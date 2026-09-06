@@ -33,6 +33,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Tool Discovery** | The agent asks a server at runtime "what can you do?" instead of carrying a hard-coded tool list in its source code. | `requests.get("http://localhost:8765/tools/list")` returns the current tool menu. |
 | **JSON-RPC** | A protocol for making remote function calls by sending JSON messages.  The full MCP specification is built on JSON-RPC. | `{"method": "tools/call", "params": {"name": "hours", "arguments": {"facility": "library"}}}` |
 | **OAuth 2.0** | An authorization standard that lets a user grant an app limited, revocable access to their account on another service without sharing their password; the app receives a scoped token instead. | Clicking "Allow this app to read my Google Calendar" issues a token, not your password. |
+| **Trust boundary** | The line between the model, which can be argued with, and the tool server, which runs code you wrote: the server holds the secret, checks the arguments the same way every time, and decides what comes back into the context window. | Part IIc: `github_issue` reads its token from the server's environment and returns four redacted fields; the model never sees the token or the full response. |
 | **No-code automation / connector** | A platform that builds service-to-service workflows by configuring pre-built connectors (each wrapping a service's OAuth/REST API) instead of writing integration code. | Power Automate, Zapier, Make, and IFTTT expose Google, Asana, and hundreds of services as ready-made connectors. |
 
 ---
@@ -392,6 +393,253 @@ Remember two things from this Part.  Discovery gives the client names and descri
 
 ---
 
+# Part IIc: The Server as a Trust Boundary (self-paced)
+
+## 2c.  What the Model Never Has to See
+
+Nothing in the seventy-five minute plan assumes this Part, and nothing graded today depends on it.  It is here because the final project and the Local Agent lab both put a credentialed service behind a tool server, and the design decisions below decide whether that server protects your data or merely relays it.
+
+Model 3 showed two safeguards without naming the pattern they belong to.  `read_note` refused a path outside the vault, and `append_daily_note` refused to write without `confirm`.  Both checks ran in the server, on the real arguments, after the model had already decided what to do.  A prompt injection can change what the model decides; it cannot change what the server enforces.  That is the first of three things a tool server can do that a prompt cannot, and together they make the server a **trust boundary**: the line on the diagram where the model's influence ends and deterministic code takes over.
+
+1.  **The server holds the secret.**  An API key, an OAuth token, or a database password lives in the server's environment and is attached to the outgoing request there.  The model sees a tool name, a schema, and a result.  It never sees the token, so no injection, no verbose error message, and no "print your system prompt" has anything to extract.  The Local Agent lab's Direction 4 calls this injecting the token at the tool-call layer; the server is that layer.
+2.  **The server decides, and it decides the same way every time.**  Path checks, allowlists, confirmation flags, rate limits, and scope checks are ordinary code.  Given the same arguments they give the same answer, which is what a guardrail should mean.  A rule in a system prompt is advice the model usually follows; a check in the server is a fact about what can happen.
+3.  **The server minimizes and sanitizes what comes back.**  Everything a tool returns lands in the context window, where the model can be talked into repeating it, summarizing it into a file, or sending it somewhere else.  The return path is where you return only the fields the task needs and redact the rest.  `search_notes` currently returns paths; a version that returned full note bodies would hand the model the whole vault one query at a time.
+
+Here is the shape as a picture.  Read it left to right for a request and right to left for a result.
+
+```text
+person ──prompt──> model ──tool call: name + args──> client ──> tool server ──HTTPS + token──> service
+                     ^                                             │
+                     │                                             │ 1. holds the secret (environment, not prompt)
+                     │                                             │ 2. checks the arguments (paths, scopes, confirm)
+                     │                                             │ 3. calls the service
+                     │                                             │ 4. filters fields, redacts, truncates
+                     └────────── sanitized result ─────────────────┘ 5. writes one audit line
+```
+
+Everything to the left of the tool server is text the model can be argued with about.  Everything inside the box is code you wrote and can test.
+
+---
+
+## Code Cell
+
+> **Runs on your machine, not here.**  This cell extends `vault_server.py` and reads an environment variable on your disk.  Copy it into your course container and run it there.  Set `GITHUB_TOKEN` in the shell that starts the server, never in the file.
+
+The three additions below implement the three safeguards.  `redact` is the return-path sanitizer: a small set of patterns for things that should never travel back to the model, applied to every string a tool returns.  `search_notes` now returns a short snippet around the match instead of the path alone, which is more useful, and instead of the note body, which would be more than the task needs.  `github_issue` is a tool over a real credentialed service: the token comes from the server's environment, the request is made server-side, and the model receives four fields rather than the API's full response.
+
+```python
+# vault_server.py additions: paste above the TOOLS dictionary, then extend TOOLS as shown.
+import os
+import re
+import traceback
+import requests as req   # a different alias, so it does not shadow Flask's `request`
+
+# --- Safeguard 3: the return-path sanitizer --------------------------------
+# Patterns for things that should never travel back into the context window.
+# Extend this list for your own domain (student IDs, room numbers, whatever you hold).
+REDACT = [
+    (re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+"), "[email]"),
+    (re.compile(r"\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b"), "[phone]"),
+    (re.compile(r"\b(ghp|gho|ghs|github_pat)_[A-Za-z0-9_]{20,}\b"), "[github-token]"),
+    (re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"), "[api-key]"),
+    (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "[aws-key]"),
+]
+
+def redact(text: str) -> str:
+    for pattern, label in REDACT:
+        text = pattern.sub(label, text)
+    return text
+
+# --- Safeguard 3 again: minimize. Snippets, not bodies. ---------------------
+def search_notes(query: str, width: int = 80):
+    # Returns the path and one short snippet per hit. The note body stays in the vault.
+    hits = []
+    q = query.lower()
+    for md_file in sorted(VAULT.rglob("*.md")):
+        text = md_file.read_text(encoding="utf-8", errors="ignore")
+        i = text.lower().find(q)
+        if i >= 0:
+            start, end = max(0, i - width // 2), min(len(text), i + width // 2)
+            hits.append({"path": str(md_file.relative_to(VAULT)),
+                         "snippet": redact(text[start:end].replace("\n", " "))})
+    return hits[:20]   # a cap is also a safeguard: no single call can dump the vault
+
+# --- Safeguards 1 and 2: the secret stays here, and the checks run here. ----
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")          # read once, at startup, from the server's shell
+ALLOWED_REPOS = {"BillJr99/Ursinus-CS357-Fall2026"}    # an allowlist the model cannot edit
+
+def github_issue(repo: str, number: int):
+    # Fetch one issue. The model supplies repo and number; the server supplies everything else.
+    if repo not in ALLOWED_REPOS:
+        return "refused: repository is not on the allowlist"
+    if not GITHUB_TOKEN:
+        return "refused: server has no GITHUB_TOKEN configured"
+    try:
+        r = req.get(f"https://api.github.com/repos/{repo}/issues/{int(number)}",
+                    headers={"Authorization": f"Bearer {GITHUB_TOKEN}",
+                             "Accept": "application/vnd.github+json"},
+                    timeout=10)
+        if r.status_code != 200:
+            return f"github returned {r.status_code}"     # the body may echo headers; do not forward it
+        issue = r.json()
+        return {"title": redact(issue.get("title", "")),
+                "state": issue.get("state"),
+                "labels": [l["name"] for l in issue.get("labels", [])],
+                "body": redact((issue.get("body") or "")[:1500])}
+    except Exception as e:
+        print(f"[vault_server:github_issue] {e}")
+        traceback.print_exc()
+        return "github unavailable"                       # the exception text stays in the server log
+
+# Extend TOOLS: replace the search_notes entry's description, and add github_issue.
+TOOLS["search_notes"]["schema"]["description"] = "Find vault notes containing a phrase; returns paths and short snippets."
+TOOLS["github_issue"] = {"fn": github_issue,
+    "schema": {"name": "github_issue",
+               "description": "Read the title, state, labels, and body of one GitHub issue in an allowed repository.",
+               "parameters": {"repo": "string", "number": "integer"}}}
+```
+
+Trace the token through that cell and notice where it is not.  It is read once from `os.environ` when the server starts, it appears in one `headers` dictionary inside `github_issue`, and it appears nowhere in anything the function returns, prints to the model, or advertises through `/tools/list`.  Now trace a failure: when the request fails, the server returns a status code, and when the code raises, the server returns a fixed string and keeps the exception text for its own log, because a stack trace can carry a URL, a header, or a fragment of the response, and every string the tool returns is a string the model will read.
+
+Restart the server and run these four calls from the Part II client with `SERVER` set to port `8766`:
+
+```python
+print(call_remote("search_notes", {"query": "office hours"}))
+print(call_remote("github_issue", {"repo": "BillJr99/Ursinus-CS357-Fall2026", "number": 1}))
+print(call_remote("github_issue", {"repo": "someone-else/private-repo", "number": 1}))
+print(requests.get(f"{SERVER}/tools/list").json()[-1])   # what the model is told about github_issue
+```
+
+The second call succeeds only if `GITHUB_TOKEN` was set in the server's shell; the third is refused by the allowlist before any network request is made; the fourth shows that discovery describes the tool and says nothing about how it authenticates.
+
+---
+
+## The Same Pattern in Servers You Did Not Write
+
+Most of the MCP servers your agent will use were written by someone else, and the safeguards above are the questions to ask of each one.  Where does the secret live?  What does the server refuse on its own?  What does a tool return, and how much of it did you need?  The configurations below are for four widely used servers.  The shapes are the ones the two agents read: Claude Code takes a `.mcp.json` file at the project root, and opencode takes an `mcp` block in `opencode.json`.  Both let a configuration file name an environment variable instead of containing a value, so the file can be committed and the secret cannot.
+
+**GitHub, hosted.**  GitHub runs the server; you connect over HTTPS with either an OAuth sign-in or a personal access token.  The token goes in a header that the client attaches; the model never sees the header.  Prefer OAuth where the client supports it (in Claude Code, add the server without a header and run `/mcp` to sign in), and when you must use a token, make it fine-grained, scope it to one repository, and give it read-only permissions unless a tool needs more.
+
+```json
+// .mcp.json (Claude Code): the value comes from the GITHUB_PAT variable in your shell
+{ "mcpServers": { "github": {
+    "type": "http",
+    "url": "https://api.githubcopilot.com/mcp/",
+    "headers": { "Authorization": "Bearer ${GITHUB_PAT}" } } } }
+```
+
+```json
+// opencode.json (opencode): same server, same variable, opencode's substitution syntax
+{ "mcp": { "github": {
+    "type": "remote",
+    "url": "https://api.githubcopilot.com/mcp/",
+    "enabled": true,
+    "headers": { "Authorization": "Bearer {env:GITHUB_PAT}" } } } }
+```
+
+**GitHub, local, read-only.**  The same server runs in a container on your machine.  Two flags make it a smaller target: `GITHUB_TOOLSETS` limits which groups of tools it advertises, so the model is never offered a write it should not have, and `GITHUB_READ_ONLY` removes every mutating tool.  The token reaches the container as an environment variable and no further.
+
+```json
+// .mcp.json (Claude Code)
+{ "mcpServers": { "github": {
+    "command": "docker",
+    "args": ["run", "-i", "--rm",
+             "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "-e", "GITHUB_TOOLSETS", "-e", "GITHUB_READ_ONLY",
+             "ghcr.io/github/github-mcp-server"],
+    "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PAT}",
+             "GITHUB_TOOLSETS": "repos,issues,pull_requests",
+             "GITHUB_READ_ONLY": "1" } } } }
+```
+
+```json
+// opencode.json (opencode)
+{ "mcp": { "github": {
+    "type": "local",
+    "command": ["docker", "run", "-i", "--rm",
+                "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "-e", "GITHUB_TOOLSETS", "-e", "GITHUB_READ_ONLY",
+                "ghcr.io/github/github-mcp-server"],
+    "enabled": true,
+    "environment": { "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:GITHUB_PAT}",
+                     "GITHUB_TOOLSETS": "repos,issues,pull_requests",
+                     "GITHUB_READ_ONLY": "1" } } } }
+```
+
+**Filesystem.**  The reference filesystem server takes the directories it may touch as command-line arguments and refuses everything else, which is the `read_note` path check as a whole server.  List the narrowest directories that will do; a vault folder, not your home directory.
+
+```json
+// .mcp.json (Claude Code)
+{ "mcpServers": { "files": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-filesystem",
+             "${HOME}/Documents/Obsidian/MyVault"] } } }
+```
+
+```json
+// opencode.json (opencode)
+{ "mcp": { "files": {
+    "type": "local",
+    "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem",
+                "{env:HOME}/Documents/Obsidian/MyVault"],
+    "enabled": true } } }
+```
+
+**Notion, hosted with OAuth.**  Several vendors now host their own MCP servers behind OAuth, and this is the configuration with the least to protect: no token in any file, a sign-in the vendor controls, and a scope the vendor's consent screen shows you.  Claude Code opens the sign-in when you run `/mcp`; opencode is configured the same way with `"type": "remote"` and no `headers`.
+
+```json
+// .mcp.json (Claude Code): nothing secret in the file
+{ "mcpServers": { "notion": { "type": "http", "url": "https://mcp.notion.com/mcp" } } }
+```
+
+Two habits carry across all four.  A configuration file names a variable and never contains a value, so `git diff` can never leak a token.  And a server you did not write still exposes only what you allow it to: toolsets, read-only flags, and directory arguments are the allowlists of Safeguard 2, set in the configuration instead of in code.
+
+---
+
+## Three Scenarios, One Architecture
+
+The pattern is easiest to see in systems where the data is sensitive and the model still has real work to do.  In each row below the model does the reasoning, and the server does the holding, the checking, and the trimming.  The scenarios are the kinds of agent a final-project team might build; the first is one your instructor could use.
+
+| Scenario | What the server holds | What the server checks, deterministically | What the model receives | Where a person sits |
+|---|---|---|---|---|
+| **Feedback assistant over a course LMS.**  The agent drafts comments on submissions. | The instructor's LMS API token, read from the environment | The assignment ID is on an allowlist for this course; `post_feedback` refuses without `confirm`; at most N posts per hour | A pseudonymous submission ID, the submission text with names and emails redacted, and the rubric.  Never the roster, never a grade history | Reads every draft before `confirm` is sent; the server writes an audit line per post |
+| **Issue triage over a repository.**  The agent labels and summarizes new issues. | A fine-grained token scoped to one repository, read-only | The repository is on an allowlist; only the `issues` toolset is exposed; write tools are not advertised at all | Title, labels, state, and a body with emails and pasted credentials redacted (people do paste keys into issues) | Applies labels from the agent's proposal; the agent cannot, because no write tool exists |
+| **Analytics over student records.**  The agent answers questions such as "which topics had the lowest quiz averages?" | The database password and a read-only connection | No raw SQL tool exists; each tool is a parameterized query over an allowed column list; any group smaller than a minimum size is suppressed before the result is returned | Aggregates only: means, counts, and distributions per topic.  Never a row, never an identifier | Reviews any query the server logs as suppressed, since a suppressed group is a signal that someone tried to isolate a student |
+| **Mail assistant.**  The agent finds threads and drafts replies. | The mailbox OAuth refresh token | Recipients on any draft must be inside the organization's domain; there is no `send` tool, only `create_draft` | Sender domain, subject, date, and a redacted excerpt per thread, not the full message | Opens the draft in the mail client and sends it, or does not |
+
+Here is the first scenario as a workflow, so the order of operations is explicit.  The order is the point: the model never gets a turn between the service and the sanitizer.
+
+1.  The instructor asks the agent to draft feedback for one assignment.
+2.  The model calls `list_submissions(assignment_id)`.  The server checks the ID against its allowlist, calls the LMS with its own token, replaces each student identity with a pseudonym it stores in a table the model cannot read, redacts names and emails inside the submission text, and returns the trimmed list.
+3.  The model drafts feedback for each pseudonym and calls `post_feedback(submission_id, text)` without `confirm`.  The server returns "not posted" and stores the draft.
+4.  The instructor reads the drafts in the server's review page.  The server, not the model, maps pseudonyms back to students for that page.
+5.  The instructor approves; the server posts each approved draft with `confirm=true` and writes one audit line per post naming the time, the pseudonym, and the hash of the text.
+
+Student records are covered by FERPA in the United States, and the design above is how an agent can help with them without any student's identity entering a model's context at all.  If your final project touches data of that kind, this is the section to reread.
+
+### Critical Thinking Questions
+
+10.  Suppose the model in the feedback assistant is completely compromised: a submission contains an injection and the model now does whatever the injection says.  List what it can leak and what it cannot, given the design in the workflow above.  Then remove one safeguard at a time (the pseudonyms, the redaction, the `confirm` flag, the allowlist) and say what becomes reachable.
+
+   > *Hint: The model can leak only what is in its context: pseudonyms, redacted text, and its own drafts.  It cannot post, because `confirm` comes from the review page, and it cannot name a student, because the mapping table is on the other side of the boundary.  Which safeguard, removed, exposes identities?  Which exposes the token?  Which makes an unwanted post possible?*
+
+11.  Classify each of the following as a deterministic check or as a model rule, and for each model rule say where it would move to become deterministic: a system prompt line "never reveal email addresses"; the `redact` function; a tool description that says "read-only"; `GITHUB_READ_ONLY=1`; a `confirm` flag; a schema whose `repo` parameter is described as "must be a course repository."
+
+   > *Hint: A description is advice about how to call a tool.  A flag, a function, and an allowlist decide what a call does.  Every model rule in the list has a server-side counterpart already in this Part; name it.*
+
+12.  `redact` will miss things.  Name two kinds of sensitive content in a submission that none of its five patterns would catch, and then explain why a server-side sanitizer that misses some cases is still a better place for the safeguard than a prompt that asks the model not to repeat sensitive content.
+
+   > *Hint: A student's name in running text, or a diagnosis in a sentence, matches no pattern.  The argument for the server is not that it is perfect; it is that it is testable, it is the same every time, and adding a pattern fixes every future call.  What does adding a sentence to a prompt fix?*
+
+Which statement about the trust boundary is true?
+
+[( )] Once the token is in an environment variable, the model can read it with a tool call and use it directly
+[( )] The `redact` function protects the token, because the token would otherwise appear in the tool's result
+[(X)] The model can only leak what a tool returned to it, so what the server returns is a security decision, not a formatting one
+[( )] A tool described as "read-only" in its schema cannot be used to write, because the model follows the description
+
+Remember two things from this Part.  A tool server is where a secret can live without ever entering a context window, and it is where a check can run the same way every time.  And the return path is a boundary too: what a tool returns is what a compromised model can leak, so return the least that does the job.
+
+---
+
 # Part III: Synthesis and Practice
 
 ## 3.  Exercises
@@ -449,7 +697,7 @@ In this Part you extend the server with a new tool to confirm that discovery is 
 
    *What to do:* In half a page, propose the checklist your final-project team will apply before connecting any third-party MCP server.  Address: who wrote it, what permissions it requests, whether it is read-only or write-capable, and how you would audit its behavior.  Test the checklist on `vault_server.py`: it is write-capable, so say what your team would require before letting an agent call `append_daily_note`.
 
-   *Starter hint:* Your memo should have sections for (a) Source Verification, how do you confirm who wrote the server and whether it has been reviewed?, (b) Permission Scope, what is the minimum set of capabilities the server needs?, (c) Audit Logging, how will you record every call made through the server so you can reconstruct what happened?
+   *Starter hint:* Your memo should have sections for (a) Source Verification, how do you confirm who wrote the server and whether it has been reviewed?, (b) Permission Scope, what is the minimum set of capabilities the server needs?, (c) Audit Logging, how will you record every call made through the server so you can reconstruct what happened?, and (d) Return Path, what does each tool return, is that more than the task needs, and where does the server hold its credential?
 
    *You've succeeded when:* Your memo gives a concrete yes/no checklist (not vague guidelines) that a teammate could apply in five minutes to a new MCP server they have never seen before.
 
