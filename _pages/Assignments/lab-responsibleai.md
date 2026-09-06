@@ -179,7 +179,7 @@ Complete the **shared threat and risk model** exactly as required of every submi
 For **each successful attack in your escalation log**, design a layered defense and justify it.  Organize your defenses across the four standard layers; a real system needs defense in depth, not a single guardrail:
 
 - **Input validation**: filtering, delimiting, or classifying untrusted input before it reaches the model.
-- **Privilege separation**: limiting what the model is allowed to do or reach, so a successful injection has a small blast radius.
+- **Privilege separation**: limiting what the model is allowed to do or reach, so a successful injection has a small blast radius.  This layer covers the return path as well as the write path: a tool server that holds the credential itself and returns only the fields the task needs limits what a compromised model can leak, not only what it can do.
 - **Output filtering**: checking the model's output before it is returned or acted upon.
 - **Human confirmation**: requiring a person in the loop before a consequential action.
 
