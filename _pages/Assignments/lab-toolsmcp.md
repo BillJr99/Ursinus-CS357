@@ -52,13 +52,13 @@ tags:
 
 The Local Agent Lab built an agent that perceives, plans, and acts in a loop, but the only action it could take was producing text.  This lab gives it hands.
 
-The three capabilities below used to be part of the Local Agent Lab, where they were due before the sessions that teach them.  They now stand on their own: handed out the day we cover tool use and due after we cover MCP, so every part of this lab is something you have already seen in class.
+The three capabilities below used to be part of the Local Agent Lab, where they were due before the sessions that teach them.  They now stand on their own, so every part of this lab is something you have already seen in class.
 
 **Prerequisites, all taught before this lab is due:** the *Tool Use and Function Calling* session, the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, and the structured-output reading attached to both.
 
 ## Before You Start
 
-**This builds on:** the *Tool Use and Function Calling* session (the day this lab is handed out), the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, which falls before this lab is due, and the structured-output reading attached to both.  It also assumes the agent loop you built in the Local Agent Lab; this lab gives that agent hands.
+**This builds on:** the *Tool Use and Function Calling* session, the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, and the structured-output reading attached to both.  It also assumes the agent loop you built in the Local Agent Lab; this lab gives that agent hands.
 
 **You need**, on the code route:
 
