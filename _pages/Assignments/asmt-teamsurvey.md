@@ -39,7 +39,7 @@ tags:
 
 ---
 
-This short survey, which you submit individually, is the first milestone of the [Project Thread]({{ site.baseurl }}/Projects/PBLThread).  Your answers are what I use to form the standing teams you'll work with all semester.  It is handed out at the second class meeting and due at the following class meeting; teams are announced the session after that.  See the [course schedule]({{ site.baseurl }}/) for the dates.
+This short survey, which you submit individually, is the first milestone of the [Project Thread]({{ site.baseurl }}/Projects/PBLThread).  Your answers are what I use to form the standing teams you'll work with all semester.  See the [course schedule]({{ site.baseurl }}/) for the assigned and due dates, and for when teams are announced.
 
 **How teams are formed, full transparency.**  Teams are formed by the instructor from this survey using the practice supported by the CATME Smarter Teamwork research program ([catme.org](https://www.catme.org/)): teams are *homogenized* on logistics: members are grouped so that meeting availability windows overlap and deadline styles are compatible, because mismatches there are the most common cause of avoidable team conflict, while interests and perspectives are allowed to vary.  In other words: you will be placed with people you *can meet with* and whose *clocks run at your speed*, not necessarily with people who think like you.  You will not be asked to self-select teams, and friend requests are not part of the algorithm.  Accurate answers therefore serve you directly: the only way to end up on a team that fits your actual life is to describe your actual life.
 

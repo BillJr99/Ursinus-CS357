@@ -221,7 +221,7 @@ Edmondson (1999) defines **psychological safety** as a team's shared belief that
 
 ## The Team Charter: A Signed Team Contract
 
-> **Handed out** at the *Coding Agents* session in week 2, once teams are announced, and **signed and due** at the *Prompt Engineering as Agent Design* session the following week.  See the [course schedule]({{ site.baseurl }}/) for exact dates.
+> **Handed out** once teams are announced, and **signed and due** the following week.  See the [course schedule]({{ site.baseurl }}/) for exact dates.
 
 Use this template as a starting point.  The format is flexible, but every row has to be answered concretely.  A paragraph that says "we will use Discord, meet Sundays at 2pm, and rotate roles every two weeks" covers more ground than a table full of vague entries.
 
