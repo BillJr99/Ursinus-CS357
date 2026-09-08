@@ -366,6 +366,8 @@ Two clarifications, because "API key" usually means "bill":
 
 Now start opencode and run `/model`.  You should see both entries, distinguishable because the `name` fields say which is which.  Ask the same question through each; the difference you observe is exactly the value OpenWebUI's configuration is adding, measured rather than assumed.
 
+**Then set the agent, which the config file does not set for you.**  The provider block chooses a model; it does not choose the agent, meaning the named set of permissions and standing instructions the model runs under.  opencode's two primary agents are `build`, which may edit files and run commands, and `plan`, which may read and propose but may not change anything until you approve.  In the **desktop application**, open **File -> Settings** and turn on the agent selector, so the agent sits in the message bar beside the model dropdown; it is not shown by default in every build, which is why plan mode is so often reported missing when it is merely hidden.  In the **terminal**, **Tab** cycles the primary agents, using the `switch_agent` keybind that the `keybinds` block of `opencode.json` can rebind, and the current agent is displayed on the input line.  Read the agent and the model together before you send anything: they are two independent choices, and only one of them is in the file you just wrote.
+
 ### 6c.  pi: Ollama and OpenWebUI together
 
 pi connects to arbitrary OpenAI-compatible endpoints through a plugin, **[pi-openai-compat](https://github.com/BillJr99/pi-openai-compat)**, which registers each one as a first-class pi provider so its models appear in pi's own `/model` picker.  It holds several providers simultaneously, which is what makes the Ollama-alongside-OpenWebUI comparison above possible.
