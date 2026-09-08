@@ -328,9 +328,13 @@ git config user.email "you@example.com"
 
 (The VS Code route copies your host `~/.gitconfig` into the container automatically, so Option A students often find this already done.)
 
-Pushing needs credentials.  Two workable choices:
+Pushing needs credentials, and this is the one place in the course where your own machine and the container are set up **differently on purpose**.  Read the reason before you pick, because the reason is the lesson.
 
-**Choice 1: HTTPS with a personal access token (PAT).  Recommended default.**
+**On your own machine, use an SSH key.**  Part 1.5 of the [Overview assignment]({{ site.baseurl }}/Assignments/Overview) walks through checking for a key you already have, creating one with `ssh-keygen -t ed25519` if you do not, adding the public half under GitHub's *Settings -> SSH and GPG keys*, and confirming it with `ssh -T git@github.com`.  That is the right default there: the machine is yours, the key is yours, and it is the credential every later lab assumes once you are driving git from a terminal.
+
+**Inside the container, the default flips to a scoped token**, and the reason is not convenience.  The container is not only yours: it runs a course image, and from Step 8 onward it runs *agent code* that acts on your files on your behalf.  A credential you place inside it is a credential that code can use.  So choose deliberately:
+
+**Choice 1: HTTPS with a personal access token (PAT).  Recommended default inside the container.**
 
 1.  GitHub -> **Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens -> Generate new token**.
 2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.
@@ -350,7 +354,9 @@ git config credential.helper 'cache --timeout=7200'
 
 `:ro` makes the mount read-only (the container can use the keys, not modify them), and you would use the `git@github.com:...` remote form.
 
-> **Security note: think like this course.**  Mounting `~/.ssh` deliberately widens the container's view of your machine: you are handing everything that runs inside (including, later, *agent code*) a credential that can push to **every** repository your key reaches.  The fine-grained PAT is the tighter default because its blast radius is one repository, `cs357-work`, and nothing else.  Least privilege is not just a lecture topic here; it is a configuration choice you are making right now.
+> **Security note: think like this course.**  Mounting `~/.ssh` deliberately widens the container's view of your machine: you are handing everything that runs inside (including, later, *agent code*) a credential that can push to **every** repository your key reaches.  The fine-grained PAT is the tighter default inside the container because its blast radius is one repository, `cs357-work`, and nothing else.  Least privilege is not just a lecture topic here; it is a configuration choice you are making right now.
+>
+> **And that is why the two environments differ.**  The question "which credential should I use?" has two different right answers here, and the difference is not the tool, it is the **blast radius**.  On your own machine, the SSH key is the correct credential and the passphrase is what protects it.  Inside a container that will shortly be running an agent, the correct credential is the narrowest one that still works.  If you find yourself wanting a single rule for both, notice that the rule *is* single: give each environment the least authority that lets it do its job.
 
 ---
 

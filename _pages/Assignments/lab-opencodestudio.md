@@ -1109,7 +1109,7 @@ This lab deliberately leaves things out, and each of them arrives somewhere spec
 - **The agent loop in code**, a persona with two tools, structured output, and a real evaluation protocol: the [Local Agent Lab]({{ site.baseurl }}/Assignments/LocalAgent), handed out the day this one is due.
 - **A second writer, a claim protocol that survives a concurrency test, and skills that try to *stop* something rather than advise it**: [Local Agent Lab Direction 5]({{ site.baseurl }}/Assignments/LocalAgent/Direction5).  The two skills you wrote here are the prerequisite; the three you write there are in addition to them.
 - **Enforcement in code rather than in instructions**: Part 3b is the first taste, Direction 2 above moves it outside the harness, and Direction 3 of the Local Agent Lab is the full version, with trust boundaries and a tested threat model.
-- **Measuring a skill of your own with the full protocol**, five runs per cell on two models: the *Skill Design Study* written assignment, handed out in the Skills session.
+- **Measuring a skill of your own with the full protocol**, five runs per cell on two models: the *Skill Design Study* written assignment.
 - **Your notes as memory an agent can read, and this same discipline across several projects at once**: the Week 7 session, *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox*.  You will arrive there with a charter already written and already tested, and that session amends it rather than starting it.
 - **A full written operating system for a domain you choose, with a governed multi-iteration loop**: Written Assignment 2, [Design Your Agent System]({{ site.baseurl }}/Assignments/AgentSystemDesign).
 
