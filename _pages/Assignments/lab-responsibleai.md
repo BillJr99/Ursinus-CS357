@@ -110,7 +110,7 @@ Submit both together.  The rubric on this page covers Component 1.  The rubric o
 
 **Why they are one thing.**  An audit with no recommendation is a bug report nobody owns.  A policy with no evidence is a press release.  The capstone asks you to do both about the *same* system, which is the actual professional task.  Your Component 2 argument must cite your own Component 1 findings, not a paper you read.
 
-**Prerequisites.**  *Training Data, Bias, and Explainability* is taught the day this is handed out.  *Intellectual Property, Privacy, and the Case for Local AI* and *Governance, Policy, and the Cost of Inference* land inside the work window, the governance session well before the capstone is due.
+**Prerequisites.**  *Training Data, Bias, and Explainability*, *Intellectual Property, Privacy, and the Case for Local AI*, and *Governance, Policy, and the Cost of Inference*.
 
 **Pace yourself.**  The shared warm-up and threat model come first.  Your chosen direction is the largest piece.  The writeup is the shortest.
 
