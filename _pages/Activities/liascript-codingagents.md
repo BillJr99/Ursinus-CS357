@@ -120,6 +120,8 @@ JSON
 
 Outside the container, use `http://localhost:11434/v1`.  There is no API key anywhere: everything today runs against the model on your own machine, which is why this session costs nothing and works offline.  If you route through OpenWebUI rather than straight to Ollama, that variant does take a key, your own, from your own server; Step 8.2 of the [Development Environment tutorial](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-devenvironment.md) shows the config and explains why it is still free.
 
+**If it runs but you cannot find plan mode**, what you are looking for is the **agent selector**, which is a separate control from the model picker and is not visible by default in every build.  In the **desktop application**, open **File -> Settings** and turn on the agent selector; it then appears in the message bar next to the model dropdown.  In the **terminal**, **Tab** cycles the primary agents, `build`, which may edit, and `plan`, which may not, and the agent you are in is shown on the input line.  Confirm you can see it before Section 2c, because that is where the distinction starts paying for itself.
+
 > **Other tools in this family** (Claude Code, Codex CLI, Gemini CLI, Aider, pi) install differently and mostly want a provider key.  The [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs) tutorial compares them.  Today we all drive the same one, so that when something breaks the person next to you can help.
 
 ### The habits that make this work

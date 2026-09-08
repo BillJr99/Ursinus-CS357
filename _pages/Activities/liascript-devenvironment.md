@@ -529,6 +529,16 @@ Port 3000 is the OpenWebUI default this course uses.  One more thing if you are 
 > **A candid expectation.** `llama3.2` is a 3-billion-parameter model running on your laptop.  It is a fine model to *learn the loop with* and a weak one to build with.  Expect it to be slow, to sometimes ignore your instructions, and to occasionally propose an edit that makes no sense.  That is not your setup failing; that is the honest capability of a small local model, and noticing where the ceiling sits is a real part of today's learning.  Later labs let you point the same tool at a larger model.
 
 
+### 8.2b: Pick the agent, not just the model
+
+The file you just wrote settles the **model**: which weights answer you.  It does not settle the **agent**: the named set of permissions and standing instructions that the model runs under.  opencode ships two primary agents, and the difference between them is the one you will care about all semester.  `build` may edit files and run commands.  `plan` may read the repository and propose steps but may not change anything until you approve it, which is the plan mode that the *Coding Agents* session and the OpenCode Studio lab are both built on.  Find the switch now, while nothing is at stake, rather than in the middle of a lab.
+
+**In the desktop application, first.**  Open **File -> Settings** and turn on the agent selector, so that the agent appears in the message bar beside the model dropdown.  It is not always shown on a fresh install, and its absence is the most common reason a student concludes, wrongly, that the desktop app has no plan mode.  With the selector visible you are choosing two things before every run, and you can see both: the model on one side, the agent on the other.
+
+**In the terminal.**  `/model` lists the providers you registered above, so both your Ollama entry and your OpenWebUI entry should appear there, distinguishable by the `name` fields you gave them.  **Tab** cycles the primary agents; it is the `switch_agent` keybind, and you can rebind it in the `keybinds` block of the same `opencode.json`.  The agent you are currently in is shown on the input line, so make a habit of reading it before you press Enter.
+
+> **Why this is a setup step and not a detail.**  Every gate this course later asks you to build assumes you know which agent was running when it fired.  A rule that is obviously in force under `plan` is not in force under `build`, and the same prompt sent under each produces two very different transcripts.
+
 ### 8.3: Give it one small job
 
 Still in `/workspace`, with `hello_agent.py` from Step 7 sitting there:
