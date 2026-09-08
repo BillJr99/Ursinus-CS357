@@ -63,10 +63,10 @@ This brief does more work later in the semester than any other early deliverable
 
 The milestone runs in four steps:
 
-1.  In-class kickoff at the *Hallucinations and Evaluating Agent Outputs* session, when I hand out the assignment.
-2.  A short unassisted problem statement that each member writes individually after the interview, due at the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session; see the course schedule for the date.
-3.  A structured peer-review exchange of draft briefs in class at the *RAG Quality: Chunking and Measuring Retrieval* session.
-4.  The revised brief, due at the *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox* session; see the course schedule for the date.
+1.  In-class kickoff, when I hand out the assignment.
+2.  A short unassisted problem statement that each member writes individually after the interview.
+3.  A structured peer-review exchange of draft briefs in class.
+4.  The revised brief, submitted by the team.
 
 The [course schedule]({{ site.baseurl }}/) is the authority on all of these dates.
 

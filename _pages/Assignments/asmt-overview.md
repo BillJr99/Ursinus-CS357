@@ -63,6 +63,8 @@ In this warmup you'll install your local AI stack and your coding agent, and wri
 
 > **Also added after this assignment went out:** three setup notes that cost students time in the first week.  Windows users should work in PowerShell rather than the old Command Prompt (Before You Start), the Python `requests` library has to be installed before the Route B script will run (Part 1, Route B, step 4), and GitHub Desktop is a supported way to do the git step (Part 1.5, step 2).  None of them changes what you turn in.
 
+> **Also added after this assignment went out:** Part 1.5, step 2 now walks through **SSH key authentication for GitHub**, using the key you already have or creating one with `ssh-keygen`, adding the public half under Settings -> SSH and GPG keys, and verifying with `ssh -T git@github.com`.  The remote is written in its `git@github.com:` form throughout, and the troubleshooting table gains a `Permission denied (publickey)` row.  What you turn in is unchanged: the same `git log --oneline` transcript showing a pushed commit.
+
 > **Also added after this assignment went out:** step 5 of Part 1 now names [opencode.ai](https://opencode.ai/) and lists the install options, both the command-line version and the desktop app.  Route A is unchanged, because the course image already ships the agent, and what you turn in is the same.
 
 > **Reorganized after this assignment went out (Sep 5):** Part 1 is now split into **Part 1A** (the Ollama stack, steps 1-4) and **Part 1B** (the coding agent, step 5), each with its own checklist, and the route choice is stated once up front.  **Nothing was added to what you turn in, and nothing was removed.**  The same five steps are graded by the same rubric; they are just no longer interleaved.  If you already started against the old layout, your work still counts as-is.  One genuinely new item appears at the end of Part 1B, an **optional** herdr install, which is explicitly not graded.
@@ -254,7 +256,53 @@ Every lab this semester runs from a terminal, lives in a git repository, and dep
 Complete each step and capture the terminal output:
 
 1.  **Navigate.**  From a terminal, create a working directory for this course, enter it, and list its contents: `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la`.  Then use one search tool, `grep` (or `ripgrep`/`rg` if installed), to find a string in a file, and paste the command you ran.
-2.  **Version control.**  Create a small git repository, make a commit, and connect it to a remote (your course GitHub Classroom repo, or a throwaway GitHub repo): `git init`, add a file, `git add`, `git commit -m "first commit"`, then `git remote add origin <url>` and `git push -u origin main`.  Paste the transcript of `git log --oneline` showing your commit.  If you would rather not type git commands yet, [GitHub Desktop](https://desktop.github.com/) is a supported option: install it, sign in, use File > New repository (or Add local repository) on your `cs357` folder, commit from the Changes tab, and Publish repository to push.  Then paste the output of `git log --oneline` from Repository > Open in terminal, which is the same transcript the command-line route produces.
+2.  **Version control, authenticated with an SSH key.**  You will push to GitHub every week this semester, so set authentication up once, now, with a key.  GitHub no longer accepts your account password over HTTPS, and a key is the option that keeps working without a prompt on every push.
+
+    **First, use the key you already have.**  A key you already trust is better than a second one, so look before you generate: run `ls -al ~/.ssh` and check for `id_ed25519.pub` (or `id_rsa.pub`).  If one is there and you know its passphrase, skip to *Add the public key to GitHub*.
+
+    **Otherwise, create one**, using the email address tied to your GitHub account:
+
+    ```bash
+    ssh-keygen -t ed25519 -C "you@example.com"
+    ```
+
+    Press Enter to accept the default location, and set a passphrase rather than leaving it empty; the passphrase is what keeps the key useful to you and useless to someone who copies the file.  Then load it into the agent so you type that passphrase once per session rather than once per push:
+
+    ```bash
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_ed25519
+    ```
+
+    **Add the public key to GitHub.**  Print the `.pub` file, which is the *public* half.  Never paste or send the file without the extension, which is the private key:
+
+    ```bash
+    cat ~/.ssh/id_ed25519.pub
+    ```
+
+    On GitHub, go to **Settings -> SSH and GPG keys -> New SSH key** (the direct link is [github.com/settings/keys](https://github.com/settings/keys)).  Title it after the machine it lives on, so you can revoke exactly one laptop later; leave the key type as **Authentication Key**; paste the whole line, and save.
+
+    **Confirm it before you depend on it:**
+
+    ```bash
+    ssh -T git@github.com
+    ```
+
+    The first connection asks you to accept GitHub's host fingerprint.  Success is a greeting that names your GitHub username; it does not open a shell, and the message that it does not provide shell access is the expected result, not an error.
+
+    **Now do the git work** against a remote (your course GitHub Classroom repo, or a throwaway GitHub repo): `git init`, add a file, `git add`, `git commit -m "first commit"`, then attach the remote in its SSH form and push:
+
+    ```bash
+    git remote add origin git@github.com:<your-username>/<your-repo>.git
+    git push -u origin main
+    ```
+
+    Paste the transcript of `git log --oneline` showing your commit.  If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, which you can verify with `git remote -v`.
+
+    *On native Windows*, PowerShell ships OpenSSH, so all of the commands above work as written.  If `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell: `Set-Service -Name ssh-agent -StartupType Manual`, then `Start-Service ssh-agent`.
+
+    *On the container route*, the default deliberately differs, and the difference is worth understanding rather than memorizing.  You still set the key up here, on your own machine, because that is where it belongs.  Inside the course container, Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) recommends a fine-grained token scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  Step 6 also shows the read-only `~/.ssh` mount if you would rather use your key there, and says plainly what you are handing over when you do.
+
+    If you would rather not type git commands yet, [GitHub Desktop](https://desktop.github.com/) is a supported option and handles authentication for you: install it, sign in, use File > New repository (or Add local repository) on your `cs357` folder, commit from the Changes tab, and Publish repository to push.  Then paste the output of `git log --oneline` from Repository > Open in terminal, which is the same transcript the command-line route produces.  Set the key up anyway, because the labs and the coding agent drive git from a terminal.
 3.  **Reproducible Python with uv.**  Install [uv](https://docs.astral.sh/uv/) (the fast, modern Python environment manager we standardize on this term).  Create and activate a project environment and add the one dependency the labs start with: `uv venv`, then `uv add requests`, then `uv run python -c "import requests; print(requests.__version__)"`.  Paste the output.  (If you cannot install uv, fall back to `python -m venv` and `pip install requests`, and note in your submission that you used the fallback.)
 
 ### Command-Line Survival: reference (use as needed, not required reading cover-to-cover)
@@ -307,7 +355,8 @@ Work down this table before you post in the course channel; if none of it helps,
 | The model download stalls or fails partway | Network interruption on a 2 GB transfer | Rerun `ollama pull llama3.2`; it resumes rather than restarting |
 | Inside the container, `localhost:11434` refuses the connection | Correct behavior: `localhost` inside a container means the container | Use `http://host.docker.internal:11434`. On Linux, start via the course compose file so that hostname resolves |
 | `Cannot connect to the Docker daemon` | Docker Desktop is installed but not running | Start the application. On Linux, `sudo systemctl start docker`, and confirm your user is in the `docker` group |
-| `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Use a fine-grained personal access token scoped to that one repository, with Contents: read and write |
+| `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Set up the SSH key in Part 1.5, step 2, then point the remote at it: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained personal access token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS |
+| `git@github.com: Permission denied (publickey)` | The key is not loaded in the agent, or its public half was never added to GitHub | `ssh-add -l` lists loaded keys and `ssh-add ~/.ssh/id_ed25519` loads yours; confirm the contents of `id_ed25519.pub` appear under Settings -> SSH and GPG keys; then retest with `ssh -T git@github.com` |
 | `uv: command not found` | Not installed, or not on `PATH` yet | Follow the uv install docs, restart the terminal, and if it still fails use the documented `python -m venv` fallback and say so |
 | `ModuleNotFoundError: No module named 'requests'` | The library is not installed in the Python you are running | `python -m pip install requests`, then rerun the script from the same terminal |
 | On Windows, `'ollama' is not recognized`, or `curl` prints something odd | You are in Command Prompt or an old PowerShell window from before the install | Open a fresh PowerShell window so the updated `PATH` loads, and use PowerShell for every command on this page |

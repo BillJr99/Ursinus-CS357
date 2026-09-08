@@ -83,7 +83,7 @@ tags:
 
 ---
 
-**Handed out** alongside the Design First session; **see the course schedule for the assigned and due dates.**
+**See the course schedule for the assigned and due dates.**
 
 Every trustworthy agent system exists twice: once as running code, and once on paper, as the specification, contract, and gates that say what it is supposed to do, what it must never do, and how anyone would know the difference.  This assignment asks you to produce that paper system.  Both directions below build the same skill: designing an agent system in writing, before or alongside building it, so that ambiguity and risk surface while they are still cheap to fix.
 
