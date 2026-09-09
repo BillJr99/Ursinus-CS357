@@ -330,7 +330,7 @@ git config user.email "you@example.com"
 
 Pushing needs credentials, and this is the one place in the course where your own machine and the container are set up **differently on purpose**.  Read the reason before you pick, because the reason is the lesson.
 
-**On your own machine, use an SSH key.**  Part 1.5 of the [Overview assignment]({{ site.baseurl }}/Assignments/Overview) walks through checking for a key you already have, creating one with `ssh-keygen -t ed25519` if you do not, adding the public half under GitHub's *Settings -> SSH and GPG keys*, and confirming it with `ssh -T git@github.com`.  That is the right default there: the machine is yours, the key is yours, and it is the credential every later lab assumes once you are driving git from a terminal.
+**On your own machine, use an SSH key.**  Part 1.5 of the [Overview assignment](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/Overview) walks through checking for a key you already have, creating one with `ssh-keygen -t ed25519` if you do not, adding the public half under GitHub's *Settings -> SSH and GPG keys*, and confirming it with `ssh -T git@github.com`.  That is the right default there: the machine is yours, the key is yours, and it is the credential every later lab assumes once you are driving git from a terminal.
 
 **Inside the container, the default flips to a scoped token**, and the reason is not convenience.  The container is not only yours: it runs a course image, and from Step 8 onward it runs *agent code* that acts on your files on your behalf.  A credential you place inside it is a credential that code can use.  So choose deliberately:
 

@@ -161,7 +161,7 @@ In this part, you will understand the two dominant pre-training objectives for l
 
 **Why this matters:** The pre-training objective determines what the model is good at by default.  CLM models (GPT, LLaMA, Claude's base) are trained to generate (to complete text forward in time) which makes them naturally suited to dialogue, code generation, and open-ended text tasks.  MLM models (BERT, RoBERTa) are trained to fill gaps (to predict masked content from bidirectional context) which makes them suited to classification, named entity recognition, and sentence-level understanding tasks where the full sentence is known at inference time.  Choosing the wrong model family for a task is one of the most common architecture mistakes in applied AI projects.
 
-**Causal Language Modeling (CLM)** trains the model to predict the next token given all previous tokens.  For a sequence of tokens $x_1, x_2, \ldots, x_T$, the training loss is:
+**Causal Language Modeling (CLM)** trains the model to predict the next token given all previous tokens.  For a sequence of tokens $$x_1, x_2, \ldots, x_T$$, the training loss is:
 
 $$\mathcal{L}_{\text{CLM}} = -\frac{1}{T} \sum_{t=1}^{T} \log P(x_t \mid x_1, x_2, \ldots, x_{t-1})$$
 
@@ -179,26 +179,26 @@ MLM models excel at tasks where the full input is known: classifying whether an 
 
 Given the four-character sequence "abbc" tokenized at the character level (tokens: `a`, `b`, `b`, `c`), and the following (toy) model probabilities:
 
-| Position | Previous context | True next token | $P(\text{true token})$ | $-\log P$ |
+| Position | Previous context | True next token | $$P(\text{true token})$$ | $$-\log P$$ |
 |----------|-----------------|-----------------|------------------------|-----------|
-| $t=1$ | (start) | a | 0.5 | 0.693 |
-| $t=2$ | a | b | 0.6 | 0.511 |
-| $t=3$ | a, b | b | 0.4 | 0.916 |
-| $t=4$ | a, b, b | c | 0.7 | 0.357 |
+| $$t=1$$ | (start) | a | 0.5 | 0.693 |
+| $$t=2$$ | a | b | 0.6 | 0.511 |
+| $$t=3$$ | a, b | b | 0.4 | 0.916 |
+| $$t=4$$ | a, b, b | c | 0.7 | 0.357 |
 
 ### Questions to Work Through
 
-**Q5.**  Compute the average cross-entropy loss for this sequence by summing the $-\log P$ column and dividing by 4.  Show your arithmetic.  Then compute the **perplexity** as $e^{\mathcal{L}}$ where $\mathcal{L}$ is the average loss.  What does this perplexity value mean intuitively: how many equally likely choices is the model effectively considering at each step?
+**Q5.**  Compute the average cross-entropy loss for this sequence by summing the $$-\log P$$ column and dividing by 4.  Show your arithmetic.  Then compute the **perplexity** as $$e^{\mathcal{L}}$$ where $$\mathcal{L}$$ is the average loss.  What does this perplexity value mean intuitively: how many equally likely choices is the model effectively considering at each step?
 
-> *Hint: Sum the four values in the $-\log P$ column: $0.693 + 0.511 + 0.916 + 0.357 = 2.477$. Divide by 4: $\mathcal{L} = 0.619$. Perplexity = $e^{0.619} \approx 1.86$. Intuitively: at each step, the model is as uncertain as if choosing uniformly among 1.86 equally likely options.  For a model with random chance over 256 characters, perplexity would be 256.  Lower = better.*
+> *Hint: Sum the four values in the $$-\log P$$ column: $0.693 + 0.511 + 0.916 + 0.357 = 2.477$. Divide by 4: $$\mathcal{L} = 0.619$$. Perplexity = $$e^{0.619} \approx 1.86$$. Intuitively: at each step, the model is as uncertain as if choosing uniformly among 1.86 equally likely options.  For a model with random chance over 256 characters, perplexity would be 256.  Lower = better.*
 
-**Q6.**  At position $t=3$, the model assigned only $P=0.4$ to the true next token `b`, even though `b` appeared immediately before.  What does this suggest about the model's ability to use recent context?  Name one architectural feature of transformers that would help the model assign higher probability to repeating recent tokens.
+**Q6.**  At position $$t=3$$, the model assigned only $$P=0.4$$ to the true next token `b`, even though `b` appeared immediately before.  What does this suggest about the model's ability to use recent context?  Name one architectural feature of transformers that would help the model assign higher probability to repeating recent tokens.
 
 > *Hint: A high-quality language model should recognize that "bb" is a frequent pattern in some vocabularies and that the second `b` should be predicted with high probability given the first `b` just appeared.  The attention mechanism in a transformer allows the model to directly attend to the previous `b` token.  What happens to this ability if the context window is very short?  What about if the model has only seen `b` rarely during pre-training?*
 
 **Q7.**  Compare CLM and MLM training objectives: which one can be used to generate new text, and why can the other one not?  Use the mechanics of the attention mask to explain your answer, not just "CLM is generative."
 
-> *Hint: CLM uses a causal attention mask: position $t$ can only attend to positions $\leq t$. At inference time, you have positions 1 through $t-1$ and want to predict position $t$; the mask exactly matches this setup, so CLM can generate autoregressively.  MLM has no causal mask: position $t$ attends to all positions including $t+1, t+2, \ldots, T$. At inference time, if you want to generate position $t$, you do not yet have positions $t+1$ through $T$; the MLM training setup assumed you did.*
+> *Hint: CLM uses a causal attention mask: position $t$ can only attend to positions $$\leq t$$. At inference time, you have positions 1 through $t-1$ and want to predict position $t$; the mask exactly matches this setup, so CLM can generate autoregressively.  MLM has no causal mask: position $t$ attends to all positions including $$t+1, t+2, \ldots, T$$. At inference time, if you want to generate position $t$, you do not yet have positions $t+1$ through $T$; the MLM training setup assumed you did.*
 
 ---
 
@@ -384,7 +384,7 @@ The practical implication: many modern open-source models (LLaMA-2, Mistral, Gem
 - **int8** (8 bits): quarters memory; small accuracy loss on most tasks; requires calibration
 - **int4** (4 bits): reduces memory by 8×; more accuracy loss, especially for smaller models; enables running 7B models on laptops
 
-The intuition: float32 can represent values between roughly $-3.4 \times 10^{38}$ and $3.4 \times 10^{38}$ with fine precision. int8 maps this range to just 256 discrete values.  For LLM weights, most weight values cluster near zero and vary smoothly; the "rounding" from float32 to int8 or int4 loses precision but usually preserves the relative ordering of weights that matters for model output.  The exception: very small models and outlier weights (which exist in larger models) are more sensitive to quantization.
+The intuition: float32 can represent values between roughly $$-3.4 \times 10^{38}$$ and $$3.4 \times 10^{38}$$ with fine precision. int8 maps this range to just 256 discrete values.  For LLM weights, most weight values cluster near zero and vary smoothly; the "rounding" from float32 to int8 or int4 loses precision but usually preserves the relative ordering of weights that matters for model output.  The exception: very small models and outlier weights (which exist in larger models) are more sensitive to quantization.
 
 ---
 
@@ -399,9 +399,9 @@ The intuition: float32 can represent values between roughly $-3.4 \times 10^{38}
 
 ### Questions to Work Through
 
-**Q11.**  A research team has a compute budget equivalent to training a 10B-parameter model on 500B tokens.  Using the Chinchilla rule of thumb ($D_{\text{optimal}} = 20 \times N$), is this training run compute-optimal?  If not, what should they change: reduce model size to fit more training, or increase model size and train on fewer tokens?
+**Q11.**  A research team has a compute budget equivalent to training a 10B-parameter model on 500B tokens.  Using the Chinchilla rule of thumb ($$D_{\text{optimal}} = 20 \times N$$), is this training run compute-optimal?  If not, what should they change: reduce model size to fit more training, or increase model size and train on fewer tokens?
 
-> *Hint: Chinchilla optimal for 10B parameters requires 10B × 20 = 200B tokens.  The team plans to use 500B tokens; they are training on 2.5× more tokens than Chinchilla optimal for this model size.  The model is being "overtrained" for Chinchilla optimality, but as the LLaMA example shows, this is often intentional to get a smaller, faster inference model.  Alternatively: what size model would be Chinchilla optimal for 500B tokens? $N = 500B / 20 = 25B$ parameters.  So a 25B model trained on 500B tokens would be compute-optimal.*
+> *Hint: Chinchilla optimal for 10B parameters requires 10B × 20 = 200B tokens.  The team plans to use 500B tokens; they are training on 2.5× more tokens than Chinchilla optimal for this model size.  The model is being "overtrained" for Chinchilla optimality, but as the LLaMA example shows, this is often intentional to get a smaller, faster inference model.  Alternatively: what size model would be Chinchilla optimal for 500B tokens? $$N = 500B / 20 = 25B$$ parameters.  So a 25B model trained on 500B tokens would be compute-optimal.*
 
 **Q12.**  A student wants to run a 13B-parameter model locally on a laptop with 16 GB of unified memory.  Calculate the memory required in float32, float16, and int4.  Which format(s) fit in 16 GB? State any approximation you use.
 
@@ -409,7 +409,7 @@ The intuition: float32 can represent values between roughly $-3.4 \times 10^{38}
 
 **Q13.**  Why do larger models tend to be *more* robust to quantization than smaller models?  Hint: consider what happens to the relative importance of any single weight when there are 70B weights versus 7B weights.
 
-> *Hint: In a 70B-parameter model, each individual weight has a smaller fractional influence on the output; the computation is distributed across many more parameters.  Rounding a weight from its float32 value to the nearest int4 value introduces absolute error of at most $\approx \Delta/2$ where $\Delta$ is the quantization step size, but the relative effect on the output scales with $1/N$. Additionally, redundancy in large models means the network can "compensate" for rounding errors in some weights using other weights.  Tiny models (1B-3B) have less redundancy and are more sensitive to quantization-induced errors.*
+> *Hint: In a 70B-parameter model, each individual weight has a smaller fractional influence on the output; the computation is distributed across many more parameters.  Rounding a weight from its float32 value to the nearest int4 value introduces absolute error of at most $$\approx \Delta/2$$ where $$\Delta$$ is the quantization step size, but the relative effect on the output scales with $1/N$. Additionally, redundancy in large models means the network can "compensate" for rounding errors in some weights using other weights.  Tiny models (1B-3B) have less redundancy and are more sensitive to quantization-induced errors.*
 
 ---
 
