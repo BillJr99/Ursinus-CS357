@@ -63,10 +63,10 @@ The RL training loop, applied to a language model:
 | Loop Step | Symbol | What It Means for an LLM |
 |-----------|--------|---------------------------|
 | Observe state | $s_t$ | The conversation so far (all prior tokens, system prompt, etc.) |
-| Choose action | $a_t \sim \pi(s_t)$ | Sample the next token from the model's current probability distribution |
-| Environment transitions | $s_{t+1}$ | The token is appended; the new state is the extended conversation |
+| Choose action | $$a_t \sim \pi(s_t)$$ | Sample the next token from the model's current probability distribution |
+| Environment transitions | $$s_{t+1}$$ | The token is appended; the new state is the extended conversation |
 | Receive reward | $r_t$ | A human (or reward model) rates the completed response |
-| Update policy | $\pi \leftarrow \pi + \Delta$ | Adjust model weights so actions that led to high reward become more probable |
+| Update policy | $$\pi \leftarrow \pi + \Delta$$ | Adjust model weights so actions that led to high reward become more probable |
 
 The Markov property ("the current state contains all information needed for the decision") means history beyond the current state is ignored.  For LLMs, the "state" is the context window, and the Markov property holds approximately (a longer context window is a better state representation).
 
@@ -92,15 +92,15 @@ The Markov property ("the current state contains all information needed for the 
 
 **Q-learning** builds a table (the Q-table) that stores the expected total future reward of taking each action $a$ in each state $s$. The Q-value $Q(s, a)$ answers the question: "if I am in state $s$ and take action $a$, how much total reward can I expect, on average, from here onward?"
 
-A simple way to update Q-values after observing a transition $(s, a, r, s^{\prime})$:
+A simple way to update Q-values after observing a transition $$(s, a, r, s^{\prime})$$:
 
 $$Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \cdot \max_{a^{\prime}} Q(s^{\prime}, a^{\prime}) - Q(s, a) \right]$$
 
-where $\alpha$ is the learning rate (how much to update per step), $\gamma$ is the discount factor (how much future rewards are worth relative to immediate rewards), and $\max_{a^{\prime}} Q(s^{\prime}, a^{\prime})$ is our best estimate of the future from the new state.  The term in brackets is the **temporal difference error**: the gap between what we expected and what we actually got plus future prospects.
+where $$\alpha$$ is the learning rate (how much to update per step), $$\gamma$$ is the discount factor (how much future rewards are worth relative to immediate rewards), and $$\max_{a^{\prime}} Q(s^{\prime}, a^{\prime})$$ is our best estimate of the future from the new state.  The term in brackets is the **temporal difference error**: the gap between what we expected and what we actually got plus future prospects.
 
 For language models, Q-learning in its raw form is intractable: the state space (all possible token sequences) and action space (the full vocabulary at each step) are astronomically large.  Instead, modern RLHF uses PPO, which approximates Q-learning with neural networks and additional stability constraints.  But the Q-learning intuition ("assign credit for actions that lead to good futures") remains the conceptual core.
 
-**The exploration-exploitation tradeoff** is unavoidable in any RL system.  If the agent always exploits (always choosing the action with the highest current Q-value) it may miss better actions it has never tried.  If it always explores (choosing randomly to discover new actions) it never uses what it has learned and accumulates low rewards.  The standard solution is an **epsilon-greedy** policy: with probability $\epsilon$, choose randomly (explore); with probability $1 - \epsilon$, choose the current best action (exploit).  Decreasing $\epsilon$ over training is called **annealing**: explore a lot early, exploit more late.
+**The exploration-exploitation tradeoff** is unavoidable in any RL system.  If the agent always exploits (always choosing the action with the highest current Q-value) it may miss better actions it has never tried.  If it always explores (choosing randomly to discover new actions) it never uses what it has learned and accumulates low rewards.  The standard solution is an **epsilon-greedy** policy: with probability $$\epsilon$$, choose randomly (explore); with probability $$1 - \epsilon$$, choose the current best action (exploit).  Decreasing $$\epsilon$$ over training is called **annealing**: explore a lot early, exploit more late.
 
 ---
 
@@ -117,13 +117,13 @@ A toy Q-table for a tiny two-state ("question-answering" vs. "question-pending")
 
 ### Questions to Work Through
 
-**Q4.**  Using the Q-table above: in the "question-pending" state, which action does an epsilon-greedy policy with $\epsilon = 0.1$ choose 90% of the time?  If the agent chose "answer directly" in this state and received reward 2, with $\alpha = 0.5$ and $\gamma = 0.9$, compute the updated Q-value using the formula above (assume $\max_{a^{\prime}} Q(\text{question-answering}, a^{\prime}) = 7.0$).
+**Q4.**  Using the Q-table above: in the "question-pending" state, which action does an epsilon-greedy policy with $$\epsilon = 0.1$$ choose 90% of the time?  If the agent chose "answer directly" in this state and received reward 2, with $$\alpha = 0.5$$ and $$\gamma = 0.9$$, compute the updated Q-value using the formula above (assume $$\max_{a^{\prime}} Q(\text{question-answering}, a^{\prime}) = 7.0$$).
 
-> *Hint: The formula is $Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma \cdot \max_{a^{\prime}} Q(s^{\prime},a^{\prime}) - Q(s,a)]$. Plug in: $Q = 1.0$, $\alpha = 0.5$, $r = 2$, $\gamma = 0.9$, $\max_{a^{\prime}} Q = 7.0$. Compute the bracket first, then multiply by $\alpha$, then add to the old Q.*
+> *Hint: The formula is $$Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma \cdot \max_{a^{\prime}} Q(s^{\prime},a^{\prime}) - Q(s,a)]$$. Plug in: $$Q = 1.0$$, $$\alpha = 0.5$$, $$r = 2$$, $$\gamma = 0.9$$, $$\max_{a^{\prime}} Q = 7.0$$. Compute the bracket first, then multiply by $$\alpha$$, then add to the old Q.*
 
 **Q5.**  Why is applying Q-learning directly to language generation intractable?  Estimate the size of the Q-table for a model with a 50,000-token vocabulary generating responses up to 500 tokens long.  What architectural change would you need to make Q-learning feasible at this scale?
 
-> *Hint: The Q-table has one entry per (state, action) pair.  The state is the full token sequence seen so far; the action is the next token.  If responses can be up to 500 tokens and the vocabulary has 50,000 entries, how many possible states are there?  (Think $50000^{500}$, an astronomically large number.)  What replaces the table in deep RL?*
+> *Hint: The Q-table has one entry per (state, action) pair.  The state is the full token sequence seen so far; the action is the next token.  If responses can be up to 500 tokens and the vocabulary has 50,000 entries, how many possible states are there?  (Think $$50000^{500}$$, an astronomically large number.)  What replaces the table in deep RL?*
 
 **Q6.**  In the context of RLHF for language models, what plays the role of "exploration" and what plays the role of "exploitation"?  How does the temperature parameter from our sampling activity connect to this tradeoff?
 

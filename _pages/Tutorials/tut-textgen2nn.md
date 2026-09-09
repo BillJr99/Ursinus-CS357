@@ -31,12 +31,12 @@ You have sampled from a softmax, tuned temperature, and measured cosine similari
 |------|--------------------------|--------------------------|
 | **Generation Loop** | The repeating cycle a language model runs: tokenize the text so far, compute a probability distribution for the next token, sample one token, append it, and repeat until a stop token. | Tracing the prompt "The sky is" through every stage to produce the word "blue" |
 | **Logit** | A raw, unbounded score the network assigns to each vocabulary token before softmax converts scores to probabilities. | Logits (4.0, 2.5, 1.0, 0.5, -1.0) for the five candidate words in Model 1 |
-| **Weight** | A learned number inside the network that multiplies an input. The network's entire "knowledge" is stored in its weights, which are fixed at generation time. | $w_{11} = 0.5$ in the tiny network of Model 2 |
-| **Bias (neuron bias)** | A learned number added after the weighted sum, shifting a neuron's activation threshold. (Distinct from data bias, which we study in the bias unit.) | $b_1 = -0.5$ in the hidden layer of Model 2 |
-| **ReLU** | The Rectified Linear Unit activation function: $\text{ReLU}(z) = \max(0, z)$. It passes positive values through unchanged and clips negatives to zero, giving the network its non-linearity. | Hidden neuron $h_2$ computes a pre-activation of $-0.5$ and outputs $0$ |
+| **Weight** | A learned number inside the network that multiplies an input. The network's entire "knowledge" is stored in its weights, which are fixed at generation time. | $$w_{11} = 0.5$$ in the tiny network of Model 2 |
+| **Bias (neuron bias)** | A learned number added after the weighted sum, shifting a neuron's activation threshold. (Distinct from data bias, which we study in the bias unit.) | $$b_1 = -0.5$$ in the hidden layer of Model 2 |
+| **ReLU** | The Rectified Linear Unit activation function: $$\text{ReLU}(z) = \max(0, z)$$. It passes positive values through unchanged and clips negatives to zero, giving the network its non-linearity. | Hidden neuron $h_2$ computes a pre-activation of $-0.5$ and outputs $0$ |
 | **Forward Pass** | One complete flow of numbers from inputs, through every layer's weights and activations, to outputs. Generation runs one forward pass per token generated. | The trace table in Model 2: inputs $(1.0, 2.0)$ flow to output $3.25$ |
 | **Embedding** | A learned vector of numbers representing a token. It is literally the first layer of the network: a lookup table of weights, trained like every other weight. | Token id 464 mapped to the 4-number vector $(0.2, -1.1, 0.7, 0.3)$ |
-| **Activation** | The output value of a neuron after its activation function, the "signal" that layer sends forward. Visualizing activations shows what the network responds to. | $h = (2.0, 0.0)$ in the trace table; the heatmaps in Model 3 |
+| **Activation** | The output value of a neuron after its activation function, the "signal" that layer sends forward. Visualizing activations shows what the network responds to. | $$h = (2.0, 0.0)$$ in the trace table; the heatmaps in Model 3 |
 
 Notice that each concept above appears in at least two forms today: in the Key Concepts table (words), in a diagram or trace table (pictures and numbers), and in runnable Python (code).  If one representation does not click, use another; they all describe the same thing.
 
@@ -109,7 +109,7 @@ Here is the entire loop, drawn as a pipeline.  Read it top to bottom; the arrow 
       +--------------------> loop back to [ tokenizer ]
 ```
 
-The numbers in this diagram are illustrative but real: you can check the softmax row yourself.  At $T = 1$: $e^{4.0} \approx 54.598$, $e^{2.5} \approx 12.182$, $e^{1.0} \approx 2.718$, $e^{0.5} \approx 1.649$, $e^{-1.0} \approx 0.368$; the sum is $\approx 71.516$, and $54.598 / 71.516 \approx 0.763$, exactly the temperature math from the sampling activity, now placed in context as the *second-to-last* stage of a longer machine.
+The numbers in this diagram are illustrative but real: you can check the softmax row yourself.  At $$T = 1$$: $$e^{4.0} \approx 54.598$$, $$e^{2.5} \approx 12.182$$, $$e^{1.0} \approx 2.718$$, $$e^{0.5} \approx 1.649$$, $$e^{-1.0} \approx 0.368$$; the sum is $$\approx 71.516$$, and $$54.598 / 71.516 \approx 0.763$$, exactly the temperature math from the sampling activity, now placed in context as the *second-to-last* stage of a longer machine.
 
 So how does this become a neural net?  Look at the three middle boxes: **embedding lookup**, **transformer layers**, and **output layer**.  Those three boxes *are* the neural network; everything else (tokenizer, softmax, sampling, appending) is ordinary deterministic code wrapped around it.  The embedding table is a layer of learned weights.  Each transformer layer is (at heart) weighted sums of its inputs passed through non-linear functions, the same recipe you will compute by hand in Part II, just with millions of neurons instead of two.  The output layer is one more weighted sum per vocabulary word, producing the logits.  A "large language model" is a very large stack of the small thing you are about to build, run once per generated token.
 
@@ -125,7 +125,7 @@ The table below traces the prompt "The sky is" through one full turn of the loop
 | Embedding lookup | id 318 | vector $(-0.3, 0.8, 1.1, -0.6)$ | the network (learned table) |
 | Transformer layers | all three embedding vectors | contextual vector $(0.9, 0.4, -0.7, 1.2)$ | the network (learned weights) |
 | Output layer | contextual vector | logits $(4.0, 2.5, 1.0, 0.5, -1.0)$ | the network (learned weights) |
-| Softmax, $T=1$ | logits | probabilities $(0.763, 0.170, 0.038, 0.023, 0.005)$ | deterministic formula |
+| Softmax, $$T=1$$ | logits | probabilities $(0.763, 0.170, 0.038, 0.023, 0.005)$ | deterministic formula |
 | Sample | probabilities | "blue" | random draw |
 | Append | "The sky is" + "blue" | "The sky is blue" | deterministic code |
 
@@ -135,9 +135,9 @@ The table below traces the prompt "The sky is" through one full turn of the loop
 
    > *Hint: "Learned" and "random" are different properties.  The embedding table and transformer weights were shaped by training, but at generation time they are frozen numbers; the same input always produces the same logits.  Which single stage rolls a die?*
 
-2.  Recompute the softmax row at $T = 0.5$ (calculator permitted): the scaled logits become $(8, 5, 2, 1, -2)$. Show that $P(\text{blue})$ rises to about $0.949$. Which *earlier* pipeline stage is completely unaffected by this change, and why does that matter for reproducibility?
+2.  Recompute the softmax row at $$T = 0.5$$ (calculator permitted): the scaled logits become $(8, 5, 2, 1, -2)$. Show that $$P(\text{blue})$$ rises to about $0.949$. Which *earlier* pipeline stage is completely unaffected by this change, and why does that matter for reproducibility?
 
-   > *Hint: $e^{8} \approx 2980.958$, $e^{5} \approx 148.413$, $e^{2} \approx 7.389$, $e^{1} \approx 2.718$, $e^{-2} \approx 0.135$; the sum is $\approx 3139.614$. Temperature is applied after the logits are computed; do the weights, embeddings, or logits change when you change $T$?*
+   > *Hint: $$e^{8} \approx 2980.958$$, $$e^{5} \approx 148.413$$, $$e^{2} \approx 7.389$$, $$e^{1} \approx 2.718$$, $$e^{-2} \approx 0.135$$; the sum is $$\approx 3139.614$$. Temperature is applied after the logits are computed; do the weights, embeddings, or logits change when you change $T$?*
 
 3.  The loop appends "blue" and runs again.  Explain, using the diagram, why the *entire network* must run again for the next token, and why generating a 200-token answer therefore costs roughly 200 forward passes.  (The Recorder writes the group's one-sentence explanation.)
 
@@ -199,33 +199,33 @@ $$
 
 ## The Trace Table
 
-We push the input $\mathbf{x} = (1.0, 2.0)$ through the network.  Every arithmetic step appears in the table; nothing is hidden.
+We push the input $$\mathbf{x} = (1.0, 2.0)$$ through the network.  Every arithmetic step appears in the table; nothing is hidden.
 
 | Step | Computation | Value |
 |------|-------------|-------|
 | $h_1$ pre-activation | $0.5(1.0) + 1.0(2.0) + (-0.5) = 0.5 + 2.0 - 0.5$ | $2.0$ |
-| $h_1$ activation | $\text{ReLU}(2.0) = \max(0, 2.0)$ | $2.0$ |
+| $h_1$ activation | $$\text{ReLU}(2.0) = \max(0, 2.0)$$ | $2.0$ |
 | $h_2$ pre-activation | $1.0(1.0) + (-1.0)(2.0) + 0.5 = 1.0 - 2.0 + 0.5$ | $-0.5$ |
-| $h_2$ activation | $\text{ReLU}(-0.5) = \max(0, -0.5)$ | $0.0$ |
+| $h_2$ activation | $$\text{ReLU}(-0.5) = \max(0, -0.5)$$ | $0.0$ |
 | output | $1.5(2.0) + 2.0(0.0) + 0.25 = 3.0 + 0 + 0.25$ | $3.25$ |
 
-So this network maps $(1.0, 2.0) \mapsto 3.25$. Notice that $h_2$ "died" for this input: its pre-activation was negative, so ReLU clipped it to zero and its outgoing weight $v_2 = 2.0$ contributed nothing.
+So this network maps $$(1.0, 2.0) \mapsto 3.25$$. Notice that $h_2$ "died" for this input: its pre-activation was negative, so ReLU clipped it to zero and its outgoing weight $$v_2 = 2.0$$ contributed nothing.
 
 ### Questions to Work Through
 
-4.  Repeat the full trace by hand for $\mathbf{x} = (2.0, 1.0)$: same table format, all five rows.  (You should get $y = 5.5$, with *both* hidden neurons active.)  The Recorder writes the completed table.
+4.  Repeat the full trace by hand for $$\mathbf{x} = (2.0, 1.0)$$: same table format, all five rows.  (You should get $$y = 5.5$$, with *both* hidden neurons active.)  The Recorder writes the completed table.
 
-   > *Hint: $h_1$ pre-activation is $0.5(2.0) + 1.0(1.0) - 0.5 = 1.5$; $h_2$ pre-activation is $1.0(2.0) - 1.0(1.0) + 0.5 = 1.5$. Both are positive, so ReLU passes both through.  Then $y = 1.5(1.5) + 2.0(1.5) + 0.25$.*
+   > *Hint: $h_1$ pre-activation is $0.5(2.0) + 1.0(1.0) - 0.5 = 1.5$; $h_2$ pre-activation is $1.0(2.0) - 1.0(1.0) + 0.5 = 1.5$. Both are positive, so ReLU passes both through.  Then $$y = 1.5(1.5) + 2.0(1.5) + 0.25$$.*
 
 5.  Compare your two traces.  The inputs $(1,2)$ and $(2,1)$ contain the same two numbers, yet the outputs differ ($3.25$ vs $5.5$) and *different neurons are active*.  What does this tell you about how a ReLU network processes its input; is it applying one fixed formula, or switching between formulas?
 
-   > *Hint: When $h_2$ is clipped to zero, the network's output formula is effectively $y = 1.5 h_1 + 0.25$; when both neurons are active, it is a different linear formula.  ReLU networks are piecewise linear: the pattern of which neurons are on/off selects which linear piece applies.  More neurons means more pieces means more expressive functions.*
+   > *Hint: When $h_2$ is clipped to zero, the network's output formula is effectively $$y = 1.5 h_1 + 0.25$$; when both neurons are active, it is a different linear formula.  ReLU networks are piecewise linear: the pattern of which neurons are on/off selects which linear piece applies.  More neurons means more pieces means more expressive functions.*
 
-6.  Trace $\mathbf{x} = (0.0, 0.0)$. Even with all-zero inputs, the output is not zero.  Which parameters are responsible, and what would the network lose if all biases were removed?
+6.  Trace $$\mathbf{x} = (0.0, 0.0)$$. Even with all-zero inputs, the output is not zero.  Which parameters are responsible, and what would the network lose if all biases were removed?
 
-   > *Hint: With zero inputs, all weight terms vanish, leaving only biases: $h_1 = \text{ReLU}(-0.5) = 0$, $h_2 = \text{ReLU}(0.5) = 0.5$, $y = 2.0(0.5) + 0.25 = 1.25$. Without biases, every neuron's decision boundary would be forced through the origin; could the network then represent a function like $y = x_1 + 5$?*
+   > *Hint: With zero inputs, all weight terms vanish, leaving only biases: $$h_1 = \text{ReLU}(-0.5) = 0$$, $$h_2 = \text{ReLU}(0.5) = 0.5$$, $$y = 2.0(0.5) + 0.25 = 1.25$$. Without biases, every neuron's decision boundary would be forced through the origin; could the network then represent a function like $$y = x_1 + 5$$?*
 
-In the trace for $\mathbf{x} = (1.0, 2.0)$, hidden neuron $h_2$ output $0.0$ because:
+In the trace for $$\mathbf{x} = (1.0, 2.0)$$, hidden neuron $h_2$ output $0.0$ because:
 
 - Its incoming weights were zero
 - The input $x_2$ was too large for the network to represent
@@ -275,7 +275,7 @@ for x in [(1.0, 2.0), (2.0, 1.0), (0.0, 0.0)]:
 
 If any line disagrees with your hand trace, find the first row where they diverge; that row contains the arithmetic slip.  This is exactly how you will debug real models later: compare expected and actual values layer by layer, top to bottom.
 
-For extended by-hand practice (a wider network approximating $y = x^2$, including the training (backward) pass) work through the printable worksheet: [nn_by_hand_quadratic_full.pdf](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/activity-neuralnets/nn_by_hand_quadratic_full.pdf).
+For extended by-hand practice (a wider network approximating $$y = x^2$$, including the training (backward) pass) work through the printable worksheet: [nn_by_hand_quadratic_full.pdf](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/activity-neuralnets/nn_by_hand_quadratic_full.pdf).
 
 ---
 
@@ -332,7 +332,7 @@ plt.show()   # renders right here in the page; compare each cell to your trace t
 
 ### Questions to Work Through
 
-7.  In the $W_1$ heatmap, one cell is strongly negative ($w_{22} = -1.0$).  Using your Part II traces, describe in plain English what that negative weight makes neuron $h_2$ *detect* about the input.  (Consider: when is $h_2$ active, when $x_1 > x_2$, or when $x_1 < x_2$?)
+7.  In the $W_1$ heatmap, one cell is strongly negative ($$w_{22} = -1.0$$).  Using your Part II traces, describe in plain English what that negative weight makes neuron $h_2$ *detect* about the input.  (Consider: when is $h_2$ active, when $x_1 > x_2$, or when $x_1 < x_2$?)
 
    > *Hint: $h_2$'s pre-activation is $x_1 - x_2 + 0.5$. It fires when $x_1 - x_2 > -0.5$, i.e., roughly when $x_1$ is at least as large as $x_2$. A neuron with one positive and one negative incoming weight is computing a comparison between its inputs.  Real networks are full of such learned comparisons.*
 
@@ -355,7 +355,7 @@ In this Part you will connect Part I's embedding stage to Part II's hidden layer
 
 ## 4.  An Embedding IS a Learned Representation
 
-**Why this matters:** In the tokens-and-embeddings activity, embeddings were handed to you as given: "words become vectors, similar words have similar vectors."  Now you can say *where those vectors come from*.  The embedding table in Part I's pipeline is a layer of the network, a grid of weights, initialized randomly and adjusted by training exactly like $w_{11}$ and $b_1$ in your tiny network.  And your tiny network's hidden layer built a representation too: it re-described the input $(1.0, 2.0)$ as the activation vector $(2.0, 0.0)$, a new coordinate system ("how much weighted-sum-pattern 1 is present, how much comparison-pattern 2 is present") that makes the output layer's job easy.  An embedding is the same move applied to words: a learned re-description of a token that makes next-token prediction easy.  **Representation = learned embedding**, whether the input is a pair of numbers or the word "sky."
+**Why this matters:** In the tokens-and-embeddings activity, embeddings were handed to you as given: "words become vectors, similar words have similar vectors."  Now you can say *where those vectors come from*.  The embedding table in Part I's pipeline is a layer of the network, a grid of weights, initialized randomly and adjusted by training exactly like $$w_{11}$$ and $b_1$ in your tiny network.  And your tiny network's hidden layer built a representation too: it re-described the input $(1.0, 2.0)$ as the activation vector $(2.0, 0.0)$, a new coordinate system ("how much weighted-sum-pattern 1 is present, how much comparison-pattern 2 is present") that makes the output layer's job easy.  An embedding is the same move applied to words: a learned re-description of a token that makes next-token prediction easy.  **Representation = learned embedding**, whether the input is a pair of numbers or the word "sky."
 
 ## Cosine Similarity, Revisited Inside the Network
 
@@ -367,13 +367,13 @@ Suppose training has produced these 4-number embeddings (the same kind of vector
 | "kitten" | $(0.8, 0.3, -0.2, 0.0)$ |
 | "carburetor" | $(-0.4, 0.7, 0.9, -0.5)$ |
 
-Using the cosine similarity formula from the tokens-and-embeddings activity, $\cos(\text{cat}, \text{kitten}) \approx 0.982$ while $\cos(\text{cat}, \text{carburetor}) \approx -0.424$.
+Using the cosine similarity formula from the tokens-and-embeddings activity, $$\cos(\text{cat}, \text{kitten}) \approx 0.982$$ while $$\cos(\text{cat}, \text{carburetor}) \approx -0.424$$.
 
 ### Questions to Work Through
 
-9.  Verify $\cos(\text{cat}, \text{kitten}) \approx 0.982$ by hand: compute the dot product, both norms, and the ratio.  (Calculator permitted; the Recorder writes all intermediate values.)
+9.  Verify $$\cos(\text{cat}, \text{kitten}) \approx 0.982$$ by hand: compute the dot product, both norms, and the ratio.  (Calculator permitted; the Recorder writes all intermediate values.)
 
-   > *Hint: dot product $= 0.72 + 0.06 + 0.06 + 0.0 = 0.84$; $\|\text{cat}\| = \sqrt{0.95} \approx 0.9747$; $\|\text{kitten}\| = \sqrt{0.77} \approx 0.8775$; then $0.84 / (0.9747 \times 0.8775) \approx 0.982$.*
+   > *Hint: dot product $= 0.72 + 0.06 + 0.06 + 0.0 = 0.84$; $$\|\text{cat}\| = \sqrt{0.95} \approx 0.9747$$; $$\|\text{kitten}\| = \sqrt{0.77} \approx 0.8775$$; then $$0.84 / (0.9747 \times 0.8775) \approx 0.982$$.*
 
 10.  Nobody typed these vectors in; they emerged from training on next-token prediction.  Propose a mechanism: *why* would training push "cat" and "kitten" close together?  What do those two tokens share that "carburetor" does not?
 
@@ -411,19 +411,19 @@ An embedding table is a layer of learned weights, so an embedding is a learned r
 2.  *Break the network.*
 
    - *What to do:* Find an input $(x_1, x_2)$ with both coordinates between $-3$ and $3$ for which *both* hidden neurons output zero.  Report the network's output for every such input and explain why it is constant.
-   - *Starter hint:* You need $0.5 x_1 + 1.0 x_2 \le 0.5$ AND $1.0 x_1 - 1.0 x_2 \le -0.5$ simultaneously.  Try $(-2, 0)$ or $(-1, -1)$. When all hidden activations are zero, what is left of the output formula?
-   - *You've succeeded when:* You have at least two qualifying inputs, both produce output $c = 0.25$, and you can state the general principle (a dead layer makes the network output its bias, ignoring the input entirely).
+   - *Starter hint:* You need $$0.5 x_1 + 1.0 x_2 \le 0.5$$ AND $$1.0 x_1 - 1.0 x_2 \le -0.5$$ simultaneously.  Try $(-2, 0)$ or $(-1, -1)$. When all hidden activations are zero, what is left of the output formula?
+   - *You've succeeded when:* You have at least two qualifying inputs, both produce output $$c = 0.25$$, and you can state the general principle (a dead layer makes the network output its bias, ignoring the input entirely).
 
 3.  *Temperature meets the pipeline.*
 
-   - *What to do:* Using the Part I logits $(4.0, 2.5, 1.0, 0.5, -1.0)$, compute the full five-word distribution at $T = 2$ by hand, then verify in Python.  Add a row to the Model 1 trace table showing how the pipeline's output changes while every upstream stage stays identical.
-   - *Starter hint:* Scaled logits at $T=2$ are $(2.0, 1.25, 0.5, 0.25, -0.5)$. Exponentiate, sum, divide, the same three moves as always.
-   - *You've succeeded when:* Your distribution sums to 1.000 (within rounding), $P(\text{blue})$ has dropped noticeably below $0.763$, and you can say which pipeline stages produced identical values across all three temperatures.
+   - *What to do:* Using the Part I logits $(4.0, 2.5, 1.0, 0.5, -1.0)$, compute the full five-word distribution at $$T = 2$$ by hand, then verify in Python.  Add a row to the Model 1 trace table showing how the pipeline's output changes while every upstream stage stays identical.
+   - *Starter hint:* Scaled logits at $$T=2$$ are $(2.0, 1.25, 0.5, 0.25, -0.5)$. Exponentiate, sum, divide, the same three moves as always.
+   - *You've succeeded when:* Your distribution sums to 1.000 (within rounding), $$P(\text{blue})$$ has dropped noticeably below $0.763$, and you can say which pipeline stages produced identical values across all three temperatures.
 
 4.  *Notebook scale-up.*
 
    - *What to do:* Run [Simple_MNIST_NN_from_scratch.ipynb](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/Simple_MNIST_NN_from_scratch.ipynb) end to end.  Find the line(s) implementing the forward pass and annotate (in a Markdown cell) which line corresponds to each row of your Model 2 trace table.
-   - *Starter hint:* Look for a matrix multiplication followed by a ReLU (or similar) function; that is $h = \text{ReLU}(W x + b)$ vectorized.  The 2-2-1 structure becomes 784-10-10, but the rows of your trace table map one-to-one onto lines of code.
+   - *Starter hint:* Look for a matrix multiplication followed by a ReLU (or similar) function; that is $$h = \text{ReLU}(W x + b)$$ vectorized.  The 2-2-1 structure becomes 784-10-10, but the rows of your trace table map one-to-one onto lines of code.
    - *You've succeeded when:* Your annotated notebook identifies the pre-activation, activation, and output computations, and the model trains to above 80% accuracy.
 
 ---
