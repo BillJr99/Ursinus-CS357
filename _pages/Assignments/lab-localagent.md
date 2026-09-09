@@ -57,7 +57,7 @@ info:
       preemerging: The system prompt is absent or does not constrain behavior, or no skill is submitted and none was ever loaded by an agent
       beginning: The system prompt establishes a role but omits tools, format, or guardrails, or a skill file exists but the agent never invoked it and no transcript evidence of its use is provided
       progressing: "The system prompt addresses role, goal, tools, format, and guardrails with minor gaps, and the generated skill is installed and invoked by name with a transcript showing it firing, but the submission is missing either the case where the skill correctly did not fire or the paragraph on what the generated skill got wrong"
-      proficient: "The system prompt fully specifies role, goal, tools, format, and guardrails; the writeup quotes each of the five elements, cites the transcript line where the model used each tool correctly, and explains what each guardrail prevents. The generated skill is installed and invoked by name, one transcript shows it firing and changing behavior that would not have happened otherwise, and a second shows it correctly not firing on out-of-scope work; and the writeup names what the AI assumed about the project that was not true, how it was found, what changed, and how its description compares with one the student wrote by hand in OpenCode Studio. On the Direction 5 route this half of the row is earned by the skills authored there"
+      proficient: "The system prompt fully specifies role, goal, tools, format, and guardrails; the writeup quotes each of the five elements, cites the transcript line where the model used each tool correctly, and explains what each guardrail prevents. The generated skill is installed and invoked by name, one transcript shows it firing and changing behavior that would not have happened otherwise, and a second shows it correctly not firing on out-of-scope work; and the writeup names what the AI assumed about the project that was not true, how it was found, what changed, and how its description compares with one the student wrote by hand in the Skill Design Study. On the Direction 5 route this half of the row is earned by the skills authored there"
     - weight: 20
       description: Evaluation and Failure Analysis
       preemerging: No evaluation is provided
@@ -77,7 +77,7 @@ info:
       progressing: The program is submitted according to the directions with a minor omission, with at least superficial responses to the reflection prompts
       proficient: The program is submitted according to the directions, including a readme writeup describing the solution, a pair programming log with at least two timestamped role swaps and names recorded, and reflection answers that each cite a specific observation from the lab transcript rather than restating the prompt
   readings:
-    - rtitle: "OpenCode Studio, the prerequisite lab: the charter, the agent contract, and the two skills this lab builds on"
+    - rtitle: "OpenCode Studio, the prerequisite lab: the configured project, the charter, and the agent contract this lab builds on"
       rlink: "OpenCodeStudio"
     - rtitle: "Agent Loop Activity"
       rlink: "Activities/liascript-agentloop.md"
@@ -150,7 +150,9 @@ In this lab, you and a partner build a working agent from first principles: a lo
 - [Docker from First Principles]({{ site.baseurl }}/Tutorials/Docker): Directions 2 and 3 only; do the installs at home first.
 - [MCP Deep Dive: REST APIs, OAuth 2.0 flows, and secure tool invocation]({{ site.baseurl }}/Assignments/LocalAgent/Direction4): Direction 4 only.
 
-**This lab assumes the OpenCode Studio lab**, which was due the day this one was handed out.  Keep working in the same `cs357-work` repository.  The charter, the `AGENTS.md` contract, and the two skills you wrote there carry forward: Part 2's system prompt is the persona layer on top of that contract, and Part 4 is the generated-skill counterpart to the two you wrote by hand.
+**This lab assumes the OpenCode Studio lab**, which was due the day this one was handed out.  Keep working in the same `cs357-work` repository.  The charter and the `AGENTS.md` contract you wrote there carry forward, and Part 2's system prompt is the persona layer on top of that contract.
+
+**Part 4 also assumes the *Skill Design Study*,** which is due the week before this lab.  The two skills you write by hand there are what Part 4's generated skill gets compared against.  If you reach Part 4 before finishing that assignment, write its two skills first; they are the shorter job, and Part 4's comparison needs them.
 
 **Prerequisite concepts**: complete these activities before you write any code:
 
@@ -678,11 +680,11 @@ The model may be stuck in a tool-call loop.  Increase `step_budget` temporarily 
 
 ## Part 4: A Skill You Did Not Write
 
-You already wrote two skills by hand in [OpenCode Studio]({{ site.baseurl }}/Assignments/OpenCodeStudio), installed them under `.agents/skills/`, watched one fire and correctly not fire, and packaged one for the section.  So this part is not "write a skill" again.  It is the other experiment: **have an AI tool generate one, then find out where it was wrong.**
+You already wrote two skills by hand in the [Skill Design Study]({{ site.baseurl }}/Assignments/SkillDesignStudy), installed them under `.agents/skills/`, watched each fire and correctly not fire, and packaged one for the section.  So this part is not "write a skill" again.  It is the other experiment: **have an AI tool generate one, then find out where it was wrong.**
 
 This is not the lesser route.  Generating a skill and then fixing it teaches something that writing from scratch does not: what an AI assumes about your workflow when you do not tell it, and how confidently it asserts an instruction that does not survive contact with your actual tool.
 
-Every student does this part.  If you are taking **Direction 5** (Build and Test Your Own Agent Skills), the three skills you write there are in addition to the two you already have, and they satisfy this part on their own terms, so you may skip the generated route.
+Every student does this part.  If you are taking **Direction 5** (Build and Test Your Own Agent Skills), the three skills you write there are in addition to the two from the Skill Design Study, and they satisfy this part on their own terms, so you may skip the generated route.
 
 ### Step 1: Give the skill a job worth doing
 
@@ -699,7 +701,7 @@ A vague job ("help me write better code") produces a skill you cannot evaluate. 
 
 Give your chosen AI tool the real requirements, not a summary of them: paste the rubric row or the convention you want enforced.  Ask it for a skill directory containing a `SKILL.md` with, at minimum, a **name**, a **description that says when the skill should be invoked** (not only what it does), and the instructions themselves.  Ask for any supporting files it thinks the skill needs.
 
-The description is the part AI tools most often get wrong, and it is the part that decides whether your skill ever fires.  You already know this from OpenCode Studio.  The question here is whether the generator knows it.
+The description is the part AI tools most often get wrong, and it is the part that decides whether your skill ever fires.  You already know this from the Skill Design Study.  The question here is whether the generator knows it.
 
 ### Step 3: Read it before you install it
 
@@ -720,11 +722,11 @@ Then one paragraph: **what did the generated skill get wrong?**  Every one of th
 
 ### Step 6: Do not package this one twice
 
-You already posted a `.skill` archive to the course discussion in OpenCode Studio, so there is nothing new to package here.  Include this generated skill's directory in your submission ZIP.  If you skipped the packaging step in that lab, do it now: from inside the skill directory, run `zip -r ../my-skill.skill .`, then `unzip -l my-skill.skill` to confirm that `SKILL.md` sits at the top level rather than inside an extra folder.  A nested `SKILL.md` is the usual reason someone else's install fails.
+You already posted a `.skill` archive to the course discussion in the Skill Design Study, so there is nothing new to package here.  Include this generated skill's directory in your submission ZIP.  If you skipped the packaging step in that lab, do it now: from inside the skill directory, run `zip -r ../my-skill.skill .`, then `unzip -l my-skill.skill` to confirm that `SKILL.md` sits at the top level rather than inside an extra folder.  A nested `SKILL.md` is the usual reason someone else's install fails.
 
 > **Checkpoint: Before writing your deliverables, make sure you can answer:**
 > 1.  What did the generated skill assume about your project that was not true?  How did you find out?
-> 2.  Compare its description with one you wrote by hand in OpenCode Studio.  Which is the better trigger, and what specifically makes it better?
+> 2.  Compare its description with one you wrote by hand in the Skill Design Study.  Which is the better trigger, and what specifically makes it better?
 > 3.  Your skill works because the model chooses to follow it.  Name one thing it enforces that a user could talk it out of, and what it would take to enforce that in code instead.
 
 ---
@@ -909,7 +911,7 @@ Each direction lives on its own page.  The table below summarizes what each one 
 | [Direction 2](LocalAgent/Direction2): Composing the Local Agent Stack | A five-tier local AI stack (inference, gateway, frontend, tool, and agent) wired with Docker Compose and a verified wiring matrix | Docker Desktop + roughly 6 GB of image pulls; no accounts or API costs | 4-6 |
 | [Direction 3](LocalAgent/Direction3): Containerizing an AI System Safely | A deliberately insecure agent container hardened step by step to least privilege, with a documented and tested threat model | Docker Desktop + roughly 6 GB of disk; an Anthropic API key (small usage cost); a test VM is strongly recommended | 5-7 |
 | [Direction 4](LocalAgent/Direction4): Build and Deploy an MCP Server with OAuth 2.0 | An MCP server exposing real tools, gated behind an OAuth 2.0 client-credentials flow and driven from an agent | Python packages + Docker for a local mock OAuth server; free; a local Ollama-based agent fallback is built in | 5-7 |
-| [Direction 5](LocalAgent/Direction5): Build and Test Your Own Agent Skills | A confirmation-guardrail skill, an Obsidian-vault memory skill, and a two-agent handoff skill with a claim protocol, each loaded by name and verified with a scripted test harness.  Builds on the two skills and the single-writer handoff you already wrote in OpenCode Studio | Free GitHub account; OpenCode and Obsidian (both free) with your local model; a second agent session for the handoff tests | 6-8 |
+| [Direction 5](LocalAgent/Direction5): Build and Test Your Own Agent Skills | A confirmation-guardrail skill, an Obsidian-vault memory skill, and a two-agent handoff skill with a claim protocol, each loaded by name and verified with a scripted test harness.  Builds on the single-writer handoff from OpenCode Studio and the two skills from the Skill Design Study | Free GitHub account; OpenCode and Obsidian (both free) with your local model; a second agent session for the handoff tests | 6-8 |
 | [Direction 6](LocalAgent/Direction6): Build Your Own AI Coach | A working web app whose core runs without AI, plus a language model layered on top through one provider-agnostic, defensively parsed API call | Nothing beyond the core lab on the keyless local-model path; a cloud key is optional | 5-8 |
 | [Direction 7](LocalAgent/Direction7): Coding Agent and Cowork Agent, Same Task | The same bounded task driven twice against local Ollama, once through opencode and once through a cowork-style agent in Open WebUI, with both traces compared on a fixed rubric and a paragraph on which kind of agent fits which kind of task | Nothing beyond the core lab setup plus the opencode install from Week 1 | 4-6 |
 
