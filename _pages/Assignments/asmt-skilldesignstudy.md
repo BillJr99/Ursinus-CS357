@@ -62,10 +62,6 @@ info:
       rlink: "../Tutorials/SamplingAndTemperature"
     - rtitle: "Tokens, Embeddings, and Attention Tutorial (optional)"
       rlink: "../Tutorials/TokensEmbeddingsAttention"
-    - rtitle: "AI by Hand Tutorial (optional; the softmax and cosine arithmetic lives here)"
-      rlink: "../Tutorials/AIByHand"
-    - rtitle: "AI by Hand, Tom Yeh"
-      rlink: "https://www.scribd.com/document/726922630/AI-by-Hand-Vol-1"
 
 tags:
   - skills
@@ -98,8 +94,6 @@ Pace yourself, because the work splits cleanly across the three parts.  Part 1 t
 Write the rubric before you run anything.  Part 2 asks for a five-item pass/fail rubric that has to exist before you have seen a single output, because a rubric written afterward is a description of what happened and cannot tell you whether the skill did anything.
 
 State the protocol first.  Before you run a single prompt, fill in the Experimental Protocol section below.  Everything in Parts 1 and 2 is a comparison, and a comparison with a drifting protocol measures nothing.
-
-If you want the arithmetic behind these patterns, the softmax-with-temperature and cosine-similarity calculations are worked step by step in the [AI by Hand tutorial]({{ site.baseurl }}/Tutorials/AIByHand).  It is optional reading here, and it is where the sampling behavior you are working around is explained.
 
 > **On the routes:** Part 1 has no code requirement.  Run each prompt with `opencode run "<your prompt>"`, or type it in an interactive session and paste the transcript.  The grade is in the comparison and the analysis.  Keep a run log, because "five runs per prompt" has to be verifiable.
 
@@ -552,9 +546,6 @@ A: No; report it honestly.  A circumvention that succeeds is more interesting th
 
 **Q: Which model should I use?**
 A: Whichever one your opencode is configured against.  Name it and its version in your protocol.  The rubric grades your analysis and methodology, not your choice of model.  Use the same model for every run in a comparison.
-
-**Q: Where did the math go?**
-A: The softmax-with-temperature and cosine-similarity problems live in the [AI by Hand tutorial]({{ site.baseurl }}/Tutorials/AIByHand), with worked examples and answers.  They are optional here.  Read them before Question 2 of the synthesis if you want to see what a temperature setting actually changes.
 
 ---
 
