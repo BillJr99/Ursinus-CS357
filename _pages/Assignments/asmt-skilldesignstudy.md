@@ -83,9 +83,9 @@ In this assignment you build a portfolio of four reusable prompt patterns, then 
 
 **This builds on** the *Prompt Engineering as Agent Design* session (Parts 1 and 3) and the *Skills: Design One, Then Measure It* session (Part 2).  Both are taught before this is due.
 
-**It also builds on the OpenCode Studio lab**, which is due before this assignment.  Part 2 works inside the project you configured there, and it packages two behaviors you obtained by hand in that lab: the kickoff interview you typed out every session, and the session wrap-up you asked for at the end of each one.  You can complete Part 2 in any repository that has an `AGENTS.md`, but using the lab's project is the shorter path, and it makes the comparison worth something.
+**It also builds on the OpenCode Studio lab**, which is due before this assignment.  Part 2 works inside the project you configured there, and what it does is package two behaviors you already produced by hand in that lab: the kickoff interview you typed out at the start of every session, and the wrap-up you asked for at the end of each one.  Any repository with an `AGENTS.md` will do for Part 2, but using that lab's project is both the shorter path and the one that makes the comparison mean anything.
 
-You need opencode, configured against your local model as in Week 1, Step 8.2.  Everything in this assignment runs through opencode.  You write no Python and you call no model API directly.  Confirm the tool is working before anything else:
+You need opencode, configured against your local model as in Week 1, Step 8.2.  Every prompt in this assignment reaches the model through opencode; you call no model API directly.  Python appears once, in Part 1's Pattern 3, and only to check output that opencode already produced.  Confirm the tool is working before anything else:
 
 ```bash
 opencode --version
@@ -93,9 +93,9 @@ opencode --version
 
 Then start `opencode`, type `/model`, and confirm your provider appears.
 
-Pace yourself.  The work splits cleanly across the three parts.  Part 1 takes the longest, because every pattern needs real runs behind it rather than one lucky output.  Part 2 is a fifteen-minute tutorial, two skills, and six short runs.  Part 3 is short if Part 1 went well.
+Pace yourself, because the work splits cleanly across the three parts.  Part 1 takes the longest, since every pattern needs real runs behind it rather than one lucky output.  Part 2 is a fifteen-minute tutorial, two skills, and six short runs.  Part 3 goes quickly if Part 1 went well.
 
-Write the rubric before you run.  Part 2 asks for a five-item pass/fail rubric, and it must exist before you see any output.  A rubric written after the runs describes what happened; it cannot tell you whether the skill worked.
+Write the rubric before you run anything.  Part 2 asks for a five-item pass/fail rubric that has to exist before you have seen a single output, because a rubric written afterward is a description of what happened and cannot tell you whether the skill did anything.
 
 State the protocol first.  Before you run a single prompt, fill in the Experimental Protocol section below.  Everything in Parts 1 and 2 is a comparison, and a comparison with a drifting protocol measures nothing.
 
@@ -125,7 +125,7 @@ Before presenting any pattern, state your protocol in one paragraph:
 - How many runs you did per prompt and per condition
 - How you kept both prompts, and both Part 2 conditions, identical in every other respect
 
-**What you cannot control here, and what to do about it.**  opencode exposes no seed setting, so you cannot pin the random draw the way a direct API call can.  Two runs of the same request will differ.  That is why every comparison in this assignment reports a **spread** alongside its means, and why an effect smaller than the spread is not an effect.  Report the spread honestly.  You get seed and temperature control back in the *Local Agent Lab*, where you call the model from code.
+**What you cannot control here, and what to do about it.**  opencode exposes no seed setting, so you cannot pin the random draw the way a direct API call lets you, which means two runs of the same request will differ and there is nothing you can do about it from inside this assignment.  That is exactly why every comparison here reports a **spread** alongside its means: an effect smaller than the spread it sits in is not an effect, however much you would like it to be.  You get seed and temperature control back in the *Local Agent Lab*, where you call the model from code.
 
 ---
 
@@ -167,7 +167,30 @@ Write 2-3 paragraphs in your analysis: (1) What specifically became consistent? 
 
 ### Pattern 3: Structured Output
 
-Demand a JSON schema from the model and show that a Python `json.loads()` call succeeds on the output across five runs.  Run the bare prompt five times and report the parse success rate.  Run the schema-constrained prompt five times and report the parse success rate.  Present this as a simple table:
+**What JSON is, and why this pattern exists.** JSON, or JavaScript Object Notation, is a plain-text format for structured data, built from objects written as `{"key": value}`, arrays written as `[1, 2, 3]`, and the handful of value types those can hold: strings in double quotes, numbers, `true`, `false`, and `null`. It is what most programs use when they need to hand data to another program.
+
+The reason it matters here is that a model gives you text, and a paragraph that reads well to a person is of no use whatever to the next stage of a pipeline. JSON is the shape that makes an answer machine-readable, and what this pattern measures is how reliably you can actually get it.
+
+```json
+{"title": "Attention Is All You Need", "year": 2017, "topics": ["transformers", "attention"]}
+```
+
+Three rules account for more broken student runs than anything else: JSON wants **double** quotes and never single ones, it allows **no trailing comma** after the last element, and a code fence is not part of the JSON at all but Markdown wrapped around it.
+
+**How to ask a model for JSON.** Naming the format does not get you very far, because "respond in JSON" still leaves the model free to invent its own keys, wrap the object in prose, or explain itself before it obliges. Give it the schema, then rule out everything else:
+
+```text
+Return only a JSON object with exactly these keys:
+  "title"   (string)
+  "year"    (integer)
+  "topics"  (array of strings, at most 3)
+
+Output the JSON object alone. No code fence, no explanation, no text before or after it.
+```
+
+That prompt is your schema-constrained condition, and your bare condition is the same request with the schema block and the closing line taken out, so that the pattern is the only thing differing between them.
+
+**Run both, five times each.** Use `opencode run "<your prompt>"`, and keep every reply verbatim, the failures very much included, since a failed parse is one of your five data points rather than a run to discard.
 
 | Run | Bare Prompt Parseable? | Schema Prompt Parseable? |
 |-----|------------------------|--------------------------|
@@ -178,7 +201,49 @@ Demand a JSON schema from the model and show that a Python `json.loads()` call s
 | 5 | | |
 | **Success rate** | **/5** | **/5** |
 
-Write 2-3 paragraphs in your analysis: (1) What was the success rate difference?  (2) Why does requesting JSON not guarantee valid JSON?  (3) What would you add to your prompt or your post-processing code to make the success rate reach 5/5 reliably?
+**Checking a reply, route 1: Python.** This is the check that settles the table, because a program either parses the text or it does not, and there is no arguing with it. Save one reply to a file and run this against it; it will tell you whether the text parses and, when it does, what fields came back:
+
+```python
+import json
+
+def inspect(path):
+    """Report whether one saved model reply is valid JSON, and what is in it."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            raw = f.read()
+    except Exception as e:
+        print(f"[inspect:read] {e}")
+        return
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError as e:
+        # This is a PASS/FAIL result for your table, not a crash.
+        print(f"FAIL: not valid JSON. {e.msg} at line {e.lineno}, column {e.colno}")
+        print(f"  the text around it: {raw[max(0, e.pos - 40):e.pos + 40]!r}")
+        return
+
+    print(f"PASS: parsed as {type(data).__name__}")
+    if isinstance(data, dict):
+        for key, value in data.items():
+            kind = type(value).__name__
+            if isinstance(value, list):
+                print(f"  {key} ({kind} of {len(value)}): {value}")
+            else:
+                print(f"  {key} ({kind}): {value!r}")
+    else:
+        print(f"  top level is not an object: {data!r}")
+
+inspect("run1.txt")
+```
+
+Run it on all ten replies. The `JSONDecodeError` branch is the interesting one, because it names the line and column where parsing gave up, and that position usually points straight at a smart quote, a trailing comma, or the opening backtick of a code fence.
+
+**Checking a reply, route 2: ask the model.** You can also hand the reply straight back to a model and have it pull the fields out for you. Paste the reply in and ask for each field by name, one per line, with the word `MISSING` wherever a field is absent.
+
+Try this route once, and be suspicious of it. Models tend to *repair* malformed JSON on their way to answering, cheerfully reporting fields out of text that `json.loads` rejects outright, which is a genuinely useful behavior in a production pipeline and a ruinous one in a measurement, since it conceals the very failures you are counting. Score your table with the Python route. Use the model route to find out what a forgiving reader would have salvaged, and tell me in your analysis whether the two ever disagreed, because a disagreement is the most interesting thing this pattern can turn up.
+
+**Write 2-3 paragraphs in your analysis.** (1) What was the success rate difference? (2) Why does requesting JSON not guarantee valid JSON? Answer in terms of what the model is doing when it generates the reply, rather than in terms of it not following directions. (3) What would you add to your prompt or your post-processing code to make the success rate reach 5 out of 5 reliably? If you tried the model route, add one sentence on where it and `json.loads` disagreed.
 
 ### Pattern 4: Guardrails
 
@@ -198,7 +263,7 @@ Everything here runs in opencode against the model you configured in Week 1. The
 
 ### What a skill is
 
-A skill is a directory containing a `SKILL.md` file. There is no registry and no install command. The tool walks the filesystem, finds the directory, reads the front matter, and offers the skill to the model. That is the whole mechanism, and it means you can read exactly what you installed before you run it.
+A skill is a directory containing a `SKILL.md` file, and that really is the whole mechanism: there is no registry and no install command, because the tool simply walks the filesystem, finds the directory, reads the front matter, and offers the skill to the model. One happy consequence is that you can read exactly what you installed before you ever run it, which is not true of most things you install.
 
 Both opencode and pi walk up from your working directory to the repository root, then fall back to your home directory:
 
@@ -209,12 +274,12 @@ Both opencode and pi walk up from your working directory to the repository root,
 
 Use `.agents/skills/`, which both read, so your skills are not welded to one tool.
 
-Two rules about the front matter cause almost every failure.
+Two rules about the front matter account for almost every failure you are likely to hit.
 
-1. **The directory name must match the `name:` field.** `.agents/skills/commit-tidy/SKILL.md` with `name: commit-tidy`. A mismatch means the skill silently never loads.
-2. **The `description` is the matching surface, not documentation.** The model reads it to decide *when* to invoke the skill, so it must state a trigger in the words a user would actually type, rather than a topic.
+1. **The directory name must match the `name:` field**, so `.agents/skills/commit-tidy/SKILL.md` goes with `name: commit-tidy`. When they disagree the skill never loads, and nothing tells you so.
+2. **The `description` is the matching surface rather than documentation.** The model reads it to decide *when* to invoke the skill, which means it has to state a trigger in the words a user would actually type instead of naming a topic.
 
-The second rule is the one that decides whether a skill ever runs. Compare:
+That second rule decides whether a skill ever runs at all, and it is worth seeing the difference side by side:
 
 ```text
 Topic   (never fires):  "Session setup helper."
@@ -226,7 +291,7 @@ Trigger (fires):        "Use at the start of any session, or whenever the user a
 
 ### Stage 1: Install and invoke a skill I wrote (tutorial, ungraded)
 
-Run this once, end to end, before writing anything of your own. It takes fifteen minutes, and you submit none of it.
+Run this once, end to end, before you write anything of your own. It takes about fifteen minutes, none of it is submitted, and it exists so that the mechanics are behind you before any of your work is being graded on them.
 
 **Step 1.** Work in the `opencode-studio` project from the OpenCode Studio lab, or any repository with an `AGENTS.md`. Create the directory and the file:
 
@@ -253,15 +318,15 @@ EOF
 
 **Step 3: make it fire.** Type a request that matches the description, such as: `Write a commit message for a change that adds retry logic to the search client.` Watch the skill load, and check the reply against the five rules.
 
-**Step 4: make it stay quiet.** Type something out of scope, such as: `What does git rebase do?` The skill must not fire. A skill that triggers on everything trains you to ignore it, which is worse than having no skill at all. You must test the negative case.
+**Step 4: make it stay quiet.** Type something out of scope, such as `What does git rebase do?`, and confirm the skill does not fire. Testing the negative case matters as much as testing the positive one, because a skill that triggers on everything trains you to ignore it, and an ignored skill is worse than no skill at all.
 
-**Step 5: break it on purpose.** Change the `description` to the single word `Commits.` Restart opencode and repeat Step 3. It will not fire. Change it back. You have now seen both failure modes you will spend Stage 2 avoiding.
+**Step 5: break it on purpose.** Change the `description` to the single word `Commits.`, restart opencode, and repeat Step 3; it will not fire. Change it back when you have seen that, at which point you have met both of the failure modes that Stage 2 asks you to avoid.
 
 ### Stage 2: Write two skills of your own
 
 Write both. They are the two ends of a working session, and together they turn a handoff from something you remember to do into something the tool does.
 
-**Skill 1: `kickoff-interview`.** The grill-me pattern, packaged. The agent interviews you with numbered multiple-choice questions before it builds anything, and your answers become part of the spec rather than assumptions buried in the code. In the OpenCode Studio lab you asked for this behavior by typing the request every session. Now you stop retyping it.
+**Skill 1: `kickoff-interview`.** This is the grill-me pattern, packaged. The agent interviews you with numbered multiple-choice questions before it builds anything, so that your answers end up in the spec instead of as assumptions buried in the code. You already produced this behavior in the OpenCode Studio lab by typing the request out at the start of every session; the point of packaging it is that you stop retyping it.
 
 Its instructions must state these as testable conditions:
 
@@ -293,7 +358,7 @@ Reply with three letters, for example "a b a".  I will write your answers into
 
 **Step 2: test both triggers.** Start opencode, type the request that should fire each skill, and watch it load. Then type the request that should not, and confirm it stays quiet. Record all four outcomes and quote both `description` fields verbatim in your writeup.
 
-**Step 3: wire them into `AGENTS.md`.** A skill the agent never thinks to invoke is a skill you will invoke by hand forever. Add a section to the `AGENTS.md` of the project you are working in:
+**Step 3: wire them into `AGENTS.md`.** A skill the agent never thinks to invoke is one you will go on invoking by hand forever, so tell the contract about both of them. Add a section to the `AGENTS.md` of the project you are working in:
 
 ```markdown
 ## Session protocol
@@ -302,7 +367,7 @@ At the end of a session, invoke the `session-wrapup` skill before you stop.
 Do not summarize a session in chat in place of writing the entry.
 ```
 
-Then start a fresh session, say only `let's get started`, and record what happens. Note carefully whether the agent invoked the skill because your `description` matched, because `AGENTS.md` told it to, or not at all. You cannot always tell these apart from the transcript, and saying so honestly is worth more than a confident guess.
+Then start a fresh session, say only `let's get started`, and record what happens. Try to work out whether the agent invoked the skill because your `description` matched, because `AGENTS.md` told it to, or whether it did not invoke it at all. You often cannot tell the first two apart from the transcript alone, and saying so honestly is worth more to me than a confident guess.
 
 **Step 4: package one and share it.**
 
@@ -317,9 +382,9 @@ Post the archive to the course discussion so the section can install each other'
 
 ### Stage 3: Measure one of them
 
-Pick **one** of your two skills and find out whether it changed anything.
+Pick one of your two skills and find out whether it actually changed anything, which is a harder question than it sounds and the reason this stage has a protocol at all.
 
-**Step 1: write the five-item rubric, before you run.** Five pass/fail checks on the output, each mapping to one rule in the skill body. Each check must be decidable by reading the output against a stated condition, with no judgment call left over.
+**Step 1: write the five-item rubric, before you run.** You need five pass/fail checks on the output, each one mapping to a rule in the skill body, and each one decidable by reading the output against a condition you stated in advance rather than by forming an impression afterward.
 
 | # | Rubric item | Checks which rule | How you decide it |
 |---|---|---|---|
@@ -329,11 +394,11 @@ Pick **one** of your two skills and find out whether it changed anything.
 | 4 | | | |
 | 5 | | | |
 
-"The reply asks five or fewer numbered questions" is a rubric item, because counting decides it. "The questions are good" is not, because nothing decides it. If you cannot state how you decide, rewrite the rule until you can. Date the rubric in your writeup. I take you at your word that it came first, and a rubric that happens to match the output exactly tends to give itself away.
+"The reply asks five or fewer numbered questions" works as a rubric item because counting settles it, while "the questions are good" does not, because nothing settles it and you will end up scoring your own mood. When you cannot say how you would decide an item, rewrite the underlying rule until you can, since a rule you cannot check is a rule the skill cannot be credited with following. Date the rubric in your writeup; I take you at your word that it came first, though I will say that a rubric matching its outputs a little too exactly tends to announce itself.
 
-**Step 2: fix the request.** Write one request you will type identically in every run. For `kickoff-interview`, something like `Let's start work on the search feature.` For `session-wrapup`, something like `Wrap up.` It does not change between runs or between conditions.
+**Step 2: fix the request.** Write one request that you will type identically in every run, such as `Let's start work on the search feature.` for `kickoff-interview` or `Wrap up.` for `session-wrapup`. Whatever you choose, it stays fixed across all six runs and across both conditions.
 
-**Step 3: run the grid.** Three runs with the skill installed, three with it removed. Six runs in total. Remove a skill by renaming its directory, which breaks the name match so the tool no longer loads it:
+**Step 3: run the grid.** You need three runs with the skill installed and three with it removed, six in all. To remove one, rename its directory so the name no longer matches the `name:` field, which is enough to stop the tool loading it:
 
 ```bash
 mv .agents/skills/kickoff-interview .agents/skills/kickoff-interview.off
@@ -341,7 +406,7 @@ mv .agents/skills/kickoff-interview .agents/skills/kickoff-interview.off
 mv .agents/skills/kickoff-interview.off .agents/skills/kickoff-interview
 ```
 
-Nothing else changes between the two conditions. Same request, same model, same project, same you.
+Beyond the presence of the skill, nothing else changes between the two conditions: the request, the model, the project, and the person typing all stay put.
 
 **Step 4: fill the table.**
 
@@ -350,13 +415,13 @@ Nothing else changes between the two conditions. Same request, same model, same 
 | without | | | | | | |
 | with | | | | | | |
 
-Report two derived numbers under it. The **skill effect** is the "with" mean minus the "without" mean. The **spread** within a condition is the largest run score minus the smallest.
+Two derived numbers go underneath the table. The **skill effect** is the "with" mean minus the "without" mean, and the **spread** within a condition is that condition's largest run score minus its smallest.
 
-**Step 5: read the table.** Write one paragraph. Say which rubric items moved. Then compare the skill effect against the spread, because a one-item gap between conditions means little when one condition's own three runs already differ by one. Look at the first reply you kept from the "with" condition and say whether anything scored 5 out of 5 that you would still send back. That gap between a rubric and its intent is what the *Critique, Consensus, and the LLM Judge* session calls reward hacking.
+**Step 5: read the table.** In one paragraph, name which rubric items moved between conditions, then set the skill effect against the spread, because a one-item gap between conditions does not mean much when one condition's own three runs already differ by one. Pull up the first reply you kept from the "with" condition and ask whether anything there scored a clean 5 out of 5 that you would nonetheless have sent back, since that gap between what a rubric checks and what you actually wanted is what the *Critique, Consensus, and the LLM Judge* session calls reward hacking.
 
-Then write one more sentence, set apart, stating what would make the difference disappear. Name one concrete change to the request, the rubric, or the skill body, and say why it would erase the effect you measured. A held-out request the skill was never tuned on, a rubric item that checks the letter of a rule the model follows anyway: either is a fair answer when you explain the mechanism.
+Then add one more sentence, set apart from the paragraph, stating what would make your measured difference disappear. Name a concrete change to the request, the rubric, or the skill body and explain the mechanism: a held-out request the skill was never tuned against, or a rubric item that happens to check the letter of a rule this model would follow anyway, are both fair answers if you say why they would erase the effect.
 
-**A note on what you are not controlling.** As the Experimental Protocol section said, no seed is pinned here. That is what the spread column measures. When your skill effect is smaller than your spread, you have not measured a skill; you have measured noise. Say so when it happens, because an honest null result earns full credit.
+**A note on what you are not controlling.** The Experimental Protocol section already warned that no seed is pinned here, and the spread column is where that comes home to roost. If your skill effect turns out smaller than your spread, then what you have measured is noise rather than a skill, and you should say so plainly; I would far rather read an honest null result than a confident one, and it earns full credit either way.
 
 ### Troubleshooting: the skill never fires
 

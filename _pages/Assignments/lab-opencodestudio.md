@@ -108,7 +108,7 @@ This lab adds no installations.  Everything it needs, you built in *Your AI Work
 **What this lab assumes:**
 
 - Ollama running on your host with at least one small model pulled
-- opencode installed and pointed at that model, from Step 8 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md)
+- opencode installed and pointed at that model, from Step 8 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md).  Either face of the tool works here, the desktop application or the command line, and the health check below sets up both
 - Your `cs357-work` repository, cloned and pushing successfully
 - The *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff* session.  Its Section 2c (plan mode) and Part IIb (hooks and gates) are the classroom versions of Part 4 and Part 3
 
@@ -124,7 +124,11 @@ curl http://localhost:11434/api/tags
 opencode --version
 ```
 
-Then start `opencode`, type `/model`, and confirm your Ollama provider appears in the list.  If it does not, check the configuration **file name** first: it is `opencode.json`, never `config.json`, and opencode silently ignores a file with the wrong name.  Step 8.2 of the Workbench activity has the full provider block.
+**Choose your model in the desktop application.**  opencode ships a desktop application for macOS, Windows, and Linux alongside the command-line version, and it is the easier face to start this lab in.  The download is on [opencode.ai](https://opencode.ai/).  Open it on your project folder, then pick your Ollama entry from the **model dropdown in the message bar**.  While you are there, open **File -> Settings** and turn on **Show Agent**, which puts the agent selector beside that dropdown.  Part 4 needs that selector, and it is off on a fresh install, which is the usual reason a student concludes wrongly that the desktop app has no plan mode.  Step 8.2b of the Workbench activity covers this in full.
+
+**The command line does the same job, and this lab still needs it.**  Start `opencode`, type `/model`, and confirm your Ollama provider appears in the list.  Keep both faces available rather than picking one: Parts 2, 3, and 5 pipe a session into a file with `tee` to produce a required transcript, and only the command-line version does that.  Read those `opencode run` commands as the command-line form of work you may do in either face.
+
+If your provider does not appear in either one, check the configuration **file name** first: it is `opencode.json`, never `config.json`, and opencode silently ignores a file with the wrong name.  Step 8.2 of the Workbench activity has the full provider block.
 
 > **A candid word about the model.**  A 3B model will sometimes ignore your instructions.  That is not a defect in your writing, and it is not a reason to give up on the local route.  Part of this lab is learning *which* instructions a small model drops first, because that tells you which rules need something other than a model to enforce them.  When the model ignores a rule, write the rule down as ignored.  That is data, and Part 3 is where you act on it.
 
@@ -380,13 +384,15 @@ An honest caution: **opencode has no built-in memory.** Nothing in the tool stor
 
 ### Step 6: Confirm the wiring
 
-Start opencode in `opencode-studio/` and type:
+Open the project and ask it one question.  In the desktop application, open the `opencode-studio` folder itself rather than its parent, because opencode reads `AGENTS.md` and `opencode.json` from the folder it is working in.  On the command line, `cd` into that directory and start `opencode` there.  Then type:
 
 ```text
 What is this project for, and what are you allowed to edit?
 ```
 
 Three things must be true in the answer. It names the charter, even a placeholder one, which proves `instructions` loaded. It names `artifact/` as the workspace, which proves it read `AGENTS.md`. And when you then ask it to create a scratch file, the tool stops and asks your permission, which proves the `permission` block took effect. Ask it to run `git status` and confirm that one does **not** stop to ask.
+
+This step is worth doing in whichever face you plan to work in, because it is what tells you the configuration reached that face. A desktop session opened on the wrong folder reads no `AGENTS.md` at all and will answer the question above from nothing.
 
 Save that exchange as `transcripts/00-wiring-confirmed.md`. If any of the three fails, work the troubleshooting table below before starting Part 1.
 
@@ -820,7 +826,7 @@ Save the exchange as `transcripts/01-interview.md`. Then record two things in yo
 
 Notice the cost. You typed that request, and you will type it again next session, and the session after that. Hold that thought; the *Skill Design Study* is where you package it so you stop retyping it, and where you measure whether packaging it changed anything.
 
-**Step 3: Start in plan mode.**  Switch to the opencode `plan` agent.  It may read the repository and propose steps, but the tool refuses edits until you approve them.  The last line of your system prompt asks the model for the same stop.  The mode makes the stop something the tool enforces, so you have both.  Run your builder agent from Part 2 and record the trace:
+**Step 3: Start in plan mode.**  Switch to the opencode `plan` agent.  In the desktop application that is the agent selector in the message bar, the one Step 8.2b of the Workbench activity had you turn on under **File -> Settings -> Show Agent**.  On the command line, **Tab** cycles the primary agents and the current one is shown on the input line.  Either way, `plan` may read the repository and propose steps, but the tool refuses edits until you approve them.  The last line of your system prompt asks the model for the same stop.  The mode makes the stop something the tool enforces, so you have both.  Run your builder agent from Part 2 and record the trace:
 
 ```bash
 opencode run --agent builder \
