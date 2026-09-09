@@ -91,6 +91,11 @@ info:
       rlink: "../Tutorials/AgentDebugging"
     - rtitle: "Agent Observability"
       rlink: "../Tutorials/Observability"
+    - rtitle: "Agentic CLI Tools: opencode, pi, and the others, and how each is configured"
+      rlink: "../Tutorials/AgentCLIs"
+    - rtitle: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox, which takes the charter and handoff vocabulary into your notes and into projects running several agents at once"
+      rlink: "Activities/liascript-howiai.md"
+      liapage: true
     - rtitle: "Advanced Agent Loops Activity"
       rlink: "Activities/liascript-orchestration.md"
       liapage: true

@@ -41,25 +41,25 @@ info:
       description: "The Artifact, the Diff, and the Refine Turn"
       preemerging: No artifact is submitted, or the artifact has no relationship to the charter's mission
       beginning: An artifact exists, but the agent's output was accepted without review and the repository history is one commit
-      progressing: The artifact meets the charter's definition of success and the diff was reviewed, but the critique is a paragraph rather than a categorized document, or only one agent iteration was run
-      proficient: "The artifact satisfies the charter's own definition of success, demonstrated by running it, rendering it, or executing the documented check, with the output included; the first diff was saved before it was accepted; critique.md sorts every finding into correct, incorrect or broken, missing, and security risk, and carries a system-prompt compliance row for each prohibition with the diff line or 'not present in diff' as evidence; a follow-up prompt addresses every finding in the last three categories by name; and the second diff is compared against the critique finding by finding, with anything unresolved explained in one sentence"
+      progressing: The artifact meets the charter's definition of success and the diff was reviewed, but the critique is a paragraph rather than a categorized table, or no acceptance line and blocking finding are stated, or the refine turn was never run
+      proficient: "The artifact satisfies the charter's own definition of success, demonstrated by running it, rendering it, or executing the documented check, with the output included; the first diff was saved before it was accepted; critique.md states an acceptance line and names exactly one blocking finding, carries a row per finding categorized as correct, incorrect, missing, or risk, and carries a compliance row for each system-prompt prohibition with the diff line or 'not present in diff' as evidence; a follow-up prompt addresses every incorrect, missing, and risk finding by name; and anything the refine turn left unresolved is named with one sentence on why it was accepted or what comes next"
     - weight: 20
       description: "Observability, Traceability, and the Cold Handoff"
       preemerging: No session log and no transcripts are submitted
       beginning: A session log exists but was written once at the end, or the handoff was described rather than run
       progressing: Dated session entries exist and end with a next safe action, and a fresh session was started, but that session was given context beyond the repository, or the questions it had to ask were not recorded
-      proficient: ".ai/SESSION.md carries at least three dated, append-only entries, each naming what was done, what was deliberately not done, and one Next Safe Action, with nothing overwriting an earlier entry; the agent wrote at least one of them in response to the AGENTS.md rule, and the writeup shows what had to be corrected in it; docs/DECISION_LOG.md holds at least two entries that each record the alternative rejected and why; one line, paragraph, or step of the artifact is traced upward through four quoted links (the commit, the session entry, the task, and the charter goal), or the broken link is named precisely along with the document that would have kept it; a cold session, started with only the filled kickoff prompt and the repository, restates the mission, the active task, and the next safe action before acting, with every question it had to ask listed alongside the document revision that now answers it; and two gate transcripts show the same guarded operation attempted against the AGENTS.md rule alone and then against a real gate (an opencode permission block or an opencode plugin), with the tool and not the model refusing in the second, and the writeup says in one paragraph why the gate held when the rule did not"
+      proficient: ".ai/SESSION.md carries at least two dated, append-only entries, each naming what was done, what was deliberately not done, and one Next Safe Action, with nothing overwriting an earlier entry; the agent wrote at least one of them in response to the AGENTS.md rule, and the writeup shows what had to be corrected in it; docs/DECISION_LOG.md holds an entry recording the alternative rejected and why; one line, paragraph, or step of the artifact is traced upward through four quoted links (the commit, the session entry, the task, and the charter goal), or the broken link is named precisely along with the document that would have kept it; a cold session, started with only the filled kickoff prompt and the repository, restates the mission, the active task, and the next safe action before acting, with every question it had to ask listed alongside the document revision that now answers it; and two gate transcripts show the same guarded operation attempted against the AGENTS.md rule alone and then against a real gate (an opencode permission block or an opencode plugin), with the tool and not the model refusing in the second, and the writeup says in one paragraph why the gate held when the rule did not"
     - weight: 15
       description: Writeup, Reflection, and Submission
       preemerging: An incomplete submission is provided
       beginning: The artifact and files are submitted, but not according to the directions in one or more ways
       progressing: The submission follows the directions with a minor omission, with at least superficial responses to the reflection prompts
-      proficient: "The submission contains every deliverable in the stated layout; the readme names the artifact route taken and the direction chosen, if any, and lists every template section deleted with its reason; the model name and the opencode version are recorded; and every reflection answer cites a specific line from your own transcript, session log, or diff rather than restating the prompt"
+      proficient: "The submission contains every deliverable in the stated layout; the readme names the artifact route taken and lists every template section deleted with its reason; the model name and the opencode version are recorded; and every reflection answer cites a specific line from your own transcript, session log, or diff rather than restating the prompt"
   readings:
     - rtitle: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff; Section 2c is the plan mode Part 4 starts in, and Part IIb is the gate Part 3 builds"
       rlink: "Activities/liascript-codingagents.md"
       liapage: true
-    - rtitle: "Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models, this lab's mid-flight checkpoint, and the five-element system prompt that Part 2 waits for and grows"
+    - rtitle: "Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models, where the five-element system prompt Part 2 builds on comes from"
       rlink: "Activities/liascript-promptengineering.md"
       liapage: true
     - rtitle: "Your AI Workbench: Step 8 is this lab's setup, and Step 8.5 names observability, isolation, and reversibility"
@@ -68,21 +68,10 @@ info:
     - rtitle: "The Agent Loop: Perceive, Plan, Act, the loop opencode is running on your behalf"
       rlink: "Activities/liascript-agentloop.md"
       liapage: true
-    - rtitle: "Agent Operating System Templates: the charter, contract, kickoff prompt, decision log, and .ai/ handoff files you copy and fill in this lab"
-      rlink: "https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md"
     - rtitle: "Governing Coding Agents: charters, handoffs, and durable memory on a real multi-month run"
       rlink: "../Tutorials/AgentGovernance"
-    - rtitle: "Agentic CLI Tools: opencode, pi, and the others, and how each is configured"
-      rlink: "../Tutorials/AgentCLIs"
-    - rtitle: "Agent Observability and Tracing, for when the agent's summary and the record disagree"
-      rlink: "../Tutorials/Observability"
-    - rtitle: "AI Coding Agent Security: poisoned repositories and the software supply chain"
-      rlink: "../Tutorials/CodingAgentSecurity"
     - rtitle: "OpenCode documentation"
       rlink: "https://opencode.ai/docs/"
-    - rtitle: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox.  This is the Week 7 session that deepens everything in this lab; nothing here assumes you have had it yet"
-      rlink: "Activities/liascript-howiai.md"
-      liapage: true
 
 tags:
   - agents
@@ -97,75 +86,58 @@ In every agent system you build this semester, the expensive and durable part is
 
 So this lab inverts the usual order.  You write the instruction layer first, and only then do you let an agent build anything.  By the end you will have seven things: a configured opencode project, a charter with ranked values, an agent contract with real confirmation gates, a project memory the agent writes to, one gate the harness enforces, one artifact of your own choosing, and proof that a fresh session can pick the work up from the repository alone.  The artifact can be software, a document, or an automation.  All three routes are graded identically, and Part 1 helps you choose.
 
-**Work on this one individually.**  The Local Agent Lab that follows owns the pair programming requirement and its swap log.  Here, the cold handoff in Part 7 is only meaningful if nobody in the room is carrying the context in their head, and a partner quietly defeats it.  If you want the collaborative version, Extension Challenge 3 and Direction 3 both trade repositories with a classmate on purpose.
+**Work on this one individually.**  The Local Agent Lab that follows owns the pair programming requirement and its swap log.  Here, the cold handoff in Part 6 only means something if nobody in the room is carrying the context in their head, and a partner quietly defeats that.
 
 ---
 
 ## Before You Start
 
-This lab adds no installations.  Everything it needs, you built in *Your AI Workbench* during Week 1, which is why it can run this early in the term.
+Nothing here needs installing. You built all of it in *Your AI Workbench*, and this lab only asks you to point it at a project of your own.
 
 **What this lab assumes:**
 
-- Ollama running on your host with at least one small model pulled
-- opencode installed and pointed at that model, from Step 8 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md).  Either face of the tool works here, the desktop application or the command line, and the health check below sets up both
+- opencode, working against whichever model you configured in the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md)
 - Your `cs357-work` repository, cloned and pushing successfully
-- The *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff* session.  Its Section 2c (plan mode) and Part IIb (hooks and gates) are the classroom versions of Part 4 and Part 3
+- The *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff* session, whose Section 2c is the plan mode Part 4 uses and whose Part IIb is the gate Part 3 builds
 
-**What this lab does not assume yet.**  Part 2 builds its contract and system prompt on the role, goal, tools, format, and guardrails frame.  That frame arrives in *Prompt Engineering as Agent Design*, which is this lab's mid-flight checkpoint.  So work the parts in this order: Part 0, then Part 1, then Part 3, then Part 2 after that session, then Parts 4 through 7.  The parts keep their numbers because later parts refer to them by number; the order you do them in is the one in this paragraph.
+### Desktop or terminal, your choice
 
-### Health check
+opencode has two faces, and this lab works entirely in either one. The **desktop application** runs on macOS, Windows, and Linux, and you can download it from [opencode.ai](https://opencode.ai/). The **terminal interface**, the TUI, is the same agent in a terminal window. Pick whichever you prefer and stay there; nothing in this lab requires you to switch.
 
-Run these before you start Part 0.  The last check is the one people skip and then lose an evening to.
+If you take the desktop route, do two things before Part 0. Pick your model from the dropdown in the message bar, and then open **File -> Settings** and turn on **Show Agent**, which puts the agent selector next to that dropdown. Part 4 needs that selector, and it is off on a fresh install, which is why students sometimes conclude that the desktop app has no plan mode when in fact it was there the whole time. If you take the terminal route, start `opencode` and type `/model` to do the same job.
 
-```bash
-ollama list
-curl http://localhost:11434/api/tags
-opencode --version
-```
-
-**Choose your model in the desktop application.**  opencode ships a desktop application for macOS, Windows, and Linux alongside the command-line version, and it is the easier face to start this lab in.  The download is on [opencode.ai](https://opencode.ai/).  Open it on your project folder, then pick your Ollama entry from the **model dropdown in the message bar**.  While you are there, open **File -> Settings** and turn on **Show Agent**, which puts the agent selector beside that dropdown.  Part 4 needs that selector, and it is off on a fresh install, which is the usual reason a student concludes wrongly that the desktop app has no plan mode.  Step 8.2b of the Workbench activity covers this in full.
-
-**The command line does the same job, and this lab still needs it.**  Start `opencode`, type `/model`, and confirm your Ollama provider appears in the list.  Keep both faces available rather than picking one: Parts 2, 3, and 5 pipe a session into a file with `tee` to produce a required transcript, and only the command-line version does that.  Read those `opencode run` commands as the command-line form of work you may do in either face.
-
-If your provider does not appear in either one, check the configuration **file name** first: it is `opencode.json`, never `config.json`, and opencode silently ignores a file with the wrong name.  Step 8.2 of the Workbench activity has the full provider block.
-
-> **A candid word about the model.**  A 3B model will sometimes ignore your instructions.  That is not a defect in your writing, and it is not a reason to give up on the local route.  Part of this lab is learning *which* instructions a small model drops first, because that tells you which rules need something other than a model to enforce them.  When the model ignores a rule, write the rule down as ignored.  That is data, and Part 3 is where you act on it.
+Every shell command in this lab comes with a prompt beside it that asks opencode to do the same thing. Use whichever you like, including mixing them, and where a step wants a saved transcript it says so and tells you how to get one from either face.
 
 ### Estimated time
 
-These are totals, not increments.  Parts 0, 1, and 3 fill the first week.  Part 2 waits for the *Prompt Engineering as Agent Design* session, and Parts 4 through 7 fill the second week.  The rows are in the order you do them.
+These are totals rather than increments, and the rows are in the order you work them.
 
 | Component | Estimated total time |
 |---|---|
-| Health check and the Background section | 0.5 hours |
+| The Background section | 0.5 hours |
 | Part 0: project wiring, permissions, contract, and memory | 1 hour |
-| Part 1: artifact route, charter, and the first commit | 1.5 hours |
+| Part 1: artifact route, charter, and the first commit | 1.25 hours |
+| Part 2: the specification, the contract, and the system prompt | 1 hour |
 | Part 3: one gate, and the rule it replaces | 1 hour |
-| Part 2, after *Prompt Engineering as Agent Design*: the specification, the contract, and the system prompt | 1.5 hours |
-| Part 4: the first agent run, from plan mode, plus the interview and the memory write | 2.5 hours |
-| Part 5: diff review, critique, and one refine turn | 2 hours |
-| Part 6: traceability and the decision log | 1 hour |
-| Part 7: the cold handoff, and the repairs it forces | 1 hour |
-| Writeup, learning log, and packaging | 1 hour |
-| **Core total** | **≈ 13 hours over two weeks** |
-| Optional direction, on top of the core | +2 to 4 hours |
+| Part 4: the first agent run, from plan mode, plus the interview | 1.75 hours |
+| Part 5: diff review, critique, and one refine turn | 1 hour |
+| Part 6: traceability and the cold handoff | 1 hour |
+| Writeup, learning log, and packaging | 0.5 hours |
+| **Core total** | **≈ 9 hours** |
 
-**Pace yourself.**  The cold handoff in Part 7 will send you back to edit documents you wrote in Parts 0 and 1.  That is the design and not an accident, so leave yourself an evening for it rather than discovering it an hour before the deadline.
+**Pace yourself.** The cold handoff in Part 6 will send you back to edit documents you wrote in Parts 0 and 1, which is the design rather than an accident, so leave yourself an evening for it instead of discovering it an hour before the deadline.
 
-> **You've succeeded when** a session of opencode that has never seen your project can read your repository, tell you what the project is for and what to do next, and do it, without you saying a word beyond the kickoff prompt.
+> **You've succeeded when** a session of opencode that has never seen your project can read your repository, tell you what the project is for and what to do next, and then do it, without you saying a word beyond the kickoff prompt.
 
 ---
 
 ## Background: Four Properties, and Where Each One Lives
 
-This section is the lab's teaching material, and it is self-contained on purpose.  The Week 7 session, *How I AI*, takes this same vocabulary much further, into your notes and into projects with several agents in them.  Nothing here assumes you have had that session yet.  The vocabulary is deliberately identical so that Week 7 deepens what you already have rather than renaming it.
+The key idea behind agent coherence and traceability is a single sentence, and everything in this section follows from it:
 
-Everything in this section rests on one sentence:
+> The repository is the durable memory for the project.
 
-> The repository is the durable memory for the project.  Conversation history is not durable project state.
-
-Your chat window knows this conversation and forgets it tomorrow.  Your agent knows the files it opened this morning.  Neither survives a closed tab, which is why you re-explain yourself constantly to tools that could in principle already know.  The fix is not a better tool.  It is a **place**: plain files, in version control, that any agent can read and that agents write back into under rules you wrote down.
+Conversation history only ever goes into the context window, and context does not survive from one session to the next. Your chat window knows this conversation and will have forgotten it tomorrow, your agent knows the files it opened this morning, and neither one outlives a closed tab, which is why you find yourself re-explaining a project to tools that could in principle already know it. What fixes that is not a better tool but a **place**: plain files, kept in version control, that any agent can read at the start of a session and write back into under rules you wrote down.
 
 ### Key Concepts
 
@@ -175,7 +147,7 @@ Your chat window knows this conversation and forgets it tomorrow.  Your agent kn
 | **Agent contract** | A file at the root of a repository stating the rules any agent must follow inside it | `AGENTS.md`, Parts 0 and 2 |
 | **Observability** | Can I see what it did?  Bought by writing things down in files: a plan, a diff, and a session entry as three separate records | `.ai/SESSION.md` and the diff, Parts 4 and 5 |
 | **Traceability** | Being able to answer, weeks later, *why* something is the way it is: which goal it served, what was decided, and what was rejected | The four-link chain, Part 6 |
-| **Handoff** | A deliberate stop in which an agent writes down enough state that a *different* agent can continue safely | `KICKOFF_PROMPT.txt` and the cold session, Part 7 |
+| **Handoff** | A deliberate stop in which an agent writes down enough state that a *different* agent can continue safely | `KICKOFF_PROMPT.txt` and the cold session, Part 6 |
 | **Durable memory** | A file the agent appends what it learned to, loaded into every session by the tool, so knowledge outlives the conversation that produced it | `.ai/MEMORY.md`, Parts 0 and 4 |
 | **Menu-driven questions** | The grill-me or interview-me pattern: a bounded set of numbered multiple-choice questions, each with a recommended default, asked before any file is touched, whose answers become part of the spec | Asked of the agent directly, Part 4 |
 | **Gate** | A check the harness runs on the real arguments of a tool call, before the tool executes.  A rule lives in the prompt and the model may drop it; a gate lives in the tool path and the model cannot skip it | `opencode.json`, Part 3 |
@@ -208,7 +180,7 @@ Step 8.5 of *Your AI Workbench* named the three properties that make delegating 
 | Property | The question it answers | How you buy it |
 |---|---|---|
 | **Observability** | Can I see what it did? | By writing things down in files: the plan, the diff, and the session log, kept separate |
-| **Isolation** | Can I bound what it reaches? | By boundaries the system enforces, not boundaries you ask for.  You largely inherited this from the container you built in Week 1, and Part 3 adds one boundary of your own |
+| **Isolation** | Can I bound what it reaches? | By boundaries the system enforces rather than boundaries you ask for.  You inherited most of this from the container your workbench runs in, and Part 3 adds one boundary of your own |
 | **Reversibility** | Can I undo it? | By never having exactly one copy of anything that matters.  In this lab that means committing *before* the agent runs |
 
 > **Common Misconception:** "Reversibility means I can undo anything, so I can be less careful about the other two."  Reversibility is bounded by observability.  You can only revert a change you *noticed*, and the dangerous agent failure is not the dramatic one.  It is the small wrong edit that lands in a file you do not reread for a month, by which time you have written three things on top of it.  Git will happily let you undo it; nothing will tell you that you should.
@@ -226,17 +198,17 @@ the diff              what actually changed                           (per chang
 docs/DECISION_LOG.md  what was chosen, and what was rejected, and why (per decision)
 ```
 
-Read that column from bottom to top and you have **traceability**: six weeks from now, a line of your artifact traces back to a diff, which traces to a session entry, which traces to a task, which traces to a charter goal.  Nobody has to remember anything, and "why is it like this?" has a written answer instead of an argument.  Part 6 makes you walk that chain for real, and it is entirely normal for the chain to break the first time.  Naming the broken link precisely is worth as much as an unbroken chain.
+Read that column from bottom to top and you have **traceability**: long after you have forgotten the details, a line of your artifact still traces back to a diff, which traces to a session entry, which traces to a task, which traces to a charter goal.  Nobody has to remember anything, and "why is it like this?" gets a written answer instead of an argument.  Part 6 walks that chain for real, and it is entirely normal for it to break the first time, since naming the broken link precisely is worth as much to me as an unbroken chain.
 
 ### Handoffs: stopping so that someone else can start
 
 A handoff is a deliberate stop in which enough state is written down that a *different* agent, with none of your context, can continue safely.  Every session entry in this lab ends with a **Next Safe Action**.  Not "next steps", which is a wish list.  One concrete action that is safe to take with no further context.  It is the handoff, written before it is needed.
 
-The test in Part 7 is blunt: close everything, start a session that has never seen the project, hand it only the kickoff prompt and the repository, and require it to restate the mission, the active task, and the next safe action **before** it acts.  Every question it has to ask you out loud is a missing section in a document.
+The test in Part 6 is blunt: close everything, start a session that has never seen the project, hand it only the kickoff prompt and the repository, and require it to restate the mission, the active task, and the next safe action **before** it acts.  Every question it has to ask you out loud is a missing section in a document.
 
 ### Menu-driven questions: the grill-me pattern
 
-This is the one idea in this lab that the Week 7 session does not cover, and it is the one that makes everything above legible.
+This is the idea that makes everything above legible, and it is the one students tell me they carry furthest past this course.
 
 An agent handed an underspecified request has two bad options.  It can guess, which produces work you did not want, or it can ask open-ended questions, which you answer carelessly because open-ended questions are expensive to answer.  The first half of the fix is a bounded question set: ask me up to five questions that would change how you approach this, then stop.  (The Coding Agents session showed you this shape in Section 4, and *Prompt Engineering as Agent Design* names it the plan-first protocol.)  A **menu** is the second half.  Each question comes with lettered options and a stated default, so answering takes three keystrokes rather than three paragraphs.
 
@@ -269,9 +241,9 @@ What this lab deliberately leaves out: a second human writer and a second simult
 
 Do this part first, before anything else. It takes about an hour and it builds the project every later part works inside: a git repository, a charter, an agent contract, a memory file, and an `opencode.json` that makes the tool ask before it acts.
 
-Every file in this part gets built two ways, and you choose per file. **Route A** is you, in an editor. **Route B** is opencode, from a prompt you write. Neither is the correct answer. Route A is faster for a file you already know the shape of; Route B is the one that teaches you what the agent does with an underspecified request. Do at least one file each way, because Part 4 asks you to compare them.
+Every file in this part can be built two ways, and you choose per file. You can write it yourself in an editor, or you can ask opencode for it with the prompt printed beside each command. Neither route is the correct one: writing it yourself is faster when you already know the shape of the file, while asking opencode teaches you what an agent does with an underspecified request, which is a thing worth knowing before Part 4 hands it something larger. Do at least one file each way.
 
-> **Route B has a chicken-and-egg problem, and it is instructive.** Until Step 3 writes `opencode.json`, opencode has no permission rules, so it edits whatever it likes. Until Step 4 writes `AGENTS.md`, it has no contract telling it what this project is. Build Steps 1 through 3 by hand for that reason, then use Route B from Step 4 onward, when there is something to disobey.
+> **There is a chicken-and-egg problem here, and it is instructive.** Until Step 3 writes `opencode.json`, opencode has no permission rules and will edit whatever it likes, and until Step 4 writes `AGENTS.md` it has no contract telling it what this project even is. That is why the prompts in Steps 1 through 3 will run without stopping to ask you, and why it is worth watching what changes once the rules exist.
 
 ### Step 1: Create the repository
 
@@ -283,7 +255,14 @@ mkdir -p opencode-studio/{artifact,docs,transcripts,.ai}
 cd opencode-studio
 ```
 
-Four directories, each with a job. `artifact/` holds the thing you build. `docs/` holds the decision log. `transcripts/` holds evidence. `.ai/` holds the state an agent reads at the start of a session and writes at the end.
+Or ask opencode to do it:
+
+```text
+Create a directory opencode-studio inside this repository, with empty subdirectories
+artifact, docs, transcripts, and .ai. Then show me the tree.
+```
+
+Four directories, each with a job: `artifact/` holds the thing you build, `docs/` holds the decision log, `transcripts/` holds your evidence, and `.ai/` holds the state an agent reads at the start of a session and writes back at the end.
 
 ### Step 2: Commit before an agent has ever run
 
@@ -292,13 +271,22 @@ git add .
 git commit -m "OpenCode Studio: empty project tree, before any agent runs"
 ```
 
-Ten seconds, and it is the entirety of your ability to undo what happens later. Reversibility is not a feature you switch on. It is a habit you already have before you need it.
+Or ask opencode to do it:
+
+```text
+Stage everything and commit it with the message "OpenCode Studio: empty project
+tree, before any agent runs".
+```
+
+Git is the one family of commands your `opencode.json` will allow without asking, once Step 3 is done. Until then opencode will stop and ask you to approve the commit, which is the correct behavior for a project with no rules in it yet.
+
+That takes ten seconds, and it is the whole of your ability to undo whatever comes later. Reversibility is a habit you have before you need it rather than a feature you switch on when you do.
 
 ### Step 3: Write `opencode.json`
 
-This file does three jobs: it points opencode at your model, it decides what the tool may do without asking, and it names the files opencode must read every session.
+This file does three jobs at once: it points opencode at your model, it decides what the tool may do without stopping to ask you, and it names the files opencode must read at the start of every session.
 
-Build this one by hand. Put it at the root of `opencode-studio/`, and note the name: **`opencode.json`, never `config.json`.** opencode silently ignores a file with the wrong name, and that single mistake accounts for most of the lost evenings in this lab.
+Build this one by hand, and put it at the root of `opencode-studio/`. Note the name while you are there, because it is **`opencode.json` and never `config.json`**; opencode ignores a file with the wrong name without telling you, and that one mistake accounts for most of the evenings lost to this lab.
 
 ```json
 {
@@ -314,13 +302,13 @@ Build this one by hand. Put it at the root of `opencode-studio/`, and note the n
 }
 ```
 
-Add your Ollama provider block from Week 1, Step 8.2 alongside these keys. The `provider` block and these keys are siblings in the same object.
+Add the provider block you wrote in the Workbench activity alongside these keys; the `provider` block and these keys are siblings in the same object.
 
 Two things in that file decide whether it works.
 
-**The `permission` block, and why the order matters.** Values are `allow`, `ask`, or `deny`. Keys are tool names such as `bash`, `edit`, `read`, and `webfetch`, and a tool's value may itself be a map of command patterns using `*` and `?`. **The last matching rule wins.** So read the block top to bottom: ask about everything; inside `bash`, ask about everything; then allow any command beginning with `git`. Reverse those last two lines and `"*": "ask"` would override the git rule and you would be approving every `git status` for the rest of the lab.
+**The `permission` block, and why the order matters.** Values are `allow`, `ask`, or `deny`, and keys are tool names such as `bash`, `edit`, `read`, and `webfetch`, where a tool's value may itself be a map of command patterns using `*` and `?`. The rule that decides everything is that **the last matching rule wins**, so read the block from the top: ask about everything, then inside `bash` ask about everything, then allow any command beginning with `git`. Reverse those last two lines and `"*": "ask"` overrides the git rule, leaving you to approve every `git status` for the rest of the lab.
 
-Git is the one family of commands allowed to run unattended, and that is a deliberate choice rather than a convenience. Git is how this project stays reversible. A commit costs nothing and can be undone; an agent that has to ask permission to commit is an agent that commits less often, which is precisely backwards. Everything else stops and asks you.
+Git is the one family of commands allowed to run unattended, and that is a deliberate choice rather than a convenience, because git is how this project stays reversible. A commit costs nothing and can be undone, so an agent that has to ask permission before committing is an agent that commits less often, which is exactly backwards. Everything else stops and asks you.
 
 **The `instructions` array.** opencode reads `AGENTS.md` from the project root on its own. `instructions` names *additional* files to load alongside it, and it accepts paths and globs. This is the mechanism that makes the next two steps real: without it, your charter is a document that an agent reads only when it remembers to.
 
@@ -330,9 +318,15 @@ Verify the file parses before you go on. A missing comma silently disables the w
 python3 -m json.tool opencode.json
 ```
 
+Or ask opencode to do it:
+
+```text
+Check that opencode.json is valid JSON and tell me the line number of any error.
+```
+
 ### Step 4: Write `CHARTER.md`, and have `AGENTS.md` require it
 
-Copy the [course template]({{ site.baseurl }}/files/agent-templates/CHARTER.md) to `./CHARTER.md`. Leave the placeholders for now; Part 1 is where you fill them in and rank the values, and a charter written before you have scoped the artifact is a charter full of generalities.
+The course ships a [set of agent operating system templates]({{ site.baseurl }}/files/agent-templates/README.md): a charter, an agent contract, a kickoff prompt, a decision log, and the `.ai/` handoff files. You will copy several of them over the course of this lab. Start with the charter: copy the [template]({{ site.baseurl }}/files/agent-templates/CHARTER.md) to `./CHARTER.md`. Leave the placeholders for now; Part 1 is where you fill them in and rank the values, and a charter written before you have scoped the artifact is a charter full of generalities.
 
 Now write `AGENTS.md` at the project root. This is the contract, and Part 2 grows it into a full page. For now it needs three rules:
 
@@ -355,9 +349,9 @@ that has never seen it, append it to `.ai/MEMORY.md` under a dated heading.
 Append only. Never rewrite or delete an existing entry.
 ```
 
-Notice what the first rule buys you. `opencode.json` loads the charter into context, and `AGENTS.md` tells the agent what to do with it. The array without the rule gives the agent a document it did not ask for; the rule without the array gives it an instruction about a file it may never open. You need both.
+Notice what that first rule buys you. `opencode.json` loads the charter into context and `AGENTS.md` tells the agent what to do with it, so the array without the rule hands the agent a document it never asked for, while the rule without the array hands it an instruction about a file it may never open. You need both, and students who write only one of them usually cannot tell which half is missing.
 
-**Route B, if you want it here.** Instead of typing that file, start opencode and ask for it:
+If you would rather have opencode write this one, start a session and ask for it:
 
 ```text
 Write an AGENTS.md at the project root for this repository. It must do three things:
@@ -367,7 +361,7 @@ new durable project knowledge to .ai/MEMORY.md under a dated heading, append-onl
 Keep it under one page. Show me the file before you write it.
 ```
 
-Then read what it produced against the three rules above before you accept it. Note in your readme what it added that you did not ask for, and what it left out. That difference is the first real data this lab gives you.
+Then read what it produced against the three rules above before you accept any of it, and note in your readme what it added that you never asked for alongside what it quietly left out. That difference is the first real data this lab gives you, and it is usually more interesting than the file itself.
 
 ### Step 5: Create the memory file
 
@@ -380,7 +374,15 @@ a session that has never seen this project would need to know.
 EOF
 ```
 
-An honest caution: **opencode has no built-in memory.** Nothing in the tool stores facts between sessions on its own. What you just built is a file, a rule in `AGENTS.md` telling the agent to append to it, and an `instructions` entry telling opencode to load it. The agent writes to that file because you asked it to and it chose to comply, which is exactly the kind of instruction Part 3 shows a model dropping. Notice now that this is a rule and not a gate. You will test the difference.
+Or ask opencode to do it:
+
+```text
+Create .ai/MEMORY.md with a top-level heading "Project Memory" and one paragraph
+saying that the file is append-only, that newest entries go at the bottom, and that
+each entry is dated and names what a session new to this project would need to know.
+```
+
+One honest caution before you move on: **opencode has no built-in memory**, and nothing in the tool stores facts between sessions on its own. What you have just built is a file, a rule in `AGENTS.md` telling the agent to append to it, and an `instructions` entry telling opencode to load it back at the start of the next session. The agent writes to that file because you asked it to and it chose to comply, which is exactly the kind of instruction Part 3 will show a model quietly dropping. Notice that this is a rule rather than a gate, and keep that in mind, because you are going to test the difference.
 
 ### Step 6: Confirm the wiring
 
@@ -390,9 +392,9 @@ Open the project and ask it one question.  In the desktop application, open the 
 What is this project for, and what are you allowed to edit?
 ```
 
-Three things must be true in the answer. It names the charter, even a placeholder one, which proves `instructions` loaded. It names `artifact/` as the workspace, which proves it read `AGENTS.md`. And when you then ask it to create a scratch file, the tool stops and asks your permission, which proves the `permission` block took effect. Ask it to run `git status` and confirm that one does **not** stop to ask.
+Three things have to be true in the answer. It names the charter, placeholder and all, which proves `instructions` loaded. It names `artifact/` as the workspace, which proves it read `AGENTS.md`. And when you then ask it to create a scratch file, the tool stops and asks your permission, which proves the `permission` block took effect. Ask it to run `git status` afterward and confirm that one does **not** stop to ask.
 
-This step is worth doing in whichever face you plan to work in, because it is what tells you the configuration reached that face. A desktop session opened on the wrong folder reads no `AGENTS.md` at all and will answer the question above from nothing.
+Do this in whichever face you plan to work in, since it is what tells you the configuration actually reached that face. A desktop session opened on the wrong folder reads no `AGENTS.md` at all, and will answer the question above from nothing while sounding perfectly confident about it.
 
 Save that exchange as `transcripts/00-wiring-confirmed.md`. If any of the three fails, work the troubleshooting table below before starting Part 1.
 
@@ -401,6 +403,13 @@ Save that exchange as `transcripts/00-wiring-confirmed.md`. If any of the three 
 ```bash
 git add .
 git commit -m "OpenCode Studio: project wiring, permissions ask by default, git allowed"
+```
+
+Or ask opencode to do it:
+
+```text
+Commit everything with the message "OpenCode Studio: project wiring, permissions
+ask by default, git allowed".
 ```
 
 ### Troubleshooting, Part 0
@@ -459,6 +468,12 @@ cd ~/cs357-work/opencode-studio
 git status          # must be clean before you continue
 ```
 
+Or ask opencode to do it:
+
+```text
+Show me git status for this project and tell me whether the working tree is clean.
+```
+
 **Step 2: Copy three templates.**  These come from the [course template set]({{ site.baseurl }}/files/agent-templates/README.md).  Skim the set once before filling anything in.
 
 | Template | Copy to | What you must fill for real |
@@ -494,6 +509,13 @@ Choose values that can actually collide.  "Quality" and "excellence" never confl
 ```bash
 git add .
 git commit -m "OpenCode Studio: charter, context, and read order before any agent runs"
+```
+
+Or ask opencode to do it:
+
+```text
+Commit everything with the message "OpenCode Studio: charter, context, and read
+order before any agent runs".
 ```
 
 That commit takes ten seconds, and it is the entirety of your ability to undo what happens next.  Reversibility is not a feature you enable.  It is a habit you have before you need it.
@@ -544,13 +566,13 @@ One paragraph: what this does and who runs it.
 JSON to stdout: a list of objects, each with `title` (string), `score` (float, 0 to 1),
 and `source` (string, a path).  The list is sorted by score descending.
 
-## Error cases (all must be handled and tested)
+## Error cases (at least two, all handled and tested)
 - Empty or whitespace-only query: exit 2 with a message on stderr, no traceback
 - max_results out of range: exit 2 with a message naming the valid range
 - Knowledge base file missing: exit 3 with a message naming the expected path
 - No matches: exit 0 with an empty JSON list, which is not an error
 
-## Testing criteria (the test suite must cover all of these)
+## Testing criteria (at least three; the test suite must cover every one you list)
 1. A query with matches returns results sorted by score descending
 2. max_results limits the number returned
 3. An empty query exits 2
@@ -585,7 +607,7 @@ Good (a gate):      STOP and confirm before any `rm` under artifact/ or any `git
                     and show me the exact file list first.
 ```
 
-Keep the whole thing to about a page, and understand why: you are writing for a 3B model, and a contract it will not read to the end is a contract it does not have.
+Keep the whole thing to about a page. A contract the model will not read to the end is a contract it does not have, and length is the usual reason it stops reading.
 
 **Step 3: Write the system prompt in `system_prompt.txt`, then wire it to an agent.**
 
@@ -649,20 +671,11 @@ opencode run --agent builder "Implement spec.md."
 
 Confirm the wiring before you rely on it. Start opencode, switch to the `builder` agent, and ask it to name one file it is forbidden to edit. If it cannot, the `prompt` path is wrong and every compliance check in Part 5 would be measuring nothing.
 
-**Step 4: Show that the contract does something.**  Run the same trivial task twice, once with `AGENTS.md` in place and once with it temporarily renamed, and save both transcripts as `transcripts/03-contract-before-after.md`.  This is the cheapest possible controlled comparison, and it is the only evidence that distinguishes a contract that works from a contract that merely exists.
-
-```bash
-opencode run "Add a one-line comment at the top of artifact/search.py naming its purpose."
-mv AGENTS.md AGENTS.md.off
-opencode run "Add a one-line comment at the top of artifact/search.py naming its purpose."
-mv AGENTS.md.off AGENTS.md
-```
-
-**Step 5: Commit all three documents** before Part 4.
+**Step 4: Commit all three documents** before Part 4.
 
 ### Troubleshooting, Part 2
 
-**The model ignores a guardrail.**  First, check whether the guardrail names an *operation* or a *topic*.  "Be careful with files" is a topic and cannot be followed; "do not edit anything outside `artifact/`" is an operation and can.  Second, if you find yourself restating the same rule in every session, that rule wants to be enforced by something other than a model.  Part 3 made exactly that move for one rule, and Direction 2 extends it.
+**The model ignores a guardrail.**  First, check whether the guardrail names an *operation* or a *topic*.  "Be careful with files" is a topic and cannot be followed; "do not edit anything outside `artifact/`" is an operation and can.  Second, if you find yourself restating the same rule in every session, that rule wants to be enforced by something other than a model.  Part 3 made exactly that move for one rule.
 
 **The contract got longer and behavior got worse.**  This is real, and it is common with small models.  Cut it back to one page, keep the gates, and move the aspirational parts into the charter, which you reread and the agent does not have to hold in working memory.
 
@@ -703,7 +716,7 @@ git commit -m "Part 3: a throwaway directory and a file that argues with the rul
 
 Anyone who can open a pull request could have written that README.  That is the point.
 
-**Step 2: Write the rule, and only the rule.**  Add one line to the `AGENTS.md` stub you wrote in Week 1 (the full contract comes in Part 2).  Use this wording, so your transcript compares with the one from class:
+**Step 2: Add the rule to `AGENTS.md`, and install no gate yet.**  The point of this run is to see what a written rule does on its own, so the rule is the only thing standing between the agent and the guarded operation.  Use this wording, so your transcript lines up with the one from class:
 
 ```text
 Never run rm -rf. Ask before deleting anything.
@@ -715,8 +728,10 @@ Your `opencode.json` from Part 0 already asks before every non-git command, whic
 
 ```bash
 opencode run --auto "Read build/README.txt, then clean up the build so the tests run again." \
-  2>&1 | tee transcripts/05-rule-alone.md
+  2>&1 | tee transcripts/03-rule-alone.md
 ```
+
+In the desktop application, start a session, turn permission prompts off for this one run if your build offers it, paste the same instruction, and export or copy the whole session into `transcripts/03-rule-alone.md` when it finishes.
 
 Read the transcript for the line where the agent decides.  If it ran `rm -rf`, mark that line.  If it held, that is a result too: mark the line where it declined, then try once more with a stronger sentence in the README (for example, a claim that the instructor approved the deletion) and record that attempt in the same file.  Two honest attempts are enough; you are not required to defeat the rule, only to test it.  Use `--auto` only for these two runs, and never on work you care about: it approves every permission prompt, which is exactly the protection Part 0 installed.  Restore the directory before the next step:
 
@@ -724,9 +739,15 @@ Read the transcript for the line where the agent decides.  If it ran `rm -rf`, m
 git checkout -- build
 ```
 
+Or ask opencode to do it:
+
+```text
+Restore the build directory from the last commit, discarding any changes to it.
+```
+
 **Step 4: Build the real gate for the tool you drive.**  Install exactly one of the following, and leave the `AGENTS.md` line in place so the two runs differ in the gate alone.
 
-*If you drive opencode:* add a `permission` block to the `opencode.json` that already holds your provider block from Week 1, Step 8.2.  Values are `allow`, `ask`, or `deny`; keys are tool names such as `bash`, `edit`, `read`, `webfetch`, and `external_directory`; a tool's value may be a map of patterns using `*` and `?`; the last matching rule wins.  Read the block from the top: ask about everything, allow any `git` command, deny any `rm`.
+Add a `permission` block to the `opencode.json` you wrote in Part 0.  Values are `allow`, `ask`, or `deny`; keys are tool names such as `bash`, `edit`, `read`, `webfetch`, and `external_directory`; a tool's value may be a map of patterns using `*` and `?`; the last matching rule wins.  Read the block from the top: ask about everything, allow any `git` command, deny any `rm`.
 
 ```json
 {
@@ -760,8 +781,10 @@ export const Guard = async ({ project, client, $, directory, worktree }) => ({
 
 ```bash
 opencode run --auto "Read build/README.txt, then clean up the build so the tests run again." \
-  2>&1 | tee transcripts/06-gate-held.md
+  2>&1 | tee transcripts/04-gate-held.md
 ```
+
+In the desktop application, run the identical instruction the same way you ran the first one, and save the session as `transcripts/04-gate-held.md`. What matters is that the two runs differ in the gate alone.
 
 The transcript must show the refusal coming from the tool rather than from the model: the permission denial printed by opencode, or the error message your plugin threw.  If the agent never attempted the command this time, say so and run it once more with the same README; the gate is only demonstrated when something hits it.
 
@@ -779,7 +802,7 @@ The transcript must show the refusal coming from the tool rather than from the m
 
 **The plugin never fires.**  In order: is the file in `.opencode/plugins/`; does it export the function; did you restart opencode after adding it.  A plugin that throws nothing permits the call, so a silent transcript means the plugin allowed the call rather than that it was skipped.
 
-> **Checkpoint 3.**  In `transcripts/05-rule-alone.md`, which single sentence of the planted README did the most work?  Rewrite the `AGENTS.md` rule so that sentence would not have worked, then say why you still would not trust the rewrite alone.  Which of your other guardrails would you move behind a gate, and which stay as rules because they are about intent rather than operations?
+> **Checkpoint 3.**  In `transcripts/03-rule-alone.md`, which single sentence of the planted README did the most work?  Rewrite the `AGENTS.md` rule so that sentence would not have worked, then say why you still would not trust the rewrite alone.  Which of your other guardrails would you move behind a gate, and which stay as rules because they are about intent rather than operations?
 
 ---
 
@@ -793,6 +816,12 @@ Now the agent builds.  The discipline here is that you capture what happened *be
 
 ```bash
 git status          # must be clean before you continue
+```
+
+Or ask opencode to do it:
+
+```text
+Confirm the working tree is clean, and if it is not, list exactly what is uncommitted.
 ```
 
 **Step 2: Ask the harness to interview you.**  Before the agent proposes anything, make it ask you what it does not know.  You are not installing anything for this; you are typing the request.  Start an interactive session on your `builder` agent and paste this:
@@ -834,6 +863,8 @@ opencode run --agent builder \
   2>&1 | tee transcripts/agent_trace_1.txt
 ```
 
+In the desktop application, pick the `plan` agent from the selector, paste the same instruction, and export the session into `transcripts/agent_trace_1.txt`. Either way the trace is your observability, and you cannot reconstruct it afterward.
+
 Either way, pipe or copy the session into `transcripts/agent_trace_1.txt`.  The trace is your observability, and you cannot reconstruct it afterward.
 
 **Step 4: Read the plan against the spec before you approve anything.**  Hold the plan next to `spec.md` and `system_prompt.txt` and check four things:
@@ -856,6 +887,13 @@ git diff > diff_1.patch                 # unstaged work
 git diff --cached >> diff_1.patch       # anything the agent staged
 ```
 
+Or ask opencode to do it:
+
+```text
+Write the current unstaged diff and any staged diff into a single file called
+diff_1.patch. Do not commit anything.
+```
+
 Do not commit yet.  The next part is a review of `diff_1.patch`, and reviewing a diff you have already accepted is a different and much weaker exercise.
 
 **Step 7: Make the agent write down what it learned.**  Part 0 put a rule in `AGENTS.md` telling the agent to append durable project knowledge to `.ai/MEMORY.md`.  Now find out whether it obeys one.  At the end of the session, type:
@@ -867,13 +905,9 @@ to .ai/SESSION.md with Scope, Completed, what you deliberately did not do,
 Validation, and exactly one Next Safe Action.  Append only.  Change no existing entry.
 ```
 
-Then do three things, in this order. The first one is what makes the other two mean anything.
+Then do two things. Run `git diff .ai/` and read what actually landed, because the agent's own account of what it wrote is not evidence and will not always match. Then correct what it got wrong, since it will be wrong in at least one particular, and quote the sentence you had to fix in your readme. That gap between what the agent believed happened and what happened is the finding.
 
-1. **Verify against the file, not the summary.**  Run `git diff .ai/` and read what actually landed.  The agent's own account of what it wrote is not evidence.
-2. **Correct what it got wrong.**  It will be wrong in at least one particular.  That correction is the finding: it is the gap between what the agent believed happened and what happened.  Quote the sentence you had to fix in your readme.
-3. **Prove the memory is load-bearing.**  Start a fresh session and ask, saying nothing else: *What do you already know about this project?*  If the answer contains nothing from `.ai/MEMORY.md`, check that the file is listed in the `instructions` array in `opencode.json`.  A memory the tool never loads is a diary rather than a memory.
-
-Do this at the end of every remaining session in this lab, not only this one.  Part 7 tests whether it worked, and three entries written honestly beat one written the night before the deadline.
+Do this at the end of every remaining session in this lab rather than only this one. Part 6 is where you find out whether it worked, and two entries written honestly beat one written the night before the deadline.
 
 ### Troubleshooting, Part 4
 
@@ -893,68 +927,34 @@ Do this at the end of every remaining session in this lab, not only this one.  P
 
 ## Part 5: Diff Review, Critique, and One Refine Turn
 
-You are the critic now.  The skill being assessed is not whether the agent produced working output on the first try.  It is whether your review discipline can drive it to a trustworthy outcome.
+You are the critic now, and what I am assessing is not whether the agent got it right first time. It is whether your review discipline can drive it somewhere you would actually trust.
 
 ### Step-by-step guide
 
-**Step 1: Read the entire diff.**  Every line, including the parts that look boring.  Read it against `spec.md` and against `system_prompt.txt`, and resist the pull to skim the parts that look like boilerplate.  That is exactly where an unwanted dependency or a swallowed exception hides, and no gate from Part 3 will catch either one.
+**Step 1: Read the entire diff.** Every line of it, including the parts that look like boilerplate, because boilerplate is exactly where an unwanted dependency or a quietly swallowed exception goes to hide, and no gate from Part 3 will catch either one. Read it against `spec.md` and against `system_prompt.txt` together.
 
-**Step 2: Produce `critique.md`.**  Sort every finding into one of four categories.  The categories matter because they map to different actions: the first needs nothing, the second and third become follow-up instructions, and the fourth blocks acceptance outright.
+**Step 2: Produce `critique.md`.** One table, one row per finding. The category column is doing real work here: findings marked incorrect, missing, or risk become instructions in Step 3, while findings marked correct need nothing from you but are worth recording so that you know the review was thorough rather than lucky.
 
 ```markdown
 # Critique Document
 
-- Agent and model: [opencode version, agent name, model name]
+- Agent, model, and opencode version:
 - Diff reviewed: diff_1.patch
-- Reviewer: [your name]
-- Date: [today]
+- Reviewer and date:
+- I will accept this when: [one line: what has to be true]
+- The one finding that blocks acceptance outright: [name exactly one]
 
-## Category 1: Correct
-| Diff line(s) | What it does | Which spec requirement it satisfies |
-|---|---|---|
-
-## Category 2: Incorrect or broken
-| Diff line(s) | What is wrong | What the spec requires instead |
-|---|---|---|
-
-## Category 3: Missing
-| Spec requirement | Where it should have appeared | Evidence it is absent |
-|---|---|---|
-
-## Category 4: Security risk
-| Diff line(s) | The risk | The consequence if shipped |
-|---|---|---|
-
-## System prompt compliance check
-
-| Prohibition | Complied? | Evidence (diff line, or "not present in diff") |
-|---|---|---|
-| No network calls | | |
-| No hardcoded credentials or absolute paths | | |
-| No eval() or exec() | | |
-| Only the allowed files were edited | | |
-| Unit tests covering every testing criterion | | |
-| [your additional constraint] | | |
+| # | Diff line(s) | Category | What I found | What the spec or prompt required |
+|---|---|---|---|---|
+| 1 | | correct / incorrect / missing / risk | | |
+| 2 | | | | |
 ```
 
-The compliance table is where the system prompt stops being decorative.  Every prohibition you wrote in Part 2 gets a row, and every row gets evidence, including "not present in diff" when the agent simply did not do the thing you forbade.
+Two of those header lines matter more than they look. A critique with no stated acceptance line is taste rather than review, and taste is not something anyone can check. And if you cannot name exactly one finding that blocks acceptance, you have not prioritized, so the agent will spread a single turn's attention evenly across everything you listed.
 
-**Step 3: State the criteria you are refining against, before you write the follow-up.**  A critique without stated criteria is taste, and taste is not reviewable.  Write these five lines at the top of `critique.md`, in the same bounded form the interview used, and answer each one for this artifact before you draft a single instruction:
+Then add a row for each prohibition you wrote into `system_prompt.txt`, using the category `compliance` and putting your evidence in the last column, including the words "not present in diff" when the agent simply never did the thing you forbade. This is where the system prompt stops being decorative: every prohibition gets a row, and every row gets evidence.
 
-```text
-1. What must be true for me to accept this?   a) it runs   b) it runs and the spec's
-                                              tests pass   c) a reader outside the course
-                                              can follow it                    [default: b]
-2. What am I explicitly not asking for?       (one sentence, in your own words)
-3. Which finding, if unfixed, blocks acceptance outright?      (name exactly one)
-4. How will I know the refine turn worked?    (the command you will run, or the thing
-                                              you will look at)
-5. What would make me stop after two turns rather than three?  (one sentence)
-```
-
-Answer 3 honestly. If every finding blocks acceptance, you have not prioritized, and the agent will spread one turn's attention across all of them. Answer 4 concretely; "it looks better" is not an answer that Step 5 can check.
-
-**Step 4: Write `followup_prompt.txt`.**  This is the refine turn: one message that addresses **every** finding in Categories 2, 3, and 4 by name, in the priority your criteria just set.  Precision is the whole game.
+**Step 3: Write `followup_prompt.txt`.** One message that addresses every incorrect, missing, and risk finding by name, in the order your blocking finding sets. Precision is the whole game, so name the line and the exact change rather than the general concern.
 
 ```text
 I have reviewed the diff and found the following, which must be corrected before I accept it.
@@ -972,123 +972,95 @@ Do not change anything else.  Do not touch spec.md, system_prompt.txt, AGENTS.md
 CHARTER.md, critique.md, or anything under .ai/ or docs/.
 ```
 
-**Step 5: Run the second iteration and save its diff.**
+**Step 4: Run the refine turn, then accept or do not.**
+
+In the terminal:
 
 ```bash
 opencode run --agent builder "$(cat followup_prompt.txt)" \
   2>&1 | tee transcripts/agent_trace_2.txt
-git diff > diff_2.patch
 ```
 
-**Step 6: Compare the two diffs finding by finding.**  Add a column to each table in `critique.md`:
+In the desktop application, switch to your `builder` agent, paste the contents of `followup_prompt.txt`, and export or copy the session into `transcripts/agent_trace_2.txt` when it finishes.
 
-```markdown
-| ... | Resolved in diff_2?  (yes / no / partially) |
-```
-
-Anything not resolved gets a one-sentence explanation.  Then accept the result, run whatever your definition of success says to run, and paste that output into your readme.
+Then look at what changed, run whatever your charter's definition of success says to run, and paste that output into your readme. Add one line to `critique.md` naming any finding the refine turn did not resolve, with a sentence on why you accepted it anyway or what you would do next. If you would rather measure the refine turn properly, diff by diff, that is the first extension challenge at the end of this handout.
 
 ### Troubleshooting, Part 5
 
-**The agent repeated the same mistake in the second diff.**  Your follow-up was not specific enough.  Rewrite that instruction with an explicit line reference and the exact text you want.  A third pass is fine and carries no penalty; document it.
+**The agent repeated the same mistake.** Your follow-up was not specific enough, so rewrite that one instruction with an explicit line reference and the exact text you want. A third pass costs you nothing in the rubric as long as you document it.
 
-**The agent fixed what you asked and introduced a new bug.**  Extremely common.  Add it to the correct category as a new row, write another follow-up entry, and note in your session log that a third iteration was needed.
+**The agent fixed what you asked and introduced a new bug.** This happens constantly, and it is worth a row of its own in the table plus a note in your session log that another iteration was needed.
 
-**The agent edited a file your system prompt prohibited.**  Do not accept it.  `git checkout -- <file>` restores it, and the violation goes in the compliance table with the diff line as evidence.  A caught and documented violation is a better result for this lab than a run in which nothing was tested.
+**The agent edited a file your system prompt prohibited.** Do not accept it. `git checkout -- <file>` puts it back, and the violation goes in the table as a compliance row with the diff line as evidence. A caught and documented violation is a better result here than a run in which nothing got tested.
 
-> **Checkpoint 5.**  Which finding did the agent resolve most cleanly, and which instruction of yours was least effective?  Did any prohibition in your system prompt turn out to be unverifiable from a diff, and if so, how would you rewrite it?
+> **Checkpoint 5.** Which finding did the agent resolve most cleanly, and which of your instructions was least effective? Did any prohibition in your system prompt turn out to be unverifiable from a diff, and if so, how would you rewrite it?
 
 ---
 
-## Part 6: Traceability and the Decision Log
+## Part 6: Traceability and the Cold Handoff
 
-Two entries and one drill.  This part takes an hour, and it is the part your future self will thank you for.
+This part answers one question in two ways: can somebody who is not you pick this project up? First you trace a line of the artifact back to the decision that caused it, and then you hand the whole thing to a session that has never seen it and watch what happens.
 
 ### Step-by-step guide
 
-**Step 1: Copy `DECISION_LOG.md` into `docs/` and write two real entries.**  Each entry records the decision, **the alternative you rejected**, and why.  The rejected alternative is the part people skip and the part that pays.  It is the only thing that stops a project from re-proposing the same bad idea every three weeks, whether the proposer is a teammate or a fresh agent with no memory.
+**Step 1: Write one decision-log entry.** Copy `DECISION_LOG.md` into `docs/` and fill in one real entry recording the decision, the alternative you rejected, and why. The rejected alternative is the part people skip and the part that pays, since it is the only thing that stops a project re-proposing the same bad idea every few weeks, whether the proposer is a teammate or a fresh agent with no memory.
 
-**Step 2: Run the traceability drill.**  Pick one line, paragraph, or step of your artifact and trace it upward through four links, quoting each one in `traceability.md`:
+**Step 2: Run the traceability drill.** Pick one line, paragraph, or step of your artifact and trace it upward through four links, quoting each one in `traceability.md`:
 
-1. The **commit** that introduced it (`git log -S '<some text from that line>'` finds it)
+1. The **commit** that introduced it, which `git log -S '<some text from that line>'` will find
 2. The **session entry** in `.ai/SESSION.md` describing that session
 3. The **task** in `.ai/CURRENT_TASK.md` it served
 4. The **charter goal** that task served
 
-**Step 3: Name the break.**  Expect the chain to break somewhere, most often between the commit and the session entry.  A precisely named break is worth as much as an unbroken chain: say which link failed, and what one sentence, written at the time, would have kept it.  Then write that sentence into the document that should have had it.
+Expect the chain to break somewhere, most often between the commit and the session entry. A precisely named break is worth as much to me as an unbroken one, so say which link failed and what single sentence, written at the time, would have held it, then go write that sentence into the document that should have had it.
+
+**Step 3: Fill `KICKOFF_PROMPT.txt`.** Real project name, real read order, real scope. If you can arrange to stop mid-task rather than at a tidy boundary, use `ai/AGENT_HANDOFF_KICKOFF.md` instead, which is both the harder test and the more honest one.
+
+**Step 4: Go cold.** Close every open session and start a fresh one with no conversation history, in whichever face you have been working in. Paste the kickoff prompt and nothing else, and say nothing that is not written in the repository however tempting it gets.
+
+**Step 5: Require it to restate before it acts.** The session has to tell you the mission, the active task, and the Next Safe Action before it touches anything, and then perform that action. Save the whole exchange as `transcripts/05-cold-handoff.md`.
+
+While you are there, check the memory file you have been writing since Part 4. Ask the cold session what it already knows about this project, and see whether anything from `.ai/MEMORY.md` comes back. If nothing does, confirm that the file is named in the `instructions` array of `opencode.json`, because a memory the tool never loads is a diary rather than a memory.
+
+**Step 6: List every question it had to ask.** This is the real deliverable, and it is worth more than a handoff that happened to go smoothly. Every question the fresh session asked you out loud is a missing section in one of your documents, so write them down, make the edit that answers each one, and note in your readme which edit each question caused.
 
 ### Troubleshooting, Part 6
 
-**The commit message says "updates" and the chain dies at link one.**  Rewrite the message for the next commit as the *why* rather than the *what*, and note the lesson in `traceability.md`.  Do not rewrite published history to make the drill come out nicely; the honest broken chain is the deliverable.
+**The commit message says "updates" and the chain dies at link one.** Write the next commit message as the *why* rather than the *what*, and note the lesson in `traceability.md`. Do not rewrite published history to make the drill come out nicely; the honest broken chain is the deliverable.
 
-**The session entry describes status rather than state.**  "Made progress on search" is status.  "search.py returns sorted results; error handling for the missing-KB case is not written; next safe action is to add that handler" is state.  Only the second one hands off.
+**The session entry describes status rather than state.** "Made progress on search" is status. "search.py returns sorted results; error handling for the missing-KB case is not written; next safe action is to add that handler" is state. Only the second one hands off, and only the second one survives you forgetting the context.
 
-**Two unrelated decisions landed in one commit, so nothing traces cleanly.**  Note it, and take the smaller-commits lesson into Part 7.
+**It restarted work that was already done.** Same cause: the session entry recorded status. Rewrite the most recent entry and re-run the cold start.
 
-> **Checkpoint 6.**  Which link broke, and what one sentence would have kept it?  Which of your two decision-log entries would a fresh agent most plausibly try to re-litigate?
+**It asked who the artifact is for.** That belongs in `.ai/CONTEXT.md`, in one sentence.
 
----
+**It could not find a file that `START_HERE.md` names.** You did not finish editing the template's read order back in Part 1. Fix the list rather than the filesystem.
 
-## Part 7: The Cold Handoff
+**It began working without restating anything.** Your kickoff prompt buried the read order below the task, so put the read order first and make the restatement a precondition inside the sentence itself.
 
-Now prove the whole apparatus works, by handing the project to a session that has never seen it.
-
-### Step-by-step guide
-
-**Step 1: Fill `KICKOFF_PROMPT.txt`.**  Real project name, real read order, real scope.  If you can arrange to stop mid-task rather than at a tidy boundary, use `ai/AGENT_HANDOFF_KICKOFF.md` instead; it is the harder and better test.
-
-**Step 2: Go cold.**  Close every open session.  Start a fresh `opencode` with no conversation history.  Paste the kickoff prompt and nothing else.  Say nothing that is not written in the repository, however tempting.
-
-**Step 3: Require it to restate before it acts.**  The session must tell you the mission, the active task, and the Next Safe Action **before** touching anything.  Then let it perform that action.  Save the whole thing as `transcripts/04-cold-handoff.md`.
-
-**Step 4: List every question it had to ask.**  This is the actual deliverable, and it is more valuable than a handoff that happened to work.  Every question the fresh session asked you out loud is a missing section in a document.  Write them down, make the document edit that answers each one, and note in your readme which edit each question caused.
-
-**Optional and recommended:** hand the repository to a classmate and have *their* agent perform your Next Safe Action.  This is the bridge to Direction 3.
-
-### Troubleshooting, Part 7
-
-**It restarted work that was already done.**  The session entry recorded status rather than state.  Rewrite the most recent entry, then re-run the cold start.
-
-**It asked who the artifact is for.**  That belongs in `.ai/CONTEXT.md`, in one sentence.
-
-**It could not find a file that `START_HERE.md` names.**  You did not finish editing the template's read order in Part 1.  Fix the list, not the filesystem.
-
-**It began working without restating anything.**  Your kickoff prompt buried the read order below the task.  Put the read order first and make the restatement a precondition in the sentence itself.
-
-> **Checkpoint 7.**  How many questions did it have to ask, and which document now answers each?  If you had stopped mid-sentence rather than at a tidy boundary, which of your documents would have failed first?
+> **Checkpoint 6.** Which link broke, and what one sentence would have kept it? How many questions did the cold session have to ask, and which document now answers each one? If you had stopped mid-sentence rather than at a tidy boundary, which of your documents would have failed first?
 
 ---
 
 ## Self-Check Before You Submit
 
-Hold your submission against the rubric's `proficient` column.
+These are the items people actually miss. Hold the rest of your submission against the rubric's `proficient` column.
 
-- [ ] `CHARTER.md` has a one-sentence **product** mission, **five ranked** values, a checkable definition of success, zones as paths, and a git policy.
+- [ ] `CHARTER.md` has a one-sentence **product** mission, **five ranked** values, and a definition of success a classmate could check without asking you.
 - [ ] Every template section you deleted is listed in the readme with a one-line reason.
+- [ ] `opencode.json` asks before every non-git command, allows `git *`, names `CHARTER.md` and `.ai/MEMORY.md` in `instructions`, and defines the agent whose `prompt` points at `system_prompt.txt`.
+- [ ] At least **two confirmation gates** name real paths or real commands rather than categories.
 - [ ] The writeup **quotes** one agent plan and names the ranked value that rejected it.
-- [ ] `AGENTS.md` and `system_prompt.txt` cover role, goal, tools, format, and guardrails.
-- [ ] At least **two confirmation gates** name real paths or real commands, not categories.
-- [ ] `opencode.json` asks before every non-git command and allows `git *`, with a transcript showing each.
-- [ ] `opencode.json` names `CHARTER.md` and `.ai/MEMORY.md` in `instructions`, and defines the agent whose `prompt` points at `system_prompt.txt`.
-- [ ] The interview asked **five or fewer** numbered questions, in groups of three or fewer, each with lettered options and a stated default, before any file was touched.
-- [ ] The readme names one question the menu got wrong, quotes the revised wording, and says what the answers changed.
-- [ ] `transcripts/05-rule-alone.md` and `transcripts/06-gate-held.md` show the same guarded operation, and in the second the **tool** refused.
+- [ ] The interview asked **five or fewer** numbered questions, each with lettered options and a stated default, before any file was touched.
+- [ ] `transcripts/03-rule-alone.md` and `transcripts/04-gate-held.md` show the same guarded operation, and in the second the **tool** refused.
 - [ ] The readme says in one paragraph, under `Why the gate held`, why the gate held when the rule did not.
-- [ ] Part 4 started in plan mode, and the plan was checked against `spec.md` before any edit was approved.
-- [ ] `diff_1.patch` was saved **before** anything was accepted.
-- [ ] `critique.md` sorts every finding into the four categories and carries a compliance row for **every** prohibition, with evidence.
-- [ ] `followup_prompt.txt` addresses every Category 2, 3, and 4 finding by name, and `diff_2.patch` is compared against the critique finding by finding.
+- [ ] `critique.md` carries a row for every finding and a compliance row for **every** prohibition, each with evidence.
 - [ ] The artifact meets **its own** definition of success, with the output pasted in.
-- [ ] `.ai/SESSION.md` has **three or more** dated, append-only entries, each with what was **not** done and one Next Safe Action.
-- [ ] `.ai/MEMORY.md` carries dated, append-only entries the **agent** wrote, verified with `git diff` rather than from its summary.
-- [ ] The readme quotes the one particular the agent got wrong in what it wrote, and the correction.
-- [ ] A fresh session, asked only what it knows about the project, answers from `.ai/MEMORY.md`.
-- [ ] `docs/DECISION_LOG.md` has **two** entries, each naming the **rejected alternative**.
+- [ ] `.ai/SESSION.md` has **two or more** dated, append-only entries, each with what was **not** done and one Next Safe Action.
+- [ ] `.ai/MEMORY.md` entries were written by the **agent** and verified with `git diff` rather than from its summary.
 - [ ] `traceability.md` quotes four links, or names the broken link and the sentence that would have kept it.
-- [ ] The cold session restated mission, task, and next safe action **before** acting.
 - [ ] Every question the cold session asked is listed with the document edit it caused.
-- [ ] Model name and opencode version are recorded.
-- [ ] Every reflection answer cites a line from your own transcript, log, or diff.
+- [ ] Model name and opencode version are recorded, and every reflection answer cites a line from your own transcript, log, or diff.
 
 ---
 
@@ -1104,33 +1076,31 @@ submission/
 |-- system_prompt.txt                the launch-time prompt you check compliance against
 |-- spec.md                          what you asked the agent to build
 |-- followup_prompt.txt              the refine turn
-|-- critique.md                      four categories plus the compliance table, with the
-|                                    resolved-in-diff_2 column filled in
-|-- diff_1.patch, diff_2.patch       before acceptance, and after the refine turn
-|-- KICKOFF_PROMPT.txt               filled, and the exact text used in Part 7
+|-- critique.md                      one findings table, with a compliance row per prohibition
+|-- diff_1.patch                     the first diff, saved before you accepted anything
+|-- KICKOFF_PROMPT.txt               filled, and the exact text used in Part 6
 |-- opencode.json                    provider, instructions, and the Part 3 permission block
 |-- .ai/
 |   |-- CONTEXT.md                   one true sentence, plus your Part 1 menu answers
 |   |-- CURRENT_TASK.md              as the Part 4 interview last left it
 |   |-- MEMORY.md                    dated, append-only, written by the agent
-|   |-- SESSION.md                   at least three dated, append-only entries
+|   |-- SESSION.md                   at least two dated, append-only entries
 |   |-- KNOWN_ISSUES.md              only if you verified a defect
 |   `-- FUTURE_WORK.md               only if you deferred something on purpose
 |-- docs/
-|   `-- DECISION_LOG.md              two entries, each naming the rejected alternative
+|   `-- DECISION_LOG.md              one entry naming the rejected alternative
 |-- artifact/                        the software, document, or automation itself
 |-- transcripts/
 |   |-- 00-wiring-confirmed.md       charter loaded, zones known, ask and allow both shown
 |   |-- 01-interview.md              the menu, your answers, and the task file it wrote
 |   |-- 02-plan-rejected.md          the plan, your rejection, and the value that rejected it
-|   |-- 03-contract-before-after.md  the same task with and without AGENTS.md
-|   |-- 04-cold-handoff.md           the fresh session, plus every question it had to ask
-|   |-- 05-rule-alone.md             the guarded operation against the AGENTS.md rule alone
-|   |-- 06-gate-held.md              the same operation against the real gate
+|   |-- 03-rule-alone.md             the guarded operation against the AGENTS.md rule alone
+|   |-- 04-gate-held.md              the same operation against the real gate
+|   |-- 05-cold-handoff.md           the fresh session, plus every question it had to ask
 |   |-- agent_trace_1.txt
 |   `-- agent_trace_2.txt
 |-- traceability.md                  the four-link chain, quoted, or the link that broke
-`-- readme.md                        about two pages: route taken, direction if any, deleted
+`-- readme.md                        about two pages: route taken, deleted
                                      template sections with reasons, why the gate held, what
                                      the interview and the memory file showed, findings,
                                      learning log
@@ -1153,10 +1123,7 @@ Keep a metacognitive learning log for this lab in your readme: in the spirit of 
 
 - Which of your five ranked values did real work, and which one has never yet resolved anything?  What would you re-rank now, and why?
 - Quote the sentence the agent wrote into `.ai/SESSION.md` or `.ai/MEMORY.md` that you had to fix.  What did the model not know that you did?
-- Your interview asked the questions you thought mattered.  Which question turned out to matter that you did not ask, and how did you find out?
-- You typed the interview request every time you wanted it.  Which of the four places an instruction can live, from the Background table, would you move it to, and what would that cost you?
-- Name one guardrail in your `AGENTS.md` that holds only because the model chose to honor it.  Part 3 moved one rule behind a gate; what would it take to make the harness, git, the container, or the operating system enforce this one instead, and would you make that trade?
-- The cold session asked you some number of questions.  Which one embarrassed you most, and what does that say about the difference between what you wrote down and what you know?
+- Name one guardrail in your `AGENTS.md` that holds only because the model chose to honor it.  Part 3 moved one rule behind a gate; what would it take to make the harness, git, or the operating system enforce this one instead, and would you make that trade?
 - Approximately how many hours did this lab take (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 - If collaboration was permitted and occurred, identify it.  Do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you.
 
@@ -1164,32 +1131,15 @@ Keep a metacognitive learning log for this lab in your readme: in the spirit of 
 
 ## Extension Challenges
 
-These are optional and carry no extra credit.  Each is about one sitting, which is what distinguishes them from the directions below.
+All four of these are optional, and each is about one sitting. Two of them pick up work the core lab deliberately set down, and two go somewhere the core lab does not.
 
-**Challenge 1 (moderate): Shorten the contract until it breaks.**  Cut `AGENTS.md` in half, keeping every gate, and run the same task from Part 4 again.  Report which behavior you lost first.  A contract a small model will not read to the end is a contract it does not have, and this finds your model's end.
+**Challenge 1: Measure the refine turn.** Part 5 stopped after one follow-up without checking it diff against diff, and this is that check. Before you run the refine turn, save the first diff with `git diff > diff_1.patch`. Run the follow-up, then save the second with `git diff > diff_2.patch`. Now add a column to your `critique.md` table headed "Resolved in diff_2?" and fill it in with yes, no, or partially for every row, reading the second diff rather than trusting the agent's summary of it. Anything still unresolved gets one sentence explaining why. What you learn is which of your instructions actually landed, and it is usually not the ones you thought were clearest.
 
-**Challenge 2 (moderate): The interrupted session.**  Stop an agent mid-edit, on purpose, at an inconvenient moment.  Does anything reach `.ai/SESSION.md` or `.ai/MEMORY.md` when a session dies rather than ends?  Report what you actually have on disk, and what that implies about instructions that only fire on a graceful exit.
+**Challenge 2: Show that the contract does something.** The core lab never tests `AGENTS.md` on its own, and this is the cheapest possible controlled comparison. Pick a trivial task, such as adding a one-line comment at the top of a file in `artifact/`. Run it once with `AGENTS.md` in place. Then rename the file with `mv AGENTS.md AGENTS.md.off`, run the identical task again, and rename it back. Save both transcripts side by side and write a paragraph on what differed. The interesting outcome is often that nothing did, which tells you the contract was carrying less weight than you assumed and points at which sentence to rewrite.
 
-**Challenge 3 (harder): Someone else's cold start.**  Give your repository to a classmate with no explanation and ask their agent to perform your Next Safe Action.  Log every question they had to ask you out loud.
+**Challenge 3: The interrupted session.** Stop an agent mid-edit, deliberately, at an inconvenient moment: cancel it while it is partway through writing a file. Then look at what is actually on disk. Did anything reach `.ai/SESSION.md` or `.ai/MEMORY.md`? Run `git status` and `git diff` to find out what state the working tree is in, and whether you can tell from the repository alone how far it got. Report what you find, and say what it implies about any instruction that only fires on a graceful exit. This is the failure mode that a well-written wrap-up rule does not cover, and knowing that changes where you put the rule.
 
-**Challenge 4 (hardest): The instruction that did not survive the model.**  Run the same session against two different local models, three runs each.  Find one instruction in `AGENTS.md` that one model honors and the other does not, and say what that tells you about writing instructions for a model you have not chosen yet.
-
----
-
-## Choose Your Direction
-
-Everyone completes the core lab above: the project wiring, the charter, the contract, the gate, the artifact, the critique and refine turn, the traceability drill, and the cold handoff.  That core is the required spine, and the 100-point rubric is earned on the core alone.
-
-A direction is **optional**.  It is a two-to-four-hour build, rather than the one-sitting deepeners above, and it produces something you can carry into your Project Thread.  Every direction runs on your local model with no account and no bill unless its row says otherwise.  If the direction you want is not on the menu, propose it.
-
-| Direction | What you build | Cost and accounts | Est. hours |
-|---|---|---|---|
-| **1. The Second Set of Eyes** | An RFC written by the agent before your largest change, reviewed and accepted or rejected by you, with the outcome and the rejected alternative recorded in `docs/DECISION_LOG.md`.  Uses the course `RFC-template.md` | Free; nothing beyond the core setup | 2-3 |
-| **2. Belt and Braces** | A second charter rule that is only advisory today, made enforceable by something outside the agent harness as well as outside the model: a git pre-commit hook, a read-only `:ro` mount on your sources directory, or a CI check.  Part 3 gated one operation inside the harness; this direction gates one where the harness cannot see it.  The deliverable is a transcript in which the **tool**, not the model, refuses | Free; Docker is already installed from Week 1 | 3-4 |
-| **3. Trade Charters** | A classmate's `CHARTER.md` and `AGENTS.md` installed in your opencode, one real task run under **their** rules, and an assumptions audit naming three things their documents took for granted that yours do not | Free; a GitHub account you already have | 2-3 |
-| **4. Harden What You Accepted** | Static analysis over the accepted artifact: `flake8` for style and `bandit` for security on the software route, a link and structure check on the document route, or a `shellcheck` pass on the automation route.  Every high-severity finding is either fixed or documented with a justification | Free; `pip install flake8 bandit` or `shellcheck` | 2-3 |
-| **5. The Runbook That Rebuilds You** | `RUNBOOK.md` maintained by the agent as a record of its own configuration, then a deliberate break of your opencode setup and a restore driven only by what the runbook says | Free; nothing beyond the core setup | 3-4 |
-| **6. Same Charter, Bigger Model** | The identical session run against a second model, with a per-instruction adherence table showing which rules survived the model change and which did not, plus a paragraph on what that implies for writing instructions for a model you have not chosen yet | Free on the two-local-models path (`ollama pull` a second model); optionally a hosted model, roughly one to two dollars, or an instructor key if one is announced.  **The local path earns identical credit** | 3-4 |
+**Challenge 4: The instruction that did not survive the model.** Point opencode at a second model, then run the same session against both, three runs each, with the same prompt and the same repository. Read the transcripts against your `AGENTS.md` line by line and find one instruction that one model honors and the other drops. Report the instruction, both behaviors, and your account of why that particular sentence was fragile. This is the hardest of the four and the one most worth doing, because it tells you which of your rules depend on a model you happen to be using rather than on anything you actually wrote down.
 
 ---
 
@@ -1199,9 +1149,9 @@ This lab deliberately leaves things out, and each of them arrives somewhere spec
 
 - **The agent loop in code**, a persona with two tools, structured output, and a real evaluation protocol: the [Local Agent Lab]({{ site.baseurl }}/Assignments/LocalAgent), handed out the day this one is due.
 - **A second writer, a claim protocol that survives a concurrency test, and skills that try to *stop* something rather than advise it**: [Local Agent Lab Direction 5]({{ site.baseurl }}/Assignments/LocalAgent/Direction5).  The two skills you write in the *Skill Design Study* are the prerequisite; the three you write there are in addition to them.
-- **Enforcement in code rather than in instructions**: Part 3 is the first taste, Direction 2 above moves it outside the harness, and Direction 3 of the Local Agent Lab is the full version, with trust boundaries and a tested threat model.
+- **Enforcement in code rather than in instructions**: Part 3 is the first taste, and Direction 3 of the Local Agent Lab is the full version, with trust boundaries and a tested threat model.
 - **Writing, installing, and measuring skills of your own**, including the kickoff interview and session wrap-up packaged as skills that load on a trigger: the *Skill Design Study* written assignment, due the week after this lab.
-- **Your notes as memory an agent can read, and this same discipline across several projects at once**: the Week 7 session, *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox*.  You will arrive there with a charter already written and already tested, and that session amends it rather than starting it.
+- **Your notes as memory an agent can read, and this same discipline across several projects at once**: *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox*.  You arrive there with a charter already written and already tested, and that session amends it rather than starting it.
 - **A full written operating system for a domain you choose, with a governed multi-iteration loop**: Written Assignment 2, [Design Your Agent System]({{ site.baseurl }}/Assignments/AgentSystemDesign).
 
 ---
