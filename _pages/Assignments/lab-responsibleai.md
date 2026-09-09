@@ -56,6 +56,8 @@ info:
   readings:
     - rtitle: "OWASP Top 10 for LLM Applications (2025)"
       rlink: "https://genai.owasp.org/llm-top-10/"
+    - rtitle: "AI Coding Agent Security: poisoned repositories and the software supply chain"
+      rlink: "../Tutorials/CodingAgentSecurity"
     - rtitle: "Gandalf: Prompt Injection Game (shared warm-up)"
       rlink: "https://gandalf.lakera.ai/"
     - rtitle: "Tensor Trust: Attack and Defend (shared warm-up)"
