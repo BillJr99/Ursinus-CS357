@@ -67,6 +67,14 @@ In this warmup you'll install your local AI stack and your coding agent, and wri
 
 > **Also added after this assignment went out:** step 5 of Part 1 now names [opencode.ai](https://opencode.ai/) and lists the install options, both the command-line version and the desktop app.  Route A is unchanged, because the course image already ships the agent, and what you turn in is the same.
 
+> **Also added after this assignment went out:** Part 1.5 now shows how to *create* the file that steps 1 and 2 ask you to search and to commit, since the course directory you just made is empty and neither `grep` nor `git add` has anything to work with until a file exists.  Nothing you turn in changes; the same search transcript and the same `git log --oneline` transcript are what I am looking for.
+
+> **Also added after this assignment went out:** Part 1, Step 4 now says how to save the Python snippet to a file and run it, from the terminal or from VS Code.  The code and the expected output are unchanged.
+
+> **Also added after this assignment went out:** Part 1, Step 1 now covers the **Docker install of Ollama**, where the `ollama` command lives inside the container and each command is prefixed with `docker exec ollama ollama ...`.  The places that mention `host.docker.internal` now say plainly that it is a fallback rather than a default: try `localhost` first, and swap it in only if the connection is refused *and* the command is running inside a container.  The troubleshooting table gains a matching row.  The steps and the transcript I am asking for are unchanged.
+
+> **Also added after this assignment went out:** Part 1.5, step 2 now offers the **GitHub CLI** (`gh auth login`) as a shortcut that generates the SSH key and registers it with your account in one prompt, and says how `gh` and GitHub Desktop differ, which matters most on native Windows without WSL2.  The verification I ask for, `ssh -T git@github.com` and a pushed commit, is unchanged.  The same step now leads with **`git clone`** when the repository already exists on GitHub, keeping `git init` for the case where it does not, and gives the **VS Code** clone route for anyone who would rather not type it.
+
 > **Reorganized after this assignment went out (Sep 5):** Part 1 is now split into **Part 1A** (the Ollama stack, steps 1-4) and **Part 1B** (the coding agent, step 5), each with its own checklist, and the route choice is stated once up front.  **Nothing was added to what you turn in, and nothing was removed.**  The same five steps are graded by the same rubric; they are just no longer interleaved.  If you already started against the old layout, your work still counts as-is.  One genuinely new item appears at the end of Part 1B, an **optional** herdr install, which is explicitly not graded.
 
 This is the first thing you install for this course.  I have put it early on purpose, so that a broken setup costs you this assignment rather than a lab.
@@ -118,7 +126,7 @@ First pick a **route**, which decides *where* those five steps run.  The steps a
 
 Set up the full course environment by following the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md): Ollama installs **natively on your host** exactly as in Route B, and the rest of the semester's toolchain lives in one course Docker container bind-mounted onto a `cs357-work` GitHub repository you create in the activity.
 
-On this route, run **steps 1-3 on your host** as written, and run **steps 4 and 5** (the Python request and the coding-agent check) **from inside the container**, replacing `localhost` with `host.docker.internal` in the URL.  A verification transcript captured from inside the container is fully accepted; include the container prompt in your copy-paste so it is visible where each command ran, along with the activity's own container verification output (the `/api/tags` one-liner, `promptfoo --version`, and the spacy model check).
+On this route, run **steps 1-3 on your host** as written, and run **steps 4 and 5** (the Python request and the coding-agent check) **from inside the container**, where `localhost` no longer reaches Ollama, so the URL becomes `host.docker.internal` instead.  Reach for that substitution only when you need it: try `localhost` first every time, and swap in `host.docker.internal` only if the connection is refused *and* the command you ran was running inside a container.  On your host, `localhost` stays correct, including when Ollama itself is a container whose port you published.  A verification transcript captured from inside the container is fully accepted; include the container prompt in your copy-paste so it is visible where each command ran, along with the activity's own container verification output (the `/api/tags` one-liner, `promptfoo --version`, and the spacy model check).
 
 #### Route B: native install
 
@@ -142,6 +150,16 @@ ollama list
 
 `ollama list` should show `llama3.2` once the pull finishes.  This is the step that takes the longest; the model is about 2 GB.
 
+**If you installed Ollama as a Docker container** rather than natively, the `ollama` command does not exist on your host, and every `ollama ...` command on this page runs *inside* that container instead.  Reach it with `docker exec`, naming the container (the conventional name, and the one `docker run --name ollama` gives you, is `ollama`; `docker ps` shows what yours is actually called).  The word appears twice for a reason: the first is the container, the second is the program inside it.
+
+```bash
+docker exec ollama ollama --version
+docker exec ollama ollama pull llama3.2
+docker exec ollama ollama list
+```
+
+Add `-it` when the command is interactive, as the chat in Step 2 is: `docker exec -it ollama ollama run llama3.2 "Say hello in five words."`.  Steps 3 and 4 are unaffected as long as you published the port with `-p 11434:11434`, because `localhost:11434` on your host then reaches the server inside the container.  A transcript from this route is fully accepted; just leave the `docker exec` prefix visible in what you paste, so I can see where the command ran.
+
 **Step 2. Run a CLI sanity check.**
 
 ```bash
@@ -154,7 +172,7 @@ ollama run llama3.2 "Say hello in five words."
 curl http://localhost:11434/api/tags
 ```
 
-On Route A, run steps 1-3 on your **host**.  From inside the container, this URL becomes `http://host.docker.internal:11434/api/tags`.
+On Route A, run steps 1-3 on your **host**, where `localhost` is the right address.  If, and only if, `localhost` is refused *and* you are running this from inside a container, the URL becomes `http://host.docker.internal:11434/api/tags`, because `localhost` inside a container means that container rather than your machine.  Running Ollama itself under Docker does not by itself call for the change: with the port published (`-p 11434:11434`), `localhost:11434` on your host reaches it normally.
 
 **Step 4. Call the model from Python.**
 
@@ -182,7 +200,16 @@ response = requests.post(
 print(json.dumps(response.json(), indent=2))
 ```
 
-On Route A, run this **from inside the container**, with `host.docker.internal` in place of `localhost`.
+**Save it and run it.**  Python runs files, so put those lines in a file rather than typing them at a prompt.  Any editor does the job: open your `~/cs357` folder in VS Code (**File > Open Folder**), create a new file with **File > New File**, paste the code, and save it as `ollama_check.py` in that folder.  From the terminal alone, `nano ollama_check.py` (paste, then Ctrl+O to write and Ctrl+X to exit) does the same thing.  Then run it from the directory the file lives in:
+
+```bash
+cd ~/cs357
+python3 ollama_check.py
+```
+
+On Windows in PowerShell the command is `python ollama_check.py`, since Windows Python installs as `python`.  If you prefer to stay inside the editor, VS Code's Run button (the triangle in the top right, with the Python extension installed) and its integrated terminal run exactly the same command, and either transcript is fine for your submission.  A `ModuleNotFoundError` here means the `requests` install above landed in a different Python than the one you just ran; the troubleshooting table at the end of this assignment has the fix.
+
+On Route A, run this **from inside the container**, and there `localhost` will fail, so put `host.docker.internal` in its place.  Everywhere else, leave the URL as written: try `localhost` first, and change it only if the connection is refused *and* the script is running inside a container.
 
 #### Part 1A Checklist
 
@@ -255,7 +282,21 @@ Every lab this semester runs from a terminal, lives in a git repository, and dep
 
 Complete each step and capture the terminal output:
 
-1.  **Navigate.**  From a terminal, create a working directory for this course, enter it, and list its contents: `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la`.  Then use one search tool, `grep` (or `ripgrep`/`rg` if installed), to find a string in a file, and paste the command you ran.
+1.  **Navigate.**  From a terminal, create a working directory for this course, enter it, and list its contents: `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la`.  That directory is empty when you make it, so create a file for the search to find before you search.  Redirecting a couple of lines into a file is the quickest way, though typing them into an editor (`nano notes.txt`, or a new file saved from VS Code) or copying in a file you already have works just as well:
+
+    ```bash
+    printf 'model: llama3.2\nhost: http://localhost:11434\nagent: crush\n' > notes.txt
+    cat notes.txt
+    ```
+
+    Note that `touch notes.txt` creates the file but leaves it empty, and a search over an empty file matches nothing, so put a line or two inside it.  (In native PowerShell, the equivalent is `Set-Content notes.txt "model: llama3.2"`, since `printf` and `grep` are Unix shell tools; `Select-String` is the PowerShell search command.  Running these from WSL2 or Git Bash keeps the commands as written.)
+
+    Then use one search tool, `grep` (or `ripgrep`/`rg` if installed), to find a string in that file, and paste the command you ran along with its output:
+
+    ```bash
+    grep -n "localhost" notes.txt
+    ```
+
 2.  **Version control, authenticated with an SSH key.**  You will push to GitHub every week this semester, so set authentication up once, now, with a key.  GitHub no longer accepts your account password over HTTPS, and a key is the option that keeps working without a prompt on every push.
 
     **First, use the key you already have.**  A key you already trust is better than a second one, so look before you generate: run `ls -al ~/.ssh` and check for `id_ed25519.pub` (or `id_rsa.pub`).  If one is there and you know its passphrase, skip to *Add the public key to GitHub*.
@@ -289,18 +330,46 @@ Complete each step and capture the terminal output:
 
     The first connection asks you to accept GitHub's host fingerprint.  Success is a greeting that names your GitHub username; it does not open a shell, and the message that it does not provide shell access is the expected result, not an error.
 
-    **Now do the git work** against a remote (your course GitHub Classroom repo, or a throwaway GitHub repo): `git init`, add a file, `git add`, `git commit -m "first commit"`, then attach the remote in its SSH form and push:
+    **Now do the git work** against a remote: your course GitHub Classroom repository, the `cs357-work` repository you created in the Development Environment activity, or a throwaway GitHub repository.  Which command starts you off depends on where that repository already exists, and the distinction is worth learning once rather than guessing at every semester: **clone** when the repository is already on GitHub, and `git init` only when it is not.
+
+    **If it already exists on GitHub, clone it.**  Cloning downloads the full repository, sets `origin` to the address you cloned from, and leaves you in a working copy that is already connected, so no `git remote add` follows.  Copy the address from the green **Code** button on the repository page, choosing the **SSH** tab so you get the `git@github.com:` form that the key you just registered authenticates:
 
     ```bash
+    cd ~/cs357
+    git clone git@github.com:<your-username>/<your-repo>.git
+    cd <your-repo>
+    git remote -v
+    ```
+
+    `git clone` creates a *new folder* named after the repository, inside whatever directory you run it from, which is why you `cd` into it on the next line.  `git remote -v` should print your SSH address twice, once for fetch and once for push, which is your evidence that the working copy is wired to GitHub.  A repository with no commits yet clones with a warning that it is empty; that is fine, since the commit below is about to fill it.
+
+    **Prefer to do this in VS Code?**  You can, and it drives the same git underneath, so the result is identical.  With no folder open, the Source Control view (Ctrl+Shift+G, or Cmd+Shift+G on macOS) offers a **Clone Repository** button; from anywhere, the Command Palette (Ctrl+Shift+P, or Cmd+Shift+P) runs **Git: Clone**.  Either one asks for the repository address, where you paste the same SSH URL, then asks which local folder to put it in, `~/cs357` here, and offers to open the clone when it finishes.  Say yes: the integrated terminal (Ctrl+`) then opens already inside the repository, which is where you run `git log --oneline` for your transcript.  The palette also offers **Clone from GitHub**, which lets you pick from a list of your repositories instead of pasting a URL, though it signs you in to GitHub inside VS Code and authenticates as that account rather than with your key.
+
+    **If nothing exists on GitHub yet**, create the repository there first (**+ > New repository**, with no README, which keeps the two histories from conflicting), then initialize locally and attach the remote by hand:
+
+    ```bash
+    git init
     git remote add origin git@github.com:<your-username>/<your-repo>.git
+    ```
+
+    **Either way, the commit is the same.**  Git versions files, so the repository needs at least one file in it before there is anything to commit; create that file the way you created `notes.txt` above, with a redirect, an editor, or a copy of something you already have:
+
+    ```bash
+    printf '# CS357 scratch repository\n' > README.md
+    git add README.md
+    git commit -m "first commit"
     git push -u origin main
     ```
 
-    Paste the transcript of `git log --oneline` showing your commit.  If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, which you can verify with `git remote -v`.
+    Two things commonly go sideways here: `git commit` without `-m` drops you into an editor, and `:q!` leaves it if that editor turns out to be `vim`; and `git push` complains if your default branch is not named `main`, which `git branch -M main` fixes.  Paste the transcript of `git log --oneline` showing your commit.  If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, which you can verify with `git remote -v`.
 
     *On native Windows*, PowerShell ships OpenSSH, so all of the commands above work as written.  If `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell: `Set-Service -Name ssh-agent -StartupType Manual`, then `Start-Service ssh-agent`.
 
     *On the container route*, the default deliberately differs, and the difference is worth understanding rather than memorizing.  You still set the key up here, on your own machine, because that is where it belongs.  Inside the course container, Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) recommends a fine-grained token scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  Step 6 also shows the read-only `~/.ssh` mount if you would rather use your key there, and says plainly what you are handing over when you do.
+
+    **A shortcut, and the one I would take on native Windows.**  The [GitHub CLI](https://cli.github.com/), the `gh` command, does this whole exchange for you.  Install it (`winget install --id GitHub.cli` in PowerShell, `brew install gh` on macOS, or your package manager on Linux), then run `gh auth login`, choose **GitHub.com**, choose **SSH** as the protocol, and answer yes when it offers to generate a new SSH key and upload it to your account.  That one prompt replaces `ssh-keygen`, the `cat` of the `.pub` file, and the paste into Settings.  Verify it exactly as above, with `ssh -T git@github.com`, and paste that output; `gh repo clone <your-username>/<your-repo>` then clones over the protocol you just authorized.
+
+    This matters most on **native Windows without WSL2**, where you would otherwise assemble the SSH tooling yourself, and the two GitHub downloads that help there are worth telling apart.  `gh` is the command-line tool just described, a separate install rather than something GitHub Desktop brings along, though installing both is common and they coexist happily.  GitHub Desktop is the graphical client described next; it bundles Git for Windows, which is where `ssh-keygen` and Git Bash come from, and it handles its own authentication.  The Ubuntu or WSL2 route gives you the standard Unix tooling instead, and every command on this page then works as written.
 
     If you would rather not type git commands yet, [GitHub Desktop](https://desktop.github.com/) is a supported option and handles authentication for you: install it, sign in, use File > New repository (or Add local repository) on your `cs357` folder, commit from the Changes tab, and Publish repository to push.  Then paste the output of `git log --oneline` from Repository > Open in terminal, which is the same transcript the command-line route produces.  Set the key up anyway, because the labs and the coding agent drive git from a terminal.
 3.  **Reproducible Python with uv.**  Install [uv](https://docs.astral.sh/uv/) (the fast, modern Python environment manager we standardize on this term).  Create and activate a project environment and add the one dependency the labs start with: `uv venv`, then `uv add requests`, then `uv run python -c "import requests; print(requests.__version__)"`.  Paste the output.  (If you cannot install uv, fall back to `python -m venv` and `pip install requests`, and note in your submission that you used the fallback.)
@@ -351,9 +420,10 @@ Work down this table before you post in the course channel; if none of it helps,
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `ollama: command not found` after installing | The installer put the binary somewhere not on your `PATH` | Restart your terminal. If it persists, find the binary (`ls /usr/local/bin/ollama`) and add its directory to `PATH`. This is the `PATH` idea from Step 0 of the Workbench session |
+| `ollama: command not found`, and you installed Ollama with Docker | There is no host binary on this route; the program lives inside the container | Prefix the command: `docker exec ollama ollama list` (`docker ps` confirms the container name), and add `-it` for the interactive `ollama run` |
 | The `curl` to `/api/tags` says connection refused | The Ollama *server* is not running, which is separate from Ollama being installed | Start the desktop app, or run `ollama serve` in its own terminal and leave it open |
 | The model download stalls or fails partway | Network interruption on a 2 GB transfer | Rerun `ollama pull llama3.2`; it resumes rather than restarting |
-| Inside the container, `localhost:11434` refuses the connection | Correct behavior: `localhost` inside a container means the container | Use `http://host.docker.internal:11434`. On Linux, start via the course compose file so that hostname resolves |
+| Inside the container, `localhost:11434` refuses the connection | Correct behavior: `localhost` inside a container means the container | Use `http://host.docker.internal:11434`, but only for commands run inside a container; from your host, `localhost` stays correct. On Linux, start via the course compose file so that hostname resolves |
 | `Cannot connect to the Docker daemon` | Docker Desktop is installed but not running | Start the application. On Linux, `sudo systemctl start docker`, and confirm your user is in the `docker` group |
 | `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Set up the SSH key in Part 1.5, step 2, then point the remote at it: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained personal access token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS |
 | `git@github.com: Permission denied (publickey)` | The key is not loaded in the agent, or its public half was never added to GitHub | `ssh-add -l` lists loaded keys and `ssh-add ~/.ssh/id_ed25519` loads yours; confirm the contents of `id_ed25519.pub` appear under Settings -> SSH and GPG keys; then retest with `ssh -T git@github.com` |
