@@ -73,7 +73,7 @@ In this warmup you'll install your local AI stack and your coding agent, and wri
 
 > **Also added after this assignment went out:** Part 1, Step 1 now covers the **Docker install of Ollama**, where the `ollama` command lives inside the container and each command is prefixed with `docker exec ollama ollama ...`.  The places that mention `host.docker.internal` now say plainly that it is a fallback rather than a default: try `localhost` first, and swap it in only if the connection is refused *and* the command is running inside a container.  The troubleshooting table gains a matching row.  The steps and the transcript I am asking for are unchanged.
 
-> **Also added after this assignment went out:** Part 1.5, step 2 now offers the **GitHub CLI** (`gh auth login`) as a shortcut that generates the SSH key and registers it with your account in one prompt, and says how `gh` and GitHub Desktop differ, which matters most on native Windows without WSL2.  The verification I ask for, `ssh -T git@github.com` and a pushed commit, is unchanged.
+> **Also added after this assignment went out:** Part 1.5, step 2 now offers the **GitHub CLI** (`gh auth login`) as a shortcut that generates the SSH key and registers it with your account in one prompt, and says how `gh` and GitHub Desktop differ, which matters most on native Windows without WSL2.  The verification I ask for, `ssh -T git@github.com` and a pushed commit, is unchanged.  The same step now leads with **`git clone`** when the repository already exists on GitHub, keeping `git init` for the case where it does not, and gives the **VS Code** clone route for anyone who would rather not type it.
 
 > **Reorganized after this assignment went out (Sep 5):** Part 1 is now split into **Part 1A** (the Ollama stack, steps 1-4) and **Part 1B** (the coding agent, step 5), each with its own checklist, and the route choice is stated once up front.  **Nothing was added to what you turn in, and nothing was removed.**  The same five steps are graded by the same rubric; they are just no longer interleaved.  If you already started against the old layout, your work still counts as-is.  One genuinely new item appears at the end of Part 1B, an **optional** herdr install, which is explicitly not graded.
 
@@ -330,14 +330,34 @@ Complete each step and capture the terminal output:
 
     The first connection asks you to accept GitHub's host fingerprint.  Success is a greeting that names your GitHub username; it does not open a shell, and the message that it does not provide shell access is the expected result, not an error.
 
-    **Now do the git work** against a remote (your course GitHub Classroom repo, or a throwaway GitHub repo).  Git versions files, so the repository needs at least one file in it before there is anything to commit; create that file the same way you created `notes.txt` above, with a redirect, an editor, or a copy of something you already have.  Initialize the repository, commit the file, then attach the remote in its SSH form and push:
+    **Now do the git work** against a remote: your course GitHub Classroom repository, the `cs357-work` repository you created in the Development Environment activity, or a throwaway GitHub repository.  Which command starts you off depends on where that repository already exists, and the distinction is worth learning once rather than guessing at every semester: **clone** when the repository is already on GitHub, and `git init` only when it is not.
+
+    **If it already exists on GitHub, clone it.**  Cloning downloads the full repository, sets `origin` to the address you cloned from, and leaves you in a working copy that is already connected, so no `git remote add` follows.  Copy the address from the green **Code** button on the repository page, choosing the **SSH** tab so you get the `git@github.com:` form that the key you just registered authenticates:
+
+    ```bash
+    cd ~/cs357
+    git clone git@github.com:<your-username>/<your-repo>.git
+    cd <your-repo>
+    git remote -v
+    ```
+
+    `git clone` creates a *new folder* named after the repository, inside whatever directory you run it from, which is why you `cd` into it on the next line.  `git remote -v` should print your SSH address twice, once for fetch and once for push, which is your evidence that the working copy is wired to GitHub.  A repository with no commits yet clones with a warning that it is empty; that is fine, since the commit below is about to fill it.
+
+    **Prefer to do this in VS Code?**  You can, and it drives the same git underneath, so the result is identical.  With no folder open, the Source Control view (Ctrl+Shift+G, or Cmd+Shift+G on macOS) offers a **Clone Repository** button; from anywhere, the Command Palette (Ctrl+Shift+P, or Cmd+Shift+P) runs **Git: Clone**.  Either one asks for the repository address, where you paste the same SSH URL, then asks which local folder to put it in, `~/cs357` here, and offers to open the clone when it finishes.  Say yes: the integrated terminal (Ctrl+`) then opens already inside the repository, which is where you run `git log --oneline` for your transcript.  The palette also offers **Clone from GitHub**, which lets you pick from a list of your repositories instead of pasting a URL, though it signs you in to GitHub inside VS Code and authenticates as that account rather than with your key.
+
+    **If nothing exists on GitHub yet**, create the repository there first (**+ > New repository**, with no README, which keeps the two histories from conflicting), then initialize locally and attach the remote by hand:
 
     ```bash
     git init
+    git remote add origin git@github.com:<your-username>/<your-repo>.git
+    ```
+
+    **Either way, the commit is the same.**  Git versions files, so the repository needs at least one file in it before there is anything to commit; create that file the way you created `notes.txt` above, with a redirect, an editor, or a copy of something you already have:
+
+    ```bash
     printf '# CS357 scratch repository\n' > README.md
     git add README.md
     git commit -m "first commit"
-    git remote add origin git@github.com:<your-username>/<your-repo>.git
     git push -u origin main
     ```
 
