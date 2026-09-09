@@ -71,6 +71,8 @@ In this warmup you'll install your local AI stack and your coding agent, and wri
 
 > **Also added after this assignment went out:** Part 1, Step 4 now says how to save the Python snippet to a file and run it, from the terminal or from VS Code.  The code and the expected output are unchanged.
 
+> **Also added after this assignment went out:** Part 1, Step 1 now covers the **Docker install of Ollama**, where the `ollama` command lives inside the container and each command is prefixed with `docker exec ollama ollama ...`.  The troubleshooting table gains a matching row.  The steps and the transcript I am asking for are unchanged.
+
 > **Reorganized after this assignment went out (Sep 5):** Part 1 is now split into **Part 1A** (the Ollama stack, steps 1-4) and **Part 1B** (the coding agent, step 5), each with its own checklist, and the route choice is stated once up front.  **Nothing was added to what you turn in, and nothing was removed.**  The same five steps are graded by the same rubric; they are just no longer interleaved.  If you already started against the old layout, your work still counts as-is.  One genuinely new item appears at the end of Part 1B, an **optional** herdr install, which is explicitly not graded.
 
 This is the first thing you install for this course.  I have put it early on purpose, so that a broken setup costs you this assignment rather than a lab.
@@ -145,6 +147,16 @@ ollama list
 ```
 
 `ollama list` should show `llama3.2` once the pull finishes.  This is the step that takes the longest; the model is about 2 GB.
+
+**If you installed Ollama as a Docker container** rather than natively, the `ollama` command does not exist on your host, and every `ollama ...` command on this page runs *inside* that container instead.  Reach it with `docker exec`, naming the container (the conventional name, and the one `docker run --name ollama` gives you, is `ollama`; `docker ps` shows what yours is actually called).  The word appears twice for a reason: the first is the container, the second is the program inside it.
+
+```bash
+docker exec ollama ollama --version
+docker exec ollama ollama pull llama3.2
+docker exec ollama ollama list
+```
+
+Add `-it` when the command is interactive, as the chat in Step 2 is: `docker exec -it ollama ollama run llama3.2 "Say hello in five words."`.  Steps 3 and 4 are unaffected as long as you published the port with `-p 11434:11434`, because `localhost:11434` on your host then reaches the server inside the container.  A transcript from this route is fully accepted; just leave the `docker exec` prefix visible in what you paste, so I can see where the command ran.
 
 **Step 2. Run a CLI sanity check.**
 
@@ -382,6 +394,7 @@ Work down this table before you post in the course channel; if none of it helps,
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `ollama: command not found` after installing | The installer put the binary somewhere not on your `PATH` | Restart your terminal. If it persists, find the binary (`ls /usr/local/bin/ollama`) and add its directory to `PATH`. This is the `PATH` idea from Step 0 of the Workbench session |
+| `ollama: command not found`, and you installed Ollama with Docker | There is no host binary on this route; the program lives inside the container | Prefix the command: `docker exec ollama ollama list` (`docker ps` confirms the container name), and add `-it` for the interactive `ollama run` |
 | The `curl` to `/api/tags` says connection refused | The Ollama *server* is not running, which is separate from Ollama being installed | Start the desktop app, or run `ollama serve` in its own terminal and leave it open |
 | The model download stalls or fails partway | Network interruption on a 2 GB transfer | Rerun `ollama pull llama3.2`; it resumes rather than restarting |
 | Inside the container, `localhost:11434` refuses the connection | Correct behavior: `localhost` inside a container means the container | Use `http://host.docker.internal:11434`. On Linux, start via the course compose file so that hostname resolves |
