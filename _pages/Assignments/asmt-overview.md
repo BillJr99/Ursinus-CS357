@@ -67,6 +67,10 @@ In this warmup you'll install your local AI stack and your coding agent, and wri
 
 > **Also added after this assignment went out:** step 5 of Part 1 now names [opencode.ai](https://opencode.ai/) and lists the install options, both the command-line version and the desktop app.  Route A is unchanged, because the course image already ships the agent, and what you turn in is the same.
 
+> **Also added after this assignment went out:** Part 1.5 now shows how to *create* the file that steps 1 and 2 ask you to search and to commit, since the course directory you just made is empty and neither `grep` nor `git add` has anything to work with until a file exists.  Nothing you turn in changes; the same search transcript and the same `git log --oneline` transcript are what I am looking for.
+
+> **Also added after this assignment went out:** Part 1, Step 4 now says how to save the Python snippet to a file and run it, from the terminal or from VS Code.  The code and the expected output are unchanged.
+
 > **Reorganized after this assignment went out (Sep 5):** Part 1 is now split into **Part 1A** (the Ollama stack, steps 1-4) and **Part 1B** (the coding agent, step 5), each with its own checklist, and the route choice is stated once up front.  **Nothing was added to what you turn in, and nothing was removed.**  The same five steps are graded by the same rubric; they are just no longer interleaved.  If you already started against the old layout, your work still counts as-is.  One genuinely new item appears at the end of Part 1B, an **optional** herdr install, which is explicitly not graded.
 
 This is the first thing you install for this course.  I have put it early on purpose, so that a broken setup costs you this assignment rather than a lab.
@@ -182,6 +186,15 @@ response = requests.post(
 print(json.dumps(response.json(), indent=2))
 ```
 
+**Save it and run it.**  Python runs files, so put those lines in a file rather than typing them at a prompt.  Any editor does the job: open your `~/cs357` folder in VS Code (**File > Open Folder**), create a new file with **File > New File**, paste the code, and save it as `ollama_check.py` in that folder.  From the terminal alone, `nano ollama_check.py` (paste, then Ctrl+O to write and Ctrl+X to exit) does the same thing.  Then run it from the directory the file lives in:
+
+```bash
+cd ~/cs357
+python3 ollama_check.py
+```
+
+On Windows in PowerShell the command is `python ollama_check.py`, since Windows Python installs as `python`.  If you prefer to stay inside the editor, VS Code's Run button (the triangle in the top right, with the Python extension installed) and its integrated terminal run exactly the same command, and either transcript is fine for your submission.  A `ModuleNotFoundError` here means the `requests` install above landed in a different Python than the one you just ran; the troubleshooting table at the end of this assignment has the fix.
+
 On Route A, run this **from inside the container**, with `host.docker.internal` in place of `localhost`.
 
 #### Part 1A Checklist
@@ -255,7 +268,21 @@ Every lab this semester runs from a terminal, lives in a git repository, and dep
 
 Complete each step and capture the terminal output:
 
-1.  **Navigate.**  From a terminal, create a working directory for this course, enter it, and list its contents: `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la`.  Then use one search tool, `grep` (or `ripgrep`/`rg` if installed), to find a string in a file, and paste the command you ran.
+1.  **Navigate.**  From a terminal, create a working directory for this course, enter it, and list its contents: `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la`.  That directory is empty when you make it, so create a file for the search to find before you search.  Redirecting a couple of lines into a file is the quickest way, though typing them into an editor (`nano notes.txt`, or a new file saved from VS Code) or copying in a file you already have works just as well:
+
+    ```bash
+    printf 'model: llama3.2\nhost: http://localhost:11434\nagent: crush\n' > notes.txt
+    cat notes.txt
+    ```
+
+    Note that `touch notes.txt` creates the file but leaves it empty, and a search over an empty file matches nothing, so put a line or two inside it.  (In native PowerShell, the equivalent is `Set-Content notes.txt "model: llama3.2"`, since `printf` and `grep` are Unix shell tools; `Select-String` is the PowerShell search command.  Running these from WSL2 or Git Bash keeps the commands as written.)
+
+    Then use one search tool, `grep` (or `ripgrep`/`rg` if installed), to find a string in that file, and paste the command you ran along with its output:
+
+    ```bash
+    grep -n "localhost" notes.txt
+    ```
+
 2.  **Version control, authenticated with an SSH key.**  You will push to GitHub every week this semester, so set authentication up once, now, with a key.  GitHub no longer accepts your account password over HTTPS, and a key is the option that keeps working without a prompt on every push.
 
     **First, use the key you already have.**  A key you already trust is better than a second one, so look before you generate: run `ls -al ~/.ssh` and check for `id_ed25519.pub` (or `id_rsa.pub`).  If one is there and you know its passphrase, skip to *Add the public key to GitHub*.
@@ -289,14 +316,18 @@ Complete each step and capture the terminal output:
 
     The first connection asks you to accept GitHub's host fingerprint.  Success is a greeting that names your GitHub username; it does not open a shell, and the message that it does not provide shell access is the expected result, not an error.
 
-    **Now do the git work** against a remote (your course GitHub Classroom repo, or a throwaway GitHub repo): `git init`, add a file, `git add`, `git commit -m "first commit"`, then attach the remote in its SSH form and push:
+    **Now do the git work** against a remote (your course GitHub Classroom repo, or a throwaway GitHub repo).  Git versions files, so the repository needs at least one file in it before there is anything to commit; create that file the same way you created `notes.txt` above, with a redirect, an editor, or a copy of something you already have.  Initialize the repository, commit the file, then attach the remote in its SSH form and push:
 
     ```bash
+    git init
+    printf '# CS357 scratch repository\n' > README.md
+    git add README.md
+    git commit -m "first commit"
     git remote add origin git@github.com:<your-username>/<your-repo>.git
     git push -u origin main
     ```
 
-    Paste the transcript of `git log --oneline` showing your commit.  If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, which you can verify with `git remote -v`.
+    Two things commonly go sideways here: `git commit` without `-m` drops you into an editor, and `:q!` leaves it if that editor turns out to be `vim`; and `git push` complains if your default branch is not named `main`, which `git branch -M main` fixes.  Paste the transcript of `git log --oneline` showing your commit.  If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, which you can verify with `git remote -v`.
 
     *On native Windows*, PowerShell ships OpenSSH, so all of the commands above work as written.  If `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell: `Set-Service -Name ssh-agent -StartupType Manual`, then `Start-Service ssh-agent`.
 
