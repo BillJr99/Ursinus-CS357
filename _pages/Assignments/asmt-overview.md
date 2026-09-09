@@ -71,7 +71,7 @@ In this warmup you'll install your local AI stack and your coding agent, and wri
 
 > **Also added after this assignment went out:** Part 1, Step 4 now says how to save the Python snippet to a file and run it, from the terminal or from VS Code.  The code and the expected output are unchanged.
 
-> **Also added after this assignment went out:** Part 1, Step 1 now covers the **Docker install of Ollama**, where the `ollama` command lives inside the container and each command is prefixed with `docker exec ollama ollama ...`.  The troubleshooting table gains a matching row.  The steps and the transcript I am asking for are unchanged.
+> **Also added after this assignment went out:** Part 1, Step 1 now covers the **Docker install of Ollama**, where the `ollama` command lives inside the container and each command is prefixed with `docker exec ollama ollama ...`.  The places that mention `host.docker.internal` now say plainly that it is a fallback rather than a default: try `localhost` first, and swap it in only if the connection is refused *and* the command is running inside a container.  The troubleshooting table gains a matching row.  The steps and the transcript I am asking for are unchanged.
 
 > **Reorganized after this assignment went out (Sep 5):** Part 1 is now split into **Part 1A** (the Ollama stack, steps 1-4) and **Part 1B** (the coding agent, step 5), each with its own checklist, and the route choice is stated once up front.  **Nothing was added to what you turn in, and nothing was removed.**  The same five steps are graded by the same rubric; they are just no longer interleaved.  If you already started against the old layout, your work still counts as-is.  One genuinely new item appears at the end of Part 1B, an **optional** herdr install, which is explicitly not graded.
 
@@ -124,7 +124,7 @@ First pick a **route**, which decides *where* those five steps run.  The steps a
 
 Set up the full course environment by following the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md): Ollama installs **natively on your host** exactly as in Route B, and the rest of the semester's toolchain lives in one course Docker container bind-mounted onto a `cs357-work` GitHub repository you create in the activity.
 
-On this route, run **steps 1-3 on your host** as written, and run **steps 4 and 5** (the Python request and the coding-agent check) **from inside the container**, replacing `localhost` with `host.docker.internal` in the URL.  A verification transcript captured from inside the container is fully accepted; include the container prompt in your copy-paste so it is visible where each command ran, along with the activity's own container verification output (the `/api/tags` one-liner, `promptfoo --version`, and the spacy model check).
+On this route, run **steps 1-3 on your host** as written, and run **steps 4 and 5** (the Python request and the coding-agent check) **from inside the container**, where `localhost` no longer reaches Ollama, so the URL becomes `host.docker.internal` instead.  Reach for that substitution only when you need it: try `localhost` first every time, and swap in `host.docker.internal` only if the connection is refused *and* the command you ran was running inside a container.  On your host, `localhost` stays correct, including when Ollama itself is a container whose port you published.  A verification transcript captured from inside the container is fully accepted; include the container prompt in your copy-paste so it is visible where each command ran, along with the activity's own container verification output (the `/api/tags` one-liner, `promptfoo --version`, and the spacy model check).
 
 #### Route B: native install
 
@@ -170,7 +170,7 @@ ollama run llama3.2 "Say hello in five words."
 curl http://localhost:11434/api/tags
 ```
 
-On Route A, run steps 1-3 on your **host**.  From inside the container, this URL becomes `http://host.docker.internal:11434/api/tags`.
+On Route A, run steps 1-3 on your **host**, where `localhost` is the right address.  If, and only if, `localhost` is refused *and* you are running this from inside a container, the URL becomes `http://host.docker.internal:11434/api/tags`, because `localhost` inside a container means that container rather than your machine.  Running Ollama itself under Docker does not by itself call for the change: with the port published (`-p 11434:11434`), `localhost:11434` on your host reaches it normally.
 
 **Step 4. Call the model from Python.**
 
@@ -207,7 +207,7 @@ python3 ollama_check.py
 
 On Windows in PowerShell the command is `python ollama_check.py`, since Windows Python installs as `python`.  If you prefer to stay inside the editor, VS Code's Run button (the triangle in the top right, with the Python extension installed) and its integrated terminal run exactly the same command, and either transcript is fine for your submission.  A `ModuleNotFoundError` here means the `requests` install above landed in a different Python than the one you just ran; the troubleshooting table at the end of this assignment has the fix.
 
-On Route A, run this **from inside the container**, with `host.docker.internal` in place of `localhost`.
+On Route A, run this **from inside the container**, and there `localhost` will fail, so put `host.docker.internal` in its place.  Everywhere else, leave the URL as written: try `localhost` first, and change it only if the connection is refused *and* the script is running inside a container.
 
 #### Part 1A Checklist
 
@@ -397,7 +397,7 @@ Work down this table before you post in the course channel; if none of it helps,
 | `ollama: command not found`, and you installed Ollama with Docker | There is no host binary on this route; the program lives inside the container | Prefix the command: `docker exec ollama ollama list` (`docker ps` confirms the container name), and add `-it` for the interactive `ollama run` |
 | The `curl` to `/api/tags` says connection refused | The Ollama *server* is not running, which is separate from Ollama being installed | Start the desktop app, or run `ollama serve` in its own terminal and leave it open |
 | The model download stalls or fails partway | Network interruption on a 2 GB transfer | Rerun `ollama pull llama3.2`; it resumes rather than restarting |
-| Inside the container, `localhost:11434` refuses the connection | Correct behavior: `localhost` inside a container means the container | Use `http://host.docker.internal:11434`. On Linux, start via the course compose file so that hostname resolves |
+| Inside the container, `localhost:11434` refuses the connection | Correct behavior: `localhost` inside a container means the container | Use `http://host.docker.internal:11434`, but only for commands run inside a container; from your host, `localhost` stays correct. On Linux, start via the course compose file so that hostname resolves |
 | `Cannot connect to the Docker daemon` | Docker Desktop is installed but not running | Start the application. On Linux, `sudo systemctl start docker`, and confirm your user is in the `docker` group |
 | `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Set up the SSH key in Part 1.5, step 2, then point the remote at it: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained personal access token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS |
 | `git@github.com: Permission denied (publickey)` | The key is not loaded in the agent, or its public half was never added to GitHub | `ssh-add -l` lists loaded keys and `ssh-add ~/.ssh/id_ed25519` loads yours; confirm the contents of `id_ed25519.pub` appear under Settings -> SSH and GPG keys; then retest with `ssh -T git@github.com` |
