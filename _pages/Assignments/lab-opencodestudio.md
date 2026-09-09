@@ -193,7 +193,7 @@ That is the whole trick.  A charter is where you make a decision **once**, in wr
 | **Git policy** | When to commit, what never gets committed |
 | **Documentation authority** | Which wins when documents and memory disagree |
 
-The ranking takes the longest and is the part worth doing.  A list of five values in no particular order resolves nothing.  A ranked list resolves cases its author never anticipated, which is precisely the situation an agent will put you in.  Keep this rule from the template verbatim:
+The ranking takes the longest and earns the most.  A list of five values in no particular order resolves nothing.  A ranked list resolves cases its author never anticipated, which is precisely the situation an agent will put you in.  Keep this rule from the template verbatim:
 
 > The agent shall never work from memory when project documentation exists.  Before every session, reread the charter, the current task, and the session log.  If project documentation conflicts with remembered context, prior chat context, or assumptions, **the documentation wins.**  If the documentation is incomplete, update it rather than relying on memory.
 
@@ -312,7 +312,7 @@ Build this one by hand. Put it at the root of `opencode-studio/`, and note the n
 
 Add your Ollama provider block from Week 1, Step 8.2 alongside these keys. The `provider` block and these keys are siblings in the same object.
 
-Two things in that file are worth reading slowly.
+Two things in that file decide whether it works.
 
 **The `permission` block, and why the order matters.** Values are `allow`, `ask`, or `deny`. Keys are tool names such as `bash`, `edit`, `read`, and `webfetch`, and a tool's value may itself be a map of command patterns using `*` and `?`. **The last matching rule wins.** So read the block top to bottom: ask about everything; inside `bash`, ask about everything; then allow any command beginning with `git`. Reverse those last two lines and `"*": "ask"` would override the git rule and you would be approving every `git status` for the rest of the lab.
 
@@ -421,7 +421,7 @@ The order in this part is the argument of the whole lab.  You choose what you ar
 
 Pick one.  All three are graded identically by the same rubric, and none of them is the "real" one.
 
-This table is the only place the three routes are spelled out. Everything after it is written for the software route, and the last two columns tell you what to substitute. Read the whole row for your route once, now, and you will not need another route aside for the rest of the lab.
+This table is the only place the three routes are spelled out. Everything after it is written for the software route, and the last two columns give the substitutions for the other two. Your row carries everything you need; the rest of the lab adds no further route asides.
 
 | Route | The artifact is | Pick this if | What "done" looks like | Your `spec.md` is | "The diff" means |
 |---|---|---|---|---|---|
@@ -861,7 +861,7 @@ to .ai/SESSION.md with Scope, Completed, what you deliberately did not do,
 Validation, and exactly one Next Safe Action.  Append only.  Change no existing entry.
 ```
 
-Then do three things, in this order, and do not skip the first.
+Then do three things, in this order. The first one is what makes the other two mean anything.
 
 1. **Verify against the file, not the summary.**  Run `git diff .ai/` and read what actually landed.  The agent's own account of what it wrote is not evidence.
 2. **Correct what it got wrong.**  It will be wrong in at least one particular.  That correction is the finding: it is the gap between what the agent believed happened and what happened.  Quote the sentence you had to fix in your readme.
