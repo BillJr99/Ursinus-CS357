@@ -27,6 +27,21 @@ Two ideas carry the whole design:
 
 Work through the steps in order.  Each practice step shows the command *and* the output you should expect.  If Docker cannot run on your machine, Step 10 (the native fallback) is a complete, fully supported route.
 
+### What each step produces for the Overview assignment
+
+Most of what the Overview assignment asks you to paste comes out of this page.  Capture the output of each proof command as you go, and you will not have to redo any of it.
+
+| Step | The command that proves it | The Overview item it satisfies |
+|---|---|---|
+| 1 | `ollama --version` and `curl http://localhost:11434/api/tags` | Part 1A, Steps 1 and 3 |
+| 2 | `docker run hello-world` | Your route choice: a working Docker means Route A |
+| 3 | `git remote -v` | Part 1.5, Step 2 (the repository you will push to) |
+| 4 | The `student@...:/workspace$` prompt | Route A evidence: include this prompt in every container transcript |
+| 5 | The four checks in 5.1 through 5.4 | The container verification lines the Overview's Route A asks for |
+| 7 | `python3 hello_agent.py`, then `git log --oneline` after the push | Part 1.5, Steps 1 and 2.  For Part 1A, Step 4, run the Overview's `ollama_check.py` from this same prompt; it prints the full JSON |
+| 8.1 through 8.3 | `opencode --version`, `/model`, and one answered prompt | Part 1B, Step 5 |
+| 10 | The `uv` commands | Part 1.5, Step 3, which runs on your host on both routes |
+
 ---
 
 ## Directions and Group Roles
@@ -70,6 +85,8 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | 10-35 | Steps 0 through 3: the shell in ten minutes, the repository, and the container |
 | 35-60 | Steps 4 through 7: the model server, the gateway, and your first end-to-end call |
 | 60-75 | Step 8: hand opencode a real task and watch it work.  Any step you do not reach today is the homework |
+
+**Doing this on your own, outside class?**  Follow the same steps in the same order and skip the roles.  Budget about ninety minutes, most of it downloads: start the Step 1 model pull and the Step 4 image build as soon as you reach them, and read ahead while they run.
 
 ---
 ## Step 0: The Shell in Ten Minutes
@@ -156,11 +173,28 @@ Note the address you just used: `localhost:11434`.  Hold that thought: in Step 5
 
 ## Step 2: Install Docker Desktop
 
-Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) (macOS/Windows) or [Docker Engine](https://docs.docker.com/engine/install/) (Linux).  If Docker is already on your machine from another course or project, skip to the verification.
+If Docker is already on your machine from another course or project, skip to the verification in 2.4.  If Docker cannot be installed on your machine at all (unsupported hardware, an administrator lock, or too little disk), go to Step 10 now rather than at the end; it is a complete route, and nothing before Step 10 is wasted.
 
 **Disk note:** Docker Desktop plus the course image (the ML libraries are hefty) needs roughly **8-10 GB** free, on top of Ollama's models.  Clear space now, not mid-download.
 
-Verify:
+**2.1: Windows only: install Ubuntu on WSL2 first.**  Docker Desktop on Windows does not run containers on Windows itself; it runs them inside **WSL2**, the Windows Subsystem for Linux.  Installing the Linux side first prevents most of the Windows trouble on this page.  Open **PowerShell as Administrator** and run:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+Reboot if it asks.  Then launch **Ubuntu** from the Start menu and set the UNIX username and password it prompts for; these are new, and separate from your Windows account.  If `wsl --install` is not recognized, your Windows is too old for the one-liner: update Windows, or follow Microsoft's [manual WSL2 install steps](https://learn.microsoft.com/en-us/windows/wsl/install-manual).  Do the rest of this page from the **Ubuntu** terminal: `~` means what it says, paths are ordinary Linux paths, and a repository kept in your WSL2 home directory bind-mounts far faster than one on the Windows side.
+
+**2.2: Install Docker.**  Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) (macOS/Windows) or [Docker Engine](https://docs.docker.com/engine/install/) (Linux), and start it.
+
+**2.3: Windows only: check two Docker settings.**  Open Docker Desktop's **Settings** (the gear icon) and verify both of these:
+
+- **General**: **Use the WSL 2 based engine** is checked.
+- **Resources -> WSL Integration**: the **Ubuntu** toggle is switched **on**.  Click **Apply & Restart**.
+
+That second setting is the one students most often miss, and its symptom is confusing: Docker Desktop looks perfectly healthy in its own window, but `docker` is not a command inside Ubuntu.
+
+**2.4: Verify.**
 
 ```bash
 docker run hello-world
@@ -198,7 +232,7 @@ origin  https://github.com/YOURUSERNAME/cs357-work.git (fetch)
 origin  https://github.com/YOURUSERNAME/cs357-work.git (push)
 ```
 
-The clone is a git repository that already knows its GitHub remote, the versioned half of the environment.
+The clone is a git repository that already knows its GitHub remote, the versioned half of the environment.  The address is HTTPS on purpose: inside the container you will authenticate with a repository-scoped token (Step 6), and that token works over HTTPS.  The SSH key from Part 1.5 of the Overview assignment stays on your host, where it belongs.
 
 ---
 
@@ -210,6 +244,21 @@ Download the three course container files and place them in a `.devcontainer/` f
 - [docker-compose.yml](https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/docker-compose.yml), one-command build/run, the workspace bind mount, and the Linux `host.docker.internal` fix
 - [devcontainer.json](https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/devcontainer.json), VS Code Dev Containers configuration
 - (optional) [README.md](https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/README.md), the quickstart version of this activity
+
+The commands below fetch all three into the right place.  Run them from your clone:
+
+```bash
+cd ~/cs357-work
+mkdir -p .devcontainer
+cd .devcontainer
+curl -fsSL -o Dockerfile https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/Dockerfile
+curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/docker-compose.yml
+curl -fsSL -o devcontainer.json https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/devcontainer.json
+cd ..
+ls -la .devcontainer
+```
+
+Expected: the three files, under exactly those names.  If you saved them from a browser instead, check the names, because browsers sometimes save `Dockerfile` as `Dockerfile.txt`, and Docker will not find it under that name.  Your repository should now look like this:
 
 ```text
 cs357-work/
@@ -332,7 +381,7 @@ Pushing needs credentials, and this is the one place in the course where your ow
 
 **On your own machine, use an SSH key.**  Part 1.5 of the [Overview assignment](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/Overview) walks through checking for a key you already have, creating one with `ssh-keygen -t ed25519` if you do not, adding the public half under GitHub's *Settings -> SSH and GPG keys*, and confirming it with `ssh -T git@github.com`.  That is the right default there: the machine is yours, the key is yours, and it is the credential every later lab assumes once you are driving git from a terminal.
 
-**Inside the container, the default flips to a scoped token**, and the reason is not convenience.  The container is not only yours: it runs a course image, and from Step 8 onward it runs *agent code* that acts on your files on your behalf.  A credential you place inside it is a credential that code can use.  So choose deliberately:
+**Inside the container, the default flips to a scoped token**, and the reason is not convenience.  The container is not only yours: it runs a course image, and from Step 8 onward it runs *agent code* that acts on your files on your behalf.  A credential you place inside it is a credential that code can use.  So choose deliberately, and if you are not sure, take Choice 1:
 
 **Choice 1: HTTPS with a personal access token (PAT).  Recommended default inside the container.**
 
@@ -495,11 +544,29 @@ Before you write it, settle the address, because getting this wrong produces a c
 | Natively on your laptop | `http://localhost:11434/v1` | `http://localhost:3000/api/v1` |
 | Inside the container | `http://host.docker.internal:11434/v1` | `http://host.docker.internal:3000/api/v1` |
 
-The `provider` block is a map, so you do not have to choose: name two keys and you get two providers, both live, both listed in `/model`.  Set them both up now, because you will want to compare them in a minute.  The heredoc below is bash, so run it in a macOS, Linux, or WSL shell; on native Windows, make the folder and save the same JSON with an editor.  It is written for the container route, so swap `host.docker.internal` for `localhost` in both URLs if you installed opencode natively:
+Write the file now.  The heredoc below is bash, so run it in a macOS, Linux, or WSL shell; on native Windows, make the folder and save the same JSON with an editor.  It is written for the container route, so put `localhost` in place of `host.docker.internal` if you installed opencode natively:
 
 ```bash
 # Container route: write it to the repository root, where it survives `--rm`.
 # Native route: use ~/.config/opencode/opencode.json instead (mkdir -p it first).
+cat > /workspace/opencode.json <<'JSON'
+{
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": { "baseURL": "http://host.docker.internal:11434/v1" },
+      "models": { "llama3.2": { "name": "llama3.2 (raw Ollama)" } }
+    }
+  }
+}
+JSON
+```
+
+That file is everything the Overview assignment needs, and everything Steps 8.3 and 8.4 need.
+
+**Optional: register OpenWebUI as a second provider.**  The `provider` block is a map, so you do not have to choose: name two keys and you get two providers, both live, both listed in `/model`.  OpenWebUI is not part of today's build; the Local Agent lab's first direction installs it on your host.  Add this second entry once it is running there, because until then the entry appears in `/model` but cannot answer.  The two-provider version of the file looks like this, again written for the container route:
+
+```bash
 cat > /workspace/opencode.json <<'JSON'
 {
   "provider": {
@@ -521,7 +588,7 @@ cat > /workspace/opencode.json <<'JSON'
 JSON
 ```
 
-**These two routes are not the same thing, which is the whole reason to register both.**  Ollama hands you the raw model: the weights you pulled, answering with nothing around them.  OpenWebUI hands you that same model *plus* everything you configured in front of it, meaning your knowledge bases, your tools, your system prompts.  Later, when an answer is wrong, you will ask the same question through each and learn in one step whether the problem is the model or the pipeline you built around it.  That is worth two minutes of setup now.
+**These two routes are not the same thing, which is the reason to register both once you have both.**  Ollama hands you the raw model: the weights you pulled, answering with nothing around them.  OpenWebUI hands you that same model *plus* everything you configured in front of it, meaning your knowledge bases, your tools, your system prompts.  Later, when an answer is wrong, you will ask the same question through each and learn in one step whether the problem is the model or the pipeline you built around it.  That is worth two minutes of setup now.
 
 Two clarifications about that key, because "API key" usually means "bill":
 
@@ -541,7 +608,7 @@ The file you just wrote settles the **model**: which weights answer you.  It doe
 
 **In the desktop application, first.**  Open **File -> Settings** and turn on **Show Agent**, which puts the agent selector in the message bar beside the model dropdown.  It is not always shown on a fresh install, and its absence is the most common reason a student concludes, wrongly, that the desktop app has no plan mode.  With the selector visible you are choosing two things before every run, and you can see both: the model on one side, the agent on the other.
 
-**In the terminal.**  `/model` lists the providers you registered above, so both your Ollama entry and your OpenWebUI entry should appear there, distinguishable by the `name` fields you gave them.  **Tab** cycles the primary agents, `shift+tab` cycles back through them, and `<leader>a` lists them outright.  Those are the `agent_cycle`, `agent_cycle_reverse`, and `agent_list` keybinds, and you rebind them in `tui.json`; keybinds in `opencode.json` are deprecated and migrated for you.  The agent you are currently in is shown on the input line, so make a habit of reading it before you press Enter.
+**In the terminal.**  `/model` lists the providers you registered above, so your Ollama entry, and your OpenWebUI entry if you added it, should appear there, distinguishable by the `name` fields you gave them.  **Tab** cycles the primary agents, `shift+tab` cycles back through them, and `<leader>a` lists them outright.  Those are the `agent_cycle`, `agent_cycle_reverse`, and `agent_list` keybinds, and you rebind them in `tui.json`; keybinds in `opencode.json` are deprecated and migrated for you.  The agent you are currently in is shown on the input line, so make a habit of reading it before you press Enter.
 
 > **Why this is a setup step and not a detail.**  Every gate this course later asks you to build assumes you know which agent was running when it fired.  A rule that is obviously in force under `plan` is not in force under `build`, and the same prompt sent under each produces two very different transcripts.
 
@@ -704,25 +771,35 @@ If your machine cannot run Docker (unsupported hardware, administrator locks, di
 
 ## Step 11: Troubleshooting
 
-**`Cannot connect to the Docker daemon`.**  Docker Desktop is not running (start the app), or on Linux the service is stopped (`sudo systemctl start docker`) or your user is not in the docker group (`sudo usermod -aG docker $USER`, then log out and in).
+The entries are in step order.  Find the step you are on, and work down its entries before you post in the course channel; when you do post, include the exact command and its full output.
 
-**Connection refused to `host.docker.internal:11434` (the Step 5.1 failure).**  Diagnose with the ladder from Docker from Zero Model 2: (1) from the *host*, `curl http://localhost:11434/api/tags`; if this fails, Ollama is not running; start it.  (2) If the host works but the container does not, and you are **on Linux**, the container was probably started without the host-gateway mapping; `host.docker.internal` is automatic on Docker Desktop (macOS/Windows) but must be opted into on Docker Engine.  The course `docker-compose.yml` includes `extra_hosts: ["host.docker.internal:host-gateway"]` and `devcontainer.json` includes the matching `--add-host` run argument, so this bites only when running the image by hand: add `--add-host=host.docker.internal:host-gateway` to your `docker run`.  (3) Some Ollama installs bind only to `127.0.0.1`, which the host gateway cannot reach; setting the environment variable `OLLAMA_HOST=0.0.0.0` where Ollama starts (see Ollama's docs for your OS) makes it listen on all interfaces.
+**Step 1: `ollama: command not found` right after installing.**  The installer put the binary somewhere not on your `PATH`, or your terminal predates the install.  Open a new terminal.  If it persists, find the binary (`ls /usr/local/bin/ollama`) and add its directory to `PATH`; that is the `PATH` idea from Step 0.
 
-Windows: the bind mount is empty or the build cannot find files.  Keep the clone under your user profile (or better, in your WSL2 home directory), and run `docker compose` from the `.devcontainer/` folder; the `..` in the compose file is relative to that folder.
+**Step 2: `Cannot connect to the Docker daemon`.**  Docker Desktop is not running (start the app), or on Linux the service is stopped (`sudo systemctl start docker`) or your user is not in the docker group (`sudo usermod -aG docker $USER`, then log out and in).
 
-**`git push` rejected: `Authentication failed` / `Support for password authentication was removed`.**  GitHub does not accept account passwords over HTTPS; paste a **personal access token** at the password prompt.  If a token is rejected, check its scope: it must list `cs357-work` under *Only select repositories* with **Contents: Read and write**, and it must not be expired.
+**Step 2: Docker Desktop is running, but `docker` is not a command inside Ubuntu (Windows).**  The WSL integration is off.  In Docker Desktop, **Settings -> Resources -> WSL Integration**, switch the **Ubuntu** toggle on, **Apply & Restart**, and open a new Ubuntu terminal.  While you are there, confirm **Settings -> General -> Use the WSL 2 based engine** is checked.
 
-Line endings: every file shows modified, or scripts fail with `\r: command not found`.  Windows CRLF vs. container LF. Add a `.gitattributes` containing `* text=auto eol=lf`, run `git add --renormalize .`, commit; set VS Code's status-bar line ending to `LF` for new files.
+**Step 3: `git: command not found` or `'git' is not recognized`.**  On macOS, run `xcode-select --install`.  On Windows, install [Git for Windows](https://git-scm.com/download/win) or GitHub Desktop, which bundles it, or use the Ubuntu terminal from Step 2.1, where `sudo apt install git` provides it.
 
-The first build fails partway through the big pip layer.  Almost always a network hiccup during the large ML downloads.  Rerun `docker compose build`; completed layers are cached and the build resumes at the failed step.
+**Step 4: the build cannot find the Dockerfile.**  Check the file names in `.devcontainer/` with `ls -la`: a browser download often saves `Dockerfile` as `Dockerfile.txt`.  Rename it, and confirm you are running `docker compose` from the `.devcontainer/` folder.
 
-**`opencode` says "command not found" on the native route, right after the installer succeeded.**  The installer places the binary in `~/.local/bin`, which is not on your `PATH` by default. `export PATH="$HOME/.local/bin:$PATH"` fixes the current session; add the same line to `~/.bashrc` to make it stick.  This is the `PATH` mechanic from Step 0, met in the wild.  Inside the course container this cannot happen, because opencode is installed globally by the image; if it does, you are on an old image and `docker compose build` will fix it.
+**Step 4 (Windows): the bind mount is empty or the build cannot find files.**  Keep the clone under your user profile (or better, in your WSL2 home directory), and run `docker compose` from the `.devcontainer/` folder; the `..` in the compose file is relative to that folder.
 
-**`opencode` starts but reports no provider or no models.**  Nine times out of ten the config is named `config.json` instead of `opencode.json`, so opencode never reads it.  Check the file name first.  Then check the location: `/workspace/opencode.json` on the container route, `~/.config/opencode/` natively (or `%USERPROFILE%\.config\opencode\` on native Windows).  Then check that the JSON parses, with `python3 -m json.tool /workspace/opencode.json`.  If your provider block disappeared between sessions, you wrote it into the container's home directory rather than into `/workspace`, and `--rm` deleted it; that is the failure the project-level file exists to prevent.
+**Step 4: the first build fails partway through the big pip layer.**  Almost always a network hiccup during the large ML downloads.  Rerun `docker compose build`; completed layers are cached and the build resumes at the failed step.
 
-The agent proposes an edit that is obviously wrong, or loops on the same failed idea.  Expected behavior for a 3B local model.  Stop it with Ctrl-C, `git checkout .` to discard, and give a smaller, more concrete instruction.  "Refactor this module" is beyond it; "add a docstring to this one function" is not.
+**Step 5: connection refused to `host.docker.internal:11434` (the 5.1 failure).**  Diagnose with the ladder from Docker from Zero Model 2: (1) from the *host*, `curl http://localhost:11434/api/tags`; if this fails, Ollama is not running; start it.  (2) If the host works but the container does not, and you are **on Linux**, the container was probably started without the host-gateway mapping; `host.docker.internal` is automatic on Docker Desktop (macOS/Windows) but must be opted into on Docker Engine.  The course `docker-compose.yml` includes `extra_hosts: ["host.docker.internal:host-gateway"]` and `devcontainer.json` includes the matching `--add-host` run argument, so this bites only when running the image by hand: add `--add-host=host.docker.internal:host-gateway` to your `docker run`.  (3) Some Ollama installs bind only to `127.0.0.1`, which the host gateway cannot reach; setting the environment variable `OLLAMA_HOST=0.0.0.0` where Ollama starts (see Ollama's docs for your OS) makes it listen on all interfaces.
 
-**Model responses are slow inside the container.**  They should be exactly as fast as from the host; inference runs *on the host*; the container only sends HTTP requests.  If host-side `ollama run llama3.2 "hi"` is also slow, that is your hardware and a small model like `llama3.2` is the right call; if only the containerized call is slow, something is off in your networking; ask in the course channel with your Step 5.1 transcript.
+**Step 5: model responses are slow inside the container.**  They should be exactly as fast as from the host; inference runs *on the host*; the container only sends HTTP requests.  If host-side `ollama run llama3.2 "hi"` is also slow, that is your hardware and a small model like `llama3.2` is the right call; if only the containerized call is slow, something is off in your networking; ask in the course channel with your Step 5.1 transcript.
+
+**Step 7: `git push` rejected: `Authentication failed` / `Support for password authentication was removed`.**  GitHub does not accept account passwords over HTTPS; paste a **personal access token** at the password prompt.  If a token is rejected, check its scope: it must list `cs357-work` under *Only select repositories* with **Contents: Read and write**, and it must not be expired.
+
+**Step 7: line endings: every file shows modified, or scripts fail with `\r: command not found`.**  Windows CRLF vs. container LF. Add a `.gitattributes` containing `* text=auto eol=lf`, run `git add --renormalize .`, commit; set VS Code's status-bar line ending to `LF` for new files.
+
+**Step 8: `opencode` says "command not found" on the native route, right after the installer succeeded.**  The installer places the binary in `~/.local/bin`, which is not on your `PATH` by default. `export PATH="$HOME/.local/bin:$PATH"` fixes the current session; add the same line to `~/.bashrc` to make it stick.  This is the `PATH` mechanic from Step 0, met in the wild.  Inside the course container this cannot happen, because opencode is installed globally by the image; if it does, you are on an old image and `docker compose build` will fix it.
+
+**Step 8: `opencode` starts but reports no provider or no models.**  Nine times out of ten the config is named `config.json` instead of `opencode.json`, so opencode never reads it.  Check the file name first.  Then check the location: `/workspace/opencode.json` on the container route, `~/.config/opencode/` natively (or `%USERPROFILE%\.config\opencode\` on native Windows).  Then check that the JSON parses, with `python3 -m json.tool /workspace/opencode.json`.  If your provider block disappeared between sessions, you wrote it into the container's home directory rather than into `/workspace`, and `--rm` deleted it; that is the failure the project-level file exists to prevent.
+
+**Step 8: the agent proposes an edit that is obviously wrong, or loops on the same failed idea.**  Expected behavior for a 3B local model.  Stop it with Ctrl-C, `git checkout .` to discard, and give a smaller, more concrete instruction.  "Refactor this module" is beyond it; "add a docstring to this one function" is not.
 
 ---
 
