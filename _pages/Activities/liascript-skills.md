@@ -102,6 +102,38 @@ Here is what happens when you type `Please review my latest changes.` in a sessi
 
 Remember two things from this section.  The directory name is the skill name, and the description is the trigger.  Everything else about a skill is ordinary Markdown.
 
+## 2b.  The Same Instructions, Three Ways In
+
+A skill body is just text that reaches the model.  There are three routes it can take to get there, and you have already used two of them this term without calling them that.  Take the `commit-message` body from Part II and picture it arriving each way.
+
+**Route 1, opencode: the filesystem.**  Save the file at `.agents/skills/commit-message/SKILL.md`.  There is no install step; being in a discovery path *is* the installation.
+
+**Route 2, OpenWebUI: a custom Model.**  In the interface you stood up in *Running Your Own AI*, go to **Workspace &rarr; Models &rarr; + Create a model**, name it, pick `llama3.2:latest` as the base model, and paste the skill body, everything below the front matter, into the **System Prompt** field.  Under **Advanced Params** set temperature and seed if you want it repeatable.  Save, and it appears in the chat model selector beside the raw model.  This is the same move the *Local Agent* lab's Direction 0 uses to build a persona agent.
+
+**Route 3, Python: a string.**  The system prompt is a parameter, so the skill body is a variable:
+
+```python
+SYSTEM = BASELINE + "\n\n" + SKILL      # the "with" condition in Part III
+```
+
+The same call through OpenWebUI's OpenAI-compatible endpoint changes only the URL, the header, and where the reply is nested:
+
+```python
+r = requests.post("http://localhost:3000/api/chat/completions",
+                  headers={"Authorization": f"Bearer {os.environ['OPENWEBUI_API_KEY']}"},
+                  json={"model": "llama3.2", "messages": messages,
+                        "options": {"temperature": 0, "seed": 42}})
+reply = r.json()["choices"][0]["message"]   # OpenWebUI nests under choices[0]
+```
+
+**Now the question that makes this section worth reading.**  Same instructions, same model, three routes.  What is actually different?
+
+Only Route 1 has a **trigger**.  In opencode the `description` decides whether the body is loaded at all, so the instructions are absent from every request that does not match.  In Routes 2 and 3 the body is pasted into the system prompt, which means it is present on *every* turn whether or not it is relevant.  **Routes 2 and 3 do not install a skill; they turn a skill into a system prompt.**  Look back at the table in Section 1: you have moved the instructions from the "Skill" row into the "System prompt" row, and given up the "No" in the always-active column.
+
+Hold onto that, because it is what Part III does on purpose.  The harness pastes the body into the system prompt, so it measures the *instructions* with the trigger taken out of the picture.  You test the trigger separately, by watching the skill load and not load at the end of Part II.  Two tests, two different things.
+
+> **Watch out:** a skill body written for Route 1 often says "when the user asks you to commit."  Pasted into a Route 2 system prompt, that sentence becomes standing instruction on a model that will also be asked about unrelated things, and a small model may try to write a commit message in reply to a question about the weather.  An instruction that assumed a trigger is not automatically safe without one.
+
 ## Model 1: The Safety-Guardrail Skill
 
 Read this `SKILL.md` from the Local Agent lab.  It is longer than most skills, which makes it a good one to read: every part of a skill's anatomy is visible.
