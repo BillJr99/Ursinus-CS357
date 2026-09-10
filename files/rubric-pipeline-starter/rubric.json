@@ -1,0 +1,114 @@
+{
+  "artifact_type": "persuasive_paragraph",
+  "description": "Rubric for a single persuasive paragraph of roughly 60 to 140 words. Weights sum to 100. Level 4 is proficient, level 1 is preemerging.",
+  "criteria": [
+    {
+      "id": "C1",
+      "name": "Thesis clarity",
+      "weight": 30,
+      "levels": [
+        {
+          "level": 4,
+          "name": "proficient",
+          "descriptor": "The first or second sentence states one specific, arguable claim, and every later sentence works to defend that same claim."
+        },
+        {
+          "level": 3,
+          "name": "progressing",
+          "descriptor": "An arguable claim is present but it is vague, appears late in the paragraph, or is split across two sentences."
+        },
+        {
+          "level": 2,
+          "name": "beginning",
+          "descriptor": "A topic is named but the writer never takes a position that someone could disagree with."
+        },
+        {
+          "level": 1,
+          "name": "preemerging",
+          "descriptor": "No topic or claim can be identified, or there is no text."
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "name": "Evidence",
+      "weight": 30,
+      "levels": [
+        {
+          "level": 4,
+          "name": "proficient",
+          "descriptor": "At least two distinct, specific pieces of support (a number, a named event, a concrete example) each appear with a stated reason connecting them to the claim."
+        },
+        {
+          "level": 3,
+          "name": "progressing",
+          "descriptor": "One specific piece of support is connected to the claim with a reason, or two pieces are mentioned without any connecting reason."
+        },
+        {
+          "level": 2,
+          "name": "beginning",
+          "descriptor": "Support is asserted only in general terms (for example 'everyone knows' or 'studies show') with no specific example."
+        },
+        {
+          "level": 1,
+          "name": "preemerging",
+          "descriptor": "No support of any kind is offered, or there is no text."
+        }
+      ]
+    },
+    {
+      "id": "C3",
+      "name": "Organization",
+      "weight": 20,
+      "levels": [
+        {
+          "level": 4,
+          "name": "proficient",
+          "descriptor": "The claim, the support, and a closing sentence appear in that order, and a transition word or phrase links each sentence to the one before it."
+        },
+        {
+          "level": 3,
+          "name": "progressing",
+          "descriptor": "The order is mostly logical, but one sentence is out of place or several sentences lack any transition."
+        },
+        {
+          "level": 2,
+          "name": "beginning",
+          "descriptor": "The sentences are on topic but appear in no discernible order, or the paragraph stops without a closing sentence."
+        },
+        {
+          "level": 1,
+          "name": "preemerging",
+          "descriptor": "There is no paragraph structure: fragments, a single sentence, or no text."
+        }
+      ]
+    },
+    {
+      "id": "C4",
+      "name": "Mechanics",
+      "weight": 20,
+      "levels": [
+        {
+          "level": 4,
+          "name": "proficient",
+          "descriptor": "There are no errors in spelling, punctuation, capitalization, or sentence boundaries."
+        },
+        {
+          "level": 3,
+          "name": "progressing",
+          "descriptor": "There are one or two errors, and none of them obscures the meaning of a sentence."
+        },
+        {
+          "level": 2,
+          "name": "beginning",
+          "descriptor": "There are three or more errors, or one error that changes the meaning of a sentence."
+        },
+        {
+          "level": 1,
+          "name": "preemerging",
+          "descriptor": "Errors make most sentences hard to read, or there is no text."
+        }
+      ]
+    }
+  ]
+}

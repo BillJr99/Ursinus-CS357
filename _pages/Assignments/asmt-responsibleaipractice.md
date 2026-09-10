@@ -9,7 +9,7 @@ info:
   tilt:
     task: "Choose one direction and carry it out in full depth: argue whether machine understanding matters for deployment; write a datasheet and model card for a course system; author an enforceable governance document mapped to NIST and the EU AI Act; map a real deployed AI system onto the regulatory landscape; or audit the carbon cost of your own AI use and your project at scale."
     criteria: "One shared rubric covers all five directions: analysis quality, evidence and citation, connection to course systems and concepts, and communication for your audience.  The rubric below breaks it down in full."
-  points: 100
+  points: 50
   goals:
     - "To analyze an AI system, practice, or question through a responsible-AI lens (philosophical, documentary, governance, regulatory, or environmental) at a depth a practitioner could act on"
     - To ground every claim in specific evidence (cited passages, published research, framework provisions with article numbers, reference values with visible arithmetic, or empirical observations of real systems) deployed at the point in the argument where it is needed, not decoratively
@@ -95,35 +95,20 @@ tags:
 
 **See the course schedule for the assigned and due dates.**
 
-> **This page is Component 2 of the Responsible AI Capstone, not a separate assignment.**  It has no deadline of its own.  Its rubric contributes 100 of the capstone's 200 points, and you submit it together with Component 1.  See the **[Responsible AI Capstone]({{ site.baseurl }}/Assignments/ResponsibleAI)** for the due date and the submission instructions.
->
-> Ground your argument here in the findings you produced in Component 1: the audit you ran, not a study you read.
+By this point in the course you have built systems that answer questions, retrieve documents, call tools, and make or support decisions.  Responsible AI starts when you stop asking "does it work?" and start asking "should anyone rely on it, and on what terms?"  In this assignment you take one of five angles on that question (whether it matters that these systems understand anything, whether their data and behavior are documented honestly, whether enforceable rules govern their operation, whether they comply with the regulations that increasingly bind them, and what their energy and carbon cost really is) and apply it to a **concrete artifact**: an essay defending a position, a datasheet and model card for a system you have used, a governance document for your own project, a regulatory mapping of a real deployed system, or a carbon audit of your own AI use.  You leave with a piece of written work precise enough that a deployer, regulator, auditor, or fellow practitioner could act on it.
 
-By this point in the course you have built systems that answer questions, retrieve documents, call tools, and make or support decisions.  Responsible AI starts when you stop asking "does it work?" and start asking "should anyone rely on it, and on what terms?"  This assignment approaches that question from five angles: whether it matters that these systems understand anything; whether their data and behavior are documented honestly; whether enforceable rules govern their operation; whether they comply with the regulations that increasingly bind them; and what their energy and carbon cost really is.  Each direction below takes one angle and applies it to a **concrete artifact**: an essay defending a position, a datasheet and model card for a system you have used, a governance document for your own project, a regulatory mapping of a real deployed system, or a carbon audit of your own AI use.
+This page is **Component 2 (Govern) of the [Responsible AI Capstone]({{ site.baseurl }}/Assignments/ResponsibleAI)**, not a separate assignment, and it has no deadline of its own.  This component is 50 of the capstone's 100 points, and I grade it with the rubric on this page; each rubric weight is a percentage of those 50 points.  You submit it together with Component 1, and the capstone page gives the due date and the submission instructions.  Ground your argument here in the findings you produced in Component 1: the audit you ran, not a study you read.
 
-Read all five directions before choosing.  Then pick **one** and carry it out in full depth.  The right choice is the angle you most want to be able to defend in your future practice, or the one that most directly serves your final project.  Do not attempt more than one; depth on one direction is worth far more than a shallow pass over several.  The shared rubric above grades every direction on the same four dimensions: analysis quality, evidence and citation, connection to course systems and concepts, and communication for audience.
+Read all five directions before choosing.  Then pick **one** and carry it out in full depth.  The right choice is the angle you most want to be able to defend in your future practice, or the one that most directly serves your final project.  Do not attempt more than one; depth on one direction is worth far more than a shallow pass over several.  The rubric grades every direction on the same four dimensions: analysis quality, evidence and citation, connection to course systems and concepts, and communication for audience.
 
 ---
 
 ## Before You Start
 
-**This builds on** three class sessions: *Training Data, Bias, and Explainability*, *Intellectual Property, Privacy, and the Case for Local AI*, and *Governance, Policy, and the Cost of Inference*.  Each direction leans on a different one, and all three are taught before this is due.
-
-**You need** no code.  Direction E needs a week of your own AI usage logged, so **start the log the day this is handed out**, even if you have not chosen a direction yet.  The log is the only part of this assignment you cannot do after the fact.  Direction E also reads token counts off your own requests.  The course repository has a ready-made instrument for that, `files/agent-templates/deliberation-harness/tools/token_meter.py`; running it takes a few lines, and estimating instead is an accepted fallback, so Direction E is still a no-code direction.
-
-**Pace yourself.**  Direction C's peer review round and Direction E's week-long audit both depend on the calendar, not only on your effort.  Start those early.
-
-**Choose a direction** honestly:
-
-| Take | If |
-|---|---|
-| **A: Does It Matter If Machines Understand?** | You want to argue, you are willing to engage a position you disagree with on its own terms, and "it depends" is not where you want to end up |
-| **B: Model Cards and Datasheets** | You want to document a real system precisely, and you would rather be exact than persuasive |
-| **C: Governance and Policy** | Your final project has an agent team that will need governing anyway, and you would rather write that document once and use it twice |
-| **D: Regulatory Landscape** | You want to know how this technology is actually being regulated, and you can pick a real deployed system to classify |
-| **E: The Carbon Cost of Intelligence** | You want a number rather than an opinion, and you will actually keep the week-long log |
-
-> **The most common way each direction fails.**  A: summarizing three positions and declining to hold one.  B: documentation that describes the system's intended use and never its misuse.  C: a policy with no enforcement path, which is a wish list.  D: classifying a system you cannot get real information about.  E: reconstructing the week's usage from memory at the end, which produces a number that is not a measurement.
+- **This builds on** three class sessions: *Training Data, Bias, and Explainability*, *Intellectual Property, Privacy, and the Case for Local AI*, and *Governance, Policy, and the Cost of Inference*.  Each direction leans on a different one, and all three are taught before this is due.
+- **You need no code.**  Direction E reads token counts off your own requests, and the course repository has a ready-made instrument for that, [token_meter.py]({{ site.baseurl }}/files/agent-templates/deliberation-harness/tools/token_meter.py).  Running it takes a few lines, and estimating instead is an accepted fallback, so Direction E is still a no-code direction.
+- **Start the Direction E log the day this is handed out**, even if you have not chosen a direction yet.  Direction E needs a week of your own AI usage logged, and the log is the only part of this assignment you cannot do after the fact.
+- **Pace yourself.**  Direction C's peer review round and Direction E's week-long audit both depend on the calendar, not only on your effort.  Start those early.
 
 ---
 
@@ -140,20 +125,27 @@ A strong submission, in any direction, has four qualities:
 
 ## Choose One Direction
 
-Complete **one** of the five directions below in full.  Expand your chosen direction for the full instructions.
+Complete **one** of the five directions below in full.  Choose honestly:
 
-- **Direction A: Does It Matter If Machines Understand?**  A 1000-1500 word argumentative essay engaging at least two named philosophical positions and arriving at a defended position with a concrete deployment implication.
-- **Direction B: Model Cards and Datasheets**: real documentation (a Gebru et al. datasheet and a Mitchell et al. model card) for a system you have used in this course, plus a bias analysis and misuse scenarios with implementable controls.
-- **Direction C: Governance and Policy**: an enforceable eight-section governance document for your final project's agent team, mapped onto the NIST AI RMF and the EU AI Act, and hardened by adversarial peer review.  Includes the Policy Clause Workshop run during the *Governance, Policy, and the Cost of Inference* class session.
-- **Direction D: Mapping a Real AI System to the Regulatory Landscape**: classify a real deployed AI system under the EU AI Act, map it onto the NIST AI RMF, identify the sector-specific rules it triggers, and build a structured risk register.
-- **Direction E: The Carbon Cost of Intelligence**: a one-week personal AI carbon audit with measured token counts, an environmental analysis of your final project at scale including a measured three-condition comparison and the amortized cost of training the model, prioritized efficiency redesigns, and a defended position on the Jevons paradox.
+| Direction | What you build | Pick this if |
+|---|---|---|
+| **A: Does It Matter If Machines Understand?** | A 1000-1500 word argumentative essay engaging at least two named philosophical positions and arriving at a defended position with a concrete deployment implication | You want to argue, you are willing to engage a position you disagree with on its own terms, and "it depends" is not where you want to end up |
+| **B: Model Cards and Datasheets** | Real documentation (a Gebru et al. datasheet and a Mitchell et al. model card) for a system you have used in this course, plus a bias analysis and misuse scenarios with implementable controls | You want to document a real system precisely, and you would rather be exact than persuasive |
+| **C: Governance and Policy** | An enforceable eight-section governance document for your final project's agent team, mapped onto the NIST AI RMF and the EU AI Act and hardened by adversarial peer review; includes the Policy Clause Workshop run during the *Governance, Policy, and the Cost of Inference* class session | Your final project has an agent team that will need governing anyway, and you would rather write that document once and use it twice |
+| **D: Mapping a Real AI System to the Regulatory Landscape** | A classification of a real deployed AI system under the EU AI Act, a mapping onto the NIST AI RMF, the sector-specific rules it triggers, and a structured risk register | You want to know how this technology is actually being regulated, and you can pick a real deployed system to classify |
+| **E: The Carbon Cost of Intelligence** | A one-week personal AI carbon audit with measured token counts, an environmental analysis of your final project at scale (including a measured three-condition comparison and the amortized cost of training the model), prioritized efficiency redesigns, and a defended position on the Jevons paradox | You want a number rather than an opinion, and you will actually keep the week-long log |
 
-<details markdown="1">
-<summary><strong>Direction A: Does It Matter If Machines Understand?</strong></summary>
+> **Watch out.**  The most common way each direction fails.  A: summarizing three positions and declining to hold one.  B: documentation that describes the system's intended use and never its misuse.  C: a policy with no enforcement path, which is a wish list.  D: classifying a system you cannot get real information about.  E: reconstructing the week's usage from memory at the end, which produces a number that is not a measurement.
 
-Long before large language models existed, philosophers argued over whether any machine could genuinely understand language, experience consciousness, or be held accountable for its actions.  Those arguments now have practical stakes.  Whether or not the systems you build in this course "really" understand affects how we design them, how we deploy them, and what obligations we take on when we do.  Write a 1000-1500 word essay (excluding references) on **one** of the four prompts below.  Choose the prompt you find most interesting; the best essays come from writers who want to answer the question.
+---
 
-#### The Philosophers in Three Sentences Each
+## Direction A: Does It Matter If Machines Understand?
+
+> **What this direction requires.**  A 1000-1500 word argumentative essay (excluding references) on one of the four prompts below, engaging at least two named philosophical positions with real citations, connecting to a concrete deployment scenario, arriving at a position, and closing with one implication for CS357 students.  You submit a single PDF.
+
+Long before large language models existed, philosophers argued over whether any machine could genuinely understand language, experience consciousness, or be held accountable for its actions.  Those arguments now have practical stakes.  Whether or not the systems you build in this course "really" understand affects how we design them, how we deploy them, and what obligations we take on when we do.  Choose the prompt you find most interesting; the best essays come from writers who want to answer the question.
+
+### The Philosophers in Three Sentences Each
 
 Treat these summaries as starting points.  They do not substitute for the readings.
 
@@ -161,16 +153,16 @@ Treat these summaries as starting points.  They do not substitute for the readin
 - **John Searle (1980)** answers that behavioral indistinguishability is not sufficient for understanding.  His Chinese Room manipulates symbols by rule and produces fluent output while understanding nothing: syntax is not sufficient for semantics.  A system that passes the Turing Test might be doing exactly what the room does.
 - **Joseph Weizenbaum (1976)**, creator of ELIZA, was disturbed by how readily users bonded with it.  His question is not whether machines *can* understand but what we *should* delegate to them.  Some activities (therapy, judgment, care) require genuine human understanding, and delegating them is a moral failure regardless of the machine's internal states.
 
-> **Common Pitfall:** Turing is asking about behavioral indistinguishability, Searle about intentionality, and Weizenbaum about appropriate delegation.  If you mix these up, your essay will argue past itself.  Define what you mean by "understanding" in your first paragraph and hold to that definition throughout.
+> **Watch out.**  Turing is asking about behavioral indistinguishability, Searle about intentionality, and Weizenbaum about appropriate delegation.  If you mix these up, your essay will argue past itself.  Define what you mean by "understanding" in your first paragraph and hold to that definition throughout.
 
-#### The Prompts
+### The Prompts
 
 - **Prompt A:** *"Searle's Chinese Room argument decisively shows that large language models do not understand language.  Even if that is true, does it matter for how we deploy them?"*  Engage Searle's original argument and at least one serious objection (the Systems Reply or the Robot Reply).  Then grant, for the sake of argument, that Searle is right: what follows for deployment?  Does a system need to understand to be useful, trustworthy, or dangerous?
 - **Prompt B:** *"The ELIZA effect, the human tendency to anthropomorphize AI systems, is not a bug but a feature: it makes AI systems more usable and more effective.  Evaluate this claim."*  Engage Weizenbaum's original concern and the broader literature on anthropomorphism.  What does "more usable" mean, and for whom?  Identify the conditions under which each conclusion holds and why those conditions matter more than the others; do not simply say "it depends."
 - **Prompt C:** *"If we cannot determine from behavior alone whether an AI system is conscious or sentient, what ethical stance should we take toward it?"*  Engage the problem of other minds as it applies to AI, and at least one framework for moral status (sentience-based, interests-based, relational).  Consider the asymmetry between the cost of wrongly treating a non-conscious system as conscious and the reverse.
-- **Prompt D:** *"Accountability requires understanding.  Therefore, AI agents cannot be held accountable for their actions.  Evaluate."*  Engage what accountability requires (intent, understanding, or something else) drawing on at least one philosophical source and one deployment scenario where accountability arose (autonomous vehicle liability, content moderation errors, AI-assisted medical decisions).  Does the premise hold?  Does the conclusion follow?  Who *is* accountable if the agent is not?
+- **Prompt D:** *"Accountability requires understanding.  Therefore, AI agents cannot be held accountable for their actions.  Evaluate."*  Engage what accountability requires (intent, understanding, or something else), drawing on at least one philosophical source and one deployment scenario where accountability arose (autonomous vehicle liability, content moderation errors, AI-assisted medical decisions).  Does the premise hold?  Does the conclusion follow?  Who *is* accountable if the agent is not?
 
-#### Requirements
+### Requirements
 
 Whichever prompt you choose, your essay must:
 
@@ -179,22 +171,25 @@ Whichever prompt you choose, your essay must:
 3.  **Arrive at a position.**  "Both sides have merit" is not a position; your conclusion must be a claim someone could reasonably disagree with.
 4.  Close with **one implication for CS357 students**: one thing a student building or deploying an AI system should do differently because of the position you argue, specific enough that it would lead to a different decision than the opposing position would recommend.
 
-#### How to Write It
+### How to Write It
 
-Argue, don't summarize.  Every paragraph should present your thesis, present a position, object to it, evaluate the objection, or connect to deployment.  If a paragraph merely describes what Turing or Searle said, cut it or turn it into analysis.  A suggested shape (deviate if your argument calls for it): introduction with thesis (~150 words); Position A with its strongest objection, evaluated (~250); Position B likewise (~250); your position, engaging the strongest argument on the other side (~200); practical implication (~100); conclusion (~100).  Do not conclude "it depends" unless you specify the conditions under which each conclusion holds and why they matter.  Do not use AI to generate your argument.  An AI-generated philosophical essay reads as a competent summary with a hedge at the end, and the rubric rewards originality of position and reasoning.  You may use AI tools for brainstorming or grammar checking; if you do, note it at the end of your essay and describe how.
+Argue, don't summarize.  Every paragraph should present your thesis, present a position, object to it, evaluate the objection, or connect to deployment.  If a paragraph merely describes what Turing or Searle said, cut it or turn it into analysis.  A suggested shape (deviate if your argument calls for it): introduction with thesis (~150 words); Position A with its strongest objection, evaluated (~250); Position B likewise (~250); your position, engaging the strongest argument on the other side (~200); practical implication (~100); conclusion (~100).  Do not conclude "it depends" unless you specify the conditions under which each conclusion holds and why they matter.
 
-#### Direction A Deliverable
+Do not use AI to generate your argument.  An AI-generated philosophical essay reads as a competent summary with a hedge at the end, and the rubric rewards originality of position and reasoning.  You may use AI tools for brainstorming or grammar checking; if you do, note it at the end of your essay and describe how.
+
+### Direction A Deliverable
 
 A single PDF: the essay, a references section (not counted in the word count), and the word count at the top of the first page.  In your reflection, name the dialectic move you made: which objection did you allow to threaten your thesis, and what changed as a result of taking it seriously?
 
-</details>
+---
 
-<details markdown="1">
-<summary><strong>Direction B: Model Cards and Datasheets</strong></summary>
+## Direction B: Model Cards and Datasheets
+
+> **What this direction requires.**  A subject description (100-150 words), a Gebru et al. datasheet covering at least 6 of 7 sections (500 words minimum), a Mitchell et al. model card with every section (400 words minimum, Ethical Considerations at least 150), and a 400-500 word unintended use analysis with three misuse scenarios and controls.  You submit a single PDF or markdown document.
 
 Documentation is not bureaucracy.  It is the primary way future deployers, researchers, regulators, and users learn what an AI system is and is not designed for.  In this direction you write real documentation for a system you have used in this course.  Write every section for a reader who has never seen your system and cannot "Google it."  "Unknown" is a legitimate answer, but you must explain it: unknown provenance is a red flag a deployer needs to investigate.  For each unknown, write down what harm could happen if the system is deployed without that information.
 
-#### Part 1: Choose Your Subject (setup)
+### Part 1: Choose Your Subject
 
 Select one documentation subject and state your choice in a one-paragraph subject description (100-150 words, naming the specific dataset and model, with one sentence on why you chose it):
 
@@ -204,7 +199,7 @@ Select one documentation subject and state your choice in a one-paragraph subjec
 
 Avoid a subject where you cannot answer at least 5 of the 7 datasheet sections with something more than "unknown."
 
-#### Part 2: Datasheet for Datasets (Gebru et al.)
+### Part 2: Datasheet for Datasets (Gebru et al.)
 
 Write a datasheet addressing at least **6 of the 7 sections** below, answering the key Gebru et al. (2021) questions for each.  Minimum 500 words total, with 2-4 substantive sentences per section rather than one-line bullets.
 
@@ -218,10 +213,9 @@ Write a datasheet addressing at least **6 of the 7 sections** below, answering t
 
 Flag at least 2 items across any section that are unknown or unverifiable, and explain why the absence of that information is a risk.  For well-known datasets, the original paper (search "[dataset name] datasheet") contains much of this.  For your own RAG knowledge base or agent data, you are the creator, so answer honestly about your own choices.
 
-**Example, Motivation section for ImageNet (illustration only; use a different dataset):**
-> *ImageNet was created to support large-scale visual object recognition research, by Fei-Fei Li and colleagues at Stanford with collection coordinated through Princeton, on behalf of the academic computer vision community, funded by the NSF, Google, and Microsoft Research.  It was designed as a research benchmark, not for commercial deployment, which matters for deployers, because ImageNet-pretrained models import assumptions baked in during academic benchmarking that may not hold outside the lab.*
+**Example, Motivation section for ImageNet (illustration only; use a different dataset):** *ImageNet was created to support large-scale visual object recognition research, by Fei-Fei Li and colleagues at Stanford with collection coordinated through Princeton, on behalf of the academic computer vision community, funded by the NSF, Google, and Microsoft Research.  It was designed as a research benchmark, not for commercial deployment, which matters for deployers, because ImageNet-pretrained models import assumptions baked in during academic benchmarking that may not hold outside the lab.*
 
-#### Part 3: Model Card (Mitchell et al.)
+### Part 3: Model Card (Mitchell et al.)
 
 Write a model card with **all** of the following sections; minimum 400 words total, with Ethical Considerations alone at least 150 words:
 
@@ -237,51 +231,49 @@ Write a model card with **all** of the following sections; minimum 400 words tot
 
 Do not start by asking "is this model biased?"  Start with "Who uses this model, and in what contexts could its outputs disadvantage some users more than others?"  Then work backward to the mechanism.
 
-#### Part 4: Unintended Use Analysis
+### Part 4: Unintended Use Analysis
 
 Write approximately one page (400-500 words) identifying **3 realistic misuse scenarios**.  For each:
 
-1.  **Describe the misuse:** who is the bad actor, what do they want, how do they use your model/agent?  Realistic beats theatrical: "a hiring manager deploys the model to screen resumes without disclosing AI use, violating state transparency laws" is more useful than a nation-state supervillain.
+1.  **Describe the misuse:** who is the bad actor, what do they want, how do they use your model or agent?  Realistic beats theatrical: "a hiring manager deploys the model to screen resumes without disclosing AI use, violating state transparency laws" is more useful than a nation-state supervillain.
 2.  **What in the documentation alerts a careful deployer:** point to the specific section and quote or paraphrase the warning.
 3.  **Propose one control:** either (a) a technical control naming the mechanism (input filtering against a regex for HIPAA-regulated terms, rate limiting to N requests per user per hour, sandboxing) or (b) a policy control naming the enforcement mechanism (a terms-of-service clause requiring human clinical review before acting on any output, with a named audit role).
 
-#### Common Mistakes
+> **Watch out.**  Common mistakes: writing "unknown" without naming the risk it creates; describing intended use without specific out-of-scope uses; treating the bias section as a checkbox (name the group, the output, and the mechanism, all three); theatrical misuse scenarios whose controls don't match; ignoring the interaction between the two documents.  If your datasheet identified a risk, it should reappear in the model card's Ethical Considerations or Caveats.
 
-Writing "unknown" without naming the risk it creates.  Describing intended use without specific out-of-scope uses.  Treating the bias section as a checkbox (name the group, the output, and the mechanism, all three).  Theatrical misuse scenarios whose controls don't match.  Ignoring the interaction between the two documents: if your datasheet identified a risk, it should reappear in the model card's Ethical Considerations or Caveats.
-
-#### Direction B Deliverable
+### Direction B Deliverable
 
 A single PDF or markdown document: subject description, datasheet, model card, unintended use analysis, and the shared reflection responses.  In your reflection, also address two questions.  First, model cards are voluntary, and a company that publishes a thorough card exposes weaknesses a more secretive competitor hides; what market incentive problem does this create, and how might it be solved (contractually, legally, or through standards)?  Second, did writing the bias section change how you think about using the system yourself?
 
-</details>
+---
 
-<details markdown="1">
-<summary><strong>Direction C: Governance and Policy</strong></summary>
+## Direction C: Governance and Policy
+
+> **What this direction requires.**  The Part 0 workshop artifact, a four-to-six page governance document with all eight sections and four appendices (committed to your project repository as `GOVERNANCE.md`), and a peer review packet: the review you received verbatim, your loophole patch, and a revision memo.
 
 In this direction you author a governance document for your final project's agent team, the same document you will defend during your in-class governance discussion.  Every organization deploying AI is expected to have one, and regulators increasingly require it.  A vague or aspirational governance document is worse than useless, because it creates false confidence.  By the end you will know the difference between a value and a mechanism, and you will have written a document that could be handed to an auditor rather than framed on a wall.
 
-#### The Two Tests
+### The Two Tests
 
 Apply these to every sentence before submitting.  They are the same tests real compliance teams use.
 
 - **The Third-Party Test:** Could an outsider determine, from evidence (logs, artifacts, outputs), whether this clause was followed?  If the answer is "only if they asked us," the clause fails.  Strong: "The system logs every agent invocation to `logs/agent_audit.jsonl` with a timestamp, agent name, input hash, and output hash; logs are retained for 90 days and reviewed weekly by the Evaluator role."  Weak: "The system will be monitored to ensure responsible use."
 - **The "Who Specifically" Test:** Does every responsibility name a specific role (Coordinator, Evaluator, Scribe) rather than "the team" or "we"?  Diffuse responsibility means no one is responsible.  Strong: "If a user reports a harmful output, the Scribe notifies the Coordinator within 24 hours; the Coordinator investigates within 72 hours and either patches the system or escalates to the instructor."
 
-#### Part 0: Policy Clause Workshop (Warm-Up)
+### Part 0: Policy Clause Workshop (Warm-Up)
 
-> This workshop runs during the **Governance, Policy, and the Cost of Inference class session**.  When that session says "see the Governance direction," this is the sub-section it means.  The workshop itself is an **in-class activity for everyone**: students in class that day complete it there regardless of which direction they choose, and doing so is credited as class participation.  **Only Direction C students** additionally submit the workshop artifact as part of this assignment.  I will give brief written feedback on it before the full governance document is due.
+> **Bring to class.**  This workshop runs during the **Governance, Policy, and the Cost of Inference** class session.  When that session says "see the Governance direction," this is the sub-section it means.  The workshop itself is an **in-class activity for everyone**: students in class that day complete it there regardless of which direction they choose, and doing so is credited as class participation.  **Only Direction C students** additionally submit the workshop artifact as part of this assignment.  I will give brief written feedback on it before the full governance document is due.
 
 **The Hospital Sepsis AI Scenario.**  Read this abbreviated incident report:
 
-> A regional hospital deployed an AI clinical decision support tool to flag patients at high risk for sepsis.  It was validated at 87% accuracy on a 2019 pilot.  In production, nurses began treating the AI's "low risk" flag as authoritative, skipping their own assessments.  Eighteen months later, an internal audit found the tool performed at 62% accuracy for patients over 75 and for non-English-speaking patients.  Two sentinel events (serious patient harm) occurred.
+*A regional hospital deployed an AI clinical decision support tool to flag patients at high risk for sepsis.  It was validated at 87% accuracy on a 2019 pilot.  In production, nurses began treating the AI's "low risk" flag as authoritative, skipping their own assessments.  Eighteen months later, an internal audit found the tool performed at 62% accuracy for patients over 75 and for non-English-speaking patients.  Two sentinel events (serious patient harm) occurred.*
 
-**Your task (30 minutes):**
+> **Do this.**  Your task (30 minutes):
+> 1.  **Identify two NIST AI RMF gaps** in the hospital's approach.  Map each to one of the four NIST functions (Map, Measure, Manage, Govern) and write one sentence explaining what that function would have caught.
+> 2.  **Write one policy clause** (100 words or fewer) that would have prevented the primary failure, specifying **scope** (who and what it applies to), **requirement** (what must happen, specifically), **enforcement** (what happens if violated), and **exception** (one valid exception to prevent over-application).  Example format, from a different domain: *"Automated resume-screening tools shall flag all candidates rejected by the AI for human review before any rejection letter is sent.  Reviews shall be logged with the reviewer's name and reasoning.  Violations by hiring managers shall be escalated to the Chief People Officer within 48 hours.  Exception: internal transfer applications are exempt."*
+> 3.  **Stress-test your clause:** identify one way it could be gamed (met in letter but not spirit) and write a one-sentence amendment that closes the gap.
 
-1.  **Identify two NIST AI RMF gaps** in the hospital's approach.  Map each to one of the four NIST functions (Map, Measure, Manage, Govern) and write one sentence explaining what that function would have caught.
-2.  **Write one policy clause** (≤100 words) that would have prevented the primary failure, specifying **scope** (who and what it applies to), **requirement** (what must happen, specifically), **enforcement** (what happens if violated), and **exception** (one valid exception to prevent over-application).  Example format, from a different domain: *"Automated resume-screening tools shall flag all candidates rejected by the AI for human review before any rejection letter is sent.  Reviews shall be logged with the reviewer's name and reasoning.  Violations by hiring managers shall be escalated to the Chief People Officer within 48 hours.  Exception: internal transfer applications are exempt."*
-3.  **Stress-test your clause:** identify one way it could be gamed (met in letter but not spirit) and write a one-sentence amendment that closes the gap.
-
-#### Step 1: Author the Governance Document
+### Step 1: Author the Governance Document
 
 Write approximately four to six pages covering all eight sections below.  Import, rather than restate, your existing artifacts from earlier work: your agent design table, data-flow diagram, pre-mortem table, and evaluation plan.  Governance is proportional to consequence, not complexity.  A simple two-agent summarizer still needs all eight sections; they will just be shorter.
 
@@ -296,7 +288,7 @@ Write approximately four to six pages covering all eight sections below.  Import
 
 Use this structural skeleton (you may add subsections but may not omit a numbered section):
 
-```
+```markdown
 # Governance Document: [System Name]
 Version 1.0 | Date | Authors: [team members and roles]
 ## 1. Purpose and Scope        ## 5. Data Handling
@@ -309,38 +301,39 @@ Version 1.0 | Date | Authors: [team members and roles]
 ## Appendix D: Revision Memo
 ```
 
-#### Step 2: Map Your System to External Frameworks
+### Step 2: Map Your System to External Frameworks
 
 **NIST AI RMF (Appendix A):** map your system onto all four functions, naming the specific artifact or activity in your project (a file, a log, a test, a human review step) that performs each of GOVERN (policies, culture, accountability), MAP (context, risk identification, affected populations), MEASURE (metrics, testing, trustworthiness assessment), and MANAGE (controls, incident response, residual risk).  "We GOVERN by having good norms" names nothing and earns nothing.
 
 **EU AI Act (Appendix B):** argue your system's plausible risk tier if deployed for real users in an educational setting (unacceptable / high risk per Annex III / limited / minimal).  Name the tier, cite the specific Annex III category (or argue why none applies, engaging the education provisions; do not simply state "our system is low risk"), and name the obligation that would bind first if the system were deployed beyond the classroom.
 
-#### Step 3: Peer Review and Red Team
+### Step 3: Peer Review and Red Team
 
 Exchange your governance document with another team.  That team applies the third-party test to every sentence, flags failures, and finds **one loophole**: a way to use the system harmfully that is not explicitly prohibited or gated.  (Example loophole: prohibiting "processing medical records" but not "processing a diary entry that describes health conditions"; or gating email *sending* but not *drafting*, so a draft can be sent by accident.)  You will receive the same treatment.  Include: the peer review verbatim (Appendix C); the loophole quoted from their review; your patch showing the original clause alongside the revised clause; and a one-paragraph revision memo (Appendix D) explaining what the original clause permitted that it should not have, and how the patch closes it.
 
-#### Direction C Deliverable
+### Direction C Deliverable
 
 The governance document (four to six pages), committed to your project repository as `GOVERNANCE.md`, plus the Part 0 workshop, the peer review packet (review received verbatim, loophole patch, revision memo), and the shared reflection responses; submitted as a repository link plus PDF export, or a single combined PDF/ZIP.  In your reflection, also address two questions.  First, which clause was hardest to make enforceable, and what does that difficulty reveal about the underlying value?  Second, your incident-response section names an owner; if your system harmed a user tomorrow, would you want to be that owner, and what would change in your design if the answer is no?
 
-</details>
+---
 
-<details markdown="1">
-<summary><strong>Direction D: Mapping a Real AI System to the Regulatory Landscape</strong></summary>
+## Direction D: Mapping a Real AI System to the Regulatory Landscape
+
+> **What this direction requires.**  A two-paragraph system description (200-250 words) with a primary source, an EU AI Act tier table with three cited compliance obligations (350-450 words), a four-function NIST AI RMF mapping table (400-500 words), and a five-row risk register.  You submit a single PDF or markdown document.
 
 In this direction you take the regulatory frameworks from class and apply them to a real, deployed AI system.  The goal is not to find a "bad" system to criticize.  It is to practice the rigorous thinking a compliance officer, auditor, or governance lead must perform: think like an auditor, stay close to publicly available evidence, and treat unknown information as data.  If a company does not publish its model card, that absence tells you something about its Govern function, and you should say so explicitly.
 
-> **Glossary:** The **EU AI Act** (in force from 2024) creates a risk pyramid (unacceptable -> high -> limited -> minimal) with obligations by tier.  **Annex III** lists the high-risk categories: biometric identification, critical infrastructure, education, employment, essential services (credit, insurance), law enforcement, migration, and administration of justice.  **GPAI** (general-purpose AI) models face a separate obligation tier, with additional obligations above a systemic-risk compute threshold.  The **NIST AI RMF** is voluntary in the US and organizes AI risk management into Govern, Map, Measure, and Manage.
+**Glossary.**  The **EU AI Act** (in force from 2024) creates a risk pyramid (unacceptable -> high -> limited -> minimal) with obligations by tier.  **Annex III** lists the high-risk categories: biometric identification, critical infrastructure, education, employment, essential services (credit, insurance), law enforcement, migration, and administration of justice.  **GPAI** (general-purpose AI) models face a separate obligation tier, with additional obligations above a systemic-risk compute threshold.  The **NIST AI RMF** is voluntary in the US and organizes AI risk management into Govern, Map, Measure, and Manage.
 
-> **Common Pitfall:** Classifying a system as "minimal risk" without actually checking Annex III.  Many systems that look benign (a resume screener, a credit-scoring tool, a medical symptom checker) are explicitly listed as high-risk.  Work through the checklist item by item and show that you checked.  Also: the EU AI Act and GDPR are separate regulations with different obligations; your system may be subject to both.
+> **Watch out.**  Do not classify a system as "minimal risk" without actually checking Annex III.  Many systems that look benign (a resume screener, a credit-scoring tool, a medical symptom checker) are explicitly listed as high-risk.  Work through the checklist item by item and show that you checked.  Also: the EU AI Act and GDPR are separate regulations with different obligations; your system may be subject to both.
 
-#### Part 1: Select and Describe a System
+### Part 1: Select and Describe a System
 
 Choose one real AI system currently deployed.  Good choices make or significantly influence decisions about employment, credit, education, healthcare, or justice (Annex III categories); are deployed in or by companies with EU operations; or use a foundation model that might qualify as GPAI.  Rich examples: GitHub Copilot, Google Health AI / Med-PaLM, Workday Skills Cloud, COMPAS, ChatGPT Enterprise, an AI hiring screener (HireVue, Pymetrics).  A system with interesting regulatory ambiguity beats both the obviously high-risk and the obviously minimal-risk case; "a chatbot on a retail website" is hard to write 400 words about.
 
 Write **two paragraphs** (200-250 words total): (a) what the system does and who the end users are; (b) what data it processes and what decisions it influences or makes.  Cite at least one primary source (company documentation, research paper, or investigative reporting).
 
-#### Part 2: EU AI Act Classification
+### Part 2: EU AI Act Classification
 
 Classify the system using the risk pyramid.  Complete a tier table (Unacceptable / High / Limited / Minimal) with your system's fit argued in each row, following the spam-filter example pattern: "No; spam filtering does not appear in Annex III categories".  Justify your classification with:
 
@@ -350,7 +343,7 @@ Classify the system using the risk pyramid.  Complete a tier table (Unacceptable
 
 If your system is a GPAI model, address the GPAI-tier obligations separately.  Approximately 350-450 words including the table.
 
-#### Part 3: NIST AI RMF Mapping
+### Part 3: NIST AI RMF Mapping
 
 Complete the following table for all four functions.  Base the "likely does" column on publicly available information: documentation, model cards, press releases, lawsuits, academic papers.  Lawsuits and investigative journalism are often more informative than press releases.  If you find nothing for a function, write "no public evidence found".  That itself is a finding worth analyzing, not a gap to hide.
 
@@ -361,9 +354,9 @@ Complete the following table for all four functions.  Base the "likely does" col
 | Measure | Define, collect, and interpret risk metrics | | | |
 | Manage | Prioritize and act on risks | | | |
 
-Example row (hypothetical customer-service chatbot): *Govern, has a published responsible-AI policy and a Chief AI Officer; gap, the policy does not specify who is accountable when the chatbot gives incorrect legal or medical information; artifact; a RACI chart naming the team responsible for flagging and reviewing high-stakes outputs.*  Plan 3-5 substantive sentences per row across the last three columns (400-500 words total).
+Example row (hypothetical customer-service chatbot): *Govern, has a published responsible-AI policy and a Chief AI Officer; gap, the policy does not specify who is accountable when the chatbot gives incorrect legal or medical information; artifact, a RACI chart naming the team responsible for flagging and reviewing high-stakes outputs.*  Plan 3-5 substantive sentences per row across the last three columns (400-500 words total).
 
-#### Part 4: Risk Register
+### Part 4: Risk Register
 
 Write a structured risk register with exactly 5 rows:
 
@@ -374,18 +367,19 @@ Write a structured risk register with exactly 5 rows:
 
 For each row, ask in order: What could go wrong?  Who is harmed and how seriously?  What existing law or standard already speaks to this failure mode?  If nothing does, that regulatory gap is itself worth noting.
 
-#### Direction D Deliverable
+### Direction D Deliverable
 
 A single PDF or markdown document containing all four parts, clearly labeled, with citations.  In your reflection, also address two questions.  First, if your system is deployed globally, which jurisdiction's rules govern it and how do conflicts get resolved (2-3 sentences)?  Second, the NIST AI RMF is voluntary in the US: what market incentives (enterprise procurement, liability exposure, reputation) might cause a company to adopt it anyway, and what might cause them to ignore it (1 paragraph)?
 
-</details>
+---
 
-<details markdown="1">
-<summary><strong>Direction E: The Carbon Cost of Intelligence</strong></summary>
+## Direction E: The Carbon Cost of Intelligence
+
+> **What this direction requires.**  A one-week usage log with every row marked measured or estimated, a personal carbon audit (250-350 words plus the log), a project environmental analysis with visible arithmetic and a measured three-condition table (400-500 words), three prioritized redesigns (350-450 words), and a Jevons paradox analysis (500-600 words).  You submit a single PDF or markdown document.
 
 Every query you send to a language model consumes electricity, and electricity has a carbon cost that varies by model size, inference provider, and grid energy mix.  In this direction you measure that cost for your own behavior, analyze it for your final project, propose design changes that reduce it, and then take on the uncomfortable question of whether efficiency improvements reduce total energy use at all.  Throughout, prefer calibrated reasoning over false precision: round to one or two significant figures, show your work, and state where the uncertainty lies.
 
-#### Reference Values
+### Reference Values
 
 | Operation | Approximate CO2eq |
 |---|---|
@@ -409,41 +403,41 @@ $$
 
 Notice what that second row does.  A local request's *operational* cost is roughly a tenth of a hosted one, which is the usual argument for running locally.  But its *training share* at these denominators is several times larger than its own operational cost.  The 8B model was cheaper to train and is amortized over far fewer requests, and the second effect is the bigger one.  Whether that holds depends entirely on the denominator, which nobody publishes.
 
-> **The denominators are assumptions, not measurements.**  They are the largest source of uncertainty in this entire direction, and they are the one number you are expected to argue with rather than accept.  Run your figures under the denominators above and under one you defend yourself, report both, and say which way the conclusion moved.  A part that reports one number and hides the assumption inside it earns *progressing* at best.
+> **Watch out.**  The denominators are assumptions, not measurements.  They are the largest source of uncertainty in this entire direction, and they are the one number you are expected to argue with rather than accept.  Run your figures under the denominators above and under one you defend yourself, report both, and say which way the conclusion moved.  A part that reports one number and hides the assumption inside it earns *progressing* at best.
 
-> **A note on offsets.**  Meta states that 100 percent of the Llama 3 emissions above were offset by its sustainability program.  The table counts the emissions rather than the offset, for the reason the *Governance, Policy, and the Cost of Inference* activity gives: an offset shifts accounting responsibility without reducing the energy the training run consumed.  If you disagree, argue it.  That is a legitimate position, and it needs to be argued rather than assumed.
+> **Why this matters.**  Meta states that 100 percent of the Llama 3 emissions above were offset by its sustainability program.  The table counts the emissions rather than the offset, for the reason the *Governance, Policy, and the Cost of Inference* activity gives: an offset shifts accounting responsibility without reducing the energy the training run consumed.  If you disagree, argue it.  That is a legitimate position, and it needs to be argued rather than assumed.
 
 Pick a value within each range that matches your best estimate of model size and provider (lower end for smaller models or cleaner grids), and state which value you chose and why.
 
-> **Common Pitfall:** Comparing AI energy use to a flight (a one-time event, ~1,000,000 g CO2eq) rather than a daily habit.  Your week of AI use probably emits between 1 and 50 g CO2eq; the flight comparison is technically accurate but deeply misleading.  Compare AI use to other daily-frequency activities (streaming, commuting, lunch) so the scale is meaningful.  The relevant question is what the habit costs at scale, over a year, across millions of users.
+> **Watch out.**  Do not compare AI energy use to a flight (a one-time event, ~1,000,000 g CO2eq) rather than a daily habit.  Your week of AI use probably emits between 1 and 50 g CO2eq; the flight comparison is technically accurate but deeply misleading.  Compare AI use to other daily-frequency activities (streaming, commuting, lunch) so the scale is meaningful.  The relevant question is what the habit costs at scale, over a year, across millions of users.
 
-#### Part 1: Personal Carbon Audit (one week)
+### Part 1: Personal Carbon Audit (one week)
 
 **Start logging on Day 1 of the assignment week.**  Real-time logs beat memory reconstruction, and a gap honestly acknowledged beats reconstructed data presented as complete.  For one full week, record every AI interaction: tool and model (if known), one-sentence task description, **input and output tokens**, whether those counts are measured or estimated, and cloud-hosted vs. local.  Expect 10-30 rows.
 
-**Measure the tokens where the tool will tell you, and estimate them where it will not.**  Any request you make to your own Ollama returns `prompt_eval_count` and `eval_count`, and `files/agent-templates/deliberation-harness/tools/token_meter.py` reads them for you.  Many hosted APIs return an equivalent `usage` block.  A browser chat window will not tell you anything, and for those rows the old rule stands: estimate at roughly four characters per token, or use the word-length buckets (short: <50 words; medium: 50-200; long: >200) and convert.  **Add a column saying which each row is.**  A log that is half measured and says so is worth more than one that is uniformly estimated and does not admit it, and far more than one that presents estimates as measurements.
+**Measure the tokens where the tool will tell you, and estimate them where it will not.**  Any request you make to your own Ollama returns `prompt_eval_count` and `eval_count`, and [token_meter.py]({{ site.baseurl }}/files/agent-templates/deliberation-harness/tools/token_meter.py) reads them for you.  Many hosted APIs return an equivalent `usage` block.  A browser chat window will not tell you anything, and for those rows the old rule stands: estimate at roughly four characters per token, or use the word-length buckets (short: <50 words; medium: 50-200; long: >200) and convert.  **Add a column saying which each row is.**  A log that is half measured and says so is worth more than one that is uniformly estimated and does not admit it, and far more than one that presents estimates as measurements.
 
 At the end of the week, estimate your total CO2eq using the reference values, **showing every conversion step**.  "50 medium prompts × 0.005 g/query (GPT-4 midpoint, cloud) = 0.25 g CO2eq" earns proficient; "my AI use produced 2 g" earns beginning.  Then compute the CO2eq of three other activities from that same week that are comparable in frequency (commuting, streaming, meals) and write a one-paragraph reflection on what surprised you most.  Analysis and reflection: approximately 250-350 words, plus the log table as an appendix.
 
-#### Part 2: Project Environmental Analysis
+### Part 2: Project Environmental Analysis
 
 Analyze your final project agent team design through an environmental lens (approximately 400-500 words with visible arithmetic):
 
 1.  **Per-session call count:** walk through a typical session step by step as if you were a user; every LLM call for routing, tool use, synthesis, or final response counts; estimate averages for conditional calls; note anything parallelized or cached.
 2.  **Per-session CO2eq:** estimate using the reference values, stating every assumption (model size, provider, grid mix).
 3.  **Annual projection at scale:** if 1,000 users each ran one session per day for a year, what is the total CO2eq?  Compare to a concrete real-world equivalent (flight hours, car miles, household electricity).
-4.  **Hot spots:** identify and quantitatively rank the top three places where reducing calls, switching models, or changing architecture would have the largest impact, at least one should reflect a design choice your team could realistically change.
+4.  **Hot spots:** identify and quantitatively rank the top three places where reducing calls, switching models, or changing architecture would have the largest impact; at least one should reflect a design choice your team could realistically change.
 5.  **Three conditions, measured.**  Take one representative task from your project and run it three ways, changing nothing else: as a **verbose one-shot** prompt, as a **compressed** prompt (terse, article-free, same acceptance criteria), and as an **agentic loop** with tool calls across turns.  Report a four-column table: condition, measured input tokens, measured output tokens, and total g CO2eq with the operational and training terms shown separately.  Then answer in two or three sentences: which condition would you ship, and what are you giving up?
 
     Predict the ordering before you run it.  Input tokens should dominate in the loop, because every turn re-reads the conversation so far, and across $$n$$ turns that term grows with $$n^2$$ while output grows with $$n$$.  If your measurements contradict the prediction, report the measurements and work out why; that is a better result than a table that agrees with the theory.
 
-#### Part 3: Redesign for Efficiency
+### Part 3: Redesign for Efficiency
 
 Propose **three concrete, project-specific design changes** that reduce your project's footprint (approximately 350-450 words).  For each: name the change precisely ("cache the retrieval agent's output for identical queries within a 30-minute window"; not "use a smaller model," which is a category, not a recommendation); estimate the percentage reduction in CO2eq per session with reasoning; and analyze honestly what capability is sacrificed.  If the answer is "none," explain why.  At least one change must involve model selection (a specific smaller model for a specific subtask) and at least one must involve system architecture (eliminating or batching calls).  Prioritize the three.  Start from your Part 2 hot spots and ask: "What would I give up by cutting this?"
 
-#### Part 4: Jevons Paradox Analysis
+### Part 4: Jevons Paradox Analysis
 
-In 1865, Jevons observed that more efficient steam engines did not reduce Britain's coal consumption.  They increased it, because cheaper steam power grew demand faster than efficiency improved.  The pattern recurs: fuel-efficient cars led to more driving; efficient bulbs to more lighting.  The question for AI: if inference becomes more energy-efficient, does total AI energy use fall (each query costs less) or rise (cheaper queries mean more queries)?  Note that the paradox is a claim about efficiency, price, and demand (market dynamics), not a moral argument, so state it precisely before arguing about it.
+In 1865, Jevons observed that more efficient steam engines did not reduce Britain's coal consumption.  They increased it, because cheaper steam power grew demand faster than efficiency improved.  The pattern recurs: fuel-efficient cars led to more driving; efficient bulbs to more lighting.  The question for AI: if inference becomes more energy-efficient, does total AI energy use fall (each query costs less) or rise (cheaper queries mean more queries)?  The paradox is a claim about efficiency, price, and demand (market dynamics), not a moral argument, so state it precisely before arguing about it.
 
 Write a structured analysis (approximately 500-600 words total):
 
@@ -451,11 +445,9 @@ Write a structured analysis (approximately 500-600 words total):
 - **Against:** argue that rebound effects will consume the gains.  AI-specific evidence is abundant: inference costs have dropped dramatically since 2020, yet total AI energy use has grown substantially.
 - **Your position** (at least 150 words): commit to a side, engage the strongest argument on the other side rather than dismissing it, and close with one concrete implication for how AI systems should be designed, deployed, or regulated.  "Both sides have merit" is not an answer.
 
-#### Direction E Deliverable
+### Direction E Deliverable
 
 A single PDF or markdown document containing all four parts, clearly labeled, with your one-week usage log as an appendix (a simple table is fine).
-
-</details>
 
 ---
 

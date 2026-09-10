@@ -338,8 +338,8 @@ schedule:
     rlink: "Tutorials/AgentCLIs"
   - rtitle: "AI Coding Agent Security: poisoned repositories and the software supply chain, the risk that arrives with the convenience"
     rlink: "Tutorials/CodingAgentSecurity"
-  - rtitle: "What a container isolates, and how to size an agent's blast radius before you hand it your machine.  This is the background section of the Local Agent Lab's containerization direction"
-    rlink: "Assignments/LocalAgent/Direction3"
+  - rtitle: "What a container isolates, and how to size an agent's blast radius before you hand it your machine.  This is the background for the Local Agent Lab's containerization direction"
+    rlink: "Tutorials/ContainerIsolation"
 - week: "2"
   date: "0"
   title: "Running Your Own AI: Ollama, OpenWebUI, and Private Local Models"
@@ -377,8 +377,8 @@ schedule:
     rubricpath: "_pages/Assignments/asmt-skilldesignstudy.md"
   readings:
   - rtitle: "Mitchell, Chapter 3, part 2 of 4: what the model is doing when it takes in your prompt"
-  - rtitle: "Writing, configuring, and publishing skills for opencode and pi.ai, in the background section of Local Agent Lab Direction 5.  Today's deck builds the first skill with you; read this so the file layout is not new"
-    rlink: "Assignments/LocalAgent/Direction5"
+  - rtitle: "Writing, configuring, and publishing skills for opencode and pi.ai.  Today's deck builds the first skill with you; read this so the file layout is not new"
+    rlink: "Tutorials/AgentSkills"
   - rtitle: "Bring your working Ollama setup and your opencode install.  The second half of class runs the same task with and without a skill and compares the results."
     rlink: false
 - week: "3"
@@ -471,8 +471,8 @@ schedule:
     rlink: "https://obsidian.md"
   - rtitle: "Syncing Obsidian to GitHub and wiring agents to your vault: the read path and write path that today's Model 3 exposes as tools"
     rlink: "Tutorials/ObsidianSync"
-  - rtitle: "MCP, REST APIs, and OAuth 2.0 together, in the background section of Local Agent Lab Direction 4"
-    rlink: "Assignments/LocalAgent/Direction4"
+  - rtitle: "MCP, REST APIs, and OAuth 2.0 together, the background for the Local Agent Lab's MCP server direction"
+    rlink: "Tutorials/MCPOAuth"
   - rtitle: "GitHub Superpowers for AI Developers: gitingest, getmcp.io, deepwiki, gdagram, and github.dev, for turning a repository into something an agent can read"
     rlink: "Tutorials/GitHubPowerTools"
 - week: "5"
@@ -565,8 +565,8 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/asmt-agentsystemdesign.md"
   readings:
-  - rtitle: "The handoff skill from Local Agent Lab Direction 5, Part C: the claim protocol your design document must specify"
-    rlink: "Assignments/LocalAgent/Direction5"
+  - rtitle: "The handoff skill's claim protocol, which your design document must specify"
+    rlink: "Tutorials/AgentSkills"
 - week: "9"
   date: "0"
   title: "Orchestration and Multi-Agent Patterns"
@@ -648,7 +648,7 @@ schedule:
     rubricpath: "_pages/Assignments/asmt-litreview.md"
   - dtitle: "Responsible AI Capstone Handed Out"
     dlink: "Assignments/ResponsibleAI"
-    points: "200"
+    points: "100"
     rubricpath: "_pages/Assignments/lab-responsibleai.md"
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
@@ -679,7 +679,7 @@ schedule:
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
   readings:
   - rtitle: "Crawford, Atlas of AI, Chapter 1, Earth: the mineral and energy costs of computation"
-  - rtitle: "Alpine et al., \"AI-driven productivity gains enable more CO₂ emissions than they avoid in a global energy–economy model,\" npj Climate Action 5:71 (2026), open access.  Crawford counts the cost of the computation itself; this paper models what the productivity gains buy, and finds that AI cuts net emissions only when renewables gain four to five times as much productivity as fossil fuels do.  Read it beside Chapter 1, and bring both to the reading response"
+  - rtitle: "Alpine et al., \"AI-driven productivity gains enable more CO₂ emissions than they avoid in a global energy–economy model\""
     rlink: "https://www.nature.com/articles/s44168-026-00411-0"
   - rtitle: "Reading Response / Discussion: post a short response before class on the carbon and water cost of a deployment you would run"
   - rtitle: "Christian, The Alignment Problem: any one chapter (for example, the section on reward and reinforcement)"
@@ -719,7 +719,7 @@ schedule:
   deliverables:
   - dtitle: "Responsible AI Capstone Due"
     dlink: "Assignments/ResponsibleAI"
-    points: "200"
+    points: "100"
     rubricpath: "_pages/Assignments/lab-responsibleai.md"
   readings:
   - rtitle: "Bring your gallery-walk artifact ready to display, and your SQR cards."

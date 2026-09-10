@@ -67,32 +67,39 @@ tags:
 
 ---
 
-You and your partner will build and compare the two aggregation architectures from class: **debate** (agents see and rebut each other) and **stochastic consensus** (independent samples, clustered by meaning, merged by a synthesizer).  Work in pairs with driver/navigator roles, swap at least every 30 minutes, and keep a swap log.
+You and your partner will build and compare the two aggregation architectures from class: **debate**, where agents see and rebut each other, and **stochastic consensus**, where independent samples are clustered by meaning and merged by a synthesizer.  You leave with a working debate loop, a working sample-cluster-synthesize pipeline, and a measurement of your own that says whether the extra model calls bought anything.  This page is **Part B** of the Multi-Agent Patterns Lab.  Part A, the generator/critic/refine loop, lives on its own page: [Critique and Refine]({{ site.baseurl }}/Assignments/CritiqueRefine).  Do Part A first.  The debate work here reuses its scaffolding, and a critic you already trust is what makes a debate round worth reading.  Work in pairs with driver/navigator roles, swap at least every 30 minutes, and keep a swap log.
 
 This lab is handed out alongside the deck *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*.  See the course schedule for the assigned and due dates.
 
 ---
 
+## Choose Your Path
+
+Multi-agent debate is a *protocol*, and you can run the protocol by hand or on a canvas rather than in Python.  Decide before you start rather than after Part 1.
+
+| Route | What you build | What you need | Pick this if |
+|-------|----------------|---------------|--------------|
+| **Code** | A configurable debate loop, an embedding-clustered consensus pipeline, and a matched-budget shootout, driven by one JSON config file | Python 3, Ollama with `llama3.2`, and the packages installed below | You want the threshold and the call budget under explicit control and can read a stack trace |
+| **No-code** | The same protocol by hand: two Open WebUI chats that rebut each other, a spreadsheet of answers you cluster yourself, and the same comparison table.  In Langflow (low-code), the debate is two Agent nodes and a loop | Open WebUI or Langflow and a spreadsheet | You want your attention on the clustering judgment and the verdict, not the plumbing |
+
+The rubric is the same on both paths.  The judgment this lab grades (whether the extra rounds bought anything, and why a correlated failure could not be repaired by aggregation) is identical on every route.  On the no-code path, read "code" in the rubric as "flow or preset configuration".  Part 3 also has an optional handoff route, open to both paths, in which two agents exchange positions through a GitHub issue thread or a shared folder.
+
+---
+
 ## Before You Start
 
-> **Choose your route first.**  This lab has a full no-code and low-code route (near the end of this page) that carries equal credit: two chat windows and a spreadsheet, or a Langflow canvas, instead of Python.  Part 3 also has an optional handoff route in which two agents exchange positions through a GitHub issue thread or a shared folder.  The judgment this lab grades (whether the extra rounds bought anything, and why a correlated failure could not be repaired by aggregation) is identical on every route.  Decide before you start rather than after Part 1.
+> **Checkpoint.** This lab has two halves and one grade.  Critique-and-refine and debate-and-consensus used to be two separate 100-point labs due eight days apart.  They are one family of idea (use more than one model call to get a better answer), so they are now one lab with one rubric.
+> - **Part A: Critique and Refine.**  Build the generator/critic/refine loop and its stopping rule.  The full step-by-step specification lives on its own page so this one stays readable: [Critique and Refine]({{ site.baseurl }}/Assignments/CritiqueRefine).
+> - **Part B: Debate and Consensus.**  Everything below on this page.
+>
+> You submit both halves together, once, against the single rubric in this assignment.  There is no separate Critique-and-Refine deadline.
 
-**Prerequisite concepts**: complete these activities before writing any code:
+Complete these activities before you write any code:
 
 - [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md): independent rounds, peer-informed revision, and majority vote (Sections 5 and 6), then sampling, embedding clustering, and synthesis (Section 7)
 - [Agents That Talk]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-agentcommunication.md): the claim protocol, needed only if you take the optional handoff route in Part 3
 
-### This lab has two halves
-
-Critique-and-refine and debate-and-consensus used to be two separate 100-point labs due eight days apart.  They are one family of idea (use more than one model call to get a better answer), so they are now one lab with one grade.
-
-**Part A: Critique and Refine.**  Build the generator/critic/refine loop and its stopping rule.  The full step-by-step specification lives on its own page so this one stays readable: [Critique and Refine]({{ site.baseurl }}/Assignments/CritiqueRefine).  Do Part A first.  The debate work in Part B reuses its scaffolding, and a critic you already trust is what makes a debate round worth reading.
-
-**Part B: Debate and Consensus.**  Everything below on this page.
-
-You submit both halves together, once, against the single rubric in this assignment.  There is no separate Critique-and-Refine deadline.
-
-### Tools to install
+Install the Python packages.  `pip install` downloads a package and makes it importable.  `curl` sends a web request and prints the reply, so the last line asks your local Ollama server to list its models; a JSON list means Ollama is up.
 
 ```bash
 # Sentence transformers for embedding clustering (Part 2)
@@ -105,7 +112,7 @@ pip install requests
 curl http://localhost:11434/api/tags
 ```
 
-**Health check:**
+Then run this health check.  It embeds three sentences, normalizes the vectors, and prints how similar the first two are.  The first run downloads the model, so give it a minute.
 
 ```bash
 python -c "
@@ -122,33 +129,32 @@ print(normed[0] @ normed[1])
 "
 ```
 
-Expected output:
+> **You should see.** A shape of `(3, 384)` (three sentences, 384 numbers each) and a similarity near 0.7.  If the import fails, `pip install` landed in a different Python than the one you ran.  If `curl` printed a connection error, start Ollama first.
 
-```
+```text
 Embedding shape: (3, 384)
 Cosine similarity (should be ~0.7 for similar sentences):
 0.6843...
 ```
 
-**Estimated time budget:**
-
-| Part | Task | Estimated time |
-|------|------|----------------|
-| Part 1 | Debate | 60-90 min |
-| Part 2 | Consensus | 60-75 min |
-| Part 3 | The Shootout | 60-75 min |
-| Part 4 | Threshold Sensitivity | 30-45 min |
-| Writeup | Readme and reflection | 30-45 min |
+> **Time budget.** About 4 to 5.5 hours in total:
+> - Part 1, Debate: 60-90 min
+> - Part 2, Consensus: 60-75 min
+> - Part 3, The Shootout: 60-75 min
+> - Part 4, Threshold Sensitivity: 30-45 min
+> - Readme and reflection: 30-45 min
 
 ---
 
-## Part 1: Debate
+## Part 1: Build a Configurable Debate (25 points)
 
-Build a configurable debate.  The number of agents, the number of rounds, and the temperature schedule all live in a JSON configuration file.  Round one is independent: each agent answers alone.  Later rounds are peer-informed: each agent sees the other agents' previous answers and may revise or hold its position.  Aggregate the final round two ways, by majority vote and by an optional judge agent.  Answer extraction must tolerate formatting drift: anchor on a required `ANSWER:` line, and when that line is missing, print a located error message instead of failing silently.
+Build a debate in which the number of agents, the number of rounds, and the temperature schedule all live in a JSON configuration file.  Round one is independent: each agent answers alone.  Later rounds are peer-informed: each agent sees the other agents' previous answers and may revise or hold its position.  Aggregate the final round two ways, by majority vote and by an optional judge agent.  Answer extraction must tolerate formatting drift: anchor on a required `ANSWER:` line, and when that line is missing, print a located error message instead of failing silently.
 
-### Step-by-step guide
+### Step 1.1: Write the configuration file
 
-**Step 1: Create your configuration file.**
+> **Do this.**
+> 1. Make a folder for this lab (for example `cs357-multiagent`) and open it in your editor.
+> 2. Create a file named `config.json` in that folder and paste in the settings below.
 
 ```json
 {
@@ -172,7 +178,13 @@ Build a configurable debate.  The number of agents, the number of rounds, and th
 
 The `temperature_schedule` list has one temperature per round.  If there are more rounds than entries, repeat the last entry.
 
-**Step 2: Implement the per-agent generation function.**
+### Step 1.2: Write the per-agent generation function
+
+One function produces one agent's response for one round; the prompt differs between round 1 and the peer-informed rounds.
+
+> **Do this.**
+> 1. Create a file named `lab4.py` next to `config.json`.  Parts 1 and 2 both add functions to this file.
+> 2. Paste in the imports, `load_config`, and `agent_respond` below.
 
 ```python
 import requests
@@ -236,7 +248,12 @@ def agent_respond(question, agent_id, round_num, peer_answers, config):
         raise
 ```
 
-**Step 3: Implement answer extraction with graceful fallback.**
+Notice the `except` block: a located message (the `[lab4:agent_respond:...]` tag says where it failed), a traceback, then a re-raise.  The Code Quality row checks for this on every model and embedding call.
+
+### Step 1.3: Extract the answer with a located warning
+
+> **Do this.**
+> 1. Add `extract_answer` below `agent_respond` in `lab4.py`.
 
 ```python
 def extract_answer(response_text, agent_id, round_num):
@@ -252,7 +269,14 @@ def extract_answer(response_text, agent_id, round_num):
         return None
 ```
 
-**Step 4: Implement the full debate loop.**
+> **Watch out.** A missing `ANSWER:` line must produce a located error, never a silent wrong answer.  `None` is the signal, and every caller of this function has to handle it.
+
+### Step 1.4: Run the debate loop
+
+The loop feeds each agent the *other* agents' previous answers, never its own, and keeps every full response for your transcript.
+
+> **Do this.**
+> 1. Add `run_debate` below `extract_answer`.
 
 ```python
 def run_debate(question, config):
@@ -298,7 +322,10 @@ def run_debate(question, config):
     return final_answers, round_answers, total_calls
 ```
 
-**Step 5: Implement majority vote aggregation.**
+### Step 1.5: Aggregate by majority vote
+
+> **Do this.**
+> 1. Add the `Counter` import and `majority_vote` below `run_debate`.
 
 ```python
 from collections import Counter
@@ -314,7 +341,17 @@ def majority_vote(final_answers):
     return counts.most_common(1)[0][0]
 ```
 
-**Step 6: Run a smoke test.**
+The proficient column asks for a judge-agent option alongside majority vote.  Challenge 1 at the end of this page describes the judge, and the handoff route in Part 3 uses one as its tie rule.
+
+### Step 1.6: Run a smoke test
+
+> **Do this.**
+> 1. Add this block at the bottom of `lab4.py`.
+> 2. Run the file from the lab folder.  `python3 lab4.py` runs the file top to bottom; the block under `if __name__ == "__main__":` is what executes.
+>
+> ```bash
+> python3 lab4.py
+> ```
 
 ```python
 if __name__ == "__main__":
@@ -327,9 +364,9 @@ if __name__ == "__main__":
     print(f"Total model calls: {calls}")
 ```
 
-Expected output:
+> **You should see.** Two rounds of three agents, then a vote.  Your answers will differ, but the call count should equal agents times rounds.
 
-```
+```text
 === Debate Round 1 ===
   Agent 0: ANSWER = 36
   Agent 1: ANSWER = 36
@@ -347,35 +384,30 @@ Total model calls: 6
 
 ### Troubleshooting, Part 1
 
-**`ANSWER:` is never found even though it appears in the raw output**
-The model may be writing `Answer:` (different capitalization) or `**ANSWER:**` (markdown bold).  The template's regex is already case-insensitive (`re.IGNORECASE`).  Strip the markdown before matching: `response_text = re.sub(r'\*+', '', response_text)`.
+- **`ANSWER:` is never found even though it appears in the raw output.**  The model may be writing `Answer:` (different capitalization) or `**ANSWER:**` (markdown bold).  The template's regex is already case-insensitive (`re.IGNORECASE`).  Strip the markdown before matching: `response_text = re.sub(r'\*+', '', response_text)`.
+- **Agents always agree on round 1 (no diversity).**  Your seeds may be too similar, or the temperature is too low.  Try `seed_base: 0` and `temperature_schedule: [0.9, 0.5]`.  Factual questions can produce agreement even at high temperature; use more subjective questions when you are testing for diversity.
+- **One agent's response is cut off mid-sentence.**  The model hit its context window.  Shorten `peer_section` by passing only the extracted `ANSWER` lines from peers, not their full reasoning: `f"Agent {pid} answered: {ans}"`.
 
-**Agents always agree on round 1 (no diversity)**
-Your seeds may be too similar, or the temperature is too low.  Try `seed_base: 0` and `temperature_schedule: [0.9, 0.5]`.  Factual questions can produce agreement even at high temperature; use more subjective questions when you are testing for diversity.
+> **Checkpoint.** Before you move to Part 2, make sure you can answer these:
+> 1. What is the purpose of sharing peer answers in rounds 2+ rather than keeping agents independent for all rounds?  What risk does peer-sharing introduce?
+> 2. What happens in your code if `extract_answer` returns None for one agent in the final round?  How does your majority vote handle it?
+> 3. Run a 3-agent, 2-round debate on an arithmetic question.  Did any agent change their answer between rounds?  If so, was it because they were persuaded by correct reasoning or simply by social pressure?
 
-**One agent's response is cut off mid-sentence**
-The model hit its context window.  Shorten `peer_section` by passing only the extracted `ANSWER` lines from peers, not their full reasoning: `f"Agent {pid} answered: {ans}"`.
-
----
-
-> **Checkpoint: Before moving to Part 2, make sure you can answer:**
-> 1.  What is the purpose of sharing peer answers in rounds 2+ rather than keeping agents independent for all rounds?  What risk does peer-sharing introduce?
-> 2.  What happens in your code if `extract_answer` returns None for one agent in the final round?  How does your majority vote handle it?
-> 3.  Run a 3-agent, 2-round debate on an arithmetic question.  Did any agent change their answer between rounds?  If so, was it because they were persuaded by correct reasoning or simply by social pressure?
+> **No-code path.** Open two Open WebUI chats with different system prompts (for example, an advocate and a skeptic), give both the same question, then paste each one's answer to the other for a rebuttal round.  Two rounds is enough to see the dynamic.  In Langflow, the same thing is two Agent nodes and a loop.  Your exported transcripts take the place of the smoke-test output.
 
 ---
 
-## Part 2: Consensus
+## Part 2: Build the Consensus Pipeline (20 points)
 
-### The Consensus Pattern (Section 7 of the deck)
+Implement the sample, cluster, synthesize pipeline: $$k$$ high-temperature drafts, embedding clustering over normalized vectors with cosine geometry, and a low-temperature synthesizer that receives one representative per cluster with its support count, follows the majority on conflicts, and discloses any close disagreement in one line.  Demonstrate the pipeline on a long-form question with no single correct answer.  The in-class tomatillo salsa question is a fine starting point; choose an analogous question of your own as well.
+
+### Why this matters: voting on meaning instead of strings
 
 Section 7 of *Critique, Consensus, and the LLM Judge* (Voting on Meaning Instead of Strings) introduces this pattern in class.  Here is the core idea again before you build.  **Stochastic consensus** uses the fact that a language model at high temperature is a *sampler*, not an oracle: ask it the same question six times and you get six different drafts drawn from a distribution of plausible answers.  Any one draft might be idiosyncratic or wrong.  But if you group the drafts by *meaning* (not by exact wording), the sizes of the groups tell you something no single draft can: which positions the model keeps returning to (high support) and which are one-off flukes (low support).
 
 The grouping step is where embeddings come in.  An embedding model maps each draft to a vector, and drafts with similar meaning land close together even when they share few words.  Normalize those vectors and cluster them with cosine distance, and "six drafts" becomes "three positions, with support counts of 3, 2, and 1."  A final low-temperature **synthesizer** then receives one representative draft per cluster (plus its support count), never all six raw transcripts, and writes a single answer that follows the majority and *discloses* any close disagreement instead of papering over it.  That disclosure rule is the pattern's honesty mechanism: when the samples split, the user deserves to know.
 
-The whole pipeline looks like this:
-
-```
+```text
 question --> sample k drafts at high temperature      (k model calls)
                     |
                     v
@@ -396,8 +428,6 @@ question --> sample k drafts at high temperature      (k model calls)
 
 You will experiment with two dials in this lab: the **sampling temperature** (how diverse the drafts are) and the **distance threshold** (how aggressively meanings are merged; the subject of Part 4).
 
-#### Why voting on meaning beats voting on strings
-
 There are three ways to aggregate $$k$$ samples, and they are not interchangeable.
 
 **Self-consistency** votes on the *answer*.  Sample $$k$$ independent chains at moderate temperature, extract each final answer, and return the mode:
@@ -412,7 +442,7 @@ For questions with short checkable answers, accuracy rises with $$k$$, because m
 
 **Synthesis** writes the merged view.  A synthesizer receives the cluster representatives with their support counts and drafts one output that keeps majority positions and names real disagreements.  Its context stays small on purpose: cluster summaries, never all $$k$$ transcripts.
 
-#### A worked example: five recipes, three positions
+### Worked example: five recipes, three positions
 
 Five agents at temperature 1.0 propose tomatillo salsa recipes.  Three roast the tomatillos, one boils them, one uses them raw; four include cilantro; opinions split on jalapeño versus serrano.
 
@@ -426,17 +456,16 @@ Five agents at temperature 1.0 propose tomatillo salsa recipes.  Three roast the
 
 Before you build anything, work out three things on paper.  They are the design decisions the code will otherwise make for you.
 
-1.  Which choice here is *load-bearing* (it changes the dish) and which is garnish-level?  If you swapped jalapeño for serrano, would the dish taste radically different?  What if you swapped raw for roasted?  Your answer tells you what the clustering has to be sensitive to, and where embeddings are likely to mislead you.
-2.  Write, in two sentences, the synthesis you would want.  It should commit where the majority is strong (3 of 5 roast) and stay candid where it is split (the chile).  That is the behavior your synthesizer prompt has to produce.
-3.  State precisely why exact-match voting on the full recipe texts yields five singleton answers.  The distinction you need is *string* identity versus *semantic* identity.
+1. Which choice here is *load-bearing* (it changes the dish) and which is garnish-level?  If you swapped jalapeño for serrano, would the dish taste radically different?  What if you swapped raw for roasted?  Your answer tells you what the clustering has to be sensitive to, and where embeddings are likely to mislead you.
+2. Write, in two sentences, the synthesis you would want.  It should commit where the majority is strong (3 of 5 roast) and stay candid where it is split (the chile).  That is the behavior your synthesizer prompt has to produce.
+3. State precisely why exact-match voting on the full recipe texts yields five singleton answers.  The distinction you need is *string* identity versus *semantic* identity.
 
-**Independence is the load-bearing assumption.**  Sampling helps only when the errors scatter.  If all $$k$$ drafts share a systematic bias, whether a misconception baked into the model or a misleading phrase in your own prompt, they will agree confidently and be wrong together, and a large cluster will look exactly like a strong consensus.  Part 3's shootout deliberately includes questions with well-known intuitive-but-wrong answers so you can watch this happen.
+> **Watch out.** Independence is the load-bearing assumption.  Sampling helps only when the errors scatter.  If all $$k$$ drafts share a systematic bias, whether a misconception baked into the model or a misleading phrase in your own prompt, they will agree confidently and be wrong together, and a large cluster will look exactly like a strong consensus.  Part 3's shootout deliberately includes questions with well-known intuitive-but-wrong answers so you can watch this happen.
 
-Implement the sample, cluster, synthesize pipeline: $$k$$ high-temperature drafts, embedding clustering over normalized vectors with cosine geometry, and a low-temperature synthesizer that receives one representative per cluster with its support count, follows the majority on conflicts, and discloses any close disagreement in one line.  Demonstrate the pipeline on a long-form question with no single correct answer.  The in-class tomatillo salsa question is a fine starting point; choose an analogous question of your own as well.
+### Step 2.1: Sample k drafts independently
 
-### Step-by-step guide
-
-**Step 1: Sample k drafts independently.**
+> **Do this.**
+> 1. Add `sample_drafts` to `lab4.py`, below `majority_vote` and above the `__main__` block.
 
 ```python
 def sample_drafts(question, config):
@@ -471,9 +500,13 @@ def sample_drafts(question, config):
     return drafts
 ```
 
-**Step 2: Embed and cluster the drafts.**
+### Step 2.2: Embed and cluster the drafts
 
-> **This code is provided complete; copy it as-is.**  You are not expected to write embedding or clustering internals with one semester of Python behind you; `sentence-transformers` and scikit-learn's `AgglomerativeClustering` do that work.  Your job in this step is to *call* this function and *interpret* what it returns: which drafts landed in which cluster, which cluster has the most support, and whether the grouping matches your own reading of the drafts.
+This code is provided complete; copy it as-is.  You are not expected to write embedding or clustering internals with one semester of Python behind you; `sentence-transformers` and scikit-learn's `AgglomerativeClustering` do that work.  Your job in this step is to *call* this function and *interpret* what it returns: which drafts landed in which cluster, which cluster has the most support, and whether the grouping matches your own reading of the drafts.
+
+> **Do this.**
+> 1. Add the three imports below to the top of `lab4.py`, and `cluster_drafts` below `sample_drafts`.
+> 2. After you run the pipeline in Step 2.4, answer the three interpretation questions that follow the code in your readme.
 
 ```python
 import numpy as np
@@ -528,13 +561,18 @@ def cluster_drafts(drafts, config):
     return labels, normed, representatives
 ```
 
-**Interpretation questions (answer these in your readme after running the provided clustering code):**
+Interpretation questions, answered in your readme after you run the provided clustering code:
 
-1.  Print `labels` next to the first 80 characters of each draft.  Read the drafts in each cluster yourself: do the groupings match *your* judgment of which drafts say the same thing?  Name one pair the clusterer grouped that you would not have, or vice versa.
-2.  Which cluster has the highest support count, and in one sentence, what position does its representative draft take?
-3.  The representative is the draft closest to the cluster centroid.  Look at the representative chosen for your largest cluster; is it also the draft you would have picked as the "most typical" of that group?  Why might the centroid-nearest draft differ from the best-written draft?
+1. Print `labels` next to the first 80 characters of each draft.  Read the drafts in each cluster yourself: do the groupings match *your* judgment of which drafts say the same thing?  Name one pair the clusterer grouped that you would not have, or vice versa.
+2. Which cluster has the highest support count, and in one sentence, what position does its representative draft take?
+3. The representative is the draft closest to the cluster centroid.  Look at the representative chosen for your largest cluster; is it also the draft you would have picked as the "most typical" of that group?  Why might the centroid-nearest draft differ from the best-written draft?
 
-**Step 3: Synthesize from cluster representatives.**
+### Step 2.3: Synthesize from cluster representatives
+
+The synthesizer sees one representative per cluster with its support count, majority first, never the raw drafts.
+
+> **Do this.**
+> 1. Add `synthesize` and `run_consensus` below `cluster_drafts`.
 
 ```python
 def synthesize(question, representatives, config):
@@ -602,17 +640,23 @@ def run_consensus(question, config):
     return synthesis, drafts, labels, representatives, total_calls
 ```
 
-**Step 4: Demonstrate on a long-form question.**
+### Step 2.4: Demonstrate on a long-form question
+
+> **Do this.**
+> 1. Replace the `__main__` block at the bottom of `lab4.py` with the one below.  (Keep the Part 1 smoke test in a comment if you want to rerun it later.)
+> 2. Run `python3 lab4.py` again.  Save the full printout; it is your consensus transcript.
 
 ```python
-long_form_q = "What makes a great study group, and what are the biggest pitfalls to avoid?"
-synthesis, drafts, labels, reps, calls = run_consensus(long_form_q, config)
-print(f"\n=== SYNTHESIZED ANSWER ({calls} model calls) ===\n{synthesis}")
+if __name__ == "__main__":
+    config = load_config()
+    long_form_q = "What makes a great study group, and what are the biggest pitfalls to avoid?"
+    synthesis, drafts, labels, reps, calls = run_consensus(long_form_q, config)
+    print(f"\n=== SYNTHESIZED ANSWER ({calls} model calls) ===\n{synthesis}")
 ```
 
-Expected output (abbreviated):
+> **You should see.** Six sample previews, a clustering summary with support counts, and one synthesized answer with a disclosure line when the split is close.  Abbreviated:
 
-```
+```text
 === Sampling 6 drafts ===
   Sample 1/6: A great study group needs clear goals and...
   ...
@@ -632,42 +676,49 @@ Note: there was minor disagreement about whether size or structure matters more.
 
 ### Troubleshooting, Part 2
 
-**`AgglomerativeClustering` raises `ValueError: The number of samples is too small`**
-This happens when `n_samples < 2`.  Set `num_samples >= 2` in your config.  For clustering to mean anything, use at least 5 samples.
+- **`AgglomerativeClustering` raises `ValueError: The number of samples is too small`.**  This happens when `n_samples < 2`.  Set `num_samples >= 2` in your config.  For clustering to mean anything, use at least 5 samples.
+- **All drafts end up in one giant cluster.**  Your `distance_threshold` is too large.  Decrease it from 0.3 to 0.15 and re-run.  If everything is still one cluster, your question may produce very uniform answers; try a more open-ended question that generates diverse responses.
+- **All drafts end up in separate clusters (no merging).**  Your `distance_threshold` is too small.  Increase it from 0.3 to 0.5.  This is common with very short drafts (under 50 words) because their embedding geometry is more spread out.
 
-**All drafts end up in one giant cluster**
-Your `distance_threshold` is too large.  Decrease it from 0.3 to 0.15 and re-run.  If everything is still one cluster, your question may produce very uniform answers; try a more open-ended question that generates diverse responses.
+> **Checkpoint.** Before you move to Part 3, make sure you can answer these:
+> 1. Why do we normalize the embedding vectors before computing cosine distance?  What goes wrong if we skip normalization?
+> 2. What is the purpose of the support count in the synthesizer's context?  What would happen if you gave the synthesizer all 6 raw drafts instead of one representative per cluster?
+> 3. What does it mean for a question to be "too easy" for stochastic consensus?  What kind of question would produce maximum cluster diversity?
 
-**All drafts end up in separate clusters (no merging)**
-Your `distance_threshold` is too small.  Increase it from 0.3 to 0.5.  This is common with very short drafts (under 50 words) because their embedding geometry is more spread out.
-
----
-
-> **Checkpoint: Before moving to Part 3, make sure you can answer:**
-> 1.  Why do we normalize the embedding vectors before computing cosine distance?  What goes wrong if we skip normalization?
-> 2.  What is the purpose of the support count in the synthesizer's context?  What would happen if you gave the synthesizer all 6 raw drafts instead of one representative per cluster?
-> 3.  What does it mean for a question to be "too easy" for stochastic consensus?  What kind of question would produce maximum cluster diversity?
+> **No-code path.** Ask the same question *n* times at a temperature above zero, record the answers in a spreadsheet, and cluster them by hand.  The clustering judgment is the actual skill, and doing it by hand is not a concession: it is the version where the ambiguous cases cannot hide behind a distance threshold you picked without looking.  Answer the Step 2.2 interpretation questions about your own hand clustering.
 
 ---
 
-## Part 3: The Shootout
+## Part 3: Run the Shootout (20 points)
 
 Build a labeled task set of at least ten questions with checkable answers (arithmetic word problems with traps work well).  At **matched call budgets**, compare:
 
-1.  Single shot (one agent, one sample).
-2.  Self-consistency (sample $$k$$, majority vote, no debate rounds).
-3.  Full debate (your Part 1 system).
+1. Single shot (one agent, one sample).
+2. Self-consistency (sample $$k$$, majority vote, no debate rounds).
+3. Full debate (your Part 1 system).
 
 Report accuracy and total model calls per condition.  Then find and document at least one correlated failure: a question where every agent agrees on the same wrong answer.  Explain, using the independence argument from class, why no aggregation strategy could have saved you, and what non-LLM addition (a tool, retrieval) would.
 
-### Step-by-step guide
-
-**Step 1: Build your labeled task set.**
+### Step 3.1: Build the labeled task set
 
 Good task types for this comparison:
-- Arithmetic word problems where one step is easy to get wrong (e.g., a percentage of a percentage)
+
+- Arithmetic word problems where one step is easy to get wrong (for example, a percentage of a percentage)
 - Multi-step logic puzzles with a common false shortcut
 - Questions with a well-known but incorrect folk belief as a trap
+
+> **Do this.**
+> 1. Create `shootout.py` in the lab folder.  Start it with these lines, which pull in your Part 1 functions and load the config once:
+>
+> ```python
+> import requests
+> from collections import Counter
+> from lab4 import load_config, extract_answer, run_debate, majority_vote
+>
+> config = load_config()
+> ```
+>
+> 2. Paste the task set below under those lines.  Swap in questions of your own if you like, keeping this mix.
 
 ```python
 SHOOTOUT_TASKS = [
@@ -689,12 +740,21 @@ SHOOTOUT_TASKS = [
 # wrong answer. Feel free to swap in questions of your own, keeping this mix.
 ```
 
-**Step 2: Run all three conditions at matched call budgets.**
+### Step 3.2: Run the three conditions at matched call budgets
 
 For a budget of B=6 calls per question:
+
 - Single shot: 1 call (use the remaining 5 as wasted budget, or run 6 single shots and majority-vote them as "self-consistency")
 - Self-consistency: 6 samples, majority vote
-- Full debate: 3 agents × 2 rounds = 6 calls
+- Full debate: 3 agents times 2 rounds = 6 calls
+
+> **Do this.**
+> 1. Paste the code below under the task set in `shootout.py`.
+> 2. Run it from the lab folder.  Ten questions at 13 calls each takes a while on a laptop; let it finish.
+>
+> ```bash
+> python3 shootout.py
+> ```
 
 ```python
 import csv
@@ -763,61 +823,74 @@ for condition, calls_key, correct_key in [
     print(f"{condition}: accuracy={acc:.1%}, avg_calls={avg_calls:.1f}")
 ```
 
-Expected output format:
+> **You should see.** A per-question block for each task, then three summary lines.  Your percentages will differ; the shape is what matters.
 
-```
+```text
 Single shot: accuracy=60.0%, avg_calls=1.0
 Self-consistency: accuracy=70.0%, avg_calls=6.0
 Debate: accuracy=80.0%, avg_calls=6.0
 ```
 
-**Step 3: Document a correlated failure.**
+> **Watch out.** `single_shot` has no exception handler.  Add the located `try`/`except` from `agent_respond` before you submit; the Code Quality row covers every model call.
 
-Find a question in your task set (or add one) where all agents agree on the same wrong answer.  Paste all agents' verbatim `ANSWER:` lines alongside the correct answer in your readme.  Then explain in your writeup: why does aggregation fail here, and what non-LLM resource (a calculator, a lookup, retrieval from a factual source) would fix it?
+### Step 3.3: Document a correlated failure
 
-### Optional route: handoff through a channel
+> **Do this.**
+> 1. Find a question in your task set (or add one) where all agents agree on the same wrong answer.
+> 2. Paste all agents' verbatim `ANSWER:` lines alongside the correct answer in your readme.
+> 3. Explain in your writeup: why does aggregation fail here, and what non-LLM resource (a calculator, a lookup, retrieval from a factual source) would fix it?
+
+### Optional route: exchange positions through a channel
 
 You may run the debate condition of the shootout as two agents that exchange positions through a shared channel, instead of three agents inside one Python process.  The channel is a GitHub issue thread or a Dropbox-style shared folder, and the agents follow the claim protocol from the session *Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling*.  This route earns the same credit on the same rubric rows (Debate Implementation and Comparative Evaluation).  The channel transcript takes the place of the in-process 3-agent, 2-round transcript, and the written protocol (how to claim, what a second agent does on seeing a claim, what makes a claim stale, what "done" looks like) takes the place of the round loop in `run_debate`.
 
 A **claim** is a visible mark in the channel that says "this item is mine now," made before any work starts.  On GitHub it is a "Claiming this" comment plus an `in-progress` label.  In a folder it is a rename from `inbox/` to `claimed/` followed by a `.claim` file holding `claimed_by` and `claimed_at`.  The rule that matters for a debate is that an agent claims the other agent's position before it reads it, so the transcript proves who read what, and when.
 
-Follow these steps for each question in your task set:
+> **Do this.** For each question in your task set:
+> 1. Write the protocol down first, as paths and conditions.  For GitHub: one issue per question, titled with the task id, and the four conventions (claim comment and label, the reply format ending in `ANSWER:`, the stale timeout, the closing comment that records the vote).  For a folder: `handoff/inbox/`, `handoff/claimed/`, and `handoff/done/`, the rename-as-claim rule, the `.claim` file, the stale timeout, and the `.result.md` file that marks a position as answered.
+> 2. Round 1, independent.  Each agent is its own chat session or its own script with its own seed.  Each answers from the question alone, before reading anything the other posted, and ends with an `ANSWER:` line.  On GitHub, each agent posts its full response as a comment.  In the folder, each agent writes `S01-agentA-round1.md` or `S01-agentB-round1.md` into `inbox/`.
+> 3. Round 2, handoff.  Each agent claims the other's round-1 position (the claim comment and label, or the rename plus the `.claim` file), then reads it, then posts a revision: a changed answer or a held position with a rebuttal, again ending in `ANSWER:`.  On GitHub the revision is a comment.  In the folder, the agent renames the claimed file into `done/` and writes its revision beside it as `S01-agentA-round1.result.md`.
+> 4. Aggregate.  Extract the `ANSWER:` line from each round-2 post with the same `extract_answer` rule as the in-process debate, including the located warning when the line is missing.  Two agents can tie, so your protocol must state the tie rule: a judge agent (one extra call) picks the answer, or the pair records the tie as no answer.  Post the result as the closing comment or as `S01.vote.md` in `done/`.
+> 5. Match the budget.  The channel debate costs two agents times two rounds, plus one call if the judge ran.  Set `k` for self-consistency to that same number so the three conditions stay matched, and report the actual call count per condition in your table.
 
-1.  Write the protocol down first, as paths and conditions.  For GitHub: one issue per question, titled with the task id, and the four conventions (claim comment and label, the reply format ending in `ANSWER:`, the stale timeout, the closing comment that records the vote).  For a folder: `handoff/inbox/`, `handoff/claimed/`, and `handoff/done/`, the rename-as-claim rule, the `.claim` file, the stale timeout, and the `.result.md` file that marks a position as answered.
-2.  Round 1, independent.  Each agent is its own chat session or its own script with its own seed.  Each answers from the question alone, before reading anything the other posted, and ends with an `ANSWER:` line.  On GitHub, each agent posts its full response as a comment.  In the folder, each agent writes `S01-agentA-round1.md` or `S01-agentB-round1.md` into `inbox/`.
-3.  Round 2, handoff.  Each agent claims the other's round-1 position (the claim comment and label, or the rename plus the `.claim` file), then reads it, then posts a revision: a changed answer or a held position with a rebuttal, again ending in `ANSWER:`.  On GitHub the revision is a comment.  In the folder, the agent renames the claimed file into `done/` and writes its revision beside it as `S01-agentA-round1.result.md`.
-4.  Aggregate.  Extract the `ANSWER:` line from each round-2 post with the same `extract_answer` rule as the in-process debate, including the located warning when the line is missing.  Two agents can tie, so your protocol must state the tie rule: a judge agent (one extra call) picks the answer, or the pair records the tie as no answer.  Post the result as the closing comment or as `S01.vote.md` in `done/`.
-5.  Match the budget.  The channel debate costs two agents times two rounds, plus one call if the judge ran.  Set `k` for self-consistency to that same number so the three conditions stay matched, and report the actual call count per condition in your table.
+Your transcript must show the exchange with timestamps.  On the GitHub route, submit the issue URL and a saved copy of each thread (an export or screenshots) showing, in order: the question, each agent's round-1 comment, each claim comment with its label, each round-2 comment, and the closing comment with the vote.  GitHub timestamps every comment for you.  On the folder route, submit a listing of `handoff/` with full timestamps (for example `ls -l --time-style=full-iso -R handoff/`, or the Dropbox file activity view) alongside the contents of every file in `inbox/`, `claimed/`, and `done/`, including each `.claim` file with its `claimed_by` and `claimed_at`.  In either case a reader must be able to see that each claim happened before the read it authorized, and that every round-2 post is a reply to a specific round-1 position.
 
-Your transcript must show the exchange with timestamps.  On the GitHub route, submit the issue URL and a saved copy of each thread (an export or screenshots) showing, in order: the question, each agent's round-1 comment, each claim comment with its label, each round-2 comment, and the closing comment with the vote.  GitHub timestamps every comment for you.  On the folder route, submit a listing of `handoff/` with full timestamps (for example `ls -l --time-style=full-iso -R handoff/`, or the Dropbox file activity view) alongside the contents of every file in `inbox/`, `claimed/`, and `done/`, including each `.claim` file with its `claimed_by` and `claimed_at`.  In either case a reader must be able to see that each claim happened before the read it authorized, and that every round-2 post is a reply to a specific round-1 position.  One reminder from that session applies here: a comment in the thread is an instruction the other agent will read, so a stray or injected line in a position becomes part of the next agent's context.
+> **Watch out.** One reminder from that session applies here: a comment in the thread is an instruction the other agent will read, so a stray or injected line in a position becomes part of the next agent's context.
 
 ### Troubleshooting, Part 3
 
-**Self-consistency and debate produce identical results on every task**
-For debate to beat self-consistency, some agents need to change their mind in revision rounds, and that requires questions with initial diversity.  Add more word problems with common arithmetic pitfalls; single-step questions rarely produce diversity.
+- **Self-consistency and debate produce identical results on every task.**  For debate to beat self-consistency, some agents need to change their mind in revision rounds, and that requires questions with initial diversity.  Add more word problems with common arithmetic pitfalls; single-step questions rarely produce diversity.
+- **All three conditions fail on the same questions (beyond the one correlated failure).**  Your task set may be too hard for the model you are using.  Add some easier questions so the results spread across correct and incorrect answers and the comparison has signal.  If everything is wrong, you cannot see which method is better.
+- **One agent never produces an ANSWER: line.**  Check the temperature and seed for that agent.  At very high temperature (above 1.0) the model output can be incoherent.  Cap temperatures at 0.9 in your `temperature_schedule`.
 
-**All three conditions fail on the same questions (beyond the one correlated failure)**
-Your task set may be too hard for the model you are using.  Add some easier questions so the results spread across correct and incorrect answers and the comparison has signal.  If everything is wrong, you cannot see which method is better.
+> **Checkpoint.** Before you move to Part 4, make sure you can answer these:
+> 1. On your task set, which condition had the best accuracy?  Did it also have the highest call count?  What does that tradeoff imply about deployment decisions?
+> 2. Describe your correlated failure in one sentence.  Why could neither majority vote nor debate fix it?
+> 3. Name the non-LLM resource that would fix your correlated failure.  How would you integrate it into your existing agent architecture (think back to the Local Agent Lab's tool pattern)?
 
-**One agent never produces an ANSWER: line**
-Check the temperature and seed for that agent.  At very high temperature (>1.0) the model output can be incoherent.  Cap temperatures at 0.9 in your `temperature_schedule`.
-
----
-
-> **Checkpoint: Before moving to Part 4, make sure you can answer:**
-> 1.  On your task set, which condition had the best accuracy?  Did it also have the highest call count?  What does that tradeoff imply about deployment decisions?
-> 2.  Describe your correlated failure in one sentence.  Why could neither majority vote nor debate fix it?
-> 3.  Name the non-LLM resource that would fix your correlated failure.  How would you integrate it into your existing agent architecture (think back to the Local Agent Lab's tool pattern)?
+> **No-code path.** Compare single-shot, debate, and consensus on the same question set in your spreadsheet, with a column for cost (rough token count or wall-clock time).  The handoff route above fits here too: the two chats can exchange their positions through an issue thread or a shared folder instead of by pasting.
 
 ---
 
-## Part 4: Threshold Sensitivity
+## Part 4: Test Threshold Sensitivity (supports the Consensus row)
 
 Vary the clustering `distance_threshold` across at least three values and report how the cluster structure, and therefore the synthesized consensus, changes on your long-form question.  Conclude with one paragraph: who should own this parameter in a deployed system, and how would you document its setting?
 
-### Step-by-step guide
+### Step 4.1: Run consensus at three threshold values
 
-**Step 1: Run consensus at three threshold values.**
+> **Do this.**
+> 1. Create `threshold.py` in the lab folder, starting with these two lines:
+>
+> ```python
+> from lab4 import load_config, run_consensus
+> config = load_config()
+> ```
+>
+> 2. Paste the loop below under them and run it:
+>
+> ```bash
+> python3 threshold.py
+> ```
 
 ```python
 long_form_q = "What makes a great study group, and what are the biggest pitfalls to avoid?"
@@ -832,9 +905,9 @@ for threshold in thresholds:
     print(f"Synthesis (first 200 chars): {synthesis[:200]}...")
 ```
 
-Expected output pattern:
+> **You should see.** The cluster count falling as the threshold rises.
 
-```
+```text
 === Threshold = 0.1 ===
 Clusters: 6   <- each draft is its own cluster
 Synthesis (first 200 chars): There were 6 distinct perspectives on what makes a great study group...
@@ -848,45 +921,52 @@ Clusters: 1   <- everything merged
 Synthesis (first 200 chars): A great study group needs...
 ```
 
-**Step 2: Tabulate and write your conclusion.**
+### Step 4.2: Tabulate and write your conclusion
 
-In your readme, create a table:
-
-| Threshold | Clusters | Synthesis character |
-|-----------|----------|---------------------|
-| 0.1 | 6 | Highly fragmented; all views presented equally |
-| 0.3 | 3 | Balanced; majority position emerges |
-| 0.5 | 1 | Over-merged; diversity lost |
-
-Then answer: who should own this parameter: the system developer, the deployer, or the end user?  What documentation would help them choose a value?
+> **Do this.**
+> 1. In your readme, fill in a table like this one with your own numbers and descriptions:
+>
+> | Threshold | Clusters | Synthesis character |
+> |-----------|----------|---------------------|
+> | 0.1 | 6 | Highly fragmented; all views presented equally |
+> | 0.3 | 3 | Balanced; majority position emerges |
+> | 0.5 | 1 | Over-merged; diversity lost |
+>
+> 2. Then answer in one paragraph: who should own this parameter, the system developer, the deployer, or the end user?  What documentation would help them choose a value?
 
 ### Troubleshooting, Part 4
 
-**All thresholds produce the same number of clusters**
-Your drafts may be nearly identical (low diversity from sampling).  Increase `sample_temperature` to 0.9 or 1.0, or use a more open-ended question.  You can also inspect the actual pairwise cosine distances with `1 - (normed @ normed.T)` to see what distances you are working with.
+- **All thresholds produce the same number of clusters.**  Your drafts may be nearly identical (low diversity from sampling).  Increase `sample_temperature` to 0.9 or 1.0, or use a more open-ended question.  You can also inspect the actual pairwise cosine distances with `1 - (normed @ normed.T)` to see what distances you are working with.
+- **Threshold 0.1 produces fewer clusters than threshold 0.3.**  This is unexpected: a lower threshold should produce more (tighter) clusters.  Check that you are using `distance_threshold` as an upper bound for merging (not a lower bound).  With `AgglomerativeClustering`, lower threshold = more clusters.
 
-**Threshold 0.1 produces fewer clusters than threshold 0.3**
-This is unexpected: a lower threshold should produce more (tighter) clusters.  Check that you are using `distance_threshold` as an upper bound for merging (not a lower bound).  With `AgglomerativeClustering`, lower threshold = more clusters.
+> **Checkpoint.** Before you write your deliverables, make sure you can answer these:
+> 1. At what threshold did the synthesizer produce the most useful response on your long-form question?  Why?
+> 2. What is the danger of setting the threshold too low?  What is the danger of setting it too high?
+> 3. If you were deploying this system for a company's internal knowledge base, who would you recommend owns the threshold parameter, and what guidance would you write in the documentation?
 
----
-
-> **Checkpoint: Before writing your deliverables, make sure you can answer:**
-> 1.  At what threshold did the synthesizer produce the most useful response on your long-form question?  Why?
-> 2.  What is the danger of setting the threshold too low?  What is the danger of setting it too high?
-> 3.  If you were deploying this system for a company's internal knowledge base, who would you recommend owns the threshold parameter, and what guidance would you write in the documentation?
+> **No-code path.** Vary the agreement threshold you would accept (how many of your hand-clustered answers have to agree before you call it a consensus) and show, from your own data, where the answer flips.
 
 ---
 
-## The No-Code and Low-Code Routes (equal credit)
+## Deliverables
 
-Multi-agent debate is a *protocol*, and you can run the protocol by hand or on a canvas rather than in Python.  Steps 1 and 2 below are fully no-code: two chat windows and a spreadsheet.  Doing the clustering by hand is not a concession; it is the version where the ambiguous cases cannot hide behind a distance threshold you picked without looking.
+Submit one ZIP containing both halves.  Fix random seeds where determinism is intended and list software version information.
 
-1.  **Debate without code.**  Open two Open WebUI chats with different system prompts (for example, an advocate and a skeptic), give both the same question, then paste each one's answer to the other for a rebuttal round.  Two rounds is enough to see the dynamic.  In Langflow, the same thing is two Agent nodes and a loop.
-2.  **Consensus without code.**  Ask the same question *n* times at a temperature above zero, record the answers in a spreadsheet, and cluster them by hand.  The clustering judgment is the actual skill; doing it manually makes the ambiguous cases impossible to hide from.
-3.  **The shootout.**  Compare single-shot, debate, and consensus on the same question set in your spreadsheet, with a column for cost (rough token count or wall-clock time).  The handoff route from Part 3 fits here too: the two chats can exchange their positions through an issue thread or a shared folder instead of by pasting.
-4.  **Threshold sensitivity.**  Vary the agreement threshold you would accept and show, from your own data, where the answer flips.
+| File or artifact | What it shows | Rubric row |
+|------------------|---------------|------------|
+| Part A artifacts, as listed on the [Critique and Refine]({{ site.baseurl }}/Assignments/CritiqueRefine) page | The critique/refine loop, its stopping rule, and the case where the critic was wrong | Part A (20) |
+| `lab4.py`, `shootout.py`, `threshold.py` | Debate loop, consensus pipeline, and comparison script, with docstrings and located exception handlers | Debate (25); Consensus (20); Code Quality (10) |
+| `config.json` | Agents, rounds, temperature schedule, and distance threshold, not hardcoded | Code Quality (10) |
+| Task set with labels | At least ten checkable questions | Comparative Evaluation (20) |
+| Comparison results (CSV or table) | Accuracy and call count per condition at matched budgets | Comparative Evaluation (20) |
+| Debate and consensus transcripts, at least two questions each | One complete 3-agent, 2-round debate (or the handoff thread or folder listing with timestamps) and the long-form consensus demonstration | Debate (25); Consensus (20) |
+| Correlated failure analysis | Verbatim agreement on the wrong answer, why no aggregation could repair it, one non-LLM fix | Comparative Evaluation (20) |
+| Pair log | At least two timestamped role swaps | Writeup, Reflection, and Submission (5) |
+| Readme writeup, about two pages | Route named at the top, Step 2.2 interpretation answers, Part 4 table and ownership paragraph, Learning Log | Writeup, Reflection, and Submission (5) |
 
-**What you submit instead of code:** the exported flow or chat transcripts, the spreadsheet of runs and clusters, and the identical written analysis, including the honest verdict on whether the extra rounds bought you anything.
+> **No-code path.** What you submit instead of code: the exported flow or chat transcripts, the spreadsheet of runs and clusters, and the identical written analysis, including the honest verdict on whether the extra rounds bought you anything.
+
+---
 
 ## Self-Check Before You Submit
 
@@ -911,20 +991,18 @@ Held against the rubric's `proficient` column.  On the no-code or low-code route
 - [ ] Every reflection answer cites a specific accuracy figure, transcript excerpt, or named failure mode.
 - [ ] The route I took is named at the top of the writeup.
 
-## Deliverables
-
-Submit a ZIP containing your code, JSON configuration, task set with labels, comparison results (CSV or table), debate and consensus transcripts for at least two questions each, the correlated failure analysis, pair log, and a readme writeup of approximately two pages.  Ensure reproducibility by fixing random seeds where determinism is intended and listing software version information.
+---
 
 ## Learning Log
 
-Keep a metacognitive learning log for this lab in your readme: in the spirit of multiple means of action and expression, you may respond to each prompt in prose, in bullet points, or with an annotated diagram, whichever best conveys your thinking.  (Prompt 4 adapts the AI-Assisted Learning Template by Marc Watkins.)
+Keep a metacognitive learning log for this lab in your readme.  In the spirit of multiple means of action and expression, you may respond to each prompt in prose, in bullet points, or with an annotated diagram, whichever best conveys your thinking.  (Prompt 4 adapts the AI-Assisted Learning Template by Marc Watkins.)
 
-1.  **What I built.**  One paragraph, in plain language that a friend outside of computer science could follow (this is deliberate practice in writing for multiple audiences).
-2.  **What surprised me.**
-3.  **What I verified and how.**  Evidence, not vibes.
-4.  **How I used AI during this lab**, and what I learned from that use.
-5.  **What I'd tell the next student** before they start.
-6.  **One open question I still have.**
+1. **What I built.**  One paragraph, in plain language that a friend outside of computer science could follow (this is deliberate practice in writing for multiple audiences).
+2. **What surprised me.**
+3. **What I verified and how.**  Evidence, not vibes.
+4. **How I used AI during this lab**, and what I learned from that use.
+5. **What I'd tell the next student** before they start.
+6. **One open question I still have.**
 
 ### Lab-specific prompts
 
