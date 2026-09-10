@@ -679,6 +679,8 @@ schedule:
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
   readings:
   - rtitle: "Crawford, Atlas of AI, Chapter 1, Earth: the mineral and energy costs of computation"
+  - rtitle: "Alpine et al., \"AI-driven productivity gains enable more CO₂ emissions than they avoid in a global energy–economy model,\" npj Climate Action 5:71 (2026), open access.  Crawford counts the cost of the computation itself; this paper models what the productivity gains buy, and finds that AI cuts net emissions only when renewables gain four to five times as much productivity as fossil fuels do.  Read it beside Chapter 1, and bring both to the reading response"
+    rlink: "https://www.nature.com/articles/s44168-026-00411-0"
   - rtitle: "Reading Response / Discussion: post a short response before class on the carbon and water cost of a deployment you would run"
   - rtitle: "Christian, The Alignment Problem: any one chapter (for example, the section on reward and reinforcement)"
   - rtitle: "AI for Accessibility: Opportunity, Gaps, and Universal Design.  Optional; the accessibility audit is one of the policy sections you may draft today"
