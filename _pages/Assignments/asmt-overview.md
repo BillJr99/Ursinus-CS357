@@ -76,7 +76,7 @@ If any of those is a problem, say so this week rather than in week four.  There 
 | *Optional Route A Setup*, A1 through A6 | Skip the optional section |
 | Steps 1 and 2, on your host | Steps 1 and 2 |
 | Step 3 on your host, plus its Route A bridge check from inside the container | Step 3 |
-| Step 4 inside the container; nothing to install | Step 4, after installing `requests` |
+| Step 4 inside the container; nothing to install | Step 4, after installing Python, pip, and `requests` |
 | Step 5 from 5b; opencode is already installed | Step 5, after installing opencode |
 | Part 1.5, Steps 1 through 3; Step 2 pushes from the container with your A6 credential | Part 1.5, Steps 1 through 3 |
 | Part 2, the reflection | Part 2, the reflection |
@@ -87,7 +87,7 @@ This assignment is nine stages plus one optional one.  Each stage ends with one 
 
 | Stage | What you do | The command that proves it | What you paste | Where the steps are |
 |---|---|---|---|---|
-| 0 | Open a terminal, learn to move around and save a file, tell your host prompt from a container prompt, and note your operating system | `pwd` | Your operating system name and version, and your route (A or B) | Part 1, *Opening a terminal* and *Where am I typing?* |
+| 0 | Open a terminal, learn to move around and save a file, tell your host prompt from a container prompt, note your operating system, and, on Route B, install Python and pip | `pwd`, and on Route B `python3 --version` | Your operating system name and version, your route (A or B), and on Route B the Python and pip version lines | Part 1, *Opening a terminal*, *Where am I typing?*, and *Installing Python and pip* |
 | A | Optional, Route A only: install Docker, create `cs357-work`, add the container files, build, enter, and verify | `docker compose run --rm cs357`, then the checks in A5 | The container prompt and the A5 output | Part 1, *Optional Route A Setup* |
 | 1 | Install Ollama and pull a model | `ollama list` | The output of `ollama --version` and `ollama list` | Part 1, Step 1 |
 | 2 | Chat with the model once | `ollama run llama3.2 "..."` | The model's reply | Part 1, Step 2 |
@@ -139,7 +139,7 @@ A route decides *where* Steps 1 through 5 run.  The commands are the same on bot
 | Where Ollama runs | On your host, natively | On your host, natively |
 | Where Steps 1-3 run | Your host terminal | Your host terminal |
 | Where Steps 4-5 run | Inside the course container | Your host terminal |
-| What you install | Ollama, Docker Desktop, and the course container, by following *Optional Route A Setup* below (the same steps the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) walks through in class) | [Ollama](https://ollama.com/download), the Python `requests` library, and opencode from [opencode.ai](https://opencode.ai/) |
+| What you install | Ollama, Docker Desktop, and the course container, by following *Optional Route A Setup* below (the same steps the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) walks through in class) | [Ollama](https://ollama.com/download), Python 3 with pip (see *Installing Python and pip* below), the Python `requests` library, and opencode from [opencode.ai](https://opencode.ai/) |
 
 > **Deciding your route.**  You do not have to decide yet, but decide early:
 >
@@ -151,7 +151,7 @@ A route decides *where* Steps 1 through 5 run.  The commands are the same on bot
 
 ### Before Step 1: Orientation (read once, come back as needed)
 
-Two short references before the steps begin.  Every *at a glance* box below says "your host terminal" or "the container prompt"; these two sections are where those words are defined, and every step that says "open a terminal," "`cd`," or "save it" means the first of them.
+Three short references before the steps begin.  Every *at a glance* box below says "your host terminal" or "the container prompt"; the first two sections are where those words are defined, and every step that says "open a terminal," "`cd`," or "save it" means the first of them.  The third installs Python and pip, which Route B needs before Step 4.
 
 #### Opening a terminal, moving around, and saving a file
 
@@ -161,8 +161,8 @@ Every step on this page happens at a terminal, and several ask you to save a fil
 
 | System | How to open it | What the prompt looks like |
 |---|---|---|
-| macOS | Press Cmd+Space, type `Terminal`, press Enter | `you@laptop ~ %` |
-| Windows, PowerShell | Open the Start menu, type `PowerShell`, press Enter (not "Command Prompt") | `PS C:\Users\you>` |
+| macOS | Press Cmd+Space, type `Terminal`, press Enter (Terminal also lives in **Applications > Utilities**) | `you@laptop ~ %` |
+| Windows, PowerShell | Open the Start menu, type `PowerShell`, press Enter (not "Command Prompt").  On Windows 11, right-clicking the Start button and choosing **Terminal** opens PowerShell too | `PS C:\Users\you>` |
 | Windows, WSL2 Ubuntu | Open the Start menu, type `Ubuntu`, press Enter (A1 of the optional Route A setup installs it) | `you@laptop:~$` |
 | Linux | Press Ctrl+Alt+T, or open Terminal from the applications menu | `you@laptop:~$` |
 | VS Code, on any system | Press Ctrl+\` (backtick), or **View > Terminal**.  It opens in the folder you have open | one of the above |
@@ -211,6 +211,41 @@ Most setup failures on this page come from running a command in the wrong place.
 > **The address rule.**  Every command on this page that names Ollama's address is written as `localhost:11434`.  On your host, leave it as written.  Inside the container, replace `localhost` with `host.docker.internal`, because `localhost` inside a container means the container.  That is the only substitution on this page, and it applies only inside the container.  Running Ollama itself as a Docker container does not change the rule: with its port published (`-p 11434:11434`), `localhost:11434` on your host still reaches it.
 
 > **Windows.**  Use PowerShell (Windows 10 and 11 include it; open it from the Start menu) or WSL2 Ubuntu, not the old Command Prompt.  Every command on this page and in the labs is written for PowerShell or a Unix shell.  In PowerShell, `python3` is spelled `python`.  When a transcript from inside the container is what you have, include the container prompt in your copy-paste so it is visible where each command ran.
+
+#### Installing Python and pip
+
+Step 4 runs a Python script, Part 1.5 installs `uv`, and every lab assumes a working Python somewhere.  Whether you need to install one on your host depends on your route:
+
+| | Route A | Route B |
+|---|---|---|
+| **Do you need Python on your host?** | Not for this page: the container carries Python 3.11 and every course library, and `uv` in Part 1.5, Step 3 brings its own Python.  Install one anyway if you want to run scripts outside the container, or if you land on the `python -m venv` fallback there | Yes, before Step 4: Python 3 and its package installer, pip |
+| **Which version** | Whatever the table below gives you | 3.11 or later, to match the container's Python; an older Python 3 runs this page's script, but the labs' libraries are tested against 3.11 |
+
+**Do.**  First check what you already have.  Open a terminal (*Opening a terminal* above) and run both commands:
+
+```bash
+python3 --version
+python3 -m pip --version
+```
+
+In PowerShell, spell them `python --version` and `python -m pip --version`.  If both print a version, and the first is 3.11 or later, you are done; skip to *Where am I typing?*.  Otherwise, install Python for your system from the row below; every row brings pip with it.
+
+| System | How to install Python (pip comes with it) | Then |
+|---|---|---|
+| **macOS, with Homebrew** | `brew install python@3.12`.  If you do not have [Homebrew](https://brew.sh/), install it first with the one-line command on its home page; it is also the easiest way to install uv in Part 1.5 | Open a new terminal window |
+| **macOS, without Homebrew** | Download the macOS installer from [python.org/downloads](https://www.python.org/downloads/) and run it | Open a new terminal window |
+| **Windows, PowerShell** | Download the Windows installer from [python.org/downloads](https://www.python.org/downloads/), run it, and on its first screen check the box that adds Python to `PATH` before you click **Install Now**.  Or, in PowerShell, `winget install --id Python.Python.3.12 -e` | Open a new PowerShell window, so the updated `PATH` loads |
+| **WSL2 Ubuntu, or Linux** | `sudo apt update && sudo apt install python3 python3-pip python3-venv`.  Ubuntu ships Python 3 but not pip or `venv`, which is why all three packages are named | Nothing; the commands work in the same window |
+
+> **What pip is, and why every pip command on this page starts with `python3 -m`.**  pip is Python's package installer, the tool that fetches libraries such as `requests` from the [Python Package Index](https://pypi.org/) and puts them where `import` can find them.  It has shipped inside Python since version 3.4, so installing Python installs pip.  A machine can hold several Pythons, though (Apple's developer tools add one, Homebrew adds another, and each `uv` environment has its own), and a bare `pip install` may target a different one than the `python3` you run scripts with.  `python3 -m pip install requests` runs pip *from inside* the Python you name, so the library lands where that Python will look for it.  This is the whole cause of the `ModuleNotFoundError` in Step 4's troubleshooting, and the reason the page writes it this way throughout.  Natively, pip also belongs inside a *virtual environment*, a per-project copy of the library folder; *Route B: installing `requests`* in Step 4 shows how to make and activate one, and every native `pip install` on this page assumes you have.
+
+**What you should see.**  In a new terminal, `python3 --version` prints `Python 3.12.x` (or whatever you installed), and `python3 -m pip --version` prints a pip version followed by the path of the Python it belongs to.  Check that the path points at the Python you just installed.
+
+**Paste.**  On Route B, both version lines, next to your operating system name in Stage 0.
+
+> **Troubleshooting:** `python3: command not found` (or `'python' is not recognized`) right after installing means the terminal predates the install; open a new one.  On Windows, if typing `python` opens the Microsoft Store, Python is not installed yet: close the Store and run the installer above, and if the Store keeps opening afterwards, open **Manage app execution aliases** from the Start menu and turn off the `python.exe` and `python3.exe` entries.  `No module named pip` means pip was skipped: `python3 -m ensurepip --upgrade` restores it on macOS and Windows, and `sudo apt install python3-pip` does on Ubuntu.  On a fresh Mac, typing `python3` may offer to install Apple's Command Line Tools instead; that copy of Python 3 runs Step 4, but it is several versions old, so install a current one from the table anyway.  If Homebrew complains that your macOS version is unsupported or a pre-release, run `brew update` first and retry.  `error: externally-managed-environment` on Ubuntu or Debian is handled under Step 4.  See the Stage 0 rows in Troubleshooting.
+
+> **Note.**  `uv`, which Part 1.5 installs, can also fetch a Python of its own (`uv python install 3.12`) and run scripts with it (`uv run python ollama_check.py`).  Install a system Python first anyway, so that `python3` works in every terminal and every editor, and so that the `python -m venv` fallback has something to run.
 
 ---
 
@@ -649,9 +684,21 @@ This is the first step where the route matters.  Read your column, then do the p
 | | Route A | Route B |
 |---|---|---|
 | **Before you start** | Finish A1 through A5 if you have not, then enter the container (A4) | Nothing |
-| **Install** | Nothing; the container already has the `requests` library | `python3 -m pip install requests` (in PowerShell: `python -m pip install requests`) |
+| **Install** | Nothing; the container already has the `requests` library | Python 3 with pip, from *Installing Python and pip* in the orientation, then `requests` by one of the three ways in *Route B: installing `requests`* just below |
 | **Where to save `ollama_check.py`** | `/workspace`, which is your `cs357-work` clone | `~/cs357` |
 | **Address in the script** | Replace `localhost` with `host.docker.internal` | Leave `localhost` as written |
+
+#### Route B: installing `requests`
+
+The script imports `requests`, a library that is not part of Python.  Three tools can install Python packages, and this is the first place on the page where you choose one.  The table names what each is for, because the choice matters more than the command:
+
+| Tool | The command | What it does, and when to use it |
+|---|---|---|
+| **pip, inside a virtual environment** | macOS, Linux, or WSL2: `cd ~/cs357`, `python3 -m venv .venv`, `source .venv/bin/activate`, then `python3 -m pip install requests`.  PowerShell: `cd ~/cs357`, `python -m venv .venv`, `.\.venv\Scripts\Activate.ps1`, then `python -m pip install requests` | A virtual environment is a private copy of Python's library folder for one project, kept in `.venv`, so that the library lands there rather than in the system Python.  Activating it (the prompt gains a `(.venv)` prefix) makes `python3` and `pip` mean that copy for the rest of the terminal session, so activate it again in every new terminal.  Installing without one works on macOS and Windows but is a habit to unlearn: it stops with `error: externally-managed-environment` on Ubuntu, Debian, and a fresh WSL2 Ubuntu, and it mixes every project's libraries together.  If PowerShell refuses to run the activation script, run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` once, then retry |
+| **uv** | `cd ~/cs357`, `uv init`, `uv add requests`, then run the script with `uv run python ollama_check.py` | Creates a project with its own environment in `~/cs357/.venv`, records `requests` in `pyproject.toml`, and runs the script inside that environment.  This is exactly what Part 1.5, Step 3 does, so doing it here means Step 3 is already done; install uv from the table in that step first |
+| **pipx** | `pipx install requests` | Stops with `No apps associated with package requests`, and that is the right answer: pipx installs *programs* (each in its own private environment, with the command on your `PATH`), not libraries for your scripts to import.  It is the right tool for `pipx install uv`, and the wrong one for `requests` |
+
+Whichever tool you choose, run the script from the same terminal, with the environment still activated on the pip route, so that the Python that runs it is the one that received the library.  Both pip's `.venv` and uv's `.venv` are ordinary folders in `~/cs357`; if that folder becomes a git repository in Part 1.5, add `.venv` to its `.gitignore`, because an environment is rebuilt from `pyproject.toml` rather than committed.
 
 #### Both routes: save and run the script
 
@@ -684,7 +731,7 @@ python3 ollama_check.py
 
 **Paste.**  The printed JSON.
 
-> **Troubleshooting:** `ModuleNotFoundError: No module named 'requests'` means the install landed in a different Python than the one you ran; use `python3 -m pip install requests` (or `python -m pip` on Windows) from the same terminal, then rerun.  A `ConnectionError` inside the container means the address rule was not applied.  `can't open file ... No such file or directory` means you are in a different directory than the one you saved into; `ls` (or `dir`) shows which.
+> **Troubleshooting:** `ModuleNotFoundError: No module named 'requests'` means the install landed in a different Python than the one you ran; use `python3 -m pip install requests` (or `python -m pip` on Windows) from the same terminal, then rerun.  `error: externally-managed-environment` (Ubuntu, Debian, and therefore a fresh WSL2 Ubuntu) is the operating system refusing to let pip change its own Python, which means you skipped the virtual environment in the pip row above: create and activate it (the prompt gains a `(.venv)` prefix), then rerun the `pip install` and the script from that same terminal.  Or jump ahead to Part 1.5, Step 3, and let `uv` manage it.  `Activate.ps1 cannot be loaded because running scripts is disabled` in PowerShell is the execution policy; the pip row has the one-time fix.  A `ConnectionError` inside the container means the address rule was not applied.  `can't open file ... No such file or directory` means you are in a different directory than the one you saved into; `ls` (or `dir`) shows which.
 
 > **You've succeeded when** the four boxes below are checked.  That is Part 1A.
 
@@ -996,7 +1043,33 @@ The Ubuntu or WSL2 route gives you the standard Unix tooling instead, and every 
 | **Route B** | Do it |
 | **You paste** | The output of all four commands |
 
-**Do.**  Install [uv](https://docs.astral.sh/uv/), the fast, modern Python environment manager we standardize on this term.  Then, in your `~/cs357` directory, create a project, an environment, and the one dependency the labs start with:
+**Do.**  Install [uv](https://docs.astral.sh/uv/), the fast, modern Python environment manager we standardize on this term, using the row for your system:
+
+| System | Install uv | Then |
+|---|---|---|
+| **macOS, with Homebrew** | `brew install uv` | Nothing; Homebrew's directory is already on your `PATH` |
+| **macOS, Linux, or WSL2 Ubuntu** | The standalone installer: the one-line `curl` command in the first block below the table | Open a new terminal, or run `source $HOME/.local/bin/env`, so that `~/.local/bin` is on your `PATH` |
+| **Windows, PowerShell** | The standalone installer: the one-line `powershell` command in the second block below the table, or `winget install --id=astral-sh.uv -e` | Open a new PowerShell window |
+| **Any system, through pipx** | `pipx install uv`.  pipx itself comes from `brew install pipx` on a Mac, `sudo apt install pipx` on Ubuntu or WSL2, or `python -m pip install --user pipx` on Windows, each followed by `pipx ensurepath` | Open a new terminal, so that pipx's `~/.local/bin` is on your `PATH` |
+| **Any system, through pip** | `python3 -m pip install uv` (PowerShell: `python -m pip install uv`) | Nothing, though on Ubuntu this meets the same `externally-managed-environment` refusal as Step 4, so use the `curl` or pipx row there |
+
+The two standalone installer lines, which do not fit in a table cell:
+
+```bash
+# macOS, Linux, or WSL2 Ubuntu
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+```powershell
+# Windows, in PowerShell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Confirm the install with `uv --version`.
+
+> **pip, pipx, or uv?**  All three install packages from the [Python Package Index](https://pypi.org/), and they divide the work cleanly.  **pip** installs a library into one particular Python, for that Python's scripts to import.  **pipx** installs a *program* written in Python (uv, `ruff`, `black`, `jupyter`) into a private environment of its own and puts its command on your `PATH`, so tools never fight over versions.  **uv** does both jobs per project, and pins what it installed in `pyproject.toml` so a teammate can rebuild the same environment; that reproducibility is why the course standardizes on it.
+
+Then, in your `~/cs357` directory, create a project, an environment, and the one dependency the labs start with:
 
 ```bash
 cd ~/cs357
@@ -1012,7 +1085,7 @@ uv run python -c "import requests; print(requests.__version__)"
 
 **Paste.**  The output of all four commands.
 
-> **Troubleshooting:** `uv: command not found` means the installer's directory is not on your PATH yet; restart the terminal.  If you cannot install uv, fall back to `python -m venv` and `pip install requests`, and note in your submission that you used the fallback.  See the Stage 8 rows in Troubleshooting.
+> **Troubleshooting:** `uv: command not found` means the installer's directory is not on your PATH yet; restart the terminal, or run `source $HOME/.local/bin/env`.  On a Mac, if `brew install uv` complains that your macOS version is unsupported, run `brew update` and retry.  If you cannot install uv, fall back to `python3 -m venv .venv`, `source .venv/bin/activate`, and `python3 -m pip install requests` (PowerShell: `python -m venv .venv`, `.\.venv\Scripts\Activate.ps1`, `python -m pip install requests`), and note in your submission that you used the fallback.  See the Stage 8 rows in Troubleshooting.
 
 **Next:** the Part 1.5 checklist, then Part 2.  The reference list below is there when you need it, not required reading.
 
@@ -1070,6 +1143,10 @@ Work down this table before you post in the course channel.  The Stage column ma
 |---|---|---|---|
 | 0 | On Windows, `'ollama' is not recognized`, or `curl` prints something odd | You are in Command Prompt or an old PowerShell window from before the install | Open a fresh PowerShell window so the updated `PATH` loads, and use PowerShell for every command on this page |
 | 0 | `python3: command not found` on Windows | Windows Python installs as `python` | Use `python` wherever this page says `python3` |
+| 0 | `python3: command not found` on macOS or Linux, or `python` opens the Microsoft Store on Windows | Python is not installed, or the terminal window predates the install | Install it from *Installing Python and pip* in Part 1's orientation, then open a new terminal.  On Windows, if the Store keeps opening afterwards, turn off the `python.exe` and `python3.exe` entries under **Manage app execution aliases** |
+| 0 | `No module named pip` | Python was installed without its package installer | `python3 -m ensurepip --upgrade` on macOS and Windows; `sudo apt install python3-pip` on Ubuntu and WSL2 |
+| 0 | `python3 -m pip --version` names a different Python than the one you just installed | Several Pythons on the machine, and `PATH` finds an older one first | `which python3` (PowerShell: `Get-Command python`) shows which one wins; open a new terminal after the install, and always write `python3 -m pip` rather than a bare `pip` |
+| 0 | On a Mac, Homebrew says your macOS version is unsupported or a pre-release, and `brew install` fails | Your copy of Homebrew predates your macOS upgrade | `brew update`, then rerun the install.  Homebrew needs macOS Sonoma (14) or later |
 | A | `Cannot connect to the Docker daemon` | Docker Desktop is installed but not running | Start the application. On Linux, `sudo systemctl start docker`, and confirm your user is in the `docker` group |
 | A | Docker Desktop is running, but `docker` is not a command inside WSL2 Ubuntu | Docker's WSL integration is off for that distribution | In Docker Desktop, **Settings -> Resources -> WSL Integration**, switch the **Ubuntu** toggle on, **Apply & Restart**, then open a new Ubuntu terminal |
 | A | `docker compose build` cannot find the Dockerfile | A browser saved it as `Dockerfile.txt`, or you are not in the `.devcontainer/` folder | `ls -la .devcontainer` and rename the file if needed; run `docker compose` from inside `.devcontainer/`, because the `..` in the compose file is relative to it |
@@ -1085,6 +1162,8 @@ Work down this table before you post in the course channel.  The Stage column ma
 | 3 | The `curl` to `/api/tags` says connection refused | The Ollama *server* is not running, which is separate from Ollama being installed | Start the desktop app, or run `ollama serve` in its own terminal and leave it open |
 | 4 | Inside the container, `localhost:11434` refuses the connection | Correct behavior: `localhost` inside a container means the container | Use `http://host.docker.internal:11434`, but only for commands run inside a container; from your host, `localhost` stays correct. On Linux, start via the course compose file so that hostname resolves |
 | 4 | `ModuleNotFoundError: No module named 'requests'` | The library is not installed in the Python you are running | `python -m pip install requests`, then rerun the script from the same terminal |
+| 4 | `error: externally-managed-environment` from `pip install` | Ubuntu and Debian protect the system Python from pip, and you installed outside a virtual environment | `python3 -m venv ~/cs357/.venv`, `source ~/cs357/.venv/bin/activate`, then rerun the install and the script in that terminal; or use `uv` from Part 1.5, Step 3 |
+| 4 | PowerShell: `Activate.ps1 cannot be loaded because running scripts is disabled on this system` | The default execution policy blocks the activation script | `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` once, then rerun `.\.venv\Scripts\Activate.ps1` |
 | 5 | `opencode` reports no provider or no models | Almost always the config **file name**: it must be `opencode.json`, not `config.json` | Fix the name, then check the location (`/workspace/opencode.json` in the container, `~/.config/opencode/opencode.json` natively), then check that the JSON parses with `python3 -m json.tool` |
 | 5 | `opencode: command not found` inside the container | An older build of the course image, from before the agent was added | Rerun `docker compose build` from your `.devcontainer/` folder; cached layers make it quick |
 | 5 | `opencode: command not found` on Route B, right after the installer succeeded | The installer put the binary in `~/.local/bin`, which is not on your `PATH` yet | `export PATH="$HOME/.local/bin:$PATH"` for this session, and add the same line to `~/.bashrc` to make it stick |
@@ -1092,7 +1171,8 @@ Work down this table before you post in the course channel.  The Stage column ma
 | 7 | `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Set up the SSH key in Part 1.5, Step 2, then point the remote at it: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained personal access token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS, and is the default inside the container (A6) |
 | 7 | `git@github.com: Permission denied (publickey)` | The key is not loaded in the agent, or its public half was never added to GitHub | `ssh-add -l` lists loaded keys and `ssh-add ~/.ssh/id_ed25519` loads yours; confirm the contents of `id_ed25519.pub` appear under Settings -> SSH and GPG keys; then retest with `ssh -T git@github.com` |
 | 7 | GitHub Desktop says authentication failed, or cannot push | Not signed in, or the repository exists on GitHub but was never published from Desktop | File > Options > Accounts, sign in with the browser, then Publish repository; if the repository already exists online, use Add local repository and set the remote under Repository > Repository settings |
-| 8 | `uv: command not found` | Not installed, or not on `PATH` yet | Follow the uv install docs, restart the terminal, and if it still fails use the documented `python -m venv` fallback and say so |
+| 8 | `uv: command not found` | Not installed, or not on `PATH` yet | Install it from the table in Part 1.5, Step 3 (`brew install uv` on a Mac with Homebrew, the `curl` or PowerShell installer elsewhere), then open a new terminal or run `source $HOME/.local/bin/env`; if it still fails, use the documented `python -m venv` fallback and say so |
+| 8 | `brew install uv` says your macOS version is unsupported | Homebrew is older than your macOS | `brew update`, then rerun `brew install uv` |
 | 8 | `uv add` complains that no `pyproject.toml` was found | You skipped `uv init` | Run `uv init` in the same directory, then rerun `uv add requests` |
 
 ---
