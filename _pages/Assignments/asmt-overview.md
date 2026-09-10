@@ -36,15 +36,11 @@ info:
   readings:
     - rtitle: "Welcome Activity"
       rlink: "https://www.billmongan.com/Ursinus-CS357-Overview"
-    - rtitle: "Required setup (Route A): the Your AI Workbench activity, on your course development environment - Host Ollama, the Course Container, Git, and GitHub"
-      rlink: "Activities/liascript-devenvironment.md"
-      liapage: true
-    - rtitle: "Required setup: the Your AI Workbench activity, Step 0 (the shell in ten minutes), covering the terminal skills every later lab assumes and the read-before-you-run habit"
+    - rtitle: "Setup (Route A): the Your AI Workbench activity, which we build together in class - Host Ollama, the Course Container, Git, GitHub, and your first coding agent; its Step 0 is the shell in ten minutes and the read-before-you-run habit every later lab assumes"
       rlink: "Activities/liascript-devenvironment.md"
       liapage: true
     - rtitle: "The Shell, in Full: pipes, redirection, background jobs, and PATH, if the shell is new to you"
       rlink: "../Tutorials/Shell"
-    - rtitle: "Mitchell, Prologue and Chapter 1"
 
 tags:
   - intro
@@ -65,28 +61,43 @@ This is the first thing you install for this course.  I have put it early on pur
 
 **You need:** a laptop you can install software on, a GitHub account, and about 10 GB of free disk.  If any of those is a problem, say so this week rather than in week four.  There is a lab-machine route, and it takes some scheduling.
 
+**Taking Route A?**  Everything you need is on this page.  The *Optional Route A Setup* section in Part 1 installs Docker and builds the course container, with direct links to the container files, and every later step says what Route A lets you skip.  The *Your AI Workbench* class session walks the same steps with you.
+
+> **How to use this page.**  First, pick your route in *Which route should I take?* at the top of Part 1.  Then follow your route's path below, top to bottom.  Every step opens with a short card that says where you type, what each route does there, and what you paste, and every step ends with a **Next** line that tells you where to go.  If you only read the cards and the Next lines, you will still land in the right place.
+
+| Route A path (recommended) | Route B path |
+|---|---|
+| *Optional Route A Setup*, A1 through A6 | Skip the optional section |
+| Steps 1 and 2, on your host | Steps 1 and 2 |
+| Step 3 on your host, plus its Route A bridge check from inside the container | Step 3 |
+| Step 4 inside the container; nothing to install | Step 4, after installing `requests` |
+| Step 5 from 5b; opencode is already installed | Step 5, after installing opencode |
+| Part 1.5, Steps 1 through 3; Step 2 pushes from the container with your A6 credential | Part 1.5, Steps 1 through 3 |
+| Part 2, the reflection | Part 2, the reflection |
+
 ### The setup map
 
-This assignment is nine stages.  Each stage ends with one command whose output you paste into your submission, so you can always tell whether a stage is done.  Work down the table in order, and use the last column to find the steps.
+This assignment is nine stages plus one optional one.  Each stage ends with one command whose output you paste into your submission, so you can always tell whether a stage is done.  Work down the table in order, and use the last column to find the steps.
 
 | Stage | What you do | The command that proves it | What you paste | Where the steps are |
 |---|---|---|---|---|
 | 0 | Open a terminal, learn to move around and save a file, tell your host prompt from a container prompt, and note your operating system | `pwd` | Your operating system name and version, and your route (A or B) | Part 1, *Opening a terminal* and *Where am I typing?* |
-| 1 | Install Ollama and pull a model | `ollama list` | The output of `ollama --version` and `ollama list` | Part 1A, Step 1 |
-| 2 | Chat with the model once | `ollama run llama3.2 "..."` | The model's reply | Part 1A, Step 2 |
-| 3 | Confirm the REST API answers | `curl http://localhost:11434/api/tags` | The JSON | Part 1A, Step 3 |
-| 4 | Call the model from Python | `python3 ollama_check.py` | The printed JSON, including a `"content"` field | Part 1A, Step 4 |
-| 5 | Confirm the coding agent talks to that model | `opencode --version` | The version string and one answered prompt | Part 1B, Step 5 |
+| A | Optional, Route A only: install Docker, create `cs357-work`, add the container files, build, enter, and verify | `docker compose run --rm cs357`, then the checks in A5 | The container prompt and the A5 output | Part 1, *Optional Route A Setup* |
+| 1 | Install Ollama and pull a model | `ollama list` | The output of `ollama --version` and `ollama list` | Part 1, Step 1 |
+| 2 | Chat with the model once | `ollama run llama3.2 "..."` | The model's reply | Part 1, Step 2 |
+| 3 | Confirm the REST API answers | `curl http://localhost:11434/api/tags` | The JSON | Part 1, Step 3 |
+| 4 | Call the model from Python | `python3 ollama_check.py` | The printed JSON, including a `"content"` field | Part 1, Step 4 |
+| 5 | Confirm the coding agent talks to that model | `opencode --version` | The version string and one answered prompt | Part 1, Step 5 |
 | 6 | Navigate a shell and search a file | `grep -n "localhost" notes.txt` | The commands and their output | Part 1.5, Step 1 |
 | 7 | Authenticate to GitHub, then commit and push | `git log --oneline` | The `ssh -T` greeting and the log | Part 1.5, Step 2 |
 | 8 | Create a reproducible Python environment | `uv run python -c "import requests; print(requests.__version__)"` | The printed version | Part 1.5, Step 3 |
 | 9 | Write the baseline reflection | none | Four labeled sections | Part 2 |
 
-**Do the stages in this order.**  Start Stage 1 first, because the download runs in the background.  While it downloads, write the reflection (Stage 9); it needs no tools.  Then finish Stages 2 through 5, and do Stages 6 through 8 last, since they use what you just installed.
+**Do the stages in this order.**  Start Stage 1 first, because the download runs in the background.  On Route A, start the Stage A image build at the same time; both are downloads.  While they download, write the reflection (Stage 9); it needs no tools.  Then finish Stages 2 through 5, and do Stages 6 through 8 last, since they use what you just installed.
 
 **If a stage fails, document it and move on.**  A documented failure earns full credit for that stage: quote the error verbatim, state your hypothesis about the cause, and say what you tried.  "It worked eventually" earns nothing.  Work down the Troubleshooting table at the end of this page before you post in the course channel.
 
-> **You've succeeded when** the four boxes in the Part 1A checklist and the three in the Part 1B checklist are checked, all three in the Part 1.5 checklist are checked, and your reflection has four labeled sections.
+> **You've succeeded when** the four boxes in the Part 1A checklist and the three in the Part 1B checklist are checked, all three in the Part 1.5 checklist are checked, and your reflection has four labeled sections.  On Route A, the Route A checklist is checked as well.
 
 ---
 
@@ -110,7 +121,7 @@ Part 1 has two halves, and you must do both:
 | **Part 1A** | The local model stack: Ollama, a pulled model, the REST API, and a Python call against it | Steps 1-4 | Four pieces of terminal output |
 | **Part 1B** | The coding agent: opencode, talking to that same local model | Step 5 | A version string and one answered prompt |
 
-Part 1A must work before Part 1B can: the coding agent in Part 1B is pointed at the model you pull in Part 1A, so do them in order.
+Part 1A must work before Part 1B can: the coding agent in Part 1B is pointed at the model you pull in Part 1A, so do them in order.  Before either half comes a decision (which route) and, on Route A, an optional setup section that builds the course container.
 
 ### Which route should I take?
 
@@ -122,13 +133,17 @@ A route decides *where* Steps 1 through 5 run.  The commands are the same on bot
 | Where Ollama runs | On your host, natively | On your host, natively |
 | Where Steps 1-3 run | Your host terminal | Your host terminal |
 | Where Steps 4-5 run | Inside the course container | Your host terminal |
-| What you install | Ollama, Docker Desktop, and the course container, by following the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) | [Ollama](https://ollama.com/download), the Python `requests` library, and opencode from [opencode.ai](https://opencode.ai/) |
+| What you install | Ollama, Docker Desktop, and the course container, by following *Optional Route A Setup* below (the same steps the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) walks through in class) | [Ollama](https://ollama.com/download), the Python `requests` library, and opencode from [opencode.ai](https://opencode.ai/) |
 
-**You do not have to decide yet.**  Steps 1 through 3 are identical on both routes, so start them now.  Decide at Step 4.  If Docker Desktop installs and `docker run hello-world` succeeds, take Route A and complete the Development Environment activity through its Step 5 before you return here.  If Docker will not run on your machine, take Route B and say so in your transcript.
+**You do not have to decide yet, but decide early.**  Steps 1 through 3 are identical on both routes, so start Step 1's download now.  If Docker Desktop installs and `docker run hello-world` succeeds (that is A1, the first thing the optional section asks), take Route A: do the *Optional Route A Setup* section, start its image build while the Step 1 model pull runs, and then Steps 3, 4, and 5 and Part 1.5 Step 2 each say what Route A lets you skip.  If Docker will not run on your machine, take Route B, skip the optional section, and say so in your transcript.
 
-I recommend Route A because every later lab assumes it and it is what we build together in the *Your AI Workbench* session.  Route B is complete and supported too.  On Route A, the activity's own container verification output (the `/api/tags` one-liner, `promptfoo --version`, and the spacy model check) belongs in your transcript as well.
+I recommend Route A because every later lab assumes it and it is what we build together in the *Your AI Workbench* session.  Route B is complete and supported too.  On Route A, the A5 checks and the Step 3 bridge check belong in your transcript as well.
 
-### Opening a terminal, moving around, and saving a file
+### Before Step 1: Orientation (read once, come back as needed)
+
+Two short references before the steps begin.  Every step card below says "your host terminal" or "the container prompt"; these two sections are where those words are defined, and every step that says "open a terminal," "`cd`," or "save it" means the first of them.
+
+#### Opening a terminal, moving around, and saving a file
 
 Every step on this page happens at a terminal, and several ask you to save a file.  Here is how, on every system this course supports.  Come back to this section whenever a step says "open a terminal," "`cd`," or "save it."
 
@@ -138,7 +153,7 @@ Every step on this page happens at a terminal, and several ask you to save a fil
 |---|---|---|
 | macOS | Press Cmd+Space, type `Terminal`, press Enter | `you@laptop ~ %` |
 | Windows, PowerShell | Open the Start menu, type `PowerShell`, press Enter (not "Command Prompt") | `PS C:\Users\you>` |
-| Windows, WSL2 Ubuntu | Open the Start menu, type `Ubuntu`, press Enter (Step 2 of the Development Environment activity installs it) | `you@laptop:~$` |
+| Windows, WSL2 Ubuntu | Open the Start menu, type `Ubuntu`, press Enter (A1 of the optional Route A setup installs it) | `you@laptop:~$` |
 | Linux | Press Ctrl+Alt+T, or open Terminal from the applications menu | `you@laptop:~$` |
 | VS Code, on any system | Press Ctrl+` (backtick), or **View > Terminal**.  It opens in the folder you have open | one of the above |
 
@@ -153,7 +168,7 @@ cd ~/cs357        # go into it
 cd ..             # go up one level
 ```
 
-`~` is your home folder: `/Users/you` on macOS, `C:\Users\you` in PowerShell, and `/home/you` in WSL2 Ubuntu.  From WSL2, your Windows files are under `/mnt/c/Users/you`.  Do all of this course's work in `~/cs357`, or in the `cs357-work` clone from the activity on Route A, so that every `cd ~/cs357` on this page lands in the same place.  Press **Tab** to complete a name you have started typing, and the up arrow to recall the previous command.
+`~` is your home folder: `/Users/you` on macOS, `C:\Users\you` in PowerShell, and `/home/you` in WSL2 Ubuntu.  From WSL2, your Windows files are under `/mnt/c/Users/you`.  Do all of this course's work in `~/cs357`, or in the `cs357-work` clone from A2 on Route A, so that every `cd ~/cs357` on this page lands in the same place.  Press **Tab** to complete a name you have started typing, and the up arrow to recall the previous command.
 
 **3. Save a file.**  When a step says "save this as `ollama_check.py`," first `cd` into the folder the file belongs in, then use one of these:
 
@@ -164,7 +179,7 @@ cd ..             # go up one level
 
 **4. Confirm it landed.**  Run `ls` and see the file's name; run `cat ollama_check.py` and see its contents.  If `ls` does not show it, you saved into a different folder than the one you are in, and `pwd` tells you which one that is.
 
-### Where am I typing?
+#### Where am I typing?
 
 Most setup failures on this page come from running a command in the wrong place.  Before every command, read your prompt.
 
@@ -179,11 +194,289 @@ Most setup failures on this page come from running a command in the wrong place.
 
 ---
 
-### Part 1A: The Local Model Stack (Steps 1-4)
+### Optional Route A Setup: Docker and the Course Container
 
-Run Steps 1 through 3 on your host on both routes.  Run Step 4 on your host on Route B, or inside the container on Route A.  Capture the output of every command.
+**This section is optional.  It is Route A.**  If you are on Route B, skip to Step 1.  If you are on Route A, do A1 through A6 once, on your host, and every lab this semester runs in what you build here: one Docker container with the whole course Python stack preinstalled (retrieval, classical ML, NLP, explainability, plus Node.js with promptfoo for evaluation and opencode, the coding agent), bind-mounted onto a directory that is a **git repository with a GitHub remote**, so everything you write inside the container is versioned and pushed like normal work.  Ollama is the one thing that stays on your host, and your containerized code reaches it at `http://host.docker.internal:11434`.
 
-**Step 1. Install Ollama, pull a small model, and confirm both.**
+Two ideas carry the whole design.  **The image is the environment:** one course Dockerfile, built once, gives everyone a byte-for-byte identical lab environment.  **The mount is the only door:** the container can see exactly one directory of your machine, the workspace you mount into it, which is the blast-radius principle enforced by architecture for a course where you run agent code that takes actions.  The [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) is the in-class version of these same six steps, and [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker) explains the concepts from first principles whenever a step below feels like magic.
+
+Budget about an hour, most of it downloads: start the A4 image build as soon as you reach it and do Step 1 while it runs.
+
+#### A1. Install Docker Desktop
+
+> - **Where you type:** your host terminal (PowerShell as Administrator for the Windows detour)
+> - **Route A:** do it
+> - **Route B:** skip this whole section and go to Step 1
+> - **You paste:** the `Hello from Docker!` line
+
+If Docker is already on your machine from another course or project, skip to the verification at the end of A1.  If Docker cannot be installed on your machine at all (unsupported hardware, an administrator lock, or too little disk), take Route B now; nothing is wasted.
+
+**Disk note:** Docker Desktop plus the course image (the ML libraries are hefty) needs roughly **8-10 GB** free, on top of Ollama's models.  Clear space now, not mid-download.
+
+<details markdown="1"><summary>Windows only: install Ubuntu on WSL2 first, then check two Docker settings</summary>
+
+Docker Desktop on Windows does not run containers on Windows itself; it runs them inside **WSL2**, the Windows Subsystem for Linux.  Installing the Linux side first prevents most of the Windows trouble on this page.  Open **PowerShell as Administrator** and run:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+Reboot if it asks.  Then launch **Ubuntu** from the Start menu and set the UNIX username and password it prompts for; these are new, and separate from your Windows account.  If `wsl --install` is not recognized, your Windows is too old for the one-liner: update Windows, or follow Microsoft's [manual WSL2 install steps](https://learn.microsoft.com/en-us/windows/wsl/install-manual).  Do the rest of this page from the **Ubuntu** terminal: `~` means what it says, paths are ordinary Linux paths, and a repository kept in your WSL2 home directory bind-mounts far faster than one on the Windows side.
+
+After Docker Desktop is installed (the *Do* step below), open its **Settings** (the gear icon) and verify both of these:
+
+- **General**: **Use the WSL 2 based engine** is checked.
+- **Resources -> WSL Integration**: the **Ubuntu** toggle is switched **on**.  Click **Apply & Restart**.
+
+That second setting is the one students most often miss, and its symptom is confusing: Docker Desktop looks perfectly healthy in its own window, but `docker` is not a command inside Ubuntu.
+
+</details>
+
+*Do.*  Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) (macOS/Windows) or [Docker Engine](https://docs.docker.com/engine/install/) (Linux), and start it.  On Windows, do the detour above first, and its two settings after.  Then, from a terminal (the Ubuntu terminal on Windows):
+
+```bash
+docker run hello-world
+```
+
+*Expected.*
+
+```text
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+```
+
+*Paste.*  The `Hello from Docker!` line.  A working Docker is your evidence that Route A is available to you.
+
+*If it fails.*  `Cannot connect to the Docker daemon` means Docker Desktop is installed but not running; start the application and wait for the whale icon to settle.  `docker: command not found` inside Ubuntu, while Docker Desktop is plainly running, is the WSL integration setting in the detour.  See the Stage A rows in Troubleshooting.
+
+**Next:** A2.
+
+#### A2. Create and clone your `cs357-work` repository
+
+> - **Where you type:** your host terminal
+> - **Route A:** do it
+> - **Route B:** skip
+> - **You paste:** the output of `git remote -v`
+
+Your lab work lives in a private GitHub repository named `cs357-work`, the directory you will mount into the container and push to all semester.
+
+*Do.*
+
+1.  On [github.com](https://github.com/): **New repository** -> name `cs357-work` -> **Private** -> check **Add a README file**.
+2.  Clone it.  Use the Ubuntu terminal on Windows, and keep the clone under your home folder, because Docker Desktop shares that location with containers by default and a clone on a second drive or a network share is the most common cause of an empty bind mount later:
+
+```bash
+cd ~
+git clone https://github.com/YOURUSERNAME/cs357-work.git
+cd cs357-work
+git remote -v
+```
+
+*Expected.*
+
+```text
+origin  https://github.com/YOURUSERNAME/cs357-work.git (fetch)
+origin  https://github.com/YOURUSERNAME/cs357-work.git (push)
+```
+
+The clone is a git repository that already knows its GitHub remote, the versioned half of the environment.  The address is HTTPS on purpose: inside the container you will authenticate with a repository-scoped token (A6), and that token works over HTTPS.  The SSH key you make in Part 1.5 stays on your host, where it belongs.
+
+*Paste.*  The two `git remote -v` lines.
+
+*If it fails.*  `git: command not found` means git is not installed on your host yet; on macOS, running `git` once offers to install the developer tools, on Ubuntu `sudo apt install git`, and on Windows the Ubuntu terminal already has it.  A prompt for a username and password means the repository is private and your host has no GitHub credential yet; Part 1.5 Step 2 sets one up, so for now make the repository, come back to this clone after Step 2, or use the GitHub Desktop alternative there.
+
+**Next:** A3.
+
+#### A3. Add the course container files
+
+> - **Where you type:** your host terminal, inside the `cs357-work` clone
+> - **Route A:** do it
+> - **Route B:** skip
+> - **You paste:** the `ls -la .devcontainer` listing and the `git commit` line
+
+The course container is defined by three small files, which you keep in a `.devcontainer/` folder inside your clone.  Read them; each one is commented line by line:
+
+- [Dockerfile]({{ site.baseurl }}/files/devcontainer/Dockerfile): the recipe for the course image; every package is commented with the lab that uses it
+- [docker-compose.yml]({{ site.baseurl }}/files/devcontainer/docker-compose.yml): one-command build/run, the workspace bind mount, and the Linux `host.docker.internal` fix
+- [devcontainer.json]({{ site.baseurl }}/files/devcontainer/devcontainer.json): VS Code Dev Containers configuration
+- (optional) [README.md]({{ site.baseurl }}/files/devcontainer/README.md): the quickstart version of this section
+
+*Do.*  The commands below fetch all three into the right place.  Run them from your clone:
+
+```bash
+cd ~/cs357-work
+mkdir -p .devcontainer
+cd .devcontainer
+curl -fsSL -o Dockerfile https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/Dockerfile
+curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/docker-compose.yml
+curl -fsSL -o devcontainer.json https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/devcontainer.json
+cd ..
+ls -la .devcontainer
+```
+
+*Expected.*  The three files, under exactly those names.  Your repository should now look like this:
+
+```text
+cs357-work/
+  .devcontainer/
+    Dockerfile
+    docker-compose.yml
+    devcontainer.json
+  README.md
+```
+
+If you saved them from a browser instead, check the names, because browsers sometimes save `Dockerfile` as `Dockerfile.txt`, and Docker will not find it under that name.
+
+Open the Dockerfile and *read it*; it is exactly the anatomy from Docker from Zero Section 5 (`FROM`, `RUN`, `ENV`, `WORKDIR`, `CMD`), and every `pip` line names its lab.  Then commit the files; they are part of your work:
+
+```bash
+git add .devcontainer
+git commit -m "Add course dev container configuration"
+```
+
+*Paste.*  The `ls -la .devcontainer` listing and the `[main ...] Add course dev container configuration` line.
+
+*If it fails.*  `curl: command not found` on native Windows means you are in Command Prompt; use PowerShell or the Ubuntu terminal.  If `git commit` asks who you are, run `git config user.name "Your Name"` and `git config user.email "you@example.com"` in this folder and commit again; A6 says why per-repository is the right scope.
+
+**Next:** A4.
+
+#### A4. Build and enter the container
+
+> - **Where you type:** your host terminal to build; the **container prompt** once you are in
+> - **Route A:** do it
+> - **Route B:** skip
+> - **You paste:** the container prompt, `student@...:/workspace$`
+
+Build and enter by either front door.  Both use the same Dockerfile, and you can switch anytime.
+
+*Do, Option A: VS Code Dev Containers.*  Install the **Dev Containers** extension, open the `cs357-work` folder, and run **Dev Containers: Reopen in Container** from the command palette.  Terminals you open in VS Code are now inside the container.
+
+*Do, Option B: plain Docker Compose.*  From the `.devcontainer/` folder:
+
+```bash
+cd ~/cs357-work/.devcontainer
+docker compose build
+docker compose run --rm cs357
+```
+
+The first build downloads the ML libraries and takes a while; start it and go do Step 1 in another terminal.  Rebuilds are nearly instant thanks to layer caching.
+
+*Expected.*  When the build finishes, a prompt like:
+
+```text
+student@a1b2c3d4e5f6:/workspace$
+```
+
+You are the non-root user `student`, in `/workspace`, which *is* your `cs357-work` clone (`ls -la` shows `.git`, `.devcontainer`, and `README.md`).  Exit anytime with `exit` or Ctrl-D; `--rm` deletes the container but never your files, which live in the mounted repo on your disk.
+
+*Paste.*  The container prompt.  Include it in every container transcript on this page, so it is visible where each command ran.
+
+*If it fails.*  A build that cannot find the Dockerfile is the `Dockerfile.txt` problem from A3, or you ran `docker compose` from somewhere other than `.devcontainer/`.  An empty `/workspace` on Windows means the clone lives somewhere Docker Desktop does not share; see the Stage A rows in Troubleshooting.  A build that dies with a network error resumes from the failed step when you rerun `docker compose build`.
+
+**Next:** A5.
+
+#### A5. Verify the tools inside the container
+
+> - **Where you type:** the container prompt
+> - **Route A:** do it
+> - **Route B:** skip
+> - **You paste:** the output of the three checks (and `herdr --version` if you include it)
+
+Three commands, each proving one tool is in the image.  The fourth thing the container must do, reach Ollama on your host, is Step 3's Route A subsection, because it needs the Ollama you install in Step 1.
+
+*Do.*  At the container prompt:
+
+```bash
+promptfoo --version
+python3 -c "import spacy; nlp = spacy.load('en_core_web_sm'); print('spacy OK:', nlp('Agents plan and act.')[0].pos_)"
+opencode --version
+```
+
+*Expected.*
+
+```text
+0.x.x
+spacy OK: NOUN
+opencode x.x.x
+```
+
+Any version string from `promptfoo` means Node.js and promptfoo are wired correctly (the evaluation lab's harness); `spacy OK: NOUN` means the NLP model the explainability directions use is loaded; a version from `opencode` means the coding agent is baked into the image, so Step 5 has nothing left to install and only needs its provider configured.  **herdr**, an agent-aware terminal multiplexer a later lab uses, is in the image too; `herdr --version` is optional and not graded.
+
+*Paste.*  All three outputs, with the container prompt visible.
+
+*If it fails.*  `command not found` for any of the three means an older build of the course image; rerun `docker compose build` from your `.devcontainer/` folder, and cached layers make it quick.  `permission denied` writing files in `/workspace` on a Linux host means the container's `student` user does not match your host UID; run the container with `docker compose run --rm --user "$(id -u):$(id -g)" cs357`.
+
+**Next:** A6.
+
+#### A6. Git identity and a push credential inside the container
+
+> - **Where you type:** the container prompt, in `/workspace`
+> - **Route A:** do it
+> - **Route B:** skip
+> - **You paste:** nothing yet; the push in Part 1.5 Step 2 is the evidence
+
+The container ships with `git` but knows nothing about you, and it cannot push without a credential.  This is the one place in the course where your own machine and the container are set up **differently on purpose**: on your host you will use an SSH key (Part 1.5 Step 2); inside the container the default is a token scoped to one repository, because from Step 5 onward this container runs *agent code* that acts on your files, and a credential you place inside it is a credential that code can use.
+
+*Do, identity.*  Set your identity **per repository**, so it is stored in `/workspace/.git/config`, on your disk, inside the mount, and survives container teardown:
+
+```bash
+cd /workspace
+git config user.name "Your Name"
+git config user.email "you@example.com"
+```
+
+(The VS Code route copies your host `~/.gitconfig` into the container automatically, so Option A students often find this already done.)
+
+*Do, credential.*  Create a fine-grained personal access token (PAT):
+
+1.  GitHub -> **Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens -> Generate new token**.
+2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.
+3.  Copy the token (shown once).  When `git push` prompts for a password, paste the token.  Cache it for a work session so you are not retyping:
+
+```bash
+git config credential.helper 'cache --timeout=7200'
+```
+
+The PAT is the tighter default because its blast radius is one repository, `cs357-work`, and nothing else.  Least privilege is a configuration choice you are making right now, not just a lecture topic.
+
+*Expected.*  `git config user.name` prints your name.  The credential proves itself at the first push, in Part 1.5 Step 2.
+
+*If it fails.*  `fatal: detected dubious ownership in repository at '/workspace'` is git noticing that the repository's owner (your host account) is not the user running the command (`student`).  Run `git config --global --add safe.directory /workspace` inside the container and rerun the command that failed.  The container's `~/.gitconfig` is recreated on every `docker compose run --rm`, so expect to run this once per session; the VS Code route keeps one long-lived container, so once is usually enough.
+
+<details markdown="1"><summary>Alternative: mount your SSH key read-only, and what you hand over when you do</summary>
+
+If you already use SSH with GitHub, add one line to the `volumes:` list in `docker-compose.yml`:
+
+```yaml
+    volumes:
+      - "..:/workspace"
+      - "~/.ssh:/home/student/.ssh:ro"
+```
+
+`:ro` makes the mount read-only (the container can use the keys, not modify them), and you would use the `git@github.com:...` remote form.  Mounting `~/.ssh` deliberately widens the container's view of your machine: you are handing everything that runs inside (including, later, *agent code*) a credential that can push to **every** repository your key reaches.  Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) says more about why the two environments differ.
+
+</details>
+
+**Next:** the Route A checklist, then Step 1.
+
+> **You've succeeded when** every box below is checked.  Then go to Step 1; on Route A, Steps 1 through 3 run on your host, not in the container.
+
+#### Route A Checklist
+
+- [ ] `docker run hello-world` printed `Hello from Docker!`
+- [ ] `git remote -v` shows your `cs357-work` repository
+- [ ] `Dockerfile`, `docker-compose.yml`, and `devcontainer.json` are in `.devcontainer/` and committed
+- [ ] The `student@...:/workspace$` prompt appears
+- [ ] `promptfoo --version`, the spacy check, and `opencode --version` all print output
+
+---
+
+### Step 1. Install Ollama, pull a small model, and confirm both
+
+> - **Where you type:** your host terminal (on Route A too: Ollama stays on the host)
+> - **Route A:** do it
+> - **Route B:** do it
+> - **You paste:** the `ollama --version` line and the `ollama list` table
 
 *Do.*  Install [Ollama](https://ollama.com/download) for your operating system.  Then open a new terminal and run:
 
@@ -193,13 +486,20 @@ ollama pull llama3.2
 ollama list
 ```
 
-*Expected.*  A version string, a download that ends in `success`, and a table from `ollama list` with a `llama3.2:latest` row.  The pull is about 2 GB and is the longest wait on this page.
+*Expected.*  A version string, a download that ends in `success`, and a table from `ollama list` with a `llama3.2:latest` row.  The pull is about 2 GB and is the longest wait on this page.  On Route A, the A4 image build can run at the same time.
 
 *Paste.*  The `ollama --version` line and the `ollama list` table.
 
 *If it fails.*  `command not found` or `not recognized` means your terminal predates the install; open a new one.  See the Stage 1 rows in Troubleshooting.
 
-**Step 2. Run a CLI sanity check.**
+**Next:** Step 2.
+
+### Step 2. Run a CLI sanity check
+
+> - **Where you type:** your host terminal
+> - **Route A:** do it
+> - **Route B:** do it
+> - **You paste:** the command and the model's reply
 
 *Do.*
 
@@ -213,7 +513,14 @@ ollama run llama3.2 "Say hello in five words."
 
 *If it fails.*  A connection error means the Ollama server is not running, which is separate from Ollama being installed.  See the Stage 3 rows in Troubleshooting.
 
-**Step 3. Verify the REST API responds.**
+**Next:** Step 3.
+
+### Step 3. Verify the REST API responds
+
+> - **Where you type:** your host terminal; on Route A, then the container prompt for the bridge check
+> - **Route A:** do it on the host, then also run the bridge check below from inside the container
+> - **Route B:** do it
+> - **You paste:** the JSON (and, on Route A, the bridge check's output)
 
 *Do.*
 
@@ -227,13 +534,44 @@ curl http://localhost:11434/api/tags
 
 *If it fails.*  `Connection refused` means the server is not running.  Start the Ollama desktop app, or run `ollama serve` in a second terminal and leave that terminal open.
 
-**Step 4. Call the model from Python.**
+#### Route A: also check the bridge from inside the container
+
+Keep Ollama running on the host, enter the container (A4), and send one line of Python straight through the container wall to the model server on your host:
+
+```bash
+python3 -c "import requests; print(requests.get('http://host.docker.internal:11434/api/tags').json())"
+```
+
+*Expected.*  Yours will show your models and digests:
+
+```text
+{'models': [{'name': 'llama3.2:latest', 'model': 'llama3.2:latest', 'modified_at': '...', 'size': 2019393189, 'digest': '...', 'details': {...}}]}
+```
+
+If you see a `models` list containing `llama3.2`, the whole architecture works: containerized Python -> `host.docker.internal` -> native Ollama.  Try `curl http://localhost:11434/api/tags` from the same container prompt and watch it fail; `localhost` inside the container is *the container*, not your machine, and that failure is correct behavior.  The image also sets `OLLAMA_HOST=http://host.docker.internal:11434`, so tools that read that variable find the host server automatically; in your own code, use the `host.docker.internal` URL whenever a lab handout says `localhost:11434`.
+
+*Paste.*  The one-liner's output, with the container prompt visible.
+
+*If it fails.*  A connection error here has two usual suspects: Ollama is not actually running on the host right now, or, on Linux, the container was started without the course compose file, whose `extra_hosts` mapping (`host.docker.internal:host-gateway`) makes the hostname resolve at all.  See the Stage 4 rows in Troubleshooting.
+
+**Next:** Step 4.
+
+### Step 4. Call the model from Python
+
+> - **Where you type:** the container prompt on Route A; your host terminal on Route B
+> - **Route A:** skip the install; run the script inside the container with `host.docker.internal`
+> - **Route B:** install `requests`, then run the script
+> - **You paste:** the printed JSON, including a `"content"` field
 
 This is the first step where the route matters.
 
-*Do, on Route A.*  Complete the Development Environment activity through its Step 5, enter the container, and run everything below at the container prompt with `host.docker.internal` in place of `localhost`.  The container already has the `requests` library installed.
+#### Route A: skip the install and run it in the container
 
-*Do, on Route B.*  Install the `requests` library into the Python you will run:
+If you have not finished A1 through A5, do that now.  Then enter the container (A4) and run everything below at the container prompt, with `host.docker.internal` in place of `localhost` in the script.  The container already has the `requests` library installed, so there is nothing to install; save `ollama_check.py` in `/workspace`, which is your `cs357-work` clone.
+
+#### Route B: install requests
+
+Install the `requests` library into the Python you will run:
 
 ```bash
 python3 -m pip install requests
@@ -241,7 +579,9 @@ python3 -m pip install requests
 
 On Windows, in PowerShell, that is `python -m pip install requests`.
 
-*Then, on either route*, save the script below as `ollama_check.py` in your `~/cs357` folder (or in `/workspace` inside the container).  Python runs files, so put the lines in a file rather than typing them at a prompt.  *Opening a terminal, moving around, and saving a file* above walks through nano, vim, VS Code, and Notepad; any of them does the job.
+#### Both routes: save and run the script
+
+*Do.*  Save the script below as `ollama_check.py` in your `~/cs357` folder (or in `/workspace` inside the container).  Python runs files, so put the lines in a file rather than typing them at a prompt.  *Opening a terminal, moving around, and saving a file* above walks through nano, vim, VS Code, and Notepad; any of them does the job.
 
 ```python
 import requests, json
@@ -272,6 +612,8 @@ On Windows in PowerShell the command is `python ollama_check.py`.  VS Code's Run
 
 *If it fails.*  `ModuleNotFoundError: No module named 'requests'` means the install landed in a different Python than the one you ran; use `python3 -m pip install requests` (or `python -m pip` on Windows) from the same terminal, then rerun.  A `ConnectionError` inside the container means the address rule was not applied.  `can't open file ... No such file or directory` means you are in a different directory than the one you saved into; `ls` (or `dir`) shows which.
 
+> **You've succeeded when** the four boxes below are checked.  That is Part 1A.
+
 #### Part 1A Checklist
 
 - [ ] `ollama --version` returns a version string
@@ -279,7 +621,7 @@ On Windows in PowerShell the command is `python ollama_check.py`.  VS Code's Run
 - [ ] The `curl` command to `/api/tags` returns JSON (not a connection error)
 - [ ] Your Python script prints a response that includes a `"content"` field
 
-#### If you installed Ollama as a Docker container
+<details markdown="1"><summary>Only if you installed Ollama as a Docker container</summary>
 
 The course expects Ollama installed natively, as in Step 1.  If you installed it as a Docker container instead, the `ollama` command does not exist on your host, and every `ollama ...` command on this page runs *inside* that container.  Reach it with `docker exec`, naming the container.  The conventional name, and the one `docker run --name ollama` gives you, is `ollama`; `docker ps` shows what yours is actually called.  The word appears twice for a reason: the first is the container, the second is the program inside it.
 
@@ -291,22 +633,32 @@ docker exec ollama ollama list
 
 Add `-it` when the command is interactive, as the chat in Step 2 is: `docker exec -it ollama ollama run llama3.2 "Say hello in five words."`.  Steps 3 and 4 are unaffected as long as you published the port with `-p 11434:11434`, because `localhost:11434` on your host then reaches the server inside the container.  A transcript from this route is fully accepted; leave the `docker exec` prefix visible in what you paste, so I can see where the command ran.
 
----
+</details>
 
-### Part 1B: Your Coding Agent (Step 5)
+**Next:** Step 5.
 
-**Step 5. Confirm your coding agent is installed and talking to that same local model.**
+### Step 5. Confirm your coding agent is installed and talking to that same local model
+
+> - **Where you type:** the container prompt on Route A; your host terminal on Route B
+> - **Route A:** skip 5a (opencode is in the image); do 5b and 5c
+> - **Route B:** install opencode in 5a, then 5b and 5c
+> - **You paste:** the version string, and one question with the agent's answer
 
 The agent is **opencode**, and every install route lives at [opencode.ai](https://opencode.ai/).  The Week 2 lab depends on this step, so it is here rather than discovered later.
 
-*5a. Install it.*
+#### 5a, Route A: nothing to install
 
-- **On Route A**, it is already in the course image, so there is nothing to install.
-- **On Route B**, install it yourself: `curl -fsSL https://opencode.ai/install | bash` on macOS, Linux, or WSL; `npm i -g opencode-ai` if you already have Node.js; or `choco install opencode` or `scoop install opencode` in PowerShell on native Windows.
+opencode is already in the course image, and A5 printed its version.  Skip to 5b.
+
+#### 5a, Route B: install opencode
+
+Install it yourself: `curl -fsSL https://opencode.ai/install | bash` on macOS, Linux, or WSL; `npm i -g opencode-ai` if you already have Node.js; or `choco install opencode` or `scoop install opencode` in PowerShell on native Windows.
 
 That page also offers a **desktop app**, in beta for macOS, Windows, and Linux, if you would rather work in a window than a terminal.  It drives the same agent, but install the command-line version even if you try the desktop one, because this assignment and every lab ask for terminal output.
 
-*5b. Point it at your model.*  opencode reads one configuration file, and the file name matters: it is `opencode.json`, never `config.json`.  opencode silently ignores a file with the wrong name.
+#### 5b, both routes: point it at your model
+
+opencode reads one configuration file, and the file name matters: it is `opencode.json`, never `config.json`.  opencode silently ignores a file with the wrong name.
 
 | Where opencode runs | Where the file goes | The `baseURL` inside it |
 |---|---|---|
@@ -330,7 +682,7 @@ The smallest working file registers Ollama and nothing else.  Create the folder 
 
 Step 8 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) walks through the same file in more detail, including an optional second provider you can add later.
 
-*5c. Verify it.*
+#### 5c, both routes: verify it
 
 ```bash
 opencode --version
@@ -343,6 +695,8 @@ Then start `opencode`, type `/model`, and confirm your Ollama provider is listed
 *Paste.*  The version string, and the question with the agent's answer.
 
 *If it fails.*  An empty provider list means the file name or location is wrong.  Check the name first, then the location from the table, then that the JSON parses with `python3 -m json.tool opencode.json`.
+
+> **You've succeeded when** the three boxes below are checked.  That is Part 1B.
 
 #### Part 1B Checklist
 
@@ -363,11 +717,13 @@ Then start `opencode`, type `/model`, and confirm your Ollama provider is listed
 
 The installer downloads one binary, checks its SHA-256, and puts it in `~/.local/bin`.  If you include `herdr --version` in your transcript, I will read it, but its absence costs you nothing.
 
+**Next:** *Capturing Part 1*, then Part 1.5.
+
 ---
 
 ### Capturing Part 1
 
-Copy-paste or screenshot the output of all five steps, including the output of `ollama --version` and your operating system name and version.
+Copy-paste or screenshot the output of all five steps, including the output of `ollama --version` and your operating system name and version.  On Route A, also include the container prompt and the A5 output, and say which route you took.
 
 **If any step fails:** document the error message verbatim, state your hypothesis about the cause, and describe what you tried.  A well-documented failure with a follow-up plan earns full credit for that step.  Do not delete error output or write "it eventually worked" without showing what changed.
 
@@ -377,11 +733,14 @@ Copy-paste or screenshot the output of all five steps, including the output of `
 
 Every lab this semester runs from a terminal, lives in a git repository, and depends on a reproducible Python environment.  This checkpoint makes sure those tools work *before* the labs depend on them, the same philosophy as the Ollama setup above.  You do not need to be a shell wizard; you need to be able to move around, version your work, and stand up an environment without guesswork.  If any command below is unfamiliar, the **Command-Line Survival** resources at the end of this section will get you there.
 
-**Route A note.**  Do the git steps of this checkpoint **from inside the course container**, against the `cs357-work` GitHub repository you created in the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md).  The activity's practice section (create `hello_agent.py`, run it against host Ollama, commit, push) is exactly this checkpoint, so its transcript satisfies the navigation and git items below.  Set up the SSH key in Step 2 on your host anyway, because that is where it belongs.  The `uv` step runs on your host on both routes; the container already bundles the course packages, and `uv` is your reproducible-environment tool for everything outside the container.
-
 Complete each step and capture the terminal output.
 
-**Step 1. Navigate and search.**
+### Step 1. Navigate and search
+
+> - **Where you type:** your host terminal; on Route A, the container prompt in `/workspace` works too
+> - **Route A:** do it
+> - **Route B:** do it
+> - **You paste:** every command with its output
 
 *Do.*  Create a working directory for this course, enter it, and list its contents:
 
@@ -408,7 +767,20 @@ grep -n "localhost" notes.txt
 
 *Paste.*  Every command above with its output.
 
-**Step 2. Authenticate to GitHub with an SSH key, then commit and push.**
+**Next:** Step 2.
+
+### Step 2. Authenticate to GitHub with an SSH key, then commit and push
+
+> - **Where you type:** your host terminal for 2a through 2d (the key lives on your host); your host terminal, or on Route A the container prompt, for 2e and 2f
+> - **Route A:** do 2a through 2d on your host; for 2e and 2f, use `cs357-work` from A2 and push from the container with your A6 token (see the subsection below)
+> - **Route B:** do 2a through 2f
+> - **You paste:** the `ssh -T` greeting and the `git log --oneline` output
+
+#### If you built the course container (Route A)
+
+You already have a repository: `cs357-work` from A2, cloned over HTTPS, with a scoped token from A6.  So for 2e, skip creating or cloning anything, and for 2f make your commit and push **from the container prompt** in `/workspace`; the token authenticates the push, and `git log --oneline` there is your transcript.  Still do 2a through 2d on your host, because the labs drive git from a host terminal too and the SSH key is the credential that belongs there.  If you built the container in class, the practice loop in Step 7 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) (create `hello_agent.py`, run it against host Ollama, commit, push) is exactly this checkpoint, and its transcript satisfies it.
+
+#### Both routes: 2a through 2f
 
 You will push to GitHub every week this semester, so set authentication up once, now, with a key.  GitHub no longer accepts your account password over HTTPS, and a key is the option that keeps working without a prompt on every push.  SSH (Secure Shell) is the protocol; the key is a file pair, one half private and one half public.  Follow 2a through 2f in order.  The alternatives after them are optional and replace specific sub-steps; choose at most one.
 
@@ -449,7 +821,7 @@ ssh -T git@github.com
 
 The first connection asks you to accept GitHub's host fingerprint; answer `yes`.  Success is a greeting that names your GitHub username.  It does not open a shell, and the message that GitHub does not provide shell access is the expected result, not an error.  **Paste this output.**
 
-*2e. Get the repository onto your machine.*  Use your course GitHub Classroom repository, the `cs357-work` repository you created in the Development Environment activity, or a throwaway GitHub repository.  Which command starts you off depends on whether the repository already exists on GitHub: **clone** when it does, and `git init` only when it does not.
+*2e. Get the repository onto your machine.*  Use your course GitHub Classroom repository, the `cs357-work` repository you created in A2 (Route A students already have it; skip to 2f), or a throwaway GitHub repository.  Which command starts you off depends on whether the repository already exists on GitHub: **clone** when it does, and `git init` only when it does not.
 
 If it already exists on GitHub, clone it.  Cloning downloads the full repository, sets `origin` to the address you cloned from, and leaves you in a working copy that is already connected, so no `git remote add` follows.  Copy the address from the green **Code** button on the repository page, choosing the **SSH** tab so you get the `git@github.com:` form that the key you just registered authenticates:
 
@@ -482,7 +854,11 @@ git push -u origin main
 
 *If it fails.*  `git commit` without `-m` drops you into an editor, and `:q!` leaves it if that editor turns out to be `vim`.  `git push` complains if your default branch is not named `main`, which `git branch -M main` fixes.  If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, then verify with `git remote -v`.  On native Windows, PowerShell ships OpenSSH, so the commands above work as written; if `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell with `Set-Service -Name ssh-agent -StartupType Manual` followed by `Start-Service ssh-agent`.
 
-**Alternatives for Step 2.  Choose at most one, and verify with `ssh -T git@github.com` either way.**
+**Route A and credentials inside the container.**  The key you just made lives on your host, which is where it belongs.  Inside the course container, A6 above recommends a fine-grained personal access token (PAT) scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  That is why A2 clones `cs357-work` over HTTPS: the token authenticates HTTPS pushes.  Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) goes deeper, and A6's detour shows the read-only `~/.ssh` mount if you would rather use your key there.
+
+<details markdown="1"><summary>Only if you want an alternative to the command line for Step 2: the GitHub CLI, VS Code, or GitHub Desktop</summary>
+
+**Choose at most one, and verify with `ssh -T git@github.com` either way.**
 
 - **The GitHub CLI, and the one I would take on native Windows.**  The [GitHub CLI](https://cli.github.com/), the `gh` command, does the whole exchange in 2b through 2c for you.  Install it (`winget install --id GitHub.cli` in PowerShell, `brew install gh` on macOS, or your package manager on Linux), then run `gh auth login`, choose **GitHub.com**, choose **SSH** as the protocol, and answer yes when it offers to generate a new SSH key and upload it to your account.  That one prompt replaces `ssh-keygen`, the `cat` of the `.pub` file, and the paste into Settings.  Verify with `ssh -T git@github.com` and paste that output; `gh repo clone <your-username>/<your-repo>` then clones over the protocol you just authorized, in place of the `git clone` in 2e.
 - **VS Code, for the clone in 2e.**  It drives the same git underneath, so the result is identical.  With no folder open, the Source Control view (Ctrl+Shift+G, or Cmd+Shift+G on macOS) offers a **Clone Repository** button; from anywhere, the Command Palette (Ctrl+Shift+P, or Cmd+Shift+P) runs **Git: Clone**.  Either one asks for the repository address, where you paste the same SSH URL, then asks which local folder to put it in, `~/cs357` here, and offers to open the clone when it finishes.  Say yes: the integrated terminal (Ctrl+`) then opens already inside the repository, which is where you run `git log --oneline` for your transcript.  The palette also offers **Clone from GitHub**, which lets you pick from a list of your repositories instead of pasting a URL, though it signs you in to GitHub inside VS Code and authenticates as that account rather than with your key.
@@ -490,9 +866,16 @@ git push -u origin main
 
 **Telling the two GitHub downloads apart on native Windows without WSL2.**  `gh` is the command-line tool, a separate install rather than something GitHub Desktop brings along, though installing both is common and they coexist happily.  GitHub Desktop is the graphical client; it bundles Git for Windows, which is where `ssh-keygen` and Git Bash come from, and it handles its own authentication.  The Ubuntu or WSL2 route gives you the standard Unix tooling instead, and every command on this page then works as written.
 
-**Route A and credentials inside the container.**  The key you just made lives on your host, which is where it belongs.  Inside the course container, Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) recommends a fine-grained personal access token (PAT) scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  That is why the activity clones `cs357-work` over HTTPS: the token authenticates HTTPS pushes.  Step 6 also shows the read-only `~/.ssh` mount if you would rather use your key there, and says plainly what you are handing over when you do.
+</details>
 
-**Step 3. Reproducible Python with uv.**
+**Next:** Step 3.
+
+### Step 3. Reproducible Python with uv
+
+> - **Where you type:** your host terminal, on both routes
+> - **Route A:** do it on the host; the container already bundles the course packages, and `uv` is your tool for everything outside it
+> - **Route B:** do it
+> - **You paste:** the output of all four commands
 
 *Do.*  Install [uv](https://docs.astral.sh/uv/), the fast, modern Python environment manager we standardize on this term.  Then, in your `~/cs357` directory, create a project, an environment, and the one dependency the labs start with:
 
@@ -512,6 +895,8 @@ uv run python -c "import requests; print(requests.__version__)"
 
 *If it fails.*  `uv: command not found` means the installer's directory is not on your PATH yet; restart the terminal.  If you cannot install uv, fall back to `python -m venv` and `pip install requests`, and note in your submission that you used the fallback.
 
+**Next:** the Part 1.5 checklist, then Part 2.  The reference list below is there when you need it, not required reading.
+
 ### Command-Line Survival: reference (use as needed, not required reading cover-to-cover)
 
 - [The Shell, in Full]({{ site.baseurl }}/Tutorials/Shell): the course's own shell tutorial, from the first prompt through pipes, PATH, and processes.
@@ -519,6 +904,8 @@ uv run python -c "import requests; print(requests.__version__)"
 - [explainshell](https://explainshell.com/): paste any command line and see each flag explained.
 - [ShellCheck](https://www.shellcheck.net/): catches bugs in shell scripts before they bite.
 - `curl` and [HTTPie](https://httpie.io/) plus [jq](https://jqlang.github.io/jq/): you will hit JSON APIs (Ollama, MCP) all semester; `curl ... | jq` is your friend.
+
+> **You've succeeded when** the three boxes below are checked.  That is Part 1.5.
 
 ### Part 1.5 Checklist
 
@@ -560,8 +947,13 @@ Work down this table before you post in the course channel.  The Stage column ma
 |---|---|---|---|
 | 0 | On Windows, `'ollama' is not recognized`, or `curl` prints something odd | You are in Command Prompt or an old PowerShell window from before the install | Open a fresh PowerShell window so the updated `PATH` loads, and use PowerShell for every command on this page |
 | 0 | `python3: command not found` on Windows | Windows Python installs as `python` | Use `python` wherever this page says `python3` |
-| 0 | `Cannot connect to the Docker daemon` | Docker Desktop is installed but not running | Start the application. On Linux, `sudo systemctl start docker`, and confirm your user is in the `docker` group |
-| 0 | Docker Desktop is running, but `docker` is not a command inside WSL2 Ubuntu | Docker's WSL integration is off for that distribution | In Docker Desktop, **Settings -> Resources -> WSL Integration**, switch the **Ubuntu** toggle on, **Apply & Restart**, then open a new Ubuntu terminal |
+| A | `Cannot connect to the Docker daemon` | Docker Desktop is installed but not running | Start the application. On Linux, `sudo systemctl start docker`, and confirm your user is in the `docker` group |
+| A | Docker Desktop is running, but `docker` is not a command inside WSL2 Ubuntu | Docker's WSL integration is off for that distribution | In Docker Desktop, **Settings -> Resources -> WSL Integration**, switch the **Ubuntu** toggle on, **Apply & Restart**, then open a new Ubuntu terminal |
+| A | `docker compose build` cannot find the Dockerfile | A browser saved it as `Dockerfile.txt`, or you are not in the `.devcontainer/` folder | `ls -la .devcontainer` and rename the file if needed; run `docker compose` from inside `.devcontainer/`, because the `..` in the compose file is relative to it |
+| A | Inside the container, `/workspace` is empty | On Windows, the clone lives on a drive or share Docker Desktop has not been granted, or `docker compose` ran from the wrong folder | Keep `cs357-work` under your user profile or, better, inside your WSL2 home directory; run `docker compose` from `.devcontainer/` |
+| A | `fatal: detected dubious ownership in repository at '/workspace'` | The repository's owner (your host account) is not the user running git in the container (`student`) | `git config --global --add safe.directory /workspace` inside the container, then rerun the command; once per session on the compose route |
+| A | `permission denied` writing files in `/workspace` (Linux hosts) | The container's `student` UID does not match your host UID | `docker compose run --rm --user "$(id -u):$(id -g)" cs357` |
+| A | The build fails partway with a network error | A flaky connection during the large download layers | Rerun `docker compose build`; completed layers are cached, so it resumes from the failed step |
 | 1 | `ollama: command not found` after installing | The installer put the binary somewhere not on your `PATH` | Restart your terminal. If it persists, find the binary (`ls /usr/local/bin/ollama`) and add its directory to `PATH`. This is the `PATH` idea from Step 0 of the Workbench session |
 | 1 | `ollama: command not found`, and you installed Ollama with Docker | There is no host binary on this route; the program lives inside the container | Prefix the command: `docker exec ollama ollama list` (`docker ps` confirms the container name), and add `-it` for the interactive `ollama run` |
 | 1 | The model download stalls or fails partway | Network interruption on a 2 GB transfer | Rerun `ollama pull llama3.2`; it resumes rather than restarting |
@@ -574,7 +966,7 @@ Work down this table before you post in the course channel.  The Stage column ma
 | 5 | `opencode: command not found` inside the container | An older build of the course image, from before the agent was added | Rerun `docker compose build` from your `.devcontainer/` folder; cached layers make it quick |
 | 5 | `opencode: command not found` on Route B, right after the installer succeeded | The installer put the binary in `~/.local/bin`, which is not on your `PATH` yet | `export PATH="$HOME/.local/bin:$PATH"` for this session, and add the same line to `~/.bashrc` to make it stick |
 | 7 | `ssh-keygen` is not recognized on Windows | OpenSSH is not installed or the window predates it | Open a new PowerShell window; if it persists, install GitHub Desktop (which bundles Git for Windows) or the GitHub CLI and use the alternative in Step 2 |
-| 7 | `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Set up the SSH key in Part 1.5, Step 2, then point the remote at it: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained personal access token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS |
+| 7 | `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Set up the SSH key in Part 1.5, Step 2, then point the remote at it: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained personal access token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS, and is the default inside the container (A6) |
 | 7 | `git@github.com: Permission denied (publickey)` | The key is not loaded in the agent, or its public half was never added to GitHub | `ssh-add -l` lists loaded keys and `ssh-add ~/.ssh/id_ed25519` loads yours; confirm the contents of `id_ed25519.pub` appear under Settings -> SSH and GPG keys; then retest with `ssh -T git@github.com` |
 | 7 | GitHub Desktop says authentication failed, or cannot push | Not signed in, or the repository exists on GitHub but was never published from Desktop | File > Options > Accounts, sign in with the browser, then Publish repository; if the repository already exists online, use Add local repository and set the remote under Repository > Repository settings |
 | 8 | `uv: command not found` | Not installed, or not on `PATH` yet | Follow the uv install docs, restart the terminal, and if it still fails use the documented `python -m venv` fallback and say so |
@@ -587,13 +979,13 @@ Work down this table before you post in the course channel.  The Stage column ma
 Hold your submission against the rubric's `proficient` column:
 
 - [ ] One file, PDF or Markdown, with each component **clearly labeled**.
-- [ ] Setup transcript covers all five steps, including the coding-agent check, and states your **OS and version numbers**.
+- [ ] Setup transcript covers all five steps, including the coding-agent check, and states your **OS and version numbers**.  On Route A, it also shows the container prompt and the A5 output.
 - [ ] Transcript output is **copied verbatim**, not retyped or paraphrased.
 - [ ] Any failure is quoted exactly, with a hypothesis and what you tried.
 - [ ] Part 1.5: shell navigation and a search, a `git log --oneline` showing a pushed commit, and the uv (or documented fallback) output.
 - [ ] Reflection has **four** labeled sections and is about a page.
 - [ ] The reflection says what you actually think, not what you expect the course to want.
-- [ ] Which route you took (A or B) is stated.
+- [ ] Which route you took (A or B) is stated, and a Route A transcript shows the container prompt.
 - [ ] Collaboration, AI-disclosure, and hours questions answered at the end.
 
 ---
@@ -601,7 +993,7 @@ Hold your submission against the rubric's `proficient` column:
 ## Deliverables
 
 Submit a single PDF or markdown file containing:
-- Your tool setup transcript (all five steps, including `opencode --version` and one answered prompt, plus version and OS info)
+- Your tool setup transcript (all five steps, including `opencode --version` and one answered prompt, plus version and OS info; on Route A, the container prompt and the A5 output as well)
 - Your command-line and git checkpoint transcript (Part 1.5: navigation, git commit/push, uv environment)
 - Your baseline reflection (one page, four sections)
 
