@@ -19,7 +19,20 @@ To take you from your first terminal prompt to fluent command-line work, so that
 
 ## About This Tutorial
 
-Every agentic CLI tool you will meet this semester (Claude Code, Codex, Gemini CLI, opencode, pi, and the rest) lives in the **terminal**, and when those agents act, they act by running shell commands on your behalf.  You cannot supervise what you cannot read.  This tutorial takes you from your very first prompt to fluent command-line work, assuming nothing.  We move today from **what a shell is → moving around → working with files → pipes and redirection → environment and PATH → processes → the terminal inside VS Code**.
+Your coding agent this semester, **opencode**, lives in the **terminal**, and when it acts, it acts by running shell commands on your behalf.  You cannot supervise what you cannot read.  This tutorial takes you from your very first prompt to fluent command-line work, assuming nothing.  We move from **what a shell is**, to **moving around**, to **working with files**, to **pipes and redirection**, to **environment and PATH**, to **processes**, and finally to **the terminal inside VS Code**.
+
+### If you are here from the Overview assignment
+
+Part 1.5 of the [Overview assignment]({{ site.baseurl }}/Assignments/Overview) needs four things from this page, and nothing else on it is required for that checkpoint:
+
+| The Overview asks you to | Read |
+|---|---|
+| Make a directory, enter it, and list it (`mkdir`, `cd`, `pwd`, `ls -la`) | Section 2, *Moving Around*, and the first two rows of the table in Section 3 |
+| Create a small file and print it (`printf ... > notes.txt`, `cat`) | Section 4, *Pipes and Redirection*, for `>`, and Section 3 for `cat` |
+| Search the file with `grep -n` | Section 4, the first pipe example, and the *Try it* box at the end of that section |
+| Understand `command not found` after an install | Section 5, *Environment Variables and PATH* |
+
+Each of Sections 2 through 6 ends with a **Try it** box that names the command to run and the output to expect, so you can tell when you have what you came for.
 
 ## Key Concepts
 
@@ -32,13 +45,13 @@ These terms turn up all through this tutorial.  Read them once before you start;
 | **Working Directory** | The folder the shell considers your current location; every relative file path is measured from here. | Shown in the prompt as `~/projects`; confirmed by running `pwd` |
 | **PATH** | An ordered list of directories the shell searches, left to right, whenever you type a command name; if a program is not in any of those directories, the shell says "command not found." | `echo $PATH` reveals something like `/usr/local/bin:/usr/bin:/bin` |
 | **Pipe** | The `|` character that connects two commands by routing the first command's output directly into the second command's input, without saving anything to a file in between. | `grep "ERROR" agent.log \| wc -l` counts error lines |
-| **Environment Variable** | A named value stored in the shell's memory and passed automatically to every program the shell launches, the standard way to supply configuration and secrets without hardcoding them. | `ANTHROPIC_API_KEY=sk-litellm-local` tells Claude Code which key to use |
+| **Environment Variable** | A named value stored in the shell's memory and passed automatically to every program the shell launches, the standard way to supply configuration and secrets without hardcoding them. | `OLLAMA_HOST=http://localhost:11434` tells the Ollama tools where the model server is |
 
 ---
 
 ### Before You Start
 
-**What you need:** A terminal. macOS and Linux have one; on Windows use WSL. Nothing else installed.
+**What you need:** A terminal.  macOS and Linux have one.  On Windows, use PowerShell (Windows 10 and 11 include it) or WSL2 Ubuntu; both are supported, and where a PowerShell command differs from the Unix one, the PowerShell form appears beside it.  Nothing else installed.
 
 **What you will have at the end:** the handful of shell moves every later lab assumes, practiced rather than read.
 
@@ -54,11 +67,13 @@ In this Part, you will learn what a shell is, how to navigate the filesystem, an
 
 Think of the terminal as your agent's native language, like learning to read blueprints instead of just looking at buildings.  A finished building (a GUI application) hides all the structural decisions; blueprints (shell commands) expose every beam, pipe, and wire.  When you can read blueprints, you can verify that what your agent proposed is safe before any concrete is poured.  This section teaches you to read the blueprints.
 
-A shell is a program that reads a line of text, runs the command it names, and shows you the result.  The window the shell lives in is the **terminal** (on macOS, Terminal.app or iTerm2; on Windows, Windows Terminal running PowerShell or, better for this course, WSL with Ubuntu; on Linux, any terminal emulator).  The shell we assume is **bash** or its close cousin **zsh** (the macOS default); their everyday commands are identical.
+A shell is a program that reads a line of text, runs the command it names, and shows you the result.  The window the shell lives in is the **terminal** (on macOS, Terminal.app or iTerm2; on Windows, Windows Terminal running PowerShell or WSL2 with Ubuntu; on Linux, any terminal emulator).  The shell we assume is **bash** or its close cousin **zsh** (the macOS default); their everyday commands are identical.  PowerShell accepts many of the same names (`pwd`, `ls`, `cd`, `cat`, `mkdir`, `rm`, `echo`) as aliases for its own commands, and the differences that matter are called out as they come up.
+
+**Opening a terminal.**  On macOS, press Cmd+Space, type `Terminal`, and press Enter.  On Windows, open the Start menu and type `PowerShell` (not "Command Prompt"), or type `Ubuntu` if you have installed WSL2.  On Linux, press Ctrl+Alt+T.  In VS Code on any system, press Ctrl+` (backtick) or choose **View > Terminal**, and the terminal opens in the folder you have open.
 
 **Anatomy of the prompt.**  When you open a terminal you see something like `bill@laptop:~/projects$`.  Read it as a sentence: user `bill`, machine `laptop`, current directory `~/projects` (the `~` means your home directory), and `$` meaning "I am ready."  Everything you type until Enter is one command: a program name, then **arguments**, separated by spaces.  Options (also called flags) usually begin with `-` or `--`.
 
-**Why agents make this matter.**  When Claude Code proposes `rm -rf build/` and asks for permission, the permission gate is only as good as your ability to read that line.  The shell is the contract language between you and your agent; this tutorial teaches you to read contracts before signing them.
+**Why agents make this matter.**  When opencode proposes `rm -rf build/` and asks for permission, the permission gate is only as good as your ability to read that line.  The shell is the contract language between you and your agent; this tutorial teaches you to read contracts before signing them.
 
 ## 2.  Moving Around
 
@@ -77,6 +92,10 @@ cd -                 # jump back to wherever you just were (like a browser Back 
 ```
 
 The filesystem is a tree.  Paths beginning with `/` are **absolute** (measured from the root of the entire tree); paths without a leading `/` are **relative** (measured from where you stand right now). `.` means "the current directory"; `..` means "the parent directory."  Press **Tab** to autocomplete names (the single biggest speed upgrade available), and the up arrow to recall previous commands. `history` shows everything you have typed, which is also how you will audit what an agent typed.
+
+**In PowerShell**, `pwd`, `ls`, `cd projects`, `cd ..`, and `cd ~` all work as written.  Two differ: `ls -la` becomes `Get-ChildItem -Force` (or `dir -Force`), and `cd -` has no equivalent, so type the path instead.  `history` becomes `Get-History`.
+
+> **Try it.**  Run `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la` (in PowerShell: `mkdir ~/cs357; cd ~/cs357; pwd; ls`).  Expected: `pwd` prints a path ending in `cs357`, and the listing is empty apart from `.` and `..`.  That is the first half of the Overview's Part 1.5, Step 1.
 
 ---
 
@@ -122,20 +141,31 @@ In this Part, you will learn the commands for creating, reading, moving, and del
 
 The table below covers the ten commands you will use most often when working with files in the shell.  Pay special attention to `rm` and `rm -r`; unlike most commands, they are permanent and irreversible.
 
-| Command | What It Does | Example Command |
-|---|---|---|
-| `mkdir lab1` | Creates a new empty directory named `lab1` in the current location | `mkdir lab1` creates `./lab1/` |
-| `touch notes.md` | Creates an empty file if it does not exist; updates its modification timestamp if it does | `touch notes.md`, safe to run on an existing file |
-| `cp notes.md backup.md` | Copies `notes.md` to a new file named `backup.md`; both files exist afterward | `cp notes.md backup.md` |
-| `mv backup.md old/` | Moves `backup.md` into the `old/` directory; also used to rename: `mv old.txt new.txt` | `mv backup.md old/` |
-| `cat notes.md` | Prints the entire contents of `notes.md` to the screen at once | `cat notes.md` |
-| `less big.log` | Pages through a large file one screen at a time; press `q` to quit, `/keyword` to search forward | `less big.log` |
-| `head -5 data.csv` | Prints only the first 5 lines of `data.csv`; change `5` to any number | `head -20 data.csv` shows the first 20 lines |
-| `tail -f agent.log` | Follows a file as it grows, printing new lines as they arrive; essential for watching live logs; press `Ctrl+C` to stop | `tail -f agent.log` |
-| `rm scratch.txt` | Permanently deletes `scratch.txt`; there is NO undo and NO trash can | `rm scratch.txt` |
-| `rm -r scratch_dir/` | Recursively deletes `scratch_dir/` and everything inside it; treat this like a chainsaw | `rm -r scratch_dir/` |
+| Command | What It Does | Example Command | PowerShell form, where it differs |
+|---|---|---|---|
+| `mkdir lab1` | Creates a new empty directory named `lab1` in the current location | `mkdir lab1` creates `./lab1/` | same |
+| `touch notes.md` | Creates an empty file if it does not exist; updates its modification timestamp if it does | `touch notes.md`, safe to run on an existing file | `New-Item notes.md` |
+| `cp notes.md backup.md` | Copies `notes.md` to a new file named `backup.md`; both files exist afterward | `cp notes.md backup.md` | same |
+| `mv backup.md old/` | Moves `backup.md` into the `old/` directory; also used to rename: `mv old.txt new.txt` | `mv backup.md old/` | same |
+| `cat notes.md` | Prints the entire contents of `notes.md` to the screen at once | `cat notes.md` | same |
+| `less big.log` | Pages through a large file one screen at a time; press `q` to quit, `/keyword` to search forward | `less big.log` | `more big.log` |
+| `head -5 data.csv` | Prints only the first 5 lines of `data.csv`; change `5` to any number | `head -20 data.csv` shows the first 20 lines | `Get-Content data.csv -Head 5` |
+| `tail -f agent.log` | Follows a file as it grows, printing new lines as they arrive; essential for watching live logs; press `Ctrl+C` to stop | `tail -f agent.log` | `Get-Content agent.log -Wait` |
+| `rm scratch.txt` | Permanently deletes `scratch.txt`; there is NO undo and NO trash can | `rm scratch.txt` | same |
+| `rm -r scratch_dir/` | Recursively deletes `scratch_dir/` and everything inside it; treat this like a chainsaw | `rm -r scratch_dir/` | `rm -r scratch_dir` (same, and just as permanent) |
+
+**Saving a file from the terminal.**  A step that says "save this as `notes.txt`" means: `cd` into the folder the file belongs in, then use one of these.
+
+- **nano** (macOS, Linux, WSL2, and the course container): `nano notes.txt`, paste (Cmd+V on macOS; right-click or Ctrl+Shift+V in Ubuntu), **Ctrl+O** then **Enter** to write, **Ctrl+X** to exit.
+- **vim** (every Unix system): `vim notes.txt`, press **i**, paste, press **Esc**, type `:wq`, press **Enter**.  Stuck?  **Esc**, then `:q!` and **Enter** leaves without saving.
+- **VS Code** (any system): `code .` from the folder, **File > New File**, paste, **Ctrl+S** (Cmd+S on macOS), and type the full name with its extension.
+- **PowerShell without nano**: `notepad notes.txt`, click **Yes** to create it, paste, save, close.  For one line, `Set-Content notes.txt "model: llama3.2"` writes the file directly.
+
+Confirm with `ls`, which must show the name, and `cat notes.txt`, which must show the contents.  If `ls` does not show it, you saved somewhere else; `pwd` says where you are.
 
 **The two commands that deserve fear.** `rm` is permanent, and `rm -rf` (force + recursive, often combined) is the chainsaw of the shell.  The `-f` flag suppresses all confirmation prompts.  Our course governance principle applies to you exactly as it applies to your agents: destructive actions get a pause, a re-read, and ideally a backup first. `tail -f` is the opposite: a gift, and the standard way to watch a container or agent log scroll by in real time.
+
+> **Try it.**  In your `~/cs357` folder, run `touch notes.txt` (PowerShell: `New-Item notes.txt`), then `ls -la` (PowerShell: `ls`).  Expected: `notes.txt` appears with a size of 0.  An empty file is fine here; the next section fills it, because a search over an empty file finds nothing.
 
 ## 4.  Pipes and Redirection: The Unix Superpower
 
@@ -185,6 +215,8 @@ python run_eval.py > out.txt 2> err.txt
 
 The four workhorses worth memorizing by name are `grep` (search text for a pattern), `wc` (count lines, words, or characters), `sort` (sort lines), and `find` (search for files by name or type: `find . -name "*.json"` finds all JSON files under the current directory).  Everything else can be looked up as needed.
 
+**In PowerShell**, `>`, `>>`, and `2>` work as written, and `|` pipes the same way.  The four workhorses have different names: `grep "ERROR" agent.log` is `Select-String "ERROR" agent.log`, `wc -l` is `Measure-Object -Line`, `sort` is `Sort-Object`, and `find . -name "*.json"` is `Get-ChildItem -Recurse -Filter *.json`.  Running the tutorial from WSL2 or Git Bash keeps every command as written.
+
 A teammate runs `python eval.py > results.txt` twice in a row with different settings, intending to compare the two runs.  What happened to the first run's results?
 
 - They appear above the second run's results in the file; this is how `>>` (append) works, but `>` does not accumulate output; it overwrites from the first byte of the new run
@@ -218,39 +250,54 @@ They were overwritten and are gone, because > truncates the file before writing;
 
    *Hint:* Consider (a) whether `logs/` might contain files that cannot be recreated, and (b) what `/dev/null` does to error messages that would otherwise warn you the deletion failed.
 
+> **Try it.**  Put three lines into the file from Section 3 and search it.  This is the second half of the Overview's Part 1.5, Step 1:
+>
+> ```bash
+> printf 'model: llama3.2\nhost: http://localhost:11434\nagent: opencode\n' > notes.txt
+> cat notes.txt
+> grep -n "localhost" notes.txt
+> ```
+>
+> Expected: `cat` prints the three lines, and `grep -n` prints `2:host: http://localhost:11434`, the line number and the matching line.  In PowerShell, `Set-Content notes.txt "model: llama3.2","host: http://localhost:11434","agent: opencode"` writes the file and `Select-String localhost notes.txt` searches it.
+
 ---
 
 *You now know how to navigate and compose file operations.  Before launching any agent tool, you need to understand environment variables (the mechanism that supplies configuration and API keys to those tools) and PATH, which controls whether the shell can find them at all.*
 
 ## 5.  Environment Variables and PATH
 
-**Environment variables** (the shell's persistent key-value settings, named values the shell stores in memory and automatically passes to every program it launches, so programs can read configuration without hardcoded paths or secrets) are named values the shell passes to every program it starts; think of them as the shell's global settings.  They are how this course's tools receive configuration and credentials without you having to hardcode those values into your code.  The following block shows the four most important environment variable operations for this course; note that `export` is what makes a variable visible to child processes like Claude Code; without it, the variable exists only in your current shell session and the tool cannot see it.
+**Environment variables** are named values the shell stores in memory and passes automatically to every program it launches, so programs can read configuration without hardcoded paths or secrets; think of them as the shell's global settings.  They are how this course's tools receive configuration and credentials without you having to hardcode those values into your code.  The following block shows the four most important environment variable operations for this course.  Note that `export` is what makes a variable visible to child processes such as `ollama` and `opencode`; without it, the variable exists only in your current shell session and the tool cannot see it.
 
 ```bash
 echo $HOME
 
 # Prints the value of the HOME variable, your home directory path
 
-export ANTHROPIC_BASE_URL=http://localhost:4000
+export OLLAMA_HOST=http://localhost:11434
 
-# Creates (or overwrites) the variable ANTHROPIC_BASE_URL and marks it for export
+# Creates (or overwrites) the variable OLLAMA_HOST and marks it for export
 
-# "export" means child processes (like Claude Code) will inherit this value
+# "export" means child processes (like the ollama command) will inherit this value;
+# the course container sets this same variable to the host.docker.internal address
 
-export ANTHROPIC_API_KEY=sk-litellm-local
+export OLLAMA_MODELS=$HOME/ollama-models
 
-# Sets the API key that Claude Code reads on startup
+# Tells the Ollama server where to keep downloaded models, if your home disk is small
 
-env | grep ANTHROPIC
+env | grep OLLAMA
 
-# env lists ALL current environment variables; grep filters to only ANTHROPIC ones
+# env lists ALL current environment variables; grep filters to only OLLAMA ones
 
 # Use this to confirm your variables are set correctly before launching a tool
 ```
 
 Variables set with `export` last only until the terminal closes; to make them permanent, append the export lines to `~/.bashrc` (or `~/.zshrc` on macOS) and run `source ~/.bashrc` to reload the file in the current session.  **Never paste a real secret into a file that might be committed to git**; we return to secret handling in the publishing module.
 
-PATH is the list of directories the shell searches to find commands.  When you type `claude` and the shell says `command not found`, the diagnosis is almost always one of two things: the tool is not installed, or it is installed somewhere not on your PATH. `which python3` shows where a command resolves; `echo $PATH` shows the search list.  This single concept explains most installation frustration you will ever feel.
+**In PowerShell**, the syntax differs: `$env:OLLAMA_HOST = "http://localhost:11434"` sets a variable for the current window, `echo $env:HOME` (or `$env:USERPROFILE`) prints one, and `Get-ChildItem env: | Select-String OLLAMA` lists the matching ones.  To make one permanent, add the assignment line to the file named by `$PROFILE`.
+
+PATH is the list of directories the shell searches to find commands.  When you type `opencode` and the shell says `command not found`, the diagnosis is almost always one of two things: the tool is not installed, or it is installed somewhere not on your PATH. `which python3` shows where a command resolves (PowerShell: `Get-Command python`); `echo $PATH` shows the search list (PowerShell: `$env:Path -split ";"`).  This single concept explains most installation frustration you will ever feel.
+
+> **Try it.**  Run `which ollama` (PowerShell: `Get-Command ollama`).  Expected: a path such as `/usr/local/bin/ollama`.  If you get nothing, and you installed Ollama, open a new terminal and try again; the Overview's Troubleshooting table has the next step.
 
 ### Questions to Work Through
 
@@ -304,6 +351,10 @@ kill -9 12345
 
 When a port is "already in use" (a constant companion in the Docker module), `lsof -i :3000` names the process holding port 3000, and now you know how to evict it.
 
+**In PowerShell**, `Get-Process ollama` lists the process, `Stop-Process -Id 12345` stops it (add `-Force` for the `kill -9` equivalent), `Get-NetTCPConnection -LocalPort 3000` names what holds a port, and a background job is started with `Start-Job { ollama serve }` rather than `&`.
+
+> **Try it.**  With Ollama running, run `ps aux | grep ollama` (PowerShell: `Get-Process ollama`).  Expected: at least one line naming the `ollama` server, with its PID in the second column.  That PID is what `kill` would take; do not kill it now, because the Overview's Step 2 needs the server up.
+
 ### Questions to Work Through
 
 9.  A teammate's agent started a local model server in the background with `ollama serve &`.  Ten minutes later they close the terminal; is the server still running?  How would you check, and how would you stop it?
@@ -326,7 +377,7 @@ In this Part, you will bring everything together in the tool you will use every 
 
 VS Code's integrated terminal puts your agent's command output and its file edits side by side in one window, so you never need to switch between the terminal and the editor to see what an agent proposal actually changes.
 
-Open VS Code's integrated terminal with **Ctrl+`** (backtick). It is a full shell, opened in your project's folder automatically, which is exactly where agent CLIs want to be launched: `claude`, `codex`, `gemini`, `opencode`, and `pi` all start in the current directory and treat it as their workspace. The split is natural: the agent runs in the terminal pane while you read its edits in the editor pane above, with VS Code's diff coloring showing every change the agent makes the moment it makes it. The agent CLI module builds on this layout; today, just confirm you can open the panel, run `pwd`, and see your project path.
+Open VS Code's integrated terminal with **Ctrl+`** (backtick). It is a full shell, opened in your project's folder automatically, which is exactly where a coding agent wants to be launched: `opencode` starts in the current directory and treats it as its workspace. The split is natural: the agent runs in the terminal pane while you read its edits in the editor pane above, with VS Code's diff coloring showing every change the agent makes the moment it makes it. The agent CLI module builds on this layout; today, just confirm you can open the panel, run `pwd`, and see your project path.
 
 ### Questions to Work Through
 
@@ -348,7 +399,7 @@ Open VS Code's integrated terminal with **Ctrl+`** (backtick). It is a full shel
 
 2.  **Log triage.**
 
-   *What to do:* Download the provided `sample-agent.log` from the course site.  Using only `grep`, `wc`, `head`, `tail`, and pipes: (a) count the total number of ERROR lines, (b) show the last five WARN lines, and (c) save all ERROR lines to a file called `errors.txt`.  Use three commands or fewer.
+   *What to do:* Download [`sample-agent.log`]({{ site.baseurl }}/files/sample-agent.log) from the course site (from a terminal, `curl -fsSL -o sample-agent.log https://www.billmongan.com/Ursinus-CS357-Fall2026/files/sample-agent.log`).  Using only `grep`, `wc`, `head`, `tail`, and pipes: (a) count the total number of ERROR lines, (b) show the last five WARN lines, and (c) save all ERROR lines to a file called `errors.txt`.  Use three commands or fewer.
 
    *Starter hint:* For (a): `grep "ERROR" sample-agent.log | wc -l`.  For (b): `grep "WARN" sample-agent.log | tail -5`.  For (c): `grep "ERROR" sample-agent.log > errors.txt`.  If you want to do (a) and (c) in one command, try `grep "ERROR" sample-agent.log | tee errors.txt | wc -l`.
 
@@ -372,7 +423,7 @@ Open VS Code's integrated terminal with **Ctrl+`** (backtick). It is a full shel
 
 5.  **Dotfile setup.**
 
-   *What to do:* Add one quality-of-life improvement to your `~/.bashrc` (Linux) or `~/.zshrc` (macOS).  Good options: an alias like `alias ll='ls -la'` so `ll` gives you a detailed listing, or an alias like `alias gs='git status'`, or a PATH addition for a tool you installed that keeps saying "command not found."  Run `source ~/.bashrc` (or `~/.zshrc`) to load the change, verify it works in the current terminal, then open a brand-new terminal and verify it persists.
+   *What to do:* Add one quality-of-life improvement to your `~/.bashrc` (Linux) or `~/.zshrc` (macOS); in PowerShell, the equivalent file is the one named by `$PROFILE`, and an alias is `Set-Alias ll Get-ChildItem`.  Good options: an alias like `alias ll='ls -la'` so `ll` gives you a detailed listing, or an alias like `alias gs='git status'`, or a PATH addition for a tool you installed that keeps saying "command not found."  Run `source ~/.bashrc` (or `~/.zshrc`) to load the change, verify it works in the current terminal, then open a brand-new terminal and verify it persists.
 
    *Starter hint:* Open the file with `nano ~/.bashrc`, scroll to the bottom, add your alias on a new line, press `Ctrl+X` then `Y` then `Enter` to save.  Then run `source ~/.bashrc` and type your new alias to confirm it works.
 
@@ -396,7 +447,7 @@ In your notebook, respond at three levels:
 
 ## Coming Up Next
 
-Now that you can navigate the filesystem, manage files, compose pipelines, and interpret environment variables, you have the vocabulary to read everything an agent proposes before approving it.  The next module puts this vocabulary to immediate use: you will launch Claude Code (and at least one other agent CLI) in VS Code's integrated terminal, walk through the permission dialog for a real multi-step coding task, and compare how different agents phrase the same shell operations.  The habits you built today (pause, read the full line, check for `&&` chains and redirections, verify PATH) are exactly the habits the next module will stress-test.
+Now that you can navigate the filesystem, manage files, compose pipelines, and interpret environment variables, you have the vocabulary to read everything an agent proposes before approving it.  The next module puts this vocabulary to immediate use: you will launch opencode in VS Code's integrated terminal, walk through the permission dialog for a real multi-step coding task, and read the shell operations it proposes line by line.  The habits you built today (pause, read the full line, check for `&&` chains and redirections, verify PATH) are exactly the habits the next module will stress-test.
 
 ---
 
