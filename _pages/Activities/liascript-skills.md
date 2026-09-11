@@ -29,7 +29,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | Term | Plain-English Definition | Example You'll See Today |
 |------|--------------------------|--------------------------|
 | **Skill** | A named instruction set the agent loads on demand, scoped to one purpose.  Stored as a directory with a `SKILL.md` inside | The `commit-message` skill the class writes in Part II |
-| **`SKILL.md`** | The file that is the skill.  YAML front matter carries `name` and `description`; the body is the instruction text | Model 1, the safety-guardrail skill from the Local Agent lab |
+| **`SKILL.md`** | The file that is the skill.  YAML front matter carries `name` and `description`; the body is the instruction text | Model 1, the safety-guardrail skill below |
 | **Description-as-trigger** | There is no separate trigger field.  The agent reads each skill's `description` against your request and decides whether to load it | "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" fires; "Safety utilities" does not |
 | **System prompt** | Standing instructions sent ahead of every turn.  Always on, never invoked by name | The `BASELINE` string in the Part III harness |
 | **Project instructions** | A file such as `AGENTS.md` in the project root, read once at startup: architecture, invariants, test commands, what not to touch | The `AGENTS.md` you wrote for `cs357-work` in Week 1 |
@@ -136,7 +136,7 @@ Hold onto that, because it is what Part III does on purpose.  The harness pastes
 
 ## Model 1: The Safety-Guardrail Skill
 
-Read this `SKILL.md` from the Local Agent lab.  It is longer than most skills, which makes it a good one to read: every part of a skill's anatomy is visible.
+Read this `SKILL.md`, a safety-guardrail skill.  It is longer than most skills, which makes it a good one to read: every part of a skill's anatomy is visible.
 
 ```markdown
 ---

@@ -4,7 +4,7 @@ permalink: /Tutorials/AgentStack
 title: 'CS357: Foundations of Artificial Intelligence - The Local Agent Stack'
 info:
   coursenum: CS357
-  purpose: "To wire the containers you can already run into one system, which is the prep the Local Agent Lab's Compose-stack and hardening directions assume."
+  purpose: "To wire the containers you can already run into one system, which is the prep the Responsible AI Capstone's container-hardening direction assumes."
 tags:
 - containers
 - stack
@@ -14,11 +14,11 @@ tags:
 
 ## Purpose
 
-To wire the containers you can already run into one system, which is the prep the Local Agent Lab's Compose-stack and hardening directions assume.
+To wire the containers you can already run into one system, which is the prep the Responsible AI Capstone's container-hardening direction assumes.
 
 ## About This Tutorial
 
-> **Supplemental: required prep only for the Local Agent Lab Directions 2-3 (the Compose-stack and container-hardening directions).**  This is self-paced reference material rather than a class session.  Do the installs and image pulls before you start the direction that needs them: Docker Desktop plus roughly 6 GB of images.  Build the **3-container minimal stack** first (Ollama, `llmproxy`, Open WebUI); the full 20-service tour below is reference.  Bring what will not start to the open studio in *How I AI*, Part III.
+> **Supplemental: required prep only for the Responsible AI Capstone's container-hardening direction (Direction 4).**  This is self-paced reference material rather than a class session.  Do the installs and image pulls before you start the direction that needs them: Docker Desktop plus roughly 6 GB of images.  Build the **3-container minimal stack** first (Ollama, `llmproxy`, Open WebUI); the full 20-service tour below is reference.  Bring what will not start to the open studio in *How I AI*, Part III.
 
 The *Docker from Zero: Containers for Agent Builders* tutorial gave you one container, and one container is a demo; a *stack* of containers that talk to each other is infrastructure.  This tutorial deploys the course's local AI ecosystem (model servers, a unifying gateway, tool servers, web frontends, and autonomous agents) and teaches the wiring discipline that makes two dozen services coexist: tiered roles, a port plan, per-service identity directories, and `host.docker.internal` as the connective tissue.  The path today: **the tier model → the inference foundation → the gateway → frontends and tools → agents → wiring and verification**.
 
@@ -296,7 +296,7 @@ In this part, you will build and verify a working minimal stack, extend it with 
 
 ## Where This Goes Next
 
-Now that the stack is running, the *Design First: Plan Before You Build* activity follows the studio: before wiring more services together, we learn to plan a multi-agent system on paper.  The stack knowledge from today feeds directly into the Local Agent Lab Directions 2-3 (the Compose-stack and container-hardening directions).
+Now that the stack is running, the *Design First: Plan Before You Build* activity follows the studio: before wiring more services together, we learn to plan a multi-agent system on paper.  The stack knowledge from today feeds directly into the Responsible AI Capstone's container-hardening direction.
 
 ---
 

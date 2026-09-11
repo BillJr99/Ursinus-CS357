@@ -338,7 +338,7 @@ schedule:
     rlink: "Tutorials/AgentCLIs"
   - rtitle: "AI Coding Agent Security: poisoned repositories and the software supply chain, the risk that arrives with the convenience"
     rlink: "Tutorials/CodingAgentSecurity"
-  - rtitle: "What a container isolates, and how to size an agent's blast radius before you hand it your machine.  This is the background for the Local Agent Lab's containerization direction"
+  - rtitle: "What a container isolates, and how to size an agent's blast radius before you hand it your machine.  This is the background for the Responsible AI Capstone's containerization direction"
     rlink: "Tutorials/ContainerIsolation"
 - week: "2"
   date: "0"
@@ -463,7 +463,7 @@ schedule:
     points: "3"
     rubricpath: "_pages/Assignments/asmt-stakeholderbrief.md"
   readings:
-  - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients.  Supports the Local Agent Lab's MCP work"
+  - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients.  Supports the Tools and MCP Lab"
     rlink: "https://huggingface.co/learn/mcp-course/"
   - rtitle: "Bring your half-page unassisted problem statement, written individually and without AI, before your team drafts the brief."
     rlink: false
@@ -471,7 +471,7 @@ schedule:
     rlink: "https://obsidian.md"
   - rtitle: "Syncing Obsidian to GitHub and wiring agents to your vault: the read path and write path that today's Model 3 exposes as tools"
     rlink: "Tutorials/ObsidianSync"
-  - rtitle: "MCP, REST APIs, and OAuth 2.0 together, the background for the Local Agent Lab's MCP server direction"
+  - rtitle: "MCP, REST APIs, and OAuth 2.0 together, the background for the Tools and MCP Lab's OAuth option"
     rlink: "Tutorials/MCPOAuth"
   - rtitle: "GitHub Superpowers for AI Developers: gitingest, getmcp.io, deepwiki, gdagram, and github.dev, for turning a repository into something an agent can read"
     rlink: "Tutorials/GitHubPowerTools"

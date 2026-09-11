@@ -426,7 +426,7 @@ The *Design Your Agent System* assignment asks for this protocol, and this is th
 
 1.  *Trace your own agent.*
 
-   - *What to do*: Add `log_event` and its three calls to the agent loop from your Local Agent lab (any direction), run three steps, and read the trace back with `grep '"phase": "act"' .ai/trace.jsonl`.
+   - *What to do*: Add `log_event` and its three calls to the agent loop from your Local Agent lab (either path), run three steps, and read the trace back with `grep '"phase": "act"' .ai/trace.jsonl`.
    - *Starter hint*: The hardest field is `rule`.  If you cannot name the rule that allowed an action, that is a finding, not a formatting problem.
    - *You've succeeded when*: You have a trace of at least three steps and can point to one line that told you something the transcript did not.
 
