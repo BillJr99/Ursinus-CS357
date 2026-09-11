@@ -269,7 +269,7 @@ cs357-work/
   README.md
 ```
 
-Open the Dockerfile and *read it*; it is exactly the anatomy from Docker from Zero Section 5 (`FROM`, `RUN`, `ENV`, `WORKDIR`, `CMD`), and every `pip` line names its lab.  Commit the files; they are part of your work:
+Open the Dockerfile and *read it*; it is exactly the anatomy from Docker from Zero Section 5 (`FROM`, `ARG`, `RUN`, `ENV`, `WORKDIR`, `CMD`), and every `pip` line names its lab.  Commit the files; they are part of your work:
 
 ```bash
 git add .devcontainer
@@ -328,7 +328,7 @@ promptfoo --version
 0.x.x
 ```
 
-Any version string means Node.js and promptfoo are wired correctly.
+Any version string means Node.js and promptfoo are wired correctly.  An `ExperimentalWarning: DecompressInterceptor is experimental` line above it comes from promptfoo's own dependencies and is harmless.  If instead promptfoo refuses to start and complains that your Node is too old, run `node --version`: the image pins `v24.21.0`, and anything older than 22.22 means you are running a stale build of the image, which `docker compose build` fixes once you have re-fetched the current Dockerfile.
 
 **5.3: The spacy language model (explainability/NLP directions):**
 
@@ -763,7 +763,7 @@ If your machine cannot run Docker (unsupported hardware, administrator locks, di
 
 1.  **Ollama**: exactly as in Step 1; it is native in both routes.
 2.  **Python environment**: in your cloned `cs357-work` repo, use [uv](https://docs.astral.sh/uv/) (from the Overview assignment's Part 1.5): `uv venv`, then `uv add` each lab's packages as that lab lists them: `requests` first (every lab), then `chromadb sentence-transformers` (retrieval), `scikit-learn numpy` (the ML labs), `spacy` plus `python -m spacy download en_core_web_sm` (NLP direction), `shap lime matplotlib pandas` (explainability direction), `flask` (web-endpoint direction).
-3.  **Node.js, promptfoo, and opencode** (evaluation lab and the coding-agent labs): install Node.js from [nodejs.org](https://nodejs.org/), then `npm install -g promptfoo opencode-ai`.
+3.  **Node.js, promptfoo, and opencode** (evaluation lab and the coding-agent labs): install Node.js from [nodejs.org](https://nodejs.org/), version **22.22 or newer**, because promptfoo refuses to start on anything older; the current 24 LTS is the safe choice, and the version your package manager offers is often not.  Confirm with `node --version`, then `npm install -g promptfoo opencode-ai`.
 4.  **Addresses**: use `http://localhost:11434` everywhere this activity says `host.docker.internal:11434`; with no container wall, `localhost` on your host really is Ollama.
 5.  **Git practice**: Steps 3, 6, and 7 work identically in a native terminal in your `cs357-work` clone (with the `localhost` substitution in `hello_agent.py`); do them there and capture the same transcript.
 

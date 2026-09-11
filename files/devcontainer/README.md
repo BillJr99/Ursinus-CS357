@@ -3,7 +3,7 @@
 One environment that runs every CS357 lab: Python 3.11 with the course
 libraries (`requests`, `chromadb`, `sentence-transformers`, `scikit-learn`,
 `numpy`, `spacy` with `en_core_web_sm`, `shap`, `lime`, `matplotlib`,
-`pandas`, `flask`), plus Node.js with `promptfoo` for the evaluation lab and
+`pandas`, `flask`), plus Node.js 24 LTS with `promptfoo` for the evaluation lab and
 `opencode` for the coding-agent labs, and `git` so you commit and push from
 inside the container.
 
@@ -73,6 +73,7 @@ Verify the stack from the container prompt (Ollama must be running on the host):
 
 ```bash
 python3 -c "import requests; print(requests.get('http://host.docker.internal:11434/api/tags').json())"
+node --version                  # v24.21.0; promptfoo requires 22.22 or newer
 promptfoo --version
 opencode --version
 python3 -c "import spacy; spacy.load('en_core_web_sm'); print('spacy OK')"
@@ -96,8 +97,9 @@ lab documents (`uv add requests`, then `chromadb sentence-transformers` for
 the retrieval lab, `scikit-learn numpy` for the ML labs, `spacy`/`shap`/
 `lime`/`matplotlib`/`pandas` for the explainability directions, `flask` for
 the web-endpoint direction), install Node.js from [nodejs.org](https://nodejs.org/)
-and `npm install -g promptfoo opencode-ai` for the evaluation and coding-agent
-labs, and use
+(version **22.22 or newer**, since promptfoo refuses to start below it; the
+current 24 LTS is the safe choice) and `npm install -g promptfoo opencode-ai`
+for the evaluation and coding-agent labs, and use
 `http://localhost:11434` instead of `host.docker.internal` in every URL.
 
 ## Troubleshooting

@@ -20,20 +20,22 @@
 FROM python:3.11-slim
 
 LABEL org.opencontainers.image.title="CS357 course development environment" \
-      org.opencontainers.image.description="Python 3.11 with the CS357 lab libraries (requests, chromadb, sentence-transformers, scikit-learn, spacy, shap, lime, flask, ...) plus Node.js, promptfoo, the opencode coding agent, and the herdr agent multiplexer; talks to host Ollama via host.docker.internal" \
+      org.opencontainers.image.description="Python 3.11 with the CS357 lab libraries (requests, chromadb, sentence-transformers, scikit-learn, spacy, shap, lime, flask, ...) plus Node.js 24 LTS, promptfoo, the opencode coding agent, and the herdr agent multiplexer; talks to host Ollama via host.docker.internal" \
       org.opencontainers.image.authors="CS357 course staff" \
       org.opencontainers.image.url="https://www.billmongan.com/Ursinus-CS357/"
 
 # System packages:
-#   git    -- commit and push your work from inside the container
-#   curl   -- probe the Ollama API and other HTTP endpoints
-#   nodejs, npm -- run promptfoo (Rubric Pipeline Lab) and opencode (the coding agent)
-#   zip    -- package submissions
+#   git      -- commit and push your work from inside the container
+#   curl     -- probe the Ollama API and other HTTP endpoints
+#   xz-utils -- unpack the Node.js release tarball installed further down
+#   zip      -- package submissions
+#
+# Node.js is deliberately NOT in this list. Debian's `nodejs` package is too
+# old for the course tools; see the Node.js section below.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         curl \
-        nodejs \
-        npm \
+        xz-utils \
         zip \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
@@ -68,6 +70,41 @@ RUN pip install --no-cache-dir \
 # The small English model spacy needs (Responsible AI Capstone Direction 2), baked into the
 # image so the lab works offline.
 RUN python -m spacy download en_core_web_sm
+
+# Node.js -- runs promptfoo (Rubric Pipeline Lab) and opencode (the coding
+# agent). Debian's own `nodejs` package will not do: bookworm ships Node 18.x
+# and trixie ships 20.x, while promptfoo requires Node 22.22.0 or newer and
+# refuses to start below it. So we install an official Node.js release
+# straight from nodejs.org, pinned to an exact version and checked against the
+# published SHASUMS256.txt *before* it is unpacked. That is the same
+# download-then-verify discipline the python base image uses for CPython
+# itself and the herdr installer uses for its binary: a tarball that does not
+# match its checksum fails the build rather than landing in the image.  (This
+# checks integrity against the manifest nodejs.org publishes over HTTPS.  The
+# official Node images go one step further and verify that manifest's GPG
+# signature against Node's release keys; that is the stronger guarantee, at the
+# cost of a keyserver fetch that is a common source of flaky builds.)
+#
+# To move to a newer Node, bump NODE_VERSION; nothing else in this file
+# changes. The trailing version checks make a bad install fail here, during
+# the build, instead of failing for a student mid-lab.
+ARG NODE_VERSION=24.21.0
+RUN set -eux; \
+        arch="$(dpkg --print-architecture)"; \
+        case "$arch" in \
+            amd64) narch='x64' ;; \
+            arm64) narch='arm64' ;; \
+            *) echo "unsupported architecture: $arch" >&2; exit 1 ;; \
+        esac; \
+        tarball="node-v${NODE_VERSION}-linux-${narch}.tar.xz"; \
+        curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/${tarball}"; \
+        curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt"; \
+        grep " ${tarball}\$" SHASUMS256.txt | sha256sum -c -; \
+        tar -xJf "${tarball}" -C /usr/local --strip-components=1 --no-same-owner; \
+        rm -f "${tarball}" SHASUMS256.txt \
+              /usr/local/CHANGELOG.md /usr/local/LICENSE /usr/local/README.md; \
+        node --version; \
+        npm --version
 
 # promptfoo -- Rubric Pipeline Lab: prompt/agent evaluation harness.
 RUN npm install -g promptfoo
