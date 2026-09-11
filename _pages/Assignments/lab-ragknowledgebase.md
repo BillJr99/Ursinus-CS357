@@ -1329,7 +1329,7 @@ if __name__ == "__main__":
     stats_text = save_statistics(balances, cfg)
 ```
 
-> **You should see.** `retirement_simulation.png` and `simulation_stats.txt`.  The left panel shows a fan of gray paths widening toward age 65 with a visible median line and two outer dashed bands; the right panel shows a right-skewed histogram with a median line and a $1M milestone line.  With the default config and seed 42 the statistics file reports roughly a 10th percentile of $341,208, a median of $1,042,577, a 90th percentile of $2,847,031, a mean of $1,298,451, and `Probability of reaching $1 million: 53.2%` (yours will vary).
+> **You should see.** `retirement_simulation.png` and `simulation_stats.txt`.  The left panel shows a fan of gray paths widening toward age 65 with a visible median line and two outer dashed bands; the right panel shows a right-skewed histogram with a median line and a \$1M milestone line.  With the default config and seed 42 the statistics file reports roughly a 10th percentile of \$341,208, a median of \$1,042,577, a 90th percentile of \$2,847,031, a mean of \$1,298,451, and `Probability of reaching $1 million: 53.2%` (yours will vary).
 
 > **If it fails.**
 > - `ValueError: could not broadcast input array...`: check that `results` is indexed `results[sim, year]` with `year` from `0` to `years - 1`.
@@ -1339,7 +1339,7 @@ if __name__ == "__main__":
 > **Checkpoint.** Before Step B, make sure you can answer:
 > 1. What does the width of the fan (the gap between the 10th and 90th percentile lines) mean in plain English?  How would you expect it to change if you doubled `num_simulations`?
 > 2. Why does the histogram skew right rather than form a symmetric bell curve?
-> 3. If `starting_savings` were $0, what would change in the simulation and in the chart?  Test it.
+> 3. If `starting_savings` were \$0, what would change in the simulation and in the chart?  Test it.
 
 ### Step B: Send the Chart to a Multimodal Model
 
@@ -1386,14 +1386,14 @@ def run_analysis_conversation(image_b64, cfg):
     return response1, response2
 ```
 
-> **You should see.** Two turns printed and saved.  A good Turn 1 notices pattern-level features: the fan widens sharply after age 40, the histogram is right-skewed, and a concrete suggestion such as "another $100 a month noticeably raises the 10th-percentile outcome."  A flawed Turn 1 says something like *"approximately 68% of simulations reached $1 million"* when `simulation_stats.txt` says 53%: a confident number estimated from visual impression rather than counted.  That is exactly what Step D analyzes.
+> **You should see.** Two turns printed and saved.  A good Turn 1 notices pattern-level features: the fan widens sharply after age 40, the histogram is right-skewed, and a concrete suggestion such as "another \$100 a month noticeably raises the 10th-percentile outcome."  A flawed Turn 1 says something like *"approximately 68% of simulations reached \$1 million"* when `simulation_stats.txt` says 53%: a confident number estimated from visual impression rather than counted.  That is exactly what Step D analyzes.
 
 > **If it fails.**
 > - `KeyError: 'response'`: `/api/generate` returns `{"response": ...}`; `/api/chat` returns `{"message": {"content": ...}}`.  Use `/api/generate` here.
 > - An empty or very short response: put "Describe the image in detail before analyzing it." as the first sentence of the prompt.  A timeout on a large image: resize before encoding (`from PIL import Image; Image.open(buf).resize((800, 600))`) or lower `dpi` to `100`.
 
 > **Checkpoint.** Before Step C, make sure you can answer:
-> 1. What percentage did the model report for simulations reaching $1 million, and what does your statistics file say?  Are they the same?
+> 1. What percentage did the model report for simulations reaching \$1 million, and what does your statistics file say?  Are they the same?
 > 2. In Turn 2, did the model's confidence rise, fall, or hold?  What does that say about follow-up questioning as a verification strategy?
 > 3. Did the model's section 4 name a limitation you had not considered?
 
@@ -1422,7 +1422,7 @@ def run_sensitivity_analysis(base_cfg):
               f"${np.percentile(final, 10):>13,.0f} ${np.percentile(final, 90):>13,.0f}")
 ```
 
-> **You should see.** One row per scenario with the median, probability of $1M, and the 10th and 90th percentiles: roughly `Pessimistic $314,042 4.2% $73,501 $877,209`, `Baseline $1,042,577 53.2% $341,208 $2,847,031`, and `Optimistic $2,891,044 89.7% $1,201,330 $5,912,448` (yours will vary slightly).
+> **You should see.** One row per scenario with the median, probability of \$1M, and the 10th and 90th percentiles: roughly `Pessimistic $314,042 4.2% $73,501 $877,209`, `Baseline $1,042,577 53.2% $341,208 $2,847,031`, and `Optimistic $2,891,044 89.7% $1,201,330 $5,912,448` (yours will vary slightly).
 
 > **Checkpoint.** Before Step D, make sure you can answer:
 > 1. Between pessimistic and baseline the median more than tripled.  What does that say about compounding a moderate improvement in average return over 40 years?
@@ -1434,7 +1434,7 @@ def run_sensitivity_analysis(base_cfg):
 This is the most important step: the core lab's audit discipline moved from retrieved text to a rendered chart.
 
 > **Do this.**
-> 1. **Read the chart yourself first.** Before re-reading the model's responses, note your own estimates: roughly what percentage of paths end above $1 million, where the median falls, whether the 10th percentile line ever reaches zero during accumulation, and whether the histogram is symmetric, right-skewed, or left-skewed.  Write them down and do not change them afterward.
+> 1. **Read the chart yourself first.** Before re-reading the model's responses, note your own estimates: roughly what percentage of paths end above \$1 million, where the median falls, whether the 10th percentile line ever reaches zero during accumulation, and whether the histogram is symmetric, right-skewed, or left-skewed.  Write them down and do not change them afterward.
 > 2. **Compare to Turn 1.** Identify **three specific differences** between your reading and the model's.  For each, record the exact AI excerpt (copied from `model_responses.txt`), whether the AI was correct, approximately correct, or wrong, and your best explanation for the discrepancy.  At least one must be a case where the model was **wrong or imprecise about a number**, rather than merely phrased differently.
 > 3. **Propose a prompt improvement.** For the numerical error you found, make one change to `initial_prompt` that would have reduced it, re-run Step B, and record whether the response improved.  Strategies worth trying: an explicit disclaimer ("If you cannot read a precise number from the chart, say 'approximately' and give a range"); reasoning before numbers ("Before giving a percentage, describe what you see in the histogram bin by bin"); or restricting scope ("Only comment on what is visually unambiguous.  Flag anything that requires precise numerical reading as uncertain").
 > 4. **Write the guardrail.** In 2-3 sentences, write the **guardrail statement** a financial planning tool would show users before the AI's chart analysis, protecting against over-reliance on numerical claims the AI cannot read precisely.
@@ -1450,7 +1450,7 @@ In Steps A through D the model only *interpreted* an experiment you designed.  T
 > 2. Write the tool's JSON schema.  The schema, not your Python, is the tool's entire interface from the agent's point of view; every name, description, and bound shapes what the model chooses.
 > 3. Drive the agent loop: POST the goal plus the schema to `/api/chat` with a `tools` array, read the tool call it returns (a function name and JSON arguments), execute `run_retirement_sim` with those arguments, then send the chart to `llava` (and the exact stats dict in the prompt) for interpretation.  Save the goal, the tool call, the tool result, and the interpretation to `tool_call_transcript.txt`.
 > 4. **Critique the agent** in your readme, against `simulation_stats.txt` and the tool's returned stats:
->    - **Parameter choices.** The user said "$500 a month" and "retire at 65" starting at 25.  Did `annual_contribution` equal 500 times 12?  Did `years` equal 40?  Is the chosen `stock_allocation` a defensible reading of "fairly aggressive," and did the model justify it?  Mark each correct, approximately correct, or wrong, quoting the tool call verbatim.
+>    - **Parameter choices.** The user said "\$500 a month" and "retire at 65" starting at 25.  Did `annual_contribution` equal 500 times 12?  Did `years` equal 40?  Is the chosen `stock_allocation` a defensible reading of "fairly aggressive," and did the model justify it?  Mark each correct, approximately correct, or wrong, quoting the tool call verbatim.
 >    - **Interpretation.** Compare the narrative to the tool's exact `prob_million` and to the ground truth.  Does "roughly three-quarters" or "more likely than not" match the number?  Quote the sentence and the statistic side by side, as in Step D.
 >    - **Compounding risk.** In 2-3 sentences: when one agent both picks parameters and interprets results, how can an early mistranslation (a wrong contribution, an unjustified allocation) compound into a confident but misleading recommendation, and which single check above would you automate as a guardrail?
 
@@ -1503,7 +1503,7 @@ Fold these into the submission ZIP and readme:
 
 ### Direction 2 Reflection Prompts
 
-1. What does the spread of simulation paths tell you that a single projected number ("you will have $800,000 at retirement") does not?  Point to a visual feature of your chart that would disappear under a single-path projection.
+1. What does the spread of simulation paths tell you that a single projected number ("you will have \$800,000 at retirement") does not?  Point to a visual feature of your chart that would disappear under a single-path projection.
 2. The AI reported a specific probability from the histogram.  How would you verify it, what tools would you need, and what does that challenge say about using AI for quantitative analysis of charts?
 3. In the core lab you audited citations against text; here you audited a number against a chart.  Which was harder to verify, and why?
 4. In Step C, the pessimistic and optimistic scenarios produced dramatically different outcomes from "reasonable" parameters.  How should a financial planning tool present parameter uncertainty to a non-expert user?

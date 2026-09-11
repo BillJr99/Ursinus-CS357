@@ -99,7 +99,7 @@ The point that survives both: an extra round only helps if it introduces somethi
 
 # Part II: Use One, a Critic That Feeds Issues Back
 
-Read the full working loop, run it, and connect it back to Part I.  Then study the three ways the loop fails, because the Multi-Agent Patterns lab asks you to measure each one; the specification for that part of the lab lives at [Part A: Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/CritiqueRefine).
+Read the full working loop, run it, and connect it back to Part I.  Then study the three ways the loop fails, because the Multi-Agent Patterns lab asks you to measure each one; the specification for that part of the lab lives at [Part A: Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-20-points).
 
 ## 3.  The Loop in Forty Lines
 
@@ -543,7 +543,7 @@ There is a second-order effect.  A long, fluent, confident trace is more persuas
 
 # Part V: Synthesis and Practice
 
-The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is handed out today.  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/CritiqueRefine); do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below are the measurements the lab expects you to be able to make.
+The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is handed out today.  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-20-points); do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below are the measurements the lab expects you to be able to make.
 
 ## 11.  Exercises
 
