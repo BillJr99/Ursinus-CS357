@@ -42,7 +42,7 @@ Project roles are in effect today: **Coordinator**, **Builder(s)**, **Evaluator*
 
 ### Before You Start
 
-**You need:** the judge from the Rubric Pipeline lab (code route: the batch scorer, its rubric JSON, and a `grades.csv` from a working run; Direction 0: your `promptfooconfig.yaml` and `run_baseline.json`), Ollama running with the model the judge was validated against, the rubric your judge reads adapted to your project's outputs, and three artifacts your project produced this week (answers, summaries, plans, report sections: whatever the rubric is written to score).  Put the three artifacts in one folder before class.  If you wrote the evaluation and monitoring section of your governance one-pager on Tuesday, bring it; today tests whether its measurements are ones you can actually take.
+**You need:** the judge from the Rubric Pipeline lab (code route: the batch scorer, its rubric JSON, and a `grades.csv` from a working run; no-code path: your `promptfooconfig.yaml` and `run_baseline.json`), Ollama running with the model the judge was validated against, the rubric your judge reads adapted to your project's outputs, and three artifacts your project produced this week (answers, summaries, plans, report sections: whatever the rubric is written to score).  Put the three artifacts in one folder before class.  If you wrote the evaluation and monitoring section of your governance one-pager on Tuesday, bring it; today tests whether its measurements are ones you can actually take.
 
 **What you will have at the end:** a filled disagreement table, one documented repair, and a harness configuration committed to your project repository.
 
@@ -158,7 +158,7 @@ With three files, each disagreement moves a criterion's number by 33 points, so 
 
 *Hint:* Human-to-human agreement is the ceiling on human-to-judge agreement.  A judge cannot agree with both of two humans who disagree.  The row is telling you the descriptor is not observable, which is a rubric repair, and no change to the judge will fix it.
 
-**Question 3.**  Your judge's `grades.csv` marks one row `REVIEW_NEEDED` (or, on Direction 0, one item returned unparseable output).  Does that row go in the disagreement table?  What level do you enter for the judge?
+**Question 3.**  Your judge's `grades.csv` marks one row `REVIEW_NEEDED` (or, on the no-code path, one item returned unparseable output).  Does that row go in the disagreement table?  What level do you enter for the judge?
 
 [[___ Your answer here ___]]
 
@@ -298,7 +298,7 @@ Two of these rows come from the release-readiness checklist you will sign at the
 
 **Exercise 2.**  Add the mechanical validator from Question 4 to your judge and report its result on today's three artifacts.
 
-*What to do:* For every quoted span the judge returns, assert that it appears verbatim in the artifact (exact substring on the code route; a `javascript` assertion that parses the JSON first on Direction 0).  Count the quotes that fail.
+*What to do:* For every quoted span the judge returns, assert that it appears verbatim in the artifact (exact substring on the code route; a `javascript` assertion that parses the JSON first on the no-code promptfoo path).  Count the quotes that fail.
 
 *Starter hint:* The lab's `HALLUCINATED_EVIDENCE` marker is the code-route shape: flag the row in the CSV and report the rate as a fraction ("1 of 12 quotes").  The point is that the check runs without anyone reading a trace.
 
@@ -342,5 +342,5 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 
 - Zheng et al. "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena."  *NeurIPS* (2023).  Pathologies and agreement rates.
 - Hashemi et al. "LLM-Rubric: A Multidimensional, Calibrated Approach to Automated Evaluation."  *ACL* (2024).
-- The [Rubric Pipeline lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RubricPipeline), Parts 2 and 5, and the [Direction 0 promptfoo route](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RubricPipeline/Direction0), Part E, which today's Models 1 and 3 reuse.
+- The [Rubric Pipeline lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RubricPipeline), Parts 2 and 5, and its no-code promptfoo path, Part 5, which today's Models 1 and 3 reuse.
 - [promptfoo](https://www.promptfoo.dev/) and [Inspect AI](https://inspect.aisi.org.uk/), the two harnesses the lab accepts.

@@ -201,7 +201,7 @@ docker run -d --name open-webui -p 3000:8080 \
 #   URL http://host.docker.internal:4000/v1, key sk-litellm-local
 ```
 
-> **Isolation and trust boundaries**, meaning which tier may talk to which and what a container actually isolates, are worked through in the optional activity [Containerization and Safety](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent/Direction3).
+> **Isolation and trust boundaries**, meaning which tier may talk to which and what a container actually isolates, are worked through in the tutorial [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).
 
 ## 6.  The Agent Tier
 
