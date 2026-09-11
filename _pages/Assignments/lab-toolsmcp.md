@@ -42,6 +42,11 @@ info:
       beginning: "A writeup exists but a reader could not reproduce the runs from it."
       progressing: "Model, parameters, and commands are recorded well enough to reproduce."
       proficient: "Fully reproducible, with an AI-use disclosure naming what was AI-assisted and how it was verified."
+  readings:
+    - rtitle: "MCP, REST, and OAuth 2.0 Together (Option 4D)"
+      rlink: "../Tutorials/MCPOAuth"
+    - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients"
+      rlink: "https://huggingface.co/learn/mcp-course/"
 
 tags:
   - lab
@@ -62,7 +67,7 @@ The three capabilities and the writeup are the same on every route.  What differ
 
 | Route | What you build | What you need | Pick this if |
 |-------|----------------|---------------|--------------|
-| **Code** | A typed tool registered with the model, with an executor loop you own; two runners over a fixed task set at a fixed seed; a small MCP server you author, or an existing server you consume from code | Ollama with a model that supports tool calling, Python 3 with `requests` | You are heading for the Local Agent Lab's MCP and OAuth direction, or you want the clearest view of the boundary between what your code owns and what the model owns |
+| **Code** | A typed tool registered with the model, with an executor loop you own; two runners over a fixed task set at a fixed seed; a small MCP server you author, or an existing server you consume from code | Ollama with a model that supports tool calling, Python 3 with `requests` | You are heading for Option 4D, the OAuth-gated server, or you want the clearest view of the boundary between what your code owns and what the model owns |
 | **No-code** | In **Open WebUI**: enable a built-in or community tool on a model and observe the invocation inline; compare a plain model against a reasoning-prompted one across your eight fixed tasks, both in the chat interface; add an MCP server to Open WebUI's tool settings and show discovery, then invocation.  Low-code variant in **Langflow**: a **Tool** node wired to an **Agent** node; the same reasoning comparison as two flows; an MCP server configured in a client's config file, with discovery and invocation shown | Open WebUI alone for the no-code variant; Open WebUI or Langflow for the low-code variant | You want your attention on *when the model chooses to call a tool*, which is the hard part, rather than on the plumbing; or you think better in a diagram and want the visual trace of which path executed |
 
 The rubric is the same on every path.  Every route must show structured output (Part 2), and every route needs a transcript.  On the no-code route, export the chat rather than pasting a screenshot of the answer: the tool invocation record is the evidence, not the reply.
@@ -125,7 +130,7 @@ Every submission must show that you can make an agent use a tool, make an agent 
 > **Do this.** Complete, at minimum:
 > 1. **At least one** Tool Use option (Part 1: Option 1A or 1B).
 > 2. **At least one** Reasoning option (Part 3: Option 3A or 3B).
-> 3. **At least one** MCP option (Part 4: Option 4A, 4B, or 4C).
+> 3. **At least one** MCP option (Part 4: Option 4A, 4B, 4C, or 4D).
 > 4. **The structured-output demonstration, required for everyone** (Part 2).  It is part of your Tool Use work, and it carries its own rubric row.
 
 | Capability | Options | Rubric row |
@@ -133,7 +138,7 @@ Every submission must show that you can make an agent use a tool, make an agent 
 | Tool Use | 1A From Scratch, 1B From a Framework | Tool Use (30) |
 | Structured Output | One technique, before and after (required) | Structured Output (20) |
 | Reasoning | 3A From Scratch, 3B Use a Reasoning Model | Reasoning, Measured (25) |
-| MCP | 4A Create, 4B Use, 4C Obsidian Vault | MCP (20) |
+| MCP | 4A Create, 4B Use, 4C Obsidian Vault, 4D OAuth-gated server | MCP (20) |
 
 ---
 
@@ -797,11 +802,11 @@ Drive reasoning by *choosing the model* rather than building the loop.  Run a re
 
 ## Part 4: MCP (20 points)
 
-MCP standardizes how a client discovers what tools a server offers and how it calls them, so a tool written once can be used by any MCP-aware client.  Every option below ends in the same evidence: a transcript showing discovery followed by invocation.  Pick at least one.
+MCP standardizes how a client discovers what tools a server offers and how it calls them, so a tool written once can be used by any MCP-aware client.  Every option below ends in the same evidence: a transcript showing discovery followed by invocation.  Pick at least one.  Option 4D is 4A with a token gate, for pairs who want the security half as well.
 
 ### Option 4A: Create, Stand Up Your Own MCP Server
 
-Expose your tool(s) over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server (for example with the Python MCP SDK / FastMCP) that advertises one or two tools, then connect a client and show the discover -> invoke round trip.  If you take the [MCP Server with OAuth 2.0 direction]({{ site.baseurl }}/Assignments/LocalAgent#direction-4-build-an-mcp-server-with-oauth-20), that fully satisfies this option.  Background: the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md) and the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/) (built with Anthropic), whose early units walk through building and connecting an MCP server step by step.
+Expose your tool(s) over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server (for example with the Python MCP SDK / FastMCP) that advertises one or two tools, then connect a client and show the discover -> invoke round trip.  If you take [Option 4D](#option-4d-secure-your-own-server-with-oauth-20), the same server with an OAuth 2.0 gate, that fully satisfies this option.  Background: the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md) and the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/) (built with Anthropic), whose early units walk through building and connecting an MCP server step by step.
 
 > **Paste into your submission.** The server code, a transcript of a client listing the tools and calling one, and one sentence on what MCP standardizes that a hand-rolled `tools` list does not.
 
@@ -820,6 +825,260 @@ Expose an Obsidian vault (a folder of Markdown notes) to an agent over MCP, with
 > **No-code path.** Configure rather than write.  Either add a community Obsidian MCP server of your choice, cited in your readme, to your client's tool settings over your vault folder, or set up an Open WebUI tool over the vault folder.  The gate still has to exist: the write must not go through until you confirm it.
 
 > **Paste into your submission.** On either route: the server code or the configuration, a transcript that shows tool discovery, one read of a note, and one gated write that was refused first and then carried out once you confirmed it, and one sentence on what MCP standardizes that a hand-rolled `tools` list does not.  If you used a community server, also name the trust question that running someone else's tool definitions raises.
+
+### Option 4D: Secure Your Own Server with OAuth 2.0
+
+Option 4A with a lock on the door.  You build the MCP server, wrap it so every request must carry a valid OAuth 2.0 access token with the right scope, drive it from an agent, and document the full data flow from agent request, through token, to tool response.  This option satisfies the MCP row on the same terms as 4A; the token gate is the extra.  Read [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth) first; it covers the flows and the token security this recipe assumes.  If MCP itself is new to you, the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/) walks through building a server and connecting clients.
+
+**You need.**  Python packages (`mcp[cli]`, `fastapi`, `uvicorn`, `python-jose[cryptography]`, `requests`) and Docker to run a local mock OAuth server (a few hundred MB).  No accounts and no API costs: the authorization server, the tokens, and the tools are all local.  Three services run at once, so plan your ports.  Budget 3-4 hours.
+
+> **Do this.**  Install and verify.  The last line should print a version such as `1.x.x`.  Keycloak (`docker pull quay.io/keycloak/keycloak:latest`) is an acceptable substitute for the mock server; its token endpoint and realm differ, so adapt the `curl` commands from its quickstart.
+>
+> ```bash
+> pip install "mcp[cli]" fastapi uvicorn "python-jose[cryptography]" requests
+> docker pull ghcr.io/navikt/mock-oauth2-server:latest
+> python -c "import mcp; print(mcp.__version__)"
+> ```
+
+#### 4D.1: Design the tools, the flow, and the ports
+
+> **Do this.**
+> 1. **Choose a domain**: local file search, a calendar query over `.ics` or JSON files, a weather wrapper over a local JSON file, or a summary of a local git repo (or propose another to me first).  Write one paragraph for your README: what the two tools do, which one reads data and which one transforms it.
+> 2. **Write a JSON Schema for each tool before any code.**  `name` is what the agent calls, `description` is how it decides when to call it (make it specific), and `input_schema` lists every parameter, its type, and which are required.  Adapt the example below.
+> 3. **Sketch the OAuth flow** as an ASCII diagram (or photograph a hand-drawn one) with the three actors and numbered messages, following the pattern below.
+> 4. **Fill in a port table** for the MCP server (default 8000), the OAuth server (8090 below, because 8080 is often taken), and the agent, with a column for why you changed any of them.  Check a port with `lsof -i :<port>` (macOS/Linux) or `netstat -ano | findstr :<port>` (Windows).
+
+```json
+{
+  "name": "search_files",
+  "description": "Search for files in the local workspace matching a query string.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {"type": "string", "description": "The search term to match against file names and contents."},
+      "max_results": {"type": "integer", "description": "Maximum number of results to return (default: 10).", "default": 10}
+    },
+    "required": ["query"]
+  }
+}
+```
+
+```text
+  AI Agent (MCP Client)
+       |  1. POST /token  grant_type=client_credentials  client_id=mcp-client
+       |     client_secret=secret  scope=mcp:read
+       v
+  OAuth Authorization Server (mock-oauth2-server or Keycloak)
+       |  2. Returns: { access_token, token_type, expires_in }
+       v
+  AI Agent (holds Bearer token)
+       |  3. POST /mcp (tool call)   Authorization: Bearer <access_token>
+       v
+  MCP Server (Resource Server)
+       |  4. Validate token (signature, expiry, scope)   5. Execute tool   6. Return result
+       v
+  AI Agent (receives tool response)
+```
+
+> **Watch out.**  In the client credentials flow, the agent is the *client* (it requests the token), the mock server is the *authorization server* (it issues tokens), and your MCP server is the *resource server* (it validates tokens and serves tools).  The MCP server never requests a token.  Also, JSON Schema's `required` is a top-level array inside the object schema, not a flag on each property; omit it and every field becomes optional.
+
+#### 4D.2: Implement the MCP server
+
+> **Do this.**
+> 1. Create the layout: `mkdir -p cs357-mcp-lab/tools cs357-mcp-lab/tests cs357-mcp-lab/data cs357-mcp-lab/logs && cd cs357-mcp-lab && touch tools/__init__.py && pip freeze > requirements.txt`.  Put each tool's implementation in `tools/tool_one.py` and `tools/tool_two.py`.
+> 2. Create `mcp_server.py` from the skeleton below and complete every `TODO`.  Keep the logging lines.
+> 3. Start it with `python mcp_server.py`, and in a second terminal send the `curl` request below.  Test your second tool the same way, then test the error case: omit a required argument and confirm the response contains an error.
+
+```python
+# mcp_server.py
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp import types
+import json, logging
+from datetime import datetime
+
+# Every log line is a valid JSON object so it can be parsed by log aggregators.
+logging.basicConfig(level=logging.INFO,
+    format='{"time": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}')
+logger = logging.getLogger(__name__)
+app = Server("cs357-mcp-server")
+
+@app.list_tools()
+async def list_tools() -> list[types.Tool]:
+    """Answer tools/list.  In 4D.3 you add scope enforcement: only mcp:admin may list."""
+    # TODO: return a list of types.Tool(name=..., description=..., inputSchema={...})
+    # built from your 4D.1 schemas.
+    pass
+
+@app.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
+    """Handle tools/call.  Log BEFORE executing so failures are still captured."""
+    logger.info(f"Tool invoked: {name}, arguments: {json.dumps(arguments)}, "
+                f"timestamp: {datetime.utcnow().isoformat()}Z")
+    # TODO: validate that required fields are present in `arguments`; if one is
+    # missing, raise ValueError naming it.  The SDK does NOT enforce inputSchema for you.
+    if name == "search_files":
+        # TODO: extract "query" and "max_results" (default 10), walk the workspace,
+        # log the result count, and return one TextContent with a JSON body:
+        # return [types.TextContent(type="text", text=json.dumps({"results": [...], "count": N}))]
+        pass
+    elif name == "your_second_tool_name":
+        # TODO: same pattern: validate, perform, log, return types.TextContent.
+        pass
+    else:
+        raise ValueError(f"Unknown tool: {name}")   # the SDK returns this as a structured error
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(stdio_server(app))
+```
+
+```bash
+curl -s -X POST http://localhost:8000/mcp -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+       "params": {"name": "search_files", "arguments": {"query": "README"}}}'
+```
+
+> **You should see.**  A JSON response whose `result.content[0]` has `"type": "text"` and a `text` field holding your tool's output, for example `{"results": ["./README.md"], "count": 1}`.  In the server terminal, each invocation prints one log line that is itself valid JSON; verify by piping one through `python -m json.tool`.
+
+> **If it fails.**
+> - `ImportError: No module named 'mcp'`: the package is not in the active environment.  Check `which python`, activate your virtual environment, and re-run the install.
+> - The handler returns `None`: every branch of `call_tool` must `return` a list.  A `pass` left in place returns `None`, which the SDK cannot serialize.
+> - Missing fields are accepted silently: you have not written the validation `TODO` yet.
+
+#### 4D.3: Add OAuth 2.0
+
+> **Do this.**
+> 1. Start the mock OAuth server: `docker run -d --name oauth-server -p 8090:8080 ghcr.io/navikt/mock-oauth2-server:latest`.  `docker ps` should show `oauth-server` with `0.0.0.0:8090->8080/tcp`, and `curl http://localhost:8090/default/.well-known/openid-configuration` should return the discovery document.
+> 2. Obtain a token with the client credentials flow (the grant type for a machine, not a human) using the first command below.  Paste the `access_token` into [jwt.io](https://jwt.io) to see the `sub`, `scope`, `iat`, and `exp` claims.
+> 3. Create `oauth_middleware.py` from the skeleton below and complete the `TODO`s.  Validation has four steps: fetch the JWKS (the server's public keys) once and cache them; extract the `Authorization: Bearer <token>` header on every request; decode the JWT, verify its signature, and check `exp`; reject failures with HTTP 401.
+> 4. Create `server_http.py`, a thin FastAPI wrapper that validates the token and forwards the body to your MCP logic (the SDK's stdio transport has no HTTP header to read, so this wrapper is where the token arrives).  Complete its final `TODO` so it forwards to your tool logic instead of returning the placeholder.
+> 5. **Enforce scopes**: `mcp:read` for any `tools/call`, `mcp:admin` for `tools/list`.  Test with the scope commands below, then repeat the token request with `scope=mcp:read mcp:admin` and confirm `tools/list` succeeds with that token and is refused with the read-only one.
+> 6. **Demonstrate expiry**: request a token, wait for it to expire (or adjust the `exp` claim by hand for testing), re-send, and save the 401 response.
+
+```bash
+curl -s -X POST http://localhost:8090/default/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials&client_id=mcp-client&client_secret=secret&scope=mcp:read"
+```
+
+> **You should see.**  JSON with `access_token` (a long `eyJ...` string), `"token_type": "Bearer"`, `"expires_in": 3600`, and `"scope": "mcp:read"`.
+
+```python
+# oauth_middleware.py
+import requests, logging
+from jose import jwt, JWTError
+
+logger = logging.getLogger(__name__)
+JWKS_URI = "http://localhost:8090/default/jwks"   # TODO: your server's JWKS endpoint
+ISSUER = "http://localhost:8090/default"          # TODO: the issuer from your discovery document
+_jwks_cache = None
+
+def get_jwks() -> dict:
+    """Fetch the JWKS from the authorization server (cached after first call)."""
+    global _jwks_cache
+    if _jwks_cache is None:
+        # TODO: requests.get(JWKS_URI) and store the parsed JSON in _jwks_cache;
+        # on a connection error, log it and raise.
+        pass
+    return _jwks_cache
+
+def validate_token(token: str, required_scope: str = None) -> dict:
+    """Return the claims of a valid Bearer token (no 'Bearer ' prefix), or raise
+    ValueError on expiry, bad signature, wrong issuer, or missing scope."""
+    jwks = get_jwks()
+    try:
+        # TODO: claims = jwt.decode(token, jwks, algorithms=["RS256"], issuer=ISSUER,
+        #                           options={"verify_aud": False})
+        claims = None  # replace with the actual decode call
+    except JWTError as e:   # expired token, bad signature, wrong issuer, ...
+        logger.warning(f"Token validation failed: {e}")
+        raise ValueError(f"Invalid token: {e}") from e
+    # TODO: if required_scope is given, check it appears in claims.get("scope", "")
+    # (a space-separated string); raise ValueError if absent.
+    return claims
+```
+
+```python
+# server_http.py: validates the OAuth token, then delegates to the MCP server
+from fastapi import FastAPI, Request, HTTPException
+from oauth_middleware import validate_token
+import uvicorn
+
+fastapi_app = FastAPI()
+
+@fastapi_app.post("/mcp")
+async def mcp_endpoint(request: Request):
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or malformed Authorization header")
+    token = auth_header.removeprefix("Bearer ")
+    try:
+        claims = validate_token(token, required_scope="mcp:read")   # mcp:admin for tools/list
+    except ValueError as e:
+        raise HTTPException(status_code=401, detail=str(e))
+    # TODO: forward the request body to your MCP server logic and return its response.
+    return {"status": "token valid", "subject": claims.get("sub")}
+
+if __name__ == "__main__":
+    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)
+```
+
+```bash
+# A read-only token, then a tools/call that should succeed
+READ_TOKEN=$(curl -s -X POST http://localhost:8090/default/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials&client_id=mcp-client&client_secret=secret&scope=mcp:read" \
+  | python -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
+curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search_files","arguments":{"query":"README"}}}'
+```
+
+> **You should see.**  The call succeeds with `READ_TOKEN`; `tools/list` succeeds only with the admin token.  After a token expires, a call returns HTTP `401 Unauthorized` with the body `{"detail": "Invalid token: Signature has expired."}`.  Save that output.
+
+> **If it fails.**
+> - 401 on a fresh token: your `ISSUER` does not exactly match the token's `iss` claim (a trailing slash or wrong realm is enough).  Inspect the token at jwt.io.
+> - No `scope` claim: the mock server includes only the scopes you requested; confirm `scope=mcp:read` is in the token request.
+> - `ConnectionRefusedError` fetching the JWKS: the container is still starting.  `docker logs oauth-server` until it reports listening, then retry.
+
+#### 4D.4: Drive it from an agent
+
+> **Do this.**
+> 1. Register the server with your agent.  For Claude Code, add the block below to `.claude/settings.json` in the project (or `~/.claude.json` globally), with the real absolute path.  For any other MCP-capable agent (an Ollama-backed agent with tool support, a LangChain agent, or opencode), consult its documentation for the equivalent registration: the server command, the environment variables for the OAuth credentials, and the transport (`stdio` for a local server).  Restart the agent; it should list your tools.
+> 2. Give the agent a natural-language task that needs **both** tools in sequence, and let it choose the tools and their order.  For the file-search domain: "Find all Python files in the cs357-mcp-lab directory that contain the word 'TODO', then summarize the first one you find so I know what still needs to be done."
+> 3. Capture the full invocation trace as `invocation_trace.txt` (Claude Code: run with `--debug`; any agent: `python mcp_server.py 2> logs/invocation.log`).  It must show the `tools/list` discovery, the token exchange or evidence the token was used, the `tools/call` with exact arguments, and the tool response.
+> 4. Error case 1: send the expired token from 4D.3 while the agent is running; save the request, the server log line, and the 401 as `error_expired_token.txt`.
+> 5. Error case 2: trigger a failure inside a tool with the command below (a path that does not exist); save the JSON-RPC error (not an HTTP 500) as `error_tool_failure.txt`, and note whether the agent retried, reported the failure, or did something else.
+
+```json
+{
+  "mcpServers": {
+    "cs357-lab": {
+      "command": "python",
+      "args": ["/absolute/path/to/cs357-mcp-lab/mcp_server.py"],
+      "env": {
+        "MCP_OAUTH_TOKEN_ENDPOINT": "http://localhost:8090/default/token",
+        "MCP_CLIENT_ID": "mcp-client",
+        "MCP_CLIENT_SECRET": "secret"
+      }
+    }
+  }
+}
+```
+
+```bash
+curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"summarize_file","arguments":{"path":"/nonexistent/path.txt"}}}'
+```
+
+> **If it fails.**
+> - The agent says the server is unavailable: confirm it is running (`ps aux | grep mcp_server`), the configured path is absolute and correct, and the interpreter is the one with `mcp` installed.
+> - The agent discovers the tools but never calls them: your descriptions are too vague, or the task does not obviously need them.  Sharpen the descriptions in `list_tools()` and try "Use the search_files tool to find README files."
+> - The agent gets a response it cannot parse: `call_tool` must return `list[types.TextContent]`, never a bare string or dict.
+
+> **Paste into your submission.**  `mcp_server.py`, `oauth_middleware.py`, `server_http.py`, `tools/tool_one.py`, `tools/tool_two.py`, and `requirements.txt`; the OAuth server `docker` command and the agent's MCP configuration, both with secrets redacted; `invocation_trace.txt`, `error_expired_token.txt`, and `error_tool_failure.txt`; the data-flow diagram and the completed port table; and a README with the domain paragraph, both tool schemas, the standardization sentence the MCP row asks for, and a paragraph naming what the OAuth scopes actually bound and what an attacker holding a valid token could still do.  In your writeup, also answer: what does the tool schema give you that a bare HTTP endpoint does not, and suppose a malicious MCP server advertised a `search_files` tool that actually exfiltrates data; how could an agent be tricked into calling it, and what trust mechanisms would prevent that?
 
 > **No-code path.** For Options 4A and 4B without code: add an MCP server to Open WebUI's tool settings, or configure one in a client's config file (the Langflow low-code variant), and export the chat showing discovery and then invocation.  Consuming a server through a client's configuration file earns the MCP row on the same terms as consuming it from code.
 
@@ -849,6 +1108,7 @@ Expose an Obsidian vault (a folder of Markdown notes) to an agent over MCP, with
 | Structured-output note: the before (broken parse on a real response), the after (constrained output parses), and the guarantee-versus-encourage sentence | One technique demonstrated on a real failure | Structured Output (20) |
 | Both runners (or both flows / model configurations) and the paired results table over at least eight fixed tasks at a fixed seed, with accuracy, tokens, and latency (or stated stand-ins), plus the sentence on when the cost was earned | Whether reasoning paid for itself | Reasoning, Measured (25) |
 | Server code or client configuration, and the discovery-then-invocation transcript (for the vault: discovery, one read, one gated write refused then confirmed), with the standardization sentence and, where applicable, the trust question | A working MCP round trip and an understanding of what the protocol buys | MCP (20) |
+| Option 4D only: the OAuth middleware and HTTP wrapper, the invocation trace, the two saved error responses, the data-flow diagram, and the port table | A token-gated MCP server driven end to end from an agent | MCP (20) |
 | Writeup with the route named at the top, model, parameters, and commands recorded, answers to the Questions to Work Through and Critical Thinking Questions, and an AI-use disclosure | A reader can reproduce your runs | Writeup and Reproducibility (5) |
 
 ---
@@ -863,6 +1123,7 @@ Expose an Obsidian vault (a folder of Markdown notes) to an agent over MCP, with
 - [ ] One defensible sentence on when the reasoning cost was earned and when it was not.
 - [ ] **MCP:** a transcript showing discovery followed by invocation (for the Obsidian vault option: discovery, one read, and one gated write refused and then confirmed).
 - [ ] The writeup says what MCP standardizes that a hand-rolled tools list does not; if you consumed someone else's server, including a community vault server, it names the trust question that raises.
+- [ ] Option 4D: the trace shows discovery, the token, the call, and the response; the expired-token 401 and the in-tool failure are saved; the README says what the scopes bound.
 - [ ] Model name and parameters recorded so a reader can reproduce your runs.
 - [ ] Route named at the top of the writeup.
 - [ ] AI-use disclosure included.

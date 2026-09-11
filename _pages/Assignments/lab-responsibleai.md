@@ -7,7 +7,7 @@ info:
   coursenum: CS357
   purpose: "To hold an AI agent you built earlier in the course accountable for its security, its privacy, and its explainability, before anyone is asked to rely on it."
   tilt:
-    task: "Threat-model an agent you already built, then audit and harden it along one chosen responsible-AI direction: prompt-injection defense, privacy, or explainability."
+    task: "Threat-model an agent you already built, then audit and harden it along one chosen responsible-AI direction: prompt-injection defense, privacy, explainability, or container isolation."
     criteria: "I assess your work on your threat and risk analysis, your implementation of the chosen direction, your evaluation and evidence, and your writeup and reflection.  The rubric below has the details."
   points: 100
   goals:
@@ -28,6 +28,7 @@ info:
     - To classify each model feature as a legitimate predictor, a proxy variable for a protected characteristic, or both, using SHAP importance as supporting evidence
     - To write a jargon-free denial explanation statement of approximately 150 words grounded in SHAP waterfall output, meeting the meaningful information requirement of EU AI Act Article 13 for high-risk AI systems
     - To evaluate whether post-hoc explanations from SHAP and LIME are sufficient to justify high-stakes credit decisions, citing specific limitations of each method
+    - To harden a containerized agent to least privilege one measure at a time, and to test the boundary with a threat model and red-team attempts
   rubric:
     - weight: 25
       description: Threat and Risk Analysis
@@ -40,7 +41,7 @@ info:
       preemerging: No working intervention is implemented or concretely specified, or the code does not run as submitted.
       beginning: A partial intervention, implemented in code, or (on Direction 0) concretely specified as a defense design, addresses only a small slice of the chosen direction, or is done incorrectly (e.g., a control so weak it is ineffective).
       progressing: The chosen direction's required components are all implemented or concretely specified and function as described, but one or more are weak or not fully connected to the agent's real input/output/decision path (on Direction 0, not clearly mapped to a logged attack).
-      proficient: The chosen direction is realized completely, correctly, and multi-layered where the direction calls for it, as implemented controls or explanations integrated into the agent's real path and clearly marked in the code (Directions 1-3), OR as concretely specified defenses (Direction 0) where each mechanism is named, mapped to a specific logged attack, and precise enough that an engineer could build it from the description; the work would run, or could be acted on, from a clean environment following only the provided instructions.
+      proficient: The chosen direction is realized completely, correctly, and multi-layered where the direction calls for it, as implemented controls or explanations integrated into the agent's real path and clearly marked in the code (Directions 1-4), OR as concretely specified defenses (Direction 0) where each mechanism is named, mapped to a specific logged attack, and precise enough that an engineer could build it from the description; the work would run, or could be acted on, from a clean environment following only the provided instructions.
     - weight: 25
       description: Evaluation and Evidence
       preemerging: No evaluation is provided, or claims are asserted without evidence.
@@ -78,6 +79,10 @@ info:
       liapage: true
     - rtitle: "Responsible AI in Practice Assignment (Model Cards and Datasheets direction)"
       rlink: "../Assignments/ResponsibleAIPractice"
+    - rtitle: "What a Container Isolates (Direction 4)"
+      rlink: "../Tutorials/ContainerIsolation"
+    - rtitle: "Docker from Zero (Direction 4)"
+      rlink: "../Tutorials/Docker"
 
 tags:
   - security
@@ -118,11 +123,11 @@ Submit both together.  The rubric on this page covers Component 1 (50 points).  
 
 ## Choose Your Path
 
-Directions 1, 2, and 3 instrument a codebase.  Direction 0 is the no-code route: it turns your hands-on attack experience into a concretely specified defense design and stress-tests it on paper.
+Directions 1, 2, 3, and 4 instrument a codebase.  Direction 0 is the no-code route: it turns your hands-on attack experience into a concretely specified defense design and stress-tests it on paper.
 
 | Path | What you build | What you need | Pick this if |
 |------|----------------|---------------|--------------|
-| **Code** (Directions 1, 2, or 3) | A defended, scrubbed, or explained agent, with runnable code and a reproducible evaluation | Python 3.10+, the libraries the direction names, and (Direction 1 only) a hosted API key or a local Ollama model | Your agent reads untrusted text (1), touches sensitive data (2), or makes decisions someone is entitled to have explained (3) |
+| **Code** (Directions 1, 2, 3, or 4) | A defended, scrubbed, explained, or contained agent, with runnable code and a reproducible evaluation | Python 3.10+, the libraries the direction names, (Direction 1 only) a hosted API key or a local Ollama model, and (Direction 4 only) Docker | Your agent reads untrusted text (1), touches sensitive data (2), makes decisions someone is entitled to have explained (3), or runs on a machine with files worth protecting (4) |
 | **No-code** (Direction 0) | An escalation log, a 2-3 page layered defense-design document mapped to OWASP LLM01, and a red-team exchange with revision notes | A web browser for [Gandalf](https://gandalf.lakera.ai/) and [Tensor Trust](https://tensortrust.ai/), and a partner team to swap with | You want to reason rigorously about defenses without standing up a new codebase |
 
 The rubric is the same on both paths.  On the no-code path, the Implementation row credits concretely specified defenses instead of running code.
@@ -133,8 +138,8 @@ The rubric is the same on both paths.  On the no-code path, the Implementation r
 
 - Complete the activities *Training Data, Bias, and Explainability*, *Intellectual Property, Privacy, and the Case for Local AI*, and *Governance, Policy, and the Cost of Inference*.
 - Have one agent you built earlier in this course ready to put on the examination table.  Direction 3 may use the synthetic credit model it provides instead.
-- Read all four directions before choosing.  The right direction is the one whose failure mode would do the most damage to the specific agent you built.  Do not attempt more than one; depth on one is worth far more than a shallow pass over several.
-- Each direction lists its own install commands and health check.
+- Read all five directions before choosing.  The right direction is the one whose failure mode would do the most damage to the specific agent you built.  Do not attempt more than one; depth on one is worth far more than a shallow pass over several.
+- Each direction lists its own install commands and health check.  Direction 4 needs Docker Desktop or Docker Engine; do that install at home first.
 
 > **Time budget.**  The shared warm-up is one focused session.  The shared threat model is a short written document.  Your chosen direction is the largest piece, about 3 to 4 hours on its own (each direction gives its own estimate).  The writeup is the shortest.  Pace yourself in that order.
 
@@ -167,14 +172,15 @@ This framing step is required of every submission, regardless of direction, beca
 
 ## Choose Your Direction
 
-Pick **one** of the four directions below and carry it out in full depth.  Each is a complete audit-and-harden cycle along one axis of responsible AI, and Component 1's 50 points cover the shared threat model plus the one direction you choose.  The rubric dimensions (threat and risk analysis, implementation, evaluation and evidence, writeup and reflection) apply to whichever direction you pick.
+Pick **one** of the five directions below and carry it out in full depth.  Each is a complete audit-and-harden cycle along one axis of responsible AI, and Component 1's 50 points cover the shared threat model plus the one direction you choose.  The rubric dimensions (threat and risk analysis, implementation, evaluation and evidence, writeup and reflection) apply to whichever direction you pick.
 
 - **Direction 0: Attack and Policy (no code)**: the no-code route; escalate the shared warm-up into a graded artifact, map each successful attack to a layered defense design, and stress-test it in a paper red-team exchange with another team.  No programming required.
 - **Direction 1: Finding and Defending Against Prompt Injection**: for agents that read untrusted text; red-team the agent, layer defenses, and quantify residual risk.
 - **Direction 2: Privacy Audit for an AI Agent**: for agents that touch sensitive data; inventory PII at every boundary, scrub input and output, and write a governance policy.
 - **Direction 3: AI Explainability with SHAP and LIME**: for agents that make or support decisions; explain a decision model, compare SHAP and LIME, and audit feature proxies.
+- **Direction 4: Containerizing an AI System Safely**: for agents that run on a machine with anything worth protecting; start from a deliberately insecure container, harden it to least privilege one measure at a time, and red-team the result.
 
-All four are graded under the same 50-point Component 1 rubric at the top of this page.  On Direction 0, the Implementation dimension credits concretely specified defenses rather than running code.
+All five are graded under the same 50-point Component 1 rubric at the top of this page.  On Direction 0, the Implementation dimension credits concretely specified defenses rather than running code.
 
 ---
 
@@ -1534,6 +1540,321 @@ Answer in your readme, in addition to the shared prompts at the end of this page
 
 ---
 
+## Direction 4: Containerizing an AI System Safely
+
+Read [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) first; it explains the trust boundary and blast radius vocabulary this direction uses.  [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker) explains the mechanics whenever a step below feels like magic.
+
+> **What this direction requires.**
+> - **Accounts and API costs:** none.  The agent calls the Ollama server on your host, the same one every lab uses.
+> - **Installs / disk:** Docker Desktop (Mac/Windows) or Docker Engine with Compose (Linux), and optionally the `trivy` image scanner.  Budget roughly 2 GB of free disk for images and build layers.
+> - **Ollama on the host**, running, with `llama3.2` pulled (the Overview assignment's Step 1).  Ollama itself stays on the host; the agent and every check in this direction run inside containers.
+> - **Hardware:** run Step 1's deliberately insecure baseline in a dedicated test VM or on a machine with no sensitive files.  This is a requirement, not a suggestion.
+
+> **Time budget.**  About 3-4 hours for the direction, on top of the shared warm-up and threat model.
+
+You put an agent in a box.  You start with a deliberately insecure container, document exactly what it can reach, and then harden it one measure at a time until it runs under least privilege: the agent gets only the access its job needs.  The goal is not to memorize Docker flags.  It is to know *why* each boundary exists, which threat it addresses, and what a container does and does not protect you from.
+
+The agent needs one secret to protect.  Ollama takes no key, so use your OpenWebUI API key from the Overview assignment, or any placeholder string such as `sk-demo-do-not-share`.  The agent sends it as a Bearer header that Ollama ignores and OpenWebUI would require; the point of Steps 1 and 2 is to watch it leak and then to stop the leak.
+
+> **Do this.**  Before Step 1, confirm `docker --version` and `docker compose version` both print a version, confirm `curl http://localhost:11434/api/tags` lists `llama3.2`, and set the secret in your shell: `export AGENT_API_KEY="sk-demo-do-not-share"` (or your real OpenWebUI key).
+
+### Step 4.1: Build and document the insecure baseline
+
+> **Do this.**
+> 1. Create the workspace and a sample file:
+>
+> ```bash
+> mkdir -p ~/cs357-containerlab/workspace && cd ~/cs357-containerlab
+> echo "This is a sample document about neural networks and gradient descent." > workspace/sample.txt
+> ```
+>
+> 2. Create `agent.py` below and run it once on the host, where Ollama is `localhost`: `OLLAMA_URL=http://localhost:11434/api/chat python agent.py workspace/sample.txt`.  You should get a one-paragraph summary.
+> 3. Create `docker-compose-insecure.yml` below.  Read every comment; each names a problem you fix in Step 4.2.
+> 4. Run `docker compose -f docker-compose-insecure.yml up`.  Copy the summary it prints into `baseline-notes.md`.
+> 5. Run the exploration commands below and copy every output into `baseline-notes.md` as exhibit A of the baseline threat.
+
+```python
+# agent.py: deliberately unhardened; that is the point of Step 4.1
+import os, sys, requests
+
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://host.docker.internal:11434/api/chat")
+MODEL      = os.environ.get("OLLAMA_MODEL", "llama3.2")
+API_KEY    = os.environ.get("AGENT_API_KEY", "")   # Ollama ignores it; OpenWebUI would require it
+
+def summarize(file_path):
+    try:
+        with open(file_path, "r") as f:
+            file_contents = f.read()
+    except FileNotFoundError:
+        print(f"Error: file not found: {file_path}")
+        sys.exit(1)
+    payload = {"model": MODEL, "stream": False,
+               "messages": [{"role": "user",
+                             "content": f"Summarize the following file ({file_path}) in one paragraph:\n\n{file_contents}"}]}
+    headers = {"Authorization": f"Bearer {API_KEY}"}
+    response = requests.post(OLLAMA_URL, json=payload, headers=headers, timeout=120)
+    response.raise_for_status()
+    return response.json()["message"]["content"]
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python agent.py <file_path>")
+        sys.exit(1)
+    print(summarize(sys.argv[1]))
+
+if __name__ == "__main__":
+    main()
+```
+
+```yaml
+# docker-compose-insecure.yml
+# WARNING: This configuration is deliberately insecure for baseline documentation only.
+services:
+  agent:
+    image: python:3.11-slim
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # lets the container reach Ollama on your host (needed on Linux)
+    volumes:
+      - ${HOME}:/hostdata   # INSECURE: Mounts entire home directory - agent can read all your files
+    environment:
+      - AGENT_API_KEY=${AGENT_API_KEY}   # INSECURE: Secret visible in docker inspect
+    command: >
+      sh -c "pip install requests -q &&
+             python /hostdata/cs357-containerlab/agent.py
+             /hostdata/cs357-containerlab/workspace/sample.txt"
+```
+
+```bash
+# A one-shot shell inside the container; run the four checks, then type exit
+docker compose -f docker-compose-insecure.yml run --rm --entrypoint sh agent
+id                                    # what user are we?
+ls /hostdata                          # what is visible?
+ls /hostdata/.ssh 2>/dev/null && echo "SSH keys visible!" || echo "(no .ssh directory)"
+env | grep -i key                     # what secrets are in the environment?
+# Then, from the host: one unsafe action, and the exposed secret
+docker compose -f docker-compose-insecure.yml run --rm --entrypoint sh agent -c "cat /hostdata/.bashrc | head -5"
+docker compose -f docker-compose-insecure.yml run --rm --entrypoint sh agent -c "echo secret_visible=\$AGENT_API_KEY"
+```
+
+> **You should see.**  `uid=0(root)`; your entire home directory under `/hostdata`; the first five lines of your `.bashrc`, a file the agent has no reason to read; and your secret printed to stdout.  In a production incident, this is how a compromised container leaks credentials.
+
+> **Checkpoint.**  In your notes: the effective UID inside the baseline container and why it is a problem; three host files or directories the container can read with no legitimate reason; and the exact mechanism by which an attacker with code execution inside this container would exfiltrate your key.
+
+### Step 4.2: Harden one measure at a time
+
+Apply six measures one at a time, verifying each before adding the next.  After every measure, run `docker compose up` again and confirm the summary still prints; a hardening step that breaks the agent is not done.  Record every verification command and its output, in order, in `hardening-log.md`.
+
+> **Do this.**  Create the `Dockerfile` below and a starting `docker-compose.yml` containing only `build: .`, the `extra_hosts` block, the volume `./workspace:/workspace`, the `AGENT_API_KEY` environment line, and `command: python /app/agent.py /workspace/sample.txt`.  Run `docker compose build && docker compose up`; the agent summarizes `sample.txt` as before, but now only `workspace/` is mounted.  Then add the six measures one at a time.  The fully hardened file at the end of this step shows the exact syntax for each, and the verification fence below has one command per measure.
+
+```dockerfile
+FROM python:3.11-slim
+
+# Measure a: uncomment the next line and the USER line at the bottom
+# RUN useradd --create-home --shell /bin/bash --uid 1000 agent
+
+RUN pip install requests --no-cache-dir
+COPY agent.py /app/agent.py
+WORKDIR /app
+
+# USER agent
+```
+
+- **Measure a: non-root user.**  A compromised root process owns the container filesystem and every mounted volume; uid 1000 limits the blast radius.  Uncomment the two Dockerfile lines and `docker compose build`.
+- **Measure b: read-only filesystem with tmpfs at `/tmp`.**  If the agent is tricked into writing a backdoor, the write fails instead of silently succeeding.  Change the volume to `./workspace:/workspace:ro`, add `read_only: true` and the `tmpfs` block.
+- **Measure c: drop all capabilities.**  Linux capabilities are fine-grained root privileges (binding low ports, changing network interfaces, loading kernel modules); dropping them all blocks privileged operations even if the process somehow runs as root.  Add the `cap_drop` block.  A Python script making an HTTP call needs none; if it fails with `EPERM`, add back only the single capability named, under `cap_add:`.
+- **Measure d: a named network.**  Removes the agent from the default bridge so a compromised agent cannot reach other containers there.  Add `networks: [agent-net]` under the service and the top-level `networks:` block.  The container still reaches your host through `host.docker.internal`, so Ollama keeps answering; a named bridge network isolates the agent from other containers, not from the host or the internet.  Full egress filtering needs a firewall rule or an egress proxy outside compose, and you confirm this in Step 4.3.
+- **Measure e: resource limits.**  Runaway generation, an infinite loop, or a fork bomb can otherwise consume the host.  Add the `deploy.resources.limits` block and `pids_limit`.
+- **Measure f: Docker secrets instead of an environment variable.**  Environment variables are visible to every process in the container and to anyone who can run `docker inspect`; a secret arrives as a file under `/run/secrets/`.  Write the key to a file, update `agent.py` to read it, remove the `environment:` block, add the two `secrets:` entries, and `docker compose build`.
+
+```bash
+# Measure f: write the key to a file the compose file will mount as a secret
+mkdir -p ~/cs357-containerlab/secrets
+echo -n "$AGENT_API_KEY" > ~/cs357-containerlab/secrets/agent_api_key
+chmod 600 ~/cs357-containerlab/secrets/agent_api_key
+```
+
+```python
+# agent.py, measure f: read the secret file first; summarize() and main() are unchanged from Step 4.1
+def get_api_key():
+    secret_path = "/run/secrets/agent_api_key"
+    if os.path.exists(secret_path):
+        with open(secret_path) as f:
+            return f.read().strip()
+    return os.environ.get("AGENT_API_KEY", "")
+
+API_KEY = get_api_key()
+```
+
+Your cumulative hardened `docker-compose.yml` must match this exactly when all six are in:
+
+```yaml
+# docker-compose.yml - fully hardened
+# All six measures: non-root user (Dockerfile), read-only filesystem,
+# dropped capabilities, named network, resource limits, and Docker secrets.
+services:
+  agent:
+    build: .
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./workspace:/workspace:ro
+    command: python /app/agent.py /workspace/sample.txt
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    networks:
+      - agent-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    pids_limit: 64
+    secrets:
+      - agent_api_key
+
+networks:
+  agent-net:
+    driver: bridge
+
+secrets:
+  agent_api_key:
+    file: ./secrets/agent_api_key
+```
+
+Verify each measure right after you add it (the `docker inspect` lines need a running container: `docker compose up -d` first, `docker compose down` after):
+
+```bash
+# a: who am I?
+docker compose run --rm --entrypoint id agent
+# b: is the root filesystem read-only, and is /tmp still writable?
+docker compose run --rm --entrypoint sh agent -c "echo test > /app/evil.py && echo 'wrote file' || echo 'write blocked'"
+docker compose run --rm --entrypoint sh agent -c "echo test > /tmp/ok.txt && echo 'tmp write succeeded'"
+# c: effective capabilities
+docker compose run --rm --entrypoint sh agent -c "cat /proc/self/status | grep CapEff"
+# d: which networks?
+docker inspect $(docker compose ps -q agent) | grep -A 5 '"Networks"'
+# e: which limits?
+docker inspect $(docker compose ps -q agent) | grep -E '"Memory"|"NanoCpus"|"PidsLimit"'
+# f: is the key still in the container's environment?
+docker inspect $(docker compose ps -q agent) | grep -i "AGENT_API_KEY"
+```
+
+> **You should see.**
+> - a: `uid=1000(agent) gid=1000(agent) groups=1000(agent)`.  If you still see `uid=0(root)`, confirm the build succeeded and the compose file says `build: .`.
+> - b: `write blocked`, then `tmp write succeeded`.  If you see `wrote file`, check the indentation; YAML is sensitive to it.
+> - c: `CapEff: 0000000000000000`.
+> - d: `agent-net` and no `default` network.
+> - e: `"Memory": 268435456`, `"NanoCpus": 500000000`, `"PidsLimit": 64`.  A `0` means the limit is not applied; confirm Compose v2 with `docker compose version`.
+> - f: nothing from the `grep`, and `docker compose up` still prints the summary, now read from `/run/secrets/agent_api_key`.
+
+> **If it fails.**
+> - The container crashes after `read_only: true`: something writes outside `/tmp`.  Read `docker compose logs` for the path; add a `tmpfs` entry for it or set `TMPDIR=/tmp`.
+> - `connection refused` reaching Ollama after the named network: confirm the `extra_hosts` block survived your edit, and on Linux that Ollama listens on all interfaces (`OLLAMA_HOST=0.0.0.0 ollama serve`).  DNS failures inside the network are fixed with `dns: [8.8.8.8]` under the service.
+> - `FileNotFoundError: /run/secrets/agent_api_key`: `wc -c secrets/agent_api_key` on the host must print a nonzero number.
+
+> **Checkpoint.**  In your notes: the difference between `read_only: true` and the `:ro` on the volume mount, and whether you could have one without the other; why an outbound HTTP call needs no network capability; and what the `Env` section of `docker inspect` shows now compared with the baseline.
+
+### Step 4.3: Threat model and red team
+
+> **Do this.**
+> 1. Copy this table into `threat-model.md` and fill every cell.  Be honest in the residual-risk column; every defense has limits.
+>
+> | # | Threat | Specific attack vector | Defense applied (Step 4.2 measure) | Residual risk after hardening |
+> |---|--------|------------------------|------------------------------------|-------------------------------|
+> | 1 | Prompt injection leading to unauthorized file access | | | |
+> | 2 | Data exfiltration via outbound network calls | | | |
+> | 3 | Resource exhaustion (CPU/memory/fork bomb) | | | |
+> | 4 | Secret theft via environment variable inspection | | | |
+>
+> 2. Run the three red-team attempts below against the hardened container.  Record the exact command and exact output of each in `red-team-notes.md`, including attempts that failed to break anything.
+> 3. Close with one paragraph: what did the hardening prevent, what did it not prevent, and which finding surprised you most?
+
+Guidance per row: row 1's defense is the read-only mount and non-root user, and its residual risk is that the agent can still read anything in `/workspace`.  Row 2's residual risk must say whether the named network actually blocks outbound internet or only isolates the container from other containers.  Row 3 names `cpus:`, `memory:`, and `pids_limit`, and says what happens when a limit is hit.  Row 4 notes the secret is now a file: who inside the container can read it?
+
+```bash
+# Attempt 1: write to the read-only filesystem
+docker compose run --rm --entrypoint sh agent -c "echo malicious > /app/backdoor.py && echo 'write succeeded' || echo 'write blocked'"
+# Attempt 2: connect to an unauthorized host
+docker compose run --rm --entrypoint sh agent -c "curl -s --max-time 5 http://example.com && echo 'connection succeeded' || echo 'connection failed'"
+# Attempt 3: read a file outside the workspace
+docker compose run --rm --entrypoint sh agent -c "cat /etc/shadow && echo 'read succeeded' || echo 'read blocked'"
+```
+
+> **You should see.**  Attempt 1: `sh: /app/backdoor.py: Read-only file system` then `write blocked`.  Attempt 3: `cat: /etc/shadow: Permission denied` then `read blocked` (uid 1000 cannot read a root-owned file).  Attempt 2 may print `connection succeeded`, because a named bridge network does not block outbound internet.  Record what you actually see and explain it in row 2's residual risk; that finding is the point of the attempt.
+
+> **Checkpoint.**  What control outside Compose would actually block the agent from reaching unauthorized hosts?  Is the secret fully safe in `/run/secrets/`, and what would an attacker inside the container need to do to read it?  Sketch a fifth threat-model row for a supply-chain attack through a malicious dependency (attack vector, defense, residual risk; no implementation needed).
+
+### Step 4.4: Verify, write the runbook, and test teardown
+
+> **Do this.**
+> 1. Run each verification below and record the output.  Do not write the runbook until all six pass.
+>
+> | # | Measure | How to verify |
+> |---|---------|---------------|
+> | a | Non-root user | `docker compose run --rm --entrypoint id agent` shows `uid=1000` |
+> | b | Read-only filesystem + tmpfs | `docker inspect ... \| grep ReadonlyRootfs` shows `true` |
+> | c | Capabilities dropped | `CapEff` shows `0000000000000000` |
+> | d | Named network only | `docker inspect ... \| grep -A5 Networks` shows only `agent-net` |
+> | e | Resource limits | `Memory`, `NanoCpus`, `PidsLimit` are nonzero |
+> | f | Docker secrets | `docker inspect ... \| grep AGENT_API_KEY` returns nothing |
+>
+> 2. Create `RUNBOOK.md` from the template below and fill every `[TODO]`.
+> 3. Confirm the stack tears down and restores cleanly: `docker compose down`, `docker compose up -d`, `docker compose logs agent`, `docker compose down`.  Record the output; the logs should show the agent ran and produced a summary.
+> 4. Optional: `trivy image cs357-containerlab-agent`, recording any HIGH or CRITICAL findings with a sentence on whether each is reachable given the agent's behavior.
+
+```text
+# Security Runbook, CS357 Containerized AI Agent
+
+Procedure 1: Updating a Docker Secret Without Restarting the Full Stack
+When to use: [TODO: e.g., routine key rotation]
+Steps: 1. [TODO: write the new value to the secrets file on the host]
+       2. [TODO: the command that makes the container pick it up; secrets are bind-mounted,
+          but does the running process re-read the file?]   3. [TODO: verify the new secret is in use]
+Gotcha: [TODO: does a process that cached the key at startup see the new value, or is a restart required?]
+
+Procedure 2: Rotating Credentials When a Secret Is Suspected Compromised
+When to use: [TODO: the trigger, e.g., the key appears in logs]
+Steps: 1. [TODO: revoke the key where it was issued, e.g., OpenWebUI's Settings, Account, API Keys]
+       2. [TODO: generate a new key]  3. [TODO: update the file, restart]
+       4. [TODO: audit what the key was used for between compromise and revocation]
+Verification: [TODO: how do you confirm the old key no longer works?]
+
+Procedure 3: Auditing Container Logs to Detect Anomalous Agent Behavior
+When to use: [TODO: proactive audit vs. reacting to an alert]
+Steps: 1. docker compose logs --since 1h agent   2. [TODO: what normal output looks like]
+       3. [TODO: two log patterns that indicate anomalous behavior]  4. [TODO: exporting logs for retention]
+Escalation: [TODO: first action on a confirmed incident]
+```
+
+> **Checkpoint.**  Did all six verifications pass on the first attempt, and if not, what did you fix?  Does a running process automatically see an updated secrets file, and why does that matter operationally?  Where would you add automated log monitoring (say, an alert on more than ten model calls a minute), and would it change the compose file?
+
+### Deliverables (Direction 4)
+
+Submit a ZIP containing all of the following; each must be present for the submission to be graded.
+
+| File or artifact | What it shows | Rubric row |
+|------------------|---------------|------------|
+| `docker-compose-insecure.yml` | Inline comments naming each security problem | Threat and Risk Analysis |
+| `docker-compose.yml`, `Dockerfile`, `agent.py` | The fully hardened form; the agent reads its secret from `/run/secrets/`, not the environment | Implementation |
+| `baseline-notes.md`, `hardening-log.md` | What the insecure agent could actually reach, from evidence; verification output for all six measures, in order | Evaluation and Evidence |
+| `threat-model.md`, `red-team-notes.md` | All four rows, all four columns; what you tried, what happened, what it means | Threat and Risk Analysis; Evaluation and Evidence |
+| `RUNBOOK.md` | All three procedures, in enough detail to follow under pressure | Implementation |
+| `readme.md` | One line per hardening measure saying which of observability, isolation, and reversibility it buys, plus the reflection answers | Writeup and Reflection |
+| `pair_log.txt` | Driver/navigator swap log with timestamps and roles | Writeup and Reflection |
+
+### Reflection Prompts (Direction 4)
+
+Answer in your readme, in addition to the shared prompts at the end of this page, citing file names, command outputs, or measure letters from your own run.
+
+1. Which hardening measure had the most surprising effect on the agent's behavior, and why?
+2. The container boundary is not a complete security guarantee.  Name one class of attack your hardening does not prevent, and the additional control it would need.
+3. The six measures are independent layers.  If an attacker could bypass exactly one, which would they target first, and why?
+
+---
+
 ## Self-Check Before You Submit
 
 Check your work against the rubric's `proficient` column, which is shared across all directions.
@@ -1542,7 +1863,7 @@ Check your work against the rubric's `proficient` column, which is shared across
 - [ ] Risks are enumerated **at every boundary**, prioritized, with likelihood and impact.
 - [ ] The chosen direction is motivated by a **specific scenario** in which this agent would cause harm if nothing were done.
 - [ ] The direction is realized completely, and multi-layered where it calls for it.
-- [ ] Controls or explanations are integrated into the agent's **real** path and clearly marked (Directions 1-3), or specified precisely enough that an engineer could build them, each mapped to a specific logged attack (Direction 0).
+- [ ] Controls or explanations are integrated into the agent's **real** path and clearly marked (Directions 1-4), or specified precisely enough that an engineer could build them, each mapped to a specific logged attack (Direction 0).
 - [ ] The evaluation is **reproducible**: exact inputs and recorded outputs, not a summary of what happened.
 - [ ] Results are tabulated against the direction's own success criteria.
 - [ ] At least one failure, disagreement, false positive or negative, or **surviving risk** is documented verbatim and analyzed mechanistically.

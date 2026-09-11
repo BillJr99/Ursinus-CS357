@@ -83,7 +83,7 @@ If any of those is a problem, say so this week rather than in week four.  There 
 
 ### The setup map
 
-This assignment is nine stages plus one optional one.  Each stage ends with one command whose output you paste into your submission, so you can always tell whether a stage is done.  Work down the table in order, and use the last column to find the steps.
+This assignment is nine stages plus two optional ones.  Each stage ends with one command whose output you paste into your submission, so you can always tell whether a stage is done.  Work down the table in order, and use the last column to find the steps.
 
 | Stage | What you do | The command that proves it | What you paste | Where the steps are |
 |---|---|---|---|---|
@@ -93,6 +93,7 @@ This assignment is nine stages plus one optional one.  Each stage ends with one 
 | 2 | Chat with the model once | `ollama run llama3.2 "..."` | The model's reply | Part 1, Step 2 |
 | 3 | Confirm the REST API answers | `curl http://localhost:11434/api/tags` | The JSON | Part 1, Step 3 |
 | 4 | Call the model from Python | `python3 ollama_check.py` | The printed JSON, including a `"content"` field | Part 1, Step 4 |
+| W | Optional, either route: install OpenWebUI, the chat interface over Ollama | Browse to `http://localhost:3000` (Docker) or `http://localhost:8080` (pip) | Nothing required; a screenshot of the model dropdown is welcome | Part 1, *Optional: Install OpenWebUI* |
 | 5 | Confirm the coding agent talks to that model | `opencode --version` | The version string and one answered prompt | Part 1, Step 5 |
 | 6 | Navigate a shell and search a file | `grep -n "localhost" notes.txt` | The commands and their output | Part 1.5, Step 1 |
 | 7 | Authenticate to GitHub, then commit and push | `git log --oneline` | The `ssh -T` greeting and the log | Part 1.5, Step 2 |
@@ -751,6 +752,46 @@ python3 ollama_check.py
 > ```
 >
 > Add `-it` when the command is interactive, as the chat in Step 2 is: `docker exec -it ollama ollama run llama3.2 "Say hello in five words."`.  Steps 3 and 4 are unaffected as long as you published the port with `-p 11434:11434`, because `localhost:11434` on your host then reaches the server inside the container.  A transcript from this route is fully accepted; leave the `docker exec` prefix visible in what you paste, so I can see where the command ran.
+
+**Next:** Step 5, or the optional OpenWebUI install first.
+
+---
+
+### Optional: Install OpenWebUI, the chat interface over Ollama
+
+OpenWebUI is a self-hosted web front end that sits in front of your Ollama server: a private chat window over the model you pulled in Step 1, with tools, knowledge bases, and an API of its own.  Nothing in this assignment needs it.  The Local Agent lab's no-code path and several later tutorials assume it is installed, so doing it now, while the model is fresh, saves you the first fifteen minutes of that lab.
+
+| Optional OpenWebUI at a glance | |
+|---|---|
+| **Where you type** | Your host terminal, on both routes.  On Route A, OpenWebUI is its own container beside the course container, not inside it |
+| **What you install** | OpenWebUI by one of two routes: Docker (recommended if Docker Desktop is already running) or pip (no Docker required) |
+| **You paste** | Nothing is required.  A screenshot of the model dropdown showing `llama3.2` is welcome |
+
+**Do.**  Confirm Ollama is running (`ollama list` shows `llama3.2`), then install by **one** route.
+
+Route 1, Docker.  Each flag does one job: `-p 3000:8080` publishes the container's port 8080 on your host's port 3000; `--add-host=host.docker.internal:host-gateway` lets the container reach Ollama on your host (required on Linux, harmless elsewhere); `-v open-webui:/app/backend/data` keeps your account, models, and chat history in a named volume that survives restarts.
+
+```bash
+docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway \
+  -v open-webui:/app/backend/data --name open-webui --restart always \
+  ghcr.io/open-webui/open-webui:main
+```
+
+Route 2, pip.  The first command downloads a large dependency set; expect several minutes.  The second starts the server in your terminal; leave that terminal open.  When the startup banner shows `Uvicorn running on http://0.0.0.0:8080`, the server is up.
+
+```bash
+pip install open-webui
+open-webui serve
+```
+
+**Then, in the browser** (`http://localhost:3000` for Docker, `http://localhost:8080` for pip):
+
+1. **Create an admin account** (name, email, password).  It exists only in your local OpenWebUI database; the email is a local username.
+2. In the **model selector at the top left**, confirm `llama3.2:latest` appears.  OpenWebUI finds a local Ollama server on its own.
+3. Send one message ("Say hello in one sentence.") and read the reply.
+4. **Create an API key**: click your initials (bottom left), then **Settings**, **Account**, **API Keys**, **Create new key**.  Keep it somewhere you will find again.  It authenticates you to a server on your own machine; it is not a payment credential.  The Local AI session and the Local Agent lab both use it.
+
+> **Troubleshooting:** the model dropdown is empty when OpenWebUI cannot reach Ollama.  On the Docker route, confirm the `--add-host` flag was present, then open **Admin Panel**, **Settings**, **Connections** and set the Ollama URL to `http://host.docker.internal:11434` (not `localhost`, which inside the container means the container itself; see *The address rule* above).  On the pip route the URL is `http://localhost:11434`, and `ollama serve` must be running.  If `http://localhost:3000` refuses to connect on the Docker route, run `docker ps`; when the container is missing, `docker logs open-webui` says why, and a port conflict means something else owns 3000, so re-run with `-p 3001:8080` and browse to 3001.  If `pip install open-webui` fails with a resolver or build error, it is almost always a Python version issue: create a 3.11 environment (`python3.11 -m venv owui && source owui/bin/activate`) and install inside it.
 
 **Next:** Step 5.
 

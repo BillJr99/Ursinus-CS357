@@ -475,7 +475,7 @@ Bring one of these:
 - **Something you want to build that is not on any assignment.**  This is the best possible use of a studio day.
 - **The vault you started in Part I**, if you want to keep going on it.
 
-For the visual-building route through a local agent stack (Langflow, wiring containers together into a system), the *Local Agent Stack* material remains the reference and is linked from the Local Agent Lab's Direction 2.
+For the visual-building route through a local agent stack (Langflow, wiring containers together into a system), the [Local Agent Stack](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentStack) tutorial remains the reference.
 
 ---
 

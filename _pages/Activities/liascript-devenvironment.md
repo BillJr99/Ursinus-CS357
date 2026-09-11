@@ -564,7 +564,7 @@ JSON
 
 That file is everything the Overview assignment needs, and everything Steps 8.3 and 8.4 need.
 
-**Optional: register OpenWebUI as a second provider.**  The `provider` block is a map, so you do not have to choose: name two keys and you get two providers, both live, both listed in `/model`.  OpenWebUI is not part of today's build; the Local Agent lab's first direction installs it on your host.  Add this second entry once it is running there, because until then the entry appears in `/model` but cannot answer.  The two-provider version of the file looks like this, again written for the container route:
+**Optional: register OpenWebUI as a second provider.**  The `provider` block is a map, so you do not have to choose: name two keys and you get two providers, both live, both listed in `/model`.  OpenWebUI is not part of today's build; the optional OpenWebUI section of the [Overview assignment](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/Overview) installs it on your host.  Add this second entry once it is running there, because until then the entry appears in `/model` but cannot answer.  The two-provider version of the file looks like this, again written for the container route:
 
 ```bash
 cat > /workspace/opencode.json <<'JSON'
@@ -674,7 +674,7 @@ None of them come from the model.  They are properties of the *environment* you 
 
 They are what "trust" actually decomposes into.  When someone asks whether you would let an agent do X, the useful reply is not yes or no. It is: can I see what it did, can I bound what it touches, and can I put it back?
 
-You will meet all three again, made much more serious: **observability** as tracing and structured logs in the evaluation labs, **isolation** as non-root containers, read-only mounts, and OAuth scopes in the Local Agent Lab's containerization and MCP directions, and **reversibility** as branch discipline, rollback, and the governance question of who is accountable when an autonomous system errs.
+You will meet all three again, made much more serious: **observability** as tracing and structured logs in the evaluation labs, **isolation** as non-root containers, read-only mounts, and OAuth scopes in the Responsible AI Capstone's containerization direction and the Tools and MCP lab's OAuth option, and **reversibility** as branch discipline, rollback, and the governance question of who is accountable when an autonomous system errs.
 
 A student runs a coding agent directly in their home directory, outside any container, on a folder that is not a git repository, and carefully reads every diff before approving it.  Which of the three properties do they have?
 
