@@ -177,7 +177,7 @@ Expected output:
 
 ### Install: no-code path
 
-promptfoo is an evaluation harness: you describe prompts, a model, test cases, and assertions in a YAML file, and one command runs them all.  Its `llm-rubric` assertion is an LLM as judge, a model prompted to decide whether an answer meets a stated criterion.  Install Node.js from [https://nodejs.org](https://nodejs.org); `npx` then downloads promptfoo on first use, so nothing else needs a global install.
+promptfoo is an evaluation harness: you describe prompts, a model, test cases, and assertions in a YAML file, and one command runs them all.  Its `llm-rubric` assertion is an LLM as judge, a model prompted to decide whether an answer meets a stated criterion.  Install Node.js from [https://nodejs.org](https://nodejs.org), version **22.22 or newer**; promptfoo refuses to start on anything older, and the version your package manager offers is often older than that, so check with `node --version` first.  `npx` then downloads promptfoo on first use, so nothing else needs a global install.
 
 ```bash
 mkdir cs357-rubric-nocode

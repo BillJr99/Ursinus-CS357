@@ -410,7 +410,7 @@ ls -la .devcontainer
 
 > **Watch out!**  If you saved the files from a browser instead, check the names, because browsers sometimes save `Dockerfile` as `Dockerfile.txt`, and Docker will not find it under that name.
 
-Open the Dockerfile and *read it*; it is exactly the anatomy from Docker from Zero Section 5 (`FROM`, `RUN`, `ENV`, `WORKDIR`, `CMD`), and every `pip` line names its lab.  Then commit the files; they are part of your work:
+Open the Dockerfile and *read it*; it is exactly the anatomy from Docker from Zero Section 5 (`FROM`, `ARG`, `RUN`, `ENV`, `WORKDIR`, `CMD`), and every `pip` line names its lab.  Then commit the files; they are part of your work:
 
 ```bash
 git add .devcontainer
@@ -482,6 +482,7 @@ Three commands, each proving one tool is in the image.  The fourth thing the con
 | 1 | `promptfoo --version` | `0.x.x` | Node.js and promptfoo are wired correctly (the evaluation lab's harness) |
 | 2 | `python3 -c "import spacy; nlp = spacy.load('en_core_web_sm'); print('spacy OK:', nlp('Agents plan and act.')[0].pos_)"` | `spacy OK: NOUN` | The NLP model the explainability directions use is loaded |
 | 3 | `opencode --version` | `opencode x.x.x` | The coding agent is baked into the image, so Step 5 has nothing left to install |
+| optional | `node --version` | `v24.21.0` | The image pins an exact Node release, because promptfoo requires 22.22 or newer; worth running first whenever promptfoo misbehaves.  Not graded |
 | optional | `herdr --version` | a version string | **herdr**, an agent-aware terminal multiplexer a later lab uses, is in the image too; this one is not graded |
 
 **Do.**  At the container prompt, the three graded checks, ready to paste:
@@ -494,7 +495,7 @@ opencode --version
 
 **Paste.**  All three outputs, with the container prompt visible.
 
-> **Troubleshooting:** `command not found` for any of the three means an older build of the course image; rerun `docker compose build` from your `.devcontainer/` folder, and cached layers make it quick.  `permission denied` writing files in `/workspace` on a Linux host means the container's `student` user does not match your host UID; run the container with `docker compose run --rm --user "$(id -u):$(id -g)" cs357`.
+> **Troubleshooting:** a line reading `ExperimentalWarning: DecompressInterceptor is experimental` above the promptfoo version is harmless noise from promptfoo's own dependencies, not a problem with your setup; the version string underneath it is what counts.  If promptfoo instead refuses to start and says your Node.js is too old, your image predates the Node 24 update, and *Appendix: Updating Your Container* has the fix.  `command not found` for any of the three means an older build of the course image; rerun `docker compose build` from your `.devcontainer/` folder.  `permission denied` writing files in `/workspace` on a Linux host means the container's `student` user does not match your host UID; run the container with `docker compose run --rm --user "$(id -u):$(id -g)" cs357`.
 
 **Next:** A6.
 
@@ -814,7 +815,7 @@ The agent is **opencode**, and every install route lives at [opencode.ai](https:
 |---|---|---|
 | **Install** | Nothing.  opencode is already in the course image, and A5 printed its version.  Skip to 5b | One of the three commands in the rows below, for your system |
 | **macOS, Linux, or WSL** | | `curl -fsSL https://opencode.ai/install \| bash` |
-| **Already have Node.js** | | `npm i -g opencode-ai` |
+| **Already have Node.js** (22.22 or newer; check with `node --version`) | | `npm i -g opencode-ai` |
 | **Native Windows, in PowerShell** | | `choco install opencode` or `scoop install opencode` |
 
 > **Note.**  That page also offers a **desktop app**, in beta for macOS, Windows, and Linux, if you would rather work in a window than a terminal.  It drives the same agent, but install the command-line version even if you try the desktop one, because this assignment and every lab ask for terminal output.
@@ -1195,6 +1196,7 @@ Work down this table before you post in the course channel.  The Stage column ma
 | A | `fatal: detected dubious ownership in repository at '/workspace'` | The repository's owner (your host account) is not the user running git in the container (`student`) | `git config --global --add safe.directory /workspace` inside the container, then rerun the command; once per session on the compose route |
 | A | `permission denied` writing files in `/workspace` (Linux hosts) | The container's `student` UID does not match your host UID | `docker compose run --rm --user "$(id -u):$(id -g)" cs357` |
 | A | The build fails partway with a network error | A flaky connection during the large download layers | Rerun `docker compose build`; completed layers are cached, so it resumes from the failed step |
+| A | `promptfoo` refuses to start and says Node.js must be 22.22.0 or newer | An image built before the course container pinned Node 24; Debian's own Node package is older than promptfoo now allows | Re-fetch the current Dockerfile and rebuild, as *Appendix: Updating Your Container* describes.  Fetching matters: the Dockerfile lives in your repository, so rebuilding without it just rebuilds the same image |
 | 1 | `ollama: command not found` after installing | The installer put the binary somewhere not on your `PATH` | Restart your terminal. If it persists, find the binary (`ls /usr/local/bin/ollama`) and add its directory to `PATH`. This is the `PATH` idea from Step 0 of the Workbench session |
 | 1 | `ollama: command not found`, and you installed Ollama with Docker | There is no host binary on this route; the program lives inside the container | Prefix the command: `docker exec ollama ollama list` (`docker ps` confirms the container name), and add `-it` for the interactive `ollama run` |
 | 1 | The model download stalls or fails partway | Network interruption on a 2 GB transfer | Rerun `ollama pull llama3.2`; it resumes rather than restarting |
@@ -1253,6 +1255,22 @@ A: Slow is okay for a small model on older hardware.  An error is okay as long a
 
 **Q: The reflection prompts ask about "agency" and "trust"; do I need to use the textbook definitions?**
 A: No.  This is a baseline, and not a knowledge test.  Write what you actually think before the course shapes your view.  The textbook will be there later; this snapshot of your prior thinking is valuable precisely because it is unfiltered.
+
+---
+
+## Appendix: Updating Your Container
+
+One of the quieter advantages of working in a container is that your environment is a file rather than a machine.  When a tool the course depends on changes underneath us, and sooner or later one always does, nobody has to reinstall anything by hand or compare laptops to work out whose setup drifted.  The Dockerfile in your repository *is* the environment, so a corrected Dockerfile plus a rebuild puts the whole class back on an identical, working stack.  When an update is announced, fetch the current file and rebuild:
+
+```bash
+cd ~/cs357-work/.devcontainer
+curl -fsSL -o Dockerfile https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/Dockerfile
+git add Dockerfile && git commit -m "Update course container"
+docker compose build
+docker compose run --rm cs357
+```
+
+That first `curl` matters more than it looks.  The Dockerfile lives in *your* repository, not in a registry somewhere, so rebuilding without fetching the new one just rebuilds the image you already have.  Expect the rebuild to take roughly as long as your original build did, because a change near the top of the file invalidates every layer beneath it, and the large library downloads run again.  If you work through VS Code Dev Containers, run **Dev Containers: Rebuild Container** from the command palette; plain **Reopen in Container** reuses the old image and will not pick up the change.  Once you are back at the container prompt, rerun the A5 checks to confirm the update landed, and then `docker image prune` to reclaim the disk the replaced image was still holding.
 
 ---
 
