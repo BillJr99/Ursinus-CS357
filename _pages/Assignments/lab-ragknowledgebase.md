@@ -215,12 +215,7 @@ for pdf in pathlib.Path('corpus_pdfs').glob('*.pdf'):
 > **Do this.** Run this count from your repository root.  It lists every `.txt` and `.md` file in `corpus/` and adds up their sizes.
 
 ```bash
-python -c "
-import pathlib
-files = list(pathlib.Path('corpus').glob('*.txt')) + list(pathlib.Path('corpus').glob('*.md'))
-total_chars = sum(f.stat().st_size for f in files)
-print(f'Files: {len(files)} | Total characters: {total_chars:,}')
-"
+python -c "import pathlib; fs = [*pathlib.Path('corpus').glob('*.txt'), *pathlib.Path('corpus').glob('*.md')]; print(f'Files: {len(fs)} | Total characters: {sum(f.stat().st_size for f in fs):,}')"
 ```
 
 > **You should see.** One line like `Files: 18 | Total characters: 142,350` (your numbers will differ).  You need at least 15 files.  If you have fewer, Wikipedia is a reliable fallback: `pip install wikipedia-api` and download 15 or more related articles.
@@ -245,7 +240,7 @@ print(f'Files: {len(files)} | Total characters: {total_chars:,}')
 
 A chunk is the unit of text you embed and retrieve, and its size decides whether an answer arrives whole or in pieces.  You implement two chunking strategies (fixed-size with overlap, and paragraph-structural), keep the parameters in a JSON file rather than in code, build a question set of at least ten questions with hand-located answers, and report recall@k for $$k \in \{1, 3, 5\}$$ under both strategies.
 
-> **No-code path.** Build this part as Direction 0, Parts B and C: two Langflow flows that differ only in the Text Splitter settings, measured on the same ten questions.  The requirements in this part still apply.
+> **No-code path.** Build this part as Direction 0, Steps B and C: two Langflow flows that differ only in the Text Splitter settings, measured on the same ten questions.  The requirements in this part still apply.
 
 ### Step 2.1: Create Your Configuration File
 
@@ -260,11 +255,7 @@ A chunk is the unit of text you embed and retrieve, and its size decides whether
   "seed": 42,
   "top_k": 3,
   "abstention_phrase": "I don't have enough information in my knowledge base to answer that.",
-  "chunking": {
-    "strategy": "fixed",
-    "chunk_size": 500,
-    "overlap": 50
-  }
+  "chunking": {"strategy": "fixed", "chunk_size": 500, "overlap": 50}
 }
 ```
 
@@ -275,20 +266,16 @@ A chunk is the unit of text you embed and retrieve, and its size decides whether
 ```python
 def chunk_fixed(text, chunk_size=500, overlap=50):
     """Split text into overlapping fixed-size chunks. Returns (chunk_text, start_char) tuples."""
-    chunks = []
-    start = 0
+    chunks, start = [], 0
     while start < len(text):
-        end = start + chunk_size
-        chunks.append((text[start:end], start))
+        chunks.append((text[start:start + chunk_size], start))
         start += chunk_size - overlap
     return chunks
 
 def chunk_by_paragraph(text, min_size=100, max_size=1000):
     """Split on blank lines, merging short paragraphs until min_size. Returns (chunk_text, paragraph_index) tuples."""
     raw_paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
-    chunks = []
-    current = ""
-    idx = 0
+    chunks, current, idx = [], "", 0
     for para in raw_paragraphs:
         current = (current + "\n\n" + para).strip() if current else para
         if len(current) >= min_size:
@@ -307,11 +294,8 @@ An embedding is a vector of numbers that places a piece of text so that similar 
 > **Do this.** Add this to `rag.py`.  The exception handlers around network, embedding, and database calls are a rubric requirement: each prints a located message such as `[lab2:build_index]` and a traceback.
 
 ```python
-import chromadb
+import chromadb, json, pathlib, traceback
 from sentence_transformers import SentenceTransformer
-import pathlib
-import json
-import traceback
 
 def build_index(config, strategy="fixed"):
     """Load corpus_dir, chunk, embed, and store in Chroma. Returns (collection, embed_model, chunk_metadata_list)."""
@@ -340,12 +324,7 @@ def build_index(config, strategy="fixed"):
                 all_ids.append(f"{doc_file.stem}_{strategy}_{i}")
                 all_metadatas.append({"source": doc_file.name, "position": position, "strategy": strategy})
 
-        all_embeddings = []
-        batch_size = 64                                  # embed in batches to limit memory use
-        for i in range(0, len(all_chunks), batch_size):
-            all_embeddings.extend(embed_model.encode(all_chunks[i:i+batch_size]).tolist())
-            print(f"  Embedded {min(i+batch_size, len(all_chunks))}/{len(all_chunks)} chunks")
-
+        all_embeddings = embed_model.encode(all_chunks, batch_size=64, show_progress_bar=True).tolist()   # batches limit memory use
         collection.add(documents=all_chunks, embeddings=all_embeddings, ids=all_ids, metadatas=all_metadatas)
         print(f"Indexed {len(all_chunks)} chunks using strategy='{strategy}'")
         return collection, embed_model, list(zip(all_ids, all_chunks, all_metadatas))
@@ -355,15 +334,7 @@ def build_index(config, strategy="fixed"):
         raise
 ```
 
-> **You should see.** Progress lines, then a total:
-
-```text
-  Embedded 64/312 chunks
-  Embedded 128/312 chunks
-  ...
-  Embedded 312/312 chunks
-Indexed 312 chunks using strategy='fixed'
-```
+> **You should see.** An embedding progress bar, then a total such as `Indexed 312 chunks using strategy='fixed'`.
 
 > **If it fails.**
 > - `ValueError: Embedding function is required`: you pass embeddings yourself in `collection.add`, so do not also pass `embedding_function` when creating the collection.
@@ -378,14 +349,11 @@ Before running any retrieval, find each answer yourself in the corpus and record
 ```python
 # question_set.py
 QUESTIONS = [
-    {
-        "id": "Q01",
-        "question": "What is the main topic covered in lecture 3?",
-        "answer_in_source": "lecture03.txt",       # file where the answer lives
-        "answer_text_snippet": "gradient descent"  # short string that appears in the answer chunk
-    },
-    # TODO: Add Q02 through Q10 covering different documents
-    # Include at least 2 questions your corpus CANNOT answer (for abstention testing in Part 3)
+    {"id": "Q01", "question": "What is the main topic covered in lecture 3?",
+     "answer_in_source": "lecture03.txt",         # file where the answer lives
+     "answer_text_snippet": "gradient descent"},  # short string that appears in the answer chunk
+    # TODO: add Q02 through Q10 covering different documents, including at least 2 your corpus CANNOT answer
+    #       (mark those "unanswerable": True, for abstention testing in Part 3)
 ]
 ```
 
@@ -421,19 +389,7 @@ if __name__ == "__main__":
             print(f"  recall@{k} = {recall_at_k(collection, embed_model, QUESTIONS, k=k):.2f}")
 ```
 
-> **You should see.** Six numbers (yours will differ):
-
-```text
-Strategy: fixed
-  recall@1 = 0.50
-  recall@3 = 0.80
-  recall@5 = 0.90
-
-Strategy: paragraph
-  recall@1 = 0.60
-  recall@3 = 0.70
-  recall@5 = 0.80
-```
+> **You should see.** Six numbers, such as `recall@1 = 0.50`, `recall@3 = 0.80`, `recall@5 = 0.90` under `fixed` and `0.60`, `0.70`, `0.80` under `paragraph` (yours will differ).
 
 > **Paste into your submission.** Put these six numbers in a table in your readme and defend the strategy you ship with a specific numeric comparison ("fixed reaches recall@3 of 0.80 versus 0.70 for paragraph on our question set").  Then set `"strategy"` in `config.json` to the winner.
 
@@ -450,7 +406,7 @@ Strategy: paragraph
 
 The query path embeds the question, retrieves the top-k chunks, and assembles a prompt that tells the model to answer **only** from that context, to cite bracketed source numbers, and to reply with the designated abstention phrase when the context is insufficient.  You demonstrate five answered questions with correct citations, two abstentions, and one before/after comparison where the bare model hallucinates and your system answers correctly or abstains.  The Code Quality row (5%) is earned here and in Part 2: docstrings on every non-trivial function, located exception handlers, and no hardcoded parameters.
 
-> **No-code path.** Build this part as Direction 0, Part D: the Prompt node carries the same rules, and the playground transcripts are your demonstration.
+> **No-code path.** Build this part as Direction 0, Step D: the Prompt node carries the same rules, and the playground transcripts are your demonstration.
 
 ### Step 3.1: Implement the Query-and-Generate Function
 
@@ -502,13 +458,13 @@ CONTEXT:
     return answer, list(zip(chunks, metadatas))
 ```
 
-### Step 3.2: Answer Five Questions with Citations
+### Step 3.2: Demonstrate All Three Behaviors
 
-> **Do this.** Create `demo.py` with the three runs in Steps 3.2 through 3.4 and run it with `python3 demo.py`.  Build the index with the strategy you chose in Part 2.
+> **Do this.** Create `demo.py` with the three runs below (five cited answers, two abstentions, and the bare-model contrast) and run it with `python3 demo.py`.  Build the index with the strategy you chose in Part 2, and include the bare-model comparison verbatim in your readme.
 
 ```python
 # demo.py
-import json
+import json, requests
 from rag import build_index, query_rag
 from question_set import QUESTIONS
 
@@ -516,50 +472,17 @@ config = json.load(open("config.json"))
 collection, embed_model, _ = build_index(config, strategy=config["chunking"]["strategy"])
 
 answerable_questions = [q for q in QUESTIONS if not q.get("unanswerable")][:5]
-for q_item in answerable_questions:
+for q_item in answerable_questions:                    # five answers with citations
     print(f"\nQ: {q_item['question']}")
     answer, retrieved = query_rag(q_item["question"], collection, embed_model, config)
     print(f"A: {answer}")
     print(f"Retrieved from: {[m['source'] for _, m in retrieved]}")
-```
 
-> **You should see.** Five blocks shaped like this, each with at least one bracketed citation:
-
-```text
-Q: What is the main topic covered in lecture 3?
-A: Lecture 3 covers gradient descent and its role in optimizing neural network weights [1].
-Retrieved from: ['lecture03.txt', 'lecture02.txt', 'lecture04.txt']
-```
-
-### Step 3.3: Abstain on Two Questions
-
-> **Do this.** Add this to `demo.py`.
-
-```python
-unanswerable = [q for q in QUESTIONS if q.get("unanswerable")][:2]
-for q_item in unanswerable:
+for q_item in [q for q in QUESTIONS if q.get("unanswerable")][:2]:   # two abstentions
     print(f"\nQ: {q_item['question']}")
     answer, _ = query_rag(q_item["question"], collection, embed_model, config)
     print(f"A: {answer}")
     print(f"Abstained correctly: {config['abstention_phrase'] in answer}")
-```
-
-> **You should see.**
-
-```text
-Q: What year was the Ursinus College library built?
-A: I don't have enough information in my knowledge base to answer that.
-Abstained correctly: True
-```
-
-> **If it fails.** Smaller models sometimes answer from training data anyway.  Make the instruction more direct ("You MUST respond with exactly that phrase and nothing else if the context is insufficient").  If it still fails, add a post-processing check: if the answer has no `[1]`-style bracket and no abstention phrase, replace it with the abstention phrase and log a warning.
-
-### Step 3.4: Show the Bare-Model Hallucination Contrast
-
-> **Do this.** Add `query_bare_model` to `demo.py` and ask the bare model (no context) a question your RAG system answered correctly.  Include the comparison verbatim in your readme.
-
-```python
-import requests
 
 def query_bare_model(question, config, ollama_url="http://localhost:11434/api/chat"):
     """Ask the model with no retrieved context, for the before/after contrast."""
@@ -568,15 +491,26 @@ def query_bare_model(question, config, ollama_url="http://localhost:11434/api/ch
     r = requests.post(ollama_url, json=payload, timeout=60)
     return r.json()["message"]["content"]
 
-example_q = answerable_questions[0]["question"]
-print(f"Question: {example_q}")
+example_q = answerable_questions[0]["question"]        # the bare-model hallucination contrast
+print(f"\nQuestion: {example_q}")
 print(f"\nBare model answer:\n{query_bare_model(example_q, config)}")
 print(f"\nRAG answer:\n{query_rag(example_q, collection, embed_model, config)[0]}")
 ```
 
-> **You should see.** A bare answer that is confident and wrong (or invented) next to a RAG answer that is cited or abstains.  If the bare model happens to be right, pick another question; the contrast is the deliverable.
+> **You should see.** Five answered blocks, each with at least one bracketed citation; two abstentions ending `Abstained correctly: True`; and a bare answer that is confident and wrong (or invented) next to a RAG answer that is cited or abstains.  If the bare model happens to be right, pick another question; the contrast is the deliverable.
+
+```text
+Q: What is the main topic covered in lecture 3?
+A: Lecture 3 covers gradient descent and its role in optimizing neural network weights [1].
+Retrieved from: ['lecture03.txt', 'lecture02.txt', 'lecture04.txt']
+
+Q: What year was the Ursinus College library built?
+A: I don't have enough information in my knowledge base to answer that.
+Abstained correctly: True
+```
 
 > **If it fails.**
+> - The model answers an unanswerable question from training data: make the instruction more direct ("You MUST respond with exactly that phrase and nothing else if the context is insufficient").  If it still fails, add a post-processing check: if the answer has no `[1]`-style bracket and no abstention phrase, replace it with the abstention phrase and log a warning.
 > - The model cites `[1]` but the wrong chunk: a retrieval problem, not a generation problem.  If Part 2's recall@3 is below 0.5, raise `top_k` to 5 or switch strategy.
 > - The answer is cut off mid-sentence: the context overflows the model's window.  Lower `top_k` to 2 or `chunk_size`, or add `"num_ctx": 4096` to the Ollama `options`.
 
@@ -591,24 +525,20 @@ print(f"\nRAG answer:\n{query_rag(example_q, collection, embed_model, config)[0]
 
 For at least ten answered questions, read the chunk each citation points to and decide whether it supports the claim.  Report a **faithfulness rate** (the fraction of audited citations whose chunk supports the claim) and show every failure verbatim, classified with the hallucination taxonomy from class.  This part is required on every path; on Direction 0, use the playground's node-inspection view to read the cited chunk.
 
-### Step 4.1: Build the Audit Table
+### Step 4.1: Build the Audit Table and Classify Failures
 
-> **Do this.** In your readme, record one row per audited citation:
+> **Do this.** In your readme, record one row per audited citation, and label each unfaithful citation with one of the four categories from class:
+> - **Fabrication**: the cited chunk exists but does not contain the claimed fact; the model invented it.
+> - **Conflation**: the cited chunk is about a related but different topic; the model merged two concepts.
+> - **Extrapolation**: the chunk implies but does not state the claim; the model over-inferred.
+> - **Wrong citation**: the fact is correct and in the corpus, but in a different chunk than the one cited.  Count it as a failure, but classify it accurately: the answer may be right even though the number is wrong.
 
 | Q# | Answer excerpt and citation | Chunk cited | Faithful? | Failure type |
 |----|-----------------------------|-------------|-----------|--------------|
 | Q01 | "Gradient descent is ..." [1] | "lecture03: Gradient descent is a method..." | Yes | - |
 | Q02 | ... | ... | No | Fabrication |
 
-### Step 4.2: Classify Failures with the Taxonomy
-
-> **Do this.** Label each unfaithful citation with one of the four categories from class:
-> - **Fabrication**: the cited chunk exists but does not contain the claimed fact; the model invented it.
-> - **Conflation**: the cited chunk is about a related but different topic; the model merged two concepts.
-> - **Extrapolation**: the chunk implies but does not state the claim; the model over-inferred.
-> - **Wrong citation**: the fact is correct and in the corpus, but in a different chunk than the one cited.  Count it as a failure, but classify it accurately: the answer may be right even though the number is wrong.
-
-### Step 4.3: Compute the Faithfulness Rate
+### Step 4.2: Compute the Faithfulness Rate
 
 > **Do this.** Create `audit.py`, fill it from your table, and run `python3 audit.py`.
 
@@ -641,33 +571,24 @@ for f in [r for r in audit_results if not r["faithful"]]:
 
 ## Part 5: Run the RAG Quality Checkup (three Quality Checkup rows, 50%)
 
-Part 5 is a structured checkup on the pipeline from Parts 2 through 4, in three steps: design a **golden set** (ten questions with expected answers and a stated scoring rule, five that should be easy for your model and five that should not), complete a checkup worksheet with measurements from your own pipeline, and freeze both into a regression harness (a fixed test you can rerun after any change and compare against the last run).  It sits mid-window on purpose: your pipeline is running by then and not yet due, which is the only point in the term when a diagnostic can still change what you build.
-
-The metrics (recall@k, citation faithfulness, abstention) come from *RAG Quality: Chunking and Measuring Retrieval*.  Do most of the worksheet in the open studio in *How I AI* (Part III) with your pipeline-in-progress in front of you.  The harness follows you forward: the Rubric Pipeline lab starts from it, and Evaluation Workshop II runs your judge against your own project work.  Most of Part 5 is evaluation work Parts 2 through 4 ask for anyway, done earlier and under supervision; the harness is the one forward investment.  Work on your pair's own pipeline and corpus, and keep the swap log going.
+Part 5 is a structured checkup on the pipeline from Parts 2 through 4: design a **golden set** (ten questions with expected answers and a stated scoring rule, five that should be easy for your model and five that should not), complete a checkup worksheet with measurements from your own pipeline, and freeze both into a regression harness (a fixed test you can rerun after any change and compare against the last run).  It sits mid-window on purpose: your pipeline is running by then and not yet due, which is the only point in the term when a diagnostic can still change what you build.  The metrics come from *RAG Quality: Chunking and Measuring Retrieval*; do most of the worksheet in the open studio in *How I AI* (Part III) with your pipeline-in-progress in front of you.  The harness follows you forward: the Rubric Pipeline lab starts from it, and Evaluation Workshop II runs your judge against your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
 
 ### Before You Start Part 5
 
-This builds on the *Hallucinations and Evaluating Agent Outputs* session, where we mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from; the *RAG Quality* session; and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  A pipeline that answers poorly is a better subject for a checkup than one that does not answer at all.
+This builds on the *Hallucinations and Evaluating Agent Outputs* session (where you mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from), the *RAG Quality* session, and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  If it is not running, come anyway and say so at the start: debugging it *is* the studio, and the checkup works on a pipeline you got running at 12:20.
 
 > **Bring to class.**
-> - Your lab repository, cloned and runnable.
-> - Your corpus indexed, with at least one chunking configuration working end to end.
+> - Your lab repository, cloned and runnable, with your corpus indexed and at least one chunking configuration working end to end.
 > - Any benchmark questions you sketched in the *Hallucinations and Evaluating Agent Outputs* session (Part IIb and its Exercise 1).  Step 5a turns them into a finished ten-item set; if you have none, start there.
 > - Five questions you care about the answers to, drawn from your own corpus.
 
-Sanity check before you arrive: your pipeline answers one question, however badly.  On Direction 0, the equivalent is one question answered in the Langflow playground.
-
-```bash
-python3 ask.py "a question your corpus should be able to answer"
-```
+Sanity check before you arrive: `python3 ask.py "a question your corpus should be able to answer"` returns an answer, however bad.  On Direction 0, the equivalent is one question answered in the Langflow playground.
 
 > **Time budget.** Step 5a is about one hour, most of it judgment rather than typing, and it is meant to be done before the studio: it needs no running pipeline, and doing it early is the single best way to make the studio productive.  Steps 5b and 5c are the studio session plus an hour or two of finishing on your own; 5c goes quickly because your golden set already exists.  If 5a runs past an hour you are polishing: ten adequate items beat six perfect ones.
 
-If your pipeline is not running, come anyway and say so at the start.  Debugging it *is* the studio, and the checkup works on a pipeline you got running at 12:20.
-
 ### Choose Your Part 5 Route
 
-Same rubric, same credit.  Step 5a is identical on every route: designing ten good items is the assignment, and the file format is a detail.  The judgment in the rest of Part 5 (which configuration wins, which citations are real, what the failure means) is identical too; the routes differ only in how you collect and rerun the numbers.  Pairs on Direction 0 usually take the no-code or low-code route; pairs who coded Parts 2 and 3 usually take the code route.  Any combination is allowed.
+Same rubric, same credit.  Step 5a is identical on every route (designing ten good items is the assignment, and the file format is a detail), and so is the judgment in the rest of Part 5: which configuration wins, which citations are real, what the failure means.  The routes differ only in how you collect and rerun the numbers.  Pairs on Direction 0 usually take the no-code or low-code route; pairs who coded Parts 2 and 3 usually take the code route.  Any combination is allowed.
 
 | Route | Golden set and harness | How you measure | Pick this if |
 |-------|------------------------|-----------------|--------------|
@@ -675,13 +596,11 @@ Same rubric, same credit.  Step 5a is identical on every route: designing ten go
 | **Low-code** | A `promptfoo` YAML case list, with the golden set as cases and `temperature: 0` pinned | By hand as above, or a small promptfoo run against your retriever | You expect to take the Rubric Pipeline lab's promptfoo direction |
 | **Code** | `goldenset.json`; the harness is a Python script grown from the class evaluation harness | A loop over your five queries that prints retrieved chunk IDs, scored against your own relevance judgments (Part 2's `recall_at_k` is a natural start) | You coded Parts 2-3 and want the harness you will extend in the Rubric Pipeline lab |
 
-> **Watch out.** The no-code route is not the shortcut.  Measuring recall@k by hand means you look at every retrieved chunk, which is exactly how people discover that their retriever returned the right document and the wrong *part* of it.  A script that prints `recall@5 = 0.6` hides that.  The same holds in Step 5a: running ten items by hand means you read every answer closely, which is what catches a *metric failure*, where your rule mis-graded a correct answer.  Students on the code route often miss those because the harness printed FAIL and they believed it.
+> **Watch out.** The no-code route is not the shortcut.  Measuring recall@k by hand means you look at every retrieved chunk, which is exactly how people discover that their retriever returned the right document and the wrong *part* of it; a script that prints `recall@5 = 0.6` hides that.  Running ten items by hand likewise catches a *metric failure*, where your rule mis-graded a correct answer.  Students on the code route often miss those because the harness printed FAIL and they believed it.
 
 ### Step 5a: Design Your Golden Set
 
-Before you can tell whether your pipeline is any good, you need a fixed set of questions with known answers.  Each item has four fields: `question`; `expected` (the answer text your scoring rule matches); `rule` (exact, substring, or normalized match, your choice per item, stated); and `rationale` (one sentence predicting whether the model will pass and *why*, reasoned from training data: how recent, how local, how specific, how citation-shaped the fact is).
-
-These ten items are about the **model**, not yet about your corpus.  Step 5c extends the set with corpus-specific questions, and the gap between how the bare model does on the fragile five and how the same model does with your retrieved chunks in front of it is the entire argument for having built a RAG pipeline.  Part 3 makes that argument on one question; the golden set makes it on ten.
+Each item has four fields: `question`; `expected` (the answer text your scoring rule matches); `rule` (exact, substring, or normalized match, your choice per item, stated); and `rationale` (one sentence predicting whether the model will pass and *why*, reasoned from training data: how recent, how local, how specific, how citation-shaped the fact is).  These ten items are about the **model**, not yet about your corpus.  Step 5c extends the set with corpus-specific questions, and the gap between how the bare model does on the fragile five and how the same model does with your retrieved chunks in front of it is the entire argument for having built a RAG pipeline.
 
 > **Do this.**
 > 1. Write five **expected-reliable** items first: stable, well-documented knowledge (famous dates, authors, capitals, definitions).  They calibrate your sense of what an unambiguous `expected` looks like.
@@ -689,24 +608,17 @@ These ten items are about the **model**, not yet about your corpus.  Step 5c ext
 > 3. Choose each item's `rule` **last**, after you know what a correct answer looks like.  Could a fully correct answer fail this rule?  Could a wrong answer pass it?
 > 4. Write every rationale as a prediction plus a reason.  The prediction is what Step 5c grades you against.
 
-Two worked items.  Notice that each rationale names a reason from the training data (thick, thin, recent, local, changing) and commits to a prediction before the run.  "This seems hard" earns the `beginning` row; "the data would be thin here because..." earns `proficient`.
+Two worked items, one of each kind.  Each rationale names a reason from the training data and commits to a prediction before the run: "This seems hard" earns the `beginning` row; "the data would be thin here because..." earns `proficient`.
 
 ```json
-{
-  "question": "In what year was the Declaration of Independence signed?",
-  "expected": "1776",
-  "rule": "substring",
-  "rationale": "Expect PASS. This date appears in a vast number of training documents in exactly this form, so it is about as thick as training data gets. Substring matching is safe because any correct phrasing contains the four digits."
-}
-```
-
-```json
-{
-  "question": "Which building houses the Ursinus College mathematics and computer science department, and what are its office hours?",
-  "expected": "Pfahler Hall",
-  "rule": "substring",
-  "rationale": "Expect FAIL on the second half. The building name may appear in a handful of pages; the office hours almost certainly appear nowhere, and they change every term. I predict a confident, invented answer, which is exactly the failure mode worth catching."
-}
+[
+  {"question": "In what year was the Declaration of Independence signed?",
+   "expected": "1776", "rule": "substring",
+   "rationale": "Expect PASS. This date appears in a vast number of training documents in exactly this form, so it is about as thick as training data gets. Substring matching is safe because any correct phrasing contains the four digits."},
+  {"question": "Which building houses the Ursinus College mathematics and computer science department, and what are its office hours?",
+   "expected": "Pfahler Hall", "rule": "substring",
+   "rationale": "Expect FAIL on the second half. The building name may appear in a handful of pages; the office hours almost certainly appear nowhere, and they change every term. I predict a confident, invented answer, which is exactly the failure mode worth catching."}
+]
 ```
 
 > **Checkpoint.** You have succeeded when you have ten items, each with all four fields, and a classmate reading only your rationales could predict your pass rate to within two items.
@@ -715,7 +627,7 @@ Two worked items.  Notice that each rationale names a reason from the training d
 
 Complete `checkup.md` against your in-progress pipeline, with your Part 5 route named at the top.  Three measurements, in this order.
 
-**Measurement 1: retrieval quality.** For five queries representative of your corpus, measure recall@k under your current chunking configuration and one alternative (a different chunk size or overlap), name the winner, and carry the winning configuration back into your Part 2 config.  Here recall is measured against *your* reading: for each query you decide which chunks contain the answer (the relevant chunks), ask the retriever for its top `k`, and count how many relevant ones came back.  Part 2's `recall_at_k` approximates that judgment with a snippet match; this measurement replaces the approximation with your own reading, on five queries, at one `k`.
+**Measurement 1: retrieval quality.** For five queries representative of your corpus, measure recall@k under your current chunking configuration and one alternative (a different chunk size or overlap), name the winner, and carry the winning configuration back into your Part 2 config.  Here recall is measured against *your* reading: for each query you decide which chunks contain the answer, ask the retriever for its top `k`, and count how many relevant ones came back.  Part 2's `recall_at_k` approximates that judgment with a snippet match; this measurement replaces the approximation with your own reading, on five queries, at one `k`.
 
 > **Do this.**
 > 1. Fix `k` (5 is a reasonable default) and **do not change it** between configurations.  Comparing recall@5 against recall@10 tells you nothing.
@@ -724,15 +636,11 @@ Complete `checkup.md` against your in-progress pipeline, with your Part 5 route 
 > 4. Change exactly **one thing** (chunk size or overlap, not both), re-index, and run the same five.
 > 5. Fill in the table and name the winner.
 
-Worked row, so the format is unambiguous:
-
 | Query | Relevant chunks (my judgment) | Config A (512/50): retrieved, recall@5 | Config B (256/25): retrieved, recall@5 |
 |---|---|---|---|
 | "What is the late policy for a three-day extension?" | c14, c15 | c14, c22, c31, c07, c19; 1/2 = 0.50 | c14, c15, c22, c31, c07; 2/2 = 1.00 |
 
-Config A retrieved `c14` and stopped; the policy spanned two chunks, and the 512-token chunking put the second half of the sentence in a chunk that scored just below the cut.  That is a *chunking* failure that looks like a *retrieval* failure, and it is the single most common thing this checkup finds.
-
-> **Checkpoint.** You have a five-row table with the same `k` in both columns, a named winner, and one sentence explaining *why* the winner won that refers to your corpus rather than to general principle.
+In the worked row, Config A retrieved `c14` and stopped; the policy spanned two chunks, and the 512-token chunking put the second half of the sentence in a chunk that scored just below the cut.  That is a *chunking* failure that looks like a *retrieval* failure, and it is the single most common thing this checkup finds.
 
 **Measurement 2: citation audit.** For five answered queries, one row each: the answer's central claim, the chunk it cites, and your verdict.  Part 4's ten-row audit with the class taxonomy is the full version; these five rows are the same muscle, built early.
 
@@ -744,13 +652,11 @@ Config A retrieved `c14` and stopped; the policy spanned two chunks, and the 512
 
 > **Watch out.** A "partial" is the interesting finding.  The chunk says the extension is available "with prior permission"; the answer says students "may take a three-day extension."  Everything in the answer traces to the chunk, and a condition has quietly dropped.  No retrieval metric catches that.  You do.
 
-> **Checkpoint.** You have five rows with verdicts, and at least one row where the verdict required reading the chunk rather than pattern-matching a phrase.
-
-**Measurement 3: one failure.** Capture one concrete misbehavior you observed (a wrong retrieval, an unsupported citation, a failed abstention) with the query, the output, a one-paragraph hypothesis for the mechanism, and your planned fix.  A hypothesis is not a complaint: "the model hallucinated" is a complaint.  A hypothesis names the stage that failed and says why:
+**Measurement 3: one failure.** Capture one concrete misbehavior you observed (a wrong retrieval, an unsupported citation, a failed abstention) with the query, the output, a one-paragraph hypothesis for the mechanism, and your planned fix.  "The model hallucinated" is a complaint; a hypothesis names the stage that failed and says why:
 
 > *"The retriever returned c31 rather than c14 for this query.  Both chunks mention 'extension,' but c31 is a syllabus paragraph about deadline extensions for the project and c14 is the late-work policy.  My embedding cannot distinguish the two senses because the chunks are short enough that neither carries the surrounding context that disambiguates them.  **Fix:** increase overlap so each chunk carries its section heading, and re-measure."*
 
-> **Checkpoint.** Your hypothesis names a *stage* (chunking, embedding, retrieval, reranking, generation) and your fix is something you could do this week.
+> **Checkpoint.** You have a five-row recall table with the same `k` in both columns, a named winner, and one sentence explaining *why* it won that refers to your corpus rather than to general principle; five audit rows with verdicts, at least one of which required reading the chunk rather than pattern-matching a phrase; and a hypothesis that names a *stage* (chunking, embedding, retrieval, reranking, generation) with a fix you could do this week.
 
 ### Step 5c: Build the Regression Harness
 
@@ -768,7 +674,7 @@ Freeze your evaluation so it can be rerun forever.  The point is not the code; i
 >    - You may also find a third kind in a RAG pipeline, a **retrieval failure**: the model would have known the answer from the right chunk and did not get it.  Name it; it points straight back at 5b's recall numbers.
 > 7. **Commit** the harness and the golden set inside your lab repository (and include them in the submission ZIP), where the Rubric Pipeline lab can pick them up.
 
-That distinction in step 6 is why you wrote the predictions down first.  A benchmark whose failures are mostly metric failures is measuring your rules, not your system.  A worked miss, for calibration:
+Step 6 is why you wrote the predictions down first: a benchmark whose failures are mostly metric failures is measuring your rules, not your system.  A worked miss, for calibration:
 
 > **Item 7** (fragile, citation-shaped).  Predicted FAIL, outcome PASS.
 >
@@ -784,11 +690,9 @@ That distinction in step 6 is why you wrote the predictions down first.  A bench
 - **Recall@k is 0.0 for every query.** Chunk IDs are not stable across re-indexing, so your judgments no longer refer to the same chunks.  Record chunk *text* alongside the ID, or re-derive judgments after the final index build.
 - **Re-indexing with a new chunk size changes nothing.** The old collection is still being queried.  Delete or rename it before re-indexing (Part 2's `build_index` does this) and confirm the stored chunk count changed.
 - **The pipeline answers but shows no citation.** Your prompt does not require one, or chunk IDs are not passed into the prompt.  Fix it and note it in the failure section; ungrounded answers are what this checkup exists to find.
-- **Two runs disagree.** Something is unpinned.  Diagnose in this order: temperature, seed, index rebuild, score ties.
 - **Everything is too slow to finish.** You are re-embedding the whole corpus per query.  Embed and store once; embed only the query per run.  If it is still slow, cut the corpus for this checkup and say you did.
 - **Everything "passes" and you do not believe it.** Your `expected` strings are too short; `"1"` is a substring of almost every answer.  Lengthen them, or switch that item to exact or normalized matching.
-- **A correct answer scores FAIL.** A formatting mismatch, not a knowledge gap: a **metric failure**, and a finding rather than a bug to hide.  Record it, then decide whether to normalize.
-- **The model refuses instead of answering.** Abstention, a distinct outcome from right and wrong.  Your rule probably cannot distinguish it from a wrong answer.  Say so in the analysis; that observation is worth points.
+- **A correct answer scores FAIL, or the model refuses instead of answering.** A formatting mismatch is a **metric failure**, not a knowledge gap: record it, then decide whether to normalize.  A refusal is abstention, a distinct outcome from right and wrong that your rule probably cannot distinguish from a wrong answer; say so in the analysis, because that observation is worth points.
 - **promptfoo cannot find your provider.** The Ollama provider string is wrong or the server is down.  Use `ollama:chat:llama3.2` and confirm your model server answers first.
 
 > **Checkpoint.** Before writing your deliverables, make sure you can answer:
@@ -800,115 +704,72 @@ That distinction in step 6 is why you wrote the predictions down first.  A bench
 
 ## Chunking Strategy Comparison Walkthrough
 
-This in-class walkthrough runs three chunking strategies over one 400-word document and five test questions, with a word-frequency cosine similarity (a score between 0 and 1 measuring how much vocabulary two texts share) standing in for embeddings, so the comparison is purely about chunking.  No libraries are needed.  For real RAG you would use a local embedding model (for example `nomic-embed-text` via Ollama); word frequency works here because the test questions deliberately reuse the document's vocabulary.
+This in-class walkthrough runs three chunking strategies over one short document and five test questions, with a word-frequency cosine similarity (a score between 0 and 1 measuring how much vocabulary two texts share) standing in for embeddings, so the comparison is purely about chunking.  No libraries are needed; for real RAG you would use a local embedding model such as `nomic-embed-text` via Ollama.
 
-### Step W.1: Create the Document and the Three Chunkers
+### Step W.1: Create the Script and Run It
 
-> **Do this.** Create `chunking_compare.py` and paste in the document and the three functions.  The excerpt contains facts that span paragraph boundaries on purpose.
+> **Do this.** Create `chunking_compare.py`, paste in the listing, and run `python3 chunking_compare.py`.  The document's facts span paragraph boundaries on purpose, and each question stresses a different boundary.
 
 ```python
+import re
+
 DOCUMENT = """
-The field of artificial intelligence was formally founded at the Dartmouth Conference in 1956,
-where John McCarthy, Marvin Minsky, Claude Shannon, and others gathered to explore whether
-machines could be made to simulate human intelligence. The participants were optimistic,
-predicting that a significant portion of human intellectual activity could be replicated
-within a single generation. This optimism led to substantial government funding throughout
-the late 1950s and 1960s, particularly from the United States Department of Defense.
+The field of artificial intelligence was formally founded at the Dartmouth Conference in 1956, where John McCarthy, Marvin Minsky,
+Claude Shannon, and others gathered to explore whether machines could simulate human intelligence. The participants were optimistic,
+predicting that much of human intellectual activity could be replicated within a generation, and that optimism drew government funding.
 
-Early AI research focused on symbolic reasoning and rule-based systems. Programs like the
-Logic Theorist, created by Allen Newell and Herbert Simon in 1956, could prove mathematical
-theorems by manipulating symbols according to formal rules. The General Problem Solver,
-which followed in 1957, attempted to model human problem-solving strategies using means-ends
-analysis. These systems demonstrated that computers could perform tasks previously thought
-to require human intelligence, though they struggled with the complexity of real-world problems.
+Early AI research focused on symbolic reasoning and rule-based systems. The Logic Theorist, created by Allen Newell and Herbert Simon
+in 1956, proved mathematical theorems by manipulating symbols according to formal rules, and the General Problem Solver of 1957
+modeled human problem solving with means-ends analysis.
 
-The first AI winter arrived in the 1970s when researchers encountered fundamental limitations.
-Minsky and Papert's 1969 book Perceptrons demonstrated mathematical limitations of single-layer
-neural networks, dampening enthusiasm for connectionist approaches. Meanwhile, combinatorial
-explosion made symbolic AI intractable for realistic problem sizes. Funding from DARPA and
-other agencies dried up as promises went unmet, and the field entered a period of reduced
-activity and skepticism known as the AI winter.
+The first AI winter arrived in the 1970s. Minsky and Papert's 1969 book Perceptrons demonstrated mathematical limitations of
+single-layer neural networks, dampening enthusiasm for connectionist approaches, while combinatorial explosion made symbolic AI
+intractable for realistic problem sizes. Funding from DARPA and other agencies dried up as promises went unmet.
 
-The expert systems era of the 1980s briefly revived interest. Programs like MYCIN, which
-diagnosed bacterial infections and recommended antibiotics, and XCON, which configured
-computer hardware for Digital Equipment Corporation, demonstrated real commercial value.
-XCON alone saved DEC an estimated forty million dollars per year by the mid-1980s. These
-systems encoded human expertise as thousands of if-then rules and could outperform novices
-in narrow domains, but they were brittle: any question outside the rule set produced no answer.
+The expert systems era of the 1980s briefly revived interest. MYCIN diagnosed bacterial infections, and XCON configured computer
+hardware for Digital Equipment Corporation, saving DEC an estimated forty million dollars per year by the mid-1980s. These systems
+encoded expertise as thousands of if-then rules, but they were brittle: any question outside the rule set produced no answer.
 
-The rise of machine learning in the 1990s and 2000s shifted the paradigm from hand-coded
-rules to systems that learned patterns from data. The availability of larger datasets,
-faster processors, and algorithms like support vector machines and boosting made it possible
-to achieve high accuracy on tasks like handwriting recognition and email spam filtering
-without explicit programming of rules. This data-driven approach would eventually culminate
-in the deep learning revolution of the 2010s.
+The rise of machine learning in the 1990s and 2000s shifted the paradigm from hand-coded rules to systems that learned patterns from
+data. Larger datasets, faster processors, and algorithms like support vector machines and boosting achieved high accuracy on
+handwriting recognition and email spam filtering without explicit rules, culminating in the deep learning revolution of the 2010s.
 """
 
-def chunk_fixed_size(text: str, chunk_size: int = 300, overlap: int = 50) -> list[str]:
-    """Split text into fixed-character windows with overlap."""
-    chunks = []
-    start = 0
-    while start < len(text):
-        chunks.append(text[start:start + chunk_size].strip())
-        start += chunk_size - overlap
-    return [c for c in chunks if c]
+def chunk_fixed_size(text, chunk_size=300, overlap=50):
+    """Fixed-character windows with overlap."""
+    starts = range(0, len(text), chunk_size - overlap)
+    return [c for c in (text[s:s + chunk_size].strip() for s in starts) if c]
 
-def chunk_by_sentence(text: str, n_sentences: int = 3, overlap: int = 1) -> list[str]:
-    """Split text into groups of n_sentences, with overlap sentences between groups."""
-    import re
+def chunk_by_sentence(text, n_sentences=3, overlap=1):
+    """Groups of n_sentences, sharing overlap sentences between groups."""
     sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text.strip()) if s.strip()]
-    chunks = []
-    step = max(1, n_sentences - overlap)
-    for i in range(0, len(sentences), step):
-        group = sentences[i:i + n_sentences]
-        if group:
-            chunks.append(" ".join(group))
-    return chunks
+    return [" ".join(sentences[i:i + n_sentences]) for i in range(0, len(sentences), max(1, n_sentences - overlap))]
 
-def chunk_by_paragraph(text: str) -> list[str]:
-    """Split text on blank lines, one paragraph per chunk."""
-    return [p.strip() for p in text.split("\n\n") if p.strip()]
-```
+def chunk_by_paragraph(text):
+    return [p.strip() for p in text.split("\n\n") if p.strip()]           # one paragraph per chunk
 
-### Step W.2: Add Retrieval and the Five Questions, Then Run
-
-> **Do this.** Append the retriever, the questions, and the comparison loop, then run `python3 chunking_compare.py`.  Each question is designed to stress a different boundary.
-
-```python
-def cosine_sim(a: str, b: str) -> float:
+def cosine_sim(a, b):
     """Cosine similarity between two strings using word-frequency vectors."""
-    words = list(set(a.split() + b.split()))
-    va = [a.split().count(w) for w in words]
-    vb = [b.split().count(w) for w in words]
-    dot = sum(x * y for x, y in zip(va, vb))
-    mag_a = sum(x * x for x in va) ** 0.5
-    mag_b = sum(x * x for x in vb) ** 0.5
-    return dot / (mag_a * mag_b + 1e-9)
+    words = set(a.split() + b.split())
+    va, vb = [a.split().count(w) for w in words], [b.split().count(w) for w in words]
+    return sum(x * y for x, y in zip(va, vb)) / ((sum(x * x for x in va) ** 0.5) * (sum(x * x for x in vb) ** 0.5) + 1e-9)
 
-def retrieve(chunks: list[str], query: str, top_k: int = 3) -> list[str]:
-    """Return the top_k chunks most similar to query."""
-    scored = [(cosine_sim(query.lower(), c.lower()), c) for c in chunks]
-    return [c for _, c in sorted(scored, reverse=True)[:top_k]]
+def retrieve(chunks, query, top_k=3):
+    scored = sorted(((cosine_sim(query.lower(), c.lower()), c) for c in chunks), reverse=True)
+    return [c for _, c in scored[:top_k]]                                    # the top_k chunks most similar to query
 
 QUESTIONS = [
-    # Q1: answer is contained within a single paragraph
-    "Who were the founders of artificial intelligence at the Dartmouth Conference?",
-    # Q2: answer requires connecting two adjacent sentences in different paragraphs
-    "What mathematical limitation did Minsky and Papert demonstrate, and when?",
-    # Q3: answer uses a specific number that appears mid-paragraph
-    "How much money did XCON save Digital Equipment Corporation per year?",
-    # Q4: answer is in the last paragraph, using different vocabulary than the question
-    "What algorithmic approaches enabled high accuracy on spam filtering?",
-    # Q5: answer spans a paragraph boundary between the expert systems era and ML era
-    "What limitation did expert systems have compared to machine learning systems?",
+    "Who were the founders of artificial intelligence at the Dartmouth Conference?",   # Q1: inside one paragraph
+    "What mathematical limitation did Minsky and Papert demonstrate, and when?",        # Q2: a claim plus a date
+    "How much money did XCON save Digital Equipment Corporation per year?",             # Q3: a number mid-paragraph
+    "What algorithmic approaches enabled high accuracy on spam filtering?",             # Q4: vocabulary differs from the text
+    "What limitation did expert systems have compared to machine learning systems?",     # Q5: spans a paragraph boundary
 ]
 
-for strategy_name, chunks in [
-    ("Fixed (300 chars, overlap=50)", chunk_fixed_size(DOCUMENT)),
-    ("By Sentence (3 sent, overlap=1)", chunk_by_sentence(DOCUMENT)),
-    ("By Paragraph", chunk_by_paragraph(DOCUMENT)),
-]:
-    print(f"\n=== {strategy_name} ({len(chunks)} chunks) ===")
+STRATEGIES = {"Fixed (300 chars, overlap=50)": chunk_fixed_size, "By Sentence (3 sent, overlap=1)": chunk_by_sentence, "By Paragraph": chunk_by_paragraph}
+for name, chunker in STRATEGIES.items():
+    chunks = chunker(DOCUMENT)
+    print(f"\n=== {name} ({len(chunks)} chunks) ===")
     for i, q in enumerate(QUESTIONS, 1):
         print(f"  Q{i}: {q[:60]}...")
         for j, r in enumerate(retrieve(chunks, q, top_k=2), 1):
@@ -917,7 +778,7 @@ for strategy_name, chunks in [
 
 > **You should see.** Three blocks, one per strategy, each with the chunk count in its header and the top two chunks for each of the five questions.
 
-### Step W.3: Fill In the Results Table
+### Step W.2: Fill In the Results Table
 
 > **Do this.** Mark each cell **Y** if a returned chunk actually contains the answer, **N** if not, and total the row.
 
@@ -929,7 +790,7 @@ for strategy_name, chunks in [
 
 ### Walkthrough Questions
 
-1. Fixed-size chunking sometimes splits a sentence mid-phrase.  Find one example in your table where this hurt retrieval: which question failed, and what did the returned chunks contain instead of the answer?  (Look for an answer that spans a character-boundary cut, such as chunk N ending with "the participants were" and chunk N+1 beginning "optimistic, predicting...".  Print a few boundary regions of the fixed chunks to see where cuts landed.)
+1. Fixed-size chunking sometimes splits a sentence mid-phrase.  Find one example in your table where this hurt retrieval: which question failed, and what did the returned chunks contain instead of the answer?  (Print a few boundary regions of the fixed chunks to see where cuts landed.)
 2. You raise `chunk_size` from 100 to 1000 characters with `overlap=0`.  Which best describes the trade-off?
    - Fewer chunks means faster embedding but always better retrieval precision
    - Larger chunks improve the chance that a multi-sentence answer is intact in one chunk, but each chunk's embedding blurs across more topics, reducing precision for focused queries
@@ -938,7 +799,7 @@ for strategy_name, chunks in [
 3. With `overlap=0` and `chunk_size=100`, a fact spanning characters 95 to 110 is split and may be incomplete in both chunks.  With `overlap=90`, that fact appears in many chunks.  What is the cost of very large overlap?  (Count the chunks a 1000-character document produces at overlap 90 versus 0; every chunk is embedded and stored, and many near-identical chunks all rank highly for the same query.)
 4. Sentence-based chunking preserves meaning better than fixed-size, but sentences in legal contracts can be 200 words long and a clause can span ten of them.  What strategy would you use for legal documents, and why?  (Consider a hybrid: split structurally on numbered clauses or headings first, then apply sentence chunking inside any clause over a maximum character count.)
 
-> **Answer.** Question 2: larger chunks improve the chance that a multi-sentence answer is intact in one chunk, but each chunk's embedding blurs across more topics, reducing precision for focused queries.  This is the Goldilocks problem: a 1000-character chunk spanning three topics must summarize all three in one vector, so it can rank below a smaller, focused chunk even when the answer is physically inside it.
+> **Answer.** Question 2: larger chunks improve the chance that a multi-sentence answer is intact in one chunk, but each chunk's embedding blurs across more topics, reducing precision for focused queries.  A 1000-character chunk spanning three topics must summarize all three in one vector, so it can rank below a smaller, focused chunk even when the answer is physically inside it.
 
 > **Watch out.** Smaller is not always better.  Very small chunks lose the surrounding context the similarity function needs: a chunk containing only "the act" scores low against almost any query because nothing says which act, when, or why.  A practical lower bound is roughly one complete sentence; a practical upper bound is roughly one focused paragraph.
 
@@ -948,9 +809,9 @@ for strategy_name, chunks in [
 
 Everyone completes core Part 1, core Part 4, and Part 5.  Beyond that, you choose **one** direction below and do not do more than one.  Pick the one that most interests you, and carry your corpus, config discipline, and evaluation habits into it.
 
-**Direction 0 is different in kind from the other two.** It is the low-code route through the middle of the lab itself: it **replaces the coding of core Parts 2-3** (indexing and grounded generation) with a visual Langflow build that meets the same requirements: two compared chunking configurations, recall@k, citations, and abstention.  Directions 1 and 2 are extensions you complete **after** finishing core Parts 1-4 in code.
+**Direction 0 is different in kind from the other two.** It is the low-code route through the middle of the lab itself: it **replaces the coding of core Parts 2-3** (indexing and grounded generation) with a visual Langflow build that meets the same requirements.  Directions 1 and 2 are extensions you complete **after** finishing core Parts 1-4 in code.
 
-The **single grade for this lab (200 points) covers your core RAG work, the Part 5 checkup, and your chosen direction together**; the rubric above still governs your score, and its rows credit a pipeline whether it is hand-coded or built as a flow.  Treat the "What proficient work looks like" bullets (or the deliverables list, for Direction 0) in your direction as the standard to meet, and fold your direction's deliverables into the same submission ZIP and readme as the core lab.
+The **single grade for this lab (200 points) covers your core RAG work, the Part 5 checkup, and your chosen direction together**; the rubric above still governs your score, and its rows credit a pipeline whether it is hand-coded or built as a flow.  Treat the "What proficient work looks like" paragraph (or the deliverables list, for Direction 0) in your direction as the standard to meet, and fold your direction's deliverables into the same submission ZIP and readme as the core lab.
 
 - **Direction 0: The Langflow Route (low-code)**: build the same RAG pipeline visually on a Langflow canvas over your own corpus, with no pipeline code authorship.  Estimated 7-9 hours, replacing core Parts 2-3.
 - **Direction 1: Hands-On Fine-Tuning with LoRA and QLoRA**: bake domain knowledge into the weights instead of retrieving it at query time, and decide from evidence whether that was worth it compared to your RAG pipeline.  GPU, free-Colab, or provided-adapter paths.
@@ -960,7 +821,7 @@ The **single grade for this lab (200 points) covers your core RAG work, the Part
 
 ## Direction 0: The Langflow Route (low-code)
 
-You build the same pipeline the core lab specifies (your corpus chunked and embedded into Chroma, retrieved, and answered with citations and abstention), but you wire components on a Langflow canvas instead of authoring Python.  The requirements do not soften: two chunking configurations compared empirically, recall@k reported, grounding and abstention forced, citations audited by hand.  What changes is the medium.  Core Part 1 and core Part 4 stay required and unchanged; use your flow's answers as the Part 4 audit material.  The writeup expectations are the core lab's.
+You build the same pipeline the core lab specifies (your corpus chunked and embedded into Chroma, retrieved, and answered with citations and abstention), but you wire components on a Langflow canvas instead of authoring Python.  The requirements do not soften: two chunking configurations compared empirically, recall@k reported, grounding and abstention forced, citations audited by hand.  Core Part 1 and core Part 4 stay required and unchanged; use your flow's answers as the Part 4 audit material.  The writeup expectations are the core lab's.
 
 > **What this direction requires.**
 > - **Accounts:** none.
@@ -999,21 +860,17 @@ ollama pull nomic-embed-text
 > 3. Run the flow in the playground with an in-corpus question.
 > 4. Record every node setting (model, chunk size, overlap, top-k, temperature) in a config notes file; this is your externalized configuration for the rubric.
 
-Component names vary slightly across Langflow versions; the dataflow is what matters, and Part IV of the visual agents activity walks through the same wiring.
-
-> **You should see.** An in-corpus question comes back answered with context in the playground before you move on.
+> **You should see.** An in-corpus question comes back answered with context in the playground before you move on.  Component names vary slightly across Langflow versions; the dataflow is what matters, and Part IV of the visual agents activity walks through the same wiring.
 
 ### Step C: Compare Two Flow Configurations by recall@k
 
-This is the core lab's empirical chunking requirement, on canvas.
+This is the core lab's empirical chunking requirement, on canvas.  Recall@k here is the count, reported as a fraction, of queries whose relevant document appears among the top k retrieved chunks.
 
 > **Do this.**
 > 1. Duplicate the flow (do not edit in place) so you have **two configurations** that differ only in the Text Splitter settings: for example 500 characters with 50 overlap versus 1,000 with 100, or a small-chunk versus large-chunk regime that mimics the fixed-versus-paragraph contrast.  Give each Chroma collection a distinct name so the two indexes cannot contaminate each other.
 > 2. Take the **same ten retrieval queries** the core lab requires (ten questions whose answering chunk you located by hand in your corpus) and run all ten through **both** flows.
 > 3. For each query, open the playground's inspection view (it shows each node's output; this visibility is the point of the canvas) and record whether the relevant document appeared in the top k, for k in {1, 3, 5}.
 > 4. Fill in the table and defend your shipped choice with a specific numeric comparison, exactly as the rubric's chunking row requires.
-
-Recall@k here is the count, reported as a fraction, of queries whose relevant document appears among the top k retrieved chunks.
 
 | Configuration | recall@1 | recall@3 | recall@5 |
 |---------------|----------|----------|----------|
@@ -1068,7 +925,7 @@ Fold these into the standard submission ZIP:
 
 ## Direction 1: Hands-On Fine-Tuning with LoRA and QLoRA
 
-This direction takes the opposite approach to knowledge injection.  Your RAG system kept knowledge *outside* the model and retrieved it at query time.  Here you adapt a local model by **baking** domain knowledge into a small set of trainable weights using **LoRA** (Low-Rank Adaptation, which adds a tiny number of trainable parameters to a frozen base model so fine-tuning fits on consumer hardware).  You train on a real domain dataset, instrument the run with loss tracking, evaluate before and after, document the result with a model card, export the model to GGUF so it runs in Ollama, and then decide whether fine-tuning earned its keep against the RAG pipeline from the core lab.
+Your RAG system kept knowledge *outside* the model and retrieved it at query time.  Here you take the opposite approach: you adapt a local model by **baking** domain knowledge into a small set of trainable weights using **LoRA** (Low-Rank Adaptation, which adds a tiny number of trainable parameters to a frozen base model so fine-tuning fits on consumer hardware).  You train on a real domain dataset, instrument the run with loss tracking, evaluate before and after, document the result with a model card, export the model to GGUF so it runs in Ollama, and then decide whether fine-tuning earned its keep against the RAG pipeline from the core lab.
 
 > **What this direction requires.**
 > - **Accounts:** a free Hugging Face account.  If you use a gated Llama base model, accept the model license on its Hugging Face page and log in with `huggingface-cli`; the non-gated bases in the table below need no license step.  A Google account if you take the free Colab path.
@@ -1077,16 +934,14 @@ This direction takes the opposite approach to knowledge injection.  Your RAG sys
 > - **Hardware:** a CUDA GPU with roughly 6-8 GB of VRAM, **or no GPU at all** using one of the two no-GPU paths below.
 > - **No-cost fallback:** Google Colab's free T4 tier runs every step; if Colab is unavailable to you, the provided-artifact variant skips training and still earns full credit.
 
-Pace yourself: the active work is bounded, and training runs in the background while you do other things.
-
 **No GPU?  Two paths, both full credit.**
 
 1. **Colab path (the default no-GPU route).** Everything runs on Colab's free T4 GPU: run the Colab setup cell in Step A, then work Steps B through E as written in the notebook.  A 3.8B to 8B model with QLoRA fits in the free tier's roughly 15 GB of VRAM in a 15-60 minute run.  Download the exported GGUF at the end of Step E and finish the Ollama deployment on your own machine.
-2. **Provided-artifact variant (only if Colab is unavailable to you).** Skip training and start from a published adapter: search the Hugging Face Hub for a public LoRA adapter for `llama3.2` (any published one works), pick one whose model card describes its training domain, cite it, and download it.  Then do **only the deployment and evaluation half**: the GGUF merge in Step E (merging the downloaded adapter), the `Modelfile`, the `ollama create` / `ollama run` deployment, and the full before/after evaluation of Step D comparing the base model against the adapted model.  **This variant earns full credit with the evaluation weighted more heavily** in place of the training run: extend your before/after comparison to at least 15 prompts (rather than 10) and include the regression analysis, since the evaluation is your primary evidence.  The model card (Step F) is still required; document the adapter's provenance, dataset, and license in place of your own training details.  The loss-curve deliverable is waived for this variant.
+2. **Provided-artifact variant (only if Colab is unavailable to you).** Skip training and start from a published adapter: search the Hugging Face Hub for a public LoRA adapter for `llama3.2`, pick one whose model card describes its training domain, cite it, and download it.  Then do **only the deployment and evaluation half**: the GGUF merge in Step E (merging the downloaded adapter), the `Modelfile`, the `ollama create` / `ollama run` deployment, and the full before/after evaluation of Step D comparing the base model against the adapted model.  This variant earns full credit with the evaluation weighted more heavily: extend your before/after comparison to at least 15 prompts (rather than 10) and include the regression analysis.  The model card (Step F) is still required; document the adapter's provenance, dataset, and license in place of your own training details.  The loss-curve deliverable is waived.
 
 ### Step A: Set Up Your Toolchain
 
-Prerequisites: GPU access confirmed (your own GPU, Colab's free T4, a cloud VM, or the provided-artifact variant chosen); Python 3.10 or later (`python --version`); for a Llama model, a Hugging Face account with the license accepted at `meta-llama/Meta-Llama-3-8B-Instruct`; the Hugging Face CLI installed and logged in if you download gated models.
+Prerequisites: GPU access confirmed (your own GPU, Colab's free T4, a cloud VM, or the provided-artifact variant chosen); Python 3.10 or later (`python --version`); for a Llama model, the license accepted at `meta-llama/Meta-Llama-3-8B-Instruct` and `huggingface-cli login` completed.
 
 Pick one training toolchain; the graded work is identical on both: a converging training run, a before/after evaluation, a model card, **and your fine-tuned model answering a prompt from inside Ollama.**
 
@@ -1094,10 +949,9 @@ Pick one training toolchain; the graded work is identical on both: a converging 
 - **Toolchain B (see-the-internals alternative): raw `transformers` + `peft` + `trl`.** Wire `LoraConfig`, `BitsAndBytesConfig`, and `SFTTrainer` by hand to see exactly what Unsloth abstracts, then convert to GGUF with `llama.cpp` in Step E.
 
 > **Do this.**
-> 1. **On Colab with Unsloth (recommended):** create a new notebook, set Runtime, Change runtime type, T4 GPU, and run this setup cell first.
-> 2. **On local hardware:** run the install in the `bash` fence instead.
-> 3. Run the tokenizer sanity check to confirm model downloads work.
-> 4. Choose a base model from the table.
+> 1. **On Colab:** create a new notebook, set Runtime, Change runtime type, T4 GPU, and run the setup cell below first.
+> 2. **On local hardware:** `pip install unsloth` (Toolchain A) or `pip install transformers peft datasets bitsandbytes accelerate trl` (Toolchain B), then run the same cell as a script to confirm the GPU and that Hugging Face downloads work.
+> 3. Choose a base model from the table.
 
 ```python
 # Cell 1: Google Colab setup (Unsloth). Runtime > Change runtime type > T4 GPU
@@ -1107,23 +961,11 @@ import torch
 print(f"CUDA available: {torch.cuda.is_available()}")
 print(f"GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'None'}")
 print(f"VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB" if torch.cuda.is_available() else "")
+from transformers import AutoTokenizer   # sanity check: Hugging Face downloads work, using a small non-gated model
+print("Tokenizer OK:", AutoTokenizer.from_pretrained("microsoft/phi-3-mini-4k-instruct", trust_remote_code=True)("Hello, world!")["input_ids"])
 ```
 
-```bash
-pip install unsloth          # Toolchain A (recommended)
-# or, for Toolchain B (hand-rolled):
-# pip install transformers peft datasets bitsandbytes accelerate trl
-python -c "import torch; print('GPU:', torch.cuda.get_device_name(0))"
-```
-
-```python
-# Sanity check: confirm Hugging Face downloads work, using a small non-gated model
-from transformers import AutoTokenizer
-tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-3-mini-4k-instruct", trust_remote_code=True)
-print(f"Tokenizer OK. Token IDs: {tokenizer('Hello, world!')['input_ids']}")
-```
-
-> **You should see.** `CUDA available: True`, `GPU: Tesla T4`, `VRAM: 15.8 GB` on Colab, and `Tokenizer OK. Token IDs: [1, 15043, 29892, 3186, 29991]` from the sanity check.  `OSError: Can't load tokenizer` means your connection is down or you are not logged in (`huggingface-cli login`).
+> **You should see.** `CUDA available: True`, `GPU: Tesla T4`, `VRAM: 15.8 GB` on Colab, and `Tokenizer OK: [1, 15043, 29892, 3186, 29991]`.  `OSError: Can't load tokenizer` means your connection is down or you are not logged in (`huggingface-cli login`).
 
 | Model | Size | Min VRAM | Notes |
 |-------|------|----------|-------|
@@ -1154,19 +996,15 @@ from datasets import load_dataset
 
 DATASET_ID = "sciq"  # TODO: replace with your chosen dataset ID
 dataset = load_dataset(DATASET_ID)
-print(f"Dataset splits: {list(dataset.keys())} | Train size: {len(dataset['train'])}")
-print(f"First example:\n{dataset['train'][0]}")
+print(f"Dataset splits: {list(dataset.keys())} | Train size: {len(dataset['train'])} | First example: {dataset['train'][0]}")
 
-def format_example(example: dict) -> dict:
+def format_example(example):
     """Convert a raw dataset row into an instruction-tuning string. TODO: adapt the field names."""
     instruction = example.get("question", "")
     answer = example.get("correct_answer", example.get("output", ""))   # TODO: your answer field
     context = example.get("support", "")                                # TODO: supporting context, if any
-    if context:
-        text = f"### Instruction:\n{instruction}\n\n### Context:\n{context}\n\n### Response:\n{answer}"
-    else:
-        text = f"### Instruction:\n{instruction}\n\n### Response:\n{answer}"
-    return {"text": text}
+    context_block = f"\n\n### Context:\n{context}" if context else ""
+    return {"text": f"### Instruction:\n{instruction}{context_block}\n\n### Response:\n{answer}"}
 
 formatted = dataset["train"].map(format_example)
 if "validation" not in dataset:                       # 90/10 split if the dataset has none
@@ -1174,25 +1012,23 @@ if "validation" not in dataset:                       # 90/10 split if the datas
     train_data, val_data = split["train"], split["test"]
 else:
     train_data, val_data = formatted, dataset["validation"].map(format_example)
-print(f"Train examples: {len(train_data)} | Validation examples: {len(val_data)}")
-print(f"Formatted example:\n{train_data[0]['text'][:300]}")
+print(f"Train examples: {len(train_data)} | Validation examples: {len(val_data)}\n{train_data[0]['text'][:300]}")
 ```
 
 > **You should see.** For `sciq`: splits `['train', 'validation', 'test']`, train size `11679`, a first example with `question`, `correct_answer`, and `support` fields, and a formatted string that starts with `### Instruction:` and contains `### Response:`.  Confirm your validation split has at least 100 examples.
 
 > **If it fails.**
 > - `load_dataset` hangs: a firewall may block the Hugging Face CDN; try `cache_dir="/tmp/hf_cache"` or download manually.
-> - Field names do not match: print `dataset['train'][0].keys()`.
-> - Empty formatted text on some rows: those rows have `None` values; return `None` for them and `.filter(lambda x: x is not None)` after mapping.
+> - Field names do not match (print `dataset['train'][0].keys()`), or some rows format to empty text because of `None` values: return `None` for those rows and `.filter(lambda x: x is not None)` after mapping.
 
 ### Step C: Fine-Tune with LoRA or QLoRA
 
 LoRA leaves the original weights untouched and learns two small matrices (A and B, with rank `r`) that approximate the weight update, so a 7B model trains on 8-16 GB of VRAM.  **QLoRA** adds 4-bit quantization on top, cutting VRAM roughly in half again.  You own every hyperparameter and must justify `r`, `learning_rate`, and `target_modules` in your writeup; the toolchain speeds the run, it does not make the choices.
 
 > **Do this.**
-> 1. Create `train_unsloth.py` (Toolchain A) or `train.py` (Toolchain B) from the skeleton for your toolchain, fill every `# TODO`, and reuse your `format_example`.
+> 1. Create `train_unsloth.py` (Toolchain A) from the skeleton below, fill every `# TODO`, and reuse your `format_example`.  On Toolchain B, create `train.py` instead: load the base model with `BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4")` for QLoRA, set `tokenizer.pad_token = tokenizer.eos_token`, wrap it with `get_peft_model(model, LoraConfig(r=8, lora_alpha=16, lora_dropout=0.05, target_modules=[...], task_type=TaskType.CAUSAL_LM))`, call `model.print_trainable_parameters()`, and pass `eval_dataset=val_data` with `eval_strategy="steps", eval_steps=50` to the same `SFTTrainer`.
 > 2. Run it and watch the loss: `python3 train_unsloth.py` or `python3 train.py`.
-> 3. Create `plot_loss.py`, run it, and annotate the curve in your writeup: does loss converge?  Is there overfitting (training loss keeps falling while validation loss rises or plateaus)?  Justify at least one hyperparameter choice.
+> 3. Create `plot_loss.py`: read `./lora-finetuned/trainer_state.json`, plot every `loss` and `eval_loss` entry in `log_history` against `step` with matplotlib, and save `loss_curve.png`.  Annotate the curve in your writeup: does loss converge?  Is there overfitting (training loss keeps falling while validation loss rises or plateaus)?  Justify at least one hyperparameter choice.
 
 ```python
 # train_unsloth.py - Toolchain A. Unsloth loads the model 4-bit and attaches the LoRA adapters.
@@ -1205,98 +1041,30 @@ MODEL_ID = "unsloth/Phi-3-mini-4k-instruct"   # TODO: your base model (Unsloth 4
 MAX_SEQ = 512
 model, tokenizer = FastLanguageModel.from_pretrained(model_name=MODEL_ID, max_seq_length=MAX_SEQ, load_in_4bit=True)
 model = FastLanguageModel.get_peft_model(
-    model, r=8, lora_alpha=16, lora_dropout=0.05,
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],  # TODO: justify
+    model, r=8, lora_alpha=16, lora_dropout=0.05,               # rank (try 8 or 16); typically alpha = 2 * rank
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],  # TODO: justify; adjust for your model family
 )
-dataset = load_dataset("sciq")                 # TODO: load and format your dataset into a "text" field
-def format_example(ex):
-    return {"text": f"### Instruction:\n{ex.get('question','')}\n\n### Response:\n{ex.get('correct_answer','')}"}
+dataset = load_dataset("sciq")                 # TODO: load your dataset and map your format_example onto a "text" field
 train_data = dataset["train"].map(format_example)
 
 trainer = SFTTrainer(
     model=model, tokenizer=tokenizer, train_dataset=train_data, dataset_text_field="text", max_seq_length=MAX_SEQ,
     args=TrainingArguments(output_dir="./lora-finetuned", num_train_epochs=1, per_device_train_batch_size=4,
                            gradient_accumulation_steps=4, learning_rate=2e-4, fp16=True, logging_steps=10,
-                           warmup_ratio=0.03, report_to="none"),
+                           warmup_ratio=0.03, report_to="none"),   # TODO: 2-3 epochs if you have time; justify learning_rate
 )
 print("Starting training..."); trainer.train()
 model.save_pretrained("./lora-finetuned")     # LoRA adapters; GGUF export happens in Step E
 ```
 
-```python
-# train.py - Toolchain B. The same LoRA/QLoRA setup wired by hand.
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
-from peft import LoraConfig, get_peft_model, TaskType
-from trl import SFTTrainer
-from datasets import load_dataset
-
-MODEL_ID, DATASET_ID, OUTPUT_DIR = "microsoft/phi-3-mini-4k-instruct", "sciq", "./lora-finetuned"   # TODO: yours
-LORA_R, LORA_ALPHA, LORA_DROPOUT = 8, 16, 0.05   # rank (try 8 or 16), typically alpha = 2 * rank, regularization
-TARGET_MODULES = ["q_proj", "v_proj"]            # TODO: adjust for your model family, e.g. add "k_proj", "o_proj"
-
-bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",     # QLoRA; drop if you have the VRAM
-                                bnb_4bit_compute_dtype=torch.float16, bnb_4bit_use_double_quant=True)
-tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
-tokenizer.pad_token = tokenizer.eos_token        # required for batch training
-model = AutoModelForCausalLM.from_pretrained(MODEL_ID, quantization_config=bnb_config, device_map="auto", trust_remote_code=True)
-model = get_peft_model(model, LoraConfig(r=LORA_R, lora_alpha=LORA_ALPHA, target_modules=TARGET_MODULES,
-                                         lora_dropout=LORA_DROPOUT, bias="none", task_type=TaskType.CAUSAL_LM))
-model.print_trainable_parameters()
-
-dataset = load_dataset(DATASET_ID)               # TODO: or load_from_disk("./formatted_dataset")
-def format_example(example):                     # TODO: adapt field names to your dataset
-    return {"text": f"### Instruction:\n{example.get('question','')}\n\n### Response:\n{example.get('correct_answer', example.get('output',''))}"}
-train_data = dataset["train"].map(format_example)
-val_data = dataset.get("validation", dataset["train"].select(range(500))).map(format_example)
-
-training_args = TrainingArguments(               # TODO: 2-3 epochs if you have time and VRAM; justify learning_rate
-    output_dir=OUTPUT_DIR, num_train_epochs=1, per_device_train_batch_size=4, per_device_eval_batch_size=4,
-    gradient_accumulation_steps=4, learning_rate=2e-4, fp16=True, logging_steps=10, eval_strategy="steps",
-    eval_steps=50, save_steps=100, warmup_ratio=0.03, report_to="none")   # "wandb" for W&B tracking
-trainer = SFTTrainer(model=model, args=training_args, train_dataset=train_data, eval_dataset=val_data,
-                     dataset_text_field="text", max_seq_length=512)
-print("Starting training..."); trainer.train()
-trainer.save_model(OUTPUT_DIR); print(f"Model saved to {OUTPUT_DIR}")
-```
-
-```python
-# plot_loss.py - reads the log the Trainer saves in output_dir/trainer_state.json
-import json
-import matplotlib.pyplot as plt
-
-state = json.load(open("./lora-finetuned/trainer_state.json"))
-train = [(e["step"], e["loss"]) for e in state["log_history"] if "loss" in e]
-evals = [(e["step"], e["eval_loss"]) for e in state["log_history"] if "eval_loss" in e]
-plt.figure(figsize=(10, 5))
-plt.plot(*zip(*train), label="Training loss", color="blue")
-if evals:
-    plt.plot(*zip(*evals), label="Validation loss", color="orange", linestyle="--")
-plt.xlabel("Steps"); plt.ylabel("Loss"); plt.title("Training vs. Validation Loss"); plt.legend(); plt.grid(True)
-plt.savefig("loss_curve.png", dpi=150)
-print("Saved loss_curve.png")
-```
-
-> **You should see.** A healthy run reports the trainable fraction and then a falling loss, roughly 2.3 toward 1.1 over 200 steps (your numbers will differ):
-
-```text
-trainable params: 4,194,304 || all params: 3,825,160,192 || trainable%: 0.1097
-Starting training...
-{'loss': 2.3421, 'learning_rate': 0.0002, 'epoch': 0.01}
-{'loss': 1.5201, 'learning_rate': 0.00018, 'epoch': 0.10}
-{'loss': 1.1478, 'learning_rate': 0.00010, 'epoch': 0.40}
-{'eval_loss': 1.2341, 'epoch': 0.40}
-...
-Model saved to ./lora-finetuned
-```
+> **You should see.** A healthy run prints the trainable fraction (`trainable params: 4,194,304 || all params: 3,825,160,192 || trainable%: 0.1097`), then `{'loss': ...}` lines every ten steps falling from roughly 2.3 toward 1.1 over 200 steps, with `{'eval_loss': ...}` lines between them on Toolchain B (your numbers will differ).
 
 > **Checkpoint.** `./lora-finetuned/` exists and contains adapter files, `loss_curve.png` is saved, and training loss fell from the first logged step to the last.
 
 > **If it fails.**
-> - `CUDA out of memory`: drop `per_device_train_batch_size` to 2 or 1 and raise `gradient_accumulation_steps` to keep the effective batch the same.
-> - Loss is `nan` from step 1: the learning rate is too high; try `1e-4` or `5e-5`.  Loss stuck above 2.0 or oscillating wildly: same fix, then check your formatting.
+> - `CUDA out of memory`: drop `per_device_train_batch_size` to 2 or 1 and raise `gradient_accumulation_steps` to keep the effective batch the same.  Training exceeds 2 hours on Colab: `train_data = train_data.select(range(2000))`.
+> - Loss is `nan` from step 1, stuck above 2.0, or oscillating wildly: the learning rate is too high; try `1e-4` or `5e-5`, then check your formatting.
 > - `target_modules` raises `ValueError`: print `[name for name, _ in model.named_modules()]` to see the real module names.
-> - Training exceeds 2 hours on Colab: `train_data = train_data.select(range(2000))`.
 
 ### Step D: Evaluate Before and After
 
@@ -1315,52 +1083,39 @@ import csv, math, torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
-MODEL_ID = "microsoft/phi-3-mini-4k-instruct"   # TODO: your model ID
-LORA_PATH = "./lora-finetuned"
+MODEL_ID, LORA_PATH = "microsoft/phi-3-mini-4k-instruct", "./lora-finetuned"   # TODO: your model ID
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
 
 def load_base_model():
     return AutoModelForCausalLM.from_pretrained(MODEL_ID, device_map="auto", trust_remote_code=True, torch_dtype=torch.float16)
 
-def generate(model, prompt: str, max_new_tokens: int = 200) -> str:
+def generate(model, prompt, max_new_tokens=200):
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     with torch.no_grad():
-        output = model.generate(**inputs, max_new_tokens=max_new_tokens, temperature=0.1, do_sample=True,
-                                pad_token_id=tokenizer.eos_token_id)
-    return tokenizer.decode(output[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)  # new tokens only
+        output = model.generate(**inputs, max_new_tokens=max_new_tokens, temperature=0.1, do_sample=True, pad_token_id=tokenizer.eos_token_id)
+    return tokenizer.decode(output[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)   # new tokens only
 
-def compute_perplexity(model, texts: list[str], max_length: int = 512) -> float:
+def compute_perplexity(model, texts, max_length=512):
     """Option A: exp(mean token loss) over held-out texts. Lower is better."""
-    model.eval(); total_loss = 0; total_tokens = 0
+    model.eval(); total_loss = total_tokens = 0
     for text in texts:
         inputs = tokenizer(text, return_tensors="pt", max_length=max_length, truncation=True).to(model.device)
         with torch.no_grad():
-            outputs = model(**inputs, labels=inputs["input_ids"])
-        total_loss += outputs.loss.item() * inputs["input_ids"].shape[1]
+            total_loss += model(**inputs, labels=inputs["input_ids"]).loss.item() * inputs["input_ids"].shape[1]
         total_tokens += inputs["input_ids"].shape[1]
     return math.exp(total_loss / total_tokens)
 
-TEST_PROMPTS = [   # TODO: 10 prompts from your domain, none from the training set
-    "### Instruction:\nWhat is the primary mechanism of action of beta-blockers?\n\n### Response:",
-    "### Instruction:\nExplain the difference between supervised and unsupervised learning.\n\n### Response:",
-]
+TEST_PROMPTS = ["### Instruction:\nWhat is the primary mechanism of action of beta-blockers?\n\n### Response:"]   # TODO: 10 prompts, none from training
 base_model = load_base_model()
 ft_model = PeftModel.from_pretrained(load_base_model(), LORA_PATH)
-
-rows = []
-for i, prompt in enumerate(TEST_PROMPTS):
-    print(f"Prompt {i+1}/{len(TEST_PROMPTS)}...")
-    rows.append({"prompt": prompt[:80], "base_output": generate(base_model, prompt)[:200],
-                 "finetuned_output": generate(ft_model, prompt)[:200], "improvement": "?", "notes": ""})
+rows = [{"prompt": p[:80], "base_output": generate(base_model, p)[:200], "finetuned_output": generate(ft_model, p)[:200],
+         "improvement": "?", "notes": ""} for p in TEST_PROMPTS]
 with open("eval_comparison.csv", "w", newline="") as f:
-    writer = csv.DictWriter(f, fieldnames=["prompt", "base_output", "finetuned_output", "improvement", "notes"])
-    writer.writeheader(); writer.writerows(rows)
-print("Saved eval_comparison.csv - open it and fill in the improvement and notes columns.")
+    writer = csv.DictWriter(f, fieldnames=list(rows[0])); writer.writeheader(); writer.writerows(rows)
 
 test_texts = ["### Instruction:\n...\n\n### Response:\n..."]   # TODO: real held-out texts from your dataset
 base_ppl, ft_ppl = compute_perplexity(base_model, test_texts), compute_perplexity(ft_model, test_texts)
-print(f"Base model perplexity: {base_ppl:.2f} | Fine-tuned model perplexity: {ft_ppl:.2f} | "
-      f"Improvement: {((base_ppl - ft_ppl) / base_ppl * 100):.1f}%")
+print(f"Base model perplexity: {base_ppl:.2f} | Fine-tuned model perplexity: {ft_ppl:.2f} | Improvement: {(base_ppl - ft_ppl) / base_ppl:.1%}")
 ```
 
 > **You should see.** `eval_comparison.csv` with one row per prompt, and a perplexity line such as `Base model perplexity: 24.31 | Fine-tuned model perplexity: 11.87 | Improvement: 51.2%` (numbers will vary).
@@ -1374,24 +1129,13 @@ print(f"Base model perplexity: {base_ppl:.2f} | Fine-tuned model perplexity: {ft
 
 ### Step E: Export to GGUF and Run Your Model in Ollama
 
-All semester your agents have talked to Ollama.  A fine-tuned model that only runs inside a notebook is not yet part of your stack, so you convert it to **GGUF** (the quantized file format Ollama loads) and run *your own model* locally, exactly like the stock models.
+A fine-tuned model that only runs inside a notebook is not yet part of your stack, so you convert it to **GGUF** (the quantized file format Ollama loads) and run *your own model* locally, exactly like the stock models.
 
 > **Do this.**
-> 1. Merge the adapter into the base weights and write a quantized GGUF, with the command for your toolchain.
+> 1. Merge the adapter into the base weights and write a quantized GGUF.  Toolchain A does it in one call: `model.save_pretrained_gguf("my-finetuned-gguf", tokenizer, quantization_method="q4_k_m")`.  Toolchain B merges the `PeftModel` into the base model, saves to `./merged-model`, and converts with `llama.cpp` as below.
 > 2. Download the `.gguf` file to the machine running Ollama (from Colab: `from google.colab import files; files.download(...)`, or save to Google Drive).
 > 3. Write a `Modelfile` that points Ollama at your GGUF and sets the system prompt you trained against.
 > 4. Register and run it, and capture a terminal screenshot or log of `ollama run my-finetuned` answering one in-domain prompt.  This transcript is a required deliverable: it is the evidence that your model runs in your local stack.
-
-```python
-# Toolchain A (Unsloth): merge LoRA into the base weights and write a quantized GGUF in one call
-model.save_pretrained_gguf("my-finetuned-gguf", tokenizer, quantization_method="q4_k_m")   # produces my-finetuned-gguf/*.gguf
-```
-
-```bash
-# Toolchain B: after merging PeftModel into the base model and saving to ./merged-model, convert with llama.cpp
-git clone https://github.com/ggerganov/llama.cpp
-python llama.cpp/convert_hf_to_gguf.py ./merged-model --outfile my-finetuned.gguf --outtype q4_k_m
-```
 
 ```text
 FROM ./my-finetuned.gguf
@@ -1400,6 +1144,10 @@ PARAMETER temperature 0.7
 ```
 
 ```bash
+# Toolchain B only: convert the merged model with llama.cpp
+git clone https://github.com/ggerganov/llama.cpp
+python llama.cpp/convert_hf_to_gguf.py ./merged-model --outfile my-finetuned.gguf --outtype q4_k_m
+# Both toolchains: register the GGUF with Ollama and run it
 ollama create my-finetuned -f Modelfile
 ollama run my-finetuned "Ask a question from your domain here"
 ```
@@ -1481,9 +1229,7 @@ Fold these into the submission ZIP and readme:
 
 ## Direction 2: Multimodal AI and Monte Carlo Simulation
 
-This direction turns from text retrieval to images.  In the core lab you audited whether a model faithfully used *text* you retrieved; here you audit whether a **multimodal** model faithfully reads *a chart*.  You build a Monte Carlo retirement simulation, send its chart to a local vision model, and find that AI image analysis is strong at pattern recognition and fragile on numerical precision, a difference that matters when the output might shape someone's financial decisions.  The ground-truth-versus-AI-claim audit is the citation audit applied to pixels instead of passages.
-
-Work in **pairs using driver/navigator roles**: the driver types while the navigator reviews, questions, and consults documentation.  Swap roles at least every 30 minutes and keep a brief log of swap times and roles.
+In the core lab you audited whether a model faithfully used *text* you retrieved; here you audit whether a **multimodal** model faithfully reads *a chart*.  You build a Monte Carlo retirement simulation (instead of projecting one "expected" future, you draw a thousand possible return sequences and look at the spread of endings, which is what matters for a decision whose consequences compound for decades), send its chart to a local vision model, and find that AI image analysis is strong at pattern recognition and fragile on numerical precision.  The ground-truth-versus-AI-claim audit is the citation audit applied to pixels instead of passages.  Work in driver/navigator pairs as in the core lab, swapping at least every 30 minutes, and keep the swap log.
 
 > **What this direction requires.**
 > - **Accounts:** none.
@@ -1491,8 +1237,6 @@ Work in **pairs using driver/navigator roles**: the driver types while the navig
 > - **Installs / disk:** `numpy`, `matplotlib`, and `requests`, plus the `llava` multimodal model (about a 4.7 GB pull; smaller alternatives such as `moondream`, `bakllava`, or `llava-phi3` also work).
 > - **Hardware:** any machine that runs the core lab; the 4.7 GB model is happiest with 8 GB of RAM or more.  Pull it before the day you need it.
 > - **No-cost fallback:** not needed; fully local and free.
-
-Why Monte Carlo?  A spreadsheet gives you one future; Monte Carlo simulation gives you a thousand.  Instead of projecting a single "expected" outcome, you draw thousands of possible annual returns from a statistical distribution, let each play out over a 40-year career, and look at the spread of endings.  That spread, not the center, is what matters for a decision whose consequences compound for decades.
 
 Complete these before writing code: [Sampling, Temperature, and Generation]({{ site.baseurl }}/Tutorials/SamplingAndTemperature) (stochastic sampling and output distributions), the [Evaluating Agent Outputs Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-evaluatingoutputs.md) (assessing AI-generated content critically), and [Multimodal Agents]({{ site.baseurl }}/Tutorials/MultimodalAgents) (sending images to local vision models).
 
@@ -1502,45 +1246,32 @@ Complete these before writing code: [Sampling, Temperature, and Generation]({{ s
 pip install numpy matplotlib requests
 ollama pull llava
 ollama list
-curl http://localhost:11434/api/tags
 ```
 
-> **You should see.** A row like `llava:latest   8dd30f6b0cb1   4.7 GB   2 minutes ago` from `ollama list`, and JSON beginning `{"models":[{"name":"llava:latest", ...` from `curl`.  If `llava` will not pull, use `moondream`, `bakllava`, or `llava-phi3` and set the `"model"` key in your config to match.
+> **You should see.** A row like `llava:latest   8dd30f6b0cb1   4.7 GB   2 minutes ago` from `ollama list` (and `curl http://localhost:11434/api/tags` returns the same list as JSON).  If `llava` will not pull, use `moondream`, `bakllava`, or `llava-phi3` and set the `"model"` key in your config to match.
 
 > **Time budget.** Step A, simulation engine: 50-70 minutes.  Step B, multimodal integration: 40-60 minutes.  Step C, parameter sensitivity: 25-35 minutes.  Step D, critical analysis: 20-30 minutes.  Readme and reflection: 30-45 minutes.
 
 ### Step A: Build the Simulation Engine
 
-You write `montecarlo.py`, which simulates 1,000 possible futures for a person who starts saving at 25 and retires at 65.  Each simulated year draws a random annual return from a normal distribution, applies it to the portfolio, and records the balance.  The output is a two-panel chart on disk.  Keep the config-file discipline from the core lab; it makes Step C a one-file edit.
+`montecarlo.py` simulates 1,000 possible futures for a person who starts saving at 25 and retires at 65.  Each simulated year draws a random annual return from a normal distribution, applies it to the portfolio, and records the balance.  The output is a two-panel chart on disk.  Keep the config-file discipline from the core lab; it makes Step C a one-file edit.
 
 > **Do this.**
 > 1. Create `config.json` in your project root.
-> 2. Create `montecarlo.py` with `load_config`, `simulate_retirement`, `plot_simulation`, `save_statistics`, and the main block below.
+> 2. Create `montecarlo.py` with `load_config`, `simulate_retirement`, `plot_simulation`, `save_statistics`, and the main block below, and complete the two `# TODO` lines.
 > 3. Run `python3 montecarlo.py`.
 
 ```json
-{
-  "starting_age": 25,
-  "retirement_age": 65,
-  "life_expectancy": 90,
-  "starting_savings": 10000,
-  "monthly_contribution": 500,
-  "annual_return_mean": 0.07,
-  "annual_return_std": 0.12,
-  "inflation_rate": 0.025,
-  "num_simulations": 1000,
-  "model": "llava",
-  "ollama_url": "http://localhost:11434"
-}
+{"starting_age": 25, "retirement_age": 65, "life_expectancy": 90, "starting_savings": 10000, "monthly_contribution": 500,
+ "annual_return_mean": 0.07, "annual_return_std": 0.12, "inflation_rate": 0.025, "num_simulations": 1000,
+ "model": "llava", "ollama_url": "http://localhost:11434"}
 ```
 
 ```python
 # montecarlo.py
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
-import base64, io, json, traceback
-import requests
+import base64, io, json, requests, traceback
 
 def load_config(path="config.json"):
     """Load simulation and model parameters from a JSON config file."""
@@ -1554,109 +1285,55 @@ def simulate_retirement(cfg):
     for sim in range(cfg["num_simulations"]):
         balance = cfg["starting_savings"]
         for year in range(years):
-            balance += cfg["monthly_contribution"] * 12                                   # annual contribution
+            balance += cfg["monthly_contribution"] * 12                                   # annual contribution first
             annual_return = np.random.normal(cfg["annual_return_mean"], cfg["annual_return_std"])
-            balance *= (1 + annual_return)                                                # apply the return
-            balance = max(balance, 0)                                                     # a portfolio cannot go negative
+            balance = max(balance * (1 + annual_return), 0)                               # a portfolio cannot go negative
             results[sim, year] = balance
     return results
 
 def plot_simulation(balances, cfg):
     """Two panels: all paths with median and 10th/90th bands; histogram of final balances. Saves a PNG and returns it base64-encoded."""
-    ages = list(range(cfg["starting_age"] + 1, cfg["retirement_age"] + 1))
-    final_balances = balances[:, -1]
+    ages = range(cfg["starting_age"] + 1, cfg["retirement_age"] + 1)
+    final = balances[:, -1]
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
-
-    for path in balances:                                                                  # every path, faint gray
-        ax1.plot(ages, path, color="gray", alpha=0.05, linewidth=0.5)
+    ax1.plot(ages, balances.T, color="gray", alpha=0.05, linewidth=0.5)                  # every path, faint gray
     ax1.plot(ages, np.median(balances, axis=0), color="blue", linewidth=2, label="Median")
-    ax1.plot(ages, np.percentile(balances, 10, axis=0), color="red", linewidth=1.5, linestyle="--", label="10th / 90th percentile")
-    ax1.plot(ages, np.percentile(balances, 90, axis=0), color="red", linewidth=1.5, linestyle="--")
-    ax1.set_xlabel("Age"); ax1.set_ylabel("Portfolio Balance")
-    ax1.set_title(f"Monte Carlo Retirement Simulation\n{cfg['num_simulations']:,} paths | "
-                  f"${cfg['monthly_contribution']:,}/mo contribution | Mean return {cfg['annual_return_mean']:.0%}")
-    ax1.legend()
-    ax1.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"${x:,.0f}"))      # currency axis
-
-    ax2.hist(final_balances, bins=50, color="steelblue", edgecolor="white", alpha=0.8)
-    ax2.axvline(np.median(final_balances), color="blue", linewidth=2, label=f"Median: ${np.median(final_balances):,.0f}")
-    ax2.axvline(1_000_000, color="green", linewidth=1.5, linestyle="--", label="$1 Million milestone")
-    ax2.set_xlabel("Final Balance at Retirement"); ax2.set_ylabel("Number of Simulations")
-    ax2.set_title("Distribution of Final Balances at Age 65"); ax2.legend()
-    ax2.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"${x/1e6:.1f}M"))
-
-    plt.tight_layout()
-    plt.savefig("retirement_simulation.png", dpi=150, bbox_inches="tight")
-    print("Saved: retirement_simulation.png")
-    buf = io.BytesIO()                                                                     # encode for the multimodal API
-    fig.savefig(buf, format="png", dpi=150, bbox_inches="tight")
-    plt.close(fig); buf.seek(0)
+    for p in (10, 90):
+        ax1.plot(ages, np.percentile(balances, p, axis=0), color="red", linestyle="--", label="10th / 90th percentile" if p == 10 else None)
+    ax2.hist(final, bins=50, color="steelblue", edgecolor="white")
+    ax2.axvline(np.median(final), color="blue", linewidth=2, label=f"Median: ${np.median(final):,.0f}")
+    ax2.axvline(1_000_000, color="green", linestyle="--", label="$1 Million milestone")
+    # TODO: axis labels, titles, legends, and currency tick formatting (matplotlib.ticker.FuncFormatter) on both panels
+    plt.tight_layout(); plt.savefig("retirement_simulation.png", dpi=150, bbox_inches="tight")
+    buf = io.BytesIO(); fig.savefig(buf, format="png", dpi=150, bbox_inches="tight"); plt.close(fig)   # encode for the API
     return base64.b64encode(buf.getvalue()).decode("utf-8")
 
 def save_statistics(balances, cfg, path="simulation_stats.txt"):
     """Save the key statistics of the run to a text file; this is your ground truth for Steps B, D, and E."""
     final = balances[:, -1]
-    lines = [
-        "Simulation parameters:",
-        f"  Monthly contribution: ${cfg['monthly_contribution']:,}",
-        f"  Mean annual return:   {cfg['annual_return_mean']:.1%}",
-        f"  Return std dev:       {cfg['annual_return_std']:.1%}",
-        f"  Number of paths:      {cfg['num_simulations']:,}",
-        "",
-        f"Final balance at retirement (age {cfg['retirement_age']}):",
-        f"  10th percentile: ${np.percentile(final, 10):>12,.0f}",
-        f"  Median (50th):   ${np.median(final):>12,.0f}",
-        f"  90th percentile: ${np.percentile(final, 90):>12,.0f}",
-        f"  Mean:            ${final.mean():>12,.0f}",
-        "",
-        f"Probability of reaching $1 million: {(final >= 1_000_000).mean():.1%}",
-    ]
-    text = "\n".join(lines)
-    print(text)
-    with open(path, "w") as f:
-        f.write(text)
-    print(f"Saved: {path}")
+    text = "\n".join([f"Final balance at retirement (age {cfg['retirement_age']}):",
+                      f"  10th percentile: ${np.percentile(final, 10):>12,.0f}",
+                      f"  Median (50th):   ${np.median(final):>12,.0f}",
+                      f"  90th percentile: ${np.percentile(final, 90):>12,.0f}",
+                      f"  Mean:            ${final.mean():>12,.0f}",
+                      f"Probability of reaching $1 million: {(final >= 1_000_000).mean():.1%}"])
+    # TODO: prepend the simulation parameters (monthly contribution, mean return, std dev, number of paths)
+    print(text); open(path, "w").write(text)
     return text
 
 if __name__ == "__main__":
     cfg = load_config()
     np.random.seed(42)
-    print("Running simulation...")
     balances = simulate_retirement(cfg)
-    print("Generating visualization...")
     image_b64 = plot_simulation(balances, cfg)
-    print("Computing statistics...")
     stats_text = save_statistics(balances, cfg)
 ```
 
-> **You should see.** The PNG and the statistics file, with numbers that vary by seed:
-
-```text
-Running simulation...
-Generating visualization...
-Saved: retirement_simulation.png
-Computing statistics...
-Simulation parameters:
-  Monthly contribution: $500
-  Mean annual return:   7.0%
-  Return std dev:       12.0%
-  Number of paths:      1,000
-
-Final balance at retirement (age 65):
-  10th percentile: $      341,208
-  Median (50th):   $    1,042,577
-  90th percentile: $    2,847,031
-  Mean:            $    1,298,451
-
-Probability of reaching $1 million: 53.2%
-Saved: simulation_stats.txt
-```
-
-The left panel shows a fan of gray paths widening toward age 65 with a visible median line and two outer dashed bands; the right panel shows a right-skewed histogram with a median line and a $1M milestone line.
+> **You should see.** `retirement_simulation.png` and `simulation_stats.txt`.  The left panel shows a fan of gray paths widening toward age 65 with a visible median line and two outer dashed bands; the right panel shows a right-skewed histogram with a median line and a $1M milestone line.  With the default config and seed 42 the statistics file reports roughly a 10th percentile of $341,208, a median of $1,042,577, a 90th percentile of $2,847,031, a mean of $1,298,451, and `Probability of reaching $1 million: 53.2%` (yours will vary).
 
 > **If it fails.**
 > - `ValueError: could not broadcast input array...`: check that `results` is indexed `results[sim, year]` with `year` from `0` to `years - 1`.
-> - The y-axis shows scientific notation: the `FuncFormatter` must be assigned after `ax1` is populated; move it to just before `plt.tight_layout()`.
+> - The y-axis shows scientific notation: assign your `FuncFormatter` after the axes are populated, just before `plt.tight_layout()`.
 > - All paths converge to zero: add the contribution *before* applying the return, and check `annual_return_std` is not unreasonably high.
 
 > **Checkpoint.** Before Step B, make sure you can answer:
@@ -1670,7 +1347,7 @@ You send the PNG to a local multimodal model through the Ollama API and hold a t
 
 > **Do this.**
 > 1. Add `ask_multimodal_model` and `run_analysis_conversation` to `montecarlo.py`.
-> 2. Extend the main block with the two lines shown, then run `python3 montecarlo.py` again.
+> 2. Add `response1, response2 = run_analysis_conversation(image_b64, cfg)` to the end of the main block, then run `python3 montecarlo.py` again.
 > 3. Read `model_responses.txt` before Step D.
 
 ```python
@@ -1688,56 +1365,32 @@ def ask_multimodal_model(image_b64, question, cfg):
 
 def run_analysis_conversation(image_b64, cfg):
     """Turn 1: structured four-section analysis. Turn 2: press on the probability estimate. Returns (response1, response2)."""
-    initial_prompt = (
-        "You are a financial educator analyzing a Monte Carlo retirement simulation "
-        "chart for a college student audience with no prior finance background.\n\n"
-        "The chart has two panels:\n"
-        "- Left panel: 1,000 simulated portfolio paths from age 25 to 65, with a "
-        "solid blue median line and two red dashed lines showing the 10th and 90th "
-        "percentile bounds.\n"
-        "- Right panel: a histogram of final portfolio balances at age 65, with a "
-        "vertical blue line at the median and a vertical green dashed line at $1 million.\n\n"
+    initial_prompt = (   # role, what to look at, response format, audience
+        "You are a financial educator analyzing a Monte Carlo retirement simulation chart for a college student audience "
+        "with no prior finance background.\n\nThe chart has two panels. Left: 1,000 simulated portfolio paths from age 25 to 65, "
+        "with a solid blue median line and two red dashed lines showing the 10th and 90th percentile bounds. Right: a histogram of "
+        "final portfolio balances at age 65, with a vertical blue line at the median and a vertical green dashed line at $1 million.\n\n"
         "Please analyze the chart and respond in exactly four numbered sections:\n"
-        "1. What the spread of paths (the gap between the dashed red lines) tells us "
-        "about retirement savings risk.\n"
-        "2. Your estimate of what percentage of simulations ended above $1 million, "
-        "based on the histogram.\n"
+        "1. What the spread of paths (the gap between the dashed red lines) tells us about retirement savings risk.\n"
+        "2. Your estimate of what percentage of simulations ended above $1 million, based on the histogram.\n"
         "3. One specific, actionable insight for a 25-year-old starting their career.\n"
-        "4. One limitation of this simulation that a tool deployer should disclose to users."
-    )
-    print("=== Turn 1: Initial Analysis ===")
+        "4. One limitation of this simulation that a tool deployer should disclose to users.")
     response1 = ask_multimodal_model(image_b64, initial_prompt, cfg)
-    print(response1)
-
-    # TODO: write a follow-up that presses the model on a specific quantitative claim from Turn 1.
-    # The suggested one asks it to show its reasoning for the percentage; numerical precision often breaks down here.
-    followup = (
-        "Based specifically on the histogram in the right panel, walk me through your "
-        "reasoning for the percentage estimate you gave in section 2. What visual "
-        "features of the histogram did you use, and how confident are you in that number?"
-    )
-    print("\n=== Turn 2: Follow-Up ===")
+    # TODO: write a follow-up that presses the model on a specific quantitative claim from Turn 1, for example:
+    followup = ("Based specifically on the histogram in the right panel, walk me through your reasoning for the percentage "
+                "estimate you gave in section 2. What visual features did you use, and how confident are you in that number?")
     response2 = ask_multimodal_model(image_b64, followup, cfg)
-    print(response2)
-
+    print("=== Turn 1 ===\n" + response1 + "\n\n=== Turn 2 ===\n" + response2)
     with open("model_responses.txt", "w") as f:
         f.write("=== Turn 1 ===\n" + response1 + "\n\n=== Turn 2 ===\n" + response2 + "\n")
-    print("\nSaved: model_responses.txt")
     return response1, response2
 ```
 
-```python
-    # add to the end of the main block
-    print("\nRunning multimodal analysis...")
-    response1, response2 = run_analysis_conversation(image_b64, cfg)
-```
-
-> **You should see.** Two turns printed and saved.  A good Turn 1 notices pattern-level features: the fan widens sharply after age 40, the histogram is right-skewed with many paths below the median, and a concrete suggestion such as "another $100 a month noticeably raises the 10th-percentile outcome."  A flawed Turn 1 says something like *"approximately 68% of simulations reached $1 million"* when `simulation_stats.txt` says 53%: a confident number estimated from visual impression rather than counted.  That is exactly what Step D analyzes.
+> **You should see.** Two turns printed and saved.  A good Turn 1 notices pattern-level features: the fan widens sharply after age 40, the histogram is right-skewed, and a concrete suggestion such as "another $100 a month noticeably raises the 10th-percentile outcome."  A flawed Turn 1 says something like *"approximately 68% of simulations reached $1 million"* when `simulation_stats.txt` says 53%: a confident number estimated from visual impression rather than counted.  That is exactly what Step D analyzes.
 
 > **If it fails.**
 > - `KeyError: 'response'`: `/api/generate` returns `{"response": ...}`; `/api/chat` returns `{"message": {"content": ...}}`.  Use `/api/generate` here.
-> - An empty or very short response: put "Describe the image in detail before analyzing it." as the first sentence of the prompt; some vision models need an explicit grounding instruction.
-> - The request times out on a large image: resize before encoding (`from PIL import Image; Image.open(buf).resize((800, 600))`) or lower `dpi` to `100`.
+> - An empty or very short response: put "Describe the image in detail before analyzing it." as the first sentence of the prompt.  A timeout on a large image: resize before encoding (`from PIL import Image; Image.open(buf).resize((800, 600))`) or lower `dpi` to `100`.
 
 > **Checkpoint.** Before Step C, make sure you can answer:
 > 1. What percentage did the model report for simulations reaching $1 million, and what does your statistics file say?  Are they the same?
@@ -1751,19 +1404,13 @@ def run_analysis_conversation(image_b64, cfg):
 > 2. Record the four statistics for each scenario in your writeup and save the table as `sensitivity_results.txt` or equivalent.
 > 3. Answer, with numbers from your runs rather than intuition: which change moved the median more, raising the mean return from 0.07 to 0.10, or lowering the standard deviation from 0.12 to 0.08?
 
-| Configuration | `annual_return_mean` | `annual_return_std` | Label |
-|---------------|----------------------|---------------------|-------|
-| Pessimistic | 0.04 | 0.15 | Poor market, high volatility |
-| Baseline | 0.07 | 0.12 | Historical average (default) |
-| Optimistic | 0.10 | 0.08 | Strong market, lower volatility |
-
 ```python
 def run_sensitivity_analysis(base_cfg):
     """Run the simulation under three parameter configurations and print a comparison table."""
     scenarios = [
-        {"label": "Pessimistic",  "annual_return_mean": 0.04, "annual_return_std": 0.15},
-        {"label": "Baseline",     "annual_return_mean": 0.07, "annual_return_std": 0.12},
-        {"label": "Optimistic",   "annual_return_mean": 0.10, "annual_return_std": 0.08},
+        {"label": "Pessimistic",  "annual_return_mean": 0.04, "annual_return_std": 0.15},   # poor market, high volatility
+        {"label": "Baseline",     "annual_return_mean": 0.07, "annual_return_std": 0.12},   # historical average (default)
+        {"label": "Optimistic",   "annual_return_mean": 0.10, "annual_return_std": 0.08},   # strong market, lower volatility
     ]
     print(f"\n{'Scenario':<14} {'Median':>14} {'P(>$1M)':>10} {'10th pct':>14} {'90th pct':>14}")
     print("-" * 70)
@@ -1775,15 +1422,7 @@ def run_sensitivity_analysis(base_cfg):
               f"${np.percentile(final, 10):>13,.0f} ${np.percentile(final, 90):>13,.0f}")
 ```
 
-> **You should see.** Median, probability of $1M, and the 10th and 90th percentiles per scenario (yours will vary slightly):
-
-```text
-Scenario       Median   P(>$1M)       10th pct       90th pct
-----------------------------------------------------------------------
-Pessimistic    $  314,042       4.2%   $   73,501   $  877,209
-Baseline       $1,042,577      53.2%   $  341,208   $2,847,031
-Optimistic     $2,891,044      89.7%   $1,201,330   $5,912,448
-```
+> **You should see.** One row per scenario with the median, probability of $1M, and the 10th and 90th percentiles: roughly `Pessimistic $314,042 4.2% $73,501 $877,209`, `Baseline $1,042,577 53.2% $341,208 $2,847,031`, and `Optimistic $2,891,044 89.7% $1,201,330 $5,912,448` (yours will vary slightly).
 
 > **Checkpoint.** Before Step D, make sure you can answer:
 > 1. Between pessimistic and baseline the median more than tripled.  What does that say about compounding a moderate improvement in average return over 40 years?
@@ -1792,7 +1431,7 @@ Optimistic     $2,891,044      89.7%   $1,201,330   $5,912,448
 
 ### Step D: Audit the Model Against Ground Truth
 
-This is the most important step.  In Steps A through C you built a tool; now you evaluate what happens when AI interprets that tool's output, the core lab's audit discipline moved from retrieved text to a rendered chart.
+This is the most important step: the core lab's audit discipline moved from retrieved text to a rendered chart.
 
 > **Do this.**
 > 1. **Read the chart yourself first.** Before re-reading the model's responses, note your own estimates: roughly what percentage of paths end above $1 million, where the median falls, whether the 10th percentile line ever reaches zero during accumulation, and whether the histogram is symmetric, right-skewed, or left-skewed.  Write them down and do not change them afterward.
@@ -1817,48 +1456,28 @@ In Steps A through D the model only *interpreted* an experiment you designed.  T
 
 ```python
 def run_retirement_sim(years=40, annual_contribution=6000, stock_allocation=0.8, n_paths=1000, seed=42):
-    """
-    Monte Carlo retirement simulation as a tool. stock_allocation is the fraction 0.0-1.0 in stocks;
-    blend: mean = alloc*0.08 + (1-alloc)*0.03, std = alloc*0.15 + (1-alloc)*0.05.
-    Returns a dict with keys: median, p10, p90, mean, prob_million, years, annual_contribution,
-    stock_allocation, n_paths, seed, chart_path.
-    """
-    # TODO: build a cfg dict from these arguments (reuse your Step A functions),
-    #       call simulate_retirement and plot_simulation, and return the stats dict.
+    """The simulation as a tool. Blend: mean = alloc*0.08 + (1-alloc)*0.03, std = alloc*0.15 + (1-alloc)*0.05.
+    Returns a dict: median, p10, p90, mean, prob_million, the five arguments, and chart_path."""
+    # TODO: build a cfg dict from these arguments, reuse simulate_retirement and plot_simulation, return the stats dict
 
-RETIREMENT_TOOL_SCHEMA = {
-    "type": "function",
-    "function": {
-        "name": "run_retirement_sim",
-        "description": "Run a Monte Carlo retirement savings simulation and return summary statistics plus a saved two-panel chart.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "years": {"type": "integer", "minimum": 1, "maximum": 60, "description": "Years of saving before retirement."},
-                "annual_contribution": {"type": "number", "minimum": 0, "description": "Dollars contributed per year."},
-                "stock_allocation": {"type": "number", "minimum": 0.0, "maximum": 1.0,
-                                     "description": "Fraction of the portfolio in stocks; higher raises both expected return and volatility."},
-                "n_paths": {"type": "integer", "minimum": 100, "maximum": 10000, "description": "Number of Monte Carlo paths (1000 recommended)."},
-                "seed": {"type": "integer", "description": "Random seed for reproducibility."}
-            },
-            "required": ["years", "annual_contribution", "stock_allocation"]
-        }
-    }
-}
+RETIREMENT_TOOL_SCHEMA = {"type": "function", "function": {
+    "name": "run_retirement_sim",
+    "description": "Run a Monte Carlo retirement savings simulation and return summary statistics plus a saved two-panel chart.",
+    "parameters": {"type": "object", "required": ["years", "annual_contribution", "stock_allocation"], "properties": {
+        "years": {"type": "integer", "minimum": 1, "maximum": 60, "description": "Years of saving before retirement."},
+        "annual_contribution": {"type": "number", "minimum": 0, "description": "Dollars contributed per year."},
+        "stock_allocation": {"type": "number", "minimum": 0.0, "maximum": 1.0,
+                             "description": "Fraction of the portfolio in stocks; higher raises both expected return and volatility."},
+        "n_paths": {"type": "integer", "minimum": 100, "maximum": 10000, "description": "Number of Monte Carlo paths (1000 recommended)."},
+        "seed": {"type": "integer", "description": "Random seed for reproducibility."}}}}}
 
-goal = ("I am 25 and want to know whether contributing $500 a month with a fairly aggressive portfolio gives me a good "
-        "chance of retiring at 65 with over $1 million. Choose appropriate parameters, run the simulation, and interpret the results for me.")
-payload = {
-    "model": "llama3.1",
-    "messages": [{"role": "system", "content": "You are a retirement planning assistant. Use the simulation tool, "
-                                               "choosing parameters that faithfully reflect the user's situation."},
-                 {"role": "user", "content": goal}],
-    "tools": [RETIREMENT_TOOL_SCHEMA],
-    "stream": False,
-}
-# TODO: POST to /api/chat, read message["tool_calls"][0]["function"],
-#       invoke run_retirement_sim(**arguments), and save the goal, the tool call,
-#       the tool result, and the interpretation to tool_call_transcript.txt.
+goal = ("I am 25 and want to know whether contributing $500 a month with a fairly aggressive portfolio gives me a good chance of "
+        "retiring at 65 with over $1 million. Choose appropriate parameters, run the simulation, and interpret the results for me.")
+system = "You are a retirement planning assistant. Use the simulation tool, choosing parameters that faithfully reflect the user's situation."
+payload = {"model": "llama3.1", "tools": [RETIREMENT_TOOL_SCHEMA], "stream": False,
+           "messages": [{"role": "system", "content": system}, {"role": "user", "content": goal}]}
+# TODO: POST payload to /api/chat, read message["tool_calls"][0]["function"], call run_retirement_sim(**arguments),
+#       send the chart to llava with the exact stats dict in the prompt, and save everything to tool_call_transcript.txt
 ```
 
 > **You should see.** A tool call in the response (not prose) with a function name and arguments, a stats dict and chart path from your function, and a `llava` interpretation of that chart.
