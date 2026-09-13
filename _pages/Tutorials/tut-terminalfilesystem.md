@@ -748,6 +748,46 @@ The third is the dangerous one, and the skill's framing of it is the sentence wo
 
 Notice that none of the three is a knowledge problem.  A bigger model has the same three failure modes and simply reaches them later.  What the skill does is refuse to let the conversation be the only place the work is recorded.
 
+Version 0.4.0 adds a fourth failure, and it is worth quoting the skill's own description of it because it is a field report rather than a hypothetical:
+
+> These changes respond to an observed failure pattern: with frequent compaction, a small model trusted drifting summaries over disk, stopped updating its checkpoint, edited from memory, and lost work to an unversioned delete.
+
+Read that as a chain rather than as one mistake, because each link enables the next.  The summary drifted from what was actually on disk.  Trusting the summary, the model stopped seeing a reason to write the checkpoint.  With no checkpoint, it edited from its recollection of a file instead of from the file.  And with nothing versioned, a delete had no undo.  **Four small omissions, and only the last one is visible when it goes wrong.**
+
+### The three invariants
+
+The whole protocol compresses to three sentences, and each one closes a link in that chain:
+
+| Invariant | What it means | Which failure it prevents |
+|---|---|---|
+| **Handoff-ready at all times** | `RESUME.md` must let a fresh agent with no transcript continue correctly if this session ended right now | The checkpoint going stale |
+| **Every verified step is a Git checkpoint** | Work can be inspected with `git log` and `git diff`, and rolled back to the last good state | The unversioned delete |
+| **Disk beats memory** | After any compaction, summary, restart, or surprise, trust `RESUME.md`, Git, and fresh reads over recalled file contents | The drifting summary, and editing from memory |
+
+The middle one is the biggest change from the previous version, where Git was optional. It is now the primary recovery mechanism, and the skill is specific about the permissions that come with it.
+
+### Git as the undo button, with the safety rules that make that safe
+
+Handing an unsupervised agent a version control system is not obviously a good idea, so notice how narrowly the skill scopes it.  Local commits on a dedicated task branch are expected; **everything that could affect anyone else requires explicit permission**:
+
+> Never push, merge, rebase, force-update, delete branches, or rewrite history without explicit user permission.
+>
+> Never commit to the user's current branch without permission; use a task branch.
+
+Setup is six steps, and two of them exist purely to protect work the agent did not write.  If the project has pre-existing uncommitted changes, the skill saves a patch snapshot and **asks before proceeding**, because sweeping unexplained changes into a task commit would silently take ownership of somebody else's work in progress.  And the task state directory goes into `.git/info/exclude` rather than into a commit, for a reason worth pausing on: if `.small-model-orchestrator/` were versioned alongside the code, then checking out an older commit would roll `RESUME.md` back to a stale checkpoint, and the recovery mechanism would restore a wrong description of its own progress.  **The map must not be versioned with the territory.**
+
+Commits carry a fixed message form, `task:<id> <milestone/action> <VERIFIED|WIP>: <short summary>`, and the distinction in that field is load-bearing.  Work that is written but not yet verified may be committed as `WIP` when it would be expensive to recreate, and the rule is that it is **never cited as verified afterward**.  That is the same separation between confidence and evidence that runs through the rest of the skill, applied to the commit log.
+
+### Never edit from memory
+
+One rule in version 0.4.0 is short enough to adopt today, whatever you are working with:
+
+> Re-read the exact lines immediately before editing.  Never build a replacement's old text from memory, a summary, or an earlier read taken before other edits.
+
+The failure it prevents is specific.  An agent reads a file, makes three edits, then constructs a fourth edit using text it remembers from the first read, which the earlier edits have already changed.  The match fails, or worse, matches in a place it should not.  The skill's escalation is worth copying too: retry once with a smaller, unique anchor, and after a second failure on the same file, stop guessing.  Re-read the whole file and rewrite it, or re-anchor from `RESUME.md` and `git diff`.
+
+There is a matching rule for *after* an edit, which is the same verification discipline in miniature: re-read the changed region, then run the syntax check, import, or test that covers it.  A successful edit tool call is a claim, not evidence.
+
 ### Durable state: the repository remembers, the conversation does not
 
 The skill keeps a directory in your project, `.small-model-orchestrator/`, and the single most important file in it is `RESUME.md`.  Every checkpoint records the same six things:
@@ -764,6 +804,8 @@ If that list feels familiar, it should.  It is the same argument the [agent gove
 Item 6 is the one that distinguishes this skill from ordinary note-taking.  Before any consequential action, the checkpoint is written with the outcome recorded as `UNKNOWN`, and it stays `UNKNOWN` until something independent checks it:
 
 > **Why this matters:** a lost response is not evidence that nothing happened.  If the connection drops during a file write, a database update, or an API call, the operation may well have completed on the other side.  An agent that assumes failure and retries has just done it twice.  The skill's rule is that an interrupted mutation is `UNKNOWN` until checked, never "failed", and this is the single most useful habit in the whole protocol.
+
+Version 0.4.0 also replaced "keep it current" with a list of specific moments, because a general reminder is exactly the instruction a small model quietly stops following.  Write the checkpoint before any mutation whose outcome would be unclear if interrupted; after each verified action or commit; after any failure, surprise, or change of plan; whenever you learn something a successor would need, such as an interface or a path or a gotcha; before context may be compacted; and at least every few tool calls during a long investigation.  **The instruction "do not batch these for later" is doing real work,** because batching is how the checkpoint goes stale without anyone deciding that it should.
 
 Every action ends up in one of five states, and the vocabulary is deliberately more precise than pass and fail:
 
@@ -828,6 +870,8 @@ The one table to keep open while you work:
 
 Two prohibitions run through all of it.  Never concatenate partial JSON, commands, or code into something you then treat as complete.  And never retry an unchanged failing payload: change the hypothesis, the inputs, the tactic, or the decomposition first, or you are just paying for the same failure twice.
 
+Version 0.4.0 treats compaction as something to schedule rather than something to survive.  Compact at a natural boundary, just after a commit and a checkpoint update, when a subtask ends: **compacting then costs almost nothing, because the state is already on disk.**  Compact early, at roughly half to two-thirds of the window, rather than at overflow.  And afterward, re-anchor before doing anything else: read `RESUME.md`, run `git status` and `git log --oneline -5`, inspect `git diff` for in-flight changes, and re-read any file before editing it.  Where the summary and the disk disagree, **the disk wins, and the discrepancy gets recorded.**
+
 > **Common Misconception:** compaction is not a substitute for the checkpoint.  A compaction summary is generated by the same model whose context is already in trouble, and it optimizes for continuing the conversation.  The checkpoint was written deliberately, while things were going well, and validated against a schema.  The skill's rule is not to wait for overflow before saving state, and not to ask an already-overflowing context to produce a comprehensive rescue summary.
 
 ### Which model to point at it
@@ -878,7 +922,7 @@ This is the same machinery as *Critique, Consensus, and the LLM Judge*, with one
 
 ### Reading the skill as a skill
 
-Set the protocol aside for a moment and look at the file as an artifact for the Skill Design Study, because it is a useful counterexample to the two small skills built in the Skills session.  Those are a page each.  This one is eleven reference files, seven templates, and six scripts, and the design question it answers is one the small skills never have to face: what do you do when the guidance is far larger than the context you have to spend on it?
+Set the protocol aside for a moment and look at the file as an artifact for the Skill Design Study, because it is a useful counterexample to the two small skills built in the Skills session.  Those are a page each.  This one is sixteen reference files, ten templates, and six scripts, and the design question it answers is one the small skills never have to face: what do you do when the guidance is far larger than the context you have to spend on it?
 
 Its answer is routing.  `SKILL.md` stays compact and loads exactly one reference for the current phase, and the instruction is explicit that the agent must not load all of the verification, failure, refinement, and critic references at bootstrap.  Guidance that does not fit is guidance that does not get followed, so the skill treats its own size as a budget to manage.
 

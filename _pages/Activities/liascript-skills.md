@@ -519,18 +519,27 @@ The third one is the problem this skill exists for.  The sentence at the heart o
 
 The skill is essentially a checklist discipline, of the same kind that surgical teams and flight crews adopted for the same reason: not because anyone involved is incompetent, but because competent people under load skip steps and do not notice they skipped them.
 
-Four habits, and each one is a direct answer to a specific way things go wrong:
+Before the habits, the story that produced them.  The authors watched a small model fail, and wrote down what they saw:
 
-1.  **Write it down where the conversation cannot reach.**  The model keeps a file in your project that says what the job is, what it has genuinely finished, and what it is about to do next.  When the conversation is lost, the file is not.
+> These changes respond to an observed failure pattern: with frequent compaction, a small model trusted drifting summaries over disk, stopped updating its checkpoint, edited from memory, and lost work to an unversioned delete.
+
+That is four mistakes in a row, and each one made the next one possible.  Its notes about the work drifted away from what was actually in the files.  Believing the notes, it stopped bothering to update them.  Working from memory instead of from notes, it edited a file it only *thought* it remembered.  And because nothing was backed up, a deletion had no undo.  **Only the last step looks like a disaster.  The first three look like an agent working normally.**
+
+Five habits, and each one breaks that chain at a different link:
+
+1.  **Write it down where the conversation cannot reach.**  The model keeps a file in your project that says what the job is, what it has genuinely finished, and what it is about to do next.  When the conversation is lost, the file is not.  Version 0.4.0 adds a list of exact moments to update it, because "keep it current" is the kind of instruction a small model quietly stops following.
 2.  **Say what you are about to do before you do it, and mark the result unknown.**  This is the clever one.  Before it changes anything, it records "I am about to do this, and I do not yet know whether it worked."  If the power goes out mid-step, whoever picks up the job later knows there is something to go and check, rather than assuming nothing happened.
-3.  **Prove it, do not assert it.**  Reading a file back is better evidence than a tool saying "success".  A test someone else wrote is better than a test the model wrote to check its own work, because the model's test inherits the model's misunderstanding.
-4.  **Attack your own work before calling it done.**  A separate pass that goes looking for nine specific kinds of problem, of which the sharpest is "fake completeness": leftover TODOs, stubbed-out functions, tests that were quietly skipped, comments describing behavior the code does not have.
+3.  **Commit every finished step, so there is always an undo.**  This is new in 0.4.0 and it is the answer to the deleted work.  The model makes a save point in Git after each verified step, on its own branch, so any mistake can be rewound to the last known-good state.  Notice how carefully that permission is drawn: it may make local save points, and it may **not** push, merge, or delete branches without being asked.  It is allowed to protect its work, not to publish it.
+4.  **Prove it, do not assert it.**  Reading a file back is better evidence than a tool saying "success".  A test someone else wrote is better than a test the model wrote to check its own work, because the model's test inherits the model's misunderstanding.
+5.  **Attack your own work before calling it done.**  A separate pass that goes looking for nine specific kinds of problem, of which the sharpest is "fake completeness": leftover TODOs, stubbed-out functions, tests that were quietly skipped, comments describing behavior the code does not have.
 
 Habit 2 deserves a sentence on its own, because it is the one that generalizes furthest beyond AI.  **A lost reply is not proof that nothing happened.**  If your connection drops while a payment is being submitted, the payment may well have gone through.  An assistant that assumes failure and tries again has just paid twice.
 
+There is a sixth rule that is less a habit than a reflex, and it is short enough to adopt yourself today: **never edit from memory.**  Re-read the exact lines right before changing them, never from a summary or from a read you took several edits ago.  An agent that remembers a file as it was three changes back will write its next change against a version that no longer exists.
+
 ## Why the file is so big
 
-Your `commit-message` skill is one page because it does one thing.  This one has eleven reference documents, and that creates a problem it then has to solve: guidance the model cannot afford to read is guidance the model will not follow.
+Your `commit-message` skill is one page because it does one thing.  This one has sixteen reference documents and ten templates, and that creates a problem it then has to solve: guidance the model cannot afford to read is guidance the model will not follow.
 
 Its answer is worth stealing for your own skill work.  The main file stays short and acts as a switchboard, pulling in exactly one reference for the phase it is currently in, and it says outright that the agent must not load everything at the start.  A skill that respects its own reader's limited attention is a better skill.  That is true of the model, and it is true of your teammates.
 

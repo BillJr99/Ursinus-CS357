@@ -42,16 +42,16 @@ The model may choose semantic content inside a state, but it should not casually
 
 ## Resume rule
 
-Before resuming after a context break, read in this order:
+Before resuming after a context break or compaction, re-anchor from disk:
 
-1. `CONTRACT.md`
-2. `STATE.md`
-3. current `PLAN.md`
-4. latest relevant entries in `EVIDENCE.md`
-5. unresolved entries in `FAILURES.md` and `GAUNTLET.md`
-6. `LESSONS.md`
+1. `RESUME.md` (authoritative checkpoint);
+2. `git status --short`, `git log --oneline -5`, `git diff --stat`;
+3. only the contract items, current `PLAN.md` section, and unresolved failure or
+   gauntlet entries that the next action needs.
 
 Then state the next planned action and its verifier before acting.
+
+`UPDATE_STATE` means: commit the verified change, then update RESUME.md.
 
 ## Cycle awareness
 
