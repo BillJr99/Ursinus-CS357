@@ -46,9 +46,10 @@ The skill itself does not require an external configuration file or orchestrator
 
 ## Context pressure
 
-When context is limited:
-1. preserve `CONTRACT.md`, `STATE.md`, and current `PLAN.md`;
-2. summarize old execution detail into evidence records;
-3. keep raw logs on disk;
-4. reload only relevant references;
+Small models are especially prone to trusting their own lossy summaries. Under any
+context size:
+1. keep RESUME.md current and commit verified work before context is compacted;
+2. summarize old execution detail into evidence records and keep raw logs on disk;
+3. reload only relevant references and file ranges;
+4. after compaction, re-anchor from RESUME.md and Git rather than the summary;
 5. never compress away unresolved failures or acceptance criteria.

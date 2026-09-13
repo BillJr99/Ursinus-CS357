@@ -42,6 +42,21 @@ Call the tool exactly as intended. Do not silently alter scope during execution.
 - performing a write before validating the read target;
 - believing a mutation without read-back verification.
 
+## Reliable file edits
+
+- Re-read the exact lines immediately before editing. Never build a replacement's
+  old text from memory, a summary, or an earlier read taken before other edits.
+- Use short, unique anchors for exact-match edits rather than long multi-line blocks.
+- If an exact-match edit fails, re-read the region and retry once with a smaller
+  anchor. After a second failure on the same file, rewrite the whole file from a
+  fresh read when it is small, or stop and re-anchor (RESUME.md, `git diff`).
+- After an edit, verify it: re-read the changed region, and run the syntax check,
+  import, or test that covers it.
+- Before deleting, moving, or overwriting, list the target and confirm the last
+  good state is committed. Prefer `git mv`/`git rm` for tracked files.
+- Avoid nested quoting pitfalls: write multi-line scripts or JSON to a file with a
+  file-write tool, then run it, instead of embedding them in shell heredocs.
+
 ## Tool chains
 
 For multi-tool workflows, each tool output becomes an explicit input with provenance to the next step. Do not rely on memory alone for critical identifiers.

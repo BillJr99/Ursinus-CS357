@@ -13,9 +13,17 @@ import traceback
 def validate(data, limits):
     required = {"task_id", "objective", "constraints", "status", "verified", "unresolved",
                 "evidence", "next_action", "verifier", "in_flight"}
-    if not isinstance(data, dict) or set(data) != required:
-        raise ValueError(f"Checkpoint must contain exactly: {', '.join(sorted(required))}")
-    for key in ("task_id", "objective", "status", "next_action", "verifier", "in_flight"):
+    optional = {"git"}
+    if not isinstance(data, dict):
+        raise ValueError("Checkpoint must be a JSON object")
+    missing = required - set(data)
+    unknown = set(data) - required - optional
+    if missing or unknown:
+        raise ValueError(f"Checkpoint must contain: {', '.join(sorted(required))} "
+                         f"(optional: {', '.join(sorted(optional))}); "
+                         f"missing: {sorted(missing)}; unknown: {sorted(unknown)}")
+    for key in ("task_id", "objective", "status", "next_action", "verifier", "in_flight",
+                *sorted(optional & set(data))):
         if not isinstance(data[key], str) or not data[key].strip():
             raise ValueError(f"{key} must be a nonempty string")
         if len(data[key]) > limits["maxFieldCharacters"]:
@@ -74,6 +82,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", required=True)
     parser.add_argument("--config", type=Path, default=Path(__file__).resolve().parents[1] / "assets/checkpoint-config.json")
+    parser.add_argument("--input", type=Path,
+                        help="Read checkpoint JSON from this file instead of stdin")
     parser.add_argument("action", choices=["write", "show"])
     args = parser.parse_args()
     limits = json.loads(args.config.read_text())
@@ -88,7 +98,11 @@ def main():
             raise ValueError("Checkpoint exceeds maxBytes; inspect bounded ranges and repair it")
         print(payload.decode("utf-8"))
     else:
-        raw = sys.stdin.buffer.read(limits["maxBytes"] * 2 + 1)
+        if args.input is not None:
+            with args.input.open("rb") as handle:
+                raw = handle.read(limits["maxBytes"] * 2 + 1)
+        else:
+            raw = sys.stdin.buffer.read(limits["maxBytes"] * 2 + 1)
         if len(raw) > limits["maxBytes"] * 2:
             raise ValueError("Input exceeds checkpoint input limit")
         target = write_checkpoint(args.root, json.loads(raw), limits)

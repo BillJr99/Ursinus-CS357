@@ -16,6 +16,14 @@ Prefer the smallest change that satisfies the contract while preserving surround
 
 Avoid speculative refactors during a bug fix unless verification shows they are required.
 
+For new multi-file work, build a thin vertical slice that runs end to end before
+adding breadth. Syntax-check, import, or run each new module as soon as it is
+written, and commit once it passes. Writing many files before the first run lets
+interface mismatches compound and is hard to recover after context loss.
+
+Record real interfaces (signatures, file layout, config keys) in RESUME.md or a
+linked notes file once verified, so a successor does not reconstruct them from memory.
+
 ## Test categories
 
 Always distinguish:
@@ -73,4 +81,5 @@ Inspect diff for:
 
 ## Build artifacts
 
+Commit verified source changes to the task branch as described in git-reversibility.md.
 Do not commit generated artifacts unless the project normally tracks them or the user requires them.

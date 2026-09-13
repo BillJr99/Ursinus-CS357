@@ -1,5 +1,7 @@
 # State
 
+Optional detail file. RESUME.md is the authoritative handoff checkpoint; keep it current first.
+
 ## Current status
 ACTIVE
 
