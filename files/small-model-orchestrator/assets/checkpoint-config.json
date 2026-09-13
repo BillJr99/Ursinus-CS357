@@ -1,0 +1,5 @@
+{
+  "maxBytes": 8000,
+  "maxFieldCharacters": 2000,
+  "maxListItems": 20
+}
