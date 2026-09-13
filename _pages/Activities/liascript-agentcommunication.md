@@ -163,7 +163,7 @@ Here is the working pattern I use daily, and it scales from one agent to a team 
 
 A conversation with an agent is ephemeral, unreviewable by teammates, and invisible to CI.  The same exchange conducted through an issue and a PR is permanent, searchable a semester later, reviewable by your project team, and gated by tests.
 
-The loop is five steps, and you ran the commands for them in *Coding Agents*, Section 2.  Here they are by name, because the questions below turn on their order rather than on their syntax:
+The loop is five steps, and you ran the commands for them in [Where the Work Comes From: GitHub and the Agent](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md#2.-where-the-work-comes-from:-github-and-the-agent).  Here they are by name, because the questions below turn on their order rather than on their syntax:
 
 1. **The task becomes an issue.**  `gh issue create`, with the repro and the acceptance criteria in the body, so any agent can pick the task up by number.
 2. **A worker agent is pointed at the issue.**  It reads the issue, writes a failing test, then fixes it.
@@ -171,11 +171,11 @@ The loop is five steps, and you ran the commands for them in *Coding Agents*, Se
 4. **Review happens in the PR, not in the chat.**  `gh pr diff`, then `gh pr review --comment` carrying the specific objection.
 5. **A second agent picks up that comment.**  A fresh session, reading the review with `gh pr view --comments`.
 
-The runnable form, with the exact command lines and the question of how the agent reaches GitHub at all, is in [Coding Agents](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Section 2.
+The runnable form, with the exact command lines, is in [Where the Work Comes From: GitHub and the Agent](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md#2.-where-the-work-comes-from:-github-and-the-agent); the question of how the agent reaches GitHub at all is the one after it, [Two Ways an Agent Reaches GitHub](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md#2a.-two-ways-an-agent-reaches-github).
 
 Step 5 is the interesting one: the review comment is the inter-agent message.  One agent wrote code, a human (or another agent) critiqued it in a durable place, and a second agent consumed that critique without either of them sharing a context window.  That is multi-agent communication built from tools you already have, with an audit trail as a side effect.
 
-> **The token, and then the channel.**  *Coding Agents* set the credential rule for this loop: a fine-grained token scoped to one repository, never your personal one.  What that rule does not cover is the channel itself, which carries instructions between agents and is therefore worth attacking.  Part III does exactly that.
+> **The token, and then the channel.**  [Where the Work Comes From: GitHub and the Agent](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md#2.-where-the-work-comes-from:-github-and-the-agent) set the credential rule for this loop: a fine-grained token scoped to one repository, never your personal one.  What that rule does not cover is the channel itself, which carries instructions between agents and is therefore worth attacking.  Part III does exactly that.
 
 ### Critical Thinking Questions
 

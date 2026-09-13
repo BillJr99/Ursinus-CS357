@@ -482,3 +482,65 @@ Respond to all three levels in your notebook:
 - Superpowers, a community skill bundle for agent CLIs: https://github.com/obra/superpowers.  Read a few of its `SKILL.md` files as further models of description-as-trigger.
 - Anthropic.  "Building Effective Agents." https://www.anthropic.com/research/building-effective-agents, the evaluator-optimizer pattern is today's measurement loop in general form.
 - On evaluation: this course's *Evaluating Agent Outputs*, *Benchmarking*, and *Testing Agents* activities extend today's five-item rubric into larger golden-test, benchmark, and property-based harnesses.
+
+---
+
+# Extension: A Skill Big Enough to Need a Filing System (self-paced)
+
+Optional, and nothing above assumes it.  Today you wrote skills that fit on a page.  This one does not, and the reason it does not is the interesting part.
+
+## What it is, in plain language
+
+Download it and look at it: [small-model-orchestrator.skill](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill), or read the [unpacked version](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator/SKILL.md) first.
+
+It is a set of working habits for an AI model that has been given a long, fiddly job and no supervision.  Think of the model you ran today as a capable assistant with an excellent vocabulary and a genuinely terrible short-term memory.  Left alone for twenty minutes it will do three things, and only the third one is frightening:
+
+| What you see | What is actually going on |
+|---|---|
+| It forgets a rule you gave it early on | Its working memory filled up and the oldest part was quietly discarded.  It was not told, so it does not know |
+| It stops in the middle of a sentence | It hit a hard limit on how much it may write at once |
+| It announces that it finished, and it did not | Nothing ever checked.  A confident summary and a correct one read identically |
+
+The third one is the problem this skill exists for.  The sentence at the heart of it is worth writing down:
+
+> A fluent response, successful command, or generated file is not proof of completion.
+
+## How it works, without the jargon
+
+The skill is essentially a checklist discipline, of the same kind that surgical teams and flight crews adopted for the same reason: not because anyone involved is incompetent, but because competent people under load skip steps and do not notice they skipped them.
+
+Four habits, and each one is a direct answer to a specific way things go wrong:
+
+1.  **Write it down where the conversation cannot reach.**  The model keeps a file in your project that says what the job is, what it has genuinely finished, and what it is about to do next.  When the conversation is lost, the file is not.
+2.  **Say what you are about to do before you do it, and mark the result unknown.**  This is the clever one.  Before it changes anything, it records "I am about to do this, and I do not yet know whether it worked."  If the power goes out mid-step, whoever picks up the job later knows there is something to go and check, rather than assuming nothing happened.
+3.  **Prove it, do not assert it.**  Reading a file back is better evidence than a tool saying "success".  A test someone else wrote is better than a test the model wrote to check its own work, because the model's test inherits the model's misunderstanding.
+4.  **Attack your own work before calling it done.**  A separate pass that goes looking for nine specific kinds of problem, of which the sharpest is "fake completeness": leftover TODOs, stubbed-out functions, tests that were quietly skipped, comments describing behavior the code does not have.
+
+Habit 2 deserves a sentence on its own, because it is the one that generalizes furthest beyond AI.  **A lost reply is not proof that nothing happened.**  If your connection drops while a payment is being submitted, the payment may well have gone through.  An assistant that assumes failure and tries again has just paid twice.
+
+## Why the file is so big
+
+Your `commit-message` skill is one page because it does one thing.  This one has eleven reference documents, and that creates a problem it then has to solve: guidance the model cannot afford to read is guidance the model will not follow.
+
+Its answer is worth stealing for your own skill work.  The main file stays short and acts as a switchboard, pulling in exactly one reference for the phase it is currently in, and it says outright that the agent must not load everything at the start.  A skill that respects its own reader's limited attention is a better skill.  That is true of the model, and it is true of your teammates.
+
+Two other things to notice as an author, both of which are today's lessons arriving from a different direction:
+
+- **The description is still the trigger.**  It names the *situation*, not the tool, right down to the condition "when correctness matters more than latency or token cost".  That one sentence is all the model reads when deciding whether this skill applies.
+- **It says what it cannot do.**  Its own documentation states that it cannot restart a dead process, cannot force a model to comply, and cannot tell you the outcome of something whose answer was lost.  A skill that is honest about its limits is easier to trust about everything else.
+
+## Try it against what you built today
+
+Run the same with-and-without comparison from Part III, but on a task long enough that memory becomes the bottleneck: something with six or seven steps rather than one.  Watch specifically for whether the model checks its own work when nobody asked it to.
+
+Expect `llama3.2` to struggle.  That is the point, and it is the most useful thing you will see: every place the small model drops a step is a place where the instruction relied on good intentions instead of structure.  Rewriting one of those steps so that it is hard to skip rather than merely requested is exactly the move the Skill Design Study is asking you to make.
+
+## Where to go next
+
+The technical treatment, with the checkpoint format, the evidence hierarchy, the nine-point review, the failure-recovery table, and guidance on which model to point at it:
+
+- [A Skill That Scaffolds a Small Model](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FilesystemIsolation#a-skill-that-scaffolds-a-small-model)
+
+To run it against a real agent in a container, on your own model:
+
+- [One Script Instead of an Image, and What That Convenience Costs](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FilesystemIsolation#one-script-instead-of-an-image-and-what-that-convenience-costs)

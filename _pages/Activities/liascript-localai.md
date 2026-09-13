@@ -402,3 +402,59 @@ In this part, you will probe your local model across five different task types t
 - Ollama documentation: https://ollama.com and https://github.com/ollama/ollama/blob/main/docs/api.md (see the `/api/chat` `messages` array for multi-turn conversations)
 - OpenWebUI documentation: https://docs.openwebui.com
 - Melanie Mitchell.  *AI: A Guide for Thinking Humans*, Chapter 3.
+
+---
+
+# Extension: Putting the Agent in a Box (self-paced)
+
+Optional, and nothing above assumes it.  You now have a model running privately on your own machine.  The obvious next step is to let something *use* it without supervision, and that is where the question changes from "can it?" to "what is it allowed to touch?"
+
+## The idea, in plain language
+
+A coding agent is a program that reads your files, writes new ones, and runs commands, all on its own judgment.  That is genuinely useful and it is also a strange thing to hand a stranger.  The usual answer is to watch it closely and approve each step, which works until you get tired.
+
+The better answer is to change what is reachable rather than to watch harder.  You put the agent in a container, which is a boxed-off copy of an operating system, and you decide in advance exactly two things:
+
+1.  **Which folder it can see.**  One project directory, and nothing above it.  Not your home folder, not your SSH keys, not your other courses.  Files that were never handed to the box do not exist as far as the agent is concerned.
+2.  **Which model it can talk to.**  Ollama, running on your laptop, on the other side of a single address.  No API key, no account, no request leaving your machine.
+
+Then the interesting question stops being "do I trust this agent?" and becomes "what is the worst thing that can happen inside this box?"  That is a question with an actual answer, and you chose it yourself.
+
+> **Why this is different from just being careful.**  Care is a thing you have to keep supplying.  A boundary is a thing you set once, and it holds while you are tired, distracted, or asleep.  The agent cannot read a file you did not mount, no matter how convincingly something in its input asks it to.
+
+## What it looks like to run
+
+Two commands, once the model is running.  The first builds the box, the second opens the agent inside it:
+
+```bash
+docker build -t course-pi-ollama .
+docker run --rm -it --user "$(id -u):$(id -g)" \
+  --add-host=host.docker.internal:host-gateway \
+  -v "$PWD:/workspace" -w /workspace \
+  -e PI_OLLAMA_MODEL=llama3.2 course-pi-ollama
+```
+
+`--rm` is the part worth noticing.  It throws the container away when you exit.  The work stays, because the work is in your project folder; the machine it ran on is disposable.  If the agent makes a mess of its own environment, the mess is gone the next time you start.
+
+## One thing that will trip you up
+
+Your model is not where the agent expects.  Inside a container, `localhost` means *the container*, not your laptop, so an agent that dials `localhost:11434` is calling a phone number in the wrong building.  Section 3a of this deck already showed you the connection-refused version of this problem; the containerized version has the same cause and the same fix.  Ollama also has to be started in a way that accepts the call at all:
+
+```bash
+OLLAMA_CONTEXT_LENGTH=8192 OLLAMA_HOST=0.0.0.0 ollama serve
+```
+
+The second setting is the familiar one from Section 3a.  The first is new, and it is the one that will stop you cold: the agent setup below refuses to start if the model has less than 8192 tokens of working memory, and Ollama hands out 4096 by default.  That refusal is deliberate, and the reason it is deliberate is worth reading.
+
+## Where to go next
+
+The full build, every flag explained, both the Windows and the macOS/Linux commands, and the honest accounting of what running as root costs you:
+
+- [One Script Instead of an Image, and What That Convenience Costs](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FilesystemIsolation#one-script-instead-of-an-image-and-what-that-convenience-costs)
+
+The files, ready to download:
+
+- [run-pi-ollama.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/pi-ollama/run-pi-ollama.sh), for macOS, Linux, and WSL
+- [run-pi-ollama.ps1](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/pi-ollama/run-pi-ollama.ps1), for Windows PowerShell
+- [Dockerfile](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/pi-ollama/Dockerfile), the version that never runs as root
+- [README.md](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/pi-ollama/README.md), the quickstart with a troubleshooting table

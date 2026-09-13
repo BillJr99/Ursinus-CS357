@@ -451,6 +451,435 @@ Compare that last row to Student A's mount, where the honest answer was "your ho
 
 ---
 
+## One Script Instead of an Image, and What That Convenience Costs
+
+The section above built an image and then ran it.  That is two steps, and the first one is slow.  It is reasonable to want a single file you can drop into a project and run, with no image to build and nothing to remember, and this section works through exactly that file.  It also works through the bill, because the convenience is not free and the price is paid in privileges.
+
+Here is the trade in one table.  Read the third row first, because it is the one that matters.
+
+| | Prebuilt image (the section above) | Self-contained script (this section) |
+|---|---|---|
+| Setup before first use | `docker build`, once, a few minutes | None |
+| Privileged work | At build time, once, on your terms | On every single launch |
+| Who the agent runs as | The image's `agent` user, or you | **Root**, unless you ask otherwise |
+| Works with no network | Yes, after the build | No.  It reinstalls `apt` and `npm` packages every time |
+| Time to a prompt | Seconds | A minute or two |
+| Changing the pinned version | Edit the Dockerfile, rebuild | Edit one line of the script |
+
+The reason for the third row is mechanical rather than careless.  A stock `node:24-bookworm` image does not contain `git`, `python3`, or `ripgrep`, and installing them means `apt-get`, and `apt-get` means root.  An image can do that work once at build time and then drop to an ordinary user forever after.  A single script that starts from a stock image has no build step to hide the privileged work in, so it does that work at run time, as root, every time you launch it.
+
+> **Watch out!**  Container root is not a lesser kind of root.  Unless you have configured user-namespace remapping, which almost nobody has, UID 0 inside the container is UID 0 on your host for anything bind-mounted.  Two concrete consequences follow.  Files the agent creates in your project come back owned by `root`, and you will need `sudo` to edit your own work.  And the thing that gets loose in a container escape is a root process rather than an ordinary one.
+
+Download the file and read along:
+
+- [run-pi-ollama.sh]({{ site.baseurl }}/files/pi-ollama/run-pi-ollama.sh) for bash, on macOS, Linux, and WSL
+- [run-pi-ollama.ps1]({{ site.baseurl }}/files/pi-ollama/run-pi-ollama.ps1) for PowerShell, on Windows
+
+They are the same program.  Every path below quotes the bash file; the PowerShell file differs only in its syntax, and the places where the platform itself differs are called out where they arise.
+
+### What the script decides, and where you change it
+
+The whole configuration is a block of shell parameter expansions at the top.  The `${NAME:-default}` form means "use the environment variable `NAME` if it is set, otherwise this default", so every one of these is overridable without editing the file:
+
+```bash
+PROJECT_DIR="${PI_PROJECT_DIR:-$PWD}"
+BASE_IMAGE="${PI_BASE_IMAGE:-node:24-bookworm}"
+PI_PACKAGE="${PI_PACKAGE:-@earendil-works/pi-coding-agent@0.85.1}"
+PI_RUN_AS="${PI_RUN_AS:-root}" # root or user; package bootstrap always runs as root
+PI_OLLAMA_MODEL="${PI_OLLAMA_MODEL:-llama3.2}"
+PI_OLLAMA_URL="${PI_OLLAMA_URL:-http://host.docker.internal:11434}"
+PI_FALLBACK_CONTEXT="${PI_FALLBACK_CONTEXT:-8192}"
+PI_MAX_CONTEXT="${PI_MAX_CONTEXT:-0}" # 0: no extra client ceiling
+```
+
+Four of those lines are worth pausing on.
+
+`PI_PACKAGE` pins an exact version.  An unpinned agent is a different program every week, and "it worked yesterday" stops being evidence of anything.  The same reasoning pins Node 24 in the course container and CPython in its base image.
+
+`PI_OLLAMA_URL` is the host-bridge address from Section 3 of this tutorial, not `localhost`.  Inside a container `localhost` is the container, and this is the single most common way this setup fails.
+
+`PI_OLLAMA_MODEL` is `llama3.2`, the model you already pulled for the Overview assignment.  It is a 3B model driving a long agentic loop, and you should expect to watch it strain.  That is discussed at length in the next section.
+
+`PI_FALLBACK_CONTEXT` is the one setting whose name is a lie worth understanding, and it gets its own subsection below.
+
+### Dropping privileges, and the flag that does less than it sounds like
+
+The script supports a second mode:
+
+```bash
+PI_RUN_AS=user bash run-pi-ollama.sh
+```
+
+```powershell
+$env:PI_RUN_AS = "user"; .\run-pi-ollama.ps1
+```
+
+Inside the container, that takes this branch after the packages are installed:
+
+```bash
+if [[ "$PI_RUN_AS" == user ]]; then
+    chown -R "$PI_USER_UID:$PI_USER_GID" "$PI_HOME"
+    exec setpriv --reuid="$PI_USER_UID" --regid="$PI_USER_GID" --clear-groups \
+        --bounding-set=-all --inh-caps=-all --ambient-caps=-all \
+        env HOME="$PI_HOME" PATH="/opt/pi/node_modules/.bin:$PATH" \
+        python3 /opt/pi-launcher/launcher.py
+fi
+```
+
+`setpriv` changes the user and group of the process about to run, and the three capability flags make the change one-way: `--bounding-set=-all` drops the capabilities the process could ever regain, and `--inh-caps=-all` and `--ambient-caps=-all` stop any of them from being inherited by what it launches.  The agent that starts after this line is genuinely unprivileged, and on Linux and macOS the files it writes into your project come back owned by you.
+
+> **Common Misconception:** `PI_RUN_AS=user` is not the same thing as rootless, and the difference is not pedantry.  The container still *starts* as root: the `docker run` line passes `--user 0:0`, and the `apt-get` and `npm install` above this branch both run with full privileges.  What the flag gives you is a smaller window, not no window.  Everything that executes before `setpriv` is still root, including any code an `apt` or `npm` package chooses to run during installation.  If you want a container that is never root at any point, the only way to get one is to move the privileged work to build time, which is what the Dockerfile route below does.
+
+In the script's favor, three real mitigations are already in place, and it is worth naming what each one does and does not buy:
+
+| Flag | What it prevents | What it does not prevent |
+|---|---|---|
+| `--security-opt=no-new-privileges` | A process inside gaining *more* privilege than it started with, through setuid binaries | Anything root can already do, which at UID 0 is nearly everything |
+| `--pids-limit=1024` | A fork bomb taking your machine down with it | A single process doing damage slowly |
+| `npm install --ignore-scripts` | Package lifecycle hooks running arbitrary code as root during install | The package itself misbehaving once you actually run it |
+
+That last one is the one students skip past, and it is the most valuable of the three.  `npm` packages may declare `postinstall` scripts, which are arbitrary code that runs at install time; the [AI coding agent security]({{ site.baseurl }}/Tutorials/CodingAgentSecurity) tutorial treats that as a supply-chain attack surface.  `--ignore-scripts` closes it.
+
+### The context window, and why the launcher refuses to start
+
+This is the part of the script that will stop you on your first run, and the failure is deliberate.
+
+Inside the container, a Python launcher asks your Ollama server what it is actually doing before it tells the agent anything.  It asks four questions in order, and each one is a fallback for the last:
+
+```python
+tags = request_json(base, "/api/tags", timeout=timeout)      # 1. is the model installed?
+show = request_json(base, "/api/show", {"model": model}, timeout)  # 2. what is its stated maximum?
+request_json(base, "/v1/chat/completions", probe, timeout)   # 3. load it, using the same endpoint pi will
+active = active_context(request_json(base, "/api/ps", ...))  # 4. what did the server ACTUALLY allocate?
+```
+
+Step 4 is the one that matters, and step 3 exists to make step 4 meaningful: a model that is not loaded has no allocation to report, so the launcher sends one trivial completion first to force the load.  Note the comment in the script that the probe deliberately does not set `num_ctx`, because a probe that configured the window would measure a runner other than the one the agent later uses.
+
+The reason for all this care is that a model's advertised maximum and a server's actual allocation are different numbers, and the agent behaves badly when it believes the larger one.  An agent told it has 128K tokens when the server gave it 4096 does not fail cleanly.  It fills the window, the server silently drops the oldest tokens, and the agent continues confidently with the beginning of its own instructions missing.
+
+Once it knows the real number, the launcher does arithmetic, and refuses if the arithmetic does not work out:
+
+```python
+def token_budgets(context, config):
+    output = min(config["maxOutputTokens"], context // 4)
+    reserve = min(context // 2, max(output + 2048, (context * 3) // 8))
+    recent = min(config["keepRecentTokens"], context // 8)
+    if context < 8192 or output < 1024:
+        raise ValueError(f"Detected {context} tokens: too small for this skill. "
+                         "Configure a larger context on the Ollama server, then restart.")
+    return output, reserve, recent
+```
+
+Read that as three reservations out of one budget.  At most a quarter of the window is allowed for the reply, because a model that is permitted to write until the window is full leaves no room for the conversation that produced it.  `reserve` is the trigger point for compaction, set so that compaction begins while there is still room to compact, rather than after the overflow it was meant to prevent.  And `recent` is what survives compaction verbatim, capped at an eighth of the window.
+
+> **Checkpoint.** On a stock install this raises, and the message is `Detected 4096 tokens: too small for this skill`.  Ollama's default context length is 4096 tokens on any machine with less than 24 GiB of VRAM, which is every laptop in this room.  The fix is to start the server with a bigger window, alongside the `OLLAMA_HOST` setting Section 3 already required:
+>
+> ```bash
+> OLLAMA_CONTEXT_LENGTH=8192 OLLAMA_HOST=0.0.0.0 ollama serve
+> ```
+>
+> ```powershell
+> $env:OLLAMA_CONTEXT_LENGTH = "8192"
+> $env:OLLAMA_HOST = "0.0.0.0"
+> ollama serve
+> ```
+>
+> One caveat that will cost you an hour if you miss it: a `num_ctx` baked into a model's Modelfile takes precedence over this environment variable.  If you set the variable and the launcher still reports 4096, check the model rather than the server.
+
+`PI_FALLBACK_CONTEXT` is what the launcher assumes when step 4 returns nothing at all.  Its name suggests a safety net, and the script is careful to say it is not one:
+
+```bash
+if not active:
+    print(f"[bootstrap] WARNING: using {context}-token fallback. This is not a verified "
+          "allocation; lower PI_FALLBACK_CONTEXT if your server allocates less.", flush=True)
+```
+
+An operator assumption is not a measurement.  If you see that warning, the number the agent is working with is one you supplied, not one anyone checked.
+
+### One more thing the launcher insists on
+
+The script will also refuse to start if the orchestration skill is not in your project:
+
+```python
+skill = next((root / path for path in (
+    ".skills/small-model-orchestrator", ".pi/skills/small-model-orchestrator",
+    ".agents/skills/small-model-orchestrator") if (root / path / "SKILL.md").is_file()), None)
+if skill is None:
+    raise ValueError("small-model-orchestrator/SKILL.md was not found under .skills, .pi/skills, or .agents/skills")
+```
+
+Three locations are checked in order and the first `SKILL.md` found wins.  Install it into your project before your first run:
+
+```bash
+mkdir -p .agents/skills
+curl -fsSL -o smo.skill https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
+unzip -q smo.skill -d .agents/skills/ && rm smo.skill
+```
+
+```powershell
+New-Item -ItemType Directory -Force -Path .agents\skills | Out-Null
+curl.exe -fsSL -o smo.zip https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
+Expand-Archive -Path smo.zip -DestinationPath .agents\skills -Force; Remove-Item smo.zip
+```
+
+That skill is the subject of the next section.
+
+### Surviving the interruption
+
+The script installs a small extension that watches for the two ways a session ends badly and writes a record of each to disk:
+
+```javascript
+pi.on("turn_end", async (event, ctx) => {
+  if (["length", "error", "aborted"].includes(event.message?.stopReason)) {
+    record(ctx, "interrupted-turn", { stopReason: event.message.stopReason, ... });
+    ctx.ui.notify("Interrupted turn recorded. Check disk state before retrying.", "warning");
+  }
+});
+
+pi.on("session_compact_failed", async (event, ctx) => {
+  record(ctx, "compaction-failed", { reason: event.reason, ... });
+});
+```
+
+A `stopReason` of `length` means the model was cut off mid-sentence, and the notification says to check disk state *before retrying* rather than simply retrying.  That instruction is the whole idea: a tool call that was cut off may still have run, and the response you did not receive is not evidence that nothing happened.
+
+Sessions live under `<project>/.pi/` and the task checkpoint lives under `<project>/.small-model-orchestrator/`.  Both are in your project, not in the container, which is what makes the container disposable.  Three flags bring you back:
+
+| Command | What it does |
+|---|---|
+| `bash run-pi-ollama.sh --continue` | Reopen the last session |
+| `bash run-pi-ollama.sh --resume` | Choose from saved sessions |
+| `bash run-pi-ollama.sh --recover` | Start a *fresh* session from the durable checkpoint |
+| `/smo-recover` | The same fresh-session recovery, from inside the agent |
+
+`--recover` is the interesting one.  It does not reload the old conversation.  It reads the checkpoint file and starts clean, which is the correct move when the reason the session ended was that its context was the problem.
+
+### The rootless alternative
+
+Everything above is the cost of having no build step.  If you would rather pay the build once and never run as root, [Dockerfile]({{ site.baseurl }}/files/pi-ollama/Dockerfile) does the same work in the other order: the `apt-get` and `npm install` happen at build time, and the image it produces has no privileged phase at all.  It needs two files beside it, [launcher.py]({{ site.baseurl }}/files/pi-ollama/launcher.py) and [recovery.mjs]({{ site.baseurl }}/files/pi-ollama/recovery.mjs), which are the same code the script writes out at run time.
+
+Build it once.  This command is identical on every platform:
+
+```bash
+docker build -t course-pi-ollama .
+```
+
+Then run it from whatever project you want the agent to work on:
+
+```bash
+docker run --rm -it \
+  --user "$(id -u):$(id -g)" \
+  --add-host=host.docker.internal:host-gateway \
+  --security-opt=no-new-privileges --cap-drop ALL --pids-limit=1024 \
+  -v "$PWD:/workspace" -w /workspace \
+  -e PI_OLLAMA_MODEL=llama3.2 \
+  course-pi-ollama
+```
+
+```powershell
+docker run --rm -it `
+  --add-host=host.docker.internal:host-gateway `
+  --security-opt=no-new-privileges --cap-drop ALL --pids-limit=1024 `
+  -v "${PWD}:/workspace" -w /workspace `
+  -e PI_OLLAMA_MODEL=llama3.2 `
+  course-pi-ollama
+```
+
+Three differences between those two commands, all of them real, and all of them worth knowing before you spend an afternoon on one:
+
+1.  **Line continuation** is a backslash in bash and a backtick in PowerShell.
+2.  **`$PWD` needs braces in PowerShell**, written `${PWD}`, because otherwise the colon that follows is read as part of the variable name and the mount silently goes to the wrong place.
+3.  **`--user` appears only in the bash version.**  On Linux and macOS a container writing into a bind mount writes with the container's own UID, so passing your own UID and GID is what makes the resulting files yours.  Docker Desktop on Windows translates ownership at the mount boundary instead, so there is no UID to pass and the flag has nothing to do.
+
+Note what the rootless version can add that the script cannot: `--cap-drop ALL`.  The script cannot drop capabilities at launch, because it needs them for the `apt-get` it is about to run.  An image that did its installing at build time has nothing left to keep them for.
+
+> **Why this matters:** this is the same argument the course container makes, and it is worth noticing that all three of this course's container patterns land in the same place.  The devcontainer ends with `USER student`.  The `course-pi` image in Section 4 above ends with `USER agent`.  This image ends with `USER agent` as well.  A container that runs as root is the exception in this course, and the exception exists here so you can see the reason for the rule.
+
+The [quickstart README]({{ site.baseurl }}/files/pi-ollama/README.md) collects every command on this page in one place, with a troubleshooting table.
+
+### Questions to Work Through
+
+13.  The script runs `apt-get` and `npm install` on every launch, as root, and the prebuilt image runs them once at build time.  Both end up executing the same third-party package code with full privileges at some point.  Explain what the image route actually buys, given that, and name the specific property of build time that makes running as root there less dangerous than running as root at launch.
+
+   *Hint: Ask when each one happens, how often, and what is mounted at the time.  A build has no bind mount to your project and produces an artifact you can inspect with `docker history` before you ever run it.*
+
+14.  You set `OLLAMA_CONTEXT_LENGTH=8192` and restarted Ollama, but the launcher still reports `Detected 4096 tokens`.  Name the most likely cause, give the command that would confirm it, and say why the environment variable loses.
+
+   *Hint: The launcher reads `num_ctx` out of `/api/show` as well as the live allocation.  A parameter baked into a model takes precedence over a server default, and `ollama show --modelfile <model>` will tell you whether yours has one.*
+
+15.  A teammate proposes deleting `--ignore-scripts` from the `npm install` line, because a package they want fails to install without its `postinstall` hook.  The script runs that install as root with your project bind-mounted at `/workspace`.  Describe the worst realistic outcome of that change, then propose a way to get the package working that does not involve running its hooks as root over your project.
+
+   *Hint: A `postinstall` hook is arbitrary code running with whatever privileges the install has, and at that moment the install can see and write everything under `/workspace`.  Consider where else that install could happen: a build stage, with no bind mount, whose output you inspect before running.*
+
+---
+
+## A Skill That Scaffolds a Small Model
+
+The previous section put a small model inside a box and handed it your project.  This section is about the other half of that arrangement, which is the harder half: a 3B model asked to do twenty minutes of careful work will lose the thread, and no amount of containerization fixes that.  The skill below is one answer to it.  Download it, read it, and install it into your project:
+
+- [small-model-orchestrator.skill]({{ site.baseurl }}/files/small-model-orchestrator.skill), the installable archive
+- [The unpacked directory]({{ site.baseurl }}/files/small-model-orchestrator/SKILL.md), if you would rather read it before you run it
+
+### The problem it is built for
+
+Three failures show up constantly when you drive a small local model through a long task, and they are easy to confuse with each other:
+
+| What you see | What actually happened | Why it is not obvious |
+|---|---|---|
+| The agent forgets a constraint you set twenty turns ago | The context window filled and the oldest tokens were dropped | The model does not announce the loss.  It continues fluently without them |
+| The agent stops mid-sentence, or mid-JSON | The output token limit was reached | A truncated tool call looks like a malformed one |
+| The agent says it finished, and it did not | Nothing checked the claim | A confident summary reads exactly like a correct one |
+
+The third is the dangerous one, and the skill's framing of it is the sentence worth taking away from this whole tutorial:
+
+> A fluent response, successful command, or generated file is not proof of completion.
+
+Notice that none of the three is a knowledge problem.  A bigger model has the same three failure modes and simply reaches them later.  What the skill does is refuse to let the conversation be the only place the work is recorded.
+
+### Durable state: the repository remembers, the conversation does not
+
+The skill keeps a directory in your project, `.small-model-orchestrator/`, and the single most important file in it is `RESUME.md`.  Every checkpoint records the same six things:
+
+1.  Task identity and objective.
+2.  Constraints and permission boundaries.
+3.  Verified progress, and unresolved issues.
+4.  Where the evidence lives.
+5.  The exact next action, and the verifier that will confirm it.
+6.  Any operation currently in flight, and its uncertain completion state.
+
+If that list feels familiar, it should.  It is the same argument the [agent governance]({{ site.baseurl }}/Tutorials/AgentGovernance) tutorial makes with `.ai/CURRENT_TASK.md` and `.ai/SESSION.md`, arriving from a different direction.  There, durable state exists so a *different* agent can pick the work up.  Here it exists so *the same* agent can survive its own context running out.  Both end at the same rule: the repository is the durable memory, and the conversation is not.
+
+Item 6 is the one that distinguishes this skill from ordinary note-taking.  Before any consequential action, the checkpoint is written with the outcome recorded as `UNKNOWN`, and it stays `UNKNOWN` until something independent checks it:
+
+> **Why this matters:** a lost response is not evidence that nothing happened.  If the connection drops during a file write, a database update, or an API call, the operation may well have completed on the other side.  An agent that assumes failure and retries has just done it twice.  The skill's rule is that an interrupted mutation is `UNKNOWN` until checked, never "failed", and this is the single most useful habit in the whole protocol.
+
+Every action ends up in one of five states, and the vocabulary is deliberately more precise than pass and fail:
+
+| Status | Meaning |
+|---|---|
+| `VERIFIED` | The postcondition was checked and holds |
+| `FAILED` | It was checked and does not hold |
+| `BLOCKED` | Something external prevents progress |
+| `INVALIDATED` | An earlier result is no longer true |
+| `NEEDS_REVIEW` | A human has to look at this |
+
+### Writing a checkpoint without destroying the last good one
+
+`scripts/checkpoint.py` reads a JSON object on standard input, validates it against a schema, and only then replaces `RESUME.md`.  Two design choices in it are worth studying, because they are the general pattern for any agent that writes files:
+
+The write is **atomic**.  The new content goes to a temporary file, is flushed, and only then replaces the target, with the containing directory flushed too on POSIX systems.  A crash halfway through leaves you with the old checkpoint intact rather than half of a new one.
+
+Invalid input **changes nothing**.  If the JSON is malformed, incomplete, or over the size limit, the previous checkpoint survives untouched.  This matters more than it sounds: the moment a model is most likely to emit truncated JSON is exactly when its context is exhausted, which is exactly when you most need the last good checkpoint.
+
+The size limit is 8000 bytes, set in `assets/checkpoint-config.json`.  That is a byte count and not a token count, and it is small on purpose, because a checkpoint that does not fit in a fresh session's context has failed at its only job.  Detail goes to the evidence files; the checkpoint holds pointers to them.
+
+### What counts as evidence
+
+The skill ranks evidence rather than treating it as a yes-or-no property, and the ordering is the part to memorize:
+
+| Strength | Kind of evidence |
+|---|---|
+| Strongest | Direct observation of the external state you asked for |
+| | An existing, authoritative test suite |
+| | An independent oracle or external specification |
+| | A targeted reproducer for the original failure |
+| | An independent critic inspecting the work |
+| | Tests the agent wrote itself |
+| | Static inspection |
+| Weakest | The model asserting that it worked |
+
+The principle underneath is independence: evidence is strong when it fails differently from the thing it is testing.  An implementation and a test written from the same misreading of the requirement are correlated, and they will agree with each other while both being wrong.  This is why "the tool returned success" ranks below reading the changed state back, and why it is worth the extra call to do so.
+
+### The gauntlet: trying to prove it is not done
+
+Before declaring success on anything consequential, the skill runs an adversarial review pass, and it is specific about what that means:
+
+> The gauntlet is not a request for generic criticism.  It is an attempt to falsify completion.
+
+Nine attack surfaces are required, and an agent that finds nothing on all nine has almost certainly not looked: requirements omissions, functional correctness, edge cases and adversarial inputs, tool misuse and unverified side effects, regression risk, security assumptions, **fake completeness**, unnecessary complexity, and evidence quality.
+
+The seventh is the one worth reading closely, because it is the list of ways work gets reported as finished when it is not: TODO and FIXME comments, stubs, placeholders, mocked behavior sitting in a production path, skipped or disabled tests, swallowed errors, migrations that never ran, fabricated results, and comments describing behavior the code does not have.
+
+Each finding carries an ID, a severity, its attack surface, the claim, the evidence, a reproduction, the required repair, and its resolution status.  Blocking findings send the work back to execution, and the relevant gauntlet sections run again afterward.  That structure is the *Karpathy Loop and the Gauntlet Loop* activity's seven-step procedure, written as something an agent follows rather than something you run by hand, so the two are worth reading side by side.
+
+### Recovery that depends on the failure
+
+The one table to keep open while you work:
+
+| What you observe | What to do |
+|---|---|
+| Input overflow, or the server truncated your input | Reconcile the context limits, try compaction once, then start a fresh session from the checkpoint if it fails or recurs without progress |
+| Output limit hit, or an incomplete tool-call payload | Inspect what actually executed and which files changed, then split the action and re-run its verifier |
+| Tool output truncated or paginated | Narrow the query, or read specific ranges from the saved complete output |
+| Connection lost, timeout, or a crash | Treat the in-flight effect as `UNKNOWN` and verify before any replay |
+| Compaction failed or came back incomplete | Keep the checkpoint and the old session records, and rebuild working context from the checkpoint |
+
+Two prohibitions run through all of it.  Never concatenate partial JSON, commands, or code into something you then treat as complete.  And never retry an unchanged failing payload: change the hypothesis, the inputs, the tactic, or the decomposition first, or you are just paying for the same failure twice.
+
+> **Common Misconception:** compaction is not a substitute for the checkpoint.  A compaction summary is generated by the same model whose context is already in trouble, and it optimizes for continuing the conversation.  The checkpoint was written deliberately, while things were going well, and validated against a schema.  The skill's rule is not to wait for overflow before saving state, and not to ask an already-overflowing context to produce a comprehensive rescue summary.
+
+### Which model to point at it
+
+Start with `llama3.2`, the model you pulled for the Overview assignment.  Expect it to strain, and expect that to be informative rather than discouraging: this course has said in several places that a smaller model follows a numbered list less reliably, and this is where you get to watch that happen against a protocol demanding enough to make it visible.  Where it drops a step, ask whether the skill could have made that step harder to drop.  That question is the Skill Design Study in miniature.
+
+If you want to compare, these are already in use elsewhere in the course, so none of them is a new download decision:
+
+| Model | Pull | Roughly | When to reach for it |
+|---|---|---|---|
+| `llama3.2` | already pulled | 2 GB | The default.  Start here, and learn what the ceiling feels like |
+| `llama3.2:1b` | `ollama pull llama3.2:1b` | 1.3 GB | Deliberately too small.  Useful for *seeing* a failure mode clearly |
+| `qwen2.5:7b` | `ollama pull qwen2.5:7b` | 4.7 GB | 16 GB machines.  Noticeably steadier at following a long protocol |
+| `hermes3:8b` | `ollama pull hermes3:8b` | 4.7 GB | When structured output and tool calls are what keep breaking |
+| `qwen3:30b` | `ollama pull qwen3:30b` | 19 GB | Only with 24 GB or more.  A different class of machine, not a different technique |
+
+Remember what you learned in the previous section: the model's advertised maximum is not your server's allocation.  A 128K-context model served in a 4096-token window is a 4096-token model, and pulling something larger does nothing about that.
+
+### More than one model, and when it actually helps
+
+The skill's default is to assume one model, and it says so plainly: do not go looking for a second model merely because the first one is performing badly.  That default exists because switching models is the most tempting and least diagnostic response to a bad result.  If the first model failed because your instructions were ambiguous, the second one fails too, and you have learned nothing while doubling the runtime.
+
+But the skill also says that if you know several models are available, you may use them freely, and it names where they help.  Every one of those places has the same shape: a second model is useful when you want a **failure that is uncorrelated with the first model's**, which is the independence principle from the evidence hierarchy applied to the models themselves.
+
+| Use | Why a second model helps |
+|---|---|
+| Independent planning | Two plans that differ tell you the task is underspecified, which is worth knowing before you build |
+| Alternative implementations | Divergence localizes the ambiguity to a specific decision |
+| Test generation | A test written by the model that wrote the code inherits its misreading.  A different model does not share it |
+| Cold criticism | A critic with none of the builder's reasoning cannot be persuaded by it |
+| Gauntlet review | The nine attack surfaces are more productive when the reviewer has no stake in the artifact |
+| Tie-breaking | A third opinion, when two disagree and both are defensible |
+
+This is the same machinery as *Critique, Consensus, and the LLM Judge*, with one practical difference: there you ran the pattern by hand to understand it, and here a skill invokes it as part of a longer task.  The warning from that session carries over unchanged.  Two models that agree are not thereby correct, especially when they share training data, and correlated agreement is the failure mode that looks most like success.
+
+> **Checkpoint.** The cheapest useful version of this needs no second machine and no second download: run the gauntlet pass in a *fresh session* with the same model, giving it the contract, the artifact, and the evidence, and withholding the builder's reasoning.  Much of the value is in the isolation rather than in the second model.  The skill asks you to disclose when a review was a self-review, which is a discipline worth copying into work of your own.
+
+### Reading the skill as a skill
+
+Set the protocol aside for a moment and look at the file as an artifact for the Skill Design Study, because it is a useful counterexample to the two small skills built in the Skills session.  Those are a page each.  This one is eleven reference files, seven templates, and six scripts, and the design question it answers is one the small skills never have to face: what do you do when the guidance is far larger than the context you have to spend on it?
+
+Its answer is routing.  `SKILL.md` stays compact and loads exactly one reference for the current phase, and the instruction is explicit that the agent must not load all of the verification, failure, refinement, and critic references at bootstrap.  Guidance that does not fit is guidance that does not get followed, so the skill treats its own size as a budget to manage.
+
+Two more things to notice, both of which are testable claims you can check against your own runs:
+
+- **The description is the trigger.**  Its `description` field names the situation rather than the skill, listing coding, tool use, research, data, documents, and mixed tasks, and naming the condition "when correctness matters more than latency or token cost".  A model decides whether to load a skill from that sentence alone.
+- **It states its own limits.**  The README says a skill cannot restart a dead process, cannot enforce model compliance, and cannot establish the outcome of an external mutation whose response was lost.  A skill that claims less is easier to trust about what it does claim.
+
+### Questions to Work Through
+
+16.  The skill writes a checkpoint marked `UNKNOWN` *before* a mutation rather than recording the result *after* it.  Construct a specific scenario where recording only after the fact causes real damage, and say what the `UNKNOWN` checkpoint lets the next session do that it otherwise could not.
+
+   *Hint: Consider an operation that succeeds on the server while the response is lost in transit.  Ask what a fresh session with no record at all would conclude, and what it would do next.*
+
+17.  A teammate reports that their agent produced a passing test suite for code that is plainly wrong.  Using the evidence hierarchy, explain how both things can be true at once, then name the two kinds of evidence from the table that would have caught it.
+
+   *Hint: The agent wrote both the code and the tests, from one reading of the requirement.  Look for the rows whose failure mode is independent of the implementation.*
+
+18.  You are running `llama3.2` and it repeatedly skips the verification step after a mutation.  The skill says not to switch models merely because performance is weak.  Give two changes you would make first, say what evidence would tell you each one worked, and state the one observation that would justify reaching for a larger model after all.
+
+   *Hint: The two obvious candidates are making the step structurally impossible to skip rather than merely instructed, and shortening what the model must hold at once.  For the last part, ask what a failure that is about capacity rather than instruction design would look like.*
+
+---
+
 ## Exercises
 
 1.  **Build a safe agent workspace.**
