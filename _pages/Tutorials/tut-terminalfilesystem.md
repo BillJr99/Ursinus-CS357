@@ -730,7 +730,7 @@ The [quickstart README]({{ site.baseurl }}/files/pi-ollama/README.md) collects e
 The previous section put a small model inside a box and handed it your project.  This section is about the other half of that arrangement, which is the harder half: a 3B model asked to do twenty minutes of careful work will lose the thread, and no amount of containerization fixes that.  The skill below is one answer to it.  Download it, read it, and install it into your project:
 
 - [small-model-orchestrator.skill]({{ site.baseurl }}/files/small-model-orchestrator.skill), the installable archive
-- [The unpacked directory]({{ site.baseurl }}/files/small-model-orchestrator/SKILL.md), if you would rather read it before you run it
+- [SKILL.md, raw](https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator/SKILL.md), if you would rather read it before you run it.  Read it raw rather than rendered: the file opens with YAML front matter, and that `description` field is the trigger the model actually reads, so it is the part you least want a page renderer to swallow
 
 ### The problem it is built for
 
