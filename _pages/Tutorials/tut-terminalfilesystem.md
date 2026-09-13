@@ -461,14 +461,16 @@ Here is the trade in one table.  Read the third row first, because it is the one
 |---|---|---|
 | Setup before first use | `docker build`, once, a few minutes | None |
 | Privileged work | At build time, once, on your terms | On every single launch |
-| Who the agent runs as | The image's `agent` user, or you | **Root**, unless you ask otherwise |
+| Who the agent runs as | The image's `agent` user, or you.  Never root | Your own uid, after a root setup phase |
 | Works with no network | Yes, after the build | No.  It reinstalls `apt` and `npm` packages every time |
 | Time to a prompt | Seconds | A minute or two |
 | Changing the pinned version | Edit the Dockerfile, rebuild | Edit one line of the script |
 
-The reason for the third row is mechanical rather than careless.  A stock `node:24-bookworm` image does not contain `git`, `python3`, or `ripgrep`, and installing them means `apt-get`, and `apt-get` means root.  An image can do that work once at build time and then drop to an ordinary user forever after.  A single script that starts from a stock image has no build step to hide the privileged work in, so it does that work at run time, as root, every time you launch it.
+The reason for the third row is mechanical rather than careless.  A stock `node:24-bookworm` image does not contain `git`, `python3`, or `ripgrep`, and installing them means `apt-get`, and `apt-get` means root.  An image can do that work once at build time and then drop to an ordinary user forever after.  A single script that starts from a stock image has no build step to hide the privileged work in, so it has to become root at run time, every time you launch it, and then decide what to do with that privilege once the installing is finished.
 
-> **Watch out!**  Container root is not a lesser kind of root.  Unless you have configured user-namespace remapping, which almost nobody has, UID 0 inside the container is UID 0 on your host for anything bind-mounted.  Two concrete consequences follow.  Files the agent creates in your project come back owned by `root`, and you will need `sudo` to edit your own work.  And the thing that gets loose in a container escape is a root process rather than an ordinary one.
+The script's answer is to give it up.  It runs as your own user account by default, dropping out of root as soon as the packages are in place, so the files it writes into your project stay yours.  What it cannot do is avoid holding root in the first place, and that residue is the subject of the next two subsections.
+
+> **Watch out!**  Container root is not a lesser kind of root.  Unless you have configured user-namespace remapping, which almost nobody has, UID 0 inside the container is UID 0 on your host for anything bind-mounted.  Two concrete consequences follow, and they are why the default is what it is.  Files created while the agent is root come back owned by `root`, and you will need `sudo` to edit your own work.  And the thing that gets loose in a container escape is a root process rather than an ordinary one.
 
 Download the file and read along:
 
@@ -485,7 +487,7 @@ The whole configuration is a block of shell parameter expansions at the top.  Th
 PROJECT_DIR="${PI_PROJECT_DIR:-$PWD}"
 BASE_IMAGE="${PI_BASE_IMAGE:-node:24-bookworm}"
 PI_PACKAGE="${PI_PACKAGE:-@earendil-works/pi-coding-agent@0.85.1}"
-PI_RUN_AS="${PI_RUN_AS:-root}" # root or user; package bootstrap always runs as root
+PI_RUN_AS="${PI_RUN_AS:-user}" # user or root; package bootstrap always runs as root
 PI_OLLAMA_MODEL="${PI_OLLAMA_MODEL:-llama3.2}"
 PI_OLLAMA_URL="${PI_OLLAMA_URL:-http://host.docker.internal:11434}"
 PI_FALLBACK_CONTEXT="${PI_FALLBACK_CONTEXT:-8192}"
@@ -502,19 +504,19 @@ Four of those lines are worth pausing on.
 
 `PI_FALLBACK_CONTEXT` is the one setting whose name is a lie worth understanding, and it gets its own subsection below.
 
-### Dropping privileges, and the flag that does less than it sounds like
+### Dropping privileges, and the setting that does less than it sounds like
 
-The script supports a second mode:
+The default, `PI_RUN_AS=user`, is the interesting path, so start there.  You opt out of it rather than into it:
 
 ```bash
-PI_RUN_AS=user bash run-pi-ollama.sh
+PI_RUN_AS=root bash run-pi-ollama.sh
 ```
 
 ```powershell
-$env:PI_RUN_AS = "user"; .\run-pi-ollama.ps1
+$env:PI_RUN_AS = "root"; .\run-pi-ollama.ps1
 ```
 
-Inside the container, that takes this branch after the packages are installed:
+Choose that only when you need the agent itself to install system packages, and expect the warning the script prints when you do.  Left at its default, the container takes this branch instead, after the packages are installed:
 
 ```bash
 if [[ "$PI_RUN_AS" == user ]]; then
@@ -528,7 +530,7 @@ fi
 
 `setpriv` changes the user and group of the process about to run, and the three capability flags make the change one-way: `--bounding-set=-all` drops the capabilities the process could ever regain, and `--inh-caps=-all` and `--ambient-caps=-all` stop any of them from being inherited by what it launches.  The agent that starts after this line is genuinely unprivileged, and on Linux and macOS the files it writes into your project come back owned by you.
 
-> **Common Misconception:** `PI_RUN_AS=user` is not the same thing as rootless, and the difference is not pedantry.  The container still *starts* as root: the `docker run` line passes `--user 0:0`, and the `apt-get` and `npm install` above this branch both run with full privileges.  What the flag gives you is a smaller window, not no window.  Everything that executes before `setpriv` is still root, including any code an `apt` or `npm` package chooses to run during installation.  If you want a container that is never root at any point, the only way to get one is to move the privileged work to build time, which is what the Dockerfile route below does.
+> **Common Misconception:** running as a user is not the same thing as rootless, and the difference is not pedantry.  The container still *starts* as root: the `docker run` line passes `--user 0:0`, and the `apt-get` and `npm install` above this branch both run with full privileges.  What the default gives you is a smaller window, not no window.  Everything that executes before `setpriv` is still root, including any code an `apt` or `npm` package chooses to run during installation.  If you want a container that is never root at any point, the only way to get one is to move the privileged work to build time, which is what the Dockerfile route below does.  Reading a claim of "runs as a user" carefully enough to ask *starting when?* is the transferable skill here.
 
 In the script's favor, three real mitigations are already in place, and it is worth naming what each one does and does not buy:
 
@@ -537,6 +539,8 @@ In the script's favor, three real mitigations are already in place, and it is wo
 | `--security-opt=no-new-privileges` | A process inside gaining *more* privilege than it started with, through setuid binaries | Anything root can already do, which at UID 0 is nearly everything |
 | `--pids-limit=1024` | A fork bomb taking your machine down with it | A single process doing damage slowly |
 | `npm install --ignore-scripts` | Package lifecycle hooks running arbitrary code as root during install | The package itself misbehaving once you actually run it |
+
+That table is also the answer to "why does the default still matter if the container starts as root anyway?"  The root phase is short, scripted, and contains no agent; the phase after it is long, open-ended, and contains a model acting on instructions that may have come from your files.  Shrinking the second phase's privileges is worth doing even when you cannot shrink the first.
 
 That last one is the one students skip past, and it is the most valuable of the three.  `npm` packages may declare `postinstall` scripts, which are arbitrary code that runs at install time; the [AI coding agent security]({{ site.baseurl }}/Tutorials/CodingAgentSecurity) tutorial treats that as a supply-chain attack surface.  `--ignore-scripts` closes it.
 
@@ -608,19 +612,27 @@ if skill is None:
     raise ValueError("small-model-orchestrator/SKILL.md was not found under .skills, .pi/skills, or .agents/skills")
 ```
 
-Three locations are checked in order and the first `SKILL.md` found wins.  Install it into your project before your first run:
+Three locations are checked in order and the first `SKILL.md` found wins.  Use the first one, `.skills/`.
+
+A `.skill` file is a zip archive with the skill's directory at its top level, so **extracting it into `.skills/` produces exactly the path the launcher checks first**.  Run this from the root of the project you want the agent to work on, before your first launch:
 
 ```bash
-mkdir -p .agents/skills
+mkdir -p .skills
 curl -fsSL -o smo.skill https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-unzip -q smo.skill -d .agents/skills/ && rm smo.skill
+unzip -q smo.skill -d .skills/ && rm smo.skill
+ls .skills/small-model-orchestrator/SKILL.md
 ```
 
 ```powershell
-New-Item -ItemType Directory -Force -Path .agents\skills | Out-Null
+New-Item -ItemType Directory -Force -Path .skills | Out-Null
 curl.exe -fsSL -o smo.zip https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-Expand-Archive -Path smo.zip -DestinationPath .agents\skills -Force; Remove-Item smo.zip
+Expand-Archive -Path smo.zip -DestinationPath .skills -Force; Remove-Item smo.zip
+Get-Item .skills\small-model-orchestrator\SKILL.md
 ```
+
+The PowerShell version downloads under a `.zip` name because `Expand-Archive` insists on that extension.  The bytes are identical either way.
+
+> **Watch out!**  Check the shape of what you extracted, not merely that something arrived.  `SKILL.md` has to sit at `.skills/small-model-orchestrator/SKILL.md`.  Some unzip tools helpfully create a folder named after the archive, leaving you with `.skills/small-model-orchestrator/small-model-orchestrator/SKILL.md`, which the launcher will not find.  The `ls` and `Get-Item` lines above exist to catch that in one second rather than in ten minutes.
 
 That skill is the subject of the next section.
 
@@ -830,9 +842,20 @@ If you want to compare, these are already in use elsewhere in the course, so non
 | `llama3.2:1b` | `ollama pull llama3.2:1b` | 1.3 GB | Deliberately too small.  Useful for *seeing* a failure mode clearly |
 | `qwen2.5:7b` | `ollama pull qwen2.5:7b` | 4.7 GB | 16 GB machines.  Noticeably steadier at following a long protocol |
 | `hermes3:8b` | `ollama pull hermes3:8b` | 4.7 GB | When structured output and tool calls are what keep breaking |
-| `qwen3:30b` | `ollama pull qwen3:30b` | 19 GB | Only with 24 GB or more.  A different class of machine, not a different technique |
+| `qwen3.8:27b` | `ollama pull qwen3.8:27b` | 18 GB | Only with 24 GB or more.  A reasoning model built for long-horizon agentic work, and the one this launcher's defaults were written for |
 
 Remember what you learned in the previous section: the model's advertised maximum is not your server's allocation.  A 128K-context model served in a 4096-token window is a 4096-token model, and pulling something larger does nothing about that.
+
+One setting only becomes meaningful at the bottom of that table, and it explains two defaults that look inert on `llama3.2`.  The launcher ships with `PI_REASONING=auto` and `PI_THINKING_LEVEL=medium`, and `auto` means it asks Ollama whether the model advertises a `thinking` capability and turns reasoning off when it does not:
+
+```python
+capabilities = show.get("capabilities")
+reasoning = config["reasoning"] == "on" or (
+    config["reasoning"] == "auto" and "thinking" in (capabilities or []))
+thinking = config["thinkingLevel"] if reasoning else "off"
+```
+
+On `llama3.2` that resolves to off, and the launcher says so at startup.  On a reasoning model such as `qwen3.8:27b`, whose thinking mode is on by default and whose depth is tunable through `reasoning_effort`, the same two settings suddenly do something, and `PI_THINKING_LEVEL` becomes a dial worth turning.  The warning in that branch is worth heeding in the other direction too: **do not force `PI_REASONING=on` for a model you have not confirmed supports it**, because you will be sending a parameter the server may reject or quietly ignore.
 
 ### More than one model, and when it actually helps
 

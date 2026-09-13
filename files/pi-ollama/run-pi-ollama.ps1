@@ -8,20 +8,24 @@
   the same host Ollama server. Use whichever file matches the shell you are in;
   they are the same program.
 
-  READ THIS BEFORE YOU RUN IT. The container starts as root (--user 0:0),
-  because installing packages into a stock node image needs root. On Windows
-  with Docker Desktop, bind-mounted files are translated rather than mapped by
-  uid, so you will not get root-owned files in your project the way a Linux or
-  macOS user would. The other half of the warning still applies to you: the
-  agent runs with full privileges inside the container, and a container escape
-  is an escape from a root process.
+  HOW THIS RUNS, AND WHAT IT COSTS. By default the agent drops to an ordinary
+  user account inside the container (PI_RUN_AS=user). The container starts as
+  root only long enough to install packages into a stock node image, then steps
+  down and cannot take the privilege back.
 
-    $env:PI_RUN_AS = "user"; .\run-pi-ollama.ps1     # drops privileges after setup
+  It is NOT rootless even so, and the distinction matters: the container still
+  STARTS as root, so anything an apt or npm package runs during install runs
+  with that privilege. For a container that is never root at any point, build
+  the Dockerfile beside this file once. README.md has those commands.
 
-  That is better, but it is NOT rootless: the container still STARTS as root.
-  For a container that is never root at any point, build the Dockerfile beside
-  this file once and run that image directly. README.md has the commands for
-  both PowerShell and bash. The tutorial explains the difference:
+    $env:PI_RUN_AS = "root"; .\run-pi-ollama.ps1     # opt in to staying root
+
+  Choose root only if you need the agent itself to install system packages.
+  On Windows with Docker Desktop, bind-mounted files are translated rather than
+  mapped by uid, so root-owned files in your project are a Linux and macOS
+  problem rather than yours. The other half of the warning is still yours: the
+  agent would hold full privileges inside the container, and a container escape
+  is an escape from a root process. The tutorial explains the difference:
   https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FilesystemIsolation
 
   Before the first run, give Ollama a context window this script can work with.
@@ -66,7 +70,7 @@ function Get-Setting {
 $ProjectDir        = Get-Setting 'PI_PROJECT_DIR'        $PWD.Path
 $BaseImage         = Get-Setting 'PI_BASE_IMAGE'         'node:24-bookworm'
 $PiPackage         = Get-Setting 'PI_PACKAGE'            '@earendil-works/pi-coding-agent@0.85.1'
-$PiRunAs           = Get-Setting 'PI_RUN_AS'             'root'   # root or user
+$PiRunAs           = Get-Setting 'PI_RUN_AS'             'user'   # user or root
 $PiOllamaModel     = Get-Setting 'PI_OLLAMA_MODEL'       'llama3.2'
 $PiOllamaUrl       = Get-Setting 'PI_OLLAMA_URL'         'http://host.docker.internal:11434'
 $PiFallbackContext = Get-Setting 'PI_FALLBACK_CONTEXT'   '8192'
@@ -112,10 +116,12 @@ Write-Host "[launcher] Project RW mount: $ProjectDir"
 Write-Host "[launcher] Runtime: $PiPackage; mode: $LaunchMode; run as: $PiRunAs"
 Write-Host "[launcher] Model: $PiOllamaModel at $PiOllamaUrl"
 if ($PiRunAs -eq 'root') {
-    Write-Warning "The agent will run as ROOT inside the container."
-    Write-Warning "It holds full privileges over everything mounted at /workspace."
-    Write-Warning 'Re-run as: $env:PI_RUN_AS = "user"; .\run-pi-ollama.ps1'
-    Write-Warning "For a container that is never root, build the Dockerfile (see README.md)."
+    Write-Warning "You asked for root. The agent keeps full privileges inside the container."
+    Write-Warning "It holds them over everything mounted at /workspace."
+    Write-Warning 'Drop this setting to run as an ordinary user instead.'
+} else {
+    Write-Host "[launcher] Setup runs as root, then the agent drops to $PiUserUid`:$PiUserGid."
+    Write-Host "[launcher] Not rootless: the container still starts as root. See README.md."
 }
 
 # The script that runs INSIDE the container. It is bash, not PowerShell, and it
