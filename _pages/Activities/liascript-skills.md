@@ -491,7 +491,7 @@ Optional, and nothing above assumes it.  Today you wrote skills that fit on a pa
 
 ## What it is, in plain language
 
-Download it and look at it: [small-model-orchestrator.skill](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill), or read the [unpacked version](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator/SKILL.md) first.
+Download it and look at it: [small-model-orchestrator.skill](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill), or read [SKILL.md in raw form](https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator/SKILL.md) first.  Raw rather than rendered, because the file opens with the same YAML front matter yours does, and a page renderer treats that block as settings and hides it.  The `description` line is the one to look at.
 
 A `.skill` file is a zip archive, exactly like the one you will package your own skill into for the Skill Design Study.  To install it, extract it into a folder named `.skills` at the top of the project you want the agent to work in:
 
