@@ -45,6 +45,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Thinking / reasoning trace** | The agent's written-out deliberation before it commits to an action. Text you can read, not a window into the model's mind | The `Thought:` lines from *The Agent Loop*, now produced by a tool you did not write |
 | **Model rule vs. gate** | A rule is text the model reads (`AGENTS.md`, a system prompt) and may forget or be talked out of. A gate is a check the harness runs outside the model, before the tool executes | Part IIb: "never run `rm -rf`" in `AGENTS.md`, and the same rule as a hook that returns deny |
 | **Hook** | A command or function the harness runs automatically at a fixed point, such as before a tool call. It sees the real arguments and can block the call with a reason | Model 3b: a `PreToolUse` hook that exits 2 on a recursive delete |
+| **Tool server** | A separate process that offers an agent each operation as its own named tool, called directly instead of composed as a shell command.  **MCP (Model Context Protocol)** is the standard for it, and a later session builds one | Section 2a: `gh pr merge` typed into the shell, against a merge tool a gate can match by name |
 | **Observability, isolation, reversibility** | The three properties that make delegating safe: can I see what it did, can I bound what it reaches, can I undo it. Named in *Your AI Workbench*, Step 8.5 | The plan and the diff, the container mount, and `git checkout .` |
 
 ---
@@ -70,7 +71,7 @@ Four parts inside our seventy-five minutes, a report-out, and an extension you t
 
 | | What you do | Roughly |
 |---|---|---|
-| **Part I** | Get your agent driving again, learn the pattern that lets agents hand work to each other through GitHub, and read a plan before the diff | 20 min |
+| **Part I** | Get your agent driving again, move work through GitHub, see the two routes an agent has to a service, and read a plan before the diff | 20 min |
 | **Part II** | Write a specification and its failing tests *before* any code exists, then let the agent implement against them | 20 min |
 | **Part IIb** | See a model rule bend and a harness gate hold, and read the hook that makes the difference | 15 min |
 | **Part III** | Read a diff that passes every test and is still dangerous | 15 min |
@@ -158,23 +159,11 @@ You started a coding agent from your home directory instead of the project folde
 
 ---
 
-## 2.  Agents Talking to Agents: GitHub as the Message Bus
+## 2.  Where the Work Comes From: GitHub and the Agent
 
-This is the working pattern I use daily.  Adopt it early, because it scales from one agent to a team of them without any new infrastructure.
+This is the working pattern I use daily.  Adopt it early, because it scales from one agent to a team of them without any new infrastructure: issues, pull requests, and review comments are already a durable, threaded, permissioned, notification-driven message bus, and both humans and agents can read and write them.  A chat window is none of those things.  Today we take the pattern on faith and use it to get work into and out of the agent; the [Agents That Talk](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-agentcommunication.md) session studies it as a communication medium, names the coordination problems it does and does not solve, and threat-models the channel.
 
-**Use GitHub as the coordination layer.**  Issues, pull requests, and review comments are already a durable, threaded, permissioned, notification-driven message bus, and both humans and agents can read and write them.
-
-| Artifact | What it carries | Who writes it |
-|---|---|---|
-| **Issue** | The task, its acceptance criteria, and the discussion of approach | You, or an agent that found the problem |
-| **Branch + PR** | One agent's attempt at that task, as a reviewable diff | The coding agent |
-| **PR review comment** | A specific, line-anchored instruction: "this misses the empty-input case" | You, or a *reviewing* agent |
-| **PR checks (CI)** | The objective verdict: tests pass or they do not | The machine |
-| **Merge** | Consensus: this attempt is accepted | You |
-
-Why this beats a chat window: a conversation with an agent is ephemeral, unreviewable by teammates, and invisible to continuous integration (CI), the automated test run that GitHub performs on every pull request.  The same exchange conducted through an issue and a PR is permanent, searchable a semester later, reviewable by your project team, and gated by tests.  Your Project Thread team will thank you.
-
-The loop, concretely:
+What the loop needs is `gh`, the [GitHub CLI](https://cli.github.com/), which the Overview assignment offered as the shortcut through key generation.  If you took the other path, install it now (`brew install gh` on macOS, `winget install --id GitHub.cli` on Windows, your package manager on Linux) and run `gh auth login`.  The loop, concretely, with `opencode run` standing in for whichever agent you drive, since every tool in this family takes a goal on the command line:
 
 ```bash
 # 1. The task becomes an issue (agents can read it by number)
@@ -185,7 +174,7 @@ Actual: the regex misses, nothing is appended to memory, and it spins until kill
 Acceptance: a test asserting the loop exits at max_steps on unparseable output."
 
 # 2. Point the agent at the issue
-claude "Fix issue #42. Read it with 'gh issue view 42', write a failing test first, then fix it."
+opencode run "Fix issue #42. Read it with 'gh issue view 42', write a failing test first, then fix it."
 
 # 3. The agent opens a PR
 gh pr create --fill
@@ -195,14 +184,42 @@ gh pr diff 17
 gh pr review 17 --comment -b "The fix works but the test only covers LF. Add a CRLF case."
 
 # 5. A second agent can pick up that comment
-claude "Read the review comments on PR 17 with 'gh pr view 17 --comments' and address them."
+opencode run "Read the review comments on PR 17 with 'gh pr view 17 --comments' and address them."
 ```
 
-Step 5 is the interesting one: **the review comment is the inter-agent message.**  One agent wrote code, a human (or another agent) critiqued it in a durable place, and a second agent consumed that critique without either of them sharing a context window.  That is multi-agent communication built from tools you already have, with an audit trail as a side effect.
+Step 5 is the one to notice: a second agent, in a fresh session, acted on a critique it never watched anyone write, and the audit trail came free.  [Agents That Talk](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-agentcommunication.md) takes that apart as a communication pattern and asks what happens when two agents race for the same task.  What matters here is narrower, and it is easy to read past: every one of those five steps reached GitHub the same way.
 
 > **Watch out!**  Give the agent a scoped token, not your personal one.  A fine-grained GitHub token limited to one repository with issue and PR write access is enough for this entire loop.  Never mount `~/.config/gh` into an agent container; that token can push to everything you can.
 
 **Notes as the other half.**  The same instinct applies to your own thinking.  I keep an [Obsidian](https://obsidian.md) vault of plain Markdown notes and mount it into agent containers read-only (`-v "$HOME/notes/vault:/reference:ro"`), so agents can ground their answers in what I have already worked out without being able to corrupt it.  Notes are the long-term memory; issues and PRs are the working memory; the container mount decides which the agent may write to.  The pattern has a name and a canonical write-up, Andrej Karpathy's [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) gist: raw sources in, a model-maintained wiki out, navigated by an `index.md` rather than by embeddings.  The [Obsidian Second Brain](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SecondBrain) and [Syncing Obsidian to GitHub](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync) modules build it out, the second with the step-by-step Obsidian and GitHub setup.
+
+## 2a.  Two Ways an Agent Reaches GitHub
+
+Look again at what actually happened in that loop.  Every `gh` line ran through the agent's **shell tool**, the surface the *Shell, in Full* reading is about: the agent composed a command line, a gate asked you about it, and the output came back as text.  The agent did not know GitHub.  It knew the shell, and GitHub happens to ship a command-line program.
+
+There is a second route.  An agent can also reach a service through a **tool server**, a separate process that advertises each operation as its own named tool the agent calls directly, instead of composing a shell command.  The standard for this is the **Model Context Protocol (MCP)**, GitHub publishes an MCP server covering the same operations you just drove with `gh`, and the [MCP session](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-mcp.md) is where you build one and configure that one.  For today, one sentence is enough: same operations, reached as named tools rather than as command lines.
+
+That difference sounds cosmetic and is not, because your gates and your context both see the two routes differently:
+
+| | `gh` through the shell tool | A GitHub tool server |
+|---|---|---|
+| **What it costs to set up** | Nothing beyond `gh auth login`, which you may already have done | A server to run, to configure, and to decide to trust |
+| **Where the credential lives** | One token in `~/.config/gh`, carrying whatever the CLI can do | A header the client attaches from an environment variable, so the model never sees it |
+| **How you shrink the surface** | Your own discipline, plus whatever a fine-grained token forbids | Configuration: the server can advertise fewer tools, or no writing tools at all, before the model is ever offered them |
+| **What a gate matches on** | A command line, by pattern, so your `permission` block needs `"gh pr merge*"` and every other spelling the agent might compose | A tool name, which has one spelling, so one rule covers it |
+| **What it costs to carry** | Nothing is advertised; the agent simply knows `gh` | Every advertised tool occupies context whether or not it is used |
+| **Where it works** | Any agent with a shell, which is all of them | Only harnesses that speak the protocol |
+
+The table has no winner, and the rows disagree with each other on purpose.  The CLI takes setup, portability, and context cost, which is why the loop above is written with `gh` and why I run it that way daily.  The tool server takes the row a *supervisor* cares about most: a name your gate can match exactly, rather than a pattern you have to get right against every command line the agent might write.  So the decision follows the stakes, the same way the supervision levels in Part II do.  The CLI suits your own repository, where `git reset` is the whole recovery plan.  The tool server earns its setup where something you cannot undo is one plausible command away.  Extension E.8 writes that tool-name gate out in full.
+
+You add `"gh pr merge*": "deny"` to the `bash` map in your `permission` block, and the agent merges a pull request anyway.  What is the most likely explanation?
+
+[( )] Pattern rules do not apply to the `bash` tool, which accepts only `allow`, `ask`, or `deny` as a whole; the `bash` key does take a map of patterns, which is exactly how Section 4b denies `rm *`
+[(X)] The agent reached the same operation by a command line your pattern does not match, such as a `gh` call inside a script it wrote or a pipeline; a pattern gate covers the spellings you anticipated, and a command line has many
+[( )] `deny` is advisory in opencode and the model may proceed after acknowledging it; a denied tool call does not run, which is the whole distinction between a rule and a gate
+[( )] The merge went through the GitHub tool server instead, which the `bash` rule does not cover; that is a real gap, but only if you configured such a server, and the question says the agent used `gh`
+
+Hold your answer loosely on the right-hand column until you have built a server yourself.  Extension Question E.1 asks this same trade about file access rather than about GitHub, and it is worth returning to once the MCP session has given you something concrete to compare.
 
 ---
 
@@ -247,7 +264,7 @@ Your agent's plan says it will modify `parser.py`, `parser_test.py`, and `build/
 
 ---
 
-## 2c.  Plan Mode: Read the Plan Before the Diff
+## 2c.  Plan Mode: When the Tool Enforces the Stop
 
 Section 2b asked for a plan in words.  Two of the tools you will use make it a mode.  In **Claude Code's plan mode** and with **opencode's plan agent**, the agent may read the repository, run read-only commands, and propose steps, but it may not edit a file or run a command that changes anything until you approve.  The tool enforces the stop; you do not have to hope the model remembers "do not edit."
 
