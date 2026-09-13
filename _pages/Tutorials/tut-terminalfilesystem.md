@@ -730,7 +730,39 @@ The [quickstart README]({{ site.baseurl }}/files/pi-ollama/README.md) collects e
 The previous section put a small model inside a box and handed it your project.  This section is about the other half of that arrangement, which is the harder half: a 3B model asked to do twenty minutes of careful work will lose the thread, and no amount of containerization fixes that.  The skill below is one answer to it.  Download it, read it, and install it into your project:
 
 - [small-model-orchestrator.skill]({{ site.baseurl }}/files/small-model-orchestrator.skill), the installable archive
-- [SKILL.md, raw](https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator/SKILL.md), if you would rather read it before you run it.  Read it raw rather than rendered: the file opens with YAML front matter, and that `description` field is the trigger the model actually reads, so it is the part you least want a page renderer to swallow
+
+The course site hosts the archive rather than its unpacked contents, so reading it is a download rather than a click.  A `.skill` file is an ordinary zip, which means you can look inside before you commit to anything:
+
+```bash
+curl -fsSL -O https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill
+unzip -l small-model-orchestrator.skill          # list the contents without extracting
+unzip -p small-model-orchestrator.skill small-model-orchestrator/SKILL.md | head -40
+```
+
+That last line is worth running before anything else, because the first fifteen lines are the whole of what a model sees when deciding whether this skill applies to the task in front of it:
+
+```yaml
+---
+name: small-model-orchestrator
+description: Reliability and orchestration protocol for difficult coding, tool-use,
+  research, data, document, and mixed tasks, especially with small local or offline
+  language models. Use when correctness matters more than latency or token cost and
+  the agent should plan progressively, keep an always-current RESUME.md handoff
+  checkpoint, version its work with Git, compact context proactively, verify every
+  consequential action, diagnose failures, retry and replan, and perform adversarial
+  gauntlet review before declaring success.
+license: MIT
+metadata:
+  author: Bill + OpenAI
+  version: "0.4.0-platform-agnostic"
+  primary-use-case: "local-offline-private-models"
+  optimization-target: "maximum-verified-task-success"
+---
+```
+
+Read the `description` as a set of trigger conditions rather than as a summary.  It names task types (coding, tool use, research, data, documents), then a condition under which the skill should fire at all, *when correctness matters more than latency or token cost*, then the specific behaviors it will impose.  A model matching this against "fix the typo in line 4" should decline; a model matching it against "migrate this schema and verify nothing broke" should load it.  **That judgment is made entirely from this block**, which is why the Skill Design Study spends as much time on the description as on the body.
+
+> **Watch out!**  Reading a downloaded skill before you install it is not optional diligence.  A skill is instruction-based control over an agent that will run commands on your machine, and the agent follows a bad instruction as faithfully as a good one.  `unzip -l` first, read `SKILL.md` second, install third.
 
 ### The problem it is built for
 

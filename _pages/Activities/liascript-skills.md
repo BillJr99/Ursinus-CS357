@@ -491,7 +491,35 @@ Optional, and nothing above assumes it.  Today you wrote skills that fit on a pa
 
 ## What it is, in plain language
 
-Download it and look at it: [small-model-orchestrator.skill](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill), or read [SKILL.md in raw form](https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator/SKILL.md) first.  Raw rather than rendered, because the file opens with the same YAML front matter yours does, and a page renderer treats that block as settings and hides it.  The `description` line is the one to look at.
+Download it and look inside: [small-model-orchestrator.skill](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill).  It is an ordinary zip, so you can read it without installing it, which is the right order of operations for any skill someone else wrote:
+
+```bash
+unzip -l small-model-orchestrator.skill          # what is in here?
+unzip -p small-model-orchestrator.skill small-model-orchestrator/SKILL.md | head -40
+```
+
+Here is what that second command prints first, and it is the same shape as the front matter on the skill you wrote today:
+
+```yaml
+---
+name: small-model-orchestrator
+description: Reliability and orchestration protocol for difficult coding, tool-use,
+  research, data, document, and mixed tasks, especially with small local or offline
+  language models. Use when correctness matters more than latency or token cost and
+  the agent should plan progressively, keep an always-current RESUME.md handoff
+  checkpoint, version its work with Git, compact context proactively, verify every
+  consequential action, diagnose failures, retry and replan, and perform adversarial
+  gauntlet review before declaring success.
+license: MIT
+metadata:
+  author: Bill + OpenAI
+  version: "0.4.0-platform-agnostic"
+  primary-use-case: "local-offline-private-models"
+  optimization-target: "maximum-verified-task-success"
+---
+```
+
+Compare it with your own `description`.  Yours probably names what the skill does.  This one names **when it should fire**: the task types, then a condition (*when correctness matters more than latency or token cost*), then the behaviors it imposes.  A model decides whether to load a skill from this block alone, so a description that reads like a title gets loaded at the wrong times, or never.
 
 A `.skill` file is a zip archive, exactly like the one you will package your own skill into for the Skill Design Study.  To install it, extract it into a folder named `.skills` at the top of the project you want the agent to work in:
 
