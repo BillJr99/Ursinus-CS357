@@ -61,7 +61,8 @@ Make the integration problem personal before you study it in the abstract.  As a
 For every service someone names, ask the question this whole unit turns on: could an agent reach it, and how?  Check whether each service exposes:
 
 - an **MCP server**, so an agent can discover and call its tools directly through the protocol we study today;
-- an **OAuth 2.0 / REST API**, so an agent can call it over HTTP with the user's delegated, revocable permission; or
+- an **OAuth 2.0 / REST API**, so an agent can call it over HTTP with the user's delegated, revocable permission;
+- a **command-line program** the vendor ships, such as `gh` for GitHub or `aws` for Amazon Web Services, which an agent can run through its shell tool.  These usually wrap the same REST API and carry a credential you authorized once at a terminal, so where one exists it is often the quickest route in; what you trade is that your gate sees a command line rather than a named tool, a trade the [Coding Agents](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md) session works through in its Section 2a; or
 - **neither**, no public programmatic access, so a human (or brittle screen-scraping) is the only way in.
 
 Look each service up rather than guessing; the answer keeps changing as vendors ship new APIs and MCP servers.  A few examples to start the conversation:
@@ -70,11 +71,12 @@ Look each service up rather than guessing; the answer keeps changing as vendors 
 |---|---|---|
 | **Google** (Gmail, Calendar, Drive) | Email, scheduling, documents, storage | Mature OAuth 2.0 REST APIs per product; a fast-growing set of MCP servers wraps them |
 | **Asana** | Team task and project tracking | Documented OAuth 2.0 REST API for tasks and projects; MCP servers are available |
+| **GitHub** | Code hosting, issues, pull requests, continuous integration | Three routes at once: a documented OAuth 2.0 REST API, the `gh` command-line program, and an official MCP server.  A useful case for asking which one you would actually hand an agent, and why |
 | **Personal Capital / Empower** | Personal budgeting and net-worth tracking | No official public API.  This is a service that is *not* openly agent-reachable; access means unofficial scraping or a third-party data aggregator |
 
-[[___ List 3-5 services your team uses.  For each, mark MCP? / OAuth-REST? / neither, and note how you found out. ___]]
+[[___ List 3-5 services your team uses.  For each, mark MCP? / OAuth-REST? / CLI? / neither, and note how you found out. ___]]
 
-> **Talking point:** A pattern is already forming.  Google and Asana give an agent a *standard front door* (OAuth/REST, increasingly MCP); Personal Capital gives it *no* front door at all.  That split (a few services are agent-reachable, many are walled off, and each open one has its own auth quirks) is the fragmentation the rest of this activity is about.  Keep your team's list handy; you will recognize the N-by-M problem in it on the next slide.
+> **Talking point:** A pattern is already forming.  Google and Asana give an agent a *standard front door* (OAuth/REST, increasingly MCP); GitHub gives it several and leaves the choice to you; Personal Capital gives it *no* front door at all.  That split (a few services are agent-reachable, many are walled off, and each open one has its own auth quirks) is the fragmentation the rest of this activity is about.  Notice too that a service with a command-line program is not therefore solved: the vendor wrote that adapter for a human at a terminal, and an agent reaches it by composing command lines, which is a different thing from calling a tool it discovered.  Keep your team's list handy; you will recognize the N-by-M problem in it on the next slide.
 
 ---
 
@@ -518,7 +520,7 @@ The second call succeeds only if `GITHUB_TOKEN` was set in the server's shell; t
 
 Most of the MCP servers your agent will use were written by someone else, and the safeguards above are the questions to ask of each one.  Where does the secret live?  What does the server refuse on its own?  What does a tool return, and how much of it did you need?  The configurations below are for four widely used servers.  The shapes are the ones the two agents read: Claude Code takes a `.mcp.json` file at the project root, and opencode takes an `mcp` block in `opencode.json`.  Both let a configuration file name an environment variable instead of containing a value, so the file can be committed and the secret cannot.
 
-**GitHub, hosted.**  GitHub runs the server; you connect over HTTPS with either an OAuth sign-in or a personal access token.  The token goes in a header that the client attaches; the model never sees the header.  Prefer OAuth where the client supports it (in Claude Code, add the server without a header and run `/mcp` to sign in), and when you must use a token, make it fine-grained, scope it to one repository, and give it read-only permissions unless a tool needs more.
+**GitHub, hosted.**  GitHub runs the server; you connect over HTTPS with either an OAuth sign-in or a personal access token.  The token goes in a header that the client attaches; the model never sees the header.  Prefer OAuth where the client supports it (in Claude Code, add the server without a header and run `/mcp` to sign in), and when you must use a token, make it fine-grained, scope it to one repository, and give it read-only permissions unless a tool needs more.  These are the same operations the *Coding Agents* session drove from the shell with `gh`; what changes is not what the agent can do but what your rules can match, a tool name with one spelling rather than a command line with many.
 
 ```json
 // .mcp.json (Claude Code): the value comes from the GITHUB_PAT variable in your shell

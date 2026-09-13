@@ -161,33 +161,21 @@ Here is the working pattern I use daily, and it scales from one agent to a team 
 | **PR checks (CI)** | The objective verdict: tests pass or they do not | The machine |
 | **Merge** | Consensus: this attempt is accepted | You |
 
-A conversation with an agent is ephemeral, unreviewable by teammates, and invisible to CI.  The same exchange conducted through an issue and a PR is permanent, searchable a semester later, reviewable by your project team, and gated by tests.  The loop, concretely:
+A conversation with an agent is ephemeral, unreviewable by teammates, and invisible to CI.  The same exchange conducted through an issue and a PR is permanent, searchable a semester later, reviewable by your project team, and gated by tests.
 
-```bash
-# 1. The task becomes an issue (agents can read it by number)
-gh issue create --title "Agent loop ignores the step budget on a malformed action" \
-  --body "Repro: give agent.py a goal that makes the model emit calc( with no closing paren.
-Expected: the parse fails, the step counter still increments, the budget stops it.
-Actual: the regex misses, nothing is appended to memory, and it spins until killed.
-Acceptance: a test asserting the loop exits at max_steps on unparseable output."
+The loop is five steps, and you ran the commands for them in *Coding Agents*, Section 2.  Here they are by name, because the questions below turn on their order rather than on their syntax:
 
-# 2. Point the agent at the issue
-claude "Fix issue #42. Read it with 'gh issue view 42', write a failing test first, then fix it."
+1. **The task becomes an issue.**  `gh issue create`, with the repro and the acceptance criteria in the body, so any agent can pick the task up by number.
+2. **A worker agent is pointed at the issue.**  It reads the issue, writes a failing test, then fixes it.
+3. **The agent opens a pull request.**  `gh pr create`, and the attempt is now a reviewable diff.
+4. **Review happens in the PR, not in the chat.**  `gh pr diff`, then `gh pr review --comment` carrying the specific objection.
+5. **A second agent picks up that comment.**  A fresh session, reading the review with `gh pr view --comments`.
 
-# 3. The agent opens a PR
-gh pr create --fill
-
-# 4. Review happens in the PR, not in the chat
-gh pr diff 17
-gh pr review 17 --comment -b "The fix works but the test only covers LF. Add a CRLF case."
-
-# 5. A second agent can pick up that comment
-claude "Read the review comments on PR 17 with 'gh pr view 17 --comments' and address them."
-```
+The runnable form, with the exact command lines and the question of how the agent reaches GitHub at all, is in [Coding Agents](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Section 2.
 
 Step 5 is the interesting one: the review comment is the inter-agent message.  One agent wrote code, a human (or another agent) critiqued it in a durable place, and a second agent consumed that critique without either of them sharing a context window.  That is multi-agent communication built from tools you already have, with an audit trail as a side effect.
 
-> **Watch out!**  Give the agent a **scoped** token, not your personal one.  A fine-grained GitHub token limited to one repository with issue and PR write access is enough for this entire loop.  Never mount `~/.config/gh` into an agent container; that token can push to everything you can.
+> **The token, and then the channel.**  *Coding Agents* set the credential rule for this loop: a fine-grained token scoped to one repository, never your personal one.  What that rule does not cover is the channel itself, which carries instructions between agents and is therefore worth attacking.  Part III does exactly that.
 
 ### Critical Thinking Questions
 
