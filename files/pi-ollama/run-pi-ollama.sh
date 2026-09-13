@@ -8,17 +8,22 @@ set -euo pipefail
 # Only the project is bind-mounted read/write.
 # Sessions and diagnostics survive under <project>/.pi; runtime is disposable.
 #
-# READ THIS BEFORE YOU RUN IT.  The container starts as root (--user 0:0),
-# because installing packages into a stock node image needs root.  Container
-# root is UID 0 on your host too, so files the agent creates in your project
-# can come back owned by root, and a container escape is a host-root escape.
+# HOW THIS RUNS, AND WHAT IT COSTS.  By default the agent runs as YOUR user
+# account (PI_RUN_AS=user).  The container starts as root only long enough to
+# install packages into a stock node image, then drops to your uid and gid and
+# cannot take them back.  Files it writes into your project stay yours.
 #
-#   PI_RUN_AS=user bash run-pi-ollama.sh    <-- drops to your UID after setup
+# It is NOT rootless even so, and the distinction matters: the container still
+# STARTS as root, so anything an apt or npm package runs during install runs
+# with that privilege.  For a container that is never root at any point, build
+# the Dockerfile beside this file once.  README.md has those commands.
 #
-# That is better, but it is NOT rootless: the container still STARTS as root.
-# For a container that is never root at any point, build the Dockerfile beside
-# this file once and run that image with --user.  README.md has the two
-# commands, for bash and for PowerShell.  See the tutorial:
+#   PI_RUN_AS=root bash run-pi-ollama.sh    <-- opt in to staying root
+#
+# Choose root only if you need the agent itself to install system packages.
+# Container root is UID 0 on your host too, so the agent can then leave
+# root-owned files in your project that you need sudo to edit, and a container
+# escape is an escape from a root process.  See the tutorial:
 # https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FilesystemIsolation
 #
 # Before the first run, give Ollama a context window this script can work with:
@@ -31,7 +36,7 @@ PROJECT_DIR="${PI_PROJECT_DIR:-$PWD}"
 BASE_IMAGE="${PI_BASE_IMAGE:-node:24-bookworm}"
 PI_PACKAGE="${PI_PACKAGE:-@earendil-works/pi-coding-agent@0.85.1}"
 # User configuration. Environment variables can override these defaults.
-PI_RUN_AS="${PI_RUN_AS:-root}" # root or user; package bootstrap always runs as root
+PI_RUN_AS="${PI_RUN_AS:-user}" # user or root; package bootstrap always runs as root
 PI_USER_UID="${PI_USER_UID:-$(id -u)}" # used only in user mode
 PI_USER_GID="${PI_USER_GID:-$(id -g)}" # used only in user mode
 PI_OLLAMA_MODEL="${PI_OLLAMA_MODEL:-llama3.2}" # the course model; see the tutorial for stepping up
@@ -52,7 +57,9 @@ if [[ ! "$PI_USER_UID" =~ ^[0-9]+$ || ! "$PI_USER_GID" =~ ^[0-9]+$ ]]; then
     exit 2
 fi
 if [[ "$PI_RUN_AS" == user && "$PI_USER_UID" =~ ^0+$ ]]; then
-    echo "User mode requires a nonzero PI_USER_UID; set the intended UID/GID." >&2
+    echo "User mode requires a nonzero PI_USER_UID, and this shell is uid 0." >&2
+    echo "Set PI_USER_UID and PI_USER_GID to the account that owns the project," >&2
+    echo "or run with PI_RUN_AS=root if you really do want the agent to be root." >&2
     exit 2
 fi
 PI_LAUNCH_MODE="new"
@@ -69,7 +76,7 @@ case "${1:-}" in
         echo "Usage: bash run-pi-ollama.sh [--recover|--continue|--resume]"
         echo "--recover starts fresh from RESUME.md; --continue reopens the last session."
         echo "Edit settings at the top of this script. PI_PROJECT_DIR selects the project."
-        echo "PI_RUN_AS=user drops to your UID after setup; the Dockerfile route is never root."
+        echo "Runs as your user by default. PI_RUN_AS=root keeps root; the Dockerfile route is never root."
         exit 0 ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
 esac
@@ -83,11 +90,13 @@ echo "[launcher] Project RW mount: $PROJECT_DIR"
 echo "[launcher] Runtime: $PI_PACKAGE; mode: $PI_LAUNCH_MODE; run as: $PI_RUN_AS"
 echo "[launcher] Model: $PI_OLLAMA_MODEL at $PI_OLLAMA_URL"
 if [[ "$PI_RUN_AS" == root ]]; then
-    echo "[launcher] WARNING: the agent will run as ROOT inside the container." >&2
+    echo "[launcher] WARNING: you asked for root. The agent keeps full privileges." >&2
     echo "[launcher] Container root is UID 0 on your host, so files this agent" >&2
     echo "[launcher] creates under $PROJECT_DIR may come back owned by root." >&2
-    echo "[launcher] Re-run as: PI_RUN_AS=user bash run-pi-ollama.sh" >&2
-    echo "[launcher] For a container that is never root, build the Dockerfile (see README.md)." >&2
+    echo "[launcher] Drop this setting to run as $(id -u):$(id -g) instead." >&2
+else
+    echo "[launcher] Setup runs as root, then the agent drops to $PI_USER_UID:$PI_USER_GID."
+    echo "[launcher] Not rootless: the container still starts as root. See README.md."
 fi
 CONTAINER_SCRIPT="$(cat <<'CONTAINER_SCRIPT_EOF'
 set -euo pipefail

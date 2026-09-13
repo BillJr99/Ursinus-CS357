@@ -493,6 +493,16 @@ Optional, and nothing above assumes it.  Today you wrote skills that fit on a pa
 
 Download it and look at it: [small-model-orchestrator.skill](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill), or read the [unpacked version](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator/SKILL.md) first.
 
+A `.skill` file is a zip archive, exactly like the one you will package your own skill into for the Skill Design Study.  To install it, extract it into a folder named `.skills` at the top of the project you want the agent to work in:
+
+```bash
+mkdir -p .skills
+unzip -q small-model-orchestrator.skill -d .skills/
+ls .skills/small-model-orchestrator/SKILL.md
+```
+
+Check that last path rather than assuming.  `SKILL.md` belongs exactly one folder deep, at `.skills/small-model-orchestrator/SKILL.md`; if your unzip tool added an extra folder named after the archive, move the inner one up a level.  On Windows, rename it to `.zip` first and use `Expand-Archive -Path small-model-orchestrator.zip -DestinationPath .skills`.
+
 It is a set of working habits for an AI model that has been given a long, fiddly job and no supervision.  Think of the model you ran today as a capable assistant with an excellent vocabulary and a genuinely terrible short-term memory.  Left alone for twenty minutes it will do three things, and only the third one is frightening:
 
 | What you see | What is actually going on |

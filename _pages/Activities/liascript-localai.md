@@ -446,6 +446,19 @@ OLLAMA_CONTEXT_LENGTH=8192 OLLAMA_HOST=0.0.0.0 ollama serve
 
 The second setting is the familiar one from Section 3a.  The first is new, and it is the one that will stop you cold: the agent setup below refuses to start if the model has less than 8192 tokens of working memory, and Ollama hands out 4096 by default.  That refusal is deliberate, and the reason it is deliberate is worth reading.
 
+## The other thing it insists on
+
+The setup also will not start without an instruction file called a *skill* sitting in your project, which the next class session is about.  Download it and unzip it into a folder named `.skills` at the top of whatever project you point the agent at:
+
+```bash
+mkdir -p .skills
+curl -fsSL -o smo.skill https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill
+unzip -q smo.skill -d .skills/ && rm smo.skill
+ls .skills/small-model-orchestrator/SKILL.md
+```
+
+That last line is the check that matters.  You are looking for `SKILL.md` exactly one folder deep, at `.skills/small-model-orchestrator/SKILL.md`.  Some unzip tools add an extra folder named after the archive, and if yours did, move the inner folder up one level.  On Windows, download it as `smo.zip` and use `Expand-Archive -Path smo.zip -DestinationPath .skills`, because `Expand-Archive` refuses any other extension.
+
 ## Where to go next
 
 The full build, every flag explained, both the Windows and the macOS/Linux commands, and the honest accounting of what running as root costs you:

@@ -7,7 +7,8 @@
 #
 # This image does the same privileged work ONCE, at build time, and then hands
 # you an image that runs as an ordinary user forever after.  Nothing inside is
-# ever root when you use run-pi-rootless.sh.
+# ever root at run time unless you deliberately ask for it; see the USER line
+# near the bottom for how to override it, and why you probably should not.
 #
 # Build it once, from this directory (same command in bash and PowerShell):
 #   docker build -t course-pi-ollama .
@@ -53,8 +54,8 @@ COPY launcher.py /opt/pi-launcher/launcher.py
 COPY recovery.mjs /opt/pi-launcher/recovery.mjs
 
 # World-readable, because the UID that runs this image is not known at build
-# time: run-pi-rootless.sh passes YOUR uid so bind-mounted files keep your
-# ownership instead of coming back owned by root.
+# time: the README's run command passes YOUR uid so bind-mounted files keep
+# your ownership instead of coming back owned by root.
 RUN chmod -R a+rX /opt/pi /opt/pi-launcher
 
 ENV PATH="/opt/pi/node_modules/.bin:$PATH" \
@@ -65,8 +66,25 @@ ENV PATH="/opt/pi/node_modules/.bin:$PATH" \
 # this as has a writable home.  A fixed /home/agent would only work for one uid.
 ENV HOME=/tmp/pi-home
 
-# A sensible default if someone runs the image without --user.  Passing --user
-# overrides this, which is exactly what the runner script does.
+# NON-ROOT BY DEFAULT.  Nothing in this image is root at run time; the only
+# privileged work happened in the layers above, at build time, on your terms.
+#
+# Passing --user on the command line overrides this line, which is how the
+# README's run command hands the container your own uid and gid so that files
+# it writes into your project come back owned by you:
+#
+#   docker run --user "$(id -u):$(id -g)" ... course-pi-ollama
+#
+# TO RUN AS ROOT ANYWAY, if you genuinely need the agent to install system
+# packages inside the container, override it the same way:
+#
+#   docker run --user 0:0 ... course-pi-ollama
+#
+# Understand what that costs before you do.  Container root is UID 0 on your
+# host as well, absent user-namespace remapping, so the agent can leave
+# root-owned files in your bind-mounted project, and it undoes the one thing
+# this file exists to provide.  Prefer building a new image with the packages
+# you need baked in, which keeps the privilege at build time where it belongs.
 RUN useradd --create-home --shell /bin/bash agent
 USER agent
 

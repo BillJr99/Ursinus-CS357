@@ -24,13 +24,14 @@ Two routes, and the difference between them is the whole security lesson:
 |---|---|---|
 | Setup | `docker build` once | None |
 | Privileged work | At build time, once | On every launch |
-| Who the agent runs as | You, or the image's `agent` user. **Never root** | **Root**, unless you set `PI_RUN_AS=user` |
+| Who the agent runs as | The image's `agent` user, or you. **Never root** | **Your own uid**, unless you ask for `PI_RUN_AS=root` |
 | Works offline | Yes, after the build | No: needs `apt-get` and `npm` every time |
 | Start-up | Seconds | A minute or two |
 
 Prefer the Dockerfile route. The script exists because one file you can read
 top to bottom is worth something, and because it is the honest demonstration of
-what "convenient" costs.
+what "convenient" costs: even at its default setting it has to become root for
+a moment, and only a build step can avoid that entirely.
 
 ## Step 0: Start Ollama so the container can reach it
 
@@ -62,26 +63,39 @@ The launcher will not start without it. It looks in three places, in order, and
 stops at the first `SKILL.md` it finds:
 
 ```
-.skills/small-model-orchestrator/SKILL.md
+.skills/small-model-orchestrator/SKILL.md          <-- use this one
 .pi/skills/small-model-orchestrator/SKILL.md
 .agents/skills/small-model-orchestrator/SKILL.md
 ```
 
-From the root of the project you want the agent to work on:
+**Extract the `.skill` file into `.skills/`.**  A `.skill` file is a zip archive
+with the skill directory at its top level, so unzipping it into `.skills/`
+produces `.skills/small-model-orchestrator/SKILL.md`, which is exactly the first
+path the launcher looks for.  From the root of the project you want the agent to
+work on:
 
 ```bash
-mkdir -p .agents/skills
+mkdir -p .skills
 curl -fsSL -o smo.skill https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-unzip -q smo.skill -d .agents/skills/ && rm smo.skill
-ls .agents/skills/small-model-orchestrator/SKILL.md
+unzip -q smo.skill -d .skills/ && rm smo.skill
+ls .skills/small-model-orchestrator/SKILL.md
 ```
 
 ```powershell
-New-Item -ItemType Directory -Force -Path .agents\skills | Out-Null
+New-Item -ItemType Directory -Force -Path .skills | Out-Null
 curl.exe -fsSL -o smo.zip https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-Expand-Archive -Path smo.zip -DestinationPath .agents\skills -Force; Remove-Item smo.zip
-Get-Item .agents\skills\small-model-orchestrator\SKILL.md
+Expand-Archive -Path smo.zip -DestinationPath .skills -Force; Remove-Item smo.zip
+Get-Item .skills\small-model-orchestrator\SKILL.md
 ```
+
+`Expand-Archive` needs the file to end in `.zip`, which is why the PowerShell
+version downloads it under that name.  The contents are identical.
+
+> **Check the shape, not just that it downloaded.**  `SKILL.md` must sit at
+> `.skills/small-model-orchestrator/SKILL.md`.  If your unzip tool created an
+> extra folder level, so that the path is
+> `.skills/small-model-orchestrator/small-model-orchestrator/SKILL.md`, move the
+> inner directory up one level or the launcher will not find it.
 
 > If you skip this step the launcher stops with
 > `small-model-orchestrator/SKILL.md was not found under .skills, .pi/skills, or .agents/skills`.
@@ -129,7 +143,7 @@ Three differences between those two, all of them real:
 
 ## Step 2b: The no-build route
 
-One file, no image, runs as root:
+One file, no image. It runs as **your** user account by default:
 
 ```bash
 bash run-pi-ollama.sh
@@ -139,19 +153,29 @@ bash run-pi-ollama.sh
 .\run-pi-ollama.ps1
 ```
 
-Both print a warning telling you what you just agreed to. To keep the single
-file but drop privileges after the package install:
+The container starts as root, installs the packages a stock `node` image lacks,
+then drops to your uid and gid and cannot take the privilege back. Files it
+writes into your project stay yours.
+
+This is **not rootless**, and the difference is worth holding onto: the container
+still *starts* as root, so anything an `apt` or `npm` package chooses to run
+during installation runs with that privilege. Only the Dockerfile route is never
+root at any point.
+
+If you genuinely need the agent to install system packages itself, opt in:
 
 ```bash
-PI_RUN_AS=user bash run-pi-ollama.sh
+PI_RUN_AS=root bash run-pi-ollama.sh
 ```
 
 ```powershell
-$env:PI_RUN_AS = "user"; .\run-pi-ollama.ps1
+$env:PI_RUN_AS = "root"; .\run-pi-ollama.ps1
 ```
 
-That is better and it is **not rootless**: the container still starts as root and
-then steps down. Only the Dockerfile route is never root at any point.
+Both print a warning when you do. On Linux and macOS that choice is what leaves
+root-owned files in your project; on Windows, Docker Desktop translates ownership
+at the mount, so the file-ownership half of the problem is not yours. The other
+half is: the agent would hold full privileges inside the container.
 
 ## Resuming after an interruption
 
@@ -176,7 +200,7 @@ Every setting is an environment variable, read by both routes.
 | `PI_OLLAMA_URL` | `http://host.docker.internal:11434` | Your host's Ollama |
 | `PI_FALLBACK_CONTEXT` | `8192` | Assumed **only** when Ollama does not report an allocation |
 | `PI_MAX_CONTEXT` | `0` | An extra client-side ceiling; 0 means none |
-| `PI_RUN_AS` | `root` | `root` or `user`. Script route only |
+| `PI_RUN_AS` | `user` | `user` or `root`. Script route only |
 | `PI_REASONING` | `auto` | `auto`, `on`, `off` |
 | `PI_THINKING_LEVEL` | `medium` | `off`, `low`, `medium`, `high` |
 | `PI_PROJECT_DIR` | current directory | What the agent may change |
@@ -190,7 +214,7 @@ Every setting is an environment variable, read by both routes.
 | `Detected 4096 tokens: too small for this skill` | Ollama's default window | Restart with `OLLAMA_CONTEXT_LENGTH=8192` |
 | `SKILL.md was not found` | Step 1 was skipped | Install the skill into `.agents/skills/` |
 | `host.docker.internal` does not resolve, on Linux | Docker Engine does not provide it | Keep `--add-host=host.docker.internal:host-gateway` |
-| New files in the project are owned by root | The script route, as root, on Linux or macOS | `sudo chown -R "$(id -u):$(id -g)" .`, then use the Dockerfile route |
+| New files in the project are owned by root | You set `PI_RUN_AS=root` on Linux or macOS | `sudo chown -R "$(id -u):$(id -g)" .`, then drop the setting |
 | PowerShell: `-v "$PWD:/workspace"` mounts the wrong path | `$PWD:` parsed as one name | Write `${PWD}` |
 
 Prove the network before you debug anything else:
