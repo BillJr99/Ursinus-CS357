@@ -4,19 +4,20 @@ permalink: /Tutorials/AgentSkills
 title: "CS357: Foundations of Artificial Intelligence - Agent Skills and Plugins: What They Are, How They Are Stored, and How to Publish One"
 info:
   coursenum: CS357
-  purpose: "To explain what an agent skill is, how it differs from a system prompt, a context file, a plugin, and a tool, where opencode and pi find skills on disk, how to write one that fires reliably, how to publish one so a classmate can install it, and what a claim protocol has to specify when two agents share a medium."
+  purpose: "To explain what an agent skill is, how it differs from a system prompt, a context file, a plugin, and a tool, where opencode and pi find skills on disk, how to write one that fires reliably, which of its clauses a hook can actually enforce and which are requests no matter how you word them, how to publish one so a classmate can install it, and what a claim protocol has to specify when two agents share a medium."
 tags:
 - skills
 - agents
 - opencode
 - pi
+- hooks
 ---
 
 # CS357: Foundations of Artificial Intelligence - Agent Skills and Plugins: What They Are, How They Are Stored, and How to Publish One
 
 ## Purpose
 
-To explain what an agent skill is, how it differs from a system prompt, a context file, a plugin, and a tool, where opencode and pi find skills on disk, how to write one that fires reliably, how to publish one so a classmate can install it, and what a claim protocol has to specify when two agents share a medium.
+To explain what an agent skill is, how it differs from a system prompt, a context file, a plugin, and a tool, where opencode and pi find skills on disk, how to write one that fires reliably, which of its clauses a hook can actually enforce and which are requests no matter how you word them, how to publish one so a classmate can install it, and what a claim protocol has to specify when two agents share a medium.
 
 ## About This Tutorial
 
@@ -186,6 +187,50 @@ Specify exactly what the agent should produce: which headings, which labels, whi
 One common skill shape is the menued-question pattern, sometimes called a grill-me or interview-me skill.  The skill asks you numbered multiple-choice questions, each with a recommended default, before the agent builds anything.  The point is to collect decisions up front so the agent does not fill the gaps with guesses.  The charter interview in the lab's deliberation-harness pathway works the same way: it collects your decisions before the controller does any work.
 
 > **Watch out.** Students often write skills that say "follow best practices for X."  This phrase is not a skill instruction; it is a deference to an undefined standard.  The agent will infer "best practices" from its training data, which may not match your project's conventions at all.  Replace "follow best practices" with the specific practices you want: the exact linting rule, the exact naming convention, the exact checklist item.  A skill you authored and a skill that says "use best practices" will produce very different results on the same input.
+
+---
+
+## Enforcing What a Skill Asks For
+
+The authoring principles above tell you to write constraints that can be tested.  This section is the answer to the question that raises, which is tested by what.
+
+Start from the structural fact, because every practical consequence follows from it.  A skill is text that the model reads.  The mechanism has no step at which anything other than the model decides whether the skill loads or whether its instructions are obeyed.  The `description` is matched by the model, the body is interpreted by the model, and a request that arrives worded slightly differently may match nothing at all.  **Every clause in a `SKILL.md` is a request, not a rule.**  That is not a defect to be fixed by better wording; it is what a skill is, and it is why the spectrum at the top of this page puts skills on the same side of the line as system prompts and project instruction files.
+
+Enforcement, when you need it, comes from outside the skill mechanism, in the form of a hook the harness runs at a fixed point in the agent loop.  Hooks do two distinct jobs for a skill, and conflating them is the most common error students make here.
+
+The first job is **load-time injection**.  A `SessionStart` hook runs when a session begins and a `UserPromptSubmit` hook runs when you press enter, and in both cases what the hook prints on standard output is placed in the model's context.  That removes the dependence on description matching: the instructions are present whether or not the model would have chosen to load the skill.  It is the direct fix for a skill that never fires, and it is also the fix for a long session in which the skill loaded early and was compacted away.
+
+The second job is **exit-time verification**.  A `Stop` hook runs when the agent wants to end its turn.  If it exits 2, the agent does not stop, and what the hook wrote to standard error is returned to the model as the reason.  This is the only one of the two that enforces anything, because it is the only one in which a program, rather than the model, examines the world and renders a verdict.
+
+The events, and what each can see and do about a skill:
+
+| Event | Runs when | Sees | What it can do for a skill |
+|---|---|---|---|
+| `SessionStart` | The session begins | Nothing of yours yet | Put the skill's rules in context regardless of description matching |
+| `UserPromptSubmit` | You press enter | The prompt text | Re-inject the rules each turn; reject a prompt outright |
+| `PreToolUse` | Before a tool runs | The tool name and its real arguments | Block an operation the skill said not to perform |
+| `PostToolUse` | After a tool runs | The tool's output | Record what happened; rewrite an MCP result before the model reads it |
+| `Stop` | The agent wants to end its turn | Whatever a program can check | Refuse the stop while the skill's contract is unmet |
+
+The full treatment of these events, with eight worked recipes in both Claude Code and opencode and a table of what each recipe cannot do, is in [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part IIb and Part E.  A worked pair for a skill specifically, built on the `kickoff-interview` contract, is Model 1b in [Skills: Design One, Then Measure It](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-skills.md).
+
+### The Authoring Consequence
+
+Here is why this section sits beside the principles rather than at the end of the page.  A hook can only check what it can see, which means the enforceability of a clause is decided when you write the clause, not later when you go looking for a way to enforce it.  "Conduct a thorough interview before starting" is unenforceable by construction: no program can look at the filesystem and decide whether an interview was thorough.  "Write the interview answers to `.ai/CURRENT_TASK.md` before editing any file" is enforceable, because it names an operation and leaves a trace, and a four-line shell script can check for that trace at the moment the agent tries to stop.
+
+The two clauses ask for the same behavior.  They differ only in whether the author wrote down something a check could find.  This is `### Explicit Constraints` again, arriving from the enforcement side: a constraint you made concrete so that it could be *tested* turns out, for the same reason, to be a constraint that can be *enforced*.  When you draft a skill, mark the clauses that matter most and ask of each one what a program would look at to decide whether it held.  Rewrite the ones with no answer until they have one.
+
+### What a Gate Still Cannot Do
+
+Three limits are worth stating before you rely on any of this.
+
+A gate sees state, not intent.  A `Stop` hook that requires `.ai/CURRENT_TASK.md` to be non-empty proves that a file exists, not that its contents are a real interview.  Every gate checks a proxy, and the engineering question is always how far the proxy sits from the thing you care about.
+
+Injection is not compliance.  A `SessionStart` hook guarantees that the rules reached the context window.  What the model does with them is the same open question it was before, which is precisely why the load-time and exit-time jobs have to be kept separate in your head.
+
+A hook that asks a model is not a gate.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model for judgment.  Those are useful when the question genuinely needs an opinion, and they are not enforcement: a model asked to judge can be argued with, exactly like the model it is judging.  Use a `command` hook for what must hold every time.
+
+Finally, note the scope.  Hooks are configured per harness and per project, in `.claude/settings.json` or a plugin's `hooks/hooks.json` for Claude Code and in `opencode.json` or `.opencode/plugins/` for opencode.  A skill you publish as a directory travels with its instructions and without its enforcement, so a classmate who installs your skill gets the requests and not the gates.  If the gates matter, publish them alongside the skill and say so in the README, the way [planning-with-files](https://github.com/OthmanAdi/planning-with-files) ships its hooks as a plugin rather than leaving them to the installer.
 
 ---
 
