@@ -33,7 +33,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Description-as-trigger** | There is no separate trigger field.  The agent reads each skill's `description` against your request and decides whether to load it | "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" fires; "Safety utilities" does not |
 | **System prompt** | Standing instructions sent ahead of every turn.  Always on, never invoked by name | The `BASELINE` string in the Part III harness |
 | **Project instructions** | A file such as `AGENTS.md` in the project root, read once at startup: architecture, invariants, test commands, what not to touch | The `AGENTS.md` you wrote for `cs357-work` in Week 1 |
-| **Hook** | A command the harness runs automatically at a fixed point, such as before a commit or after a file edit.  Enforced by code, so the model cannot talk its way past it | The `commit-msg` hook in Exercise 2 |
+| **Hook** | A command the harness runs automatically at a fixed point, such as before a commit or after a file edit.  Enforced by code, so the model cannot talk its way past it | The `SessionStart` and `Stop` hooks in Model 1b |
 | **Golden set** | A fixed list of inputs with known expected outputs, scored automatically, so a change to a prompt or skill gets a number instead of an opinion | The capitals harness from *Prompt Engineering as Agent Design*, reused in Part III |
 | **Rubric** | A short list of checkable criteria, each answered pass or fail, so two people scoring the same output get the same score | The five items in Model 2, scored by `score()` in Part III |
 
@@ -55,15 +55,15 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 | Minutes | What we do |
 |---|---|
-| 0-15 | Part I, what a skill is and when it fires |
-| 15-40 | Part II, design the `commit-message` skill together |
-| 40-70 | Part III, run it with and without, on two models, and score it |
+| 0-20 | Part I, what a skill is, when it fires, and what a hook can enforce about it |
+| 20-42 | Part II, design the `commit-message` skill together |
+| 42-70 | Part III, run it with and without, on two models, and score it |
 | 70-75 | Report out: each team's results table and the one number that surprised them |
 
 ---
 # Part I: What a Skill Is
 
-In this part you place skills among the other ways of instructing an agent, learn how a skill is stored and found, and read one real skill closely enough to say when it fires and when it does not.
+In this part you place skills among the other ways of instructing an agent, learn how a skill is stored and found, read one real skill closely enough to say when it fires and when it does not, and see what a hook can and cannot enforce about the skill's promises.
 
 ## 1.  Four Ways to Instruct an Agent
 
@@ -76,7 +76,7 @@ The big idea in one sentence: a skill is guidance the agent chooses to follow, l
 | Skill | One named purpose | No | By name, or by the agent matching its `description` | The model reading it |
 | Hook | One fixed point in the loop | Yes, at that point | Automatically, by the harness | Code |
 
-Three of the four rows share the last column.  A system prompt, a project file, and a skill are all text the model reads, and the model can weigh any of them against your latest request and lose.  Only the hook row is code.  That is why the Local Agent lab says: if you need a rule that holds even when the model decides otherwise, the rule belongs in code.  Today's skill states rules; Exercise 2 moves one of them into a hook so you can feel the difference.
+Three of the four rows share the last column.  A system prompt, a project file, and a skill are all text the model reads, and the model can weigh any of them against your latest request and lose.  Only the hook row is code.  That is why the Local Agent lab says: if you need a rule that holds even when the model decides otherwise, the rule belongs in code.  Today's skill states rules; Section 2c moves one of them into a hook so you can feel the difference, and Exercise 2 has you do it yourself on the commit rule.
 
 ## 2.  A Skill Is a Directory
 
@@ -196,6 +196,88 @@ A classmate says: "I wrote a safety-check skill, so now the agent will always as
 [(X)] A skill loads only when the agent matches the request to its description, and even then the model chooses whether to follow it
 [( )] A skill is always on, but only for the project where its directory lives
 [( )] The claim is correct as long as the directory name matches the `name:` field
+
+---
+## 2c.  A Fourth Route, and the Two Jobs a Hook Does for a Skill
+
+Section 2b gave you three routes by which a skill body reaches the model, and all three end the same way: the text arrives, and the model decides.  Section 1 said why in one column of a table.  A system prompt, a project file, and a skill are enforced by the model reading them, and only the hook row is enforced by code.  The fourth route is the harness putting the text there and then checking what came of it, and it is worth being precise about what that buys you, because a hook does two quite different jobs for a skill and they are easy to run together.
+
+The first job is **load-time**.  A skill loads only when the agent matches your request against its `description`, which is exactly the failure the *Skill Design Study* has you troubleshoot when a skill never fires.  A `SessionStart` hook sidesteps the match: whatever the hook prints on standard output is placed in the context at the start of the session, so the rules are present whether or not the model would have chosen to load them.  `UserPromptSubmit` does the same once per turn, which matters in a long session where the opening context has since been compacted away.
+
+The second job is **exit-time**.  Injection guarantees that the text arrived, and it guarantees nothing about compliance, because a rule in the context window is still a rule the model reads.  A `Stop` hook runs when the agent wants to end its turn, and it may refuse: exit 2, and whatever the hook wrote to standard error goes back to the model as the reason it has to keep working.  That refusal is a gate in the sense of *Coding Agents*, because the check runs in code and looks at the state of the filesystem rather than at the model's account of itself.
+
+Hold on to the distinction, because it is the whole of this section.  **Load-time puts the instruction where the model can see it.  Exit-time checks whether the model did it.**  Only the second one is enforcement.
+
+## Model 1b:  The Skill Says It, the Hook Checks It
+
+The `kickoff-interview` skill you write in *OpenCode Studio* promises, among other things, that the interview answers are written to `.ai/CURRENT_TASK.md` before any file is touched.  That clause was chosen carefully: it names an operation and it leaves a trace on disk, which is what makes it checkable at all.  Here is the same promise arriving both ways.
+
+Load-time, so the rules are in context on turn one:
+
+```json
+// .claude/settings.json (Claude Code)
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/kickoff-rules.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+```bash
+#!/bin/sh
+# .claude/hooks/kickoff-rules.sh: whatever this prints is added to the context.
+cat "$CLAUDE_PROJECT_DIR/.agents/skills/kickoff-interview/SKILL.md"
+```
+
+Exit-time, so the promise is checked rather than trusted:
+
+```json
+// .claude/settings.json (Claude Code)
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/require-task-file.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+```bash
+#!/bin/sh
+# .claude/hooks/require-task-file.sh: the interview has to be written down
+event=$(cat)
+echo "$event" | grep -q '"stop_hook_active": *true' && exit 0
+[ -s "$CLAUDE_PROJECT_DIR/.ai/CURRENT_TASK.md" ] && exit 0
+echo "The kickoff interview is not recorded in .ai/CURRENT_TASK.md.  Run it and write the answers down before stopping." >&2
+exit 2
+```
+
+The `stop_hook_active` line is the loop breaker: when the agent is already continuing because this hook sent it back, let it stop rather than trap it forever on a file it cannot produce.  You meet the same guard again in Recipe E.5 of *Coding Agents*, where the thing being checked is a test suite instead of a file.
+
+Two runs, compressed.  In **Run A** the skill is on disk and nothing else is.  You ask for help with a feature, your request does not read like a kickoff, the skill never loads, the agent edits three files, and the turn ends.  Nothing went wrong that anyone would notice; you simply did not get the interview.  In **Run B** both hooks are installed.  The rules are in context whether the description matched or not, and when the agent tries to end the turn with no `.ai/CURRENT_TASK.md`, the turn does not end.  **The hook in Run B never read the skill and never weighed your request against it.**  It ran one test against the filesystem and answered with a number.
+
+### Critical Thinking Questions
+
+3.  Your `kickoff-interview` skill has four clauses: (a) ask at most five questions, (b) offer lettered options with a default, (c) write the answers to `.ai/CURRENT_TASK.md` before touching a file, and (d) keep the questions relevant to the task.  Sort them into the clauses a `Stop` hook could enforce and the clauses it could not, then say in one sentence what distinguishes the two groups.
+
+   > *Hint: A hook sees arguments, exit codes, and the filesystem.  It never sees whether a question was relevant.  Clause (a) is a counting problem, so ask where the thing to be counted would have to be written down before a hook could count it.*
+
+A teammate installs the `SessionStart` hook from Model 1b and says: "Good, now the agent has to run the interview."  Which statement below names what is wrong with that claim?
+
+[( )] A `SessionStart` hook cannot print into the context; only `UserPromptSubmit` can
+[(X)] The hook guarantees the rules are in the context, and the model still decides whether to follow them; only the `Stop` gate makes the interview required
+[( )] The hook fires after the first tool call, so the rules arrive too late to matter
+[( )] Nothing is wrong: text injected by a hook is followed, unlike text the model loads on its own
 
 ---
 # Part II: Design One
@@ -482,6 +564,9 @@ Respond to all three levels in your notebook:
 - Superpowers, a community skill bundle for agent CLIs: https://github.com/obra/superpowers.  Read a few of its `SKILL.md` files as further models of description-as-trigger.
 - Anthropic.  "Building Effective Agents." https://www.anthropic.com/research/building-effective-agents, the evaluator-optimizer pattern is today's measurement loop in general form.
 - On evaluation: this course's *Evaluating Agent Outputs*, *Benchmarking*, and *Testing Agents* activities extend today's five-item rubric into larger golden-test, benchmark, and property-based harnesses.
+- Claude Code hooks: https://code.claude.com/docs/en/hooks, the reference for the events in Section 2c, the exit-code contract, and the JSON form a hook uses when it needs to say more than yes or no.
+- The eight-recipe hook cookbook from Week 1, including the `Stop` gate that Model 1b adapts: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part E.
+- planning-with-files, a planning skill distributed with its enforcement attached: https://github.com/OthmanAdi/planning-with-files (MIT).  It registers six lifecycle hooks so that its plan files are re-injected every turn, and its `Stop` gate holds the stop while any phase is still marked `in_progress`.  Read it as a worked answer to the question Section 2c raises: what does it take to ship a skill that does not depend on the model remembering to use it?
 
 ---
 
@@ -591,3 +676,38 @@ The technical treatment, with the checkpoint format, the evidence hierarchy, the
 To run it against a real agent in a container, on your own model:
 
 - [One Script Instead of an Image, and What That Convenience Costs](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FilesystemIsolation#one-script-instead-of-an-image-and-what-that-convenience-costs)
+
+---
+
+# Extension: Making the Skill Load Every Time (self-paced)
+
+Optional, and nothing above assumes it.  Section 2c drew a line between putting an instruction in front of the model and checking that the model acted on it.  This extension has you build both sides of that line against a skill you already wrote, and it closes a gap Exercise 3 leaves open on purpose.
+
+## Where this picks up
+
+Exercise 3 asks you to score your `kickoff-interview` skill on five conditions and then concedes that one of them, "touch no file," is not visible in the reply text at all.  It asks you to say where that check would have to live.  Here is the answer, made concrete: it lives outside the model, in code, looking at the filesystem at the moment the agent tries to stop.
+
+## What to do
+
+1.  **Install the load-time hook.**  Build `kickoff-rules.sh` from Model 1b, make it executable with `chmod +x`, and register it under `SessionStart` in `.claude/settings.json`.  Start a session and ask the agent, in your first message, to repeat back the rules it is working under.  You are checking one thing: that the rules are there without your having named the skill.
+
+2.  **Run without the gate.**  With only the `SessionStart` hook installed, ask for a change to a file in a way that does not sound like a kickoff request, for example "add a `--verbose` flag to the CLI."  Capture the transcript.  Note whether `.ai/CURRENT_TASK.md` was written, and whether the agent edited anything before writing it.
+
+3.  **Install the exit-time gate.**  Build `require-task-file.sh` from Model 1b, `chmod +x` it, register it under `Stop`, delete `.ai/CURRENT_TASK.md`, and run exactly the same request again.  Capture this transcript too.
+
+4.  **Score the item you could not score.**  Return to your five-item rubric from Exercise 3 and rewrite the "touch no file" item so that it is decided by the hook's exit code rather than by reading the reply.  Run your `score()` over both transcripts with the new item included.
+
+5.  **Write two sentences.**  The first names what changed between Step 2 and Step 3 and what caused it.  The second names something the gate still cannot tell you.
+
+## You've succeeded when
+
+You have two transcripts of the same request, a rubric in which every item including the fifth is decided by something other than your own reading of the text, and a sentence that honestly states the gate's limit.
+
+## The limit, stated plainly
+
+The gate proves that `.ai/CURRENT_TASK.md` exists and is not empty.  It does not prove that the file contains a real interview.  A model that wanted to get past this gate could write one line of nonsense into it and stop, and the hook would let it.  That is not a flaw in hooks; it is the general shape of the problem.  **Every gate checks a proxy for the thing you actually care about, and the engineering question is how far the proxy sits from the thing.**  Tightening the proxy, by checking that the file contains five answered questions rather than merely that it exists, is worth an afternoon on your own project, and it is the same move you make when you turn a vague rubric item into a string check.
+
+## Where to go next
+
+- The full treatment of hooks as gates, with eight recipes and the table of what each one can and cannot see: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part IIb and Part E.
+- The authoring consequence, which is that you should write the clauses you intend to enforce so a check outside the model can see them: [Agent Skills and Plugins](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentSkills#enforcing-what-a-skill-asks-for).
