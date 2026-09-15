@@ -58,7 +58,7 @@ info:
       mendtime: "N/A"
       mroom: "N/A"       
   finalexam:
-    - fdate: "Wednesday, December 16, 2026"
+    - fdate: "2026/12/16"
       fstarttime: "8:00 AM"
       fendtime: "11:00 AM"
       froom: "Pfahler 107"
