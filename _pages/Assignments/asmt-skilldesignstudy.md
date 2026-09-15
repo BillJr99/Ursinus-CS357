@@ -568,8 +568,6 @@ Submit a single PDF containing:
 - Which pattern or skill produced the largest change per line of instruction, and why do you think that is?
 - You ran the same request three times under identical conditions.  How far apart were the results, and what does that tell you about what a single run of an agent can be used to prove?
 - You wrote the kickoff interview twice: once as a typed request in the OpenCode Studio lab, once as a skill here.  Which version did the model follow more reliably, and what did packaging it actually buy you?
-- If collaboration with a buddy was permitted, did you work with a buddy on this assignment?  If so, who?  If not, do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours it took you to finish this assignment (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 
@@ -589,4 +587,3 @@ Submit a single PDF containing:
 - [ ] Both skill directories are committed and the PDF links to them.
 - [ ] Part 3's system prompt names a persona and scope, a primary task, and an explicit refusal condition.
 - [ ] The synthesis shows the change-per-line arithmetic and states a hypothesis with its independent variable, dependent variable, and measurement.
-- [ ] AI disclosure and hours answered.

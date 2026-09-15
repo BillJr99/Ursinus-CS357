@@ -1124,8 +1124,6 @@ Keep a metacognitive learning log for this lab in your readme: in the spirit of 
 - Which of your five ranked values did real work, and which one has never yet resolved anything?  What would you re-rank now, and why?
 - Quote the sentence the agent wrote into `.ai/SESSION.md` or `.ai/MEMORY.md` that you had to fix.  What did the model not know that you did?
 - Name one guardrail in your `AGENTS.md` that holds only because the model chose to honor it.  Part 3 moved one rule behind a gate; what would it take to make the harness, git, or the operating system enforce this one instead, and would you make that trade?
-- Approximately how many hours did this lab take (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
-- If collaboration was permitted and occurred, identify it.  Do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you.
 
 ---
 
@@ -1153,10 +1151,3 @@ This lab deliberately leaves things out, and each of them arrives somewhere spec
 - **Writing, installing, and measuring skills of your own**, including the kickoff interview and session wrap-up packaged as skills that load on a trigger: the *Skill Design Study* written assignment, due the week after this lab.
 - **Your notes as memory an agent can read, and this same discipline across several projects at once**: *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox*.  You arrive there with a charter already written and already tested, and that session amends it rather than starting it.
 - **A full written operating system for a domain you choose, with a governed multi-iteration loop**: Written Assignment 2, [Design Your Agent System]({{ site.baseurl }}/Assignments/AgentSystemDesign).
-
----
-
-Please also answer the following questions in your submission:
-
-- If collaboration with a buddy was permitted, did you work with a buddy on this assignment?  If so, who?  If not, do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours it took you to finish this assignment (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?

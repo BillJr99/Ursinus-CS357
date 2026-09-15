@@ -344,12 +344,6 @@ Whichever direction you choose, close your submission with this short worked-the
 
 ---
 
-## Submission Instructions
-
-Submit a single PDF or markdown bundle containing your chosen direction's deliverable, the token ledger questions, and your reflection responses.  State at the top of the first page which direction you chose.
-
----
-
 ## Reflection Prompts
 
 Answer each of the following with a specific observation from this assignment:
@@ -357,8 +351,6 @@ Answer each of the following with a specific observation from this assignment:
 1.  **Which part of the design changed the most as you worked through it, and why?**  Name the component or document that required the most revision, and the assumption you discovered was wrong.
 2.  **What surprised you most**: the pre-mortem failure you initially believed "could not happen" (Direction A), or the leak your loop exposed in documents you thought were complete (Direction B)?  What does that surprise reveal about your initial assumptions?
 3.  **How would you know the design is actually working?**  For Direction A: one week after deployment, what data would you collect, who would collect it, and what would you do if a criterion was not being met?  For Direction B: which document do you predict would rot first under a month of real use, and what revision or automation would prevent it?
-4.  If collaboration with a buddy was permitted, did you work with a buddy on this assignment?  If so, who?  If not, do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you, including any text drafted or revised with an AI tool, with a brief note on how the tool was used.
-5.  Approximately how many hours did it take you to finish this assignment (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 

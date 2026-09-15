@@ -1143,8 +1143,6 @@ Keep a metacognitive learning log for this lab in your readme.  In the spirit of
 
 - Your pipeline could grade a real class's submissions tomorrow by changing one path in a configuration file.  List two conditions (one technical and one procedural) that you believe must be satisfied before that would be responsible.  For each condition, name the specific course concept it connects to (for example hallucinated evidence rate, human-to-judge agreement, bias measurement).
 - Where did you and your partner disagree with each other more than with the judge?  What does that specific disagreement reveal about what the rubric was measuring versus what you thought it was measuring?  What would you add to the rubric to resolve it?
-- If collaboration beyond your pair occurred, identify it.  Do you certify that this submission represents your pair's original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours did this lab take (I will not judge you for this at all; I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 

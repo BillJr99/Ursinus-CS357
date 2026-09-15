@@ -1593,8 +1593,6 @@ Keep a metacognitive learning log for this lab in your readme.  In the spirit of
 - Describe the most surprising critic behavior you observed: a missed defect, a phantom defect, or an oscillation (the critic reverses its verdict across rounds without the draft changing).  What does that behavior imply about using this critic in a high-stakes setting?
 - Debate and consensus spend extra computation to buy reliability.  Name one decision in your own life where you would pay that cost and one where you would not.  Map each onto a condition from your shootout (single-shot, self-consistency, or debate), and explain what feature of the task, beyond the cost, drives the choice.
 - Your synthesizer "follows the majority."  Name a real scenario (in medicine, law, or public policy) where the majority of experts can all be wrong in the same direction, and explain what mechanism (something other than more samples) would be needed to catch that error.
-- If collaboration beyond your pair occurred, identify it.  Do you certify that this submission represents your pair's original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours did this lab take (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 
