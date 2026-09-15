@@ -760,8 +760,6 @@ Keep a metacognitive learning log for this lab in your readme.  In the spirit of
 - Where in your code does the agent perceive, plan, act, and remember?  Point to line numbers.
 - Your agent's "thoughts" shaped its actions.  Describe one transcript where the stated reasoning and the chosen action did not match, if you observed one, and what that implies about trusting narrated reasoning.
 - How did the driver/navigator structure change the code you wrote compared with working alone?
-- If collaboration beyond your pair occurred, identify it.  Do you certify that this submission represents your pair's original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours did this lab take (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 > **No-code path.**  Answer the first prompt in terms of the OpenWebUI architecture: which tier holds the system prompt, which executes the tool, where chat memory lives, and what your exported JSON shows about each.  Then answer one extra question: **what did the UI hide from you** that a code-path student had to build by hand, and name one concrete debugging situation where that hiding would hurt.
 

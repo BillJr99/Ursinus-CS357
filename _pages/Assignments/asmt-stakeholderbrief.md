@@ -37,9 +37,9 @@ info:
     - weight: 20
       description: Writeup, Process, and Submission
       preemerging: An incomplete submission is provided
-      beginning: The brief is submitted but misses the length or required sections, or lacks per-section primary authors, signatures, or the AI-use disclosure
+      beginning: The brief is submitted but misses the length or required sections, or lacks per-section primary authors or signatures
       progressing: The brief is complete and well-organized with all Project Thread process elements present, with a minor omission such as a thin track-fit section covering fewer than all three final-project tracks
-      proficient: The 2-3 page brief contains all required sections including a candidate track fit that works for all three final-project tracks; every section names its primary author and every member is primary author of at least one section; the submission carries all members' signatures and an AI-use disclosure stating what was AI-assisted and how it was verified (Goals 13, 14)
+      proficient: The 2-3 page brief contains all required sections including a candidate track fit that works for all three final-project tracks; every section names its primary author and every member is primary author of at least one section; the submission carries all members' signatures (Goals 13, 14)
   readings:
     - rtitle: "The Project Thread (semester map, team playbook, and assessment philosophy)"
       rlink: "../Projects/PBLThread"
@@ -293,7 +293,7 @@ At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange d
 | Interview packet appendix (prep questions, notes, consent record, follow-up exchange) | That the interview followed the full protocol and the stakeholder confirmed your understanding | Interview Quality and Professionalism (20) |
 | All team members' typed signatures, re-affirming your charter | That every member stands behind the submission | Writeup, Process, and Submission (20) |
 | AI-use disclosure (what, if anything, was AI-assisted, with what tool, and how the team verified it) | How the team used tools and checked their output | Writeup, Process, and Submission (20) |
-| Reflection prompt answers, written individually | What changed in your understanding, plus the collaboration certification and hours estimate | Writeup, Process, and Submission (completeness) |
+| Reflection prompt answers, written individually | What changed in your understanding | Writeup, Process, and Submission (completeness) |
 
 ---
 
@@ -317,5 +317,3 @@ Answer individually in your submission, keyed to the Open Questions (Goal 15):
 
 - *What should matter to me?* Before the interview you had assumptions about what this stakeholder's real problem was. Which assumption died first, and what does the gap between what you expected to matter and what actually mattered to them tell you about how you choose problems?
 - *How can we understand the world?* Name one thing the stakeholder's discipline treats as obvious evidence that CS would not, or vice versa. What would your team lose by using only one of the two lenses?
-- If collaboration beyond your team occurred, identify it. Do you certify that this submission represents your team's original work? Please identify any and all portions of your submission that were not originally written by your team.
-- Approximately how many hours did this assignment take you personally (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?

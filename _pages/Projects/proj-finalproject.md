@@ -27,10 +27,10 @@ info:
       proficient: The approach is deliberate, documented, and defensible, every major decision names the alternative that was rejected and the course pattern, principle, or evidence that motivated the choice; the direction's rigor requirement is fully met (Direction A - a fixed evaluation set compared against a monolith baseline with at least three failure modes documented from transcripts and at least one mitigation re-measured; Direction B - every major framework step yields a specific, cited finding with at least three mechanistic failure modes distinguishing materialized from foreseeable risks; Direction C - an independently verifiable ecosystem gap with named alternatives, a one-sentence minimum viable scope, and at least three non-trivially specified property tests); and the work is explicitly grounded in the Stakeholder Brief, Literature Review, and the partner's stated needs (Goals 11, 12)
     - weight: 18
       description: Process and Professionalism, meetings, communication, project management, check-ins, charter adherence
-      preemerging: There is no evidence of team process, no meeting agendas or notes, no decision log, no role rotation, missing check-ins and signatures, and no AI-use disclosure on the proposal or final submission
-      beginning: Some process artifacts exist but are spotty, meeting notes or the decision log have gaps, one or more intra-team check-ins are missing, the GANTT-style timeline is absent or stale, signatures are missing from a milestone, or an AI-use disclosure is absent from the proposal or the final submission
-      progressing: The Team Playbook is followed with minor lapses, meeting agendas and notes, the decision log, role rotation, the project timeline, all three intra-team check-ins, all-member signatures, and AI-use disclosures on the proposal and final submission are present, but one element is thin, late, or inconsistently maintained (Goal 13)
-      proficient: Team process is visible and current throughout, every meeting has a posted agenda and notes with owners and dates; the decision log records alternatives and rationale; project management is real (a maintained GANTT-style timeline with named owners, sprint boundaries honored, runnable increments at each sprint); all three intra-team check-ins are submitted on time; the team demonstrably operates under its signed charter, including its conflict protocol; roles rotate per sprint and every student is primary author of at least one section or component of every team deliverable (editable by teammates); each team document's version or commit history shows a real drafting trajectory rather than a single late paste; every milestone carries all members' signatures and an AI-use disclosure stating specifically what was AI-assisted, with what tool, why, and how it was verified (Goal 13)
+      preemerging: There is no evidence of team process, no meeting agendas or notes, no decision log, no role rotation, and missing check-ins and signatures
+      beginning: Some process artifacts exist but are spotty, meeting notes or the decision log have gaps, one or more intra-team check-ins are missing, the GANTT-style timeline is absent or stale, or signatures are missing from a milestone
+      progressing: The Team Playbook is followed with minor lapses, meeting agendas and notes, the decision log, role rotation, the project timeline, all three intra-team check-ins, and all-member signatures are present, but one element is thin, late, or inconsistently maintained (Goal 13)
+      proficient: Team process is visible and current throughout, every meeting has a posted agenda and notes with owners and dates; the decision log records alternatives and rationale; project management is real (a maintained GANTT-style timeline with named owners, sprint boundaries honored, runnable increments at each sprint); all three intra-team check-ins are submitted on time; the team demonstrably operates under its signed charter, including its conflict protocol; roles rotate per sprint and every student is primary author of at least one section or component of every team deliverable (editable by teammates); each team document's version or commit history shows a real drafting trajectory rather than a single late paste; every milestone carries all members' signatures (Goal 13)
     - weight: 24
       description: Product, the working system, audit, or publication; the Demo Day presentation; and the partner-facing artifact
       preemerging: The direction's core artifact is missing or does not function, the system does not run, the audit lacks findings and governance, or nothing was published; the Demo Day presentation is missing or covers only a happy path with no disclosed limitation; no partner-facing artifact exists
@@ -430,8 +430,6 @@ Answer individually in your final submission:
 - What did your direction's rigor requirement (the baseline, the framework, or the gap verification) teach you that you did not expect?
 - What did your community partner's feedback change about the work, and what did you decide not to change, and why?
 - Using the four Open Questions (*What should matter to me?  How should we live together?  How can we understand the world?  What will I do?*), describe one specific new understanding and one area of growth or skill development from the Project Thread, from formation survey to Demo Day (Goal 15).
-- Do you certify that your contribution statement accurately represents your own work?  Please identify any and all portions of the project that were not originally created by your team, including any AI-assisted work and how it was verified.
-- Approximately how many hours did the project take you personally (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 
@@ -566,8 +564,6 @@ Answer these as part of your self-assessment before your project's publish gate:
 
 - Where in this project did the agent's output most need you, and what would have shipped if you had not been paying attention there?
 - Publication is effectively irreversible.  Describe the moment you ran the publish command: what had to be true for you to feel entitled to run it, and is that standard now portable to bigger things?
-- If collaboration with a buddy was permitted, did you work with a buddy on this artifact?  If so, who?  If not, do you certify that this work represents your own original work?  Please identify any and all portions of your work that were not originally written by you.
-- Approximately how many hours it took you to work through this guide (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ### ShipIt Self-Check
 
@@ -664,7 +660,6 @@ Answer individually after the mock-interview rehearsal, connecting to the course
 - Which question made you realize you understood something less well than you thought, and what did you do about it before Demo Day?
 - What did you learn from being the *interviewer* that you could not have learned as the interviewee?
 - You practiced telling the story of work you built with AI assistance, honestly disclosed.  How does that conversation change what you will claim (and disclose) about your work after this course?
-- Approximately how many hours did you spend preparing with this guide (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ### Demo Day Guide Self-Check
 

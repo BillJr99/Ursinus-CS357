@@ -451,12 +451,6 @@ A single PDF or markdown document containing all four parts, clearly labeled, wi
 
 ---
 
-## Submission Instructions
-
-Submit your chosen direction's deliverable as described inside that direction, together with your reflection responses.  State at the top of the first page which direction you chose.
-
----
-
 ## Reflection Prompts
 
 Answer each of the following with a specific observation from this assignment (plus any direction-specific reflection questions listed in your chosen direction's deliverable section):
@@ -464,8 +458,6 @@ Answer each of the following with a specific observation from this assignment (p
 1.  **What was the uncomfortable part of your direction**, the objection that threatened your thesis, the unknown in your documentation, the loophole in your governance document, the gap you could only infer from silence, or the evidence against your Jevons position, and how did engaging it honestly change your submission?
 2.  **What will you do differently in your next project because of this analysis?**  Name one specific design, deployment, documentation, or usage decision.
 3.  If you used an AI tool for any part of this assignment (brainstorming, grammar checking, drafting), note it here and describe how you used it.  The analysis, argument, and writing must be your own.
-4.  If collaboration with a buddy was permitted, did you work with a buddy on this assignment?  If so, who?  If not, do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you.
-5.  Approximately how many hours did it take you to finish this assignment (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 
@@ -477,8 +469,6 @@ Answer each of the following with a specific observation from this assignment (p
 - [ ] Every claim about a real system is sourced, and every source resolves.
 - [ ] The work is about a **specific** system, deployment, or question, not about AI in general.
 - [ ] Real names and sensitive data are redacted.
-- [ ] AI disclosure names what was AI-assisted and how I verified it.
-- [ ] Hours reported.
 
 **Direction A:** at least two named philosophical positions engaged on their own terms; a defended position, not a survey; a concrete deployment implication that would change what someone builds.
 

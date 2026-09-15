@@ -121,8 +121,6 @@ The survey is not in the LMS. The questionnaire lives on the [Project Thread pag
 Answer briefly in your submission (not in the survey answers themselves):
 
 - *How should we live together?*  Which of your survey answers do you most hope your future teammates take seriously, and why?
-- If collaboration with a buddy was permitted, did you work with a buddy on this assignment?  If so, who?  If not, do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours it took you to finish this assignment (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 

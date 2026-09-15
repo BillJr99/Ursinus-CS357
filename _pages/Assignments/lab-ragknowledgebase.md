@@ -1223,7 +1223,6 @@ Fold these into the submission ZIP and readme:
 - You spent hours fine-tuning on 1,000 examples.  A colleague says "just put those examples in the system prompt instead."  When would they be right, and when would fine-tuning be worth the effort?
 - For your specific domain, which would you deploy, the RAG system or the fine-tuned model, and what evidence from your two evaluations drives that choice?
 - Your fine-tuned model may now do better in your domain and worse on general questions.  Who is responsible for communicating that trade-off to users?
-- How many hours did this direction take?
 
 ---
 
@@ -1507,8 +1506,6 @@ Fold these into the submission ZIP and readme:
 2. The AI reported a specific probability from the histogram.  How would you verify it, what tools would you need, and what does that challenge say about using AI for quantitative analysis of charts?
 3. In the core lab you audited citations against text; here you audited a number against a chart.  Which was harder to verify, and why?
 4. In Step C, the pessimistic and optimistic scenarios produced dramatically different outcomes from "reasonable" parameters.  How should a financial planning tool present parameter uncertainty to a non-expert user?
-5. If collaboration beyond your pair occurred, identify it.  Do you certify that this submission represents your pair's original work?  Identify any and all portions of your submission that were not originally written by you.
-6. Approximately how many hours did this direction take?
 
 ---
 
@@ -1592,8 +1589,6 @@ Keep a metacognitive learning log for this lab in your readme.  In the spirit of
 - Which fragile item in your golden set surprised you in either direction, and what does that tell you about your mental model of the training data?
 - Which chunking configuration won on your corpus in 5b, and did the margin surprise you?  Does your Part 2 table agree?
 - What did the 5b citation audit reveal that the recall@k numbers alone would have hidden?
-- If collaboration beyond your pair occurred, identify it.  Do you certify that this submission represents your pair's original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours did this lab take?  (I will not judge you for this at all; I use it to gauge whether the assignments are too easy or too hard.)
 
 ---
 

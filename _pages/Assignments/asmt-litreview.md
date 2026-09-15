@@ -37,9 +37,9 @@ info:
     - weight: 15
       description: Information Literacy, Process, and Submission
       preemerging: An incomplete submission is provided
-      beginning: Citations are incomplete or unformatted, search strategies are undocumented, or the Project Thread process elements (signatures, AI-use disclosure) are missing
+      beginning: Citations are incomplete or unformatted, search strategies are undocumented, or the Project Thread signatures are missing
       progressing: Citations are complete and consistent and the submission includes all process elements, with a minor gap such as an undocumented search strategy for one source
-      proficient: Every source has a complete, consistently formatted citation; each annotation notes how the source was found (database, search terms, or citation chain); the submission carries all members' signatures, names the synthesis's primary author, and includes an AI-use disclosure stating what was AI-assisted (including any AI-assisted search or summarization) and how it was verified against the actual sources
+      proficient: Every source has a complete, consistently formatted citation; each annotation notes how the source was found (database, search terms, or citation chain); the submission carries all members' signatures and names the synthesis's primary author; every citation was verified against the actual source
   readings:
     - rtitle: "The Project Thread (semester map, team playbook, and assessment philosophy)"
       rlink: "../Projects/PBLThread"
@@ -199,8 +199,6 @@ Answer individually in your submission, keyed to the Open Questions (Goal 15):
 
 - *How can we understand the world?*  Pick the source from another discipline that most changed how you see the problem.  What does that discipline accept as evidence that surprised you, and has your idea of what "knowing something" means shifted at all?
 - *What should matter to me?*  The gap your team named is a claim about what deserves work.  Whose needs does that gap center, and whose did your sources let you overlook?
-- If collaboration beyond your team occurred, identify it.  Do you certify that your annotations represent your own original reading and writing, and that the synthesis represents the team's?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours did this assignment take you personally (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
 
 ---
 

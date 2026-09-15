@@ -1894,5 +1894,3 @@ Answer all of the following in your writeup.
 2. What is the single most important thing your chosen intervention does **not** fix, and why can it not be fixed with the controls you applied?
 3. If you had to certify this agent for real users tomorrow, what one additional safeguard (beyond what you built) would you insist on first?
 4. How did working on this direction change how you think about the other directions you did not choose?
-5. If collaboration beyond your team or pair occurred, identify it.  Do you certify that this submission represents your original work?  Please identify any and all portions of your submission that were not originally written by you.
-6. Approximately how many hours did this lab take?  (I will not judge you for this at all; I am simply using it to gauge if the assignments are too easy or hard.)

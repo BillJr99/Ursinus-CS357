@@ -41,7 +41,7 @@ info:
       preemerging: "No writeup, or one that cannot be followed."
       beginning: "A writeup exists but a reader could not reproduce the runs from it."
       progressing: "Model, parameters, and commands are recorded well enough to reproduce."
-      proficient: "Fully reproducible, with an AI-use disclosure naming what was AI-assisted and how it was verified."
+      proficient: "Fully reproducible."
   readings:
     - rtitle: "MCP, REST, and OAuth 2.0 Together (Option 4D)"
       rlink: "../Tutorials/MCPOAuth"
@@ -1126,10 +1126,3 @@ curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN"
 - [ ] Option 4D: the trace shows discovery, the token, the call, and the response; the expired-token 401 and the in-tool failure are saved; the README says what the scopes bound.
 - [ ] Model name and parameters recorded so a reader can reproduce your runs.
 - [ ] Route named at the top of the writeup.
-- [ ] AI-use disclosure included.
-
----
-
-## What to Submit
-
-One repository or archive containing your code, plus a writeup that includes, for each of the three capabilities, the deliverable that capability asks for.  Record the model and parameters you used so a reader can reproduce your runs, and include an AI-use disclosure naming what was AI-assisted and how you verified it.

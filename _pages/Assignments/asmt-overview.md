@@ -32,7 +32,7 @@ info:
       preemerging: An incomplete submission is provided
       beginning: The submission is provided but is disorganized, the transcript and the reflection are hard to tell apart, or one is missing
       progressing: All required components are present in a single file, with a minor omission such as an unlabeled transcript section or missing OS information
-      proficient: A single well-organized PDF or Markdown file with each component clearly labeled, the five-step setup transcript with version and OS details, the Part 1.5 command-line and git checkpoint, and the four-section reflection, with the collaboration, AI-disclosure, and time questions answered at the end
+      proficient: A single well-organized PDF or Markdown file with each component clearly labeled, the five-step setup transcript with version and OS details, the Part 1.5 command-line and git checkpoint, and the four-section reflection, with the collaboration and time questions answered at the end
   readings:
     - rtitle: "Welcome Activity"
       rlink: "https://www.billmongan.com/Ursinus-CS357-Overview"
@@ -1271,10 +1271,3 @@ docker compose run --rm cs357
 ```
 
 That first `curl` matters more than it looks.  The Dockerfile lives in *your* repository, not in a registry somewhere, so rebuilding without fetching the new one just rebuilds the image you already have.  Expect the rebuild to take roughly as long as your original build did, because a change near the top of the file invalidates every layer beneath it, and the large library downloads run again.  If you work through VS Code Dev Containers, run **Dev Containers: Rebuild Container** from the command palette; plain **Reopen in Container** reuses the old image and will not pick up the change.  Once you are back at the container prompt, rerun the A5 checks to confirm the update landed, and then `docker image prune` to reclaim the disk the replaced image was still holding.
-
----
-
-Please also answer the following questions in your submission:
-
-- If collaboration with a buddy was permitted, did you work with a buddy on this assignment?  If so, who?  If not, do you certify that this submission represents your own original work?  Please identify any and all portions of your submission that were not originally written by you.
-- Approximately how many hours it took you to finish this assignment (I will not judge you for this at all...I am simply using it to gauge if the assignments are too easy or hard)?
