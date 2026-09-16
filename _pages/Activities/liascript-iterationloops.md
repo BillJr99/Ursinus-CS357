@@ -16,7 +16,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 In *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff*, you wrote a specification before any code existed and watched an agent implement it.  Today you put that work inside a loop, and you set the loop up so the agent runs it.
 
-Two loops do the job.  The **Karpathy loop** moves in small steps, each one verified by a check that already exists.  The **Gauntlet loop** writes the check first, as a rubric, and then attacks each candidate until no material defect remains.  Both are configuration plus a command.  You leave today with the files that configure them, the commands that run them, and one gauntlet round scored against a rubric you wrote.
+Two loops do the job, and one of them has a variant you should recognize.  The **Karpathy loop** moves in small steps, each one verified by a check that already exists; its **autoresearch** variant keeps the same shape but lets a measured number stand in for the check.  The **Gauntlet loop** writes the check first, as a rubric, and then attacks each candidate until no material defect remains.  All of them are configuration plus a command.  You leave today with the files that configure them, the commands that run them, one gauntlet round scored against a rubric you wrote, and one metric round that discards its own best idea.
 
 ---
 
@@ -42,7 +42,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Fog** | An unresolved decision, dependency, ambiguity, or missing fact that could materially change the work.  Fog is cleared, never disguised as a settled assumption | "Score is a float from 0 to 1": scored how? |
 | **Converged result** | A candidate for which the latest critique finds no material defect that warrants revision | The stopping condition of every gauntlet preset |
 | **Evaluation metric** | A single number a program computes from an artifact's behavior on inputs the loop may not edit, with a target fixed before the loop starts | Model 4: mean reciprocal rank over twelve held-out queries |
-| **autoresearch** | Karpathy's variant of the loop, in which a metric rather than a test decides whether an attempt is kept | Section 9: four attempts, one of them discarded for a worse score |
+| **autoresearch** | Karpathy's variant of the loop, in which a metric rather than a test decides whether an attempt is kept | Model 4: a baseline and three attempts, one of them discarded for a worse score |
 
 ### Before You Start
 
@@ -65,9 +65,9 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | 0-6 | Key Concepts, and why iteration beats one big prompt |
 | 6-18 | Model 1's two increments, and the six parts of a loop prompt |
 | 18-34 | Part II: the four files, one increment, the `.ai/` directory, and Model 2's broken run |
-| 34-55 | Part III: the rubric written two ways, and Model 3 from prompt to convergence |
-| 55-60 | The code cell, and which loop when |
-| 60-70 | Part IV: Model 4's metric loop, unattended loops, and auto mode |
+| 34-42 | Part III: the seven steps, and the rubric written two ways |
+| 42-58 | Model 3 from prompt to convergence, and the code cell |
+| 58-70 | Part IV: which loop when, unattended loops, auto mode, and Model 4's metric loop |
 | 70-75 | Report-out.  Exercises, the Extension, and the reflection are take-home |
 
 Anything marked self-paced sits outside this budget, and nothing graded assumes it.
@@ -82,7 +82,7 @@ That session left you with a specification and an agent that could implement it.
 
 Iteration beats that for one reason.  It shrinks the thing you have to judge, and it gives you something to judge it *against*.  A single increment is checked by a test you already wrote.  A large result has no check at all until you invent one after the fact, which is exactly when you are most inclined to accept what you are looking at.
 
-Andrej Karpathy, who named vibe coding, makes the point (as the *AI-Assisted Development* tutorial records) that people are better at writing specifications than at reviewing arbitrary output, and models are better at producing output than at writing specifications.  Both loops today keep you on the side of that trade you are better at.  They differ in where the check comes from, and that one difference decides everything else about how they run.  The Karpathy loop has a third form worth naming now, because you will meet it in Section 9: when the artifact is a model rather than a program, the check becomes a number instead of a pass or a fail, and Karpathy calls that variant **autoresearch**.
+Andrej Karpathy, who named vibe coding, makes the point (as the *AI-Assisted Development* tutorial records) that people are better at writing specifications than at reviewing arbitrary output, and models are better at producing output than at writing specifications.  Both loops today keep you on the side of that trade you are better at.  They differ in where the check comes from, and that one difference decides everything else about how they run.  The Karpathy loop has a third form worth naming now, because you will meet it in Model 4: when the artifact is a model rather than a program, the check becomes a number instead of a pass or a fail, and Karpathy calls that variant **autoresearch**.  Side by side, the three differ in five places, and every one of them follows from the first row.
 
 | | Karpathy loop | autoresearch | Gauntlet loop |
 |---|---|---|---|
@@ -163,7 +163,7 @@ Here is Increment 2 from Model 1 with those parts labeled.  The brackets are for
 [Report]    Say what changed, what the check said, what you committed, and what is next.
 ```
 
-Each part does one job, and the whole point of naming them is that only one of the six changes when you switch loops.
+Each part does one job, and naming them is what lets you carry the shape from one loop to the next.  Every part is filled in differently by a different loop, but one of them decides the rest: change the **Check** and the Gate, the Stopping rule, and the Report all have to change with it, because they are the parts that handle what the check returns.
 
 | Part | What it pins down | Karpathy (Model 1) | Gauntlet (Model 3) | autoresearch (Model 4) |
 |---|---|---|---|---|
@@ -523,7 +523,7 @@ Now the stopping decision, which is the step people skip.  The weighted score mo
 
 N1 still fails, and it stays failing.  It is non-material, so it does not block convergence, and the correct move is to write it into `.ai/FUTURE_WORK.md`, not to fix it now and not to quietly delete the row so the table looks clean.
 
-**Run the round yourself.**  Three scripts build the whole thing, and they need nothing but Python:
+**Run the round yourself.**  Two scripts build the state this model walks through, and they need nothing but Python and `git`.  The rubric is not in the kit: use the `rubric.md` from Section 7, which is written against this exact spec.
 
 ```bash
 bash setup_gauntlet_sample.sh     # builds the practice repo, ends at tag candidate-0
@@ -549,7 +549,7 @@ Download them from [setup_gauntlet_sample.sh](https://www.billmongan.com/Ursinus
 
     *Hint: Who wrote the suite, and what were they trying to demonstrate when they wrote it?*
 
-Candidate 1 clears the weighted threshold, and K4 is still at "Does not meet."  What is the correct call?
+Suppose the Step 7 re-score had come back differently: Candidate 1 clears the weighted threshold, but K4 is still at "Does not meet."  What would the correct call have been?
 
 [( )] Converged, because the weighted score cleared the threshold
 [(X)] Not converged, because K4 is material, and clearing the threshold does not override a failed material criterion
@@ -639,78 +639,6 @@ Every one of them is the Karpathy loop with the human gate replaced by a determi
 4.  Fresh context each iteration, with the state in `.ai/` and `git` rather than in a conversation.
 5.  A human gate before merge.  The loop may commit to its branch all night; it does not merge to `main`.
 
-## Model 4: An autoresearch Round, Scored by a Metric
-
-Control 2 is the one worth seeing run, because a check the loop cannot edit is easy to agree with and easy to get wrong.  This model makes it concrete on the artifact you already have.
-
-Candidate 1 from Model 3 passes every material criterion in `rubric.md`, so the gauntlet is finished with it.  That does not make it *good*.  Ask it "the basic definition of an agent" and the document it ranks first is `kb/docs/01.md`, "Agents and tools," because six of the eight documents contain the word "agent" and the scorer has no way to prefer one of them.  No criterion in the rubric decides that, and none should: the rubric asks whether each requirement is met, and ranking quality is not a requirement, it is a **degree**.  Degrees need a number.
-
-This runs on the practice repository, not on your graded lab artifact.  Nothing here adds a lab requirement.
-
-**The setup.**  Two files, written before the loop starts:
-
-- `eval/queries.json`, twelve queries a student might actually type, each labeled with the one document that should rank first.
-- `eval/score.py`, which runs each query through `artifact/search.py` as a subprocess, finds the rank of the labeled document, and prints the **mean reciprocal rank**: rank 1 scores 1.0, rank 2 scores 0.5, rank 4 scores 0.25, absent scores 0.
-
-Two rules turn that number into a check rather than a suggestion.  The agent may not edit either file, and the target is written down **before** the first attempt, in `eval/BEST.md`: reach 0.80, with a budget of five attempts.  A target chosen after you see the scores is not a target, it is a description.
-
-**The prompt**, in the six parts from Section 2:
-
-```text
-[Scope]     Change only the score() function in artifact/search.py.
-[Truth]     spec.md still holds.  Do not edit eval/queries.json or eval/score.py.
-[Check]     Run python3 eval/score.py and report the number it prints, exactly.
-[Gate]      After the measurement, before keeping anything: tell me the number first.
-[Stop]      Stop when the number reaches 0.80, or after five attempts, whichever comes first.
-[Report]    Say what you changed, what it scored, whether you kept it, and what you will try next.
-```
-
-Or ask opencode to do it: paste that into the message bar without the brackets.
-
-Two parts differ from Model 1, and they are the two that make this autoresearch rather than a Karpathy increment.  The **Check** is a measurement rather than a pass or a fail, so "it worked" is not available as an answer.  And the **Stopping rule** has two arms, because a metric can always be nudged a little higher and a loop optimizing a number will keep going until something stops it.
-
-**The discard rule** is what the Gate buys you, and it belongs in `AGENTS.md` beside the others:
-
-```markdown
-## Keeping an attempt
-- After every attempt, run the metric and compare with the best score in eval/BEST.md.
-- Better: commit, and append one row to eval/BEST.md.
-- Worse or equal: restore the working tree.  Do not commit a regression to try to fix it later.
-```
-
-**The execution.**  Four measurements, starting from Candidate 1 as the gauntlet left it:
-
-| Attempt | What changed in `score()` | MRR | Kept? |
-|---|---|---|---|
-| baseline | Candidate 1 unchanged: fraction of query terms found anywhere in the document | 0.667 | recorded as best |
-| 1 | Drop stopwords, so "the", "a", "of", and "how" stop earning credit | **0.785** | kept, better than 0.667 |
-| 2 | Match whole words instead of substrings, so "an" stops matching "answer" | 0.646 | **discarded**, worse than 0.785 |
-| 3 | Restore attempt 1, then count a term found in the title twice | **0.826** | kept, target reached |
-
-Attempt 2 is the row that earns the loop.  Whole-word matching is the change any of us would have argued for: substring matching is obviously sloppy, and "an" really does match "answer."  The metric said 0.646 and the attempt was restored, because whole-word matching also stops "agents" from matching "agent," and in this corpus that costs more than the sloppiness earns.  Nobody had to win that argument.  The loop spent one attempt on it and moved on, which is the entire value proposition: a number you agreed to in advance settles questions that a discussion would not.
-
-The loop stopped at attempt 3 with 0.826, above the 0.80 target, two attempts of budget unspent.  It stopped because the target was reached, not because the agent ran out of ideas.
-
-**Run it yourself**, after the two scripts from Model 3:
-
-```bash
-bash setup_autoresearch_eval.sh   # writes eval/, commits nothing
-python3 eval/score.py             # 0.667, the baseline
-python3 eval/score.py -v          # the rank of every query, which is where the ideas come from
-```
-
-Download it from [setup_autoresearch_eval.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/gauntlet-sample/setup_autoresearch_eval.sh).
-
-**Two hazards, and both have bitten people.**
-
-The metric has to be held out and unwritable.  If the agent can edit `eval/queries.json`, the fastest path to 0.80 is to delete the queries it gets wrong, and it will find that path.  This is Model 2 line [5] again, where the agent rewrote a failing test to match its code, except that a metric fails more quietly: a rewritten test still has to sit in the suite where somebody may read it, while a deleted query leaves nothing behind but a better number.
-
-And a rising metric is not a rising artifact.  Twelve queries are a sample of the behaviors somebody thought to check, and a loop that keeps seeing them will eventually fit them rather than the thing they stand for.  Two habits keep that honest: fix the target in advance so the loop stops when it is met instead of grinding, and re-score the winner against `rubric.md` before merging, because a change that improves ranking can quietly break a criterion the rubric cares about.  Attempt 3 was re-scored: still 12 of 13, still converged.
-
-12.  Attempt 2 scored 0.646 against a recorded best of 0.785, and the agent restored the working tree.  Rewrite that attempt as a gauntlet round instead: name what the critique would have to find for the same change to be discarded, and say which of the two checks you would trust more if the change also made the code shorter and easier to read.
-
-    *Hint: Could a criterion in `rubric.md`, as written, have caught this at all?*
-
 ### Auto mode, and the isolation it requires
 
 A loop that stops to ask permission is not unattended, so these patterns need the permission prompts off.  opencode does that two ways.  The flag is `--auto`:
@@ -739,6 +667,78 @@ Why does a Ralph loop start each iteration with a *fresh* context window instead
 [(X)] Because the task's memory lives on disk (codebase, `TODO` file, `git` history), so each iteration can re-read exactly what it needs and avoid the context-overflow failure that plagues one very long session
 [( )] Because a fresh context makes the agent more creative by preventing it from repeating earlier ideas
 
+## Model 4: An autoresearch Round, Scored by a Metric
+
+Of the five controls above, the second is the one worth seeing run, because a check the loop cannot edit is easy to agree with and easy to get wrong.  This model makes it concrete on the artifact you already have.
+
+Candidate 1 from Model 3 passes every material criterion in `rubric.md`, so the gauntlet is finished with it.  That does not make it *good*.  Ask it "the basic definition of an agent" and three documents tie at 0.5, so the one that comes back first, "Agents and tools," wins on nothing but the order it happens to sit in the file.  Six of the eight documents contain the word "agent," and the scorer has no way to prefer one of them.  No criterion in the rubric decides that, and none should: the rubric asks whether each requirement is met, and ranking quality is not a requirement at all.  It is a **degree**, and degrees need a number.
+
+This runs on the practice repository, not on your graded lab artifact.
+
+**The setup.**  Two files, written before the loop starts:
+
+- `eval/queries.json`, twelve queries a student might actually type, each labeled with the one document that should rank first.
+- `eval/score.py`, which runs each query through `artifact/search.py` as a subprocess, finds the rank of the labeled document, and prints the **mean reciprocal rank**: rank 1 scores 1.0, rank 2 scores 0.5, rank 4 scores 0.25, absent scores 0.
+
+Two rules turn that number into a check rather than a suggestion.  The agent may not edit either file, and the target is written down **before** the first attempt, in `eval/BEST.md`: reach 0.80, with a budget of five attempts.  A target chosen after you see the scores is not a target at all; it is a description.
+
+**The prompt.**  In the six parts from Section 2:
+
+```text
+[Scope]     Change only the score() function in artifact/search.py.
+[Truth]     spec.md still holds.  Do not edit eval/queries.json or eval/score.py.
+[Check]     Run python3 eval/score.py and report the number it prints, exactly.
+[Gate]      After the measurement, before keeping anything: tell me the number first.
+[Stop]      Stop when the number reaches 0.80, or after five attempts, whichever comes first.
+[Report]    Say what you changed, what it scored, whether you kept it, and what you will try next.
+```
+
+Or ask opencode to do it: paste that into the message bar without the brackets.
+
+Change the **Check** from a test to a measurement and watch what it drags with it.  "It worked" is no longer available as an answer, so the **Report** has to carry a number.  The **Gate** moves from before the edit to after the measurement, because there is nothing to judge until the number exists.  And the **Stopping rule** grows a second arm, because a metric can always be nudged a little higher and a loop optimizing a number will keep going until something stops it.  That is the claim from Section 2 doing its work: one part changed, and three followed.
+
+**The discard rule.**  This is what the Gate buys you, and it belongs in `AGENTS.md` beside the others:
+
+```markdown
+## Keeping an attempt
+- After every attempt, run the metric and compare with the best score in eval/BEST.md.
+- Better: commit, and append one row to eval/BEST.md.
+- Worse or equal: restore the working tree.  Do not commit a regression to try to fix it later.
+```
+
+**The execution.**  Four measurements, starting from Candidate 1 as the gauntlet left it:
+
+| Attempt | What changed in `score()` | MRR | Kept? |
+|---|---|---|---|
+| baseline | Candidate 1 unchanged: fraction of query terms found anywhere in the document | 0.667 | recorded as best |
+| 1 | Drop stopwords, so "the", "a", "of", and "how" stop earning credit | **0.785** | kept, better than 0.667 |
+| 2 | Match whole words instead of substrings, so a query term must equal a document word | 0.646 | **discarded**, worse than 0.785 |
+| 3 | Restore attempt 1, then count a term found in the title twice | **0.826** | kept, target reached |
+
+Attempt 2 is the row that earns the loop.  Whole-word matching is the change any of us would have argued for, because substring matching is obviously sloppy and will match fragments nobody meant.  The metric said 0.646, and three queries say why.  "How is an agent checked for quality" and "serving a model on my own machine" both fall to zero because the corpus says *agents* and *models* where the query says *agent* and *model*, and "perceive plan act" falls to zero because the document reads "An agent perceives, plans, and acts," where whole-word matching sees `perceives,` with the comma attached.  Sloppy substring matching was quietly absorbing every one of those, and in this corpus that is worth more than the fragments it costs.  A discussion would have gone the other way, and it would have been wrong.
+
+The loop stopped at attempt 3 with 0.826, above the 0.80 target, two attempts of budget unspent.  It stopped because the target was reached, not because the agent ran out of ideas.
+
+**Run it yourself**, after the two scripts from Model 3:
+
+```bash
+bash setup_autoresearch_eval.sh   # writes eval/, commits nothing
+python3 eval/score.py             # 0.667, the baseline
+python3 eval/score.py -v          # the rank of every query, which is where the ideas come from
+```
+
+Download it from [setup_autoresearch_eval.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/gauntlet-sample/setup_autoresearch_eval.sh).
+
+Two hazards are worth stating plainly before you run one of these.  The first is that the metric has to be held out and unwritable.  If the agent can edit `eval/queries.json`, the fastest path to 0.80 is to delete the queries it gets wrong, and it will find that path.  This is Model 2 line [5] again, where the agent rewrote a failing test to match its code, except that a metric fails more quietly: a rewritten test still has to sit in the suite where somebody may read it, while a deleted query leaves nothing behind but a better number.
+
+And a rising metric is not a rising artifact.  Twelve queries are a sample of the behaviors somebody thought to check, and a loop that keeps seeing them will eventually fit them rather than the thing they stand for.  Two habits keep that honest: fix the target in advance so the loop stops when it is met instead of grinding, and re-score the winner against `rubric.md` before merging, because a change that improves ranking can quietly break a criterion the rubric cares about.  Attempt 3 was re-scored: still 12 of 13, still converged.
+
+### Critical Thinking Questions
+
+12.  Attempt 2 scored 0.646 against a recorded best of 0.785, and the agent restored the working tree.  Rewrite that attempt as a gauntlet round instead: name what the critique would have to find for the same change to be discarded, and say which of the two checks you would trust more if the change also made the code shorter and easier to read.
+
+    *Hint: Could a criterion in `rubric.md`, as written, have caught this at all?*
+
 ## 10.  Exercises
 
 1.  *Set up and run the Karpathy loop.*
@@ -754,7 +754,7 @@ Why does a Ralph loop start each iteration with a *fresh* context window instead
 3.  *Point a metric at your own artifact.*
 
     - *What to do:* Pick one thing your artifact does by degree rather than by requirement, the way ranking quality is a degree in Model 4.  Write at least ten labeled cases in the shape of `eval/queries.json`, a scorer that prints one number, and a target in `eval/BEST.md` fixed **before** you start.  Then run three attempts using the six-part prompt from Section 2, recording the score of each and whether you kept or restored it.  Finish by writing the `ask` permission block from Section 3 beside the auto-mode configuration from Section 9, and one paragraph on the isolation you would require before letting this loop run unattended.
-    - *You've succeeded when:* Your target was written down before the first score, at least one attempt was restored for a worse number, your three rows name what changed rather than only what it scored, you can state what `--auto` does *not* override, and the isolation paragraph names the credentials and directories at risk rather than only saying "use a VM." 
+    - *You've succeeded when:* Your target was written down before the first score, at least one attempt was restored for a worse number, your three rows name what changed rather than only what it scored, you can state what `--auto` does *not* override, and the isolation paragraph names the credentials and directories at risk rather than only saying "use a VM."
 
 ---
 
@@ -796,7 +796,7 @@ Or run the four prompts from Model 3 in sequence in the message bar and keep the
 
 ## C.  Scoring the metric yourself
 
-The cell below is `eval/score.py` from Model 4 with the corpus inlined, so it runs here rather than on your laptop.  It scores the same twelve queries against the four variants from Model 4's table, and it should print the same four numbers.  Change `stopwords` or `title_weight` and watch what happens.
+The cell below is a standalone version of `eval/score.py` with the corpus inlined, so it runs here rather than on your laptop.  It scores the same twelve queries against the four variants from Model 4's table, and it should print the same four numbers.  Change `stopwords` or `title_weight` and watch what happens.
 
 ```python
 # The corpus and the twelve labeled queries are the practice kit's.  Each variant is a
@@ -884,7 +884,7 @@ print(f"\nbest {best:.3f}, target 0.80")
 ```
 @Pyodide.eval
 
-The last two lines apply the discard rule from Model 4 rather than printing four numbers and leaving the judgment to you.  That is the difference between measuring and looping: the loop has a rule about what to do with the measurement, decided before the measurement arrives.
+The `kept` line inside the loop is the discard rule from Model 4, so the cell decides rather than printing four numbers and leaving the judgment to you.  That is the difference between measuring and looping: the loop has a rule about what to do with the measurement, decided before the measurement arrives.
 
 ---
 
