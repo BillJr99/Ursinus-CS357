@@ -163,7 +163,7 @@ Add logging to capture the full conversation context (system prompt version, con
 
 **To use a trace viewer effectively:** identify the span where the model's output first diverges from expected; examine the exact prompt that was assembled and sent to the model (including all injected context); check the tool call inputs and outputs immediately preceding the divergence point; and compare token counts across turns to detect context overflow.
 
-### Prompt Logging Best Practices
+### What to Log on Every Agent Call
 
 | What to Log | How to Log It | Why It Matters for Debugging |
 |------------|---------------|------------------------------|

@@ -245,7 +245,7 @@ The server sends the complete response in a single HTTP response body instead of
 
 ---
 
-# Part III: Request Construction Deep Dive
+# Part III: Building the Request, Field by Field
 
 In this part, you will dissect the full `/v1/chat/completions` payload field by field and trace a complete tool-calling round-trip, the skill needed to integrate any LLM into a real application.
 

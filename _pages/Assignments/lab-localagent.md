@@ -62,7 +62,7 @@ info:
     - rtitle: "Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models"
       rlink: "Activities/liascript-promptengineering.md"
       liapage: true
-    - rtitle: "RESTful LLM Access, on the api/v1 paradigm"
+    - rtitle: "RESTful LLM Access, and the api/v1 endpoints"
       rlink: "../Tutorials/RESTLLMAPI"
     - rtitle: "Ollama API Documentation"
       rlink: "https://github.com/ollama/ollama/blob/main/docs/api.md"
@@ -81,7 +81,7 @@ tags:
 
 ---
 
-In this lab, you and a partner build a working agent from first principles: a loop, a prompt, two tools, and a small evaluation.  You leave with a private agent that runs on your own machine, a system prompt you can defend line by line, and an honest measurement of where it fails.  Work in **pairs using driver and navigator roles**.  The driver types; the navigator reviews, asks questions, and consults documentation.  Swap roles at least every 30 minutes, and log each swap time and who held each role.
+In this lab, you and a partner build a working agent yourselves: a loop, a prompt, two tools, and a small evaluation.  You leave with a private agent that runs on your own machine, a system prompt you can defend line by line, and an honest measurement of where it fails.  Work in **pairs using driver and navigator roles**.  The driver types; the navigator reviews, asks questions, and consults documentation.  Swap roles at least every 30 minutes, and log each swap time and who held each role.
 
 ---
 
@@ -909,7 +909,7 @@ Keep a metacognitive learning log for this lab in your readme.  In the spirit of
 
 ## Extension Challenges
 
-These are optional and carry no extra credit, but they will deepen your understanding.
+These are optional and carry no extra credit.  Do one if you want to push further on something in this lab.
 
 **Challenge 1 (moderate): Add a memory tool.**  Give the agent `remember(key=value)` and `recall(key)` tools backed by a Python dict.  Run a two-step goal: "Remember that my exam is on 2025-12-15, then tell me how many days away it is."  Show that `recall` retrieves the stored value without the user repeating it.
 

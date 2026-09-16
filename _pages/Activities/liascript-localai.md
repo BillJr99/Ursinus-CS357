@@ -411,7 +411,7 @@ Optional, and nothing above assumes it.  You now have a model running privately 
 
 ## The idea, in plain language
 
-A coding agent is a program that reads your files, writes new ones, and runs commands, all on its own judgment.  That is genuinely useful and it is also a strange thing to hand a stranger.  The usual answer is to watch it closely and approve each step, which works until you get tired.
+A coding agent is a program that reads your files, writes new ones, and runs commands, all on its own judgment.  That is useful, and it is also a strange thing to hand a stranger.  The usual answer is to watch it closely and approve each step, which works until you get tired.
 
 The better answer is to change what is reachable rather than to watch harder.  You put the agent in a container, which is a boxed-off copy of an operating system, and you decide in advance exactly two things:
 

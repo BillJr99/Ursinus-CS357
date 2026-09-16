@@ -115,11 +115,9 @@ curl -s http://localhost:11434/api/tags | head -c 120
 
 > **Watch out.** Check this now rather than at hour four: not every local model does native function calling well.  A model that does not will produce prose describing a tool call instead of emitting one.  Test with a trivial tool before you build anything real.  If your model will not emit tool calls, say so in your writeup, switch models, and note what you observed.  That observation is worth more than a clean run on a model you did not choose deliberately.
 
-Start the reasoning comparison early.  Eight tasks times two conditions is mostly wall-clock waiting, and it is the one part of this lab you cannot compress on the last night.
-
 > **Time budget.** Roughly 6 to 8 hours: about 2 hours for tool use plus structured output, 2 to 3 for the reasoning comparison (most of it waiting on runs), and 2 to 3 for MCP.  The reasoning comparison is the one to start early, because eight tasks times two conditions is a lot of wall-clock time if you leave it to the last night.
 
-**What you will have at the end:** an agent that can act on the world, a demonstrated technique for making its output parseable, a measured answer to "did making it reason pay for itself," and working experience with the protocol the rest of the ecosystem is standardizing on.
+**What you will have at the end:** an agent that can act on the world, a demonstrated technique for making its output parseable, a measured answer to "did making it reason pay for itself," and working experience with the protocol the rest of the field is standardizing on.
 
 ---
 
@@ -498,7 +496,7 @@ Grammar-constrained: {"sentiment": "negative"}
 | **Function calling / tool use** | The API wraps the model's output in a structured function-call schema; the model generates a `tool_calls` field rather than prose | The format of the function call is guaranteed to be structurally valid; argument types match the declared schema | Model may call the wrong tool when multiple tools are available, omit required arguments, or pass arguments with the right type but wrong semantic content (a valid-format but wrong value) |
 | **Grammar-constrained decoding** (Outlines, LMQL, llama.cpp grammars) | At each decoding step, the token sampler masks out any token that would violate the grammar; only valid-next-token candidates can be sampled | Syntactic validity is mathematically guaranteed at the token level; the output will always parse as valid JSON matching the schema | Model may produce syntactically valid but semantically wrong output (correct format, wrong meaning); very complex required outputs can degrade overall response quality |
 
-Three properties are worth separating clearly.  They are the levels of correctness:
+Keep three properties separate.  They are the levels of correctness:
 
 - **Syntactic validity**: Is the output parseable as JSON (or another format)?  Does it have matching brackets and correct quoting?
 - **Schema validity**: Does the output conform to the specific schema: required fields present, types correct, enum values within the allowed set?

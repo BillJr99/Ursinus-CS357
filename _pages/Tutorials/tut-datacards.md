@@ -148,7 +148,7 @@ Mitchell et al. (2019) proposed **Model Cards** as the model-level analogue to D
 
 9.  A classmate reads a model card that contains the sentence "Ethical Considerations: this model may produce harmful content in adversarial settings."  They conclude that the model card discharges the developer's ethical responsibility; after all, the warning is right there in the document.  Evaluate this argument carefully: what does the warning accomplish, and what does it fail to accomplish?  What would a more substantive ethical considerations section look like?
 
-   *Hint:* A warning that says "may produce harmful content" tells the deployer almost nothing actionable.  What would they need to know to actually decide whether to deploy?  Think about specificity: what types of harmful content, under what conditions, with what frequency, affecting which populations?  What mitigation did the developer implement, and what residual risk remains?
+   *Hint:* A warning that says "may produce harmful content" tells the deployer almost nothing they can act on.  What would they need to know to actually decide whether to deploy?  Think about specificity: what types of harmful content, under what conditions, with what frequency, affecting which populations?  What mitigation did the developer implement, and what residual risk remains?
 
 ---
 

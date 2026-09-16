@@ -460,7 +460,7 @@ Pick **one** of your own repositories: `cs357-work`, or your Project Thread repo
 6.  **Then let it work**, and when it finishes: *append a dated entry to `.ai/SESSION.md` describing what you changed, what you did not do, and one Next Safe Action.*
 7.  **Read what it wrote.  Correct it.**  Then commit.
 
-> **You've succeeded when** your repository has a charter with ranked values, a session entry an agent wrote and you edited, and you can point to one sentence in that entry you had to fix.  That sentence is the reason step 7 exists.  Bonus, and it is the real one: if a plan got rejected in step 5, write down which ranked value did the rejecting.
+> **You've succeeded when** your repository has a charter with ranked values, a session entry an agent wrote and you edited, and you can point to one sentence in that entry you had to fix.  That sentence is the reason step 7 exists.  Bonus, and it is the one that matters: if a plan got rejected in step 5, write down which ranked value did the rejecting.
 
 ---
 

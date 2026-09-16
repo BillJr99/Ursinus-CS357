@@ -397,7 +397,7 @@ Remember two things from this Part.  Discovery gives the client names and descri
 
 # Part IIc: The Server as a Trust Boundary (self-paced)
 
-## 2c.  What the Model Never Has to See
+## 2c.  What the Server Keeps Out of the Context Window
 
 Nothing in the seventy-five minute plan assumes this Part, and nothing graded today depends on it.  It is here because the final project and the Tools and MCP lab's OAuth option both put a credentialed service behind a tool server, and the design decisions below decide whether that server protects your data or merely relays it.
 

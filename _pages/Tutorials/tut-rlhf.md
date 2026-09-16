@@ -17,7 +17,7 @@ tags:
 
 ## About This Tutorial
 
-Before language models could be aligned to human values, AI researchers had to solve a more fundamental problem: how do you teach an agent to make good decisions when you cannot write down every rule?  The answer (reinforcement learning) turns out to be both powerful and tricky to harness for the subtlety of human preferences.  In this tutorial we trace the path from **basic RL mechanics → Q-learning intuition → the RLHF training loop → DPO as a simpler alternative → Constitutional AI**.
+Before language models could be aligned to human values, AI researchers had to solve a more fundamental problem: how do you teach an agent to make good decisions when you cannot write down every rule?  The answer, reinforcement learning, turns out to be powerful and also hard to aim at something as subtle as human preferences.  In this tutorial we trace the path from **basic RL mechanics → Q-learning intuition → the RLHF training loop → DPO as a simpler alternative → Constitutional AI**.
 {: .tb-lede}
 
 ## Key Concepts

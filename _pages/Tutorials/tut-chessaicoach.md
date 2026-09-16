@@ -344,7 +344,7 @@ The request bodies are nearly identical; the **auth** and the **reply location**
 
 6. `callTextModel` throws a specific `Error` (e.g. "Enter an Anthropic API key.") before it ever calls `fetch` when the key is missing.  Why check first instead of letting the provider return a 401?
 
-   > *Hint: A local guard gives a clear, instant, actionable message and avoids a pointless network round-trip (and a confusing provider-specific error body).  Validate what you can locally; only spend a network call on things only the server can decide.*
+   > *Hint: A local guard gives a clear, instant message and avoids a pointless network round-trip (and a confusing provider-specific error body).  Validate what you can locally; only spend a network call on things only the server can decide.*
 
 In a response from `POST https://api.anthropic.com/v1/messages`, where is the model's reply text?
 
@@ -456,7 +456,7 @@ function safeJsonParse(text, fallback) {
 }
 ```
 
-Three defenses stacked together make this robust:
+Three defenses stacked together make this reliable:
 
 1.  **Ask precisely**: "Respond ONLY with a JSON object like `{"eval": 0.5}`" and `temperature: 0`.
 2.  **Clean the text**: strip ```` ```json ```` fences the model may add.

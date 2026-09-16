@@ -36,7 +36,7 @@ Make sure these terms are solid before you start.  You will meet all of them bel
 
 ## The Three Paradigms: Chat, Code, and Cowork
 
-Before you install a single tool, it helps to know *which kind* of tool you are installing.  The AI-assistant landscape has settled into three paradigms, and the difference between them is not the model; it is **who runs the actions and where those actions land**.  A useful analogy: a **chat** assistant is a knowledgeable colleague on the phone (they tell you what to do, you do it); a **code** agent is a contractor you handed the keys to *one room* (they do the work, you approve each consequential step); a **cowork** agent is a personal assistant loose in your *whole office* (they open apps, edit documents, and run errands across your desktop).
+Before you install a single tool, it helps to know *which kind* of tool you are installing.  AI assistants have settled into three paradigms, and the difference between them is not the model; it is **who runs the actions and where those actions land**.  A useful analogy: a **chat** assistant is a knowledgeable colleague on the phone (they tell you what to do, you do it); a **code** agent is a contractor you handed the keys to *one room* (they do the work, you approve each consequential step); a **cowork** agent is a personal assistant loose in your *whole office* (they open apps, edit documents, and run errands across your desktop).
 
 | Paradigm | What you do | Who runs the actions | Primarily for | Autonomy | Example tools |
 |----------|-------------|----------------------|---------------|----------|---------------|

@@ -210,7 +210,7 @@ Two students are deploying the same researcher agent.  Their Docker commands loo
 
 The key to reading these commands is understanding the `-v` flag: `-v HOST_PATH:CONTAINER_PATH:FLAGS`.  The host path is what exists on your real machine; the container path is what the agent sees inside Docker; the optional `:ro` flag means read-only (no writes allowed).
 
-The two `docker run` commands below implement the same agent with dramatically different security properties.  Read each one and predict the blast radius before looking at the comparison table.
+Read each of the two `docker run` commands below and predict its blast radius before you look at the comparison table.
 
 **Student A's command:**
 

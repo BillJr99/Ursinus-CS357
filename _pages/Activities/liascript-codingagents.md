@@ -249,7 +249,7 @@ Before you change anything: list the files you intend to modify, in the order yo
 will touch them, with one sentence each on why. Then stop and wait. Do not edit.
 ```
 
-### The trace, and what it is not
+### The trace, and how much to trust it
 
 Many agents also show you their thinking: the deliberation they write out before choosing an action.  Read it.  It is useful, and it is the same `Thought:` line you built by hand in *The Agent Loop*, produced by a tool you did not write.  Read it for what it is, though.  The trace is text the model generated because we asked it to, not a recording of a hidden reasoning process.  It can be perfectly coherent and describe a step the agent then does not take.  It can rationalize an action rather than explain it.  Treat it as the agent's stated intent: useful for spotting a misunderstanding early, worthless as proof that the code is right.  That is why you still read the diff.
 
@@ -784,7 +784,7 @@ A general agent does not have to live on a desktop.  **Hermes** is a general loc
 
 The move to cowork raises the stakes on everything this session taught about review.  A wrong diff in the code setting is caught by tests and reversed by `git`.  A cowork agent that edits the wrong document, emails the wrong person, or deletes the wrong file has no test suite and often no undo.  Your judgment does not disappear as agents leave the codebase; it moves, from "review the diff" to "define the gates of a world that has no `git revert`."  Part IIb is the first of those gates.
 
-16.  In the code paradigm, `git` and the test suite give you a safety net: you can review a diff and roll back a bad change.  When a cowork agent operates across your whole desktop, what plays the role of "the diff" and "the rollback", and where does that leave the human's responsibility?
+16.  In the code setting, `git` and the test suite give you a safety net: you can review a diff and roll back a bad change.  When a cowork agent operates across your whole desktop, what plays the role of "the diff" and "the rollback", and where does that leave the human's responsibility?
 
 [[___ Your answer here ___]]
 
@@ -817,7 +817,7 @@ Docker does not virtualize hardware the way a virtual machine does.  It leans on
 
 Two flags do most of the work.  `--memory 2g` stops an agent stuck in a tool-call loop from eating the host's RAM and taking every other process down with it.  Dropping `CAP_SYS_PTRACE` stops a hijacked agent from attaching a debugger to a process that holds secrets in memory.  Three questions to settle for your own setup, before the next lab:
 
-1.  Which directories does your coding agent genuinely need?  Everything you mount is inside the blast radius, and `-v ~:/host` puts your entire life inside it.
+1.  Which directories does your coding agent need?  Everything you mount is inside the blast radius, and `-v ~:/host` puts your entire life inside it.
 2.  Does your agent need the network at all?  A research agent does.  An agent that only refactors local files does not, and `--network none` is free safety when the answer is no.
 3.  What is the worst single command your current setup would let an agent run without stopping to ask you?  If you cannot answer that, you do not yet know your blast radius.  If you can, that command is your first hook.
 
@@ -831,7 +831,7 @@ Nothing below is assumed by Parts I through IV, and none of it is required to fi
 
 ## A.  A Comparison of Coding Agent Architectures
 
-Three open or widely-used coding agents take different architectural approaches to the same problem: how does an agent read a codebase, plan changes, and execute them safely?  Study the table the way you would compare three contractors before hiring one, and focus on the Safety Model column, because that column determines how much damage a wrong decision can cause.  One contractor starts work immediately with full access to your house.  One writes a detailed blueprint you must approve before picking up a hammer.  One can only use tools you have explicitly handed them.  Each approach has real advantages and real risks.
+Three open or widely-used coding agents take different architectural approaches to the same problem: how does an agent read a codebase, plan changes, and execute them safely?  Study the table the way you would compare three contractors before hiring one, and focus on the Safety Model column, because that column determines how much damage a wrong decision can cause.  One contractor starts work immediately with full access to your house.  One writes a detailed blueprint you must approve before picking up a hammer.  One can only use tools you have explicitly handed them.  Each approach has advantages and risks.
 
 | Agent | Architecture | How It Plans | File Access Method | How It Executes | Safety Model |
 |---|---|---|---|---|---|

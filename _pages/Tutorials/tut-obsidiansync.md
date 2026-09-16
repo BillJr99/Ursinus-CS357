@@ -651,7 +651,7 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
    *You've succeeded when:* `session-log.md` contains your hand-written entry unchanged at the top, and the agent's new entry below it, separated by the correct heading and frontmatter.
 
-4.  **Design the folder structure for a vault that serves as both personal knowledge base and AI project memory simultaneously.**
+4.  **Design the folder structure for a vault that is both a personal knowledge base and an AI project memory.**
 
    *What to do:* Design (on paper or in a Markdown file) the complete folder structure for a vault that you would actually use for the rest of this course and beyond.  The structure must support: (a) human-authored course notes that agents can read; (b) an agent context folder injected at session start; (c) an append-only session memory log; (d) a read-only inbox for source material (PDFs, transcripts); (e) at least one personal project area.  For each folder, write one sentence explaining its purpose and who (human, agent, or both) is expected to write to it.  Submit the annotated folder tree.
 
@@ -671,7 +671,7 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
 ---
 
-## Key Concepts
+## Every Term on This Page, in One Table
 
 | Term | Definition |
 |------|------------|

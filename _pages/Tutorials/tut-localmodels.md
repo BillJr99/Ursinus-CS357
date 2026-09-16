@@ -207,7 +207,7 @@ containing the temperature in Celsius and the current weather conditions.
 Would you like me to proceed with that call?
 ```
 
-This is prose *describing* a function call.  An agent framework trying to parse this for an actionable tool invocation will fail or require brittle regex extraction.
+This is prose *describing* a function call.  An agent framework trying to parse this into an executable tool call will fail, or will need brittle regex extraction.
 
 ---
 

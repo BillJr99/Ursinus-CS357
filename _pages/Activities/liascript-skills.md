@@ -126,7 +126,7 @@ r = requests.post("http://localhost:3000/api/chat/completions",
 reply = r.json()["choices"][0]["message"]   # OpenWebUI nests under choices[0]
 ```
 
-**Now the question that makes this section worth reading.**  Same instructions, same model, three routes.  What is actually different?
+**Now the question that matters.**  Same instructions, same model, three routes.  What is actually different?
 
 Only Route 1 has a **trigger**.  In opencode the `description` decides whether the body is loaded at all, so the instructions are absent from every request that does not match.  In Routes 2 and 3 the body is pasted into the system prompt, which means it is present on *every* turn whether or not it is relevant.  **Routes 2 and 3 do not install a skill; they turn a skill into a system prompt.**  Look back at the table in Section 1: you have moved the instructions from the "Skill" row into the "System prompt" row, and given up the "No" in the always-active column.
 
@@ -572,7 +572,7 @@ Respond to all three levels in your notebook:
 
 # Extension: A Skill Big Enough to Need a Filing System (self-paced)
 
-Optional, and nothing above assumes it.  Today you wrote skills that fit on a page.  This one does not, and the reason it does not is the interesting part.
+Optional, and nothing above assumes it.  Today you wrote skills that fit on a page.  This one does not, and why it cannot is the lesson.
 
 ## What it is, in plain language
 
@@ -616,7 +616,7 @@ ls .skills/small-model-orchestrator/SKILL.md
 
 Check that last path rather than assuming.  `SKILL.md` belongs exactly one folder deep, at `.skills/small-model-orchestrator/SKILL.md`; if your unzip tool added an extra folder named after the archive, move the inner one up a level.  On Windows, rename it to `.zip` first and use `Expand-Archive -Path small-model-orchestrator.zip -DestinationPath .skills`.
 
-It is a set of working habits for an AI model that has been given a long, fiddly job and no supervision.  Think of the model you ran today as a capable assistant with an excellent vocabulary and a genuinely terrible short-term memory.  Left alone for twenty minutes it will do three things, and only the third one is frightening:
+It is a set of working habits for an AI model that has been given a long, fiddly job and no supervision.  Think of the model you ran today as a capable assistant with an excellent vocabulary and a terrible short-term memory.  Left alone for twenty minutes it will do three things, and only the third one is frightening:
 
 | What you see | What is actually going on |
 |---|---|

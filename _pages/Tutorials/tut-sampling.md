@@ -600,7 +600,7 @@ In this part you apply the sampling vocabulary to real design decisions (choosin
 
 > Work through the worked example at home.  It shows the renormalization step that most explanations of top-k and top-p leave out.
 
-### Worked Example: top-k and top-p, including the step everyone skips
+### Worked Example: top-k, top-p, and the Renormalization Step
 
 The multiple-choice question in Part I handed you a finished distribution and asked only which tokens fall inside the nucleus.  That is the easy half.  The half that matters, and the one that silently changes what your agent emits, is **renormalization**: after you throw tokens away, the survivors no longer sum to 1, so you have to divide by what is left.
 
@@ -736,9 +736,9 @@ Nothing above depends on this section.  It is here because the dial you turned i
 
 Work these in sequence.  Each section assumes the one before it, and the code blocks are meant to be executed, not skimmed.
 
-### Why This Matters
+### Why Determinism Is Worth Pinning Down
 
-Most software you have used behaves predictably: the same input always produces the same output.  AI systems built on large language models deliberately do not.  Understanding why, and what that means for how you interpret and rely on AI outputs, is one of the most practically important ideas in this course.
+Most software you have used behaves predictably: the same input always produces the same output.  AI systems built on large language models deliberately do not.  Understanding why, and what that means for how you read and rely on AI output, is what this extension is for.
 
 This extension connects to the sampling and generation material above.  You classify computing systems as deterministic or probabilistic, examine the cognitive trap called *automation bias*, and reason about the specific dangers that arise when people treat probabilistic AI outputs as reliable ground truth.
 

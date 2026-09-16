@@ -228,13 +228,13 @@ Your agent finishes a lab and learns that your course's grader rejects any commi
 
 With the zone structure and contract defined, you are ready to learn the metadata protocol, the low-level bookkeeping detail that is invisible when it works and catastrophic when it doesn't.
 
-# Part III: The Metadata Protocol (the Part Everyone Gets Wrong)
+# Part III: The Metadata Protocol Every Agent Write Must Follow
 
 In this part, you will learn the specific metadata bookkeeping step that every agent commit must include to keep the bidirectional sync working, the single most common failure point when wiring agents to a gitless-synced vault.
 
 ## Why Agent Writes Need One Extra Step
 
-Here is the subtle mechanic that makes bidirectional sync work, and the single most common failure point when wiring agents to a gitless-synced vault.  The plugin tracks every file's sync state in `.obsidian/github-sync-metadata.json`.  When **you** edit in Obsidian, the plugin maintains this file automatically.  But when an **agent** creates or modifies vault files directly through the GitHub API, the plugin has no record of the change, and on the next sync, it may simply not pull the agent's work, or may overwrite it.
+The plugin tracks every file's sync state in `.obsidian/github-sync-metadata.json`.  When **you** edit in Obsidian, the plugin maintains this file automatically.  But when an **agent** creates or modifies vault files directly through the GitHub API, the plugin has no record of the change, and on the next sync, it may simply not pull the agent's work, or may overwrite it.
 
 **The rule: any process that writes vault files outside Obsidian must update the metadata file in the same atomic commit.**
 

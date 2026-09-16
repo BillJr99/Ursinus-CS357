@@ -30,7 +30,7 @@ Every pattern coded by hand up through *Orchestration and Multi-Agent Patterns* 
 
 ---
 
-# Part I: The Medium and the Message
+# Part I: When a Flow Beats Code
 
 In this part, you will discover that every AI pipeline you've coded this semester can be expressed visually as a drag-and-drop flow, and you will learn *when* that matters and *when* it doesn't.
 
@@ -74,7 +74,7 @@ You already know every component.  A Prompt node is your system-prompt string; a
 
 # Part II: Build Sessions
 
-Now that you understand what visual flows are and how they map to code, let's build them, starting simple and adding complexity one layer at a time.
+You now know what visual flows are and how they map to code.  Next you build three of them, starting simple and adding one layer at a time.
 
 ## Build 1 - Chat with a Persona
 

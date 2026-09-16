@@ -19,7 +19,7 @@ Agentic tools have collapsed the distance between an idea and a working artifact
 
 ## Key Concepts
 
-Before diving in, keep this reference table handy.  Every term below appears in today's models and exercises.
+Keep this reference table handy.  Every term below appears in today's models and exercises.
 
 | Term | Plain-English Definition | Where You'll Meet It |
 |------|--------------------------|--------------------------|
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
 Hand the agent *this file* and the request "make these pass without modifying the tests," and you have converted a vague wish into a checkable contract, with the no-modification clause closing the most obvious hack.  That clause should sound familiar: it is your rubric-patching lab, transplanted.
 
-## 3.  Where Agents Genuinely Excel for Engineers
+## 3.  Where Agents Excel for Engineers
 
 Steer the horsepower toward its best uses: generating test cases you would not have bothered writing (edge cases, property-based sketches, regression tests from bug reports); mechanical refactors under test protection; reading unfamiliar codebases and drafting the documentation nobody wrote; and first drafts of CI configuration, which Part IV shows.  The common thread is work where verification is cheap relative to generation, which is precisely where the new economics pay you instead of ambushing you.
 

@@ -57,7 +57,7 @@ VRAM is a hard limit.  The entire model must fit in GPU VRAM (or be offloaded ac
 
 Plus overhead for the KV cache (key-value cache for attention), activations, and runtime buffers, the actual requirement is typically 10-20% higher than the weight-only calculation.  That KV-cache overhead is not a fixed 10-20%; it grows with every concurrent request and every token of context, and it is where most serving inefficiency hides.  For *how* the non-weight VRAM is actually managed (fragmentation, PagedAttention, and the tuning knobs that decide how many users a card can serve), see Part IV of the companion activity *Serving LLMs in Production* ([Serving LLMs in Production]({{ site.baseurl }}/Tutorials/LLMServing)).
 
-### Hardware Landscape
+### Which Hardware Runs Which Model Size
 
 Use the table below to determine which hardware tier can run which model sizes.  The "Models That Fit at FP16" column assumes no quantization; with Q4 quantization, each model fits on hardware with roughly one-quarter the VRAM listed.
 

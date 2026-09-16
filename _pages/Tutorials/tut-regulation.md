@@ -13,7 +13,7 @@ tags:
 ---
 ## About This Tutorial
 
-Building an agent that works is only half the challenge.  Deploying it legally and responsibly requires understanding the regulatory landscape that governs where and how AI can be used.  This tutorial covers the three most influential frameworks you will encounter: the **EU AI Act** (the world's first comprehensive AI law), the **NIST AI Risk Management Framework** (the leading voluntary standard in the United States), and **sector-specific rules** in healthcare, finance, education, and law enforcement.  By the end of this tutorial, you will be able to classify an agent system by risk tier, apply the NIST RMF functions to a real project, and identify the compliance obligations your own course agents may carry.
+Building an agent that works is only half the challenge.  Deploying it legally and responsibly requires understanding the rules that govern where and how AI can be used.  This tutorial covers the three most influential frameworks you will encounter: the **EU AI Act** (the world's first comprehensive AI law), the **NIST AI Risk Management Framework** (the leading voluntary standard in the United States), and **sector-specific rules** in healthcare, finance, education, and law enforcement.  By the end of this tutorial, you will be able to classify an agent system by risk tier, apply the NIST RMF functions to a real project, and identify the compliance obligations your own course agents may carry.
 {: .tb-lede}
 
 ## Key Concepts

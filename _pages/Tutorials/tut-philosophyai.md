@@ -213,7 +213,7 @@ In this final part, you will apply the philosophical tools from Parts I-III to y
 
 *Technical:* In your course project, what design choices did you make about how the system presents itself: its tone, its first-person or third-person framing, whether it acknowledges uncertainty, whether it discloses its nature?  Now that you know about the ELIZA effect, would you change any of those choices?
 
-*Societal:* The responsibility map you drew for your project has clear gaps: parties who bear some moral responsibility but no formal legal accountability.  Is this a feature or a bug of the current AI regulatory landscape?  What governance change would close the most important gap?
+*Societal:* The responsibility map you drew for your project has clear gaps: parties who bear some moral responsibility but no formal legal accountability.  Is this a feature or a bug of the way AI is regulated today?  What governance change would close the most important gap?
 
 ---
 
