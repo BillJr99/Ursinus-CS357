@@ -14,7 +14,7 @@ tags:
 ---
 ## About This Tutorial
 
-Coding agents can now write working programs from a few sentences of English, but "working" and "correct" are not the same thing.  Researcher Andrej Karpathy coined the term **vibe coding** for the practice of giving an agent full latitude to implement a feature while you focus on the specification and the review.  We move from **the spectrum of AI assistance → specification-first development → rigorous diff review → the red-green-refactor-agent repair cycle**.
+Coding agents can now write working programs from a few sentences of English, but "working" and "correct" are not the same thing.  Researcher Andrej Karpathy coined the term **vibe coding** for the practice of giving an agent full latitude to implement a feature while you focus on the specification and the review.  We move from **the spectrum of AI assistance → specification-first development → reviewing what the agent produced → the red-green-refactor-agent repair cycle**.
 {: .tb-lede}
 
 ## Key Concepts
@@ -24,7 +24,7 @@ Coding agents can now write working programs from a few sentences of English, bu
 | **Vibe Coding** | Describing the desired outcome to a coding agent in natural language and letting it produce the full implementation, then reviewing the result rather than writing code line-by-line. | "Implement `search_memory` to pass these five tests", then reviewing what the agent produces |
 | **Specification-First Development** | Writing a clear natural-language spec, acceptance criteria, and failing tests *before* any code exists, so there is an objective standard the implementation must meet. | Writing five `pytest` cases for `search_memory` before prompting the agent to implement it |
 | **Test-Driven Development (TDD)** | A discipline in which every new behavior is defined by a failing test first; code is written to make the test pass; then the code is refactored. Often summarized as **red -> green -> refactor**. | A test that asserts `len(results) <= k` fails before the agent writes any code; it passes after |
-| **Diff Review** | Examining the exact line-by-line changes an agent produced (insertions and deletions) rather than reading the final file from scratch, so you catch what the agent *changed* rather than what it *left alone*. | Spotting `eval(query)` in a 30-line diff that would otherwise be easy to miss |
+| **Acceptance Review** | Reading the implementation an agent produced against the specification it was given, so you catch behaviors the tests never sampled. | Spotting `eval(query)` in a 35-line implementation that passes every test |
 | **Red-Green-Refactor** | The three TDD phases: **Red**, write a test that fails because the code does not yet exist; **Green**, write the minimum code that makes the test pass; **Refactor**, clean up the code without breaking the test. | A `pytest` run showing `FAILED` (red), then the agent's code making it `PASSED` (green) |
 | **Agent Supervision Level** | How closely a human monitors and reviews the agent's output, ranging from autocomplete (every token supervised) to pair (every file reviewed) to vibe (only the final result reviewed). | Choosing "pair" for a security-sensitive module vs. "vibe" for a low-stakes utility script |
 {: .tb-full}
@@ -37,7 +37,7 @@ In this part, you will map the range of ways AI can assist with coding (from aut
 
 ## 1.  Three Supervision Levels
 
-**Why this matters:** Handing an agent a task without thinking about supervision level is like handing a contractor your house keys and leaving for a month: maybe fine, maybe catastrophic, depending on how well you specified the job and how much you trust the contractor.  Karpathy makes the point that humans are better at writing specs than at reviewing arbitrary code, while models are better at writing code than at writing specs.  This suggests a division of labor: you own the specification, the agent owns the implementation, and the diff is the handoff artifact.
+**Why this matters:** Handing an agent a task without thinking about supervision level is like handing a contractor your house keys and leaving for a month: maybe fine, maybe catastrophic, depending on how well you specified the job and how much you trust the contractor.  Karpathy makes the point that humans are better at writing specs than at reviewing arbitrary code, while models are better at writing code than at writing specs.  This suggests a division of labor: you own the specification, the agent owns the implementation, and the specification is what the result is handed back against.
 
 **The three levels exist on a continuum**, and the right choice depends on the stakes, the clarity of the spec, and how much you trust the existing test suite.
 
@@ -45,20 +45,20 @@ In this part, you will map the range of ways AI can assist with coding (from aut
 |-------------------|-------------|-----------------|------------|------------------------|
 | **Autocomplete** | Agent suggests the next token, line, or block; human accepts or rejects inline | Boilerplate, well-understood APIs, single-function completions | Low | Every token as it is accepted |
 | **Pair** | Human describes a task; agent produces a full file or function; human reads every line before accepting | New features in production code, security-sensitive modules | Medium | Every changed file, every line |
-| **Vibe** | Human writes a spec and tests; agent implements the whole feature; human reviews only the diff | Well-tested utility code, prototypes, features with complete acceptance criteria | High (without tests) / Medium (with tests) | The diff against the spec and the test results |
+| **Vibe** | Human writes a spec and tests; agent implements the whole feature; human reviews the result against the spec | Well-tested utility code, prototypes, features with complete acceptance criteria | High (without tests) / Medium (with tests) | The spec, the test results, and the behavior when run |
 {: .tb-full}
 
 ---
 
-## Supervision and the Diff
+## Supervision and What You Accept
 
-At vibe supervision level, the agent has autonomy over *how* to implement; the human retains authority over *what* to accept by reviewing the diff.
+At vibe supervision level, the agent has autonomy over *how* to implement; the human retains authority over *what* to accept, and exercises it by reading the implementation against the specification that authorized it.
 
 ### Questions to Work Through
 
 1.  At autocomplete supervision level, what is the primary artifact the human reviews before accepting work?  At vibe level?
 
-   > *Hint: At autocomplete, you see each suggestion as it appears in your editor.  At vibe, you see the final output, but what specific representation of "what changed" is most useful for a human reviewer?*
+   > *Hint: At autocomplete, you see each suggestion as it appears in your editor.  At vibe, the code is finished before you look at it, so what do you have to compare it against for your approval to mean anything?*
 
 2.  Karpathy's claim is that LLMs are better at writing code than writing specs, and humans are better at writing specs than reviewing arbitrary code.  If that is true, what does it imply about where human effort should be concentrated in the vibe coding workflow?
 
@@ -68,19 +68,19 @@ At vibe supervision level, the agent has autonomy over *how* to implement; the h
 
    > *Hint: Tests check the behaviors you thought to test.  What categories of security behavior might a developer forget to write tests for?  Name at least two.*
 
-> "Vibe coding means you do not have to understand what the agent did."  At vibe supervision level the agent writes the code, but *you* are responsible for every line that ships.  The diff review and the test suite are not optional extras; they are what makes the "let me cook" approach safe rather than reckless.
+"Vibe coding means you do not have to understand what the agent did."  At vibe supervision level the agent writes the code, but *you* are responsible for every line that ships.  The specification and the test suite are not optional extras; they are what makes the "let me cook" approach safe rather than reckless.
 {: .tb-pitfall data-title="Common Misconception"}
 
-At which supervision level is the diff the primary artifact you review before accepting the agent's work?
+At vibe supervision level, what has the human delegated, and what have they kept?
 
-- Autocomplete, you review token-by-token suggestions in your editor
-- Pair, you read every changed line in every file the agent touched
-- Vibe, you have given the agent autonomy over implementation and now inspect what changed
-- All three levels equally, the diff is always the primary review artifact
+- Delegated the specification, kept the implementation
+- Delegated the implementation, kept the specification and the standard the result is accepted against
+- Delegated both, since the test suite decides on its own
+- Delegated neither, since the human still reads every line before it ships
 
 <details markdown="1"><summary>Answer</summary>
 
-Vibe, you have given the agent autonomy over implementation and now inspect what changed
+Delegated the implementation, kept the specification and the standard the result is accepted against
 
 </details>
 
@@ -193,13 +193,13 @@ The test runs but fails because the implementation does not yet exist or is inco
 
 # Part III: Synthesis and Practice
 
-In this part, you will read a realistic AI-generated diff with a planted bug, practice the diff-review discipline that catches subtle errors, and apply the full spec -> generate -> review -> test loop on a problem of your own.
+In this part, you will read a realistic AI-generated implementation with a planted bug, practice the review discipline that catches subtle errors, and apply the full spec -> generate -> review -> test loop on a problem of your own.
 
-## 3.  Reviewing AI-Generated Diffs
+## 3.  Reviewing What the Agent Produced
 
-**Why this matters:** When you ask a coding agent to "implement `search_memory` to pass these tests," the agent may produce code that passes every test and still be dangerous.  Tests are not a complete specification of correct behavior; they are a sample of behaviors you thought to check.  Diff review is how you find the behaviors you forgot to test.
+**Why this matters:** When you ask a coding agent to "implement `search_memory` to pass these tests," the agent may produce code that passes every test and still be dangerous.  Tests are not a complete specification of correct behavior; they are a sample of behaviors you thought to check.  Reading the implementation against the spec is how you find the behaviors you forgot to test.
 
-**What to look for in a diff review:**
+**What to look for, reading the implementation against the spec:**
 
 1.  **Spec fidelity:** Does the implementation match the spec, or does it satisfy only the letter of the tests?
 2.  **Hidden assumptions:** Does the code assume sorted input, single-threaded access, ASCII-only text, or other preconditions not stated in the spec?
@@ -208,7 +208,7 @@ In this part, you will read a realistic AI-generated diff with a planted bug, pr
 
 ---
 
-## A Planted-Bug Diff
+## A Planted Bug
 
 Below is a 35-line implementation of `search_memory` that an agent might plausibly produce.  It passes all five tests above.  It contains **three deliberate issues**.  Read it carefully before answering the questions.
 
@@ -286,19 +286,19 @@ def search_memory(query, k):
 
     > *Hint: Bug 1: what input to `search_memory` would trigger code execution if `eval()` is present? Bug 2: how would you simulate an embedding failure and check that an exception (not an empty list) is raised? Bug 3: what corpus size would make the full-scan computation visible as a performance problem?*
 
-> "If all tests pass, the code is correct."  Tests can only verify the behaviors you thought to test.  A function can pass 100 tests and still contain a security vulnerability, a resource leak, or an incorrect behavior on an input the tests did not cover.  Passing tests are necessary but not sufficient for correctness, which is precisely why diff review exists alongside testing.
+> "If all tests pass, the code is correct."  Tests can only verify the behaviors you thought to test.  A function can pass 100 tests and still contain a security vulnerability, a resource leak, or an incorrect behavior on an input the tests did not cover.  Passing tests are necessary but not sufficient for correctness, which is precisely why reading the implementation against the spec exists alongside testing.
 {: .tb-pitfall data-title="Common Misconception"}
 
-A coding agent produces an implementation that passes all five acceptance-criterion tests.  A diff reviewer then notices `eval(query)` on line 4.  What does this finding demonstrate?
+A coding agent produces an implementation that passes all five acceptance-criterion tests.  A reviewer then notices `eval(query)` on line 4.  What does this finding demonstrate?
 
 - The tests were poorly written and should be discarded
 - The agent made a mistake that the test suite should have prevented automatically
-- Tests verify sampled behaviors; diff review catches behaviors outside the test's scope, such as security properties
+- Tests verify sampled behaviors; reading the implementation against the spec catches behaviors outside the test's scope, such as security properties
 - The reviewer is being overly cautious; if all tests pass, the code is safe to ship
 
 <details markdown="1"><summary>Answer</summary>
 
-Tests verify sampled behaviors; diff review catches behaviors outside the test's scope, such as security properties
+Tests verify sampled behaviors; reading the implementation against the spec catches behaviors outside the test's scope, such as security properties
 
 </details>
 
@@ -334,7 +334,7 @@ When a human wrote every line, code review, tests, and architecture reviews were
 
 - **Tests before code (TDD), and *secret* tests.**  Why is a test *written before* the agent generates code a stronger quality signal than one written after?  Now push further: why might you keep a set of **held-out ("secret") acceptance tests the agent never sees**, and what specifically does that defend against that agent-visible tests do not?  (Connect to the "missing tests" and security-property test exercises above, and to held-out evaluation in [Testing Agents]({{ site.baseurl }}/Tutorials/TestingAgents).)
 - **Charter-first architecting.**  Fixing the architecture, invariants, and interfaces *before* generation constrains what the agent is even able to build.  How does deciding the design up front reduce the blast radius of an AI error, compared to letting the agent invent structure as it goes?  (Connect to the charter in [Governing Coding Agents]({{ site.baseurl }}/Tutorials/AgentGovernance).)
-- **Verification vs. trust, and accountability.**  You will approve a diff you did not fully read.  What is the minimum you must verify yourself for that approval to be responsible, and if a defect ships anyway, who is accountable: the person who wrote the spec, the agent, the reviewer who approved, or the team that deployed?
+- **Verification vs. trust, and accountability.**  You will approve work you did not fully read.  What is the minimum you must verify yourself for that approval to be responsible, and if a defect ships anyway, who is accountable: the person who wrote the spec, the agent, the reviewer who approved, or the team that deployed?
 
 **Deliverable.**  Produce a short "quality checklist" (5-7 items) your team would actually apply to an AI-generated pull request, and mark each item as a gate that runs *before* generation, *during* review, or *after* merge.
 
@@ -344,11 +344,11 @@ When a human wrote every line, code review, tests, and architecture reviews were
 
 ## Reflection Prompt
 
-*Personal:* Looking back at the planted-bug diff in Model 3, did you spot all three issues before reading the questions?  Be honest.  What made the dangerous ones easy or hard to see?
+*Personal:* Looking back at the planted bug in Model 3, did you spot all three issues before reading the questions?  Be honest.  What made the dangerous ones easy or hard to see?
 
 *Technical:* In your notebook: how does TDD change the *cost* of an AI error?  If the agent introduces a bug that violates an acceptance criterion, at what point in the workflow is that bug caught, and how does that compare to a workflow with no pre-written tests?
 
-*Societal:* Suppose a team uses vibe coding to ship a student-facing grade portal and a bug causes incorrect grades to display.  Who is responsible: the developer who wrote the spec, the agent that wrote the code, the reviewer who approved the diff, or the institution that deployed it?  Argue for one answer and identify the weakest link in the chain.
+*Societal:* Suppose a team uses vibe coding to ship a student-facing grade portal and a bug causes incorrect grades to display.  Who is responsible: the developer who wrote the spec, the agent that wrote the code, the reviewer who approved the result, or the institution that deployed it?  Argue for one answer and identify the weakest link in the chain.
 
 ---
 
