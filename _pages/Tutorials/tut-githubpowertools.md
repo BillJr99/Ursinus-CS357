@@ -15,7 +15,7 @@ tags:
 
 ## About This Tutorial
 
-This tutorial introduces five URL **domain-swap tricks** that unlock new superpowers when working with GitHub repositories.  We move from **the problem of feeding code to AI → domain-swap tools that solve it → grounding agents in real code → navigating unfamiliar codebases in minutes**.
+This tutorial introduces five URL **domain-swap tricks** that convert any public GitHub repository into a form you or an agent can work with directly, from flattened text to a live MCP server.  We move from **the problem of feeding code to AI → domain-swap tools that solve it → grounding agents in real code → navigating unfamiliar codebases in minutes**.
 {: .tb-lede}
 
 ## Key Concepts
@@ -34,7 +34,7 @@ This tutorial introduces five URL **domain-swap tricks** that unlock new superpo
 
 # Part I: Swapping the Domain in a GitHub URL
 
-In this part, you will learn how swapping a single domain in a GitHub URL unlocks five different power tools (from in-browser editors to instant MCP servers) turning any public repo into an AI-ready resource without cloning anything.
+In this part, you will learn how swapping a single domain in a GitHub URL gives you access to five specialized tools, from in-browser editors to live MCP servers, each of which makes a public repository usable by an AI agent without cloning it.
 
 ## 1.  Domain Swapping
 

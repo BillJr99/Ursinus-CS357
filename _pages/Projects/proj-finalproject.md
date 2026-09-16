@@ -500,7 +500,7 @@ Add the automated check appropriate to your artifact.
 
 ### Stage 4: Publish
 
-Before publishing, conduct the pre-publication audit.  It is not only a checklist item; it is evidence of the professional discipline the course requires.
+Before publishing, conduct the pre-publication audit.  Publication is irreversible, so this audit is the last point at which you can confirm that no secret, credential, or private file leaves your machine inside the artifact.
 
 > **Do this.**
 > 1. Audit the package before it leaves your machine, and save the output in your evidence portfolio:
