@@ -338,7 +338,7 @@ When a human wrote every line, code review, tests, and architecture reviews were
 
 **Deliverable.**  Produce a short "quality checklist" (5-7 items) your team would actually apply to an AI-generated pull request, and mark each item as a gate that runs *before* generation, *during* review, or *after* merge.
 
-> *Hint: The strongest regimes combine all three levers rather than relying on one.  A held-out test the agent cannot see is uncheatable; a charter written first bounds what can go wrong; and a human who verifies the security-critical and irreversible paths (even without reading every line) catches what tests miss.  Ask which lever catches which category of failure.*
+> *Hint: Each lever fails differently, so ask what each one actually catches.  A test the agent never sees cannot be written to pass.  A charter fixed in advance limits what the agent is able to build at all.  A reviewer who reads only the security-critical and irreversible paths will still catch failures no test was written for.  Which category of failure does each lever miss?*
 
 ---
 
