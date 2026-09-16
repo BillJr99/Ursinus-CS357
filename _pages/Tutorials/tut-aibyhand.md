@@ -669,33 +669,33 @@ Recap: a forward pass is a trace table, and every cell is a multiply, an add, or
 
 1.  **Encode two words with the learned merge table.**
 
-   *What to do:* Using the merge table `[es, est, est</w>]` from Part 1, encode `slowest` and `widest`, showing the sequence after each merge as in the `lowest` table.
+    *What to do:* Using the merge table `[es, est, est</w>]` from Part 1, encode `slowest` and `widest`, showing the sequence after each merge as in the `lowest` table.
 
-   *You've succeeded when:* `slowest` ends as five tokens (`s` `l` `o` `w` `est</w>`) and `widest` ends as four (`w` `i` `d` `est</w>`), and you can say why the prefix of each word is spelled letter by letter while the suffix is one token.
+    *You've succeeded when:* `slowest` ends as five tokens (`s` `l` `o` `w` `est</w>`) and `widest` ends as four (`w` `i` `d` `est</w>`), and you can say why the prefix of each word is spelled letter by letter while the suffix is one token.
 
 2.  **Cosine on a new pair.**
 
-   *What to do:* Compute $$\cos(\mathbf{u}, \mathbf{w})$$ for $$\mathbf{u} = (3, 4)$$ and $$\mathbf{w} = (4, 3)$$ by hand, showing the dot product, both norms, and the ratio.  Then verify it with the `cosine_sim` function from Part 2.
+    *What to do:* Compute $$\cos(\mathbf{u}, \mathbf{w})$$ for $$\mathbf{u} = (3, 4)$$ and $$\mathbf{w} = (4, 3)$$ by hand, showing the dot product, both norms, and the ratio.  Then verify it with the `cosine_sim` function from Part 2.
 
-   *You've succeeded when:* Your paper says $$24 / (5 \times 5) = 0.960$$ and Python prints `0.960`.
+    *You've succeeded when:* Your paper says $$24 / (5 \times 5) = 0.960$$ and Python prints `0.960`.
 
 3.  **Softmax and a shift.**
 
-   *What to do:* Compute the softmax of logits $$(3, 1, 0)$$ at $$T = 1$$ and at $$T = 0.5$$, one step per line, then compare your table to the $$(4, 2, 1)$$ table in Part 4.
+    *What to do:* Compute the softmax of logits $$(3, 1, 0)$$ at $$T = 1$$ and at $$T = 0.5$$, one step per line, then compare your table to the $$(4, 2, 1)$$ table in Part 4.
 
-   *You've succeeded when:* Both of your rows match the Part 4 rows exactly, and you can explain in one sentence why subtracting the same constant from every logit leaves the probabilities unchanged (the same fact that lets the sweep code subtract `max_l`).
+    *You've succeeded when:* Both of your rows match the Part 4 rows exactly, and you can explain in one sentence why subtracting the same constant from every logit leaves the probabilities unchanged (the same fact that lets the sweep code subtract `max_l`).
 
 4.  **Attention for a different token.**
 
-   *What to do:* Using the table in Part 3, compute the new representation of `loan` (query $$(0, 1)$$) with all four steps shown, then confirm it by changing the query in the demo code.
+    *What to do:* Using the table in Part 3, compute the new representation of `loan` (query $$(0, 1)$$) with all four steps shown, then confirm it by changing the query in the demo code.
 
-   *You've succeeded when:* Your scaled scores are $$[0, 0.71, 0.71]$$, your weights are about $$[0.20, 0.40, 0.40]$$, and the new vector is $$(1.00, 1.00)$$ to two decimals.
+    *You've succeeded when:* Your scaled scores are $$[0, 0.71, 0.71]$$, your weights are about $$[0.20, 0.40, 0.40]$$, and the new vector is $$(1.00, 1.00)$$ to two decimals.
 
 5.  **The printable worksheet.**
 
-   *What to do:* Print the [Neural Network by Hand worksheet (PDF)]({{ site.baseurl }}/files/activity-neuralnets/nn_by_hand_quadratic_full.pdf) and work its forward pass and training step on paper.  Then adapt the `forward` function from Part 5 to check every value.
+    *What to do:* Print the [Neural Network by Hand worksheet (PDF)]({{ site.baseurl }}/files/activity-neuralnets/nn_by_hand_quadratic_full.pdf) and work its forward pass and training step on paper.  Then adapt the `forward` function from Part 5 to check every value.
 
-   *You've succeeded when:* Every number on your worksheet matches the code to two decimal places, and you can name the one step in the worksheet that Part 5 does not include.
+    *You've succeeded when:* Every number on your worksheet matches the code to two decimal places, and you can name the one step in the worksheet that Part 5 does not include.
 
 ---
 

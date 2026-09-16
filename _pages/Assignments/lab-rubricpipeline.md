@@ -1100,9 +1100,9 @@ This path satisfies the harness discipline by construction, because every measur
 > 2. Weaken one criterion's rubric text in the copy: for example, delete the observable PASS line and leave only the criterion name.
 > 3. Re-run and keep the output:
 >
-> ```bash
-> npx promptfoo@latest eval -c promptfooconfig-regressed.yaml --output run_regressed.json
-> ```
+>    ```bash
+>    npx promptfoo@latest eval -c promptfooconfig-regressed.yaml --output run_regressed.json
+>    ```
 >
 > 4. Compare `run_baseline.json` and `run_regressed.json`.  The viewer's side-by-side, a text diff, or a hand-built table of the 60 verdicts all work.  Identify which items' verdicts changed and in which direction.
 > 5. Write two or three sentences in your readme interpreting the result, then revert the change and confirm the baseline verdicts recover.

@@ -79,15 +79,15 @@ For each scenario, decide which of the three files the assistant should be obeyi
 
 1.  Resolve each scenario: name the governing file *and* the specific rule violated or invoked.  Scenarios 2 and 4 violate different rules with the same underlying philosophy; what is it?
 
-   > *Hint: For 2, re-read the linter's write disciplines.  For 4, the output-discipline rule.  Both rules force a small, inspectable step before a large, expensive one.*
+    > *Hint: For 2, re-read the linter's write disciplines.  For 4, the output-discipline rule.  Both rules force a small, inspectable step before a large, expensive one.*
 
 2.  The memory-to-vault sync rule orders operations: file first, *then* live-store deletion or compression.  What failure does the opposite order create, and why is it unrecoverable in a way most assistant failures are not?
 
-   > *Hint: Every other artifact in this system is versioned in Git.  What is the live memory store versioned in?*
+    > *Hint: Every other artifact in this system is versioned in Git.  What is the live memory store versioned in?*
 
 3.  The standing prompt's "assess before acting" habit and the escalation protocol's "do not recover autonomously" rule both make the assistant *less* autonomous.  Given that the entire point of the system is delegation, argue why these rules increase rather than decrease the total work safely delegated.
 
-   > *Hint: Think about what one uninvited irreversible action does to the owner's willingness to delegate the next hundred reversible ones.  Trust is the budget; what spends it?*
+    > *Hint: Think about what one uninvited irreversible action does to the owner's willingness to delegate the next hundred reversible ones.  Trust is the budget; what spends it?*
 
 > "The system prompt is where you make the assistant smart."  Nothing in the standing prompt improves the model's intelligence.  Every section either *routes* intelligence (read the vault, lead with the outcome) or *bounds* it (gates, escalation).  Capability comes from the model and its tools; a production standing prompt is how capability becomes trustworthy.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -158,15 +158,15 @@ Classify each action into **Autorun**, **Queue**, or **Forbidden** under the pol
 
 1.  Classify all ten.  Two of them are Forbidden, and the reason they are Forbidden rather than merely Queued is different for each.  Explain the two distinct principles.
 
-   > *Hint: One violates "never persist secrets outside the secret store"; no approval can make it safe, because the danger is the artifact existing at all.  The other violates a data-boundary rule about regulated personal data; whose consent is missing, and can the owner supply it?*
+    > *Hint: One violates "never persist secrets outside the secret store"; no approval can make it safe, because the danger is the artifact existing at all.  The other violates a data-boundary rule about regulated personal data; whose consent is missing, and can the owner supply it?*
 
 2.  "Open a draft PR" is Autorun, but "merge" is Queue, even though the merge was of the assistant's own work and CI was green.  What distinction between the two actions justifies the different lanes?  State it as a general rule you could apply to a brand-new action type.
 
-   > *Hint: Which of the two actions is trivially reversible?  Which one changes what other people and systems consume?*
+    > *Hint: Which of the two actions is trivially reversible?  Which one changes what other people and systems consume?*
 
 3.  The urgent domain renewal (#7) is $12 and expires *tomorrow*; queueing it risks losing the domain.  Does the policy still make the right call?  Design one mechanism that preserves the gate while handling real urgency, without creating an "urgent" loophole an agent could learn to invoke.
 
-   > *Hint: The gate governs who decides, not how fast.  What properties would an escalation channel need, and who defines "urgent," the policy or the agent?*
+    > *Hint: The gate governs who decides, not how fast.  What properties would an escalation channel need, and who defines "urgent," the policy or the agent?*
 
 > "Approval gates don't scale; you end up approving hundreds of things a day."  In the production system the opposite happened, because the *classification* did the scaling: routine actions were deliberately moved into Autorun **with an audit row**, so the queue stayed short enough that each item got real attention.  The failure mode to fear is not too many gates; it is gates so numerous and noisy that approval becomes a reflex.  (You saw this as *approval fatigue* in the Human-in-the-Loop module.)
 {: .tb-pitfall data-title="Common Misconception"}
@@ -208,15 +208,15 @@ And because an always-on host is sometimes off, the routines carry a **catch-up 
 
 1.  Why implement the morning brief as a deterministic script rather than an LLM prompt ("summarize my day"), given that the assistant has a perfectly good model available?  Name three concrete advantages, at least one involving failure behavior.
 
-   > *Hint: Consider cost, reproducibility ("why did Tuesday's brief omit the deadline?"), testing, and what a hallucination in a trusted daily artifact does that a hallucination in a chat answer does not.*
+    > *Hint: Consider cost, reproducibility ("why did Tuesday's brief omit the deadline?"), testing, and what a hallucination in a trusted daily artifact does that a hallucination in a chat answer does not.*
 
 2.  The watchdogs are silent on success.  Connect this to alarm fatigue (the operational cousin of approval fatigue): what happens to the *information content* of a notification channel as its false-positive and no-op rate rises?
 
-   > *Hint: If the assistant messages you 40 times a day saying "all fine," what is your reaction time to message 41, which isn't?*
+    > *Hint: If the assistant messages you 40 times a day saying "all fine," what is your reaction time to message 41, which isn't?*
 
 3.  The catch-up policy runs a missed job *exactly once*, not once per missed interval.  Construct a concrete example where replaying every missed interval would be actively harmful, and one where a single catch-up loses something.  How would you decide a job's policy?
 
-   > *Hint: Think about a deadline-radar job missed for three days versus a "log a daily metric snapshot" job missed for three days.  Which output is cumulative and which is a view of "now"?*
+    > *Hint: Think about a deadline-radar job missed for three days versus a "log a daily metric snapshot" job missed for three days.  Which output is cumulative and which is a view of "now"?*
 
 The production system's file-store integration reads *metadata only* in routine digests.  The best justification is:
 
@@ -266,15 +266,15 @@ An assistant using the harness was asked to "clean up the vault's project pages:
 
 1.  Find *three* distinct harness violations in the closing message.  For each, name the harness element that should have caught it.
 
-   > *Hint: What evidence is shown for criterion (a)?  Who judged that the work "is in order"?  And what happened to the frozen criteria when the assistant improved "the spirit" of (b)?*
+    > *Hint: What evidence is shown for criterion (a)?  Who judged that the work "is in order"?  And what happened to the frozen criteria when the assistant improved "the spirit" of (b)?*
 
 2.  The vocabulary standardization might well be an improvement.  What is the harness-compliant way to handle a mid-task better idea, and why does the harness refuse to let even *good* ideas bypass it?
 
-   > *Hint: The freeze exists because a weak model cannot reliably distinguish "improving the criteria" from "drifting away from the request."  Where do good mid-task ideas go instead; recall the parking-lot pattern from the companion activity?*
+    > *Hint: The freeze exists because a weak model cannot reliably distinguish "improving the criteria" from "drifting away from the request."  Where do good mid-task ideas go instead; recall the parking-lot pattern from the companion activity?*
 
 3.  The blind cross-checker receives only the frozen criteria and the artifact, deliberately *not* the transcript.  What class of error does withholding the transcript prevent the verifier from inheriting?
 
-   > *Hint: Transcripts are persuasive.  If the executor's narration says "I verified all links," what does a verifier reading that narration tend to do, and what does a verifier who can only run the linter itself do?*
+    > *Hint: Transcripts are persuasive.  If the executor's narration says "I verified all links," what does a verifier reading that narration tend to do, and what does a verifier who can only run the linter itself do?*
 
 Under the self-improvement guardrail, the assistant may add a new skill or durable memory only when:
 
@@ -311,11 +311,11 @@ The through-line of the whole case study: intelligence is cheap and replaceable;
 
 1.  The cutover checklist requires "survives a host reboot" *and* "survives a service restart" as separate checks before an old capability owner is disabled.  Why are these distinct failure modes, and what specifically breaks if you test only the restart?
 
-   > *Hint: What launches a service after a reboot?  Is that mechanism exercised by restarting the service by hand?*
+    > *Hint: What launches a service after a reboot?  Is that mechanism exercised by restarting the service by hand?*
 
 2.  The reconstruction manifest makes the skill layer rebuildable "explicitly without copying secrets."  Explain how the names-never-values rule is what makes it *safe for this manifest to exist at all*, and what the manifest would become without it.
 
-   > *Hint: A complete, well-organized inventory of a system is exactly what an attacker wants.  What turns a treasure map into a harmless index?*
+    > *Hint: A complete, well-organized inventory of a system is exactly what an attacker wants.  What turns a treasure map into a harmless index?*
 
 The service-ownership table exists primarily to prevent:
 
@@ -340,21 +340,21 @@ Copy-paste starting points (the vault contract, standing prompt, memory file, an
 
 1.  *Write your own gates.*
 
-   - *What to do:* Take the `SYSTEMPROMPT.md` template and rewrite §9 for **your** life: identify every irreversible action an assistant with your accounts could take (think: messages, money, grades, publishing, deletion), sort each into a gate category, and write the confirmation-display rule for the two you consider most dangerous.  Then classify 10 actions you'd actually delegate into Autorun / Queue / Forbidden.
-   - *Starter hint:* Start from your sent-mail folder, bank statement, and GitHub activity for the past week; everything there was an irreversible action *you* took.  Which would you let hermes take?
-   - *You've succeeded when:* A teammate can take your policy and correctly classify three actions you didn't list, and at least one Forbidden item is something no approval should ever make safe.
+    - *What to do:* Take the `SYSTEMPROMPT.md` template and rewrite §9 for **your** life: identify every irreversible action an assistant with your accounts could take (think: messages, money, grades, publishing, deletion), sort each into a gate category, and write the confirmation-display rule for the two you consider most dangerous.  Then classify 10 actions you'd actually delegate into Autorun / Queue / Forbidden.
+    - *Starter hint:* Start from your sent-mail folder, bank statement, and GitHub activity for the past week; everything there was an irreversible action *you* took.  Which would you let hermes take?
+    - *You've succeeded when:* A teammate can take your policy and correctly classify three actions you didn't list, and at least one Forbidden item is something no approval should ever make safe.
 
 2.  *Build one no-agent routine.*
 
-   - *What to do:* Write a deterministic script (no LLM call) that produces your own "morning brief" from at least two real sources you can read programmatically (a calendar export, a task list file, your vault's task pages, a GitHub notifications feed).  Follow the production conventions: empty output = no message; no source-system mutations; output to a local report file.
-   - *Starter hint:* An `.ics` export and a Markdown task list are enough.  The interesting design decision is the *filter*: what earns a line in the brief?  Deadline radar (next 14 days) is a good default.
-   - *You've succeeded when:* Running it twice in a row produces identical output (determinism), and on a day with nothing actionable it prints nothing at all.
+    - *What to do:* Write a deterministic script (no LLM call) that produces your own "morning brief" from at least two real sources you can read programmatically (a calendar export, a task list file, your vault's task pages, a GitHub notifications feed).  Follow the production conventions: empty output = no message; no source-system mutations; output to a local report file.
+    - *Starter hint:* An `.ics` export and a Markdown task list are enough.  The interesting design decision is the *filter*: what earns a line in the brief?  Deadline radar (next 14 days) is a good default.
+    - *You've succeeded when:* Running it twice in a row produces identical output (determinism), and on a day with nothing actionable it prints nothing at all.
 
 3.  *Harness a weak model.*
 
-   - *What to do:* Using a small local model from your course stack (deliberately not your best model), run one nontrivial task twice: once with a plain prompt, once under the harness: Gate 1 criteria, Gate 2 plan-with-checks, a coverage matrix you keep in a file, and a blind cross-check by a *fresh* session that sees only the criteria and the artifact.
-   - *Starter hint:* Good task shape: "produce a study guide covering all 6 Key Concepts from activity X, each with an example not from the activity."  Criteria are then countable, and the blind verifier can check coverage mechanically.
-   - *You've succeeded when:* You can point to at least one defect the harness caught that the plain run shipped, or, if both succeeded, you can say precisely which harness step was wasted effort for this task and why.
+    - *What to do:* Using a small local model from your course stack (deliberately not your best model), run one nontrivial task twice: once with a plain prompt, once under the harness: Gate 1 criteria, Gate 2 plan-with-checks, a coverage matrix you keep in a file, and a blind cross-check by a *fresh* session that sees only the criteria and the artifact.
+    - *Starter hint:* Good task shape: "produce a study guide covering all 6 Key Concepts from activity X, each with an example not from the activity."  Criteria are then countable, and the blind verifier can check coverage mechanically.
+    - *You've succeeded when:* You can point to at least one defect the harness caught that the plain run shipped, or, if both succeeded, you can say precisely which harness step was wasted effort for this task and why.
 
 ---
 

@@ -83,15 +83,15 @@ The mnemonic: *host honestly, walk generously*.  When you host, show the weak pa
 
 1.  Here are three "Strength" entries written about the same brief.  Rank them by usefulness to the receiving team and justify your ranking: (a) "Great job, very professional!"  (b) "The problem statement is strong."  (c) "The problem statement (section 4) quotes the stakeholder's own words ('we lose a week every audit season') which makes the scope checkable against a real cost."
 
-   > *Hint: Ask of each: could the receiving team learn what to keep doing from this?  (a) locates nothing.  (b) locates a section but not what works about it.  (c) names the location, the technique, and why it works; the team can now repeat the technique elsewhere.*
+    > *Hint: Ask of each: could the receiving team learn what to keep doing from this?  (a) locates nothing.  (b) locates a section but not what works about it.  (c) names the location, the technique, and why it works; the team can now repeat the technique elsewhere.*
 
 2.  Rewrite this fake question as a genuine one: "Did you even think about whether the registrar's office would actually use this?"  What changed, and why does the fake version damage the review relationship while the genuine version strengthens it?
 
-   > *Hint: A genuine version might be: "What did the registrar say when you asked how this would fit their current workflow?  We couldn't find it in the brief."  The fake version asserts a failure and dares the team to deny it; the genuine version admits what the reviewer doesn't know and points at a checkable gap.  One produces defensiveness, the other produces a to-do item.*
+    > *Hint: A genuine version might be: "What did the registrar say when you asked how this would fit their current workflow?  We couldn't find it in the brief."  The fake version asserts a failure and dares the team to deny it; the genuine version admits what the reviewer doesn't know and points at a checkable gap.  One produces defensiveness, the other produces a to-do item.*
 
 3.  Why does the SQR protocol *require* a mitigation to accompany every Risk?  Consider what a review full of unmitigated risks does to the receiving team's ability to act, and what proposing a mitigation forces the *reviewer* to do first.
 
-   > *Hint: Ten risks with no exits produce paralysis and a sense of being graded rather than helped.  And to propose a mitigation, the reviewer must first understand the team's constraints well enough to suggest something feasible; the requirement quietly forces the reviewer to actually read the work.*
+    > *Hint: Ten risks with no exits produce paralysis and a sense of being graded rather than helped.  And to propose a mitigation, the reviewer must first understand the team's constraints well enough to suggest something feasible; the requirement quietly forces the reviewer to actually read the work.*
 
 Which of the following is a valid Risk entry on an SQR card?
 
@@ -133,15 +133,16 @@ Alongside the private check-in, one public instrument continues: **every progres
 
 4.  The check-ins are scheduled just after the stakeholder-brief exchange, the proposal review, and the gallery walk.  What would be lost if there were only one check-in, at the gallery walk?  Name two distinct failure patterns the earlier check-ins can catch while they are still fixable.
 
-   > *Hint: Pattern one: workload asymmetry that starts small early in the project and compounds, visible at the first check-in, entrenched by the last.  Pattern two: the silent member drifting away (or the dominant member crowding others out): at the first check-in this is a conversation; by the gallery walk it is a grade dispute.  Feedback has a half-life; the final check-in can only document, not repair.*
+    > *Hint: Pattern one: workload asymmetry that starts small early in the project and compounds, visible at the first check-in, entrenched by the last.  Pattern two: the silent member drifting away (or the dominant member crowding others out): at the first check-in this is a conversation; by the gallery walk it is a grade dispute.  Feedback has a half-life; the final check-in can only document, not repair.*
 
 5.  Why must the "one request" be a *behavior* ("post your section by Thursday standup") rather than a *trait* ("be more responsible")?  Connect your answer to both Edmondson's (1999) psychological safety and to plain practicality: which of the two can a teammate actually comply with by next week?
 
-   > *Hint: A trait judgment is an attack on identity; it triggers defense, not change, and it teaches the team that check-ins are where you get character-assassinated (there goes psychological safety).  A behavior request has a built-in success condition: either the section shows up Thursday or it doesn't.  You can comply with a behavior; you can only argue with a verdict.*
+    > *Hint: A trait judgment is an attack on identity; it triggers defense, not change, and it teaches the team that check-ins are where you get character-assassinated (there goes psychological safety).  A behavior request has a built-in success condition: either the section shows up Thursday or it doesn't.  You can comply with a behavior; you can only argue with a verdict.*
 
 6.  You are filling in the check-in and realize your answer about a teammate's reliability is negative, and you have never raised the issue with them directly.  What does the charter (and Model 3's repair moves) say you should do in the week after submitting the check-in, and why does the private channel not discharge that obligation?
 
-   > *Hint: The check-in informs the instructor; it does not inform the teammate.  If the first time they hear about the problem is in an instructor conversation, they were denied the cheap, early, face-saving chance to fix it, which is what the charter's conflict protocol exists to provide.  The check-in AND the direct repair move are both required; each does a job the other cannot.*
+    > *Hint: The check-in informs the instructor; it does not inform the teammate.  If the first time they hear about the problem is in an instructor conversation, they were denied the cheap, early, face-saving chance to fix it, which is what the charter's conflict protocol exists to provide.  The check-in AND the direct repair move are both required; each does a job the other cannot.*
+{: start="4"}
 
 The structured check-in at the three scheduled milestones is:
 
@@ -177,7 +178,8 @@ And three norms that keep the room safe for candid review, whichever side of it 
 
 7.  A team receives an SQR card whose Risk is real but whose suggested mitigation is infeasible (it assumes budget the team does not have).  Walk the team's best response through the four moves.  Which move is doing the most work in preventing this from becoming "reviewers just don't get our project"?
 
-   > *Hint: Restating is doing the heavy lifting: "the risk you see is X" separates the (valid) risk from the (infeasible) mitigation, so the team can accept one without the other.  Teams that skip restating tend to reject the whole card because its weakest part was weak, and lose the diagnosis along with the prescription.*
+    > *Hint: Restating is doing the heavy lifting: "the risk you see is X" separates the (valid) risk from the (infeasible) mitigation, so the team can accept one without the other.  Teams that skip restating tend to reject the whole card because its weakest part was weak, and lose the diagnosis along with the prescription.*
+{: start="7"}
 
 ---
 

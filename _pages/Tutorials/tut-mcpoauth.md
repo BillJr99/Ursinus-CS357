@@ -138,6 +138,7 @@ The Implicit flow was deprecated because tokens in URL fragments appear in brows
 6.  The principle of **least privilege** applied to OAuth scopes means requesting only what is needed.  An agent requests `repo` scope on GitHub (which grants full control of all public and private repositories, including the ability to delete them).  What is the minimum scope it actually needs if it only reads public repository README files?
 
     *Hint: GitHub's API documentation lists scopes at https://docs.github.com/en/developers/apps/scopes-for-oauth-apps.  For public repositories, you may need no special scope at all; unauthenticated requests can read public data.  What is the blast radius if a `repo`-scoped token is stolen versus a no-scope token?*
+{: start="4"}
 
 > The right flow gets you the right token with the right scopes.  How you store, log, and handle that token decides whether the authorization stays secure after it is granted.
 {: .tb-practice data-title="Checkpoint"}
@@ -170,6 +171,7 @@ The MCP server you build in the Tools and MCP Lab is that application code.  It 
 8.  Why is **token rotation** (generating a new token and revoking the old one on a regular schedule) valuable even when there is no known breach or leaked token?  Describe two specific threat scenarios that rotation defeats even if you never know the threat occurred.
 
     *Hint: Scenario 1: an attacker copied your token three months ago without you knowing.  Scenario 2: an old token was accidentally logged to a low-visibility log file that nobody checks.  What does rotation do in each case?*
+{: start="7"}
 
 > Keep tokens out of source, logs, and prompts, and request the narrowest scope that works.  The Tools and MCP Lab's Option 4D applies those rules while you build the simplest MCP server a real agent would call.
 {: .tb-practice data-title="Checkpoint"}

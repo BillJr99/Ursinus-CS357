@@ -100,11 +100,11 @@ Work through the following steps using the `litellm` repository (`github.com/Ber
 
 2.  A teammate suggests using `gitingest.com` on a private company repository that contains database credentials in a `.env.example` file.  What is the specific risk, and what would you tell them?
 
-   > *Hint: "Public only" is not just a terms-of-service issue; consider where the text block ends up, who processes it, and whether it can be logged by a third-party service.*
+    > *Hint: "Public only" is not just a terms-of-service issue; consider where the text block ends up, who processes it, and whether it can be logged by a third-party service.*
 
 3.  Compare the experience of finding the entry point via `github.dev` (keyboard shortcuts, file explorer) versus scanning the `gitingest.com` text dump.  For which task is each approach faster?  Is there a task where you would use both together?
 
-   > *Hint: The gitingest text dump preserves file boundaries but loses the IDE's navigation features.  The browser editor preserves navigation but requires you to open files one at a time.*
+    > *Hint: The gitingest text dump preserves file boundaries but loses the IDE's navigation features.  The browser editor preserves navigation but requires you to open files one at a time.*
 
 > Students often assume that pasting a codebase into a model's context gives the model "access" to the code in the way a compiler has access, allowing it to run the code or verify that it compiles.  The model only reads the text.  It cannot execute the code, check for import errors, or confirm that dependencies are installed.  It will reason about the code as text, which means it can misinterpret dynamic behavior, miss runtime configuration, and confidently describe code paths that are never actually reached.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -178,11 +178,12 @@ Compare the same request sent to a local `llama3.2` model (a) without MCP ground
 
 4.  In the un-grounded response, identify any method names or parameter names that do not appear in the current `chromadb` documentation.  What is the most likely explanation for the discrepancy?
 
-   > *Hint: The model's training data has a cutoff date.  Libraries that move fast (particularly in the AI ecosystem) may have changed their public API after that cutoff.  The model has no way to know this unless it is given current information.*
+    > *Hint: The model's training data has a cutoff date.  Libraries that move fast (particularly in the AI ecosystem) may have changed their public API after that cutoff.  The model has no way to know this unless it is given current information.*
 
 5.  MCP grounding adds a network call at agent runtime.  Describe one scenario where this latency cost is worth paying and one scenario where you would skip MCP grounding and use `gitingest.com` instead.
 
-   > *Hint: Think about whether the code being generated will run once or thousands of times.  Think about whether the library changes frequently or is extremely stable.  Think about whether you are in a development/debugging workflow or a production pipeline.*
+    > *Hint: Think about whether the code being generated will run once or thousands of times.  Think about whether the library changes frequently or is extremely stable.  Think about whether you are in a development/debugging workflow or a production pipeline.*
+{: start="4"}
 
 Why does connecting an agent to a live MCP server reduce hallucinated API calls, even though the underlying language model's weights have not changed?
 
@@ -237,7 +238,7 @@ Give yourself 12 minutes to answer five questions about an unfamiliar agent fram
 
 6.  For each of the five questions above, record which tool (deepwiki or gdagram) you used and how confident you are in the answer (high / medium / low).  What patterns do you notice about which tool works better for which type of question?
 
-   > *Hint: Diagram tools are good at "what connects to what" questions.  Text explanation tools are good at "why" and "how" questions.  Neither is good at questions that require reading actual code logic.*
+    > *Hint: Diagram tools are good at "what connects to what" questions.  Text explanation tools are good at "why" and "how" questions.  Neither is good at questions that require reading actual code logic.*
 
 7. `deepwiki.com` generates its explanations by processing the repository's code and comments.  If a module has no comments and uses cryptic variable names, how does this affect the quality of the generated explanation?  What does this tell you about good coding practice for AI-assisted development?
 
@@ -245,7 +246,8 @@ Give yourself 12 minutes to answer five questions about an unfamiliar agent fram
 
 8.  Neither `deepwiki.com` nor `gdagram.com` can tell you what a piece of code *actually does* when it runs.  Name two things about a codebase that these tools cannot reveal, and for each, describe how you would find the answer instead.
 
-   > *Hint: Think about runtime behavior: what happens when an exception is thrown?  What does the model actually return for a given prompt?  What values does a configuration variable take in production?  These are observable only by running the code.*
+    > *Hint: Think about runtime behavior: what happens when an exception is thrown?  What does the model actually return for a given prompt?  What values does a configuration variable take in production?  These are observable only by running the code.*
+{: start="6"}
 
 A teammate wants to use `gdagram.com` to verify that a dependency they plan to remove is not used anywhere in the codebase.  Which of the following is the most accurate assessment of this approach?
 
@@ -273,27 +275,27 @@ In this part, you will combine the tools from Parts I-IV in a real codebase spri
 
 1.  *Domain-swap scavenger hunt.*
 
-   - *What to do*: Choose any open-source agent project from GitHub (not one used in this tutorial's examples).  Apply all five domain-swap tools to it and fill in one row of the key-concepts table from this activity: domain swap, what it revealed, whether it was useful for this particular repo.
-   - *Starter hint*: Start with `github.dev` (press `.`) to orient yourself, then `gdagram.com` for the diagram, then `deepwiki.com` for the explanation.  Use `gitingest.com` last so you know which subdirectory to filter to.  Save `getmcp.io` for a library you actually plan to use in code.
-   - *You've succeeded when*: You can answer the five codebase-orientation questions from Model 3 for your chosen repo, citing which tool gave you each answer.
+    - *What to do*: Choose any open-source agent project from GitHub (not one used in this tutorial's examples).  Apply all five domain-swap tools to it and fill in one row of the key-concepts table from this activity: domain swap, what it revealed, whether it was useful for this particular repo.
+    - *Starter hint*: Start with `github.dev` (press `.`) to orient yourself, then `gdagram.com` for the diagram, then `deepwiki.com` for the explanation.  Use `gitingest.com` last so you know which subdirectory to filter to.  Save `getmcp.io` for a library you actually plan to use in code.
+    - *You've succeeded when*: You can answer the five codebase-orientation questions from Model 3 for your chosen repo, citing which tool gave you each answer.
 
 2.  *Token budget math.*
 
-   - *What to do*: Use `gitingest.com` on a repo of your choice.  Record the full-repo token count.  Then apply at least two filters (subdirectory, file extension) and record the reduced counts.  Calculate the percentage reduction each filter achieves.
-   - *Starter hint*: A token is approximately 3-4 characters of English text or code.  If the full repo is 500 000 tokens and your local model has a 128k context window, what fraction of the repo can you fit?  Which subdirectory contains the most tokens?  (gitingest shows a breakdown by directory.)
-   - *You've succeeded when*: You have a table showing full-repo token count, at least two filtered counts, percentage reductions, and a written recommendation: which filter strategy would you use to prepare this repo for a coding agent, and why?
+    - *What to do*: Use `gitingest.com` on a repo of your choice.  Record the full-repo token count.  Then apply at least two filters (subdirectory, file extension) and record the reduced counts.  Calculate the percentage reduction each filter achieves.
+    - *Starter hint*: A token is approximately 3-4 characters of English text or code.  If the full repo is 500 000 tokens and your local model has a 128k context window, what fraction of the repo can you fit?  Which subdirectory contains the most tokens?  (gitingest shows a breakdown by directory.)
+    - *You've succeeded when*: You have a table showing full-repo token count, at least two filtered counts, percentage reductions, and a written recommendation: which filter strategy would you use to prepare this repo for a coding agent, and why?
 
 3.  *Grounding comparison.*
 
-   - *What to do*: Ask a local `mistral` or `llama3.2` model to write a Python function that uses a popular library (your team chooses: `httpx`, `chromadb`, `langchain`, or `pydantic`).  Record the generated code.  Then look up the actual current API in the library's documentation or source code.  Identify any discrepancies.
-   - *Starter hint*: Pay attention to constructor arguments, method names, and return types.  Libraries like `chromadb` have changed their client API significantly across versions.  A model trained before a major release will use the old API.
-   - *You've succeeded when*: You have a side-by-side comparison of the model's generated API calls and the actual current API, with each discrepancy annotated with "hallucinated" or "correct."
+    - *What to do*: Ask a local `mistral` or `llama3.2` model to write a Python function that uses a popular library (your team chooses: `httpx`, `chromadb`, `langchain`, or `pydantic`).  Record the generated code.  Then look up the actual current API in the library's documentation or source code.  Identify any discrepancies.
+    - *Starter hint*: Pay attention to constructor arguments, method names, and return types.  Libraries like `chromadb` have changed their client API significantly across versions.  A model trained before a major release will use the old API.
+    - *You've succeeded when*: You have a side-by-side comparison of the model's generated API calls and the actual current API, with each discrepancy annotated with "hallucinated" or "correct."
 
 4.  *Security audit of the workflow.*
 
-   - *What to do*: Write a one-page team policy for using the five tools here safely.  Cover: which tools are appropriate for which types of repositories, what to check before pasting a URL into any external service, and what to do if a teammate accidentally exposes a private URL.
-   - *Starter hint*: Consider the data flow for each tool: where does the repo content go, who processes it, and is it stored?  The answers differ by tool; some process client-side, some send repo content to external servers.
-   - *You've succeeded when*: Your policy covers all five tools, addresses both public and private repo scenarios, and includes at least one concrete "red line" action that is never acceptable (for example: "Never paste a URL containing credentials into any external tool").
+    - *What to do*: Write a one-page team policy for using the five tools here safely.  Cover: which tools are appropriate for which types of repositories, what to check before pasting a URL into any external service, and what to do if a teammate accidentally exposes a private URL.
+    - *Starter hint*: Consider the data flow for each tool: where does the repo content go, who processes it, and is it stored?  The answers differ by tool; some process client-side, some send repo content to external servers.
+    - *You've succeeded when*: Your policy covers all five tools, addresses both public and private repo scenarios, and includes at least one concrete "red line" action that is never acceptable (for example: "Never paste a URL containing credentials into any external tool").
 
 ---
 

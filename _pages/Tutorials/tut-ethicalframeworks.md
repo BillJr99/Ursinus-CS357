@@ -75,15 +75,15 @@ An AI agent is instructed to write a maximally persuasive essay arguing for a co
 
 1.  The frameworks reach similar conclusions here but via different routes and with different residual permissions.  Identify one decision the agent's designer must make that is *permitted* by deontological ethics but *prohibited* by design justice principles.  What does this gap reveal about the completeness of any single framework?
 
-   *Hint: Deontological ethics focuses on the rights of the individuals interacting with the agent.  Design justice focuses on structural power and who was included in the design process.  Can you find a design choice that respects every user's individual rights but still systematically advantages one group over another?*
+    *Hint: Deontological ethics focuses on the rights of the individuals interacting with the agent.  Design justice focuses on structural power and who was included in the design process.  Can you find a design choice that respects every user's individual rights but still systematically advantages one group over another?*
 
 2.  Virtue ethics demands practical wisdom in novel situations.  Name two features of the persuasive-essay scenario that a rule-based system could not perceive without something analogous to contextual judgment, and explain how you would engineer a proxy for each.
 
-   *Hint: Think about what changes when the same essay is addressed to a vulnerable population versus a politically active one; when the policy is contested versus broadly agreed upon; when the client is transparent about their identity versus anonymous.  A rule-based system handles categories; virtue ethics handles gradations.  Can you build a classifier for "morally relevant context"?*
+    *Hint: Think about what changes when the same essay is addressed to a vulnerable population versus a politically active one; when the policy is contested versus broadly agreed upon; when the client is transparent about their identity versus anonymous.  A rule-based system handles categories; virtue ethics handles gradations.  Can you build a classifier for "morally relevant context"?*
 
 3.  The utilitarian analysis depends on predicting aggregate effects of persuasion at scale.  This is hard to do.  Does epistemic uncertainty about consequences weaken the utilitarian argument for refusal, or strengthen it?
 
-   *Hint: When you do not know the probability distribution of outcomes, you must reason about the shape of the uncertainty.  If the harm distribution has a heavy tail (meaning rare but catastrophic outcomes are possible) the expected-value calculation changes even if the median outcome seems acceptable.  What is the worst plausible outcome of AI-generated persuasion at scale, and how much does it weigh in the calculation?*
+    *Hint: When you do not know the probability distribution of outcomes, you must reason about the shape of the uncertainty.  If the harm distribution has a heavy tail (meaning rare but catastrophic outcomes are possible) the expected-value calculation changes even if the median outcome seems acceptable.  What is the worst plausible outcome of AI-generated persuasion at scale, and how much does it weigh in the calculation?*
 
 With the three frameworks applied to one scenario, Part II zooms in on the ACM Code of Ethics, a professional standard that turns the same ethical intuitions into checkable design requirements.
 
@@ -128,15 +128,16 @@ Selected clauses with agentic implications:
 
 4.  Clause 2.5 requires "comprehensive and thorough evaluations."  Apply this to your course project: what would a thorough evaluation require that you have not yet done?  Name at least three tests and explain why each is necessary.
 
-   *Hint: Think about: (1) failure modes: what inputs cause the system to produce harmful outputs?  (2) subpopulation performance: does the system perform equally well for different user types, languages, or contexts?  (3) adversarial inputs: what happens when someone tries to misuse the system deliberately?  For each test, explain what harm it would prevent if you ran it and found a problem.*
+    *Hint: Think about: (1) failure modes: what inputs cause the system to produce harmful outputs?  (2) subpopulation performance: does the system perform equally well for different user types, languages, or contexts?  (3) adversarial inputs: what happens when someone tries to misuse the system deliberately?  For each test, explain what harm it would prevent if you ran it and found a problem.*
 
 5.  Clause 3.1 creates a professional obligation that may conflict with employment obligations.  Under what conditions would you, personally, be willing to act on clause 3.1 against organizational pressure?  What would need to be true about the harm, the organizational response, and your alternatives?
 
-   *Hint: Be honest rather than aspirational.  Consider: the harm would need to be serious enough that remaining silent makes you complicit; the organization would need to have ignored internal channels; and you would need alternatives (another employer, professional support, legal protection).  What is the minimum that would need to be true for you to act?*
+    *Hint: Be honest rather than aspirational.  Consider: the harm would need to be serious enough that remaining silent makes you complicit; the organization would need to have ignored internal channels; and you would need alternatives (another employer, professional support, legal protection).  What is the minimum that would need to be true for you to act?*
 
 6.  The ACM Code is a list of principles, not a decision procedure.  When two clauses conflict, for example, satisfying a user's explicit request (1.1 serving the user) conflicts with avoiding harm to a third party (1.2), the Code does not resolve the conflict.  Who should?  What mechanism would you build into an agentic system to surface and escalate such conflicts automatically?
 
-   *Hint: A software analogy: when two requirements conflict, you do not just pick one; you surface the conflict to a decision-maker with the authority to resolve it.  What is the AI equivalent?  Who has that authority for your system?  How would the system recognize that a conflict has occurred, and what would it do next?*
+    *Hint: A software analogy: when two requirements conflict, you do not just pick one; you surface the conflict to a decision-maker with the authority to resolve it.  What is the AI equivalent?  Who has that authority for your system?  How would the system recognize that a conflict has occurred, and what would it do next?*
+{: start="4"}
 
 An agent is designed to help users write performance reviews for their employees.  Which design choice best satisfies both ACM clause 1.2 (avoid harm) and clause 2.5 (thorough evaluations)?
 
@@ -191,15 +192,16 @@ Two agents are given the same task: "Help a user manage their email inbox."  Con
 
 7.  A critic argues that the minimal footprint agent is less useful because it interrupts the user more often.  Construct the strongest version of this argument, then rebut it using the asymmetry between the cost of unnecessary interruptions and the cost of irreversible errors.
 
-   *Hint: The strongest version of the critic's argument notes that frequent interruptions train users to ignore them (the "alert fatigue" problem), which defeats the purpose of the confirmation gate.  Your rebuttal should address this: what is the right interruption frequency, and how does the design of the confirmation (what it shows, not just that it exists) determine whether the user pays attention?*
+    *Hint: The strongest version of the critic's argument notes that frequent interruptions train users to ignore them (the "alert fatigue" problem), which defeats the purpose of the confirmation gate.  Your rebuttal should address this: what is the right interruption frequency, and how does the design of the confirmation (what it shows, not just that it exists) determine whether the user pays attention?*
 
 8.  **Value-sensitive design** requires eliciting stakeholder values before building.  For the email agent, identify at least three stakeholder groups beyond the direct user, describe one value each holds that the direct user might not prioritize, and explain how that value would change a design choice.
 
-   *Hint: Consider: people who send emails to the user (they have an interest in their messages being read and responded to appropriately); the user's employer (they may have an interest in email retention for legal compliance); and the user's contacts (they may have privacy interests in how their information is stored and processed).  For each, name a specific design choice that would serve their value.*
+    *Hint: Consider: people who send emails to the user (they have an interest in their messages being read and responded to appropriately); the user's employer (they may have an interest in email retention for legal compliance); and the user's contacts (they may have privacy interests in how their information is stored and processed).  For each, name a specific design choice that would serve their value.*
 
 9.  Apply the dual newspaper test to the maximum-capability email agent.  Write the first sentence of both the harm story and the paternalism story.  Does the test give you a clear answer about which design is preferable, or does it surface a real tension?
 
-   *Hint: Harm story opening: "An AI email agent autonomously deleted thousands of messages..." Paternalism story opening: "An AI email agent requires user confirmation for every action, making..." Now ask: does one of these stories feel much more likely to be written?  If so, that asymmetry is informative.  If both feel equally likely, you have found a real design tension that the test cannot resolve on its own.*
+    *Hint: Harm story opening: "An AI email agent autonomously deleted thousands of messages..." Paternalism story opening: "An AI email agent requires user confirmation for every action, making..." Now ask: does one of these stories feel much more likely to be written?  If so, that asymmetry is informative.  If both feel equally likely, you have found a real design tension that the test cannot resolve on its own.*
+{: start="7"}
 
 > "Ethics review is something you do at the end, before shipping."  This belief produces a specific failure mode: the ethics review occurs when it is too late to change the architecture, the training data, the objective function, or the permission model.  Changes at that stage cost too much or break the system, so the review becomes perfunctory.  Ethics review that happens at design time (when the agent's scope, permissions, and objective are being specified) can actually change outcomes.  The frameworks in this tutorial are meant to be applied at the moment when a blank design document is on the table, not at the moment when the ship date is tomorrow.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -216,27 +218,27 @@ In this final part, you will apply the frameworks and principles from Parts I th
 
 1.  *Pre-deployment ethics review.*
 
-   *What to do:* For your course project, conduct a structured ethics review using all three frameworks from Part I. For each framework, identify: (a) one design choice your project makes that the framework endorses, and (b) one design choice or capability the framework would require you to constrain.  Write one paragraph per framework.
+    *What to do:* For your course project, conduct a structured ethics review using all three frameworks from Part I. For each framework, identify: (a) one design choice your project makes that the framework endorses, and (b) one design choice or capability the framework would require you to constrain.  Write one paragraph per framework.
 
-   *Starter hint:* Be specific about design choices, not values.  Instead of "our system is fair" (a value), write "our system shows the retrieved source for every answer" (a design choice).  Instead of "the utilitarian framework endorses helpfulness," write "the utilitarian framework endorses our choice to include an abstention option, because confidently wrong answers cause more aggregate harm than acknowledged uncertainty."  The more concrete, the more useful the review.
+    *Starter hint:* Be specific about design choices, not values.  Instead of "our system is fair" (a value), write "our system shows the retrieved source for every answer" (a design choice).  Instead of "the utilitarian framework endorses helpfulness," write "the utilitarian framework endorses our choice to include an abstention option, because confidently wrong answers cause more aggregate harm than acknowledged uncertainty."  The more concrete, the more useful the review.
 
-   *You've succeeded when:* Each paragraph identifies a specific design choice (something you did or could do), applies one framework explicitly, and produces either a defense or a constraint recommendation, not a general statement of values.
+    *You've succeeded when:* Each paragraph identifies a specific design choice (something you did or could do), applies one framework explicitly, and produces either a defense or a constraint recommendation, not a general statement of values.
 
 2.  *Footprint audit.*
 
-   *What to do:* List every permission, API scope, and data access your project agent currently requests.  For each, classify it as: (a) necessary for current functionality, (b) useful but not necessary, or (c) requested as a precaution for future features.  Propose the reduced permission set that retains (a) only, and describe what you would need to add back and why if you retained any (b) items.
+    *What to do:* List every permission, API scope, and data access your project agent currently requests.  For each, classify it as: (a) necessary for current functionality, (b) useful but not necessary, or (c) requested as a precaution for future features.  Propose the reduced permission set that retains (a) only, and describe what you would need to add back and why if you retained any (b) items.
 
-   *Starter hint:* Look at every API call, file read, environment variable, and network request in your codebase.  For each, ask: what feature breaks if I remove this permission?  If nothing breaks, it is (b) or (c).  If the feature it enables is live and used, it is (a).  The goal is not to break your project; it is to understand what you actually need and eliminate everything else.
+    *Starter hint:* Look at every API call, file read, environment variable, and network request in your codebase.  For each, ask: what feature breaks if I remove this permission?  If nothing breaks, it is (b) or (c).  If the feature it enables is live and used, it is (a).  The goal is not to break your project; it is to understand what you actually need and eliminate everything else.
 
-   *You've succeeded when:* You have a specific list of permissions in each category, a proposed reduced set, and at least one sentence explaining the security or privacy benefit of the reduction, not just the list itself.
+    *You've succeeded when:* You have a specific list of permissions in each category, a proposed reduced set, and at least one sentence explaining the security or privacy benefit of the reduction, not just the list itself.
 
 3.  *Stakeholder map.*
 
-   *What to do:* For your project, identify at least five stakeholder groups, including groups who are affected by the system's outputs but do not interact with it directly.  For each group, name one value they hold and one design constraint that value implies.
+    *What to do:* For your project, identify at least five stakeholder groups, including groups who are affected by the system's outputs but do not interact with it directly.  For each group, name one value they hold and one design constraint that value implies.
 
-   *Starter hint:* Direct users are the obvious starting point.  Then ask: who else is affected?  If your system grades work, the graded students are subjects, not users.  If your system retrieves information, the authors of that information are stakeholders.  If your system makes recommendations, the people those recommendations affect are stakeholders.  For each group, the constraint should be specific: not "respect their privacy" but "do not store their name in association with their submission."
+    *Starter hint:* Direct users are the obvious starting point.  Then ask: who else is affected?  If your system grades work, the graded students are subjects, not users.  If your system retrieves information, the authors of that information are stakeholders.  If your system makes recommendations, the people those recommendations affect are stakeholders.  For each group, the constraint should be specific: not "respect their privacy" but "do not store their name in association with their submission."
 
-   *You've succeeded when:* You have five groups, each with a named value and a specific design constraint, and at least two of the constraints conflict with each other in a way that your current design does or does not resolve.
+    *You've succeeded when:* You have five groups, each with a named value and a specific design constraint, and at least two of the constraints conflict with each other in a way that your current design does or does not resolve.
 
 ---
 

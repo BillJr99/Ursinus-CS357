@@ -124,15 +124,15 @@ A rule of thumb: the vault is for *your knowledge about the world*, not *secrets
 
 1.  You generate a fine-grained PAT scoped to Contents read/write on your vault repo.  Your roommate generates a classic `repo`-scope PAT for the same task.  Compare what an attacker gains from each token if it leaks.  Which token does the principle of least privilege select, and why?
 
-   > *Hint:* A fine-grained PAT scoped to one repo gives access to exactly one repository's file contents.  A classic `repo`-scope PAT gives read/write access to every repository in your account, including private ones you haven't mentioned.  Consider: if the token appeared in a public CI log, what is the blast radius of each?
+    > *Hint:* A fine-grained PAT scoped to one repo gives access to exactly one repository's file contents.  A classic `repo`-scope PAT gives read/write access to every repository in your account, including private ones you haven't mentioned.  Consider: if the token appeared in a public CI log, what is the blast radius of each?
 
 2.  The plugin's auto-push interval defaults to 5 minutes.  A student changes it to 60 minutes to reduce API calls.  Describe a concrete scenario where the 60-minute interval causes a problem that the 5-minute interval would have caught in time.
 
-   > *Hint:* Think about what happens if you make a change on one device (your laptop), then pick up your phone to continue working.  How stale is the phone's copy if the laptop hasn't pushed in 55 minutes?  Now add an agent that pulls the vault expecting the latest notes.
+    > *Hint:* Think about what happens if you make a change on one device (your laptop), then pick up your phone to continue working.  How stale is the phone's copy if the laptop hasn't pushed in 55 minutes?  Now add an agent that pulls the vault expecting the latest notes.
 
 3.  Your `.gitignore` excludes `.obsidian/workspace.json` but a teammate's does not.  After both of you push from different machines, explain the specific kind of merge conflict that will result and why the file should never have been tracked.
 
-   > *Hint:* `workspace.json` stores which panels are open and where they are positioned; it changes every time Obsidian opens or resizes a pane.  Two people (or two devices) will generate different versions of this file on every session.  What does git do when it sees two divergent edits to the same file?
+    > *Hint:* `workspace.json` stores which panels are open and where they are positioned; it changes every time Obsidian opens or resizes a pane.  Two people (or two devices) will generate different versions of this file on every session.  What does git do when it sees two divergent edits to the same file?
 
 ---
 
@@ -298,15 +298,16 @@ Use a vault index so the agent can identify which subset of notes to read, then 
 
 4.  A teammate argues: "I'll just give the agent access to my entire vault directory and tell it to search for what it needs."  Explain two specific failure modes this causes (one related to context window size, one related to agent decision quality) that the vault index pattern prevents.
 
-   > *Hint:* Context window limit: if the agent tries to read all 400 notes, it will hit the model's context window maximum and either fail or silently truncate the most recent notes.  Decision quality: an agent searching blindly through filenames like `note-2026-03-14.md` has no information about content; it can only guess, and it will guess wrong or read irrelevant files.  How does a structured index fix both of these?
+    > *Hint:* Context window limit: if the agent tries to read all 400 notes, it will hit the model's context window maximum and either fail or silently truncate the most recent notes.  Decision quality: an agent searching blindly through filenames like `note-2026-03-14.md` has no information about content; it can only guess, and it will guess wrong or read irrelevant files.  How does a structured index fix both of these?
 
 5.  The `agent-context/` folder contains `key-decisions.md` with the entry: "Decided to use Chroma as the vector store because the team already knows Python."  Explain how this single sentence changes the agent's behavior on your *next* session compared to a session where the file doesn't exist.
 
-   > *Hint:* Without the file, the agent must either ask which vector store to use (interrupting your flow) or guess (risking recommending a store that conflicts with your existing code).  With the file, the agent starts already knowing the decision and its rationale, and can make recommendations consistent with it.  What else might the agent do differently: for example, in which imports it writes or which documentation it looks up?
+    > *Hint:* Without the file, the agent must either ask which vector store to use (interrupting your flow) or guess (risking recommending a store that conflicts with your existing code).  With the file, the agent starts already knowing the decision and its rationale, and can make recommendations consistent with it.  What else might the agent do differently: for example, in which imports it writes or which documentation it looks up?
 
 6.  You set up file-based injection for your vault, but your OpenCode sessions take 30 seconds longer to start than before.  Diagnose the likely cause and propose a fix that preserves the benefit of vault context without the latency.
 
-   > *Hint:* If `agent-context/*.md` files have grown large (detailed session logs appended over months), the injection is passing a lot of text to the model on every session.  Which specific files matter most at the *start* of a session versus which ones the agent can look up on demand?  Consider splitting the always-inject files (standing instructions, project state) from the on-demand files (detailed notes, session log history).
+    > *Hint:* If `agent-context/*.md` files have grown large (detailed session logs appended over months), the injection is passing a lot of text to the model on every session.  Which specific files matter most at the *start* of a session versus which ones the agent can look up on demand?  Consider splitting the always-inject files (standing instructions, project state) from the on-demand files (detailed notes, session log history).
+{: start="4"}
 
 ---
 
@@ -439,15 +440,16 @@ Add a new section with today's date at the bottom of the file, below all existin
 
 7.  The YAML frontmatter in each memory entry includes `key_decisions` as a list.  Write a ten-line Python function that parses `session-log.md` and returns all `key_decisions` entries tagged with a given `project` name, as a flat list of strings.
 
-   > *Hint:* Each entry is separated by `## YYYY-MM-DD`.  Within each entry, the YAML block is between the `---` delimiters.  You can use the `yaml` module to parse the frontmatter.  Walk through the file section by section: when you find a `## ` heading, start a new section; when you hit the second `---`, you've finished the frontmatter for that section.
+    > *Hint:* Each entry is separated by `## YYYY-MM-DD`.  Within each entry, the YAML block is between the `---` delimiters.  You can use the `yaml` module to parse the frontmatter.  Walk through the file section by section: when you find a `## ` heading, start a new section; when you hit the second `---`, you've finished the frontmatter for that section.
 
 8.  An agent rewrites `session-log.md` instead of appending.  You don't notice for three weeks.  Describe the specific data loss that occurred and explain why git history does not fully protect you from this mistake.
 
-   > *Hint:* The data loss is the content that existed before the rewrite; the agent replaced it with its own summary.  Git history *does* contain the old content in previous commits, but recovering it requires: (a) knowing which commit was the last good one, (b) running `git show <commit>:memories/session-log.md` or a similar command, and (c) manually re-integrating the recovered content.  If you didn't notice for three weeks, there are also three weeks of *new* sessions that were appended to the wrong file.  What would the recovery actually look like?
+    > *Hint:* The data loss is the content that existed before the rewrite; the agent replaced it with its own summary.  Git history *does* contain the old content in previous commits, but recovering it requires: (a) knowing which commit was the last good one, (b) running `git show <commit>:memories/session-log.md` or a similar command, and (c) manually re-integrating the recovered content.  If you didn't notice for three weeks, there are also three weeks of *new* sessions that were appended to the wrong file.  What would the recovery actually look like?
 
 9.  Design a canary check (a simple script or scheduled command) that detects within 24 hours if the vault's auto-push has silently stopped working (e.g., because the PAT expired).  Describe what the check does, how it is triggered, and what alert it produces.
 
-   > *Hint:* One approach: a cron job that runs daily, clones (or pulls) the vault repo, checks the timestamp of the most recent commit, and prints a warning if it is more than 25 hours old.  Another approach: a "canary note" (`agent-context/sync-canary.md`) that the agent updates with today's date at the start of every session; if the canary date is stale by more than one day, sync has stopped.  Which approach is cheaper?  Which catches more failure modes?
+    > *Hint:* One approach: a cron job that runs daily, clones (or pulls) the vault repo, checks the timestamp of the most recent commit, and prints a warning if it is more than 25 hours old.  Another approach: a "canary note" (`agent-context/sync-canary.md`) that the agent updates with today's date at the start of every session; if the canary date is stale by more than one day, sync has stopped.  Which approach is cheaper?  Which catches more failure modes?
+{: start="7"}
 
 ---
 
@@ -629,35 +631,35 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
 1.  **Set up Gitless Sync on your Obsidian vault and confirm push to GitHub.**
 
-   *What to do:* Complete the five-step setup from Model 1 (create private repo, generate fine-grained PAT, initialize git in vault, install Obsidian Git plugin, configure auto-push).  Create one new note titled `test-sync.md`, wait for the auto-push interval, and verify the note appears in your GitHub repository.  Submit a screenshot of the GitHub repository showing `test-sync.md` in the commit history, with your PAT redacted from any settings screenshots.
+    *What to do:* Complete the five-step setup from Model 1 (create private repo, generate fine-grained PAT, initialize git in vault, install Obsidian Git plugin, configure auto-push).  Create one new note titled `test-sync.md`, wait for the auto-push interval, and verify the note appears in your GitHub repository.  Submit a screenshot of the GitHub repository showing `test-sync.md` in the commit history, with your PAT redacted from any settings screenshots.
 
-   *Starter hint:* If auto-push does not fire, check the plugin's status bar icon in Obsidian (bottom right); it shows sync status.  You can also trigger a manual push with the command palette (`Ctrl+P` or `Cmd+P`): search for "Obsidian Git: Commit and push all changes".
+    *Starter hint:* If auto-push does not fire, check the plugin's status bar icon in Obsidian (bottom right); it shows sync status.  You can also trigger a manual push with the command palette (`Ctrl+P` or `Cmd+P`): search for "Obsidian Git: Commit and push all changes".
 
-   *You've succeeded when:* The GitHub repository shows at least one commit from the Obsidian Git plugin (the commit message will follow your configured template), and `test-sync.md` appears in the file listing.
+    *You've succeeded when:* The GitHub repository shows at least one commit from the Obsidian Git plugin (the commit message will follow your configured template), and `test-sync.md` appears in the file listing.
 
 2.  **Write a `_index.md` for your vault and verify an agent can use it to navigate.**
 
-   *What to do:* Create `_index.md` at the root of your vault following the structure in Model 2.  Include at least 8 entries across at least 3 topic sections.  Then start an OpenCode or pi.ai session, give the agent only the path to `_index.md` and a question whose answer is in one of your listed notes, and observe whether the agent navigates correctly to that note.  Submit: the `_index.md` file content and a two-sentence description of whether the agent used it successfully and what (if anything) it missed.
+    *What to do:* Create `_index.md` at the root of your vault following the structure in Model 2.  Include at least 8 entries across at least 3 topic sections.  Then start an OpenCode or pi.ai session, give the agent only the path to `_index.md` and a question whose answer is in one of your listed notes, and observe whether the agent navigates correctly to that note.  Submit: the `_index.md` file content and a two-sentence description of whether the agent used it successfully and what (if anything) it missed.
 
-   *Starter hint:* Ask the agent something specific: "Based on my vault index at `~/Documents/Obsidian/MyVault/_index.md`, which note should I look at for information about [topic]?  Read that note and summarize its key point."  This forces the agent to use the index rather than guessing.
+    *Starter hint:* Ask the agent something specific: "Based on my vault index at `~/Documents/Obsidian/MyVault/_index.md`, which note should I look at for information about [topic]?  Read that note and summarize its key point."  This forces the agent to use the index rather than guessing.
 
-   *You've succeeded when:* The agent reads `_index.md`, identifies the correct note from it, reads that note, and produces a summary that accurately reflects the note's content, without reading any other vault files.
+    *You've succeeded when:* The agent reads `_index.md`, identifies the correct note from it, reads that note, and produces a summary that accurately reflects the note's content, without reading any other vault files.
 
 3.  **Write a session memory entry by hand, then script it so OpenCode does it automatically.**
 
-   *What to do:* First, manually write one well-formed memory entry in `memories/session-log.md`, following the YAML frontmatter format from Model 3.  Commit and push it.  Then add the Memory Write-Back Protocol to your project's `AGENTS.md` and start an OpenCode session.  After completing any small task, verify that OpenCode appended a new entry at the bottom of `session-log.md` without modifying your hand-written entry.  Submit: the file content after the agent's write, with both entries visible.
+    *What to do:* First, manually write one well-formed memory entry in `memories/session-log.md`, following the YAML frontmatter format from Model 3.  Commit and push it.  Then add the Memory Write-Back Protocol to your project's `AGENTS.md` and start an OpenCode session.  After completing any small task, verify that OpenCode appended a new entry at the bottom of `session-log.md` without modifying your hand-written entry.  Submit: the file content after the agent's write, with both entries visible.
 
-   *Starter hint:* After adding the protocol to `AGENTS.md`, tell OpenCode explicitly at the end of the session: "We're done; please write the session memory entry now."  Review the result before committing.  Check that the YAML frontmatter is well-formed (valid YAML, no tab characters), and that the `## 2026-XX-XX` heading is at the bottom.
+    *Starter hint:* After adding the protocol to `AGENTS.md`, tell OpenCode explicitly at the end of the session: "We're done; please write the session memory entry now."  Review the result before committing.  Check that the YAML frontmatter is well-formed (valid YAML, no tab characters), and that the `## 2026-XX-XX` heading is at the bottom.
 
-   *You've succeeded when:* `session-log.md` contains your hand-written entry unchanged at the top, and the agent's new entry below it, separated by the correct heading and frontmatter.
+    *You've succeeded when:* `session-log.md` contains your hand-written entry unchanged at the top, and the agent's new entry below it, separated by the correct heading and frontmatter.
 
 4.  **Design the folder structure for a vault that is both a personal knowledge base and an AI project memory.**
 
-   *What to do:* Design (on paper or in a Markdown file) the complete folder structure for a vault that you would actually use for the rest of this course and beyond.  The structure must support: (a) human-authored course notes that agents can read; (b) an agent context folder injected at session start; (c) an append-only session memory log; (d) a read-only inbox for source material (PDFs, transcripts); (e) at least one personal project area.  For each folder, write one sentence explaining its purpose and who (human, agent, or both) is expected to write to it.  Submit the annotated folder tree.
+    *What to do:* Design (on paper or in a Markdown file) the complete folder structure for a vault that you would actually use for the rest of this course and beyond.  The structure must support: (a) human-authored course notes that agents can read; (b) an agent context folder injected at session start; (c) an append-only session memory log; (d) a read-only inbox for source material (PDFs, transcripts); (e) at least one personal project area.  For each folder, write one sentence explaining its purpose and who (human, agent, or both) is expected to write to it.  Submit the annotated folder tree.
 
-   *Starter hint:* Start from the reference structure in Model 4 and adapt it.  Ask yourself: where do my class notes actually live today?  Where should the agent's memories go so I can find them in Obsidian's graph view?  What is the one source of truth for "what am I working on right now"?  Your design should answer all three.
+    *Starter hint:* Start from the reference structure in Model 4 and adapt it.  Ask yourself: where do my class notes actually live today?  Where should the agent's memories go so I can find them in Obsidian's graph view?  What is the one source of truth for "what am I working on right now"?  Your design should answer all three.
 
-   *You've succeeded when:* Every folder in your design has a clear owner (human, agent, or both), the structure satisfies all five requirements, and you can explain in one sentence why the `raw/` folder must be read-only for agents.
+    *You've succeeded when:* Every folder in your design has a clear owner (human, agent, or both), the structure satisfies all five requirements, and you can explain in one sentence why the `raw/` folder must be read-only for agents.
 
 ---
 

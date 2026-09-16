@@ -100,21 +100,24 @@ The survey is not in the LMS. The questionnaire lives on the [Project Thread pag
 6.  **Pet peeves:** What teammate behavior reliably frustrates you?  Be specific.
 7.  **What matters most:** Complete the sentence: "For me, a team is working well when ______." Take a position.  Then answer its mirror: what matters most to *you* in a teammate?
 8.  **Role tendencies:** In past teams, which role have you naturally gravitated toward: the **facilitator** who keeps the meeting moving, the **builder** who wants to make the thing, the **writer** who shapes the words, or the **skeptic** who asks "are we sure?"  Name your top one or two.  (This informs team formation only: on your team, roles **rotate** on a schedule, so everyone will practice every job, including the ones they would not volunteer for.)
+{: start="4"}
 
 **Interests (secondary matching signal):**
 
 9.  **Project-domain interests:** Rank your top two or three domains you would find meaningful for a semester-long, stakeholder-grounded project.  Example multidisciplinary domains (you may propose others):
-   - **Health** (campus wellness, public health information, accessibility)
-   - **Sustainability / environment** (campus energy, food systems, local conservation)
-   - **Education** (tutoring, advising, K-12 outreach, study support)
-   - **Finance** (financial literacy, budgeting, local nonprofit operations)
-   - **Arts** (archives, exhibitions, creative production, arts organizations)
-   - **Campus life** (student organizations, residence life, dining, events)
+    - **Health** (campus wellness, public health information, accessibility)
+    - **Sustainability / environment** (campus energy, food systems, local conservation)
+    - **Education** (tutoring, advising, K-12 outreach, study support)
+    - **Finance** (financial literacy, budgeting, local nonprofit operations)
+    - **Arts** (archives, exhibitions, creative production, arts organizations)
+    - **Campus life** (student organizations, residence life, dining, events)
+{: start="9"}
 
 **Confidential (seen only by the instructor):**
 
 10.  **(Optional, confidential)** Name **at most one** person in this course you would prefer not to work with.  This field is read **only by the instructor**, is never shared or acknowledged, requires no explanation, and is a preference the instructor will try to honor, **never a guarantee**.  Answering it has no effect on your grade; it exists so that a known-bad pairing never has to be explained publicly.
 11.  **(Optional, confidential)** Is there anything else the instructor should know to help your team thrive?  Accommodations, outside commitments, past team experiences you do not want to repeat, something you are working on as a teammate, anything at all.
+{: start="10"}
 
 ---
 

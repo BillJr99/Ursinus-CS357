@@ -61,15 +61,15 @@ The last row is the pivot of this tutorial: a script that calls **OpenWebUI's** 
 
 1.  A teammate registers a `search_catalog` tool in OpenWebUI and enables it for `llama3.2`.  Their Python script then calls `http://localhost:11434/api/chat` and reports "the tool never fires."  Diagnose the bug using the table, and state the one-line fix.
 
-   > *Hint: Port 11434 is Ollama: the backend tier.  The tool lives in the frontend tier at port 3000.  Which URL (and which extra header) makes the script's requests pass through the tier where the tool is registered?*
+    > *Hint: Port 11434 is Ollama: the backend tier.  The tool lives in the frontend tier at port 3000.  Which URL (and which extra header) makes the script's requests pass through the tier where the tool is registered?*
 
 2.  Tools in OpenWebUI execute *server-side*, inside the frontend container, with whatever filesystem and network access that container has.  Compare this to the tool registry you built in the Tool Use activity, where *your own process* executed the function.  Who controls the security boundary in each case, and which arrangement would you trust with a `read_file` tool?
 
-   > *Hint: In your own agent loop, you wrote the registry and could wrap any call in a confirmation gate.  In OpenWebUI, the execution environment and sandboxing policy belong to the frontend.  Consider: who audits the tool code your teammates install from the community library?*
+    > *Hint: In your own agent loop, you wrote the registry and could wrap any call in a confirmation gate.  In OpenWebUI, the execution environment and sandboxing policy belong to the frontend.  Consider: who audits the tool code your teammates install from the community library?*
 
 3.  Knowledge collections give you RAG without writing retrieval code.  Name one thing you *lose* relative to the RAG pipeline you built yourself, and one situation where the frontend-managed version is clearly the right call.
 
-   > *Hint: What you lose is visibility and control: chunk size, embedding model, top-k, and the exact injected passages are the frontend's decisions (though some are configurable in Admin Settings).  When is "good defaults, zero code, shared with every user of the server" worth more than that control?*
+    > *Hint: What you lose is visibility and control: chunk size, embedding model, top-k, and the exact injected passages are the frontend's decisions (though some are configurable in Admin Settings).  When is "good defaults, zero code, shared with every user of the server" worth more than that control?*
 
 A tool registered in OpenWebUI's Workspace -> Tools panel will be available to:
 
@@ -134,15 +134,16 @@ The hands-on core of this tutorial is two Colab-ready notebooks from the course 
 
 4.  Notebook 1's upload step has a fallback: if `/v1/files` fails, parse the document locally and paste its text into the prompt.  Identify one way the *fallback* behavior can silently differ from the *upload* behavior for a long document, and how you would detect the difference from the response alone.
 
-   > *Hint: Server-side knowledge is chunked and retrieved: only relevant passages reach the prompt.  Client-side injection pastes the document up to whatever fits in context.  For a 100-page document, which approach risks truncation, and which risks retrieving the wrong chunk?  A response that cites material from the document's final pages tells you what about the path taken?*
+    > *Hint: Server-side knowledge is chunked and retrieved: only relevant passages reach the prompt.  Client-side injection pastes the document up to whatever fits in context.  For a 100-page document, which approach risks truncation, and which risks retrieving the wrong chunk?  A response that cites material from the document's final pages tells you what about the path taken?*
 
 5.  In Notebook 2, every agent is "the same model with a different system prompt."  What, concretely, makes the Critic's judgment independent enough to be useful, given that it shares every parameter with the Worker it is judging?  What would strengthen that independence?
 
-   > *Hint: The system prompt changes the model's instructions and the blackboard slice it sees; a fresh call has no memory of the Worker's reasoning process, only its output.  Strengthening options: a different model for the Critic, structured rubrics, or evidence requirements.  Recall the LLM-as-judge module's findings on self-evaluation bias.*
+    > *Hint: The system prompt changes the model's instructions and the blackboard slice it sees; a fresh call has no memory of the Worker's reasoning process, only its output.  Strengthening options: a different model for the Critic, structured rubrics, or evidence requirements.  Recall the LLM-as-judge module's findings on self-evaluation bias.*
 
 6.  The blackboard in Notebook 2 lives in a Python dictionary in the orchestrator, not in OpenWebUI. Why must it live there and not in the chat history of a single OpenWebUI conversation?  What does this tell you about where the "agent system" actually resides?
 
-   > *Hint: Each API call in the workflow is stateless; the orchestrator chooses exactly which blackboard slices to include in each call's messages.  A single shared conversation would show every agent everything (recall the AutoGen group-chat leak from the frameworks activity).  The system's memory and routing live in your code; OpenWebUI supplies completions.*
+    > *Hint: Each API call in the workflow is stateless; the orchestrator chooses exactly which blackboard slices to include in each call's messages.  A single shared conversation would show every agent everything (recall the AutoGen group-chat leak from the frameworks activity).  The system's memory and routing live in your code; OpenWebUI supplies completions.*
+{: start="4"}
 
 In the multi-agent notebook, the Planner, Worker, and Critic are implemented as:
 
@@ -226,15 +227,16 @@ If the verdict begins with `REVISE`, the orchestrator loops the affected steps b
 
 7.  List every decision in Model 3 that is made by *Python code* rather than by a model (there are at least four).  Then answer: if the workflow misbehaves, why is this list the first place to look?
 
-   > *Hint: Which text becomes each call's context; how the plan is split into steps; how many steps run; when the loop terminates; what "begins with REVISE" means.  These are deterministic and inspectable, unlike the model's generations.  Recall the debugging module: check the deterministic scaffolding before blaming the stochastic component.*
+    > *Hint: Which text becomes each call's context; how the plan is split into steps; how many steps run; when the loop terminates; what "begins with REVISE" means.  These are deterministic and inspectable, unlike the model's generations.  Recall the debugging module: check the deterministic scaffolding before blaming the stochastic component.*
 
 8.  The Worker's system prompt says "Execute exactly the step you are given; do not do other steps."  Connect this instruction to the small-context-window principle from the [Memory and the Small Context Window Principle]({{ site.baseurl }}/Tutorials/MemoryAndContext) tutorial: what failure appears if the Worker is instead handed the whole plan and told to "make progress"?
 
-   > *Hint: With the whole plan in context, the model tends to do a shallow pass over everything, the same dilution as one-big-prompt research.  One step per call keeps each generation focused and makes the blackboard entries attributable to a step.*
+    > *Hint: With the whole plan in context, the model tends to do a shallow pass over everything, the same dilution as one-big-prompt research.  One step per call keeps each generation focused and makes the blackboard entries attributable to a step.*
 
 9.  Where would you add a human-approval gate in Model 3 if one Worker step could trigger an irreversible action (say, posting to a course forum via an OpenWebUI tool)?  Identify the exact line and defend it against putting the rule in the Worker's system prompt instead.
 
-   > *Hint: The gate belongs in the orchestrator, around the `ask(...)` call (or around the tool-enabled step), where Python can block until a human confirms.  A prompt instruction is a request to a stochastic system; a code gate is enforcement.  This is the same argument as the tool-registry boundary in the Tool Use activity.*
+    > *Hint: The gate belongs in the orchestrator, around the `ask(...)` call (or around the tool-enabled step), where Python can block until a human confirms.  A prompt instruction is a request to a stochastic system; a code gate is enforcement.  This is the same argument as the tool-registry boundary in the Tool Use activity.*
+{: start="7"}
 
 > Students often expect OpenWebUI to "run the multi-agent workflow" once the roles are defined.  OpenWebUI executes *one completion per request*; it has no idea your Planner and Critic are related calls.  The workflow (sequencing, memory, revision loops, stopping) exists only in your orchestrator code.  The frontend supplies completions, tools, and knowledge; *you* supply the agency.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -245,21 +247,21 @@ If the verdict begins with `REVISE`, the orchestrator loops the affected steps b
 
 1.  *Key in hand.*  Generate an OpenWebUI API key, run the minimal client from Part II against your stack, and then break it three ways: wrong port (11434), missing Bearer header, and a model name you have not pulled.  Record the three error responses.
 
-   - *What to do:* Make each mistake deliberately and capture status codes and bodies.  Build yourself a one-paragraph troubleshooting table.
-   - *You've succeeded when:* You can identify from an error response alone which of the three mistakes a classmate made.
+    - *What to do:* Make each mistake deliberately and capture status codes and bodies.  Build yourself a one-paragraph troubleshooting table.
+    - *You've succeeded when:* You can identify from an error response alone which of the three mistakes a classmate made.
 
 2.  *Notebook run-through.*  Complete [OpenWebUI_API_Client_With_Upload.ipynb](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/OpenWebUI_API_Client_With_Upload.ipynb) with a document of your own (a course reading, a README).  Force the fallback path by pointing the upload at a bad endpoint, and compare the two answers you get for the same question about the document.
 
-   - *You've succeeded when:* You can state one concrete difference between the server-RAG answer and the context-injection answer, and explain it using CTQ 4.
+    - *You've succeeded when:* You can state one concrete difference between the server-RAG answer and the context-injection answer, and explain it using CTQ 4.
 
 3.  *Tool + workflow integration.*  Register a simple tool in OpenWebUI (e.g., a `get_current_time` or a word-count tool from the Tool Use activity), enable it for your model, then extend the Part III skeleton (or [OpenWebUI_MultiAgent_Goal_Workflow.ipynb](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/OpenWebUI_MultiAgent_Goal_Workflow.ipynb)) with a goal that requires the tool.
 
-   - *Starter hint:* In OpenWebUI, a tool is a Python class whose typed methods and docstrings become the schema.  Whether tools fire on API calls depends on the model's tool support and the server's function-calling settings; observing *whether and when* the tool fires is the point of the exercise.
-   - *You've succeeded when:* You can show one workflow run where the tool executed (visible in the response or server logs) and state which tier executed it.
+    - *Starter hint:* In OpenWebUI, a tool is a Python class whose typed methods and docstrings become the schema.  Whether tools fire on API calls depends on the model's tool support and the server's function-calling settings; observing *whether and when* the tool fires is the point of the exercise.
+    - *You've succeeded when:* You can show one workflow run where the tool executed (visible in the response or server logs) and state which tier executed it.
 
 4.  *Critic ablation.*  Run the Part III workflow five times with the Critic enabled, then five times with the verdict hard-coded to APPROVE. Score the ten briefings (rubric of your design) without knowing which condition produced each.
 
-   - *You've succeeded when:* You can report whether the Critic measurably improved the output on your rubric, and connect the result to the critique-refine module.
+    - *You've succeeded when:* You can report whether the Critic measurably improved the output on your rubric, and connect the result to the critique-refine module.
 
 ---
 
@@ -338,11 +340,12 @@ granted once through a consent screen and stored by the platform, so the flow de
 
 7.  A Power Automate connector and your Flask server both let a system "create a calendar event."  Name two things the no-code connector gives you for free that you handled yourself in code, and one thing the code version gives you that the connector cannot.
 
-   > *Hint: For free: the OAuth flow and token storage, plus a maintained schema/UI for the service's fields.  In code you keep: custom logic, self-hosting and portability, and version-controlled review of exactly what runs.*
+    > *Hint: For free: the OAuth flow and token storage, plus a maintained schema/UI for the service's fields.  In code you keep: custom logic, self-hosting and portability, and version-controlled review of exactly what runs.*
 
 8.  In step 5 you can call a model with an HTTP action whose body is a `/v1/chat/completions` payload.  Where should the model's API key live so it does not end up pasted into the flow definition that teammates can open and export?
 
-   > *Hint: Store it as a secure input / environment variable / connection secret (or a Key Vault reference) and reference it; never hard-code it into the HTTP action's headers, where it becomes part of the exported flow.  Same rule as every other secret this term.*
+    > *Hint: Store it as a secure input / environment variable / connection secret (or a Key Vault reference) and reference it; never hard-code it into the HTTP action's headers, where it becomes part of the exported flow.  Same rule as every other secret this term.*
+{: start="7"}
 
 Compared with writing an MCP server, a no-code platform like Power Automate primarily trades:
 

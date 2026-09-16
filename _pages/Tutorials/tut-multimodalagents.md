@@ -56,15 +56,15 @@ Multimodality is not magic; it is an extension of the fundamental token-processi
 
 1.  An agent is asked to process a 100-page PDF invoice archive.  Calculate the approximate token cost of each approach (text extraction, OCR, and VLM) for 100 pages.  At the rate of $0.003 per 1,000 input tokens (a rough mid-range API price), what is the cost difference between the cheapest and most expensive approaches?
 
-   *Hint:* Text extraction: ~500 tokens/page × 100 pages = 50,000 tokens.  VLM (one image per page): ~768 tokens/image × 100 pages = 76,800 tokens.  But what happens when the PDFs are scanned (image-only), which approaches still work?
+    *Hint:* Text extraction: ~500 tokens/page × 100 pages = 50,000 tokens.  VLM (one image per page): ~768 tokens/image × 100 pages = 76,800 tokens.  But what happens when the PDFs are scanned (image-only), which approaches still work?
 
 2.  A customer service agent transcribes voice calls and then processes the transcripts to extract action items.  The transcription error rate is 3% of words (a realistic Whisper error rate in noisy call centers).  For a 500-word conversation, estimate the number of errors.  How many of those errors are likely to affect downstream extraction of fields like names, dates, and dollar amounts?
 
-   *Hint:* 3% of 500 words = 15 expected errors.  Names, dates, and amounts are high-information words; the model cannot guess them from context if it mishears them.  Compare this to common words like "the" or "and" where context allows recovery.
+    *Hint:* 3% of 500 words = 15 expected errors.  Names, dates, and amounts are high-information words; the model cannot guess them from context if it mishears them.  Compare this to common words like "the" or "and" where context allows recovery.
 
 3.  The same image is processed by a VLM to extract an invoice total.  The first extraction returns "$1,247".  The second extraction (with the same prompt, same image) returns "$1,274".  What does this tell you about the reliability of VLM extraction for numeric fields, and what mitigation strategy would you add to the pipeline?
 
-   *Hint:* The model has some uncertainty about the digits; its output is sampled, not deterministic at temperature > 0.  Running extraction twice and comparing results is a simple way to detect low-confidence extractions.  What would you do when the two runs disagree?
+    *Hint:* The model has some uncertainty about the digits; its output is sampled, not deterministic at temperature > 0.  Running extraction twice and comparing results is a simple way to detect low-confidence extractions.  What would you do when the two runs disagree?
 
 Now that we understand the token-level mechanics of modality conversion, we can look at specific models and tools, and what makes each one the right choice for a given document type.
 
@@ -113,15 +113,16 @@ In practice, robust document processing pipelines combine all three: extract tex
 
 4.  You are building an agent to process medical imaging reports that arrive as scanned PDFs.  Some are typed, some are handwritten, and all contain critical numeric values (lab results, dosages).  Sketch a multi-stage pipeline that maximizes accuracy on numeric values while minimizing cost.  Justify each stage.
 
-   *Hint:* Stage 1: try text extraction (fast, accurate for typed documents).  Stage 2: if text extraction returns empty or garbled text, try OCR. Stage 3: for all numeric fields, use a VLM to cross-check (extract the same field twice using different prompts and compare).  Stage 4: flag any extraction where Stage 1, 2, and 3 disagree for human review.
+    *Hint:* Stage 1: try text extraction (fast, accurate for typed documents).  Stage 2: if text extraction returns empty or garbled text, try OCR. Stage 3: for all numeric fields, use a VLM to cross-check (extract the same field twice using different prompts and compare).  Stage 4: flag any extraction where Stage 1, 2, and 3 disagree for human review.
 
 5.  A coding agent is given a 2,000-line Python codebase to refactor.  It cannot fit the entire codebase in its context window.  Design a tool-based approach where the agent queries the codebase incrementally rather than reading it all at once.  What tools would you give it, and in what order would it use them?
 
-   *Hint:* Tools to consider: `list_files()`, `read_function(name: str)`, `find_all_callers(function_name: str)`, `search_code(pattern: str)`.  The agent should plan its refactoring by understanding the structure first (which functions exist, which call which), then reading only the functions it needs to modify.
+    *Hint:* Tools to consider: `list_files()`, `read_function(name: str)`, `find_all_callers(function_name: str)`, `search_code(pattern: str)`.  The agent should plan its refactoring by understanding the structure first (which functions exist, which call which), then reading only the functions it needs to modify.
 
 6.  An audio processing agent transcribes a doctor-patient consultation and extracts the patient's current medications and dosages.  What specific types of transcription errors are most dangerous in this scenario, and how would you design a validation step to catch them before the extracted data is written to an electronic health record?
 
-   *Hint:* "Metformin 500mg" vs. "Metformin 50mg": a single dropped digit can cause a 10x dosage error.  "Lisinopril" vs. "Lisinopril": drug names are often unfamiliar to the ASR model and easily mangled.  What validation can you do with just a known drug name list and a dose range table?
+    *Hint:* "Metformin 500mg" vs. "Metformin 50mg": a single dropped digit can cause a 10x dosage error.  "Lisinopril" vs. "Lisinopril": drug names are often unfamiliar to the ASR model and easily mangled.  What validation can you do with just a known drug name list and a dose range table?
+{: start="4"}
 
 The conversion failures you've seen in specific tools are all instances of a deeper structural problem, and grounding is the technique that makes those failures detectable rather than silent.
 
@@ -234,123 +235,123 @@ In this part, you will build and evaluate real multimodal pipelines using the to
 
 1.  *VLM extraction benchmark.*  Take 10 screenshots of web forms, invoices, or structured documents.  Using a VLM of your choice (LLaVA locally via `ollama pull llava:7b`, or GPT-4o/Claude via API), extract the structured fields from each.  Manually compare the extracted values to the ground truth.  Report: field-level accuracy, which field types are most often wrong, and the cost of API calls if you used a cloud model.
 
-   *What to do:* Create a simple evaluation script that compares extracted JSON to a manually labeled ground truth JSON. Use exact match for numeric fields and case-insensitive match for text fields.
+    *What to do:* Create a simple evaluation script that compares extracted JSON to a manually labeled ground truth JSON. Use exact match for numeric fields and case-insensitive match for text fields.
 
-   *Starter hint:* The code below shows the full extraction pipeline for a single image; notice the `temperature=0` setting (which makes extraction deterministic) and the prompt that requests `null` for any field not visible (which prevents hallucination of missing fields):
+    *Starter hint:* The code below shows the full extraction pipeline for a single image; notice the `temperature=0` setting (which makes extraction deterministic) and the prompt that requests `null` for any field not visible (which prevents hallucination of missing fields):
 
-   ```python
-   import base64
-   from openai import OpenAI
-   from pathlib import Path
+    ```python
+    import base64
+    from openai import OpenAI
+    from pathlib import Path
 
-   client = OpenAI()  # uses OPENAI_API_KEY from environment
+    client = OpenAI()  # uses OPENAI_API_KEY from environment
 
-   def extract_fields_from_image(image_path: str) -> dict:
-       """Extract structured fields from a document image using GPT-4o."""
-       image_data = base64.b64encode(Path(image_path).read_bytes()).decode()
+    def extract_fields_from_image(image_path: str) -> dict:
+        """Extract structured fields from a document image using GPT-4o."""
+        image_data = base64.b64encode(Path(image_path).read_bytes()).decode()
 
-       response = client.chat.completions.create(
-           model="gpt-4o",
-           messages=[{
-               "role": "user",
-               "content": [
-                   {
-                       "type": "text",
-                       "text": """Extract the following fields from this document and return ONLY valid JSON:
-   {"vendor_name": str, "invoice_date": "YYYY-MM-DD", "total_amount": float, "invoice_number": str}
-   If a field is not visible, use null."""
-                   },
-                   {
-                       "type": "image_url",
-                       "image_url": {"url": f"data:image/jpeg;base64,{image_data}"}
-                   }
-               ]
-           }],
-           temperature=0  # deterministic for extraction tasks
-       )
-       import json
-       return json.loads(response.choices[0].message.content)
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": """Extract the following fields from this document and return ONLY valid JSON:
+    {"vendor_name": str, "invoice_date": "YYYY-MM-DD", "total_amount": float, "invoice_number": str}
+    If a field is not visible, use null."""
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{image_data}"}
+                    }
+                ]
+            }],
+            temperature=0  # deterministic for extraction tasks
+        )
+        import json
+        return json.loads(response.choices[0].message.content)
 
-   # For local inference with LLaVA via Ollama:
-   # from openai import OpenAI
-   # client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
-   # model = "llava:7b"  # then same call structure
-   ```
+    # For local inference with LLaVA via Ollama:
+    # from openai import OpenAI
+    # client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+    # model = "llava:7b"  # then same call structure
+    ```
 
-   *You've succeeded when:* You have a table of 10 documents × field count with accuracy percentages, and you can identify which field type (text name, date, dollar amount, address) has the lowest extraction accuracy and explain why.
+    *You've succeeded when:* You have a table of 10 documents × field count with accuracy percentages, and you can identify which field type (text name, date, dollar amount, address) has the lowest extraction accuracy and explain why.
 
 2.  *Audio pipeline construction.*  Using Whisper (`pip install openai-whisper`) and an LLM, build a meeting-to-action-items pipeline: record or use a sample audio file, transcribe it, and extract a structured list of action items with assignee and due date.
 
-   *What to do:* Transcribe the audio, then send the transcript to an LLM with a structured extraction prompt.  Validate that each action item has the required fields.
+    *What to do:* Transcribe the audio, then send the transcript to an LLM with a structured extraction prompt.  Validate that each action item has the required fields.
 
-   *Starter hint:* The code below chains two steps (Whisper transcription followed by LLM extraction) look for how the transcript is passed verbatim into the extraction prompt, and consider what happens to the extraction if the transcription contains a word error:
+    *Starter hint:* The code below chains two steps (Whisper transcription followed by LLM extraction) look for how the transcript is passed verbatim into the extraction prompt, and consider what happens to the extraction if the transcription contains a word error:
 
-   ```python
-   import whisper  # pip install openai-whisper
+    ```python
+    import whisper  # pip install openai-whisper
 
-   # Load model (first run downloads ~1.5 GB for "medium", ~150 MB for "tiny")
-   model = whisper.load_model("medium")  # or "tiny" for speed, "large" for accuracy
+    # Load model (first run downloads ~1.5 GB for "medium", ~150 MB for "tiny")
+    model = whisper.load_model("medium")  # or "tiny" for speed, "large" for accuracy
 
-   # Transcribe
-   result = model.transcribe("meeting_recording.mp3")
-   transcript = result["text"]
-   print(f"Transcript ({len(transcript.split())} words): {transcript[:200]}...")
+    # Transcribe
+    result = model.transcribe("meeting_recording.mp3")
+    transcript = result["text"]
+    print(f"Transcript ({len(transcript.split())} words): {transcript[:200]}...")
 
-   # Extract action items with an LLM
-   from openai import OpenAI
-   client = OpenAI()
+    # Extract action items with an LLM
+    from openai import OpenAI
+    client = OpenAI()
 
-   extraction_prompt = f"""From this meeting transcript, extract all action items.
-   Return ONLY valid JSON with this schema:
-   {% raw %}{{"action_items": [{{"description": str, "assignee": str, "due_date": str or null}}]}}{% endraw %}
+    extraction_prompt = f"""From this meeting transcript, extract all action items.
+    Return ONLY valid JSON with this schema:
+    {% raw %}{{"action_items": [{{"description": str, "assignee": str, "due_date": str or null}}]}}{% endraw %}
 
-   Transcript:
-   {transcript}"""
+    Transcript:
+    {transcript}"""
 
-   response = client.chat.completions.create(
-       model="gpt-4o-mini",  # cheaper model for extraction tasks
-       messages=[{"role": "user", "content": extraction_prompt}],
-       temperature=0
-   )
-   import json
-   action_items = json.loads(response.choices[0].message.content)
-   print(f"Found {len(action_items['action_items'])} action items")
-   for item in action_items['action_items']:
-       print(f"  - {item['description']} (Owner: {item['assignee']}, Due: {item['due_date']})")
-   ```
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",  # cheaper model for extraction tasks
+        messages=[{"role": "user", "content": extraction_prompt}],
+        temperature=0
+    )
+    import json
+    action_items = json.loads(response.choices[0].message.content)
+    print(f"Found {len(action_items['action_items'])} action items")
+    for item in action_items['action_items']:
+        print(f"  - {item['description']} (Owner: {item['assignee']}, Due: {item['due_date']})")
+    ```
 
-   *You've succeeded when:* You can demonstrate the full pipeline (audio in, structured JSON action items out) and you have tested it on at least one audio file where you know the ground truth (either you recorded it yourself or you have a transcript).
+    *You've succeeded when:* You can demonstrate the full pipeline (audio in, structured JSON action items out) and you have tested it on at least one audio file where you know the ground truth (either you recorded it yourself or you have a transcript).
 
 3.  *Modality comparison experiment.*  Take the same 5 documents in two formats: as a text file (typed text) and as a screenshot.  Extract the same structured fields using the text directly vs. using the VLM on the screenshot.  Report: accuracy difference, token cost difference, and which document types favor one approach over the other.
 
-   *What to do:* For text extraction, send the document text directly to the LLM. For vision extraction, encode the screenshot as base64 and send it to a VLM. Compare accuracy and cost.
+    *What to do:* For text extraction, send the document text directly to the LLM. For vision extraction, encode the screenshot as base64 and send it to a VLM. Compare accuracy and cost.
 
-   *Starter hint:* Expected finding: text extraction is almost always more accurate and cheaper than VLM extraction for digitally-created documents.  VLM wins for documents with complex layout where text extraction loses column structure, and for scanned documents where there is no text layer to extract.
+    *Starter hint:* Expected finding: text extraction is almost always more accurate and cheaper than VLM extraction for digitally-created documents.  VLM wins for documents with complex layout where text extraction loses column structure, and for scanned documents where there is no text layer to extract.
 
-   *You've succeeded when:* You have a 5×2 table (documents × approaches) with per-field accuracy and cost in tokens/dollars, and a written recommendation for each document type.
+    *You've succeeded when:* You have a 5×2 table (documents × approaches) with per-field accuracy and cost in tokens/dollars, and a written recommendation for each document type.
 
 4.  *Grounding implementation.*  Using a VLM that supports bounding box output (GPT-4o with structured output, or a grounding-trained model), process a screenshot of a web page and ask the model to identify three specific UI elements (a button, a form field, and an error message) and return their bounding box coordinates.  Verify by cropping the image to those coordinates and confirming the element is present.
 
-   *What to do:* Ask the VLM to return `{"elements": [{"name": "Submit button", "bbox": [x1, y1, x2, y2], "confidence": "high/low"}]}`.  Crop the image using Pillow and display the crops.
+    *What to do:* Ask the VLM to return `{"elements": [{"name": "Submit button", "bbox": [x1, y1, x2, y2], "confidence": "high/low"}]}`.  Crop the image using Pillow and display the crops.
 
-   *Starter hint:*
-   ```python
-   from PIL import Image
+    *Starter hint:*
+    ```python
+    from PIL import Image
 
-   def crop_and_show(image_path: str, bbox: list, label: str):
-       """Crop an image to a bounding box and save for verification."""
-       img = Image.open(image_path)
-       x1, y1, x2, y2 = bbox
-       cropped = img.crop((x1, y1, x2, y2))
-       cropped.save(f"crop_{label}.png")
-       print(f"Saved crop_{label}.png ({x2-x1}×{y2-y1} pixels)")
+    def crop_and_show(image_path: str, bbox: list, label: str):
+        """Crop an image to a bounding box and save for verification."""
+        img = Image.open(image_path)
+        x1, y1, x2, y2 = bbox
+        cropped = img.crop((x1, y1, x2, y2))
+        cropped.save(f"crop_{label}.png")
+        print(f"Saved crop_{label}.png ({x2-x1}×{y2-y1} pixels)")
 
-   # After extracting bboxes from VLM response:
-   for element in extracted["elements"]:
-       crop_and_show("screenshot.png", element["bbox"], element["name"].replace(" ", "_"))
-   ```
+    # After extracting bboxes from VLM response:
+    for element in extracted["elements"]:
+        crop_and_show("screenshot.png", element["bbox"], element["name"].replace(" ", "_"))
+    ```
 
-   *You've succeeded when:* You have saved cropped images for each element and can confirm visually that the VLM pointed to the correct region (not just the right general area).  Note and document any cases where the bounding box was incorrect.
+    *You've succeeded when:* You have saved cropped images for each element and can confirm visually that the VLM pointed to the correct region (not just the right general area).  Note and document any cases where the bounding box was incorrect.
 
 ---
 

@@ -66,15 +66,15 @@ Each team examines one real transcript from its project system.
 
 1.  Classify every explanatory element in your transcript into the four categories above (trace step, citation, uncertainty signal, narrated rationale).  Which categories are absent entirely?
 
-   *Hint: Go line by line through your transcript.  Every "I think" or "I believe" is narrated rationale.  Every tool call and its output is a trace step.  Every document quote is a citation.  A statement like "I'm not sure about this" is an uncertainty signal.  Count what you find in each category.*
+    *Hint: Go line by line through your transcript.  Every "I think" or "I believe" is narrated rationale.  Every tool call and its output is a trace step.  Every document quote is a citation.  A statement like "I'm not sure about this" is an uncertainty signal.  Count what you find in each category.*
 
 2.  Find one narrated rationale and attempt to verify it against harder evidence in the same transcript.  Does the story check out?
 
-   *Hint: If the model says "I concluded X because the document says Y," find the place in the transcript where it actually retrieved the document.  Does the retrieved text actually say Y? If it does not, you have found a case where the narrated rationale is a confabulation, a plausible-sounding story that does not match the actual evidence.*
+    *Hint: If the model says "I concluded X because the document says Y," find the place in the transcript where it actually retrieved the document.  Does the retrieved text actually say Y? If it does not, you have found a case where the narrated rationale is a confabulation, a plausible-sounding story that does not match the actual evidence.*
 
 3.  Your demo audience includes non-programmers.  Which single artifact (trace, citation, confidence) would most increase *their* justified trust, and how will you render it on screen?
 
-   *Hint: Think about what a non-programmer can actually evaluate.  They cannot check whether a trace step is logically correct.  But they can click a link to a source document and read it.  They can understand "I'm 70% confident in this answer."  Choose the artifact that gives them something to do with it, not just something to look at.*
+    *Hint: Think about what a non-programmer can actually evaluate.  They cannot check whether a trace step is logically correct.  But they can click a link to a source document and read it.  They can understand "I'm 70% confident in this answer."  Choose the artifact that gives them something to do with it, not just something to look at.*
 
 ---
 
@@ -119,15 +119,16 @@ Sketch (on paper) the confirmation screen your project shows a human before its 
 
 4.  What evidence appears on your screen, and in what order?  Apply the evidence hierarchy from Part I.
 
-   *Hint: The most trustworthy evidence goes first.  If your system retrieved a document, show the specific passage.  If it ran a tool, show what the tool returned.  Put the model's narrated summary at the bottom, not the top; it is the least verifiable item.*
+    *Hint: The most trustworthy evidence goes first.  If your system retrieved a document, show the specific passage.  If it ran a tool, show what the tool returned.  Put the model's narrated summary at the bottom, not the top; it is the least verifiable item.*
 
 5.  What would make a busy user *stop* on the rare bad case while letting routine cases flow?  Name one anomaly signal your system can compute (low retrieval similarity, judge disagreement, low confidence) and surface it visually.
 
-   *Hint: Think about how email spam filters work: routine messages flow through; suspicious ones get flagged.  What is the equivalent of a spam flag for your system?  When is the model less certain than usual, and how would you show that on the confirmation screen without alarming users on every click?*
+    *Hint: Think about how email spam filters work: routine messages flow through; suspicious ones get flagged.  What is the equivalent of a spam flag for your system?  When is the model less certain than usual, and how would you show that on the confirmation screen without alarming users on every click?*
 
 6.  Run the calibration exercise on your own system: for ten outputs where it stated confidence, compute the ECE buckets.  Is your agent honest about what it knows?
 
-   *Hint: Collect 10 outputs with stated confidence levels.  For each, mark whether it was correct.  Group them by confidence level (e.g., high/medium/low).  In each group, compare the average stated confidence to the actual accuracy rate.  If your "high confidence" outputs are only right 40% of the time, your system is overconfident.*
+    *Hint: Collect 10 outputs with stated confidence levels.  For each, mark whether it was correct.  Group them by confidence level (e.g., high/medium/low).  In each group, compare the average stated confidence to the actual accuracy rate.  If your "high confidence" outputs are only right 40% of the time, your system is overconfident.*
+{: start="4"}
 
 > "A more detailed explanation always means a more trustworthy system."  More words do not mean more transparency.  A long, fluent paragraph explaining an AI's reasoning can be entirely confabulated, generated to sound plausible rather than to accurately describe the computation.  The evidence hierarchy (tool logs > citations > traces > narrated rationale) matters precisely because length and fluency are not measures of accuracy.  A single cited source the user can verify is worth more than three paragraphs of confident prose.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -144,35 +145,35 @@ In this Part, you will translate the analysis from Parts I and II into deployabl
 
 1.  *Trace viewer.*
 
-   *What to do:* Add to your project the simplest possible "why" affordance: a collapsible pane showing the trace and citations behind each answer.  Screenshot before and after.
+    *What to do:* Add to your project the simplest possible "why" affordance: a collapsible pane showing the trace and citations behind each answer.  Screenshot before and after.
 
-   *Starter hint:* The minimum viable version is a styled `<details>` HTML element (or equivalent in your framework) that collapses by default and shows the raw ReAct trace when expanded.  You do not need to make it beautiful; you need to make the evidence accessible.  Add citation links to any retrieved document chunk.
+    *Starter hint:* The minimum viable version is a styled `<details>` HTML element (or equivalent in your framework) that collapses by default and shows the raw ReAct trace when expanded.  You do not need to make it beautiful; you need to make the evidence accessible.  Add citation links to any retrieved document chunk.
 
-   *You've succeeded when:* A user who receives an answer can click one element, see the tool calls and retrieved passages that produced it, and verify the answer against the sources, without reading any code.
+    *You've succeeded when:* A user who receives an answer can click one element, see the tool calls and retrieved passages that produced it, and verify the answer against the sources, without reading any code.
 
 2.  *Abstention audit.*
 
-   *What to do:* Construct five questions your system should refuse or qualify.  Report its abstention rate and rewrite one prompt or policy to fix the worst failure.
+    *What to do:* Construct five questions your system should refuse or qualify.  Report its abstention rate and rewrite one prompt or policy to fix the worst failure.
 
-   *Starter hint:* Design questions that are clearly outside your system's scope (out-of-domain topics), questions with no correct answer in your documents, and questions that require information your system does not have access to.  For each, record whether the system abstained, qualified, or confidently confabulated.  The confabulations are your highest-priority fixes.
+    *Starter hint:* Design questions that are clearly outside your system's scope (out-of-domain topics), questions with no correct answer in your documents, and questions that require information your system does not have access to.  For each, record whether the system abstained, qualified, or confidently confabulated.  The confabulations are your highest-priority fixes.
 
-   *You've succeeded when:* You can state the abstention rate across your five test cases, identify the pattern in the failures, and show a revised prompt or policy that improves the rate on at least one case, with evidence from a re-run.
+    *You've succeeded when:* You can state the abstention rate across your five test cases, identify the pattern in the failures, and show a revised prompt or policy that improves the rate on at least one case, with evidence from a re-run.
 
 3.  *Demo dry run.*
 
-   *What to do:* Deliver your 90-second explainability story (what the system shows, why a stranger should calibrate trust correctly) to another team.  Collect and address one objection.
+    *What to do:* Deliver your 90-second explainability story (what the system shows, why a stranger should calibrate trust correctly) to another team.  Collect and address one objection.
 
-   *Starter hint:* Your story should cover three things: (1) what the system does when it is confident and correct; (2) what it does when it is uncertain; and (3) what it does when it cannot answer.  If you cannot describe all three, your system is not ready for demo.  Practice with someone who has not seen your project.
+    *Starter hint:* Your story should cover three things: (1) what the system does when it is confident and correct; (2) what it does when it is uncertain; and (3) what it does when it cannot answer.  If you cannot describe all three, your system is not ready for demo.  Practice with someone who has not seen your project.
 
-   *You've succeeded when:* The other team raises at least one objection you had not considered, and you can describe the design change (or disclosed limitation) that addresses it.
+    *You've succeeded when:* The other team raises at least one objection you had not considered, and you can describe the design change (or disclosed limitation) that addresses it.
 
 4.  *Reliance experiment design.*
 
-   *What to do:* Sketch a small study (n = 8 classmates) measuring over- and under-reliance on your system: task, conditions, and the one metric you would report.  You need not run it; designing it is the point.
+    *What to do:* Sketch a small study (n = 8 classmates) measuring over- and under-reliance on your system: task, conditions, and the one metric you would report.  You need not run it; designing it is the point.
 
-   *Starter hint:* Over-reliance studies typically compare performance with versus without AI assistance on tasks where the AI is sometimes wrong.  Under-reliance studies measure whether users ignore correct AI outputs.  A simple design: give 8 people 10 questions with your system's answers visible.  Introduce 3 wrong answers.  Measure: what fraction of participants caught the wrong answers (over-reliance check) and what fraction used correct AI answers they initially doubted (under-reliance check)?
+    *Starter hint:* Over-reliance studies typically compare performance with versus without AI assistance on tasks where the AI is sometimes wrong.  Under-reliance studies measure whether users ignore correct AI outputs.  A simple design: give 8 people 10 questions with your system's answers visible.  Introduce 3 wrong answers.  Measure: what fraction of participants caught the wrong answers (over-reliance check) and what fraction used correct AI answers they initially doubted (under-reliance check)?
 
-   *You've succeeded when:* Your design specifies the task, the participant assignment, the AI conditions, and the one metric you would report, clearly enough that another researcher could replicate the study from your description.
+    *You've succeeded when:* Your design specifies the task, the participant assignment, the AI conditions, and the one metric you would report, clearly enough that another researcher could replicate the study from your description.
 
 ---
 

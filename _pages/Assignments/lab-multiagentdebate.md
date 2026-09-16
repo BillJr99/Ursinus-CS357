@@ -1295,13 +1295,13 @@ Good task types for this comparison:
 > **Do this.**
 > 1. Create `shootout.py` in the lab folder.  Start it with these lines, which pull in your Part B.1 functions and load the config once:
 >
-> ```python
-> import requests
-> from collections import Counter
-> from lab4 import load_config, extract_answer, run_debate, majority_vote
+>    ```python
+>    import requests
+>    from collections import Counter
+>    from lab4 import load_config, extract_answer, run_debate, majority_vote
 >
-> config = load_config()
-> ```
+>    config = load_config()
+>    ```
 >
 > 2. Paste the task set below under those lines.  Swap in questions of your own if you like, keeping this mix.
 
@@ -1474,10 +1474,10 @@ Vary the clustering `distance_threshold` across at least three values and report
 > **Do this.**
 > 1. Create `threshold.py` in the lab folder, starting with these two lines:
 >
-> ```python
-> from lab4 import load_config, run_consensus
-> config = load_config()
-> ```
+>    ```python
+>    from lab4 import load_config, run_consensus
+>    config = load_config()
+>    ```
 >
 > 2. Paste the loop below under them and run it:
 >
@@ -1519,11 +1519,11 @@ Synthesis (first 200 chars): A great study group needs...
 > **Do this.**
 > 1. In your readme, fill in a table like this one with your own numbers and descriptions:
 >
-> | Threshold | Clusters | Synthesis character |
-> |-----------|----------|---------------------|
-> | 0.1 | 6 | Highly fragmented; all views presented equally |
-> | 0.3 | 3 | Balanced; majority position emerges |
-> | 0.5 | 1 | Over-merged; diversity lost |
+>    | Threshold | Clusters | Synthesis character |
+>    |-----------|----------|---------------------|
+>    | 0.1 | 6 | Highly fragmented; all views presented equally |
+>    | 0.3 | 3 | Balanced; majority position emerges |
+>    | 0.5 | 1 | Over-merged; diversity lost |
 >
 > 2. Then answer in one paragraph: who should own this parameter, the system developer, the deployer, or the end user?  What documentation would help them choose a value?
 

@@ -51,15 +51,15 @@ The EU AI Act (entered into force August 2024, with phased enforcement through 2
 
 1.  The EU AI Act bans "AI systems that deploy subliminal techniques beyond a person's consciousness to distort their behavior in a way that causes or is likely to cause harm."  A personalized recommendation agent that learns which emotional framing makes a user most likely to click on content is not explicitly listed as banned.  Make the argument both for and against classifying it as Unacceptable Risk, drawing on the language of the definition above.
 
-   *Hint:* The key phrase is "subliminal": below conscious awareness.  If the recommendation logic is disclosed to users, does that change whether it qualifies?  What if the emotional framing exploits fear or social comparison in ways users would not endorse if they understood the mechanism?
+    *Hint:* The key phrase is "subliminal": below conscious awareness.  If the recommendation logic is disclosed to users, does that change whether it qualifies?  What if the emotional framing exploits fear or social comparison in ways users would not endorse if they understood the mechanism?
 
 2.  The High Risk tier requires "appropriate human oversight measures."  For a course agent that drafts written feedback on student assignments, describe what a meaningful human oversight measure would look like in practice.  Then describe what would make oversight merely formal (a checkbox the instructor clicks without reading) versus substantive (oversight that could actually catch and correct errors).
 
-   *Hint:* Think about the difference between an instructor who reviews the AI feedback before a student sees it versus an instructor who clicks "approve" on a hundred pieces of feedback in five minutes because they trust the system.  What design choices would make substantive review easier?
+    *Hint:* Think about the difference between an instructor who reviews the AI feedback before a student sees it versus an instructor who clicks "approve" on a hundred pieces of feedback in five minutes because they trust the system.  What design choices would make substantive review easier?
 
 3.  The Limited Risk tier requires that users be clearly informed they are interacting with an AI. A course agent is deployed as a chat widget on the college website with the welcome message "Hi, I'm Aria, your academic advisor; how can I help you today?"  Identify every specific element of this deployment that would need to change to comply with the EU AI Act, and explain what the compliant version would say.
 
-   *Hint:* The name "Aria" sounds human.  The phrase "your academic advisor" implies a professional relationship.  The welcome message contains no AI disclosure.  The law requires disclosure to be clear and prominent, not buried in terms of service.  What would a compliant version of this welcome message look like?
+    *Hint:* The name "Aria" sounds human.  The phrase "your academic advisor" implies a professional relationship.  The welcome message contains no AI disclosure.  The law requires disclosure to be clear and prominent, not buried in terms of service.  What would a compliant version of this welcome message look like?
 
 ---
 
@@ -87,15 +87,16 @@ The four functions are not a linear sequence; they form a cycle.  Measurement fi
 
 4.  Apply the NIST RMF **Map** function to a course coding agent that can read and execute student-submitted Python files.  Identify at least three distinct stakeholder groups (including at least one group that does not directly interact with the agent), and for each stakeholder group identify one specific potential harm they could experience.
 
-   *Hint:* Obvious stakeholders are students and instructors.  Who else might be affected?  Think about other students whose code might be compared or shared, the institution's IT infrastructure if the agent can execute arbitrary code, or the course graders who must act on the agent's feedback.
+    *Hint:* Obvious stakeholders are students and instructors.  Who else might be affected?  Think about other students whose code might be compared or shared, the institution's IT infrastructure if the agent can execute arbitrary code, or the course graders who must act on the agent's feedback.
 
 5.  The **Measure** function includes evaluating "bias."  For a coding agent that gives feedback on student code, what would bias mean in this specific context; what would it look like if the agent were biased?  Then describe how you would measure it: what data would you need to collect, what statistical comparison would you run, and what threshold would indicate a problem worth addressing?
 
-   *Hint:* Bias in a code review agent might mean it gives harsher feedback to code that uses variable names in certain languages, or that it rates code quality differently based on stylistic choices that correlate with student background.  To measure it, you would need outcome data disaggregated by some student attribute, but which attribute, and how would you get that data ethically?
+    *Hint:* Bias in a code review agent might mean it gives harsher feedback to code that uses variable names in certain languages, or that it rates code quality differently based on stylistic choices that correlate with student background.  To measure it, you would need outcome data disaggregated by some student attribute, but which attribute, and how would you get that data ethically?
 
 6.  The NIST RMF is voluntary in the U.S. A classmate argues: "If it's voluntary, companies can just ignore it and there are no consequences."  Give two concrete, specific reasons why a company building AI products might adopt the NIST RMF even without a legal mandate to do so.
 
-   *Hint:* Think about what happens when something goes wrong.  Who decides whether the company acted responsibly?  Also think about who the company's customers are and what those customers require in their vendor contracts.
+    *Hint:* Think about what happens when something goes wrong.  Who decides whether the company acted responsibly?  Also think about who the company's customers are and what those customers require in their vendor contracts.
+{: start="4"}
 
 ---
 
@@ -131,15 +132,16 @@ High risk; AI systems used in employment and worker management, including CV-scr
 
 7.  A student team wants to deploy a health information chatbot for their senior capstone project.  The chatbot will answer general health questions using a public medical knowledge base and will be tested with real Ursinus students as users.  Identify the specific regulatory obligations that apply to this deployment, and describe the concrete steps the team must complete before any student user accesses the chatbot.
 
-   *Hint:* Does the chatbot process Protected Health Information?  Even general health questions from identifiable students could constitute PHI if the responses are tied to a specific person's health inquiry.  Does the chatbot "diagnose" anything, or does it only provide general information?  Where is the line between health information and medical advice, and why does that line matter for FDA regulation?
+    *Hint:* Does the chatbot process Protected Health Information?  Even general health questions from identifiable students could constitute PHI if the responses are tied to a specific person's health inquiry.  Does the chatbot "diagnose" anything, or does it only provide general information?  Where is the line between health information and medical advice, and why does that line matter for FDA regulation?
 
 8.  The finance sector's SR 11-7 guidance requires "independent model validation": the team that validates a model must be organizationally separate from the team that built it.  Explain why this principle might be valuable for AI agents in any sector, not just finance.  Then describe what independent validation would look like for a student-built academic advising agent at Ursinus.
 
-   *Hint:* Why might the team that built a system be poorly positioned to find its flaws?  Think about cognitive bias, incentives, and what "independent" actually requires: does it mean a different student, a different class, or a different institution?
+    *Hint:* Why might the team that built a system be poorly positioned to find its flaws?  Think about cognitive bias, incentives, and what "independent" actually requires: does it mean a different student, a different class, or a different institution?
 
 9.  FERPA protects student education records.  If a course agent is given read access to a grade database to answer student questions about their own grades, identify two specific FERPA obligations the deployment must satisfy.  Then describe one concrete scenario in which the agent could inadvertently violate FERPA even with good intentions and even if the code appears correct.
 
-   *Hint:* FERPA violations often happen at the boundaries of legitimate use, not from malicious access, but from a student asking a question that sounds innocent but causes the system to return information about someone else.  Can you construct a natural-sounding question that might trick a naive agent into doing this?
+    *Hint:* FERPA violations often happen at the boundaries of legitimate use, not from malicious access, but from a student asking a question that sounds innocent but causes the system to return information about someone else.  Can you construct a natural-sounding question that might trick a naive agent into doing this?
+{: start="7"}
 
 ---
 
@@ -147,27 +149,27 @@ High risk; AI systems used in employment and worker management, including CV-scr
 
 1.  **EU AI Act classification.**
 
-   *What to do:* For each of the following agent systems from the course, assign an EU AI Act risk tier (Unacceptable / High / Limited / Minimal) and write a one-paragraph justification citing specific tier criteria: (a) the RAG agent that answers questions about course readings, (b) the coding agent that reviews student code and gives feedback, (c) a hypothetical agent that recommends mental health resources based on student chat patterns, (d) an agent that schedules campus events based on historical attendance data, (e) an agent that predicts which students are at risk of dropping a course.
+    *What to do:* For each of the following agent systems from the course, assign an EU AI Act risk tier (Unacceptable / High / Limited / Minimal) and write a one-paragraph justification citing specific tier criteria: (a) the RAG agent that answers questions about course readings, (b) the coding agent that reviews student code and gives feedback, (c) a hypothetical agent that recommends mental health resources based on student chat patterns, (d) an agent that schedules campus events based on historical attendance data, (e) an agent that predicts which students are at risk of dropping a course.
 
-   *Starter hint:* For each system, ask yourself: (1) Does it make a consequential decision about an individual person, one that affects their rights, opportunities, or wellbeing?  (2) Is it in a sector explicitly listed in Annex III (the EU AI Act's enumerated list of High Risk application domains, including employment, education, healthcare, law enforcement, critical infrastructure)?  (3) Does it deploy any manipulation technique?  Systems (c) and (e) are the most complex cases; work through those carefully.  For (c), consider whether recommending mental health resources constitutes providing medical advice.
+    *Starter hint:* For each system, ask yourself: (1) Does it make a consequential decision about an individual person, one that affects their rights, opportunities, or wellbeing?  (2) Is it in a sector explicitly listed in Annex III (the EU AI Act's enumerated list of High Risk application domains, including employment, education, healthcare, law enforcement, critical infrastructure)?  (3) Does it deploy any manipulation technique?  Systems (c) and (e) are the most complex cases; work through those carefully.  For (c), consider whether recommending mental health resources constitutes providing medical advice.
 
-   *You've succeeded when:* Each classification is supported by at least one specific criterion from the EU AI Act text, and the justifications for borderline cases (b), (c), and (e) acknowledge the arguments on both sides before reaching a conclusion.
+    *You've succeeded when:* Each classification is supported by at least one specific criterion from the EU AI Act text, and the justifications for borderline cases (b), (c), and (e) acknowledge the arguments on both sides before reaching a conclusion.
 
 2.  **NIST RMF risk register.**
 
-   *What to do:* Using the four NIST RMF functions as column headers (Govern / Map / Measure / Manage), create a one-page risk register for the course RAG agent.  For each function column, identify one specific risk, one activity to address it, and one artifact that would document the team's response.
+    *What to do:* Using the four NIST RMF functions as column headers (Govern / Map / Measure / Manage), create a one-page risk register for the course RAG agent.  For each function column, identify one specific risk, one activity to address it, and one artifact that would document the team's response.
 
-   *Starter hint:* Here is a starter row to show the format; fill in the remaining three columns with different risks: **Govern** | Risk: No one is accountable if the agent produces harmful output | Activity: Assign a named "AI owner" who reviews all deployment decisions | Artifact: Roles and responsibilities document signed by the team.  Now complete Map, Measure, and Manage with distinct risks specific to a RAG agent (think about retrieval quality, hallucination, and data freshness as potential risk sources).
+    *Starter hint:* Here is a starter row to show the format; fill in the remaining three columns with different risks: **Govern** | Risk: No one is accountable if the agent produces harmful output | Activity: Assign a named "AI owner" who reviews all deployment decisions | Artifact: Roles and responsibilities document signed by the team.  Now complete Map, Measure, and Manage with distinct risks specific to a RAG agent (think about retrieval quality, hallucination, and data freshness as potential risk sources).
 
-   *You've succeeded when:* Each cell contains a specific, concrete entry, not a generic statement like "check for bias" but a specific risk (e.g., "the retrieval corpus contains outdated advising policies from 2019") and a specific artifact (e.g., "corpus freshness audit report with dates of all source documents").
+    *You've succeeded when:* Each cell contains a specific, concrete entry, not a generic statement like "check for bias" but a specific risk (e.g., "the retrieval corpus contains outdated advising policies from 2019") and a specific artifact (e.g., "corpus freshness audit report with dates of all source documents").
 
 3.  **GDPR enforcement research.**
 
-   *What to do:* Find one real enforcement action taken by a European data protection authority (DPA) under GDPR that involved AI, automated decision-making, or algorithmic profiling.  Write a one-paragraph summary covering: what the company did, which GDPR article was violated, what the fine or remedy was, and what lesson the enforcement action carries for developers building agents today.
+    *What to do:* Find one real enforcement action taken by a European data protection authority (DPA) under GDPR that involved AI, automated decision-making, or algorithmic profiling.  Write a one-paragraph summary covering: what the company did, which GDPR article was violated, what the fine or remedy was, and what lesson the enforcement action carries for developers building agents today.
 
-   *Starter hint:* Search the GDPR Enforcement Tracker at https://www.enforcementtracker.com/; filter by "automated decision-making" or "profiling" to find relevant cases.  Notable cases have involved credit scoring algorithms, behavioral advertising profiles, and AI hiring tools.  Pick a case you find interesting rather than the most famous one.
+    *Starter hint:* Search the GDPR Enforcement Tracker at https://www.enforcementtracker.com/; filter by "automated decision-making" or "profiling" to find relevant cases.  Notable cases have involved credit scoring algorithms, behavioral advertising profiles, and AI hiring tools.  Pick a case you find interesting rather than the most famous one.
 
-   *You've succeeded when:* Your paragraph identifies the specific GDPR article violated (e.g., Article 22 on automated individual decision-making, or Article 5 on data minimization), gives the actual fine amount, and draws a specific lesson that applies to one of the agent systems you have built this semester.
+    *You've succeeded when:* Your paragraph identifies the specific GDPR article violated (e.g., Article 22 on automated individual decision-making, or Article 5 on data minimization), gives the actual fine amount, and draws a specific lesson that applies to one of the agent systems you have built this semester.
 
 ---
 
