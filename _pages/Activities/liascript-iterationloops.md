@@ -30,7 +30,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 
 | Term | Plain-English Definition | Example You'll See Today |
 |------|--------------------------|--------------------------|
-| **Karpathy loop** | Ask for one small change, run the check, commit or revert, repeat.  The agent never gets more than one verifiable step ahead of you | Model 1: two increments to `normalize_title`, each one a commit |
+| **Karpathy loop** | Ask for one small change, run the check, commit or restore, repeat.  The agent never gets more than one verifiable step ahead of you | Model 1: two increments to `normalize_title`, each one a commit |
 | **Gate** | A point where the loop cannot continue until a person or a deterministic check says so | The plan gate and the check gate in Model 1 |
 | **Rubric** | The written check: what must be true, how to verify it, and whether a failure is material.  You write it before the agent runs | Section 6: the same rubric in a qualitative form and a quantitative one |
 | **Material defect** | A flaw that could change correctness, usefulness, compliance, interpretation, feasibility, safety, or a user's decision.  Style preferences usually are not | Default `max_results` of 10 when the spec says 5 |
@@ -83,7 +83,7 @@ Andrej Karpathy, who named vibe coding, makes the point (as the *AI-Assisted Dev
 | **The check** | A test or command you already have | A rubric you write first from the source of truth |
 | **The unit** | One increment | One candidate, one critique |
 | **What decides** | The check passes or it does not | The rubric's material criteria, all of them |
-| **When it stops** | The spec is met, or you revert and rethink | No material defect remains, or the preset's round limit is reached |
+| **When it stops** | The spec is met, or you restore and rethink | No material defect remains, or the preset's round limit is reached |
 | **Fits** | Code with a runnable check | Prompts, plans, documents, and code without a complete test suite |
 
 ## Model 1: A Two-Step Karpathy Loop
@@ -166,7 +166,17 @@ The loop is four files and one command repeated.  Two of the files you already h
 - One increment per run.  An increment is one criterion from spec.md.
 - Before editing, list the files you will change and why, then stop and wait.
 - After editing, run the check and report its exact output.  Do not summarize it.
-- Append one entry to .ai/SESSION.md after every commit or revert.
+
+## Track your own work in git
+- Commit every increment whose check passes.  The message names the criterion.
+- When the check fails, restore the working tree and say so.  Never leave a
+  failed increment half-applied for the next run to trip over.
+- Append one entry to .ai/SESSION.md after every commit or restore.
+
+## Report in plain sentences
+- Say what you changed, what the check said, what you committed, and what is next.
+- Name files and behavior, not line numbers.  Do not paste a patch.
+- If you could not do something, say which part and why, before anything else.
 
 ## Never
 - Do not edit spec.md, rubric.md, rubric.json, or system_prompt.txt.
@@ -197,11 +207,15 @@ Or ask opencode to do it:
 
 ```text
 Write AGENTS.md at the project root with these rules: one increment per run, list
-files before editing and stop, run the check and report its exact output, append to
-.ai/SESSION.md after every commit.  Forbid editing spec.md, rubric.md, rubric.json,
-system_prompt.txt, and any test.  Then write opencode.json with a permission block
-that asks by default, allows "git *" and "python -m pytest*" under bash, and denies
-"rm *".  Show me both files before you write them.
+files before editing and stop, run the check and report its exact output, commit
+every increment whose check passes with a message naming the criterion, restore the
+working tree when a check fails, and append to .ai/SESSION.md after every commit or
+restore.  Add a reporting rule: plain sentences saying what changed, what the check
+said, what was committed, and what is next, naming files and behavior rather than
+line numbers, and never pasting a patch.  Forbid editing spec.md, rubric.md,
+rubric.json, system_prompt.txt, and any test.  Then write opencode.json with a
+permission block that asks by default, allows "git *" and "python -m pytest*" under
+bash, and denies "rm *".  Show me both files before you write them.
 ```
 
 > **Checkpoint.**  Reopen the project after writing `opencode.json`, in the desktop application or by restarting `opencode` in that directory.  opencode reads the config from the folder it is working in, and a session that was already open does not pick up a file that did not exist when it started.
@@ -216,12 +230,45 @@ opencode run "Make <the next check> pass.  Edit <the one file> only.  List the f
 
 Or ask opencode to do it: type the same sentence into the message bar.  The `run` subcommand and the message bar reach the same agent with the same contract; the only difference is where the transcript ends up.
 
-Then the check, then the commit or the revert.  The agent can run all three for you, because `git` and `pytest` are already allowed:
+Then the check, then the commit or the restore.  The agent can run all three for you, because `git` and `pytest` are already allowed:
 
 ```text
 Run the check.  If it passes, commit with a message naming the criterion.  If it
-fails, revert the working tree and tell me what the failure said.
+fails, restore the working tree and tell me what the failure said.
 ```
+
+### What the agent should tell you
+
+The contract asked for plain sentences rather than a patch, and this is the shape it produces.  Four facts, in this order: what changed, what the check said, what was committed, what is next.
+
+```text
+Changed tools/titles.py so normalize_title lowercases the result and joins words
+with hyphens.  No other file touched.
+
+Check: python -m pytest tools/test_titles.py -q, 2 passed, 0 failed.
+
+Committed as 4a91c2e "normalize_title: lowercase and hyphenate".
+
+Next: test_rejects_empty_title does not exist yet, so the empty-string case has no
+check to make pass.  Write that test before the next increment.
+```
+
+Read what that report does and does not ask of you.  It names a file and a behavior, so you can tell whether the agent did the thing you asked.  It quotes the check verbatim, so "it works" is never the evidence.  It names the commit, so you can go look if you want to.  And it ends by telling you what the loop is blocked on, which is the sentence that decides the next prompt.
+
+Notice that you can accept or reject this increment without reading a line of the code.  The check is the evidence, and the commit is the record.  If the report and the check disagree, believe the check.
+
+The whole run reads back the same way, because the agent committed as it went:
+
+```bash
+git log --oneline
+```
+
+```text
+4a91c2e normalize_title: lowercase and hyphenate
+7f30bd1 normalize_title: collapse whitespace
+```
+
+One line per increment, each one a criterion that passed its check.  That is the progress report for the session, and it costs nothing to produce because the loop built it along the way.
 
 ## 4.  Where the Loop's State Lives
 
@@ -231,7 +278,7 @@ Every increment produces two things: a commit, and a sentence about what happene
 |---|---|---|
 | `.ai/CONTEXT.md` | "What is this project, and what do I read first?" | Almost never |
 | `.ai/CURRENT_TASK.md` | "What exactly is in flight, and what is the next immediate action?" | When you pick the next increment |
-| `.ai/SESSION.md` | "What just happened, what was verified, and what is the Next Safe Action?" | After every commit or revert |
+| `.ai/SESSION.md` | "What just happened, what was verified, and what is the Next Safe Action?" | After every commit or restore |
 | `.ai/FUTURE_WORK.md` | "Which good ideas are deliberately deferred?" | When you reject a plan for scope, as in Increment 2 |
 
 Every `SESSION.md` entry ends with a **Next Safe Action**, which in the Karpathy loop is simply the next increment.  Here is the entry for Model 1's second increment, so you can see how short it is:
@@ -536,8 +583,8 @@ Why does a Ralph loop start each iteration with a *fresh* context window instead
 
 1.  *Set up and run the Karpathy loop.*
 
-    - *What to do:* Write the `AGENTS.md` and `opencode.json` from Section 2 into your `cs357-work` repository.  Then implement your `spec.md` in at least three increments, each one a single `opencode run` or message-bar prompt, one check, and one commit or revert.  After each commit, append a `SESSION.md` entry in the shape of Section 4's example.
-    - *You've succeeded when:* `git log --oneline` shows one commit per increment, each `SESSION.md` entry names the verifying command, at least one plan was rejected or narrowed before it ran, and your permission block stopped at least one command you had to approve by hand.
+    - *What to do:* Write the `AGENTS.md` and `opencode.json` from Section 2 into your `cs357-work` repository.  Then implement your `spec.md` in at least three increments, each one a single `opencode run` or message-bar prompt, one check, and one commit or restore.  After each commit, append a `SESSION.md` entry in the shape of Section 4's example.
+    - *You've succeeded when:* `git log --oneline` shows one commit per increment with a message naming its criterion, every agent report names what changed, what the check said, and what is next, each `SESSION.md` entry names the verifying command, at least one plan was rejected or narrowed before it ran, and your permission block stopped at least one command you had to approve by hand.
 
 2.  *Write both rubrics and run one gauntlet round.*
 
