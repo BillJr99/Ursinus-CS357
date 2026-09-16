@@ -60,15 +60,15 @@ You already know every component.  A Prompt node is your system-prompt string; a
 
 1.  Complete the translation table.  For each artifact from our codebase (system prompt, `chat()` wrapper, chunker, embedder, vector query, critique loop), name the Langflow component or wiring pattern that plays its role.
 
-   *Hint:* Use the table above as a starting point.  Open Langflow's component sidebar and look for components whose names match the artifacts.  Some artifacts (like the critique loop) will not map to a single component.
+    *Hint:* Use the table above as a starting point.  Open Langflow's component sidebar and look for components whose names match the artifacts.  Some artifacts (like the critique loop) will not map to a single component.
 
 2.  Which of our patterns has *no* single-component equivalent and must be expressed as graph structure?  What does that tell you about what is essential (the underlying pattern) versus incidental (the medium in which it is expressed)?
 
-   *Hint:* A RAG query path requires multiple nodes connected in sequence.  A critique-refine loop requires a cycle.  Is the difficulty with Langflow about the concept being hard, or about the visual medium not supporting cycles natively?
+    *Hint:* A RAG query path requires multiple nodes connected in sequence.  A critique-refine loop requires a cycle.  Is the difficulty with Langflow about the concept being hard, or about the visual medium not supporting cycles natively?
 
 3.  Predict one class of bug that becomes *easier* to find on a canvas than in code, and one that becomes *harder*.  Justify both predictions before you test them in the builds below.
 
-   *Hint:* Think about what you can *see* on a canvas that is implicit in code (data flow direction, which nodes are connected).  Then think about what you can *inspect* in code that is hidden behind a node's icon (exact prompt text, exception tracebacks).
+    *Hint:* Think about what you can *see* on a canvas that is implicit in code (data flow direction, which nodes are connected).  Then think about what you can *inspect* in code that is hidden behind a node's icon (exact prompt text, exception tracebacks).
 
 ---
 
@@ -110,15 +110,16 @@ The visual artifact and your code-world tooling (harnesses, batch evaluation) co
 
 4.  Run your RAG Knowledge Base Lab evaluation question set through the Langflow endpoint with your harness from the *Hallucinations and Evaluating Agent Outputs* activity.  Do the two implementations score identically?  If not, hunt the delta: which knob (chunking, $k$ retrieved documents, prompt wording) silently differs between the Python implementation and the Langflow flow?
 
-   *Hint:* Export the Langflow flow JSON and search for your chunk size value.  Is it exactly the same number as in your Python RAG Knowledge Base Lab code?  Check the retriever's $k$ parameter (number of documents retrieved) in the Chroma node settings.
+    *Hint:* Export the Langflow flow JSON and search for your chunk size value.  Is it exactly the same number as in your Python RAG Knowledge Base Lab code?  Check the retriever's $k$ parameter (number of documents retrieved) in the Chroma node settings.
 
 5.  Time both versions on ten queries.  Attribute any latency overhead to a specific cause, and decide whether the difference matters for an interactive chatbot versus a batch processing pipeline.
 
-   *Hint:* Use Python's `time.time()` before and after each query.  If Langflow is slower, consider: is it doing the same computation, or is there HTTP overhead from the local API call?  Does that matter if a user is waiting 2 seconds versus 0.5 seconds?
+    *Hint:* Use Python's `time.time()` before and after each query.  If Langflow is slower, consider: is it doing the same computation, or is there HTTP overhead from the local API call?  Does that matter if a user is waiting 2 seconds versus 0.5 seconds?
 
 6.  Hand your canvas to a teammate who did not build it, with no narration allowed.  Ask them to explain the system.  Try the same with your Python RAG Knowledge Base Lab file.  Record the asymmetry honestly: which medium was clearer to a newcomer, and which medium revealed more detail to an expert?
 
-   *Hint:* Record specific moments of confusion or clarity.  Which medium let the newcomer correctly predict what would happen if you changed the chunk size?  Which let the expert find the exact temperature setting used?
+    *Hint:* Record specific moments of confusion or clarity.  Which medium let the newcomer correctly predict what would happen if you changed the chunk size?  Which let the expert find the exact temperature setting used?
+{: start="4"}
 
 The most defensible claim about visual builders versus code for agent systems is:
 
@@ -146,13 +147,13 @@ Open `http://localhost:7860` and keep notes on what each component represents an
 
 ---
 
-### Step 1: Simple Chat (5 minutes)
+## Step 1: Simple Chat (5 minutes)
 
 1.  Click **New Flow** -> **Blank Canvas**
 2.  From the left sidebar, drag onto the canvas:
-   - **Chat Input** (under Helpers)
-   - **Ollama** (under Models): set Model Name to `llama3.2`, Base URL to `http://localhost:11434`
-   - **Chat Output** (under Helpers)
+    - **Chat Input** (under Helpers)
+    - **Ollama** (under Models): set Model Name to `llama3.2`, Base URL to `http://localhost:11434`
+    - **Chat Output** (under Helpers)
 3.  Connect: **Chat Input -> Ollama -> Chat Output** (click the output port of Chat Input, drag to input port of Ollama; repeat for Ollama -> Chat Output)
 4.  Click **Run** (play button at top right)
 5.  Type a question in the Chat Input field.  You should see a response in Chat Output.
@@ -163,7 +164,7 @@ Open `http://localhost:7860` and keep notes on what each component represents an
 
 ---
 
-### Step 2: Add a System Prompt (5 minutes)
+## Step 2: Add a System Prompt (5 minutes)
 
 1.  Drag a **Prompt** component onto the canvas (under Prompts)
 2.  In the Prompt's template field, write a system prompt of your choice (use the ROLE/GOAL/TOOLS/FORMAT/GUARDRAILS framework from the Prompt Engineering activity)
@@ -188,16 +189,16 @@ The system message in the `messages` list (the dict with `"role": "system"`)
 
 ---
 
-### Step 3: Add RAG (15 minutes)
+## Step 3: Add RAG (15 minutes)
 
 This replicates your RAG Knowledge Base Lab RAG pipeline visually.
 
 1.  Drag onto the canvas:
-   - **File** component (under Data): click "Upload File" and upload any short text document (or create a 3-paragraph `.txt` file about any topic)
-   - **RecursiveCharacterTextSplitter** (under Processing): set `chunk_size=500`, `chunk_overlap=50`
-   - **Chroma** (under Vector Stores)
-   - **OllamaEmbeddings** (under Embeddings): set Model to `nomic-embed-text`
-   - **Retriever** (connected to Chroma)
+    - **File** component (under Data): click "Upload File" and upload any short text document (or create a 3-paragraph `.txt` file about any topic)
+    - **RecursiveCharacterTextSplitter** (under Processing): set `chunk_size=500`, `chunk_overlap=50`
+    - **Chroma** (under Vector Stores)
+    - **OllamaEmbeddings** (under Embeddings): set Model to `nomic-embed-text`
+    - **Retriever** (connected to Chroma)
 
 2.  Connect the indexing path: **File -> TextSplitter -> Chroma**
 3.  Connect embeddings: **OllamaEmbeddings -> Chroma** (for storing) and **OllamaEmbeddings -> Retriever** (for querying)
@@ -212,6 +213,7 @@ Context: {context}
 
 5.  Connect: **Chat Input -> Retriever** (the query path) and **Retriever output -> Prompt {context} input**
 6.  Test with 3 questions: one answerable from the document, one not in the document, and one where the answer is split across two chunks
+{: start="5"}
 
 **Critical Thinking**:
 
@@ -219,23 +221,23 @@ Context: {context}
 
 2.  Your RAG Knowledge Base Lab RAG pipeline had explicit code to handle "no relevant chunks found" and return an abstention message.  Where in the Langflow flow would you implement this?
 
-   > *Hint: You could add a **Conditional Router** node that checks whether the retriever returned any results before passing context to the Prompt.  Or you could handle it in the Prompt template itself with a fallback instruction.*
+    > *Hint: You could add a **Conditional Router** node that checks whether the retriever returned any results before passing context to the Prompt.  Or you could handle it in the Prompt template itself with a fallback instruction.*
 
 ---
 
-### Step 4: Export and Inspect the JSON (5 minutes)
+## Step 4: Export and Inspect the JSON (5 minutes)
 
 1.  Click the three-dot menu (⋯) at top right -> **Export Flow** -> save as `rag_flow.json`
 2.  Open the file and find:
-   - The Ollama model configuration (model name, base URL, temperature)
-   - The `chunk_size` value you set
-   - How edges (connections) are represented in the JSON
+    - The Ollama model configuration (model name, base URL, temperature)
+    - The `chunk_size` value you set
+    - How edges (connections) are represented in the JSON
 
 **Critical Thinking**: The JSON export is the "source code" for your visual pipeline.  Compare it to your RAG Knowledge Base Lab Python code.  Which is easier to read?  Which is easier to version-control and diff in a tool like `git`?
 
 ---
 
-### In-Activity Closing Reflection
+## In-Activity Closing Reflection
 
 Answer these in your notes before moving on:
 
@@ -257,27 +259,27 @@ Now that you've built, tested, and exported flows, this part asks you to push th
 
 1.  *Pattern rebuild.*
 
-   *What to do:* Choose one Unit 3 pattern (router, critique-refine, or a two-stage pipeline) and realize it on the Langflow canvas.  Capture a screenshot of the working flow with at least one playground transcript showing the expected behavior.
+    *What to do:* Choose one Unit 3 pattern (router, critique-refine, or a two-stage pipeline) and realize it on the Langflow canvas.  Capture a screenshot of the working flow with at least one playground transcript showing the expected behavior.
 
-   *Starter hint:* A two-stage pipeline is the simplest: one Prompt+Ollama node for the first stage, whose output feeds a second Prompt+Ollama node.  The "router" pattern requires a conditional; look for a "Conditional Router" component in Langflow's sidebar.
+    *Starter hint:* A two-stage pipeline is the simplest: one Prompt+Ollama node for the first stage, whose output feeds a second Prompt+Ollama node.  The "router" pattern requires a conditional; look for a "Conditional Router" component in Langflow's sidebar.
 
-   *You've succeeded when:* You can show the screenshot to a teammate who did not build it, and they correctly explain what the flow does without your help.
+    *You've succeeded when:* You can show the screenshot to a teammate who did not build it, and they correctly explain what the flow does without your help.
 
 2.  *Limit hunt.*
 
-   *What to do:* Attempt to express your Multi-Agent Patterns Lab debate (n agents, two rounds, majority vote) visually on the canvas.  Document precisely where the canvas resists (loops, dynamic fan-out, variable number of agents), and state the general principle about what dataflow graphs express awkwardly.
+    *What to do:* Attempt to express your Multi-Agent Patterns Lab debate (n agents, two rounds, majority vote) visually on the canvas.  Document precisely where the canvas resists (loops, dynamic fan-out, variable number of agents), and state the general principle about what dataflow graphs express awkwardly.
 
-   *Starter hint:* Dynamic fan-out means "create $n$ parallel paths where $n$ is determined at runtime."  Can you wire $n$ Ollama nodes when you do not know $n$ at flow-design time?  What does this tell you about the difference between *static* and *dynamic* computation graphs?
+    *Starter hint:* Dynamic fan-out means "create $n$ parallel paths where $n$ is determined at runtime."  Can you wire $n$ Ollama nodes when you do not know $n$ at flow-design time?  What does this tell you about the difference between *static* and *dynamic* computation graphs?
 
-   *You've succeeded when:* You can write one precise sentence stating the structural limitation (e.g., "Langflow flows are static graphs; they cannot spawn a variable number of parallel nodes at runtime") and give a concrete example from the debate pipeline that hits this limit.
+    *You've succeeded when:* You can write one precise sentence stating the structural limitation (e.g., "Langflow flows are static graphs; they cannot spawn a variable number of parallel nodes at runtime") and give a concrete example from the debate pipeline that hits this limit.
 
 3.  *Stakeholder demo.*
 
-   *What to do:* Prepare a 90-second explanation of your Build 2 RAG flow for a non-programmer (an RA, a club officer, a professor in another department).  Deliver it to another team's Reflector and collect one comprehension question you failed to anticipate.
+    *What to do:* Prepare a 90-second explanation of your Build 2 RAG flow for a non-programmer (an RA, a club officer, a professor in another department).  Deliver it to another team's Reflector and collect one comprehension question you failed to anticipate.
 
-   *Starter hint:* Your explanation should answer: "What does it do?  Where does the knowledge come from?  What does it NOT know?"  Avoid the words "embedding," "vector," and "Chroma."  Use analogies: "It's like a search engine that reads your documents before answering."
+    *Starter hint:* Your explanation should answer: "What does it do?  Where does the knowledge come from?  What does it NOT know?"  Avoid the words "embedding," "vector," and "Chroma."  Use analogies: "It's like a search engine that reads your documents before answering."
 
-   *You've succeeded when:* Your listener asks a question you had not prepared for, you can record that question, and you can improve your explanation to preemptively answer it next time.
+    *You've succeeded when:* Your listener asks a question you had not prepared for, you can record that question, and you can improve your explanation to preemptively answer it next time.
 
 ---
 

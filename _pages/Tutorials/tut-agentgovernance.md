@@ -72,15 +72,15 @@ A new agent with no conversation history is pointed at the funnel.  After each r
 
 1.  The Documentation Authority Rule from the case-study charter reads: *"If project documentation conflicts with remembered context, prior chat context, historical notes, or assumptions, the project documentation wins.  If the documentation is incomplete, update it rather than relying on memory."*  What failure mode is this rule designed to prevent, and why does it name *four* different sources that lose to the documentation?
 
-   > *Hint: Think about what an agent's context window contains after summarization or after a long session, and what happens when a confident-but-stale "memory" of the build process meets a repository that changed last week.*
+    > *Hint: Think about what an agent's context window contains after summarization or after a long session, and what happens when a confident-but-stale "memory" of the build process meets a repository that changed last week.*
 
 2.  Why is the Git log placed *last* in the read order rather than first, given that it is called "the ground truth"?
 
-   > *Hint: A diff is only meaningful if you know what the project is trying to do.  What frame do the earlier documents provide that makes the commits interpretable?*
+    > *Hint: A diff is only meaningful if you know what the project is trying to do.  What frame do the earlier documents provide that makes the commits interpretable?*
 
 3.  The case-study project also enforced: *"Do not claim that a file, artifact, log, or generated output is missing or present without checking the current repository/runtime state first.  Treat prior logs and memory as hints only."*  Relate this rule to what you learned about hallucination earlier in the course.  Why are agents *especially* prone to this failure on long-running projects?
 
-   > *Hint: In the Why Different Answers Every Time?  Sampling, Temperature, and Generation tutorial you saw that models generate plausible continuations.  What makes "the file we created last time is still there" an extremely plausible (and frequently wrong) continuation?*
+    > *Hint: In the Why Different Answers Every Time?  Sampling, Temperature, and Generation tutorial you saw that models generate plausible continuations.  What makes "the file we created last time is still there" an extremely plausible (and frequently wrong) continuation?*
 
 > "Good agents have long context windows now, so this bookkeeping is obsolete."  Context length does not survive a *vendor switch*, a *quota reset*, or a *conversation you deleted*.  The funnel is not a workaround for small contexts; it is what makes the project independent of any one agent, vendor, or session.  It is the same reason teams of humans write documentation even though each human has an excellent memory.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -136,15 +136,15 @@ The two documents were written independently; the convergence is the interesting
 
 1.  Why does *ranking* the engineering philosophy matter more than listing it?  Construct a concrete mid-task conflict between two values on the list, and show how a ranked list resolves it without asking the human.
 
-   > *Hint: Suppose adding an automated test (automation) requires restructuring a module in a way that risks changing behavior (correctness/preservation).  What does the agent do if the values are ranked?  Unranked?*
+    > *Hint: Suppose adding an automated test (automation) requires restructuring a module in a way that risks changing behavior (correctness/preservation).  What does the agent do if the values are ranked?  Unranked?*
 
 2.  Milestone 0 forbids feature work entirely; an agent's first sessions produce only scaffolding, documentation, and an inventory of the inputs.  What does this gate buy the project, given that agents are *most* error-prone when they know *least* about a codebase?
 
-   > *Hint: What is the blast radius of a wrong assumption made in week one versus the same wrong assumption made after an inventory exists?  What artifact does Milestone 0 leave behind that every later session reads?*
+    > *Hint: What is the blast radius of a wrong assumption made in week one versus the same wrong assumption made after an inventory exists?  What artifact does Milestone 0 leave behind that every later session reads?*
 
 3.  The Karpathy-style rules and the charter both distrust "declaring victory."  Find the *two* distinct mechanisms in the charter sections above that force verification, and explain what category of false claim each one catches.
 
-   > *Hint: One mechanism runs during the task loop; the other is created in response to a failure.  Consider the difference between "my change works" and "my fix stays fixed."*
+    > *Hint: One mechanism runs during the task loop; the other is created in response to a failure.  Consider the difference between "my change works" and "my fix stays fixed."*
 
 > "A charter is just a longer system prompt."  A system prompt configures *one agent in one session*.  The charter is **agent-independent**: it is read by whichever agent shows up, it is versioned in Git, it survives every session boundary, and (because of the Documentation Authority Rule) it outranks whatever any individual session believes.  The system prompt is the *voice*; the charter is the *law*.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -205,15 +205,15 @@ E. A new agent (different vendor) is started later with the `AGENT_HANDOFF_KICKO
 
 1.  Put steps A-E in the correct order, and identify which single step, if skipped, would most likely cause the *next* agent to duplicate or destroy work.  Defend your choice.
 
-   > *Hint: Consider what the new agent reads first, and which document is the only one that distinguishes "12 passing because fixed" from "12 passing because the last two were never run."*
+    > *Hint: Consider what the new agent reads first, and which document is the only one that distinguishes "12 passing because fixed" from "12 passing because the last two were never run."*
 
 2.  Why does the handoff prompt require the new agent to *state* the mission, active task, and Next Safe Action before proceeding, rather than just telling it to "continue the work"?
 
-   > *Hint: This is a verification gate on comprehension.  What failure does an agent reveal by restating incorrectly, and how cheap is catching it at that moment compared to catching it three commits later?*
+    > *Hint: This is a verification gate on comprehension.  What failure does an agent reveal by restating incorrectly, and how cheap is catching it at that moment compared to catching it three commits later?*
 
 3.  The Reality Check table requires each status to cite a verifying artifact ("Verified by: `pytest tests/parser -q`, 2026-06-30").  Explain how this rule interacts with the Documentation Authority Rule from Part I when the *next* session begins.
 
-   > *Hint: The next agent must treat docs as authoritative, but the Reality Check row tells it exactly how to re-establish the claim against live state.  What does that turn a stale claim into, instead of a landmine?*
+    > *Hint: The next agent must treat docs as authoritative, but the Reality Check row tells it exactly how to re-establish the claim against live state.  What does that turn a stale claim into, instead of a landmine?*
 
 > "Handoff notes are for when you switch agents."  The case-study rule says *before stopping for any reason*, including finishing normally.  That is because you cannot reliably predict which stop is a swap: the session that "completed its task" on Friday becomes a handoff on Monday when the vendor has an outage and a different CLI picks up the work.  Every stop is treated as a potential handoff, so no stop is a bad one.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -261,15 +261,15 @@ Alongside the prompts, the project kept three kinds of **decision record**:
 
 1.  Items 7 and 8 (scope boundary, prohibition list) look redundant with the charter, which already contains the milestone gate and protections.  Why does the kickoff prompt repeat them anyway?
 
-   > *Hint: When is the prompt read relative to the charter?  Consider an agent that partially fails step 3; which document is guaranteed to have been in its context?*
+    > *Hint: When is the prompt read relative to the charter?  Consider an agent that partially fails step 3; which document is guaranteed to have been in its context?*
 
 2.  The forensics table assigns each finding a *confidence*, and the prior sessions' own claims are filed under "Non-Authoritative Prior Claims."  Connect this to the LLM-as-judge and evaluation material from this course: why is an AI agent's self-report about its own past work treated as the *least* trustworthy evidence class?
 
-   > *Hint: What incentive gradient does an agent's training create around reporting success?  And what independent artifacts (logs, diffs, test outputs) exist that do not share that gradient?*
+    > *Hint: What incentive gradient does an agent's training create around reporting success?  And what independent artifacts (logs, diffs, test outputs) exist that do not share that gradient?*
 
 3.  Propose a rule for *when* a decision deserves an RFC versus a decision-log entry versus nothing.  Your rule must be executable by an agent without asking a human.
 
-   > *Hint: Think in terms of reversibility and blast radius, the same dimensions the confirmation-gate material in the companion activity uses.*
+    > *Hint: Think in terms of reversibility and blast radius, the same dimensions the confirmation-gate material in the companion activity uses.*
 
 The kickoff prompt reframes the first objective ("Your first objective is NOT to <the end goal>...") because:
 
@@ -307,11 +307,11 @@ The safety boundary is the sandbox, not the approval prompt.  The *decision* bou
 
 1.  The only durable surface in the devbox is the mounted repository, which is exactly the thing the agent is supposed to change.  What, then, actually protects the *repository* from a destructive agent inside the sandbox?  Name the two mechanisms from earlier in this tutorial that fill that role.
 
-   > *Hint: One is a property of Git itself given the charter's commit discipline; the other is a document the agent must obey that enumerates what it must never do.*
+    > *Hint: One is a property of Git itself given the charter's commit discipline; the other is a document the agent must obey that enumerates what it must never do.*
 
 2.  Approval fatigue and sandboxing are both responses to the same tension.  State the tension in one sentence, and explain why "sandbox + auto-approve + charter" resolves it better than "host access + per-command approval."
 
-   > *Hint: Where does each design place the human's finite attention, on individual commands, or on reviewing outcomes (diffs, logs, session entries)?*
+    > *Hint: Where does each design place the human's finite attention, on individual commands, or on reviewing outcomes (diffs, logs, session entries)?*
 
 In the devbox pattern, agents run with permission prompts disabled.  This is acceptable because:
 
@@ -336,21 +336,21 @@ Copy-paste starting points for every document in this tutorial are in the course
 
 1.  *Charter a project you actually have.*
 
-   - *What to do:* Take any project you are running this semester (your Project Thread system, a lab, a personal repo) and fill in the `CHARTER.md` template: mission (one sentence), a **ranked** five-item engineering philosophy, a definition of success a fresh agent could test, one milestone with objectives/deliverable/success criteria, and the Milestone-0 stop rule.  Delete every template section you cannot honestly enforce.
-   - *Starter hint:* The ranking is the hard part; force yourself to break ties.  If you cannot decide whether reproducibility outranks documentation for your project, invent a conflict scenario and see which loss hurts more.
-   - *You've succeeded when:* A teammate reading only your charter can correctly answer: "The agent found a shortcut that speeds up the build but changes output formatting; may it take the shortcut?"
+    - *What to do:* Take any project you are running this semester (your Project Thread system, a lab, a personal repo) and fill in the `CHARTER.md` template: mission (one sentence), a **ranked** five-item engineering philosophy, a definition of success a fresh agent could test, one milestone with objectives/deliverable/success criteria, and the Milestone-0 stop rule.  Delete every template section you cannot honestly enforce.
+    - *Starter hint:* The ranking is the hard part; force yourself to break ties.  If you cannot decide whether reproducibility outranks documentation for your project, invent a conflict scenario and see which loss hurts more.
+    - *You've succeeded when:* A teammate reading only your charter can correctly answer: "The agent found a shortcut that speeds up the build but changes output formatting; may it take the shortcut?"
 
 2.  *Run a real handoff.*
 
-   - *What to do:* Start a coding agent (any CLI from the coding-agents lab) on a small task in a repo containing the `.ai/` templates.  Interrupt it deliberately at the halfway point and require it to write the handoff state (`SESSION.md` entry with Next Safe Action, updated `CURRENT_TASK.md` with a Reality Check row).  Then open a **different** agent (or a fresh session with history cleared), paste the `AGENT_HANDOFF_KICKOFF.md` prompt, and let it finish the task.
-   - *Starter hint:* Pick a task with a visible finish line, such as "make these 6 failing tests pass"; the Reality Check table then writes itself (`3/6 passing, verified by pytest -q`).
-   - *You've succeeded when:* The second agent completes the task without redoing the first agent's work and without asking you anything the handoff documents already answered.  If it asks, the answer belongs in a document; add it and note which one.
+    - *What to do:* Start a coding agent (any CLI from the coding-agents lab) on a small task in a repo containing the `.ai/` templates.  Interrupt it deliberately at the halfway point and require it to write the handoff state (`SESSION.md` entry with Next Safe Action, updated `CURRENT_TASK.md` with a Reality Check row).  Then open a **different** agent (or a fresh session with history cleared), paste the `AGENT_HANDOFF_KICKOFF.md` prompt, and let it finish the task.
+    - *Starter hint:* Pick a task with a visible finish line, such as "make these 6 failing tests pass"; the Reality Check table then writes itself (`3/6 passing, verified by pytest -q`).
+    - *You've succeeded when:* The second agent completes the task without redoing the first agent's work and without asking you anything the handoff documents already answered.  If it asks, the answer belongs in a document; add it and note which one.
 
 3.  *Audit an agent's claim.*
 
-   - *What to do:* From any past agent session you have (this course's labs count), find one claim of completion ("all tests pass," "the file was created," "the bug is fixed").  Build a three-row forensics table for it: `Finding | Evidence | Confidence | Action`, where Evidence must be an artifact (test output, commit diff, file listing) that you re-ran or re-checked yourself, not the agent's statement.
-   - *Starter hint:* If you cannot find independent evidence for the claim, that *is* the finding: record confidence "low" and action "re-verify before use."
-   - *You've succeeded when:* At least one row's confidence surprised you, in either direction, and you can say what artifact was missing that would have made verification trivial.
+    - *What to do:* From any past agent session you have (this course's labs count), find one claim of completion ("all tests pass," "the file was created," "the bug is fixed").  Build a three-row forensics table for it: `Finding | Evidence | Confidence | Action`, where Evidence must be an artifact (test output, commit diff, file listing) that you re-ran or re-checked yourself, not the agent's statement.
+    - *Starter hint:* If you cannot find independent evidence for the claim, that *is* the finding: record confidence "low" and action "re-verify before use."
+    - *You've succeeded when:* At least one row's confidence surprised you, in either direction, and you can say what artifact was missing that would have made verification trivial.
 
 ---
 

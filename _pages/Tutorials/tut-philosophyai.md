@@ -65,15 +65,15 @@ The debate over whether machines can understand (and what understanding even mea
 
 1.  Searle distinguishes the "systems reply" from his own view.  Reconstruct the systems reply in your own words.  Does Searle's counter-response (imagining the person internalizing the entire rulebook) succeed?
 
-   *Hint: The systems reply says: the person alone does not understand Chinese, but the whole system (person + rules + symbols) does.  Searle's counter is to imagine the person memorizing all the rules, so the whole system is inside one head.  Ask yourself: does the person now understand Chinese?  If the answer still feels like "no," what does that reveal about where understanding must live?*
+    *Hint: The systems reply says: the person alone does not understand Chinese, but the whole system (person + rules + symbols) does.  Searle's counter is to imagine the person memorizing all the rules, so the whole system is inside one head.  Ask yourself: does the person now understand Chinese?  If the answer still feels like "no," what does that reveal about where understanding must live?*
 
 2.  A functionalist would say an LLM "believes" a sentence is true if that sentence is encoded in its parameters in a way that influences outputs appropriately.  Is this a meaningful use of the word "believe," or a category error?  Defend a position.
 
-   *Hint: Think about what we ordinarily mean when we say a person "believes" something.  Does it require consciousness?  Inner experience?  The capacity to act on the belief?  Now ask: does an LLM satisfy any of those criteria, all of them, or something that is functionally equivalent but metaphysically different?*
+    *Hint: Think about what we ordinarily mean when we say a person "believes" something.  Does it require consciousness?  Inner experience?  The capacity to act on the belief?  Now ask: does an LLM satisfy any of those criteria, all of them, or something that is functionally equivalent but metaphysically different?*
 
 3.  If no behavioral test can settle the question of machine consciousness (the hard problem), what follows for AI policy?  Does the unresolvability of the philosophical question mean we should act as if machines are or are not conscious?
 
-   *Hint: Consider how we handle moral uncertainty in other domains.  We extend moral consideration to entities whose inner experience we cannot verify (infants, animals, people with severe cognitive disabilities).  What principle governs those decisions?  Does the same principle apply to AI, and if not, why not?*
+    *Hint: Consider how we handle moral uncertainty in other domains.  We extend moral consideration to entities whose inner experience we cannot verify (infants, animals, people with severe cognitive disabilities).  What principle governs those decisions?  Does the same principle apply to AI, and if not, why not?*
 
 ---
 
@@ -103,15 +103,16 @@ Mary is a seventy-three-year-old widow whose adult children have suggested she t
 
 4.  Identify at least three specific psychological mechanisms operating in Mary's case.  For each, explain what the AI system did (or appeared to do) that triggered the mechanism, and note whether the trigger was intentional design.
 
-   *Hint: Start with the three mechanisms named in the reading (anthropomorphism, parasocial attachment, illusion of reciprocal disclosure).  For each, identify the specific feature of the AI's behavior that activated it.  Then ask: was that feature deliberately engineered to produce attachment, or is it a side effect of making the system responsive and fluent?*
+    *Hint: Start with the three mechanisms named in the reading (anthropomorphism, parasocial attachment, illusion of reciprocal disclosure).  For each, identify the specific feature of the AI's behavior that activated it.  Then ask: was that feature deliberately engineered to produce attachment, or is it a side effect of making the system responsive and fluent?*
 
 5.  Weizenbaum argued that some tasks should *never* be delegated to machines because the relationship between human and human in performing them is itself the point: therapy, care, grief counseling.  Do you find this argument compelling or paternalistic?  What principle would you use to distinguish delegable from non-delegable tasks?
 
-   *Hint: Consider what makes a therapy relationship valuable: is it the cognitive content (the insights produced), the emotional experience (feeling heard), or the moral relationship (being cared for by another person who could choose not to)?  Which of those does an AI system provide, and which is it incapable of providing in principle?*
+    *Hint: Consider what makes a therapy relationship valuable: is it the cognitive content (the insights produced), the emotional experience (feeling heard), or the moral relationship (being cared for by another person who could choose not to)?  Which of those does an AI system provide, and which is it incapable of providing in principle?*
 
 6.  The **intentionality question**: Mary attributes to the AI a genuine interest in her wellbeing.  Is this attribution simply false, or is the concept of "genuine interest" doing ambiguous work?
 
-   *Hint: Consider what it would take for a human's interest in another person to be "genuine."  Does it require consciousness?  Does it require the capacity to be harmed by the other's suffering?  Does it require that caring was chosen rather than designed?  Now ask: does an AI system satisfy any of those criteria?*
+    *Hint: Consider what it would take for a human's interest in another person to be "genuine."  Does it require consciousness?  Does it require the capacity to be harmed by the other's suffering?  Does it require that caring was chosen rather than designed?  Now ask: does an AI system satisfy any of those criteria?*
+{: start="4"}
 
 > "Users who form emotional attachments to AI are naive or confused."  Research consistently shows that the ELIZA effect operates across education levels, age groups, and even among people who know they are talking to a program.  It is a feature of human social cognition, not a failure of intelligence.  This means that designing an AI to be responsive, warm, and attentive will produce emotional attachment in many users regardless of disclosure, and that disclosure alone ("this is an AI") does not prevent the effect.  Engineers have a responsibility to design with this knowledge, not to assume users will simply "be rational."
 {: .tb-pitfall data-title="Common Misconception"}
@@ -161,15 +162,16 @@ Autonomous AI agents introduce a novel version: the agent has no interests in th
 
 7.  For each scenario in Model 3, identify which responsible party would bear liability under a *strict liability* regime (harm establishes liability regardless of fault) versus a *negligence* regime (liability requires failure to meet a reasonable standard of care).  Do the regimes produce the same answer?
 
-   *Hint: Under strict liability, you ask "who made/deployed the product that caused the harm?"  Under negligence, you ask "who failed to exercise the care that a reasonable professional would have exercised?"  These can point to different parties.  For the medical AI: strict liability might point to the developer; negligence might point to the physician who did not verify.*
+    *Hint: Under strict liability, you ask "who made/deployed the product that caused the harm?"  Under negligence, you ask "who failed to exercise the care that a reasonable professional would have exercised?"  These can point to different parties.  For the medical AI: strict liability might point to the developer; negligence might point to the physician who did not verify.*
 
 8.  The **free will** question intersects here: an agent cannot be held morally responsible unless it could have done otherwise.  Does an AI agent lack moral responsibility because it cannot do otherwise, or because it cannot have intentions, or for some other reason?
 
-   *Hint: A thermostat cannot do otherwise than respond to temperature, but we do not hold it morally responsible.  A human who acts under severe coercion arguably "could not do otherwise", but we still debate whether they bear responsibility.  Where does an AI agent fall on this spectrum?  Does the answer change if the agent learned its behavior from human feedback rather than being explicitly programmed?*
+    *Hint: A thermostat cannot do otherwise than respond to temperature, but we do not hold it morally responsible.  A human who acts under severe coercion arguably "could not do otherwise", but we still debate whether they bear responsibility.  Where does an AI agent fall on this spectrum?  Does the answer change if the agent learned its behavior from human feedback rather than being explicitly programmed?*
 
 9.  One proposed principle is **corrigibility**: an agent should always defer to its principal rather than pursue goals autonomously.  Is a fully corrigible agent desirable?  What happens when the principal's instructions are themselves harmful?
 
-   *Hint: Consider an agent that is given the instruction "maximize this metric by any means necessary."  Full corrigibility means it follows this instruction literally, even if the means are harmful.  But an agent that overrides harmful instructions is no longer fully corrigible.  Where is the right point on this spectrum, and who decides?*
+    *Hint: Consider an agent that is given the instruction "maximize this metric by any means necessary."  Full corrigibility means it follows this instruction literally, even if the means are harmful.  But an agent that overrides harmful instructions is no longer fully corrigible.  Where is the right point on this spectrum, and who decides?*
+{: start="7"}
 
 ---
 
@@ -183,27 +185,27 @@ In this final part, you will apply the philosophical tools from Parts I-III to y
 
 1.  *Thought experiment extension.*
 
-   *What to do:* Extend Searle's Chinese Room to the case of an LLM fine-tuned on a specific person's writing.  Does the argument change?  Argue both for the extension holding and for it breaking down, then state which you find more persuasive and why.
+    *What to do:* Extend Searle's Chinese Room to the case of an LLM fine-tuned on a specific person's writing.  Does the argument change?  Argue both for the extension holding and for it breaking down, then state which you find more persuasive and why.
 
-   *Starter hint:* The original Chinese Room processes symbols according to a fixed rulebook.  Fine-tuning on a person's writing means the model's parameters now encode patterns from that specific individual's language use.  Does this change the "understanding" question?  Consider: a very detailed rulebook derived from one person's writing is still a rulebook, or is something different happening in parameter space?*
+    *Starter hint:* The original Chinese Room processes symbols according to a fixed rulebook.  Fine-tuning on a person's writing means the model's parameters now encode patterns from that specific individual's language use.  Does this change the "understanding" question?  Consider: a very detailed rulebook derived from one person's writing is still a rulebook, or is something different happening in parameter space?*
 
-   *You've succeeded when:* You have a written argument for both positions (holding and breaking down) that is at least two sentences each, and a clear statement of which you find more persuasive with a specific reason that addresses the strongest counterargument.*
+    *You've succeeded when:* You have a written argument for both positions (holding and breaking down) that is at least two sentences each, and a clear statement of which you find more persuasive with a specific reason that addresses the strongest counterargument.*
 
 2.  *Design audit.*
 
-   *What to do:* Choose one AI-facing product you use or have used.  Identify two design choices that exploit the ELIZA effect (whether or not intentionally) and one design choice that resists it.  For each, state whether the choice is ethically defensible.
+    *What to do:* Choose one AI-facing product you use or have used.  Identify two design choices that exploit the ELIZA effect (whether or not intentionally) and one design choice that resists it.  For each, state whether the choice is ethically defensible.
 
-   *Starter hint:* Look for: Does the product give the AI a name and personality?  Does it use first-person language ("I care about you")?  Does it avoid reminding users that it is AI? Does it encourage continued conversation beyond the user's stated need?  Each of these can be an ELIZA-effect amplifier or a resistance design.*
+    *Starter hint:* Look for: Does the product give the AI a name and personality?  Does it use first-person language ("I care about you")?  Does it avoid reminding users that it is AI? Does it encourage continued conversation beyond the user's stated need?  Each of these can be an ELIZA-effect amplifier or a resistance design.*
 
-   *You've succeeded when:* You have identified three specific design choices by name (not just "it feels friendly"), explained the psychological mechanism each one activates or resists, and defended or criticized each choice on ethical grounds.*
+    *You've succeeded when:* You have identified three specific design choices by name (not just "it feels friendly"), explained the psychological mechanism each one activates or resists, and defended or criticized each choice on ethical grounds.*
 
 3.  *Responsibility mapping.*
 
-   *What to do:* For your course project, construct a responsibility map: list every party who could bear some portion of responsibility for a harmful output, and state what obligation each party has *before* harm occurs to reduce its likelihood.
+    *What to do:* For your course project, construct a responsibility map: list every party who could bear some portion of responsibility for a harmful output, and state what obligation each party has *before* harm occurs to reduce its likelihood.
 
-   *Starter hint:* Start with four parties: you (the developer), the instructor or institution deploying the project, any user who interacts with it, and any third party affected by its outputs.  For each, ask: what do they know about the system's capabilities and limitations?  What could they do to reduce the probability of harm?  What information would they need to do that?*
+    *Starter hint:* Start with four parties: you (the developer), the instructor or institution deploying the project, any user who interacts with it, and any third party affected by its outputs.  For each, ask: what do they know about the system's capabilities and limitations?  What could they do to reduce the probability of harm?  What information would they need to do that?*
 
-   *You've succeeded when:* Every party on your map has at least one named pre-harm obligation: something specific they could do or check before harm occurs, not just "respond after something goes wrong."*
+    *You've succeeded when:* Every party on your map has at least one named pre-harm obligation: something specific they could do or check before harm occurs, not just "respond after something goes wrong."*
 
 ---
 

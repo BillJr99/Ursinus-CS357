@@ -381,9 +381,9 @@ This is the part most people find satisfying: the model asks for a tool, your co
 > **Do this.**
 > 1. From inside `tools-lab/`, run the agent.  `python3 agent.py` executes the file, which fires the three test questions at the bottom:
 >
-> ```bash
-> python3 agent.py
-> ```
+>    ```bash
+>    python3 agent.py
+>    ```
 >
 > 2. Save the full terminal output.  This is the transcript Option 1A asks for, and it must show all three parts of the round trip: the request, the execution, and the result fed back.
 
@@ -426,12 +426,14 @@ Answer these in your writeup.  Question 11 needs a second run of `agent.py`; the
     - `"system"`
 
     *Hint: Look at the line `msgs.append({"role": "tool", "content": result})` in the agent loop.  The OpenAI-compatible API (which Ollama follows) requires the role `"tool"` so the model knows this message is a function result rather than a user turn or its own prior response.*
+{: start="11"}
 
 > **Answer.** `"tool"`.
 
 13. Consider a fourth tool: `read_file(path: str) -> str` that opens a file path supplied by the user and returns its contents.  What security risk does this create, and what would you do to mitigate it?
 
     *Hint: Think about what happens when the model (prompted by a malicious user) supplies the path `/etc/passwd`, `~/.ssh/id_rsa`, or `../../config/secrets.json`.  The mitigation involves restricting which directories the tool is allowed to read from: for example, only allowing paths that begin with an approved prefix such as `/home/user/documents/`.  You might also check that the resolved absolute path (after following symlinks with `os.path.realpath`) still begins with that prefix, to prevent path traversal attacks.*
+{: start="13"}
 
 > **Watch out.** Students often assume `tool_choice="auto"` means the model will always call a tool.  It means the model *may* call a tool if it decides one is needed; it can also answer from memory without calling any tool at all.  If you need a specific tool invoked for every request (for safety, auditing, or consistency), set `tool_choice={"type": "function", "function": {"name": "tool_name"}}` to force it.  The difference matters for tools like `log_query` that you want called every time regardless of the model's judgment.
 
@@ -630,6 +632,7 @@ Version B output:
 6.  The `missing_perspectives` field is an array of strings.  It can always be syntactically valid (any list of strings passes) and always be schema-valid (the schema only requires the items to be strings).  But what makes this field particularly hard to validate *semantically*, even when it is perfectly formatted?  What would a realistic post-hoc validation step for this field look like?
 
     *Hint: To validate that "environmental groups" is a missing perspective for a highway article, you need to know what perspectives actually exist for highway projects and which ones the article addressed.  You cannot determine this from the JSON alone.  What external resource or process would you need?*
+{: start="4"}
 
 Even the best-designed schema cannot guarantee that the model produces valid output every time.  That is why every production system needs a validation pipeline with a repair loop.
 
@@ -750,6 +753,7 @@ Key properties of this pipeline:
     *Starter hint: One option is to return a partially valid response (the fields that passed validation) alongside an explicit `is_degraded: True` flag and a `validation_errors` field listing what failed.  Another option is to return a "manual review required" placeholder.  Which is more useful to a downstream system?  What does a system that relies on this output need to know to handle both cases correctly?*
 
 10. You ask an LLM to output a JSON object with a field `"confidence": float` constrained to values between 0 and 1.  The model outputs `{"confidence": "high"}`.  What is the most likely root cause of this failure?
+{: start="7"}
 
 ### Step 2.5: Demonstrate One Technique With a Before and After
 

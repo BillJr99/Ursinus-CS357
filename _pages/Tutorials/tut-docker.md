@@ -90,7 +90,7 @@ A teammate runs `docker run -it ubuntu bash`, creates `/notes.txt` inside, exits
 
 1.  Explain the disappearance using the image/container distinction.  Where does (did) `/notes.txt` actually live?
 
-   *Hint:* Think about which layer holds new files written during a container's lifetime.  The image itself is read-only, so where does the writable layer go, and what happens to it when you start a second container?
+    *Hint:* Think about which layer holds new files written during a container's lifetime.  The image itself is read-only, so where does the writable layer go, and what happens to it when you start a second container?
 
 2. `docker ps -a` shows the first container still exists, exited.  What command sequence would get the file back?  (Hint: `docker start` plus the verb that enters a running container.)
 
@@ -98,7 +98,7 @@ A teammate runs `docker run -it ubuntu bash`, creates `/notes.txt` inside, exits
 
 3.  State the design lesson as a rule: anything that must survive the container goes in a ______. (Part II names it.)
 
-   *Hint:* The blank is a word that describes something stored on your host machine and linked into the container at startup.  What mechanism lets data outlive the container that wrote it?
+    *Hint:* The blank is a word that describes something stored on your host machine and linked into the container at startup.  What mechanism lets data outlive the container that wrote it?
 
 ---
 
@@ -311,15 +311,16 @@ A teammate's Open WebUI container cannot reach Ollama.  From the host, `curl htt
 
 4.  Explain why the same URL behaves differently in the two places, using the container networking model.
 
-   *Hint:* What does `localhost` resolve to when you are on your host machine versus when you are inside a container?  Each network namespace has its own loopback interface.  Draw a box labeled "host" and a box labeled "container" and trace where `localhost` points in each.
+    *Hint:* What does `localhost` resolve to when you are on your host machine versus when you are inside a container?  Each network namespace has its own loopback interface.  Draw a box labeled "host" and a box labeled "container" and trace where `localhost` points in each.
 
 5.  Give the corrected URL the container should use, and the run-time flag a Linux host requires for it to resolve.
 
-   *Hint:* The corrected hostname is the special DNS name Docker provides for reaching the host machine from inside a container.  Check Section 7 for the exact name.  The Linux flag is also in Section 7; it is a `--add-host` argument to `docker run`.
+    *Hint:* The corrected hostname is the special DNS name Docker provides for reaching the host machine from inside a container.  Check Section 7 for the exact name.  The Linux flag is also in Section 7; it is a `--add-host` argument to `docker run`.
 
 6.  Propose the three-step diagnostic ladder for any future "container cannot reach X" report: test from host, test from inside the container, then check what?  (Logs, the flag, the port map: order them and justify.)
 
-   *Hint:* Start by narrowing down whether the problem is on the host side or the container side.  Step 1: `curl http://localhost:<port>` from your host terminal; does the service respond at all?  Step 2: `docker exec -it <container> bash` then repeat the curl; does it fail?  If yes, the problem is networking between the container and host, not the service itself.  Step 3: for that networking failure, what are the two most likely causes, missing flag or wrong hostname?  Check those next.
+    *Hint:* Start by narrowing down whether the problem is on the host side or the container side.  Step 1: `curl http://localhost:<port>` from your host terminal; does the service respond at all?  Step 2: `docker exec -it <container> bash` then repeat the curl; does it fail?  If yes, the problem is networking between the container and host, not the service itself.  Step 3: for that networking failure, what are the two most likely causes, missing flag or wrong hostname?  Check those next.
+{: start="4"}
 
 ---
 
@@ -549,82 +550,82 @@ Running it in a container whose only writable mount is one git-tracked project f
 
 1.  *First container.*
 
-   *What to do:* Run an interactive Ubuntu container, install `curl` inside it with `apt-get update && apt-get install -y curl`, verify it works with `curl --version`, then exit.  Next, run a *new* Ubuntu container with `docker run -it ubuntu bash` and show that `curl` is missing.  Finally, use `docker start` and `docker exec` to re-enter the *original* container and confirm `curl` is still there.  Document both behaviors with copy-pasted terminal output.
+    *What to do:* Run an interactive Ubuntu container, install `curl` inside it with `apt-get update && apt-get install -y curl`, verify it works with `curl --version`, then exit.  Next, run a *new* Ubuntu container with `docker run -it ubuntu bash` and show that `curl` is missing.  Finally, use `docker start` and `docker exec` to re-enter the *original* container and confirm `curl` is still there.  Document both behaviors with copy-pasted terminal output.
 
-   *Starter hint:* Run `docker ps -a` after your first session to find the original container's ID. Then use `docker start <id>` followed by `docker exec -it <id> bash` to re-enter it; do not run a new `docker run ubuntu bash` or you will get a fresh container.
+    *Starter hint:* Run `docker ps -a` after your first session to find the original container's ID. Then use `docker start <id>` followed by `docker exec -it <id> bash` to re-enter it; do not run a new `docker run ubuntu bash` or you will get a fresh container.
 
-   *You've succeeded when:* You can show side-by-side that `curl --version` works in the original container and fails in a freshly started one, and you can explain in one sentence why the two containers differ despite using the same image.
+    *You've succeeded when:* You can show side-by-side that `curl --version` works in the original container and fails in a freshly started one, and you can explain in one sentence why the two containers differ despite using the same image.
 
 2.  *Persistent service.*
 
-   *What to do:* Run Open WebUI with a published port and a bind-mounted data directory.  Create a user account inside the web interface.  Stop and remove the container completely with `docker stop webui && docker rm webui`.  Then recreate the container using the exact same `-v` flag pointing to the same host directory, and log back in to demonstrate your account survived container destruction.  Submit both `docker run` commands.
+    *What to do:* Run Open WebUI with a published port and a bind-mounted data directory.  Create a user account inside the web interface.  Stop and remove the container completely with `docker stop webui && docker rm webui`.  Then recreate the container using the exact same `-v` flag pointing to the same host directory, and log back in to demonstrate your account survived container destruction.  Submit both `docker run` commands.
 
-   *Starter hint:* Your two run commands should look like this (fill in the blanks):
-   ```bash
-   docker run -d --name webui \
-     -p 3000:8080 \
-     -v "$HOME/agents/openwebui/data:/app/backend/data" \
-     ghcr.io/open-webui/open-webui:main
-   ```
-   The second run command after `docker rm webui` is identical; that is the whole point.
+    *Starter hint:* Your two run commands should look like this (fill in the blanks):
+    ```bash
+    docker run -d --name webui \
+      -p 3000:8080 \
+      -v "$HOME/agents/openwebui/data:/app/backend/data" \
+      ghcr.io/open-webui/open-webui:main
+    ```
+    The second run command after `docker rm webui` is identical; that is the whole point.
 
-   *You've succeeded when:* You log back into the recreated container and your previously created account, settings, or chat history is still present, proving the data lived on your disk rather than inside the (now-deleted) container.
+    *You've succeeded when:* You log back into the recreated container and your previously created account, settings, or chat history is still present, proving the data lived on your disk rather than inside the (now-deleted) container.
 
 3.  *Your first image.*
 
-   *What to do:* Write a `Dockerfile` for a Python script that prints the current time and exits.  Build the image, run it to confirm the output, then edit the Python script (for example, change the output message), rebuild, and record which layers Docker rebuilt and which it served from cache.  The cache behavior is the lesson; pay attention to the build output.
+    *What to do:* Write a `Dockerfile` for a Python script that prints the current time and exits.  Build the image, run it to confirm the output, then edit the Python script (for example, change the output message), rebuild, and record which layers Docker rebuilt and which it served from cache.  The cache behavior is the lesson; pay attention to the build output.
 
-   *Starter hint:* Your `Dockerfile` should follow the pattern from Section 5.  Start with `FROM python:3.12-slim`, set a `WORKDIR`, copy your script with `COPY`, and set a `CMD`.  Build with:
-   ```bash
-   docker build -t mytime:0.1 .
-   docker run --rm mytime:0.1
-   ```
-   After editing the script, rebuild with `docker build -t mytime:0.2 .` and watch which steps say "CACHED."
+    *Starter hint:* Your `Dockerfile` should follow the pattern from Section 5.  Start with `FROM python:3.12-slim`, set a `WORKDIR`, copy your script with `COPY`, and set a `CMD`.  Build with:
+    ```bash
+    docker build -t mytime:0.1 .
+    docker run --rm mytime:0.1
+    ```
+    After editing the script, rebuild with `docker build -t mytime:0.2 .` and watch which steps say "CACHED."
 
-   *You've succeeded when:* You can point to a specific line in the build output showing a layer was served from cache and explain in one sentence which Dockerfile instruction caused Docker to use the cache versus rebuild from scratch.
+    *You've succeeded when:* You can point to a specific line in the build output showing a layer was served from cache and explain in one sentence which Dockerfile instruction caused Docker to use the cache versus rebuild from scratch.
 
 4.  *Compose conversion.*
 
-   *What to do:* Convert exercise 2's `docker run` command into a `docker-compose.yml` file with at least two services: Open WebUI and one additional service of your choosing (Ollama, a simple Nginx server, or anything from Docker Hub).  Start the stack with `docker compose up -d`, observe combined logs with `docker compose logs -f`, then tear it down with `docker compose down`.  Submit the complete `docker-compose.yml`.
+    *What to do:* Convert exercise 2's `docker run` command into a `docker-compose.yml` file with at least two services: Open WebUI and one additional service of your choosing (Ollama, a simple Nginx server, or anything from Docker Hub).  Start the stack with `docker compose up -d`, observe combined logs with `docker compose logs -f`, then tear it down with `docker compose down`.  Submit the complete `docker-compose.yml`.
 
-   *Starter hint:* Your Compose file should have a `services:` block with two named entries.  Each entry mirrors the flags of your `docker run` command (`image:`, `ports:`, `volumes:`) written as YAML keys instead of CLI flags.  Start from the example in Section 6 and adapt it.
+    *Starter hint:* Your Compose file should have a `services:` block with two named entries.  Each entry mirrors the flags of your `docker run` command (`image:`, `ports:`, `volumes:`) written as YAML keys instead of CLI flags.  Start from the example in Section 6 and adapt it.
 
-   *You've succeeded when:* `docker compose ps` shows both services in a running state, `docker compose logs -f` shows interleaved output from both, and `docker compose down` cleanly stops everything.  Bonus: add `depends_on:` so your second service waits for the first.
+    *You've succeeded when:* `docker compose ps` shows both services in a running state, `docker compose logs -f` shows interleaved output from both, and `docker compose down` cleanly stops everything.  Bonus: add `depends_on:` so your second service waits for the first.
 
 5.  *The host bridge.*
 
-   *What to do:* Start any server on your host machine: Ollama if it is installed, or a simple Python HTTP server with `python3 -m http.server 8001` run in a terminal.  Then start a container with an interactive shell.  From inside the container, attempt `curl http://localhost:8001` and show that it fails.  Then attempt `curl http://host.docker.internal:8001` and show that it succeeds.  On Linux, include the required flag.  Paste both curl outputs as your deliverable.
+    *What to do:* Start any server on your host machine: Ollama if it is installed, or a simple Python HTTP server with `python3 -m http.server 8001` run in a terminal.  Then start a container with an interactive shell.  From inside the container, attempt `curl http://localhost:8001` and show that it fails.  Then attempt `curl http://host.docker.internal:8001` and show that it succeeds.  On Linux, include the required flag.  Paste both curl outputs as your deliverable.
 
-   *Starter hint:* On macOS or Windows with Docker Desktop, run:
-   ```bash
-   docker run --rm -it ubuntu bash
-   # then inside:
-   apt-get update && apt-get install -y curl
-   curl http://localhost:8001          # should fail
-   curl http://host.docker.internal:8001  # should succeed
-   ```
-   On Linux, you must add the host flag when starting the container:
-   ```bash
-   docker run --rm -it --add-host=host.docker.internal:host-gateway ubuntu bash
-   ```
+    *Starter hint:* On macOS or Windows with Docker Desktop, run:
+    ```bash
+    docker run --rm -it ubuntu bash
+    # then inside:
+    apt-get update && apt-get install -y curl
+    curl http://localhost:8001          # should fail
+    curl http://host.docker.internal:8001  # should succeed
+    ```
+    On Linux, you must add the host flag when starting the container:
+    ```bash
+    docker run --rm -it --add-host=host.docker.internal:host-gateway ubuntu bash
+    ```
 
-   *You've succeeded when:* You have copy-pasted terminal output showing `curl http://localhost:8001` returning a connection error and `curl http://host.docker.internal:8001` returning a successful HTTP response, and you can explain in one sentence why the two addresses produce different results from inside the same container.
+    *You've succeeded when:* You have copy-pasted terminal output showing `curl http://localhost:8001` returning a connection error and `curl http://host.docker.internal:8001` returning a successful HTTP response, and you can explain in one sentence why the two addresses produce different results from inside the same container.
 
 6.  *The agent's fence.*
 
-   *What to do:* Build the agent image from Section 9.1 and prove its boundaries hold before you trust an agent inside it.  Create a scratch git repository to be the writable workspace and a second folder to be the read-only reference.  Build the image, then run all three verification commands from Section 9.5 and paste the output of each.  Finally, write one sentence naming the worst thing an agent could do to your machine from inside that container.
+    *What to do:* Build the agent image from Section 9.1 and prove its boundaries hold before you trust an agent inside it.  Create a scratch git repository to be the writable workspace and a second folder to be the read-only reference.  Build the image, then run all three verification commands from Section 9.5 and paste the output of each.  Finally, write one sentence naming the worst thing an agent could do to your machine from inside that container.
 
-   *Starter hint:* Save the Section 9.1 Dockerfile as `Dockerfile.agent` and build it:
-   ```bash
-   mkdir -p ~/agents/project ~/agents/reference
-   git -C ~/agents/project init
-   docker build -f Dockerfile.agent -t course-agent .
-   ```
-   Then run the three checks from Section 9.5 in order: write to the `:ro` mount, resolve a hostname under `--network none`, and list the writable bind mounts.  Each is written to *fail loudly* when the fence is working, so a failure is your evidence, not your bug.
+    *Starter hint:* Save the Section 9.1 Dockerfile as `Dockerfile.agent` and build it:
+    ```bash
+    mkdir -p ~/agents/project ~/agents/reference
+    git -C ~/agents/project init
+    docker build -f Dockerfile.agent -t course-agent .
+    ```
+    Then run the three checks from Section 9.5 in order: write to the `:ro` mount, resolve a hostname under `--network none`, and list the writable bind mounts.  Each is written to *fail loudly* when the fence is working, so a failure is your evidence, not your bug.
 
-   *You've succeeded when:* Your three pasted outputs show, in order, `Read-only file system` (or your `BLOCKED-as-expected` message) from the reference mount, a name-resolution failure under `--network none`, and exactly one writable bind mount at `/work`.  Your worst-case sentence names a specific, bounded outcome, damage to files in one git-tracked folder, rather than a vague reassurance.  If you cannot write that sentence, Section 9.3 says you have not earned `--dangerously-skip-permissions`, and this exercise is where you find that out.
+    *You've succeeded when:* Your three pasted outputs show, in order, `Read-only file system` (or your `BLOCKED-as-expected` message) from the reference mount, a name-resolution failure under `--network none`, and exactly one writable bind mount at `/work`.  Your worst-case sentence names a specific, bounded outcome, damage to files in one git-tracked folder, rather than a vague reassurance.  If you cannot write that sentence, Section 9.3 says you have not earned `--dangerously-skip-permissions`, and this exercise is where you find that out.
 
-   *Push it harder:* Try to actually run an agent under the full Section 9.3 command.  You will hit the contradiction the Watch Out box names: `--network none` blocks the model API too.  Record what happened, then decide which rung of the Section 9.4 ladder your real work belongs on and say why.
+    *Push it harder:* Try to actually run an agent under the full Section 9.3 command.  You will hit the contradiction the Watch Out box names: `--network none` blocks the model API too.  Record what happened, then decide which rung of the Section 9.4 ladder your real work belongs on and say why.
 
 ---
 

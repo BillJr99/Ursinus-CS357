@@ -180,15 +180,18 @@ Your answers are the data I use to form the standing teams you will work with al
 6.  **Pet peeves.**  What teammate behavior reliably frustrates you?  Be specific.
 7.  **What matters most.**  Complete the sentence: "For me, a team is working well when ______." Take a position.  Then answer its mirror: what matters most to *you* in a teammate?
 8.  **Role tendencies.**  In past teams, which role have you naturally gravitated toward: the **facilitator**, the **builder**, the **writer**, or the **skeptic**?  Name your top one or two.  (This informs team formation only: on your team, roles **rotate**, so everyone practices every job.)
+{: start="4"}
 
 ### Interests (secondary matching signal)
 
 9.  **Project-domain interests.**  Rank your top two or three domains you would find meaningful for a semester-long, stakeholder-grounded project: **health**, **sustainability / environment**, **education**, **finance**, **arts**, **campus life**, or another you propose.
+{: start="9"}
 
 ### Confidential (seen only by the instructor)
 
 10.  **(Optional)** Name **at most one** person in this course you would prefer not to work with.  Read **only by the instructor**, never shared or acknowledged, no explanation required, and a preference the instructor will try to honor, **never a guarantee**.  Answering has no effect on your grade.
 11.  **(Optional)** Is there anything else the instructor should know to help your team thrive?  Accommodations, outside commitments, past team experiences you do not want to repeat, anything at all.
+{: start="10"}
 
 ---
 

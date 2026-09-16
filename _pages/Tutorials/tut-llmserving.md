@@ -69,15 +69,15 @@ The practical implication: **to improve TTFT, shorten prompts or use a smaller m
 
 1.  A startup is building a real-time voice assistant where the model's text output is immediately spoken aloud.  Their current TTFT is 800 ms and TPOT is 30 ms/token.  Which metric should they optimize first, and why?  What architectural change would you investigate first?
 
-   > *Hint: Think about what "text-to-speech" requires before it can produce any sound.  Also consider: does the TTS engine need the full response or just the first sentence?*
+    > *Hint: Think about what "text-to-speech" requires before it can produce any sound.  Also consider: does the TTS engine need the full response or just the first sentence?*
 
 2.  A research team runs a nightly batch job that summarizes 10,000 academic papers.  Their single-request TTFT is 2 seconds and their throughput at batch size 1 is 80 tokens/sec. Which metric is irrelevant for their use case, and what should they optimize instead?
 
-   > *Hint: If no human is watching the output appear, what cost matters?  If their GPU is idle 70% of the time between requests, what does that suggest about their batch size?*
+    > *Hint: If no human is watching the output appear, what cost matters?  If their GPU is idle 70% of the time between requests, what does that suggest about their batch size?*
 
 3.  The prefill phase for a 500-token prompt takes 120 ms on a given GPU. Estimate the prefill time for a 4,000-token RAG prompt on the same hardware.  If TPOT is 25 ms and the response is 150 tokens, what is the total end-to-end latency for each case?
 
-   > *Hint: Prefill time scales roughly linearly with prompt length for transformer models (each token attends to all prior tokens, so work is proportional to *n*).  Decode time is simply TPOT × output tokens.  Add them.*
+    > *Hint: Prefill time scales roughly linearly with prompt length for transformer models (each token attends to all prior tokens, so work is proportional to *n*).  Decode time is simply TPOT × output tokens.  Add them.*
 
 A product team is building a streaming chat assistant where the model's response appears word-by-word in a chat bubble.  A user complains "the response takes forever to start but then comes out fast."  Which metric is the primary problem?
 
@@ -245,15 +245,15 @@ print("directly improve any individual request's TTFT or TPOT.")
 
 1.  In the simulation output, continuous batching at batch size 8 should outperform static batching at batch size 8.  Explain in your own words *why*: what is happening at the slot level that the static scheduler wastes?
 
-   > *Hint: Imagine a batch of 8 requests where one finishes after 30 output tokens and the others need 300.  In static batching, what is the 30-token request's GPU slot doing during the remaining 270 decode steps?*
+    > *Hint: Imagine a batch of 8 requests where one finishes after 30 output tokens and the others need 300.  In static batching, what is the 30-token request's GPU slot doing during the remaining 270 decode steps?*
 
 2.  The simulation uses `BATCH_SPEEDUP` coefficients to model reduced per-token decode time at larger batch sizes.  Why does batching reduce the effective decode time per token?  What hardware property does this exploit?
 
-   > *Hint: GPUs execute operations in parallel across many cores.  A single request uses only a fraction of available GPU cores; multiple requests in the same batch allow more cores to be active simultaneously, amortizing the per-step overhead.*
+    > *Hint: GPUs execute operations in parallel across many cores.  A single request uses only a fraction of available GPU cores; multiple requests in the same batch allow more cores to be active simultaneously, amortizing the per-step overhead.*
 
 3.  Modify `PREFILL_MS_PER_TOKEN` to 2.0 (simulating a larger model) and re-run.  Which strategy benefits more from this change, and at which batch sizes?  What does this tell you about when continuous batching's advantage is largest relative to static batching?
 
-   > *Hint: With a longer prefill time, the "wasted slot" time in static batching is the same absolute amount, but now a larger fraction of total wall-clock time.  Does continuous batching's slot-reuse help more when prefill is long or when decode is long?*
+    > *Hint: With a longer prefill time, the "wasted slot" time in static batching is the same absolute amount, but now a larger fraction of total wall-clock time.  Does continuous batching's slot-reuse help more when prefill is long or when decode is long?*
 
 A serving system uses static batching with a fixed batch size of 8.  One request in the current batch generates only 5 output tokens; the other 7 requests each need 400 output tokens.  During the decode phase, after the 5-token request finishes, what happens to its GPU slot?
 
@@ -351,15 +351,15 @@ The published PagedAttention research measured the result: traditional systems w
 
 1.  A request reserves a contiguous 2,048-token block but generates only 250 tokens before the user closes the tab.  How much of that block is internally fragmented, and why can no *other* request use it even though the GPU has "free" memory?
 
-   > *Hint: Internal fragmentation is reserved-but-unfilled space inside one request's own allocation.  What makes the leftover unavailable is that it was committed to this request up front.  How many tokens are wasted here?*
+    > *Hint: Internal fragmentation is reserved-but-unfilled space inside one request's own allocation.  What makes the leftover unavailable is that it was committed to this request up front.  How many tokens are wasted here?*
 
 2.  Your GPU reports 900 tokens' worth of free KV-cache memory, but a new request needing a 600-token contiguous block is rejected.  Which fragmentation type is responsible, and what OS concept is this identical to?
 
-   > *Hint: Free memory exists but not in one usable piece.  This is the same reason an OS with plenty of free RAM can still fail a large contiguous `malloc` before virtual memory paging solved it.*
+    > *Hint: Free memory exists but not in one usable piece.  This is the same reason an OS with plenty of free RAM can still fail a large contiguous `malloc` before virtual memory paging solved it.*
 
 3.  A customer-support deployment gives all 100 concurrent users the same 500-token system prompt.  Estimate the KV-cache memory wasted to redundant duplication versus storing that prefix once.  What later optimization in this tutorial eliminates exactly this waste?
 
-   > *Hint: 99 redundant copies of a 500-token prefill.  Which of the four tuning knobs in Model 8 is designed for shared prefixes?*
+    > *Hint: 99 redundant copies of a 500-token prefill.  Which of the four tuning knobs in Model 8 is designed for shared prefixes?*
 
 A serving system pre-allocates a contiguous block sized to the maximum context length for every request.  A user sends a 200-token prompt and gets a 300-token answer, well under the 2,048-token maximum.  What is the ~1,500 tokens of unused reserved space called?
 
@@ -393,15 +393,15 @@ Two consequences fall out of this design.  First, internal fragmentation drops f
 
 1.  Explain, in your own words, what the block table maps and why that indirection is what makes non-contiguous allocation possible.  What is the exact operating-system structure it mirrors?
 
-   > *Hint: The attention math needs to see a continuous sequence of tokens; the physical blocks are scattered.  What sits between "logical position" and "physical location" to reconcile the two?*
+    > *Hint: The attention math needs to see a continuous sequence of tokens; the physical blocks are scattered.  What sits between "logical position" and "physical location" to reconcile the two?*
 
 2.  With a block size of 16 tokens, what is the *maximum* internal fragmentation for any single request under PagedAttention, regardless of how long the request is?  Contrast this with the naive scheme's worst case.
 
-   > *Hint: Only the last block can be partially filled.  If a request ends mid-block, how many token-slots at most are wasted?  Compare to reserving 2,048 tokens for a 300-token answer.*
+    > *Hint: Only the last block can be partially filled.  If a request ends mid-block, how many token-slots at most are wasted?  Compare to reserving 2,048 tokens for a 300-token answer.*
 
 3.  PagedAttention lets two requests' block tables point at the same physical blocks.  Which of the three fragmentation problems from Model 6 does that directly eliminate, and what OS mechanism is it analogous to?
 
-   > *Hint: Think about the 100 users sharing one system prompt.  What OS feature lets multiple processes share one physical copy of read-only memory?*
+    > *Hint: Think about the 100 users sharing one system prompt.  What OS feature lets multiple processes share one physical copy of read-only memory?*
 
 In PagedAttention, what does the block table map?
 
@@ -437,15 +437,15 @@ The unifying idea: the first three knobs are all about **using the KV-cache memo
 
 1.  You are running a RAG assistant where every request begins with the same 1,200-token instruction-and-context preamble.  Which knob gives you the biggest time-to-first-token win, and why does the win scale with how many requests share that preamble?
 
-   > *Hint: Which knob is about not recomputing a shared prefix?  If the prefill for those 1,200 tokens is computed once instead of per request, what happens to TTFT as concurrency rises?*
+    > *Hint: Which knob is about not recomputing a shared prefix?  If the prefill for those 1,200 tokens is computed once instead of per request, what happens to TTFT as concurrency rises?*
 
 2.  A deployment sets `gpu_memory_utilization` to 0.95 and runs fine for a week, then starts throwing out-of-memory errors during a traffic spike.  Explain the tradeoff and give a specific remediation.
 
-   > *Hint: A higher fraction packs more requests but leaves less headroom for bursts.  What value does the guidance suggest under OOM-under-burst conditions?*
+    > *Hint: A higher fraction packs more requests but leaves less headroom for bursts.  What value does the guidance suggest under OOM-under-burst conditions?*
 
 3.  Speculative decoding's benefit "shrinks at very high concurrency."  Connect this to the prefill/decode split from Part I: what resource is the draft model exploiting during decode, and why does a full batch erase that opportunity?
 
-   > *Hint: Decode is memory-bound, so the GPU's compute units are partly idle between memory reads.  The draft model fills that idle compute.  What happens to idle compute when the batch is already large enough to saturate the GPU?*
+    > *Hint: Decode is memory-bound, so the GPU's compute units are partly idle between memory reads.  The draft model fills that idle compute.  What happens to idle compute when the batch is already large enough to saturate the GPU?*
 
 Which tuning knob most directly eliminates the *redundant duplication* waste identified in Model 6 (the same system prompt cached separately per request)?
 

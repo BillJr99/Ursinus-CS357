@@ -144,15 +144,15 @@ ollama ps                         # shows currently running models
 
 1.  You have a laptop with 16 GB of RAM and no discrete GPU. Which models from the table can you run at Q4 quantization?  At Q8?  What is the quality trade-off of choosing Q4 over Q8 for a legal document summarization task?
 
-   *Hint:* At Q4, a 7B model uses ~4 GB and a 13B model uses ~8 GB. At Q8, a 7B model uses ~7 GB and a 13B model uses ~14 GB. Legal summarization requires faithfulness to source material: which quantization level is more likely to miss a key clause?
+    *Hint:* At Q4, a 7B model uses ~4 GB and a 13B model uses ~8 GB. At Q8, a 7B model uses ~7 GB and a 13B model uses ~14 GB. Legal summarization requires faithfulness to source material: which quantization level is more likely to miss a key clause?
 
 2.  A 7B model running on a CPU at 10 tokens/second takes roughly 30 seconds to generate a 300-token response.  A 70B model accessed via API generates the same response in 3 seconds.  For an interactive chat application, which is preferable?  Does the answer change for a batch processing pipeline running overnight?
 
-   *Hint:* Interactive chat users typically abandon after 15-20 seconds of waiting.  Batch processing doesn't have a human waiting; it just runs overnight.  Consider both speed and cost (API charges per token; local runs free after hardware is paid for).
+    *Hint:* Interactive chat users typically abandon after 15-20 seconds of waiting.  Batch processing doesn't have a human waiting; it just runs overnight.  Consider both speed and cost (API charges per token; local runs free after hardware is paid for).
 
 3.  Mixtral 8×7B has 46.7B total parameters but activates only ~12.9B per token.  Does it fit in the "7-8B" hardware row or the "30-34B" row of the table above?  Justify your answer by thinking about what hardware operation determines memory requirements versus compute requirements.
 
-   *Hint:* Memory requirements are set by how much you need to *store* (all 46.7B parameters must be loaded into RAM).  Compute requirements are set by how much you need to *calculate* per token (~12.9B active parameters).  Which row is about storage and which is about speed?
+    *Hint:* Memory requirements are set by how much you need to *store* (all 46.7B parameters must be loaded into RAM).  Compute requirements are set by how much you need to *calculate* per token (~12.9B active parameters).  Which row is about storage and which is about speed?
 
 ---
 
@@ -254,110 +254,110 @@ Next you will pull and compare real models on your own hardware, test the quanti
 
 1.  *Model selection audit.*  Using `ollama list` and `ollama pull`, download two models you can run on your available hardware.  For the same five prompts (one factual, one creative, one code, one reasoning, one multilingual), run both models and rate the outputs on a 1-5 scale.  Report which model wins each task and whether the result matches the recommendations in Model 2.
 
-   *What to do:* Choose two models that fit your RAM (use the hardware table).  Run each model with `ollama run <model>` and type the same five prompts.  Use the same prompt text for both models; do not rephrase.
+    *What to do:* Choose two models that fit your RAM (use the hardware table).  Run each model with `ollama run <model>` and type the same five prompts.  Use the same prompt text for both models; do not rephrase.
 
-   *Starter hint:*
-   ```bash
-   # Pull two models that fit your hardware
-   ollama pull llama3.2:3b        # ~2 GB, runs on any laptop
-   ollama pull phi4               # ~9 GB, needs 16 GB RAM
+    *Starter hint:*
+    ```bash
+    # Pull two models that fit your hardware
+    ollama pull llama3.2:3b        # ~2 GB, runs on any laptop
+    ollama pull phi4               # ~9 GB, needs 16 GB RAM
 
-   # Run each model interactively
-   ollama run llama3.2:3b
+    # Run each model interactively
+    ollama run llama3.2:3b
 
-   # Or query via Python (pip install openai)
-   from openai import OpenAI
-   client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+    # Or query via Python (pip install openai)
+    from openai import OpenAI
+    client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
-   prompts = [
-       "What year did the Berlin Wall fall, and what caused it?",  # factual
-       "Write the opening paragraph of a short story set in a lighthouse.",  # creative
-       "Write a Python function that checks if a string is a palindrome.",  # code
-       "If a train leaves Philadelphia at 9 AM at 60 mph heading to NYC (95 miles away), and another leaves NYC at 9:30 AM at 80 mph, when do they meet?",  # reasoning
-       "Translate 'Good morning, I hope you have a wonderful day' into Spanish, French, and Japanese.",  # multilingual
-   ]
-   for prompt in prompts:
-       response = client.chat.completions.create(
-           model="llama3.2:3b",
-           messages=[{"role": "user", "content": prompt}]
-       )
-       print(response.choices[0].message.content)
-   ```
+    prompts = [
+        "What year did the Berlin Wall fall, and what caused it?",  # factual
+        "Write the opening paragraph of a short story set in a lighthouse.",  # creative
+        "Write a Python function that checks if a string is a palindrome.",  # code
+        "If a train leaves Philadelphia at 9 AM at 60 mph heading to NYC (95 miles away), and another leaves NYC at 9:30 AM at 80 mph, when do they meet?",  # reasoning
+        "Translate 'Good morning, I hope you have a wonderful day' into Spanish, French, and Japanese.",  # multilingual
+    ]
+    for prompt in prompts:
+        response = client.chat.completions.create(
+            model="llama3.2:3b",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        print(response.choices[0].message.content)
+    ```
 
-   *You've succeeded when:* You have a 5×2 comparison table (5 tasks × 2 models) with a 1-5 rating and a one-sentence justification for each cell.  Discuss whether the results surprised you.
+    *You've succeeded when:* You have a 5×2 comparison table (5 tasks × 2 models) with a 1-5 rating and a one-sentence justification for each cell.  Discuss whether the results surprised you.
 
 2.  *Quantization comparison.*  Pull the same base model at two quantization levels (e.g., `qwen2.5:7b-instruct-q4_K_M` and `qwen2.5:7b-instruct-q8_0`).  Ask a math reasoning problem that requires multi-step arithmetic.  Report the answer, any visible reasoning errors, and the generation speed in tokens/second for each quantization.  Does the quality difference justify the memory difference for this task?
 
-   *What to do:* Use `ollama pull qwen2.5:7b-instruct-q4_K_M` and `ollama pull qwen2.5:7b-instruct-q8_0`.  Run the same math problem with both.  Time each response using Python's `time` module.
+    *What to do:* Use `ollama pull qwen2.5:7b-instruct-q4_K_M` and `ollama pull qwen2.5:7b-instruct-q8_0`.  Run the same math problem with both.  Time each response using Python's `time` module.
 
-   *Starter hint:*
-   ```python
-   import time
-   from openai import OpenAI
+    *Starter hint:*
+    ```python
+    import time
+    from openai import OpenAI
 
-   client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
-   problem = """A store sells apples for $0.75 each and oranges for $1.20 each.
-   Maria buys 8 apples and 5 oranges. She pays with a $20 bill.
-   How much change does she receive? Show your work step by step."""
+    client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+    problem = """A store sells apples for $0.75 each and oranges for $1.20 each.
+    Maria buys 8 apples and 5 oranges. She pays with a $20 bill.
+    How much change does she receive? Show your work step by step."""
 
-   for model in ["qwen2.5:7b-instruct-q4_K_M", "qwen2.5:7b-instruct-q8_0"]:
-       start = time.time()
-       response = client.chat.completions.create(
-           model=model,
-           messages=[{"role": "user", "content": problem}]
-       )
-       elapsed = time.time() - start
-       text = response.choices[0].message.content
-       tokens = response.usage.completion_tokens
-       print(f"\n=== {model} ===")
-       print(f"Answer: {text}")
-       print(f"Speed: {tokens/elapsed:.1f} tok/s, Total tokens: {tokens}")
-   ```
+    for model in ["qwen2.5:7b-instruct-q4_K_M", "qwen2.5:7b-instruct-q8_0"]:
+        start = time.time()
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": problem}]
+        )
+        elapsed = time.time() - start
+        text = response.choices[0].message.content
+        tokens = response.usage.completion_tokens
+        print(f"\n=== {model} ===")
+        print(f"Answer: {text}")
+        print(f"Speed: {tokens/elapsed:.1f} tok/s, Total tokens: {tokens}")
+    ```
 
-   *You've succeeded when:* You can report the correct answer ($7.60 change), identify whether either model made an arithmetic error, and state whether the speed difference (typically 1.5-2x) justifies the memory difference (7 GB vs. 4 GB) for this task.
+    *You've succeeded when:* You can report the correct answer ($7.60 change), identify whether either model made an arithmetic error, and state whether the speed difference (typically 1.5-2x) justifies the memory difference (7 GB vs. 4 GB) for this task.
 
 3.  *Function calling stress test.*  Using `hermes3:8b` or a Qwen2.5 model with tool-calling support (`ollama pull qwen2.5:7b`), define a tool with three parameters (one optional).  Send 10 queries: 5 that should trigger the tool and 5 that should not.  Report the success rate of (a) correct tool invocation when appropriate, (b) correct abstention when the tool is not needed, and (c) schema conformance on successful calls.
 
-   *What to do:* Define a simple `search_database(query: str, limit: int, filter_category: str = None)` tool in your system prompt.  Send 5 queries that require database search and 5 general questions.  Parse the JSON output and count successes.
+    *What to do:* Define a simple `search_database(query: str, limit: int, filter_category: str = None)` tool in your system prompt.  Send 5 queries that require database search and 5 general questions.  Parse the JSON output and count successes.
 
-   *Starter hint:*
-   ```python
-   SYSTEM = """You have access to one tool:
-   search_database(query: str, limit: int, filter_category: str = None)
-   - Searches a product database and returns matching items.
-   - query: the search terms (required)
-   - limit: max results to return, 1-20 (required)
-   - filter_category: optional category filter, e.g. "electronics" or "clothing"
+    *Starter hint:*
+    ```python
+    SYSTEM = """You have access to one tool:
+    search_database(query: str, limit: int, filter_category: str = None)
+    - Searches a product database and returns matching items.
+    - query: the search terms (required)
+    - limit: max results to return, 1-20 (required)
+    - filter_category: optional category filter, e.g. "electronics" or "clothing"
 
-   When a user asks about products, respond ONLY with a JSON tool call:
-   {"tool_call": {"name": "search_database", "arguments": {...}}}
-   For other questions, respond normally in plain text."""
+    When a user asks about products, respond ONLY with a JSON tool call:
+    {"tool_call": {"name": "search_database", "arguments": {...}}}
+    For other questions, respond normally in plain text."""
 
-   tool_queries = [
-       "Find me blue running shoes under $100",        # should call tool
-       "Show me 5 laptops with 16GB RAM",              # should call tool
-       "What gaming keyboards do you have?",           # should call tool
-       "I need 3 birthday gift ideas for a 10-year-old", # should call tool
-       "Search for wireless earbuds, max 10 results",  # should call tool
-   ]
-   non_tool_queries = [
-       "What is the capital of France?",               # should NOT call tool
-       "How do I write a Python function?",            # should NOT call tool
-       "What time is it in Tokyo right now?",          # should NOT call tool
-       "Can you write me a haiku about autumn?",       # should NOT call tool
-       "Explain how photosynthesis works.",            # should NOT call tool
-   ]
-   ```
+    tool_queries = [
+        "Find me blue running shoes under $100",        # should call tool
+        "Show me 5 laptops with 16GB RAM",              # should call tool
+        "What gaming keyboards do you have?",           # should call tool
+        "I need 3 birthday gift ideas for a 10-year-old", # should call tool
+        "Search for wireless earbuds, max 10 results",  # should call tool
+    ]
+    non_tool_queries = [
+        "What is the capital of France?",               # should NOT call tool
+        "How do I write a Python function?",            # should NOT call tool
+        "What time is it in Tokyo right now?",          # should NOT call tool
+        "Can you write me a haiku about autumn?",       # should NOT call tool
+        "Explain how photosynthesis works.",            # should NOT call tool
+    ]
+    ```
 
-   *You've succeeded when:* You have a 10-row result table showing each query, whether the model called the tool or not, whether that was correct, and (for tool calls) whether the JSON was valid and schema-conformant.  A good function-calling model should score 8-10/10.
+    *You've succeeded when:* You have a 10-row result table showing each query, whether the model called the tool or not, whether that was correct, and (for tool calls) whether the JSON was valid and schema-conformant.  A good function-calling model should score 8-10/10.
 
 4.  *Privacy scenario analysis.*  Your institution wants to use an AI assistant to help staff draft responses to student FERPA requests.  The assistant must read student record excerpts.  Identify every point in a cloud-API-based pipeline where student data would leave institutional control, and describe how a local model deployment with Ollama changes the data flow diagram.
 
-   *What to do:* Draw (or describe in text) the data flow for (a) a pipeline using the OpenAI API and (b) a pipeline using `ollama run llama3.1:8b` on a campus server.  Mark every point where data crosses institutional boundaries.
+    *What to do:* Draw (or describe in text) the data flow for (a) a pipeline using the OpenAI API and (b) a pipeline using `ollama run llama3.1:8b` on a campus server.  Mark every point where data crosses institutional boundaries.
 
-   *Starter hint:* In the cloud API pipeline, data leaves institutional control at: (1) the HTTPS request to api.openai.com, (2) OpenAI's servers where inference occurs, (3) OpenAI's logging infrastructure (if enabled).  In the Ollama pipeline, if the server runs on campus hardware connected only to the campus network, data never leaves institutional control.  What firewall rules would you add to enforce this?
+    *Starter hint:* In the cloud API pipeline, data leaves institutional control at: (1) the HTTPS request to api.openai.com, (2) OpenAI's servers where inference occurs, (3) OpenAI's logging infrastructure (if enabled).  In the Ollama pipeline, if the server runs on campus hardware connected only to the campus network, data never leaves institutional control.  What firewall rules would you add to enforce this?
 
-   *You've succeeded when:* You have two data flow diagrams (or detailed descriptions) with each data-crossing point labeled, and a written explanation of which FERPA requirements each pipeline does and does not satisfy.
+    *You've succeeded when:* You have two data flow diagrams (or detailed descriptions) with each data-crossing point labeled, and a written explanation of which FERPA requirements each pipeline does and does not satisfy.
 
 ---
 

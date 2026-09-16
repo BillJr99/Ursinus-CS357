@@ -70,15 +70,15 @@ Round prompts, in order:
 
 1.  Look at your team's completed grid.  Find one **pair of answers that could collide**: for example, one member's energy source is another member's pet peeve (long unstructured brainstorms, say).  What norm could you write *now* that lets both people get what they need?
 
-   > *Hint: The collision is not a problem to eliminate but a constraint to design around.  A norm like "meetings have 20 minutes of open brainstorm, then 20 minutes of silent structured work" serves both the brainstormer and the person drained by open-ended discussion.*
+    > *Hint: The collision is not a problem to eliminate but a constraint to design around.  A norm like "meetings have 20 minutes of open brainstorm, then 20 minutes of silent structured work" serves both the brainstormer and the person drained by open-ended discussion.*
 
 2.  The protocol forbids listeners from debating or "fixing" what a speaker shares.  What does that rule protect, and what would likely happen in round 1 (Challenges) without it?
 
-   > *Hint: Think about what it costs a person to admit "I struggle to ask for help", and what it teaches them if the immediate response is advice, judgment, or someone else's story.  Would round 3 (pet peeves) still get candid answers?*
+    > *Hint: Think about what it costs a person to admit "I struggle to ask for help", and what it teaches them if the immediate response is advice, judgment, or someone else's story.  Would round 3 (pet peeves) still get candid answers?*
 
 3.  Which single cell of your team's grid do you predict will matter most by the midpoint charter revisit?  The Recorder should write the prediction down, with a one-sentence reason; you will check it at the charter revisit.
 
-   > *Hint: Look for the answer that interacts with deadlines, since the thread's crunch points (the stakeholder brief, the synthesis, and the proposal milestones on the course schedule) are where working-style differences surface.*
+    > *Hint: Look for the answer that interacts with deadlines, since the thread's crunch points (the stakeholder brief, the synthesis, and the proposal milestones on the course schedule) are where working-style differences surface.*
 
 ---
 
@@ -107,15 +107,16 @@ Here is the same idea two ways: a stage table, and then a scenario trace through
 
 4.  List every point in the scenario where information existed but did not reach the people who needed it.  For each, name a charter norm (specific and observable) that would have routed it correctly.
 
-   > *Hint: There are at least three: Q's silence in the channel (a check-in/response-time norm), Q's private message to the Manager that stayed private (a norm about where absence information goes: the channel, not a DM), and R's unilateral takeover (a missed-deadline procedure that says what happens, and when, before anyone rewrites anyone's work).*
+    > *Hint: There are at least three: Q's silence in the channel (a check-in/response-time norm), Q's private message to the Manager that stayed private (a norm about where absence information goes: the channel, not a DM), and R's unilateral takeover (a missed-deadline procedure that says what happens, and when, before anyone rewrites anyone's work).*
 
 5.  R's Thursday-night message is the moment psychological safety takes damage, for Q, and for everyone watching.  Using Edmondson's (1999) definition, explain what every *other* member of the team just learned about the cost of falling behind, and why that lesson makes the team's *next* problem more likely to stay hidden.
 
-   > *Hint: Psychological safety is a shared belief built from observed evidence.  The audience for R's message is not just Q. If struggling publicly earns public sarcasm, what will members do the next time they are struggling: surface it early, or hide it and hope?*
+    > *Hint: Psychological safety is a shared belief built from observed evidence.  The audience for R's message is not just Q. If struggling publicly earns public sarcasm, what will members do the next time they are struggling: surface it early, or hide it and hope?*
 
 6.  Write the **repair script**: what should R say at the Friday meeting, and what should Q say, if both follow the four repair moves (*name it, own your part, restate the other side, propose a next step*)?  The Recorder writes both scripts word for word; your team will adapt them into your charter's conflict protocol.
 
-   > *Hint: R might begin: "I want to name that my message Thursday was sarcastic and public, and I'm sorry; I was anxious about the deadline (own).  I didn't know about your emergency (restate comes after listening)..." A repair script is short.  The hard part is that someone has to go first; your charter can name whose job that is (hint: the current Reflector is a natural owner).*
+    > *Hint: R might begin: "I want to name that my message Thursday was sarcastic and public, and I'm sorry; I was anxious about the deadline (own).  I didn't know about your emergency (restate comes after listening)..." A repair script is short.  The hard part is that someone has to go first; your charter can name whose job that is (hint: the current Reflector is a natural owner).*
+{: start="4"}
 
 According to Tuckman (1965), a team having its first serious disagreement in week 6 of the semester is:
 
@@ -162,15 +163,16 @@ A normal, expected developmental stage that healthy teams pass through
 
 7.  Take your Overview pre-draft charter and run every sentence through the enforceability test: could a stranger, reading only your team's channel and documents, tell whether the sentence was being followed?  Count the sentences that pass.  What fraction survived, and what does the most common failure look like?
 
-   > *Hint: The most common failure is an attitude word doing the work of a behavior: "respectful," "open," "fair," "flexible."  Each one needs to be traded for a who-does-what-by-when.  This is the same third-party test you will apply to governance clauses later in the course; practice it here first.*
+    > *Hint: The most common failure is an attitude word doing the work of a behavior: "respectful," "open," "fair," "flexible."  Each one needs to be traded for a who-does-what-by-when.  This is the same third-party test you will apply to governance clauses later in the course; practice it here first.*
 
 8.  Your Model 1 grid holds each member's pet peeves and challenges.  Pick the two entries with the highest stakes and write one charter norm each that *pre-empts* them.  Why is a norm written from a real member's answer stronger than one copied from a template?
 
-   > *Hint: A template norm protects a hypothetical team; a grid-derived norm protects this one.  It is also self-enforcing in a way templates are not: everyone remembers why the norm exists and who it protects, which makes invoking it feel like care rather than rule-lawyering.*
+    > *Hint: A template norm protects a hypothetical team; a grid-derived norm protects this one.  It is also self-enforcing in a way templates are not: everyone remembers why the norm exists and who it protects, which makes invoking it feel like care rather than rule-lawyering.*
 
 9.  Decision rules trade off speed, buy-in, and quality.  For each of these three decisions, choose a rule (consensus / majority vote / role-holder decides / escalate to instructor) and defend the choice: (a) which stakeholder your team pursues for the Brief, (b) which retrieval library to use in a sprint, (c) whether to report a teammate's sustained non-participation to the instructor.
 
-   > *Hint: (a) is high-stakes and identity-flavored; buy-in matters most, which argues for consensus with a deadline.  (b) is reversible and technical; speed matters, which argues for a timebox plus role-holder decision, logged.  (c) involves the charter itself failing, which is exactly what escalation paths are for, and why the charter should name the threshold in advance so reporting is a procedure, not a betrayal.*
+    > *Hint: (a) is high-stakes and identity-flavored; buy-in matters most, which argues for consensus with a deadline.  (b) is reversible and technical; speed matters, which argues for a timebox plus role-holder decision, logged.  (c) involves the charter itself failing, which is exactly what escalation paths are for, and why the charter should name the threshold in advance so reporting is a procedure, not a betrayal.*
+{: start="7"}
 
 Which of the following charter clauses passes the enforceability test?
 

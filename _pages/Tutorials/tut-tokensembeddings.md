@@ -158,11 +158,11 @@ Remember two things from this Part.  A tokenizer's vocabulary is learned by coun
 
 1.  Why do frequent character pairs deserve dedicated tokens?  Connect your answer to compression.
 
-   *Hint:* If "th" appears in thousands of words, how many fewer tokens do you need to store a typical English text if "th" is one token instead of two?  Think of it as a ZIP file for language.
+    *Hint:* If "th" appears in thousands of words, how many fewer tokens do you need to store a typical English text if "th" is one token instead of two?  Think of it as a ZIP file for language.
 
 2.  Before you run the tiktoken cell, predict which is more tokens: "internationalization" or "the cat sat on the mat".  Justify your prediction, then run the cell (add the second phrase to the list) and check.
 
-   *Hint:* "internationalization" is a single rare word, and rare words shatter into many subword pieces.  The second phrase has six common words.  Estimate both with the three-quarters-of-a-word rule.
+    *Hint:* "internationalization" is a single rare word, and rare words shatter into many subword pieces.  The second phrase has six common words.  Estimate both with the three-quarters-of-a-word rule.
 
 ---
 
@@ -187,7 +187,8 @@ Remember two things from this section.  An embedding is a point, and cosine simi
 
 3.  Let $$\mathbf{a} = (1, 2, 2)$$ stand for "the dog ran" and $$\mathbf{b} = (2, 4, 4)$$ stand for "a dog was running", so $$\mathbf{b} = 2\mathbf{a}$$ exactly.  What does cosine similarity say about vectors that differ only in magnitude, and why is that a desirable property for comparing a short query with a long document?
 
-   *Hint:* A short question like "parking rules?" and a long parking policy document might have similar meanings but very different lengths.  Should length penalize similarity?  What does the division by the norms accomplish?
+    *Hint:* A short question like "parking rules?" and a long parking policy document might have similar meanings but very different lengths.  Should length penalize similarity?  What does the division by the norms accomplish?
+{: start="3"}
 
 Check yourself.  Two sentences receive embeddings with cosine similarity 0.92.  The best interpretation is:
 
@@ -246,7 +247,8 @@ Remember two things from this section.  Attention replaces one fixed vector per 
 
 5.  Compare the cosine-similarity formula in Section 2 with the attention relevance score $$\mathbf{q}_i \cdot \mathbf{k}_j$$.  Both start with a dot product.  Name the one thing cosine does that attention's relevance score does not, and suggest why attention might not want it.
 
-   *Hint:* Cosine divides by the two norms.  What is that division for, and what would you lose if a token's "loudness" could no longer affect how much others attend to it?
+    *Hint:* Cosine divides by the two norms.  What is that division for, and what would you lose if a token's "loudness" could no longer affect how much others attend to it?
+{: start="4"}
 
 Check yourself.  In one attention step for the sentence "river bank loan", which quantity decides *how much* `bank` is influenced by `loan`?
 
@@ -280,6 +282,7 @@ Remember two things from this section.  Attention cost grows with the square of 
 ### Questions to Work Through
 
 6.  This section states that growing a prompt from 2,000 tokens to 8,000 multiplies the attention work per layer by 16.  Show where 16 comes from, then connect that number to a cost or latency you have already noticed on your own machine.
+{: start="6"}
 
 ---
 
@@ -339,15 +342,16 @@ Remember two things from this Part.  Semantic search is cosine similarity betwee
 
 7.  Neither query shares a single content word with its best match.  Identify exactly which line of code performed the "understanding," and what it computes mathematically.
 
-   *Hint:* Look at the line `sims = D @ q / ...`.  `D @ q` is a matrix-vector product; what does each entry of the result represent?  Which formula from Section 2 does this implement?
+    *Hint:* Look at the line `sims = D @ q / ...`.  `D @ q` is a matrix-vector product; what does each entry of the result represent?  Which formula from Section 2 does this implement?
 
 8.  Craft a query that retrieves the *wrong* document with high confidence.  What does the failure reveal about what embeddings capture and what they miss (negation, numbers, proper names)?
 
-   *Hint:* Try something like "the library is NOT open on weekends"; does the negation change the retrieved document?  Try a query with a specific number that does not appear in any document.  What does that tell you about what the embedding "remembers"?
+    *Hint:* Try something like "the library is NOT open on weekends"; does the negation change the retrieved document?  Try a query with a specific number that does not appear in any document.  What does that tell you about what the embedding "remembers"?
 
 9.  The matrix-vector product `D @ q` computes all similarities at once.  For one million documents, what becomes expensive, and what data structure might help?  (This previews vector databases.)
 
-   *Hint:* With one million documents each holding 768 numbers, how many multiplications does one search require?  (Multiply 1,000,000 by 768.)  What if you could organize the vectors spatially so you only had to check a fraction of them?
+    *Hint:* With one million documents each holding 768 numbers, how many multiplications does one search require?  (Multiply 1,000,000 by 768.)  What if you could organize the vectors spatially so you only had to check a fraction of them?
+{: start="7"}
 
 ---
 
@@ -359,21 +363,21 @@ These exercises extend the search engine to reveal the geometry of meaning: buil
 
 1.  *Similarity matrix.*  Embed eight sentences of your choosing spanning two obvious topics.  Compute the full 8x8 cosine similarity matrix, render it as a heatmap, and verify that the block structure matches the topics.
 
-   - *What to do:* Choose 4 sentences about Topic A (e.g., dining) and 4 about Topic B (e.g., parking).  Call `embed()` on each, build the 8x8 matrix using the cosine formula, and visualize with `matplotlib` using `imshow`.
-   - *Starter hint:* `matrix[i][j] = np.dot(vecs[i], vecs[j]) / (np.linalg.norm(vecs[i]) * np.linalg.norm(vecs[j]))`.  For the heatmap: `plt.imshow(matrix, vmin=-1, vmax=1, cmap='coolwarm')`.
-   - *You've succeeded when:* The top-left 4x4 block and bottom-right 4x4 block show high similarity (warm colors), while the off-diagonal blocks show low similarity (cool colors).
+    - *What to do:* Choose 4 sentences about Topic A (e.g., dining) and 4 about Topic B (e.g., parking).  Call `embed()` on each, build the 8x8 matrix using the cosine formula, and visualize with `matplotlib` using `imshow`.
+    - *Starter hint:* `matrix[i][j] = np.dot(vecs[i], vecs[j]) / (np.linalg.norm(vecs[i]) * np.linalg.norm(vecs[j]))`.  For the heatmap: `plt.imshow(matrix, vmin=-1, vmax=1, cmap='coolwarm')`.
+    - *You've succeeded when:* The top-left 4x4 block and bottom-right 4x4 block show high similarity (warm colors), while the off-diagonal blocks show low similarity (cool colors).
 
 2.  *Analogy probe.*  Test the classic claim that embedding arithmetic captures analogy: compare $$\cos(\text{embed}(\text{"king"}) - \text{embed}(\text{"man"}) + \text{embed}(\text{"woman"}),\ \text{embed}(\text{"queen"}))$$ against unrelated words.  Report whether your sentence-level model exhibits the effect, and hypothesize why or why not.
 
-   - *What to do:* Compute the four embeddings, do the vector arithmetic, then compare the result to `embed("queen")` using cosine similarity.  Also compare it to `embed("table")` as a baseline.
-   - *Starter hint:* `analogy_vec = embed("king") - embed("man") + embed("woman")`.  Then `cosine(analogy_vec, embed("queen"))` vs `cosine(analogy_vec, embed("table"))`.
-   - *You've succeeded when:* You can report the two similarity scores and explain why sentence-level models may show a weaker analogy effect than word-level models like Word2Vec.
+    - *What to do:* Compute the four embeddings, do the vector arithmetic, then compare the result to `embed("queen")` using cosine similarity.  Also compare it to `embed("table")` as a baseline.
+    - *Starter hint:* `analogy_vec = embed("king") - embed("man") + embed("woman")`.  Then `cosine(analogy_vec, embed("queen"))` vs `cosine(analogy_vec, embed("table"))`.
+    - *You've succeeded when:* You can report the two similarity scores and explain why sentence-level models may show a weaker analogy effect than word-level models like Word2Vec.
 
 3.  *Token budget audit.*  Estimate the token count of your team charter document at four characters per token, then explain how that figure constrains stuffing it into an agent's prompt every turn.  (We address this properly in the memory module.)
 
-   - *What to do:* Count the total characters in your charter (or any document of at least 500 words), divide by 4 to estimate tokens, and compare that figure to a 4,000-token context window.
-   - *Starter hint:* `token_estimate = len(document_text) / 4`.  If your context window is 4,000 tokens and your system prompt costs 300 tokens and each user turn costs about 50 tokens, how many turns can fit alongside the full charter?
-   - *You've succeeded when:* You can state the charter's token estimate, the percentage of the context window it occupies, and one concrete consequence for an agent that carries the full charter every turn.
+    - *What to do:* Count the total characters in your charter (or any document of at least 500 words), divide by 4 to estimate tokens, and compare that figure to a 4,000-token context window.
+    - *Starter hint:* `token_estimate = len(document_text) / 4`.  If your context window is 4,000 tokens and your system prompt costs 300 tokens and each user turn costs about 50 tokens, how many turns can fit alongside the full charter?
+    - *You've succeeded when:* You can state the charter's token estimate, the percentage of the context window it occupies, and one concrete consequence for an agent that carries the full charter every turn.
 
 ---
 
@@ -445,11 +449,12 @@ These two vectors, $$x_{\text{the}} = (1,0)$$ and $$x_{\text{cat}} = (1,1)$$, ar
 
 10.  The tokens "the" and "cat" have embeddings $$(1,0)$$ and $$(0,1)$$, orthogonal vectors.  In one sentence, what would it mean geometrically if two tokens had *identical* embeddings, and why would that be a problem?
 
-   *Hint:* Embeddings are the model's only handle on meaning.  If two different words map to the same vector, can any later stage ever tell them apart?
+     *Hint:* Embeddings are the model's only handle on meaning.  If two different words map to the same vector, can any later stage ever tell them apart?
 
 11.  We added position *after* embedding.  Show what $$x_{\text{cat}}$$ would be if "cat" appeared in position 0 instead of position 1.  Why does the model need this, given that attention (next section) treats its inputs as an unordered set?
 
-   *Hint:* $$\text{pos}_0 = (0,0)$$.  Recompute $$(0,1) + \text{pos}_0$$.  If two orderings produced identical vectors, could the model ever distinguish "dog bites man" from "man bites dog"?
+     *Hint:* $$\text{pos}_0 = (0,0)$$.  Recompute $$(0,1) + \text{pos}_0$$.  If two orderings produced identical vectors, could the model ever distinguish "dog bites man" from "man bites dog"?
+{: start="10"}
 
 Check yourself.  Why does a transformer add a positional encoding to the token embedding before attention?
 
@@ -498,11 +503,12 @@ Notice that $$q$$, $$k$$, and $$v$$ are all different from the input $$x$$ and f
 
 12.  Verify by hand that $$k_{\text{cat}} = (1, 2)$$ by multiplying $$x_{\text{cat}} = (1,1)$$ by $$W_K$$.  Show the two dot products.
 
-   *Hint:* The first component is $$(1,1)$$ dotted with the first column of $$W_K$$, which is $$(1,0)$$.  The second uses the second column $$(1,1)$$.
+     *Hint:* The first component is $$(1,1)$$ dotted with the first column of $$W_K$$, which is $$(1,0)$$.  The second uses the second column $$(1,1)$$.
 
 13.  If $$W_Q$$, $$W_K$$, and $$W_V$$ were all the identity matrix, what would $$q$$, $$k$$, and $$v$$ equal?  Explain why that would waste the model's expressive power.
 
-   *Hint:* The identity leaves a vector unchanged.  If all three roles were the same vector, could a token ever "look for" something different from what it "advertises"?
+     *Hint:* The identity leaves a vector unchanged.  If all three roles were the same vector, could a token ever "look for" something different from what it "advertises"?
+{: start="12"}
 
 ### Attention Scores, Softmax, and the Context Vector
 
@@ -542,15 +548,16 @@ The vector $$(0.6698, 1.0)$$ is "cat," now aware of the token before it.  That i
 
 14.  "cat" put weight $$0.6698$$ on itself and $$0.3302$$ on "the."  Explain what it would mean if the attention weights had come out $$(0.5, 0.5)$$ instead.  What in the scores would have to be true?
 
-   *Hint:* Equal softmax weights require equal scaled scores.  What would that say about how relevant "the" and "cat" are to the query?
+     *Hint:* Equal softmax weights require equal scaled scores.  What would that say about how relevant "the" and "cat" are to the query?
 
 15.  The scaled scores differ by about $$0.707$$, yet the softmax weights differ by roughly a factor of two ($$0.33$$ vs $$0.67$$).  Why does softmax exaggerate a modest gap in scores?
 
-   *Hint:* Softmax exponentiates before normalizing.  What does $$e^x$$ do to a difference of $$0.707$$ in the exponent?
+     *Hint:* Softmax exponentiates before normalizing.  What does $$e^x$$ do to a difference of $$0.707$$ in the exponent?
 
 16.  This is where the $$O(n^2)$$ cost of context length comes from (see Section 2c and the *Memory and the Small Context Window Principle* activity).  With 2 tokens we computed 2 scores.  How many query-key scores would a 1,000-token prompt need for its last token, and for *all* tokens?
 
-   *Hint:* The last token dots against all prior keys.  Summed over every token attending to every prior token, the total grows like $$n^2$$.
+     *Hint:* The last token dots against all prior keys.  Summed over every token attending to every prior token, the total grows like $$n^2$$.
+{: start="14"}
 
 Check yourself.  The context vector $$(0.6698, 1.0)$$ for "cat" is computed as:
 
@@ -618,11 +625,12 @@ The sum is $$24.9313$$, giving:
 
 17.  "sat" won with probability $$0.5791$$, but "the" had a healthy $$0.2130$$.  At a high temperature, roughly what happens to the gap between these two, and how could that change which token is sampled?
 
-   *Hint:* Temperature divides the logits before softmax.  Dividing by a number bigger than 1 flattens the distribution; does that make an upset more or less likely?
+     *Hint:* Temperature divides the logits before softmax.  Dividing by a number bigger than 1 flattens the distribution; does that make an upset more or less likely?
 
 18.  The unembedding gave "sat" the highest logit because its direction $$(1,1)$$ aligns best with $$h = (1.6698, 1.0)$$.  Which token was *least* likely, and what about its direction explains that?
 
-   *Hint:* Look for the row whose dot product with $$(1.6698, 1.0)$$ is most negative.  Which direction points "against" $$h$$?
+     *Hint:* Look for the row whose dot product with $$(1.6698, 1.0)$$ is most negative.  Which direction points "against" $$h$$?
+{: start="17"}
 
 Check yourself.  The five logits are converted into the five next-token probabilities by:
 
@@ -677,15 +685,16 @@ Did it help?  Recompute that one logit: $$\text{logit}_{\text{sat}} = 1.3514\cdo
 
 19.  The gradient $$p_i - y_i$$ for the true token "sat" was negative ($$-0.4209$$), while for a wrong token like "the" it would be positive ($$+0.2130$$).  Explain how the sign tells gradient descent to *raise* the correct token's logit but *lower* a wrong token's.
 
-   *Hint:* Gradient descent moves opposite the gradient.  A negative gradient means subtracting a negative, which raises the weight.  What does a positive gradient do?
+     *Hint:* Gradient descent moves opposite the gradient.  A negative gradient means subtracting a negative, which raises the weight.  What does a positive gradient do?
 
 20.  We used learning rate $$\eta = 0.5$$.  Predict qualitatively what happens to $$W_U[\text{sat},0]$$ and the loss if $$\eta$$ were enormous, say $$50$$.  Why do practitioners keep the learning rate small?
 
-   *Hint:* The step size is $$\eta$$ times the gradient.  A giant step can overshoot the minimum entirely; the loss can go *up*.  What is the risk of stepping too far?
+     *Hint:* The step size is $$\eta$$ times the gradient.  A giant step can overshoot the minimum entirely; the loss can go *up*.  What is the risk of stepping too far?
 
 21.  We updated only one of the ten-plus weights in this model.  If we instead updated *every* weight by its own gradient in the same step, would the loss drop by more or less than the $$0.5464 \to 0.3395$$ we saw?  Why?
 
-   *Hint:* Each weight's update independently reduces the loss (to first order).  What happens when many small improvements combine?
+     *Hint:* Each weight's update independently reduces the loss (to first order).  What happens when many small improvements combine?
+{: start="19"}
 
 Check yourself.  After one gradient-descent step on $$W_U[\text{sat},0]$$, the loss went from $$0.5464$$ to $$0.3395$$.  This happened because:
 

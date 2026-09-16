@@ -90,15 +90,15 @@ And three operations, each of which is a standing prompt rather than a piece of 
 
 1.  Compare the classic `repo`-scope Personal Access Token against a fine-grained token limited to a single repository's Contents permission.  What does an attacker gain with each token if it leaks?  Which does our data-minimization principle select, and why?
 
-   *Hint:* A classic `repo`-scope token gives read/write access to all repositories in your account, including private ones.  A fine-grained token scoped to one repository gives access only to that repository's file contents.  What is the worst-case scenario for each if the token appears in a public log?
+    *Hint:* A classic `repo`-scope token gives read/write access to all repositories in your account, including private ones.  A fine-grained token scoped to one repository gives access only to that repository's file contents.  What is the worst-case scenario for each if the token appears in a public log?
 
 2.  The expired-token failure is *silent*: local editing in Obsidian continues working, and only cross-device staleness or agent failures reveal the problem, sometimes days later.  Design the cheapest detection habit you can (a calendar reminder, a canary note an agent updates daily) and justify why your choice is the right tradeoff between effort and reliability.
 
-   *Hint:* A calendar reminder set for one day before the token's expiration date costs almost nothing to set up.  A canary note that an agent updates daily would reveal staleness within 24 hours but requires an agent running on a schedule.  Which failure mode do you actually care more about catching early?
+    *Hint:* A calendar reminder set for one day before the token's expiration date costs almost nothing to set up.  A canary note that an agent updates daily would reveal staleness within 24 hours but requires an agent running on a schedule.  Which failure mode do you actually care more about catching early?
 
 3.  Your vault will hold personal context by design.  List three categories of information you would deliberately keep *out* of even a private synced vault, and state the specific principle behind each exclusion.  Consider both the risk of token theft and the risk of the GitHub account itself being compromised.
 
-   *Hint:* Consider categories like: credentials and passwords (should never be in plaintext anywhere), health or financial information with legal protection (subject to breach notification requirements even in private repos), and information that belongs to others (contacts, private conversations) rather than only to you.
+    *Hint:* Consider categories like: credentials and passwords (should never be in plaintext anywhere), health or financial information with legal protection (subject to breach notification requirements even in private repos), and information that belongs to others (contacts, private conversations) rather than only to you.
 
 ---
 
@@ -292,15 +292,16 @@ Notice the last line: for content containing multi-byte characters (accented let
 
 4.  An agent's commit contains: a new file `wiki/people/silverman.md`, an edit to `wiki/index.md`, and a metadata file updated with only one entry (for `silverman.md`) whose `sha` field holds the plain SHA-1 of the file's text (not the git blob SHA).  Find both protocol violations and predict the concrete symptom each one produces on the next Obsidian sync.
 
-   *Hint:* Violation 1: the metadata is missing an entry for `wiki/index.md`.  What does the plugin do with a file it has no metadata record for: does it ignore it, overwrite it, or treat it as a conflict?  Violation 2: the SHA is wrong (plain SHA-1 instead of blob SHA).  What does the plugin do when it computes the correct SHA for the file and finds it doesn't match the stored one: does it consider the file dirty, clean, or in conflict?
+    *Hint:* Violation 1: the metadata is missing an entry for `wiki/index.md`.  What does the plugin do with a file it has no metadata record for: does it ignore it, overwrite it, or treat it as a conflict?  Violation 2: the SHA is wrong (plain SHA-1 instead of blob SHA).  What does the plugin do when it computes the correct SHA for the file and finds it doesn't match the stored one: does it consider the file dirty, clean, or in conflict?
 
 5.  Write the corrected metadata entries for both `wiki/people/silverman.md` and `wiki/index.md`, using the safe null-and-dirty pattern.  Explain why setting `sha: null` and `dirty: true` is safer than trying to pre-compute the correct blob SHA.
 
-   *Hint:* The null-and-dirty pattern tells the plugin "I made a change and I want you to be the authority on the final SHA after upload."  Pre-computing the SHA requires getting the byte length exactly right, handling encoding correctly, and matching the exact content that was committed; any discrepancy causes a mismatch.  Null-and-dirty eliminates all of those failure modes.
+    *Hint:* The null-and-dirty pattern tells the plugin "I made a change and I want you to be the authority on the final SHA after upload."  Pre-computing the SHA requires getting the byte length exactly right, handling encoding correctly, and matching the exact content that was committed; any discrepancy causes a mismatch.  Null-and-dirty eliminates all of those failure modes.
 
 6.  Why does the AGENTS.md contract make the *agent* responsible for the metadata bookkeeping rather than asking the human to "just resync manually after the agent commits"?  Connect your answer to the architecture's goal of spending whose time.
 
-   *Hint:* The entire system is designed so that the human's interaction with agent output is "open Obsidian and sync once."  If the agent's commits require human follow-up (diagnose what didn't sync, fix metadata, trigger a second sync), the system is not actually reducing the human's cognitive load; it's just moving the manual work to a different moment.
+    *Hint:* The entire system is designed so that the human's interaction with agent output is "open Obsidian and sync once."  If the agent's commits require human follow-up (diagnose what didn't sync, fix metadata, trigger a second sync), the system is not actually reducing the human's cognitive load; it's just moving the manual work to a different moment.
+{: start="4"}
 
 ---
 
@@ -350,15 +351,16 @@ Obsidian becomes the comfortable viewer onto a knowledge base your agents largel
 
 7.  The wiring prompt above passes the PAT via an environment variable rather than including it in the prompt string.  Explain specifically why this matters: what are the two specific places where an inline PAT in a prompt could be exposed to unintended readers?
 
-   *Hint:* Consider: (1) where the prompt string goes when you run an agent CLI: does it appear in logs, in process listings (`ps aux`), in the shell history?  (2) What happens if the agent itself is asked to repeat or summarize the instructions it was given?
+    *Hint:* Consider: (1) where the prompt string goes when you run an agent CLI: does it appear in logs, in process listings (`ps aux`), in the shell history?  (2) What happens if the agent itself is asked to repeat or summarize the instructions it was given?
 
 8.  The AGENTS.md contract says agents should "answer from wiki/ first, consulting raw/ only to fill gaps, and update the wiki before answering when it is stale."  Explain the compounding benefit of this ordering rule for the vault's long-term value.  What happens to the wiki over dozens of agent sessions if this rule is followed consistently?
 
-   *Hint:* Each time an agent updates the wiki before answering, the wiki becomes more complete.  The next agent session has a richer starting point and needs to consult `raw/` less.  Over time, what does the wiki become?  What does this mean for the quality and speed of future agent sessions?
+    *Hint:* Each time an agent updates the wiki before answering, the wiki becomes more complete.  The next agent session has a richer starting point and needs to consult `raw/` less.  Over time, what does the wiki become?  What does this mean for the quality and speed of future agent sessions?
 
 9.  An agent is given read-write access to the whole vault but no AGENTS.md contract exists yet.  Describe three specific ways this could go wrong during the agent's first session processing a document in raw/, and explain how each would have been prevented by an explicit zone contract.
 
-   *Hint:* Consider: What does the agent do if it finds a typo in a raw/ source file?  What does it do if it wants to "organize" the vault and moves files around?  What does it do if it creates a new note but doesn't update the metadata file?  For each, how would an explicit AGENTS.md rule have prevented the failure?
+    *Hint:* Consider: What does the agent do if it finds a typo in a raw/ source file?  What does it do if it wants to "organize" the vault and moves files around?  What does it do if it creates a new note but doesn't update the metadata file?  For each, how would an explicit AGENTS.md rule have prevented the failure?
+{: start="7"}
 
 ---
 
@@ -366,43 +368,43 @@ Obsidian becomes the comfortable viewer onto a knowledge base your agents largel
 
 1.  *Stand it up.*
 
-   *What to do:* Complete the five-step setup (install Obsidian, create a private GitHub repository, generate a fine-grained PAT with Contents read/write on that one repo, install and configure the GitHub Gitless Sync plugin, trigger the first sync).  Demonstrate a round trip: edit a note on one device, sync, observe the change on a second device (or a second Obsidian instance pointing at the same vault).  Submit your token-redacted plugin settings and the repository's commit history showing at least two sync commits.
+    *What to do:* Complete the five-step setup (install Obsidian, create a private GitHub repository, generate a fine-grained PAT with Contents read/write on that one repo, install and configure the GitHub Gitless Sync plugin, trigger the first sync).  Demonstrate a round trip: edit a note on one device, sync, observe the change on a second device (or a second Obsidian instance pointing at the same vault).  Submit your token-redacted plugin settings and the repository's commit history showing at least two sync commits.
 
-   *Starter hint:* If you don't have two devices available, you can demonstrate the round trip by: (1) editing a file in Obsidian and syncing (commit appears in GitHub), (2) then editing the same file directly in the GitHub web editor, (3) then syncing in Obsidian and confirming the web edit appears locally.  This proves both directions of the sync work.
+    *Starter hint:* If you don't have two devices available, you can demonstrate the round trip by: (1) editing a file in Obsidian and syncing (commit appears in GitHub), (2) then editing the same file directly in the GitHub web editor, (3) then syncing in Obsidian and confirming the web edit appears locally.  This proves both directions of the sync work.
 
-   *You've succeeded when:* You can show a GitHub commit history with at least two commits from the Obsidian plugin (not manual git pushes), and demonstrate that a change made on one side appears on the other side after a sync.
+    *You've succeeded when:* You can show a GitHub commit history with at least two commits from the Obsidian plugin (not manual git pushes), and demonstrate that a change made on one side appears on the other side after a sync.
 
 2.  *Author the contract.*
 
-   *What to do:* Write your own `AGENTS.md`, `LLMMEMORIES.md`, and `SYSTEMPROMPT.md`; one page each is a good starting point.  AGENTS.md must explicitly state: the zone boundaries (which directories agents can write, which are read-only), the metadata protocol (file changes and metadata entries in one atomic commit), the synthesis rules (summarize don't transcribe; enrich existing pages before creating new ones), and the memory-scope rule (project scope is the default; what qualifies a fact as global; ambiguity resolves to project scope).  LLMMEMORIES.md should contain context about you that any agent should know before starting work.  SYSTEMPROMPT.md should contain standing behavioral instructions you'd otherwise paste into every tool.
+    *What to do:* Write your own `AGENTS.md`, `LLMMEMORIES.md`, and `SYSTEMPROMPT.md`; one page each is a good starting point.  AGENTS.md must explicitly state: the zone boundaries (which directories agents can write, which are read-only), the metadata protocol (file changes and metadata entries in one atomic commit), the synthesis rules (summarize don't transcribe; enrich existing pages before creating new ones), and the memory-scope rule (project scope is the default; what qualifies a fact as global; ambiguity resolves to project scope).  LLMMEMORIES.md should contain context about you that any agent should know before starting work.  SYSTEMPROMPT.md should contain standing behavioral instructions you'd otherwise paste into every tool.
 
-   *Starter hint:* Start AGENTS.md with: "Read this file completely before taking any action in this vault."  Then add a section for each major rule.  For LLMMEMORIES.md, start with: who you are, what you're currently working on, and three facts about your context that agents frequently get wrong when they don't know them.  For SYSTEMPROMPT.md, start with your preferred response style (concise vs. detailed), citation requirements, and any topics where you have strong preferences.
+    *Starter hint:* Start AGENTS.md with: "Read this file completely before taking any action in this vault."  Then add a section for each major rule.  For LLMMEMORIES.md, start with: who you are, what you're currently working on, and three facts about your context that agents frequently get wrong when they don't know them.  For SYSTEMPROMPT.md, start with your preferred response style (concise vs. detailed), citation requirements, and any topics where you have strong preferences.
 
-   *You've succeeded when:* All three files are in the root of your vault and synced to GitHub, AGENTS.md explicitly states zone boundaries, the metadata protocol, and the memory-scope default, and LLMMEMORIES.md contains at least five facts about your context that are not publicly findable and that stay true after any one project ends.
+    *You've succeeded when:* All three files are in the root of your vault and synced to GitHub, AGENTS.md explicitly states zone boundaries, the metadata protocol, and the memory-scope default, and LLMMEMORIES.md contains at least five facts about your context that are not publicly findable and that stay true after any one project ends.
 
 3.  *First agent write.*
 
-   *What to do:* Drop one real document (a class reading, a paper, a saved article) into `raw/` and sync it to GitHub.  Run the ingestion prompt against hermes or your preferred agent CLI. Verify the result: (a) the agent did not modify the file in `raw/`, (b) a new wiki page was created in `wiki/`, (c) the metadata file was updated in the same commit as the wiki page.  Submit the agent's commit (showing the atomic file-plus-metadata change) and a screenshot of the synced wiki page in Obsidian after the next sync.
+    *What to do:* Drop one real document (a class reading, a paper, a saved article) into `raw/` and sync it to GitHub.  Run the ingestion prompt against hermes or your preferred agent CLI. Verify the result: (a) the agent did not modify the file in `raw/`, (b) a new wiki page was created in `wiki/`, (c) the metadata file was updated in the same commit as the wiki page.  Submit the agent's commit (showing the atomic file-plus-metadata change) and a screenshot of the synced wiki page in Obsidian after the next sync.
 
-   *Starter hint:* Before running the agent, check `wiki/` and the metadata file to establish a baseline.  After the agent commits, check: does the commit touch any file in `raw/`?  Does the commit contain exactly one new/modified wiki file and one metadata file update?  Are they in the same commit (not two separate commits)?  Open the GitHub commit view to verify all of this before syncing to Obsidian.
+    *Starter hint:* Before running the agent, check `wiki/` and the metadata file to establish a baseline.  After the agent commits, check: does the commit touch any file in `raw/`?  Does the commit contain exactly one new/modified wiki file and one metadata file update?  Are they in the same commit (not two separate commits)?  Open the GitHub commit view to verify all of this before syncing to Obsidian.
 
-   *You've succeeded when:* You can show a GitHub commit that contains a new `wiki/` file and a metadata update in one commit, with no changes to any `raw/` file, and a screenshot of the resulting wiki page visible in Obsidian.
+    *You've succeeded when:* You can show a GitHub commit that contains a new `wiki/` file and a metadata update in one commit, with no changes to any `raw/` file, and a screenshot of the resulting wiki page visible in Obsidian.
 
 4.  *Protocol forensics.*
 
-   *What to do:* Deliberately commit a vault change *without* the metadata update: use the GitHub web editor to create or modify a file in `wiki/` without touching the metadata file.  Observe and document the sync behavior in Obsidian: does the change appear? does it appear correctly? does any error occur?  Then repair the situation by adding the correct metadata entry and committing it.  Write a three-sentence postmortem explaining what went wrong, why it went wrong, and what the fix was.
+    *What to do:* Deliberately commit a vault change *without* the metadata update: use the GitHub web editor to create or modify a file in `wiki/` without touching the metadata file.  Observe and document the sync behavior in Obsidian: does the change appear? does it appear correctly? does any error occur?  Then repair the situation by adding the correct metadata entry and committing it.  Write a three-sentence postmortem explaining what went wrong, why it went wrong, and what the fix was.
 
-   *Starter hint:* In the GitHub web editor, navigate to `wiki/` and create a file like `wiki/test-forensics.md` with some content.  Commit it.  Then open Obsidian and sync.  Observe carefully: does the file appear?  Is the content correct?  Does the plugin show any warning?  Then add the metadata entry manually (following the null-and-dirty pattern) and sync again.
+    *Starter hint:* In the GitHub web editor, navigate to `wiki/` and create a file like `wiki/test-forensics.md` with some content.  Commit it.  Then open Obsidian and sync.  Observe carefully: does the file appear?  Is the content correct?  Does the plugin show any warning?  Then add the metadata entry manually (following the null-and-dirty pattern) and sync again.
 
-   *You've succeeded when:* You have documented observations of the sync behavior before and after the fix, and your postmortem correctly identifies the mechanism of the failure (plugin had no record of the file) and confirms the fix worked.
+    *You've succeeded when:* You have documented observations of the sync behavior before and after the fix, and your postmortem correctly identifies the mechanism of the failure (plugin had no record of the file) and confirms the fix worked.
 
 5.  *The memory loop.*
 
-   *What to do:* After a substantive working session with any AI tool (a tutoring session, a coding session, a research conversation), identify one refined fact about your context that emerged from that session, something the AI helped you clarify about your own project or thinking.  Write that fact into `LLMMEMORIES.md` and sync it to GitHub.  Then start a fresh agent session, tell the agent to read the vault per AGENTS.md, and give it a task that would benefit from knowing that fact.  Report whether the new session behaved differently because of the updated memory.
+    *What to do:* After a substantive working session with any AI tool (a tutoring session, a coding session, a research conversation), identify one refined fact about your context that emerged from that session, something the AI helped you clarify about your own project or thinking.  Write that fact into `LLMMEMORIES.md` and sync it to GitHub.  Then start a fresh agent session, tell the agent to read the vault per AGENTS.md, and give it a task that would benefit from knowing that fact.  Report whether the new session behaved differently because of the updated memory.
 
-   *Starter hint:* The fact you add should be specific enough to change agent behavior: not "I am interested in AI" but "I am building a RAG pipeline for course syllabi and I have decided to use Chroma as the vector store because the team already has Python skills."  After adding this, ask the agent: "What vector store should I use for my project, and why?"  Compare the answer before and after the memory update.
+    *Starter hint:* The fact you add should be specific enough to change agent behavior: not "I am interested in AI" but "I am building a RAG pipeline for course syllabi and I have decided to use Chroma as the vector store because the team already has Python skills."  After adding this, ask the agent: "What vector store should I use for my project, and why?"  Compare the answer before and after the memory update.
 
-   *You've succeeded when:* You have a before/after comparison of agent responses to the same question (one without the memory fact, one with it), and you can describe in two sentences how the agent's response changed and why that change was useful.
+    *You've succeeded when:* You have a before/after comparison of agent responses to the same question (one without the memory fact, one with it), and you can describe in two sentences how the agent's response changed and why that change was useful.
 
 ---
 
