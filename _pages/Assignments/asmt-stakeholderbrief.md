@@ -55,7 +55,11 @@ tags:
 
 ---
 
-In this Project Thread milestone, your team finds a real stakeholder outside computer science, interviews them, and writes a 2-3 page Stakeholder Brief that states their problem in their own words. A **stakeholder** is a real person or office who owns the problem: they experience it, they would benefit from progress on it, and they can tell you when you have misunderstood it. The brief ends in a problem statement: one paragraph, traceable to the interview, that names a problem an agent system could address without committing to a design. Along the way you describe the disciplines the problem lives in. A **discipline** is a field of study or practice (education, accounting, ecology, public health) with its own way of deciding what counts as evidence and what "solved" means.
+In this Project Thread milestone, your team finds a real stakeholder outside computer science, interviews them, and writes a 2-3 page Stakeholder Brief that states their problem in their own words.
+
+A **stakeholder** is a real person or office who owns the problem: they experience it, they would benefit from progress on it, and they can tell you when you have misunderstood it.
+
+The brief ends in a problem statement: one paragraph, traceable to the interview, that names a problem an agent system could address without committing to a design. Along the way you describe the disciplines the problem lives in. A **discipline** is a field of study or practice, such as education, accounting, ecology, or public health, with its own way of deciding what counts as evidence and what "solved" means.
 
 I identify the community partners: campus offices and local organizations who have agreed to talk with student teams. I share the roster in class before the kickoff rather than publishing it on the website. Your team anchors its brief in one real partner from that roster, or, while the roster is pending, in a concrete named stakeholder group your team identifies and I approve.
 

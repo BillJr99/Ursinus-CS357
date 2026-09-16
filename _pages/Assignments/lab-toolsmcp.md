@@ -806,7 +806,11 @@ MCP standardizes how a client discovers what tools a server offers and how it ca
 
 ### Option 4A: Create, Stand Up Your Own MCP Server
 
-Expose your tool(s) over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server (for example with the Python MCP SDK / FastMCP) that advertises one or two tools, then connect a client and show the discover -> invoke round trip.  If you take [Option 4D](#option-4d-secure-your-own-server-with-oauth-20), the same server with an OAuth 2.0 gate, that fully satisfies this option.  Background: the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md) and the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/) (built with Anthropic), whose early units walk through building and connecting an MCP server step by step.
+Expose your tools over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server, for example with the Python MCP SDK or FastMCP, that advertises one or two tools.  Then connect a client and show the discover to invoke round trip.
+
+If you take [Option 4D](#option-4d-secure-your-own-server-with-oauth-20), the same server with an OAuth 2.0 gate, that fully satisfies this option.
+
+For background, see the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md) and the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/), built with Anthropic, whose early units walk through building and connecting an MCP server step by step.
 
 > **Paste into your submission.** The server code, a transcript of a client listing the tools and calling one, and one sentence on what MCP standardizes that a hand-rolled `tools` list does not.
 
@@ -1078,7 +1082,15 @@ curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN"
 > - The agent discovers the tools but never calls them: your descriptions are too vague, or the task does not obviously need them.  Sharpen the descriptions in `list_tools()` and try "Use the search_files tool to find README files."
 > - The agent gets a response it cannot parse: `call_tool` must return `list[types.TextContent]`, never a bare string or dict.
 
-> **Paste into your submission.**  `mcp_server.py`, `oauth_middleware.py`, `server_http.py`, `tools/tool_one.py`, `tools/tool_two.py`, and `requirements.txt`; the OAuth server `docker` command and the agent's MCP configuration, both with secrets redacted; `invocation_trace.txt`, `error_expired_token.txt`, and `error_tool_failure.txt`; the data-flow diagram and the completed port table; and a README with the domain paragraph, both tool schemas, the standardization sentence the MCP row asks for, and a paragraph naming what the OAuth scopes actually bound and what an attacker holding a valid token could still do.  In your writeup, also answer: what does the tool schema give you that a bare HTTP endpoint does not, and suppose a malicious MCP server advertised a `search_files` tool that actually exfiltrates data; how could an agent be tricked into calling it, and what trust mechanisms would prevent that?
+> **Paste into your submission.**
+>
+> - The code: `mcp_server.py`, `oauth_middleware.py`, `server_http.py`, `tools/tool_one.py`, `tools/tool_two.py`, and `requirements.txt`.
+> - The OAuth server `docker` command and the agent's MCP configuration, both with secrets redacted.
+> - The traces: `invocation_trace.txt`, `error_expired_token.txt`, and `error_tool_failure.txt`.
+> - The data-flow diagram and the completed port table.
+> - A README with the domain paragraph, both tool schemas, the standardization sentence the MCP row asks for, and a paragraph naming what the OAuth scopes actually bound and what an attacker holding a valid token could still do.
+>
+> In your writeup, also answer two questions.  What does the tool schema give you that a bare HTTP endpoint does not?  And suppose a malicious MCP server advertised a `search_files` tool that actually exfiltrates data: how could an agent be tricked into calling it, and what trust mechanisms would prevent that?
 
 > **No-code path.** For Options 4A and 4B without code: add an MCP server to Open WebUI's tool settings, or configure one in a client's config file (the Langflow low-code variant), and export the chat showing discovery and then invocation.  Consuming a server through a client's configuration file earns the MCP row on the same terms as consuming it from code.
 

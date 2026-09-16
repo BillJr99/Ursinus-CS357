@@ -571,7 +571,17 @@ for f in [r for r in audit_results if not r["faithful"]]:
 
 ## Part 5: Run the RAG Quality Checkup (three Quality Checkup rows, 50%)
 
-Part 5 is a structured checkup on the pipeline from Parts 2 through 4: design a **golden set** (ten questions with expected answers and a stated scoring rule, five that should be easy for your model and five that should not), complete a checkup worksheet with measurements from your own pipeline, and freeze both into a regression harness (a fixed test you can rerun after any change and compare against the last run).  It sits mid-window on purpose: your pipeline is running by then and not yet due, which is the only point in the term when a diagnostic can still change what you build.  The metrics come from *RAG Quality: Chunking and Measuring Retrieval*; do most of the worksheet in the open studio in *How I AI* (Part III) with your pipeline-in-progress in front of you.  The harness follows you forward: the Rubric Pipeline lab starts from it, and Evaluation Workshop II runs your judge against your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
+Part 5 is a structured checkup on the pipeline from Parts 2 through 4.  You do three things:
+
+- design a **golden set**: ten questions with expected answers and a stated scoring rule, five that should be easy for your model and five that should not;
+- complete a checkup worksheet with measurements from your own pipeline; and
+- freeze both into a **regression harness**, a fixed test you can rerun after any change and compare against the last run.
+
+It sits mid-window on purpose.  Your pipeline is running by then and not yet due, which is the only point in the term when a diagnostic can still change what you build.
+
+The metrics come from *RAG Quality: Chunking and Measuring Retrieval*.  Do most of the worksheet in the open studio in *How I AI* (Part III), with your pipeline-in-progress in front of you.
+
+The harness follows you forward: the Rubric Pipeline lab starts from it, and Evaluation Workshop II runs your judge against your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
 
 ### Before You Start Part 5
 
@@ -937,7 +947,13 @@ Your RAG system kept knowledge *outside* the model and retrieved it at query tim
 **No GPU?  Two paths, both full credit.**
 
 1. **Colab path (the default no-GPU route).** Everything runs on Colab's free T4 GPU: run the Colab setup cell in Step A, then work Steps B through E as written in the notebook.  A 3.8B to 8B model with QLoRA fits in the free tier's roughly 15 GB of VRAM in a 15-60 minute run.  Download the exported GGUF at the end of Step E and finish the Ollama deployment on your own machine.
-2. **Provided-artifact variant (only if Colab is unavailable to you).** Skip training and start from a published adapter: search the Hugging Face Hub for a public LoRA adapter for `llama3.2`, pick one whose model card describes its training domain, cite it, and download it.  Then do **only the deployment and evaluation half**: the GGUF merge in Step E (merging the downloaded adapter), the `Modelfile`, the `ollama create` / `ollama run` deployment, and the full before/after evaluation of Step D comparing the base model against the adapted model.  This variant earns full credit with the evaluation weighted more heavily: extend your before/after comparison to at least 15 prompts (rather than 10) and include the regression analysis.  The model card (Step F) is still required; document the adapter's provenance, dataset, and license in place of your own training details.  The loss-curve deliverable is waived.
+2. **Provided-artifact variant (only if Colab is unavailable to you).** Skip training and start from a published adapter.  Search the Hugging Face Hub for a public LoRA adapter for `llama3.2`, pick one whose model card describes its training domain, cite it, and download it.
+
+    Then do **only the deployment and evaluation half**: the GGUF merge in Step E, merging the downloaded adapter; the `Modelfile`; the `ollama create` and `ollama run` deployment; and the full before/after evaluation of Step D comparing the base model against the adapted model.
+
+    This variant earns full credit, with the evaluation weighted more heavily.  Extend your before/after comparison to at least 15 prompts rather than 10, and include the regression analysis.
+
+    The model card (Step F) is still required.  Document the adapter's provenance, dataset, and license in place of your own training details.  The loss-curve deliverable is waived.
 
 ### Step A: Set Up Your Toolchain
 
@@ -1216,7 +1232,13 @@ Fold these into the submission ZIP and readme:
 - `model_card.md`: complete, with all 8 sections
 - A section in your writeup covering reflection answers, hyperparameter justifications, and your fine-tuning-versus-RAG recommendation
 
-**What proficient work looks like.** Training runs with a loss curve, a quantitative before/after metric, a comparison table, and at least one hyperparameter choice justified with evidence.  The model is exported to GGUF and demonstrably runs in Ollama via a `Modelfile`, with a transcript.  The dataset is described with source, size, format, and cleaning; a validation set catches overfitting; at least one dataset limitation is named.  Evaluation uses a defined metric, honestly reports at least one regression, and delivers a defended recommendation on fine-tuning versus RAG and prompting.  The model card is complete across all eight sections, names at least one bias shift the fine-tuning introduced or amplified, and the reflection answers are grounded in your own results.
+**What proficient work looks like.**
+
+- **Training** runs with a loss curve, a quantitative before/after metric, a comparison table, and at least one hyperparameter choice justified with evidence.
+- **Deployment** exports the model to GGUF and demonstrably runs it in Ollama via a `Modelfile`, with a transcript.
+- **The dataset** is described with source, size, format, and cleaning; a validation set catches overfitting; and at least one dataset limitation is named.
+- **Evaluation** uses a defined metric, honestly reports at least one regression, and delivers a defended recommendation on fine-tuning versus RAG and prompting.
+- **The model card** is complete across all eight sections and names at least one bias shift the fine-tuning introduced or amplified, and the reflection answers are grounded in your own results.
 
 ### Direction 1 Reflection Prompts
 
@@ -1228,7 +1250,11 @@ Fold these into the submission ZIP and readme:
 
 ## Direction 2: Multimodal AI and Monte Carlo Simulation
 
-In the core lab you audited whether a model faithfully used *text* you retrieved; here you audit whether a **multimodal** model faithfully reads *a chart*.  You build a Monte Carlo retirement simulation (instead of projecting one "expected" future, you draw a thousand possible return sequences and look at the spread of endings, which is what matters for a decision whose consequences compound for decades), send its chart to a local vision model, and find that AI image analysis is strong at pattern recognition and fragile on numerical precision.  The ground-truth-versus-AI-claim audit is the citation audit applied to pixels instead of passages.  Work in driver/navigator pairs as in the core lab, swapping at least every 30 minutes, and keep the swap log.
+In the core lab you audited whether a model faithfully used *text* you retrieved.  Here you audit whether a **multimodal** model faithfully reads *a chart*.
+
+You build a Monte Carlo retirement simulation, send its chart to a local vision model, and find that AI image analysis is strong at pattern recognition and fragile on numerical precision.  A Monte Carlo simulation, rather than projecting one "expected" future, draws a thousand possible return sequences and looks at the spread of endings, which is what matters for a decision whose consequences compound for decades.
+
+The ground-truth-versus-AI-claim audit is the citation audit applied to pixels instead of passages.  Work in driver/navigator pairs as in the core lab, swapping at least every 30 minutes, and keep the swap log.
 
 > **What this direction requires.**
 > - **Accounts:** none.
@@ -1442,7 +1468,13 @@ This is the most important step: the core lab's audit discipline moved from retr
 
 ### Step E: Wrap the Simulation as a Tool (Function-Calling Extension)
 
-In Steps A through D the model only *interpreted* an experiment you designed.  This extension inverts the relationship and bridges to the **Tool Use and Function Calling** session: you wrap the simulation as a tool with a JSON schema, and the model **chooses the parameters**, asks your code to invoke the tool, and then interprets the chart the tool produced.  The model never executes anything; it can only request, and your code runs the simulation.  A fully worked, runnable version (with canned offline responses for machines without Ollama) is in the [companion notebook]({{ site.baseurl }}/files/notebooks/MonteCarloRetirement.ipynb).  `llava` does not support function calling: use a tool-capable model for the parameter-selection turn (`ollama pull llama3.1`, or `qwen2.5`) and keep `llava` for the vision turn.
+In Steps A through D the model only *interpreted* an experiment you designed.  This extension inverts the relationship and bridges to the **Tool Use and Function Calling** session.  You wrap the simulation as a tool with a JSON schema, and the model **chooses the parameters**, asks your code to invoke the tool, and then interprets the chart the tool produced.
+
+The model never executes anything.  It can only request, and your code runs the simulation.
+
+A fully worked, runnable version, with canned offline responses for machines without Ollama, is in the [companion notebook]({{ site.baseurl }}/files/notebooks/MonteCarloRetirement.ipynb).
+
+One model note: `llava` does not support function calling.  Use a tool-capable model for the parameter-selection turn (`ollama pull llama3.1`, or `qwen2.5`) and keep `llava` for the vision turn.
 
 > **Do this.**
 > 1. Refactor Step A into one callable, `run_retirement_sim`.  The new `stock_allocation` parameter blends an equity-like return distribution (mean 8%, std 15%) with a bond-like one (mean 3%, std 5%), giving the agent a meaningful lever.
@@ -1498,7 +1530,12 @@ Fold these into the submission ZIP and readme:
 - A readme section covering: (1) the sensitivity analysis with all three scenarios and four statistics each, (2) the critical analysis with three AI/human comparison items including at least one AI error with a verbatim excerpt, (3) the prompt engineering change you tested and whether it helped, (4) your guardrail statement
 - `pair_log.txt`: the driver/navigator swap log with timestamps and roles
 
-**What proficient work looks like.** The simulation is configurable from a JSON file; the visualization includes the median, 10th and 90th percentile bands, and the final-balance histogram, with a text summary saved alongside, and edge cases are handled.  The multimodal integration sends a valid base64 PNG in the `images` array to `/api/generate`, parses `response.json()["response"]`, runs a structured Turn 1 (role, four numbered sections, audience) plus a Turn 2 that presses a specific quantitative claim, and saves both turns.  The comparative analysis names three AI-versus-human differences, at least one a wrong or imprecise number backed by a verbatim excerpt alongside the true value from `simulation_stats.txt`, tests one prompt change and reports whether it helped, and (if the tool-calling extension is attempted) audits both the agent's parameter choices and its interpretation.  The writeup tabulates the four statistics for all three scenarios, states which parameter change moved the median more, judges AI interpretation quality with a verbatim excerpt, and delivers a 2-3 sentence plain-language user-facing guardrail.
+**What proficient work looks like.**
+
+- **The simulation** is configurable from a JSON file, handles edge cases, and its visualization includes the median, the 10th and 90th percentile bands, and the final-balance histogram, with a text summary saved alongside.
+- **The multimodal integration** sends a valid base64 PNG in the `images` array to `/api/generate`, parses `response.json()["response"]`, runs a structured Turn 1 (role, four numbered sections, audience) plus a Turn 2 that presses a specific quantitative claim, and saves both turns.
+- **The comparative analysis** names three AI-versus-human differences, at least one of them a wrong or imprecise number backed by a verbatim excerpt alongside the true value from `simulation_stats.txt`.  It tests one prompt change and reports whether it helped.  If you attempted the tool-calling extension, it audits both the agent's parameter choices and its interpretation.
+- **The writeup** tabulates the four statistics for all three scenarios, states which parameter change moved the median more, judges AI interpretation quality with a verbatim excerpt, and delivers a 2-3 sentence plain-language user-facing guardrail.
 
 ### Direction 2 Reflection Prompts
 

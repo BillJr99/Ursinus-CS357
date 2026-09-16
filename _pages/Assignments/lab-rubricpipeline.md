@@ -113,11 +113,23 @@ tags:
 ---
 
 
-In this lab you and your partner turn the judge you built in class into a batch grading pipeline, then measure whether that judge deserves to be trusted.  A JSON rubric and a folder of submissions go in.  A table of per-criterion scores, quoted evidence, and weighted totals comes out.  You then test that table three ways: against blind human scores, against the source text the evidence claims to quote, and against a deliberate bias probe.  **All submissions in this lab are synthetic artifacts; no real student work may be used.**  The starter pack gives you a rubric and twelve synthetic paragraphs, and you write at least two more yourselves.  You complete this lab in pairs, using driver/navigator roles, swapping at least every 30 minutes and keeping a swap log.
+In this lab you and your partner turn the judge you built in class into a batch grading pipeline, then measure whether that judge deserves to be trusted.  A JSON rubric and a folder of submissions go in.  A table of per-criterion scores, quoted evidence, and weighted totals comes out.
+
+You then test that table three ways: against blind human scores, against the source text the evidence claims to quote, and against a deliberate bias probe.
+
+**All submissions in this lab are synthetic artifacts; no real student work may be used.**  The starter pack gives you a rubric and twelve synthetic paragraphs, and you write at least two more yourselves.
+
+You complete this lab in pairs, using driver/navigator roles, swapping at least every 30 minutes and keeping a swap log.
 
 I hand this lab out at *Evaluating Agents With a Rubric: The Judge Pipeline Workshop*, where you build the in-class judge this lab scales up; that judge comes from the critic-and-judge loop in *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*.  See the course schedule for the assigned and due dates.
 
-A few terms recur on this page, so here they are up front.  A rubric is a list of criteria, each with a weight and a set of observable levels, written so that two graders reading the same text land on the same score.  An LLM as judge is a language model prompted to score an artifact against that rubric instead of writing the artifact itself.  Human agreement is the rate at which independent scores match: human to human, or human to judge.  A bias measurement is a controlled experiment that changes one feature the rubric does not care about (length, position, author name) and records how far the score moves.  Fail closed means that when the judge returns output the pipeline cannot parse, the pipeline flags the row for a human instead of guessing a score.
+A few terms recur on this page, so here they are up front.
+
+- A **rubric** is a list of criteria, each with a weight and a set of observable levels, written so that two graders reading the same text land on the same score.
+- An **LLM as judge** is a language model prompted to score an artifact against that rubric instead of writing the artifact itself.
+- **Human agreement** is the rate at which independent scores match, human to human or human to judge.
+- A **bias measurement** is a controlled experiment that changes one feature the rubric does not care about, such as length, position, or author name, and records how far the score moves.
+- **Fail closed** means that when the judge returns output the pipeline cannot parse, the pipeline flags the row for a human instead of guessing a score.
 
 ---
 
@@ -143,7 +155,14 @@ Complete these two activities before you install anything:
 - [Evaluating Agents With a Rubric: The Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md): judge prompting, structured output, fail-closed policies
 - [Evaluating Outputs Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-evaluatingoutputs.md): agreement metrics, bias taxonomy, evidence faithfulness
 
-**The starter pack.**  Download [rubric-pipeline-starter.zip]({{ site.baseurl }}/files/rubric-pipeline-starter.zip) and unzip it into your lab folder.  It contains `rubric.json` (four criteria, four named levels each, weights summing to 100), `submissions/s01.txt` through `s12.txt` (twelve synthetic persuasive paragraphs spanning strong, adequate, and weak, plus an empty file, an off-topic recipe, and a verbose paragraph that never makes a claim), `dataset.csv` (the same twelve paragraphs in the two-column form promptfoo reads), and a `README.md` that names the planted edge cases and lists the intended quality tier per id.  Do not read the tier table until you have recorded your own blind scores in Part 2.
+**The starter pack.**  Download [rubric-pipeline-starter.zip]({{ site.baseurl }}/files/rubric-pipeline-starter.zip) and unzip it into your lab folder.  It contains four things:
+
+- `rubric.json`, with four criteria, four named levels each, and weights summing to 100.
+- `submissions/s01.txt` through `s12.txt`: twelve synthetic persuasive paragraphs spanning strong, adequate, and weak, plus an empty file, an off-topic recipe, and a verbose paragraph that never makes a claim.
+- `dataset.csv`, the same twelve paragraphs in the two-column form promptfoo reads.
+- `README.md`, which names the planted edge cases and lists the intended quality tier per id.
+
+Do not read the tier table until you have recorded your own blind scores in Part 2.
 
 Both paths need Ollama running with the `llama3.2` model, as in the earlier labs.  Start it with `ollama serve` in a separate terminal and leave that terminal open.
 
@@ -732,7 +751,13 @@ percent agreement = (number of criterion cells where human consensus == judge ve
 
 Report percent agreement overall and per criterion (each criterion has 15 cells).
 
-> **No-code path.** Cohen's kappa is not required on this path.  Two things replace it: the percent-agreement numbers above, and a written disagreement analysis of the three worst mismatches, meaning the three items with the highest `mismatches` count.  For each of the three, quote the answer, state the human verdict and the judge verdict per disputed criterion, quote the judge's stated reasoning from the promptfoo output, and diagnose why they diverged: is the criterion's wording ambiguous, is the judge pattern-matching on surface features, or did the humans read something into the answer that is not on the page?  Then revise the wording of the single worst criterion's rubric text in `promptfooconfig-baseline.yaml`, re-run it, and report that criterion's agreement before and after.  This is the same revise-and-remeasure discipline as Step 2.4.
+> **No-code path.**
+>
+> Cohen's kappa is not required on this path.  Two things replace it: the percent-agreement numbers above, and a written disagreement analysis of the three worst mismatches, meaning the three items with the highest `mismatches` count.
+>
+> For each of the three, quote the answer, state the human verdict and the judge verdict per disputed criterion, and quote the judge's stated reasoning from the promptfoo output.  Then diagnose why they diverged.  Is the criterion's wording ambiguous?  Is the judge pattern-matching on surface features?  Or did the humans read something into the answer that is not on the page?
+>
+> Then revise the wording of the single worst criterion's rubric text in `promptfooconfig-baseline.yaml`, re-run it, and report that criterion's agreement before and after.  This is the same revise-and-remeasure discipline as Step 2.4.
 
 > **If it fails.**
 > - Percent agreement is suspiciously high: the partners scored together, or one saw the judge's output first.  Rescore blind.  The value of this part is entirely in the independence.
