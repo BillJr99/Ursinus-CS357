@@ -50,7 +50,7 @@ info:
       proficient: "The reflection is analytically sharp: it identifies a moment where the discussion revealed a real disagreement, explains what underlying assumption drove the disagreement, and states what the student now thinks about that assumption."
 ---
 
-## Overview
+## How a Session Runs
 
 Each week, one or two students lead a short discussion on a current event or reading related to AI. Leading a session earns a **10-point base grade** (scored on the rubric below), **plus up to 10 points of extra credit**, and the earlier in the term you present, the larger that extra-credit bonus.
 

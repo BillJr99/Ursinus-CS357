@@ -44,7 +44,7 @@ Please go through the sections in order, and run each code block as you hit it. 
 
 ---
 
-# Part I: The Mental Model
+# Part I: Images Versus Containers
 
 In this Part, you will build the conceptual model that makes every Docker command make sense: the distinction between an image (the frozen template) and a container (the live, running copy).  Once this distinction is clear, you will be able to predict what happens to data when containers start, stop, and restart.
 

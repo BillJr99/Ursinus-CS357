@@ -14,7 +14,7 @@ tags:
 ---
 ## About This Tutorial
 
-When you open a model picker and see names like *base*, *instruct*, *reasoning*, or *vision*, those are not marketing adjectives; they are labels for **where a model stopped along a training pipeline**.  Every one of them begins life as the same thing: a next-token predictor.  What separates a chatbot from a "thinking" model from a model that can read a screenshot is which additional training stages were applied, and in what order.  This tutorial is the **hub** that ties together pieces the course teaches separately (pretraining, alignment, fine-tuning, and multimodality) into one lifecycle you can reason about.  When you need the mechanics of any single stage, we point you to the deep-dive activity that covers it.
+When you open a model picker and see names like *base*, *instruct*, *reasoning*, or *vision*, those are not marketing adjectives; they are labels for **where a model stopped along a training pipeline**.  Every one of them begins life as the same thing: a next-token predictor.  What separates a chatbot from a "thinking" model from a model that can read a screenshot is which additional training stages were applied, and in what order.  This tutorial is the **hub** that ties together pieces the course teaches separately (pretraining, alignment, fine-tuning, and multimodality) into one lifecycle you can reason about.  When you need the mechanics of any single stage, we point you to the activity that covers it in depth.
 {: .tb-lede}
 
 Our arc: **pretraining → supervised fine-tuning → preference alignment → reasoning training → multimodal training**, and then a taxonomy that lets you *choose* the right model type for a task instead of guessing.
@@ -282,4 +282,4 @@ These four activities are the deep dives this hub connects.  Open any of them wh
 - [How LLMs Are Built: Tokenization, Pre-Training, and Scaling]({{ site.baseurl }}/Tutorials/LLMPretraining), the *pretraining -> base model* stage in full.
 - [From Rewards to Preferences: Reinforcement Learning and RLHF]({{ site.baseurl }}/Tutorials/RLHF), RL, RLHF, and DPO, the machinery behind *alignment* and *reasoning* training.
 - [Fine-Tuning, RAG, and Prompting: Choosing the Right Approach](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-ragquality.md), how to specialize any model type, including the LoRA shortcut.
-- [Multimodal Agents: Vision, Documents, and Code as First-Class Inputs]({{ site.baseurl }}/Tutorials/MultimodalAgents), the deep dive on *vision/multimodal* models, the modality bottleneck, and grounding.
+- [Multimodal Agents: Vision, Documents, and Code as First-Class Inputs]({{ site.baseurl }}/Tutorials/MultimodalAgents), the longer treatment of *vision/multimodal* models, the modality bottleneck, and grounding.

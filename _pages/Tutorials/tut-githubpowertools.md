@@ -32,9 +32,9 @@ This tutorial introduces five URL **domain-swap tricks** that unlock new superpo
 
 ---
 
-# Part I: The Big Idea
+# Part I: Swapping the Domain in a GitHub URL
 
-In this part, you will learn how swapping a single domain in a GitHub URL unlocks six different power tools (from in-browser editors to instant MCP servers) turning any public repo into an AI-ready resource without cloning anything.
+In this part, you will learn how swapping a single domain in a GitHub URL unlocks five different power tools (from in-browser editors to instant MCP servers) turning any public repo into an AI-ready resource without cloning anything.
 
 ## 1.  Domain Swapping
 

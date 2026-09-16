@@ -18,7 +18,7 @@ The bench has four parts, and we build them in order: **the shell** (Step 0, the
 
 This tutorial builds **one environment that runs every CS357 lab**: a Docker container with the whole course Python stack preinstalled (retrieval, classical ML, NLP, explainability, plus Node.js with promptfoo for evaluation and opencode, the coding agent), bind-mounted onto a directory that is a **git repository with a GitHub remote**, so everything you write inside the container is versioned and pushed like normal work.
 
-One deliberate exception: **Ollama stays on your host.**  Model inference is the performance-critical piece, so it runs natively with direct access to your hardware, and your containerized code reaches it over the host bridge at `http://host.docker.internal:11434`.  That hostname is doing real work and it is worth knowing why: inside a container, `localhost` means *the container*, so reaching your own machine needs a different name.  The [Docker from Zero tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Docker) (Section 7, *host.docker.internal: Talking to the Host*) explains that and everything else here from first principles; today we put it to work.  When a step below feels like magic, that is the page to read.
+One deliberate exception: **Ollama stays on your host.**  Model inference is the performance-critical piece, so it runs natively with direct access to your hardware, and your containerized code reaches it over the host bridge at `http://host.docker.internal:11434`.  That hostname is doing real work: inside a container, `localhost` means *the container*, so reaching your own machine needs a different name.  The [Docker from Zero tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Docker) (Section 7, *host.docker.internal: Talking to the Host*) explains that and everything else here from the ground up; today we put it to work.  When a step below feels like magic, that is the page to read.
 
 Two ideas carry the whole design:
 
@@ -523,7 +523,7 @@ opencode --version
 
 **Every install route in one place:** [opencode.ai](https://opencode.ai/).  Two beyond the two above are worth knowing.  On Windows without WSL, `choco install opencode` or `scoop install opencode` install the command-line version natively, though the project itself recommends WSL, which is the route Step 10 and the Overview assignment describe.  That same page also offers a **desktop application**, in beta for macOS, Windows, and Linux, which puts this agent in a window with tabs instead of a terminal.
 
-Use the container route for this course, because every lab assumes it and a classmate can reproduce it.  Install the command-line version natively only if you are on the Step 10 fallback.  The desktop app is worth a look if you would rather have a window than a terminal, but treat it as a second face on one tool rather than a replacement: the labs hand you commands, and the OpenCode Studio lab asks for a transcript.
+Use the container route for this course, because every lab assumes it and a classmate can reproduce it.  Install the command-line version natively only if you are on the Step 10 fallback.  Try the desktop app if you would rather have a window than a terminal, but treat it as a second face on one tool rather than a replacement: the labs hand you commands, and the OpenCode Studio lab asks for a transcript.
 
 ### 8.2: Point it at your own model
 
@@ -599,7 +599,7 @@ Port 3000 is the OpenWebUI default this course uses.  One more thing if you are 
 
 > **Prefer a different agent?**  pi does the same two-provider trick through a plugin, and the instructions are in the [agentic CLI tools tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs).  If you want it running inside a container with the Dockerfile written out, that is in [terminal and filesystem isolation](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FilesystemIsolation).
 
-> **A candid expectation.** `llama3.2` is a 3-billion-parameter model running on your laptop.  It is a fine model to *learn the loop with* and a weak one to build with.  Expect it to be slow, to sometimes ignore your instructions, and to occasionally propose an edit that makes no sense.  That is not your setup failing; that is the honest capability of a small local model, and noticing where the ceiling sits is a real part of today's learning.  Later labs let you point the same tool at a larger model.
+> **A candid expectation.** `llama3.2` is a 3-billion-parameter model running on your laptop.  It is a fine model to *learn the loop with* and a weak one to build with.  Expect it to be slow, to sometimes ignore your instructions, and to occasionally propose an edit that makes no sense.  That is not your setup failing; that is the honest capability of a small local model, and noticing where the ceiling sits is part of today's learning.  Later labs let you point the same tool at a larger model.
 
 
 ### 8.2b: Pick the agent, not just the model
@@ -666,7 +666,7 @@ Look back at what just happened.  You gave a program permission to change files 
 | **Isolation** | *What could it have reached?* | The container: one mount, `/workspace`, and nothing else of yours | An agent running on your host with your credentials, one bad path away from your documents |
 | **Reversibility** | *Can I undo it?* | `git checkout .`, because you started from a clean tree | An afternoon's work quietly overwritten with no version history to restore from |
 
-Three things worth noticing about that table.
+Notice three things about that table.
 
 They are independent.  You can have any two without the third, and each combination fails differently.  Observability without reversibility means you get to watch the damage in detail.  Isolation without observability means the agent can only wreck the sandbox, but you will not know what it did in there or why the result is wrong.  Reversibility without isolation means you can restore the repository and not the credential that leaked out of it.
 

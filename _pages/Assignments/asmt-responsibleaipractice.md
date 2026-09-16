@@ -403,7 +403,7 @@ Mitigations must be implementable rather than generic.  "Ensure fairness" is not
 
 Example row, for an AI hiring screener: *R-01, model trained on historical hiring data produces lower scores for candidates from HBCUs, creating disparate impact on Black applicants, H/H, EU AI Act Art. 10 (data governance); US EEOC adverse impact doctrine; annual adverse impact analysis by race and school type, with human review for any candidate within 5 points of the threshold.*
 
-For each row, ask in order: What could go wrong?  Who is harmed and how seriously?  What existing law or standard already speaks to this failure mode?  If nothing does, that regulatory gap is itself worth noting.
+For each row, ask in order: What could go wrong?  Who is harmed and how seriously?  What existing law or standard already speaks to this failure mode?  If nothing does, record that regulatory gap as a finding of its own.
 
 ### Direction D Deliverable
 

@@ -57,7 +57,7 @@ Please go through the sections in order, and run each code block as you hit it. 
 
 ---
 
-# Part I: Orientation
+# Part I: Reading a Command Before You Run It
 
 In this Part, you will learn what a shell is, how to navigate the filesystem, and how to read and decode a compound shell command before running it.  By the end, you will be able to look at any agent-proposed command and explain what it does, the first requirement for safe agent supervision.
 

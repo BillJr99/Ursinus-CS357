@@ -206,7 +206,7 @@ You now know how and why private information leaks from AI systems.  Next come t
 
 ## Privacy-Preserving Techniques
 
-The previous section described the threat.  This section describes the defenses.  None of them is complete on its own.  Differential privacy reduces statistical leakage but costs model accuracy.  Federated learning keeps raw data local but is vulnerable to gradient inversion.  PII scrubbing catches obvious identifiers but misses contextual ones.  Real privacy protection combines all three layers, the way a bank uses locked vaults, security cameras, and access logs together rather than relying on any one alone.
+The previous section described the threat.  This section describes the defenses.  None of them is complete on its own.  Differential privacy reduces statistical leakage but costs model accuracy.  Federated learning keeps raw data local but is vulnerable to gradient inversion.  PII scrubbing catches obvious identifiers but misses contextual ones.  Privacy protection in practice combines all three layers, the way a bank uses locked vaults, security cameras, and access logs together rather than relying on any one alone.
 
 ### Differential Privacy (DP)
 

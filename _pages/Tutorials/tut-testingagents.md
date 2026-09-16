@@ -36,7 +36,7 @@ In this part, you will learn why agents are fundamentally harder to test than or
 
 ## Test Type Taxonomy
 
-You wouldn't ship a bridge without load-testing it first.  Why ship an AI agent without testing its reasoning?  The challenge is that an agent isn't a simple function; it makes decisions, calls tools, and produces open-ended text.  The same agent system requires several qualitatively different kinds of tests, and confusing them leads to both false confidence and wasted effort.
+An agent's reasoning needs testing the way a bridge needs load-testing, and the hard part is that an agent isn't a simple function; it makes decisions, calls tools, and produces open-ended text.  The same agent system requires several qualitatively different kinds of tests, and confusing them leads to both false confidence and wasted effort.
 
 | Test Type | What It Tests | Deterministic? | Cost | Example in Our Course |
 |---|---|---|---|---|

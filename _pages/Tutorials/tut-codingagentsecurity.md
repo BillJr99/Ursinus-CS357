@@ -136,7 +136,7 @@ Pre-registering a package name that LLMs predictably *hallucinate*, so agents th
 
 ---
 
-# Part III: State-of-the-Art Defenses
+# Part III: Defenses You Can Cite in a Design Review
 
 In this part, you move from threats to named, sourced, current mitigations, the ones you would actually cite in a design review.  They fall into two groups: defenses that make injection *harder to land*, and controls that make a successful injection *do less damage*.
 
@@ -246,7 +246,7 @@ Securing a single coding agent is the start.  As agents gain autonomy and are wi
 - Spracklen, Wijewickrama, Sakib, Maiti, Viswanath, Jadliwala.  "We Have a Package for You!  A Comprehensive Analysis of Package Hallucinations by Code Generating LLMs."  USENIX Security 2025. arXiv:2406.10279.  (The term *slopsquatting* was coined by Seth Larson and popularized by Andrew Nesbitt.)
 - Birsan.  "Dependency Confusion: How I Hacked Into Apple, Microsoft and Dozens of Other Companies." 9 February 2021. https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610
 
-**State-of-the-art defenses**
+**Injection defenses**
 
 - Hines, Lopez, Hall, Zarfati, Zunger, Kiciman (Microsoft).  "Defending Against Indirect Prompt Injection Attacks With Spotlighting." 2024. arXiv:2403.14720.
 - Wallace, Xiao, Leike, Weng, Heidecke, Beutel (OpenAI).  "The Instruction Hierarchy: Training LLMs to Prioritize Privileged Instructions." 2024. arXiv:2404.13208.

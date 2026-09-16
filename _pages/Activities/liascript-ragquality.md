@@ -268,7 +268,7 @@ Optional, and not assumed by anything above.  You now know how to make retrieval
 
 ---
 
-## The Ladder
+## The Ladder: Prompting, RAG, and Fine-Tuning
 
 In this part, you will learn the three basic ways to specialize a language model (prompting, RAG, and fine-tuning) and build a diagnostic for choosing among them.  Knowing which lever to reach for first will save your team weeks of unnecessary work.
 

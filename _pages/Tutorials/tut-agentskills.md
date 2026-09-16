@@ -274,7 +274,7 @@ The Skill Design Study asks you to package one skill as a `.skill` archive and p
 
 ---
 
-## Key Concepts Summary
+## Every Term on This Page, in One Table
 
 | Term | Definition |
 |------|------------|

@@ -292,7 +292,7 @@ The row that matters is the second.  A reasoning model lifts the cap on how many
 
 10.  Your team runs a 3-agent debate and all three agents are reasoning models.  All three produce long, internally consistent reasoning and converge on the same wrong answer.  Which of debate's two assumptions failed, and would swapping in three *different* models have helped?
 
-    > *Hint: The independence assumption failed, not the deliberation one; every agent reasoned carefully and correlated anyway, because they share training data and inductive biases.  Different model families genuinely decorrelate errors more than different samples from one model, so it would likely help, and it is not a guarantee: models trained on overlapping web data can share the same misconception.  The honest move is to measure disagreement rate rather than assume it.*
+    > *Hint: The independence assumption failed, not the deliberation one; every agent reasoned carefully and correlated anyway, because they share training data and inductive biases.  Different model families decorrelate errors more than different samples from one model, so it would likely help, and it is not a guarantee: models trained on overlapping web data can share the same misconception.  The honest move is to measure disagreement rate rather than assume it.*
 
 ## 6.  Three Agents, Two Rounds, One Vote
 
@@ -596,7 +596,7 @@ The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026
 
 # Extension: Human-in-the-Loop (self-paced)
 
-Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius.  Your final project will make you answer that in writing, so this is worth a read before the proposal.
+Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius.  Your final project will make you answer that in writing, so read this before the proposal.
 
 ## Key Concepts
 

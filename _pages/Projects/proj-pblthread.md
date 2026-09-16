@@ -219,7 +219,7 @@ Edmondson (1999) defines **psychological safety** as a team's shared belief that
 
 ---
 
-## The Team Charter: A Signed Team Contract
+## The Team Charter
 
 > **Handed out** once teams are announced, and **signed and due** the following week.  See the [course schedule]({{ site.baseurl }}/) for exact dates.
 
@@ -355,7 +355,7 @@ Your thread work is read at more than one level, and the mapping below is fixed 
 
 ---
 
-## Reflection: The Open Questions Run Through Everything (Goal 15)
+## Reflection: The Open Questions (Goal 15)
 
 Every thread milestone ends with reflection prompts keyed to the four **Ursinus Open Questions**.  You will answer them with each milestone submission, and by Demo Day you will have a semester-long record of your own growth to draw on.  The standing mapping:
 

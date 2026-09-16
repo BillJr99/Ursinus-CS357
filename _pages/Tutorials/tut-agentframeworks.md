@@ -74,9 +74,9 @@ Choosing a framework is like choosing a car vs. a motorcycle vs. a bicycle for a
 
 In this part, you will trace what each framework hides inside the same three-agent pipeline, and practice identifying the specific hidden mechanism that could leak and cause a bug, because the most common framework bugs require understanding the hidden layer to fix.
 
-## 2.  What Frameworks Are Really Hiding
+## 2.  What Frameworks Hide
 
-When a framework's assumption breaks down, you must understand the hidden layer to fix the problem.  The same three-agent pipeline implemented in three frameworks reveals dramatically different hidden machinery.
+When a framework's assumption breaks down, you must understand the hidden layer to fix the problem.  The same three-agent pipeline, implemented in three frameworks, hides different machinery in each one.
 
 ## The Same Pipeline, Three Frameworks
 

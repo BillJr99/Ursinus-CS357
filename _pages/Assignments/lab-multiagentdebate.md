@@ -1632,6 +1632,6 @@ These are optional and carry no extra credit.
 
 ---
 
-## Where the Coding-Agent Work Went
+## The Coding-Agent Direction Moved to OpenCode Studio
 
 Earlier versions of the critique-and-refine half of this lab carried a "Coding Agents in Practice" direction, in which a coding agent stood in as the generator and you critiqued its diff.  That material is now its own lab, [OpenCode Studio]({{ site.baseurl }}/Assignments/OpenCodeStudio), handed out in Week 2, so that it can be taught before you need it rather than after.  The discipline is the same one you build in Part A: read the output against a written specification, sort the findings into categories, and drive one precise refine turn from those categories.

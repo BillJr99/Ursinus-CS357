@@ -53,7 +53,7 @@ In this warmup you'll install your local AI stack and your coding agent, and wri
 
 There are no wrong answers in the reflection.  This is a starting point, and I am not evaluating what you know.
 
-Two administrative notes.  Your team charter is **not** part of this assignment; it is handed out separately once teams are announced (see the [Project Thread]({{ site.baseurl }}/Projects/PBLThread#the-team-charter-a-signed-team-contract)).  And see the course schedule for this onboarding assignment's due date; it is assessed within the Class Activities and Participation category.
+Two administrative notes.  Your team charter is **not** part of this assignment; it is handed out separately once teams are announced (see the [Project Thread]({{ site.baseurl }}/Projects/PBLThread#the-team-charter)).  And see the course schedule for this onboarding assignment's due date; it is assessed within the Class Activities and Participation category.
 
 ---
 

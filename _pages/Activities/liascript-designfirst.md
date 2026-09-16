@@ -90,13 +90,13 @@ Your team designs an agent that files issues in your project's GitHub repository
 [( )] Free, since issues can be deleted
 [( )] It depends entirely on how good the model is
 
-The interesting part of this question is the notification.  The artifact is editable, so the state is recoverable; the side effect on other people's attention is not.  Many agent actions look free when you consider only the data and turn out to be costly when you consider who got pinged.  Ask about both.
+The notification is what settles this question.  The artifact is editable, so the state is recoverable; the side effect on other people's attention is not.  Many agent actions look free when you consider only the data and turn out to be costly when you consider who got pinged.  Ask about both.
 
 Two things to remember from this section.  Every row in your design must answer how the agent is observed, what it reaches, and how its work is undone.  The observability answer is not new work: it is the protocol from Tuesday, applied to one agent at a time.
 
 ---
 
-## The Question That Comes Before the Table
+## Ask Whether a Step Needs a Model at All
 
 The agent table you are about to read has one row per agent, and that shape quietly assumes something: that every step in your system needs a model.  Most systems that disappoint their builders got that assumption wrong somewhere.  So ask the prior question on every step before you give it a row.
 
@@ -114,7 +114,7 @@ The agent table you are about to read has one row per agent, and that shape quie
 | Needs labeled data | No | Yes | Yes, usually a lot | No |
 | Handles input you did not anticipate | No | Poorly | Poorly | Well, and this is the whole reason to use one |
 
-Read that last row against all the others.  The one thing an LLM does that nothing else on the table does is cope with open-ended input it was never shown.  That capability is remarkable, and you pay for it on every other row.  When the input is not open-ended, you are paying and getting nothing.
+Read that last row against all the others.  The one thing an LLM does that nothing else on the table does is cope with open-ended input it was never shown.  That one capability is what you are buying, and you pay for it on every other row.  When the input is not open-ended, you are paying and getting nothing.
 
 ### Four Tools, and How to Tell Which One You Are Looking At
 
@@ -124,9 +124,9 @@ Read that last row against all the others.  The one thing an LLM does that nothi
 
 **A model you train or fine-tune, when the task is narrow, repeated, and yours.**  If you run the same specialized judgment millions of times, and you have domain data nobody else has, training a small model or fine-tuning an open one buys you something you cannot rent: a system that encodes *your* institution's definitions, runs on your hardware, keeps your data on your premises, and does not change underneath you when a vendor ships an update.  The cost is real, in labeled data and in the obligation to monitor it, so this earns its place at volume and by specificity, not by ambition.
 
-**A general LLM, when the input is open-ended and the task varies.**  Free-form text, tasks you cannot enumerate in advance, instructions given in English at runtime, a long tail where every case is a little different, and no labeled data to learn from.  This is the real zone, and it is a large one.  Use the model here without apology.
+**A general LLM, when the input is open-ended and the task varies.**  Free-form text, tasks you cannot enumerate in advance, instructions given in English at runtime, a long tail where every case is a little different, and no labeled data to learn from.  This is the zone where a model earns its cost, and it is a large one.  Use the model here without apology.
 
-### The Pattern That Actually Ships
+### Use the Model Where Structure Is Missing
 
 The answer is rarely one tool for the whole system.  The pattern that survives production is narrower than "build an agent" and better than it:
 
@@ -252,7 +252,7 @@ A pre-mortem is a technique from project management.  Before starting a project,
 
 10.  The pre-mortem row for CriticAgent includes injecting a "known-bad draft" as a test.  This is called an **adversarial test case**.  Why must this test be designed *before* the system is built, and not added later when a real failure is discovered?
 
-   > *Hint: Think about what happens to your objectivity once you have already seen the system run successfully 100 times.  Is it harder or easier to design a truly adversarial test at that point?  Why?*
+   > *Hint: Think about what happens to your objectivity once you have already seen the system run successfully 100 times.  Is it harder or easier to design an adversarial test at that point?  Why?*
 
 11.  The last row covers the "whole pipeline" failing in a way no single agent caught.  What property of multi-agent systems makes this kind of failure possible even when each individual agent passes its own tests?
 

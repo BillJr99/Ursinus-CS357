@@ -101,7 +101,7 @@ tags:
 
 ---
 
-By this point in the course you have built at least one working agent: a local agent, a RAG agent, an MCP agent, a coding agent, or a decision model.  It runs, and it produces answers.  That is the moment when responsibility begins.  An agent that works is an agent people will be tempted to rely on, and this capstone is where you earn that reliance.  Building a system and being able to defend it are two different skills.  This capstone is about the second one.  You threat-model an agent you already built, then audit and harden it along one direction you choose, and you leave with evidence about how it behaves and an honest statement of what risk remains.
+By this point in the course you have built at least one working agent: a local agent, a RAG agent, an MCP agent, a coding agent, or a decision model.  It runs, and it produces answers.  An agent that works is an agent people will be tempted to rely on, and responsibility starts there.  Building a system and being able to defend it are two different skills, and this capstone is about the second one.  You threat-model an agent you already built, then audit and harden it along one direction you choose, and you leave with evidence about how it behaves and an honest statement of what risk remains.
 
 **See the course schedule for the assigned and due dates.**
 

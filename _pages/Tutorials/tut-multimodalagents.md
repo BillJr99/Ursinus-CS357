@@ -14,7 +14,7 @@ tags:
 ---
 ## About This Tutorial
 
-A multimodal agent is like a colleague who can not only read your email but also glance at the whiteboard photo you attached, scan the PDF contract you dropped in the chat, and look at the screenshot of the error you're seeing.  The ability to reason across formats (not just text) dramatically expands what an agent can perceive and act on.  But every modality conversion introduces new failure modes, and understanding those failures is essential for building reliable systems.
+A multimodal agent is like a colleague who can not only read your email but also glance at the whiteboard photo you attached, scan the PDF contract you dropped in the chat, and look at the screenshot of the error you're seeing.  The ability to reason across formats, not just text, widens what an agent can perceive and act on.  But every modality conversion introduces new failure modes, and understanding those failures is essential for building reliable systems.
 {: .tb-lede}
 
 ## Key Concepts
@@ -72,7 +72,7 @@ Now that we understand the token-level mechanics of modality conversion, we can 
 
 # Part II: Vision Language Models
 
-In this part, you will survey the landscape of Vision Language Models (VLMs) and learn the document processing pipeline that real agents use for PDFs.  The goal is to know which tool to reach for and when, and to understand why the "obvious" choice (just send the image to the model) often fails on structured data like tables.
+In this part, you will survey the Vision Language Models (VLMs) in use now and learn the document processing pipeline that real agents use for PDFs.  The goal is to know which tool to reach for and when, and to understand why the "obvious" choice (just send the image to the model) often fails on structured data like tables.
 
 ## 2.  Notable VLMs
 
@@ -205,7 +205,7 @@ With the failure modes of individual components understood, we can now see how t
 
 ---
 
-# Part IV: Agent Pipeline Deep Dive
+# Part IV: One Pipeline, End to End
 
 In this part, you will trace a complete, real-world multimodal pipeline step by step, from receiving a raw image to writing validated data to a database.  Each step in the table reveals a different failure mode and its mitigation, illustrating why production pipelines require multiple stages rather than a single model call.
 
