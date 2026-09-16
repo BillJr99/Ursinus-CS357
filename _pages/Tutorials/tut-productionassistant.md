@@ -1,25 +1,22 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/ProductionAssistant
 title: 'CS357: Foundations of Artificial Intelligence - From Second Brain to Chief of Staff'
 info:
   coursenum: CS357
   purpose: "To follow one real personal agent from a Markdown vault to a system running in production, and to see which design decisions survived contact with daily use."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - case-study
 - agents
 - production
 ---
 
-# CS357: Foundations of Artificial Intelligence - From Second Brain to Chief of Staff
-
-## Purpose
-
-To follow one real personal agent from a Markdown vault to a system running in production, and to see which design decisions survived contact with daily use.
-
 ## About This Tutorial
 
 In *The Second Brain* module you built the foundation: a Markdown vault on GitHub, a sync protocol, and an `AGENTS.md` contract that let an agent like **hermes** read and write your knowledge safely.  This case study (a real production system, anonymized) shows what that foundation grows into after a year of daily use: a standing assistant wired into a task manager, calendar, file store, email, and GitHub, running scheduled routines around the clock, accumulating skills, and updating its own memory, all without ever once being trusted to send an email on its own.
+{: .tb-lede}
 
 This case study runs **the three-file contract → confirmation gates and governed autonomy → integrations and scheduled routines → the robustness harness → operations as knowledge**.
 
@@ -33,6 +30,7 @@ This case study runs **the three-file contract → confirmation gates and govern
 | **Self-Updating Memory** | A durable memory file the assistant itself writes back to, under a sync rule that no live memory may be deleted or compressed before it is reflected in the file. | `LLMMEMORIES.md`, appended with dated entries rather than silently rewritten |
 | **No-Agent Routine** | A scheduled job implemented as a deterministic script with *no LLM in the loop*, reserving the model for judgment and keeping routine work reproducible. | A morning-brief cron job whose empty output means "no message today" |
 | **Living Runbook** | The assistant's versioned memory of its *own* infrastructure (instances, services, skills, known issues) maintained by the assistant as part of every setup change. | A service-ownership table that prevents two instances from silently fighting over one capability |
+{: .tb-full}
 
 ---
 
@@ -75,6 +73,7 @@ For each scenario, decide which of the three files the assistant should be obeyi
 | 3 | The owner mentions in passing that they've switched task managers; the session will end in five minutes | ? |
 | 4 | Asked to draft thank-you notes to 40 people, the assistant generates all 40 immediately | ? |
 | 5 | Mid-task, a cloud API starts returning errors the assistant has never seen | ? |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -90,7 +89,8 @@ For each scenario, decide which of the three files the assistant should be obeyi
 
    > *Hint: Think about what one uninvited irreversible action does to the owner's willingness to delegate the next hundred reversible ones.  Trust is the budget; what spends it?*
 
-> **Common Misconception:** "The system prompt is where you make the assistant smart."  Nothing in the standing prompt improves the model's intelligence.  Every section either *routes* intelligence (read the vault, lead with the outcome) or *bounds* it (gates, escalation).  Capability comes from the model and its tools; a production standing prompt is how capability becomes trustworthy.
+> "The system prompt is where you make the assistant smart."  Nothing in the standing prompt improves the model's intelligence.  Every section either *routes* intelligence (read the vault, lead with the outcome) or *bounds* it (gates, escalation).  Capability comes from the model and its tools; a production standing prompt is how capability becomes trustworthy.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Under the production `AGENTS.md`, when the assistant finds `/wiki/` outdated relative to `/raw/` while answering a question, it should:
 
@@ -133,6 +133,7 @@ A gate is easy when the owner is in the chat.  But this assistant also runs *una
 | **Autorun** | Execute immediately + write an audit row | Create/update/complete a task; send a digest *to the owner*; create a branch; open a *draft* PR; capture a note; authorized vault write-backs |
 | **Queue** | Store as a proposal; wait for explicit approval | Send email/message to a third party; push to a non-vault repo; merge; force-push; deploy a site; any financial transaction; modify an institutional system; large batches |
 | **Forbidden** | Refuse outright, even if asked casually | Write a secret to the vault; log a secret; exfiltrate a credential; send raw regulated personal data to a cloud service |
+{: .tb-full}
 
 Approvals arrive over authenticated channels (dashboard buttons, or `approve #17` / `reject #17` replies in chat or email) with an owner-identity check before applying, and a daily digest renders pending proposals as a stable numbered list.
 
@@ -167,7 +168,8 @@ Classify each action into **Autorun**, **Queue**, or **Forbidden** under the pol
 
    > *Hint: The gate governs who decides, not how fast.  What properties would an escalation channel need, and who defines "urgent," the policy or the agent?*
 
-> **Common Misconception:** "Approval gates don't scale; you end up approving hundreds of things a day."  In the production system the opposite happened, because the *classification* did the scaling: routine actions were deliberately moved into Autorun **with an audit row**, so the queue stayed short enough that each item got real attention.  The failure mode to fear is not too many gates; it is gates so numerous and noisy that approval becomes a reflex.  (You saw this as *approval fatigue* in the Human-in-the-Loop module.)
+> "Approval gates don't scale; you end up approving hundreds of things a day."  In the production system the opposite happened, because the *classification* did the scaling: routine actions were deliberately moved into Autorun **with an audit row**, so the queue stayed short enough that each item got real attention.  The failure mode to fear is not too many gates; it is gates so numerous and noisy that approval becomes a reflex.  (You saw this as *approval fatigue* in the Human-in-the-Loop module.)
+{: .tb-pitfall data-title="Common Misconception"}
 
 Under the umbrella rule, the owner says: "I trust you; just handle my inbox this week."  The assistant may:
 

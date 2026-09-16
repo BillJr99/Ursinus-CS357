@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AgenticOpenWebUI
 title: 'CS357: Foundations of Artificial Intelligence - Agentic OpenWebUI'
 info:
   coursenum: CS357
   purpose: "To use OpenWebUI as an agent frontend rather than a chat window: registering tools, holding uploaded knowledge, and running multi-agent workflows."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - openwebui
 - tools
 - local-ai
 ---
-# CS357: Foundations of Artificial Intelligence - Agentic OpenWebUI
-
-## Purpose
-
-To use OpenWebUI as an agent frontend rather than a chat window: registering tools, holding uploaded knowledge, and running multi-agent workflows.
-
 ## About This Tutorial
 
 You already run OpenWebUI as a chat window over Ollama.  Here we treat it as something more interesting: an **agent frontend**: a server that registers tools, holds uploaded knowledge, manages models, and exposes an OpenAI-compatible API that *your Python code* can drive.  We move from **OpenWebUI as an agent frontend → driving its API from Python (two hands-on notebooks) → a goal-directed planner/worker/critic workflow built entirely from successive API calls**.
+{: .tb-lede}
 
 This is a **supplemental tutorial**: it is not graded and no commercial API keys are required.  It builds directly on the local agent stack you assembled in the [Agent Stack activity]({{ site.baseurl }}/Tutorials/AgentStack).
 
@@ -34,6 +31,7 @@ This is a **supplemental tutorial**: it is not graded and no commercial API keys
 | **API Key (Bearer Token)** | A secret string identifying *your account* to the API. Every request your scripts make runs with your permissions and shows up in your account's history. | The notebooks read the key from a variable rather than hard-coding it, so it never lands in a Git repository. |
 | **Blackboard** | A shared data structure that multiple agents read from and write to as their only communication channel: a fan-in point for multi-agent state. | The multi-agent notebook's dictionary holding the goal, the plan, completed steps, and critiques. |
 | **Planner / Worker / Critic** | A three-role decomposition: one call plans the steps, one call executes each step, one call judges the result and requests revisions. All three can be the *same model* prompted differently. | Three successive `/api/chat/completions` calls with different system prompts, orchestrated by a Python loop. |
+{: .tb-full}
 
 ---
 
@@ -55,6 +53,7 @@ A bare Ollama server answers `POST /api/generate` and `POST /api/chat`: text in,
 | **Knowledge uploads** | Drag documents into Workspace -> Knowledge | Chunks, embeds, stores, and retrieves per query; injects passages into the prompt | Frontend container + its vector store |
 | **Users and keys** | Create accounts and API keys | Authenticates every request; scopes history and permissions per user | Frontend container |
 | **OpenAI-compatible API** | Point any script at `/api/chat/completions` with a Bearer key | Routes to Ollama, *applying the tools, knowledge, and filters configured for that model* | Frontend container -> Ollama container |
+{: .tb-full}
 
 The last row is the pivot of this tutorial: a script that calls **OpenWebUI's** API gets the whole agentic layer; a script that calls **Ollama** directly on port 11434 gets none of it.
 
@@ -97,7 +96,8 @@ In this Part you will move from clicking the UI to scripting it: the same chat, 
 
 Every interaction reduces to one authenticated POST. Run this against your own stack (replace the API key with yours; the default OpenWebUI port from the agent stack lab is 3000):
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -183,7 +183,8 @@ The workflow pattern from Notebook 2, reduced to its skeleton:
 
 A compact implementation.  Three roles, one endpoint, the loop visible:
 
-> **Runs on your machine, not here.**  This cell makes network calls that the page sandbox blocks.  Copy it into your course container and run it there.
+> This cell makes network calls that the page sandbox blocks.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -235,7 +236,8 @@ If the verdict begins with `REVISE`, the orchestrator loops the affected steps b
 
    > *Hint: The gate belongs in the orchestrator, around the `ask(...)` call (or around the tool-enabled step), where Python can block until a human confirms.  A prompt instruction is a request to a stochastic system; a code gate is enforcement.  This is the same argument as the tool-registry boundary in the Tool Use activity.*
 
-> **Common Misconception:** Students often expect OpenWebUI to "run the multi-agent workflow" once the roles are defined.  OpenWebUI executes *one completion per request*; it has no idea your Planner and Critic are related calls.  The workflow (sequencing, memory, revision loops, stopping) exists only in your orchestrator code.  The frontend supplies completions, tools, and knowledge; *you* supply the agency.
+> Students often expect OpenWebUI to "run the multi-agent workflow" once the roles are defined.  OpenWebUI executes *one completion per request*; it has no idea your Planner and Critic are related calls.  The workflow (sequencing, memory, revision loops, stopping) exists only in your orchestrator code.  The frontend supplies completions, tools, and knowledge; *you* supply the agency.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -355,6 +357,7 @@ control and portability for speed and pre-built, already-authenticated connector
 
 </details>
 
-> **Common Misconception:** "No-code means there is no security to think about."  Often the opposite: one flow can hold OAuth tokens to your email, files, and calendar at once and run unattended.  The connector hides the *plumbing*, not the *risk*: least-privilege scopes, controlling who can edit the flow, and keeping model keys out of the flow body all still matter.
+> "No-code means there is no security to think about."  Often the opposite: one flow can hold OAuth tokens to your email, files, and calendar at once and run unattended.  The connector hides the *plumbing*, not the *risk*: least-privilege scopes, controlling who can edit the flow, and keeping model keys out of the flow body all still matter.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---

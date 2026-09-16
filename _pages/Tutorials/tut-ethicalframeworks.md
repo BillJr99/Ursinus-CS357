@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/EthicalFrameworks
 title: 'CS357: Foundations of Artificial Intelligence - Ethical Frameworks for Agentic AI'
 info:
   coursenum: CS357
   purpose: "To move past the commitment to build fair and beneficial AI, which every team with a catastrophic product also made, and reason with frameworks that decide cases."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - ethics
 - frameworks
 - responsible-ai
 ---
-# CS357: Foundations of Artificial Intelligence - Ethical Frameworks for Agentic AI
-
-## Purpose
-
-To move past the commitment to build fair and beneficial AI, which every team with a catastrophic product also made, and reason with frameworks that decide cases.
-
 ## About This Tutorial
 
 Abstract commitments to building "fair and beneficial AI" are not enough; every team with a catastrophic product has made such commitments.  What distinguishes thoughtful from reckless AI development is the capacity to apply specific ethical frameworks at design time: before deployment, before harm, before someone else decides for you.  Today you learn to use three classical frameworks as design tools, map the ACM Code of Ethics to concrete agentic choices, and grapple with the structural tensions that no framework resolves cleanly.  The goal is not ethical certainty but ethical literacy: knowing which considerations apply, where they conflict, and how to reason in public about your decisions.
+{: .tb-lede}
 
 ### Key Concepts
 
@@ -30,6 +27,7 @@ Abstract commitments to building "fair and beneficial AI" are not enough; every 
 | **Design Justice** | A framework that centers the perspectives and interests of communities most affected by technology in the design process, particularly communities that have historically been excluded from design decisions but disproportionately bear the costs of design failures. | An AI hiring tool designed without input from applicants (who are not "users" of the system but are its primary subjects) may optimize for recruiter convenience while systematically disadvantaging certain candidate groups. |
 | **Minimal Footprint Principle** | The engineering principle that an autonomous agent should request only the permissions needed for the current task, prefer reversible over irreversible actions, and escalate to a human when uncertain, rather than maximizing capability and autonomy. | An email management agent that requests read-only inbox access and drafts suggestions for human approval has a smaller footprint than one that requests full read/write/delete access and acts autonomously. |
 | **Dual Newspaper Test** | A practical heuristic for checking whether an AI design decision has gone wrong in either direction: (1) would accurate reporting of this action embarrass the organization as an AI harm story? (2) would accurate reporting of a refusal embarrass the organization as a paternalistic AI story? Both failure modes are real. | An agent that refuses to help a nurse look up drug interactions fails the second test; one that autonomously adjusts medication dosages fails the first. |
+{: .tb-full}
 
 ---
 
@@ -71,6 +69,7 @@ An AI agent is instructed to write a maximally persuasive essay arguing for a co
 | Deontological | Readers have a right not to be psychologically manipulated by AI-generated content optimized for persuasion rather than truth. This right holds regardless of whether the policy being advocated is good. The agent as instrument of manipulation is doing something categorically wrong, independent of the outcome. | The agent should refuse the "maximally persuasive" framing; drafting an argument that makes accurate claims is permissible, but optimizing for psychological manipulation is not. |
 | Virtue Ethics | A person of practical wisdom would ask: is this the kind of work that a trustworthy professional would perform? Would a journalist, a lawyer, or a teacher who cares about democratic deliberation take this commission? Scale amplifies the stakes: the same text shared by one person differs morally from the same text shared by ten million. | The agent may help draft an argument, but must disclose its AI origin, avoid rhetoric that exploits rather than engages, and decline techniques that bypass deliberative reason, because a virtuous professional would not use them. |
 | Design Justice | Who is not at the table? The communities most affected by the political policy being advocated (immigrants, taxpayers, workers) had no input into the agent's design, training, or deployment for this purpose. Scale effects fall asymmetrically: those with access to AI persuasion tools gain political influence; those without, lose relative ground. | Requires stakeholder analysis before deployment; the agent should not be deployed for political advocacy targeting vulnerable communities without participation from those communities in the design process. |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -123,6 +122,7 @@ Selected clauses with agentic implications:
 | 1.6 Respect privacy | Minimize data collection to exactly what the task requires; disclose what is collected in language users can understand | Apply data minimization by design; include a clear user-facing disclosure of all logging before first use; provide an opt-out mechanism for non-essential data collection |
 | 2.5 Thorough evaluations | Test the system on failure modes, edge cases, and adversarial inputs before deployment, including subpopulation performance, not just average performance | Conduct red-teaming; produce disaggregated evaluation results by relevant demographic and task subgroups; publish a pre-deployment performance report that includes failure modes |
 | 3.1 Public good is central | Document and escalate when organizational pressure conflicts with public interest; do not substitute personal discomfort for action | Create formal dissent channels in the development process; require ethics review gates before deployment; document override decisions with the reasoning that was offered |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -185,6 +185,7 @@ Two agents are given the same task: "Help a user manage their email inbox."  Con
 | Response to ambiguous instruction | Requests clarification before proceeding; presents two interpretations and asks which the user intended | Infers the most likely intent and proceeds immediately; may be systematically wrong for an entire category of instructions | Ambiguity resolution is cheap when it is a conversation; it is expensive when it has already acted on thousands of emails |
 | Audit trail | Every action logged with the rationale used and the confidence score; available to the user in plain language | Actions logged; rationale and confidence not stored; audit trail exists for compliance but not for user review | A user who wants to understand why an email was archived cannot do so with the maximum agent; the minimal agent's logs support correction and learning |
 | Recovery from error | Draft folder preserves all changes; user can review the full action history and undo any individual action | Deletions are permanent; bulk errors require manual recovery from backup, which may not exist for all users | Error recovery in the minimal design is a two-click user action; in the maximum design it is a support ticket and may be impossible |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -200,7 +201,8 @@ Two agents are given the same task: "Help a user manage their email inbox."  Con
 
    *Hint: Harm story opening: "An AI email agent autonomously deleted thousands of messages..." Paternalism story opening: "An AI email agent requires user confirmation for every action, making..." Now ask: does one of these stories feel much more likely to be written?  If so, that asymmetry is informative.  If both feel equally likely, you have found a real design tension that the test cannot resolve on its own.*
 
-> **Common Misconception:** "Ethics review is something you do at the end, before shipping."  This belief produces a specific failure mode: the ethics review occurs when it is too late to change the architecture, the training data, the objective function, or the permission model.  Changes at that stage cost too much or break the system, so the review becomes perfunctory.  Ethics review that happens at design time (when the agent's scope, permissions, and objective are being specified) can actually change outcomes.  The frameworks in this tutorial are meant to be applied at the moment when a blank design document is on the table, not at the moment when the ship date is tomorrow.
+> "Ethics review is something you do at the end, before shipping."  This belief produces a specific failure mode: the ethics review occurs when it is too late to change the architecture, the training data, the objective function, or the permission model.  Changes at that stage cost too much or break the system, so the review becomes perfunctory.  Ethics review that happens at design time (when the agent's scope, permissions, and objective are being specified) can actually change outcomes.  The frameworks in this tutorial are meant to be applied at the moment when a blank design document is on the table, not at the moment when the ship date is tomorrow.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Having applied frameworks, codes, and design principles to constructed scenarios, Part IV asks you to bring the same rigor to your own project, where the design decisions are real and the stakes belong to you.
 

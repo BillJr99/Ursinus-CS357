@@ -1,10 +1,11 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AIByHand
 title: 'CS357: Foundations of Artificial Intelligence - AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass'
 info:
   coursenum: CS357
   purpose: "To do every core computation of a language model on paper, one step per line, and then confirm each result in Python."
+  eyebrow: "Tutorial"
 tags:
 - ai-by-hand
 - fundamentals
@@ -15,15 +16,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass
-
-## Purpose
-
-To do every core computation of a language model on paper, one step per line, and then confirm each result in Python.
-
 ## About This Tutorial
 
 Every model you use this semester does five things with numbers: it cuts text into tokens, it compares vectors with a dot product, it mixes vectors with attention, it turns scores into probabilities with softmax, and it pushes inputs through weights in a forward pass.  Each of those is arithmetic you can do on paper in a few minutes.  This article collects every by-hand model from the course in one place, works each one with every intermediate step written out, and gives you a short Python snippet to check your answer.  The concept articles at [Tokens, Embeddings, and Attention]({{ site.baseurl }}/Tutorials/TokensEmbeddingsAttention) and [Sampling and Temperature]({{ site.baseurl }}/Tutorials/SamplingAndTemperature) explain why these computations matter; this one is where you do them.
+{: .tb-lede}
 
 Work each part with a pencil and a calculator before you read the answers.  A result you did not commit to on paper is not a prediction, and the moment your paper disagrees with the machine is the most useful moment on this page: find which step drifted.  If you want a printable version of the forward-pass practice, the [Neural Network by Hand worksheet (PDF)]({{ site.baseurl }}/files/activity-neuralnets/nn_by_hand_quadratic_full.pdf) extends Part 5 to a full network with a training pass.
 
@@ -42,6 +38,7 @@ Work each part with a pencil and a calculator before you read the answers.  A re
 | **Temperature** | A number that divides every logit before softmax.  Below 1 it sharpens the distribution; above 1 it flattens it. | $$P(\text{Paris})$$ moving from 0.998 at $$T = 0.5$$ to 0.786 at $$T = 2$$ in Part 4 |
 | **ReLU** | The Rectified Linear Unit, $$\text{ReLU}(z) = \max(0, z)$$: positive values pass through, negatives become zero. | Hidden neuron $$h_2$$ computing $$-0.5$$ and outputting $$0$$ in Part 5 |
 | **Forward pass** | One complete flow of numbers from inputs, through every layer's weights and activations, to the output. | Input $$(1.0, 1.0)$$ flowing to output $$2.0$$ in Part 5 |
+{: .tb-full}
 
 ---
 
@@ -49,7 +46,8 @@ Work each part with a pencil and a calculator before you read the answers.  A re
 
 A tokenizer cuts text into pieces from a fixed vocabulary by applying a list of merge rules, in order, to a string of characters.
 
-> **Why this matters:** The model never sees the letter "e" inside "cheeseburger"; it sees whatever token the tokenizer carved out.  That is why models struggle to count letters, why long numbers trip them up, and why your context budget is measured in tokens rather than words.
+> The model never sees the letter "e" inside "cheeseburger"; it sees whatever token the tokenizer carved out.  That is why models struggle to count letters, why long numbers trip them up, and why your context budget is measured in tokens rather than words.
+{: .tb-key data-title="Why this matters"}
 
 ### Worked Example: "the thing" with four merge rules
 
@@ -96,6 +94,7 @@ Take the learned merge table above, in order, and encode `lowest`, a word that n
 | after merge 2 | `l o w est </w>` | `es t` -> `est` |
 | after merge 3 | `l o w est</w>` | `est </w>` -> `est</w>` |
 | final | `l` `o` `w` `est</w>` | no more rules apply |
+{: .tb-full}
 
 Four tokens for a word the model has never seen: a prefix spelled out letter by letter plus a suffix it knows well.  Now ask a model how many `r`s are in *strawberry*.  A production tokenizer splits it into something like `str` `aw` `berry`, and not one of those pieces is a letter.  The model is looking at three opaque IDs, not at `s-t-r-a-w-b-e-r-r-y`.  Counting letters inside a token is an input representation failure, not a reasoning failure: the information was destroyed before the model saw it.  The same mechanism explains why models are shaky at rhyming, at reversing strings, and at arithmetic on long numbers.
 
@@ -103,7 +102,8 @@ Recap: BPE learns merges from frequency alone, and it encodes unseen words by ap
 
 ### Check it against a real tokenizer
 
-> **Runs on your machine, not here.**  This cell needs the `tiktoken` library, which is installed in your course container rather than in the page.  Copy it there and run it.
+> This cell needs the `tiktoken` library, which is installed in your course container rather than in the page.  Copy it there and run it.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 # pip install tiktoken
@@ -140,7 +140,8 @@ Compare the output against your hand trace.  Two things to notice: common words 
 
 Cosine similarity measures the angle between two vectors, so it reports direction (meaning) and ignores length.
 
-> **Why this matters:** Once text is a vector, the model needs a way to say that "dog" and "puppy" are related while "dog" and "tax return" are not.  Cosine similarity is that measure, and it is the comparison every semantic search and every retrieval pipeline in this course runs.
+> Once text is a vector, the model needs a way to say that "dog" and "puppy" are related while "dog" and "tax return" are not.  Cosine similarity is that measure, and it is the comparison every semantic search and every retrieval pipeline in this course runs.
+{: .tb-key data-title="Why this matters"}
 
 An embedding maps a token, sentence, or document to a vector $$\mathbf{v} \in \mathbb{R}^d$$ (a list of $$d$$ numbers, with $$d$$ commonly 384 to 4096) such that semantically similar texts map to nearby vectors.  The standard similarity measure is the cosine of the angle between two vectors:
 
@@ -213,7 +214,8 @@ cos(a, 3a) = 1.000
 
 Recap: every cosine computation is the same four lines (dot product, two norms, divide), and the only place to make an error is arithmetic.  If your paper says anything other than 0.833 and 1.000, recheck the sum of squares first; it is the step most often miscopied.
 
-> **Common Misconception:** A high cosine score does not mean the two sentences share the same words, that one logically implies the other, or that either is factually true.  It only means the embedding model placed them in a similar direction in meaning-space.  Two completely wrong sentences about the same topic can score 0.95 with each other.
+> A high cosine score does not mean the two sentences share the same words, that one logically implies the other, or that either is factually true.  It only means the embedding model placed them in a similar direction in meaning-space.  Two completely wrong sentences about the same topic can score 0.95 with each other.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -242,7 +244,8 @@ Recap: every cosine computation is the same four lines (dot product, two norms, 
 
 Attention rebuilds each token's vector as a weighted average of every token's value vector, where the weights come from a softmax over dot products.
 
-> **Why this matters:** A lookup table gives "bank" one vector, which is wrong at least half the time ("the bank was steep" versus "the bank approved the loan").  Attention lets the surrounding words move a token's meaning, and it is the single idea that separates the models you use this semester from the word-vector methods that came before them.
+> A lookup table gives "bank" one vector, which is wrong at least half the time ("the bank was steep" versus "the bank approved the loan").  Attention lets the surrounding words move a token's meaning, and it is the single idea that separates the models you use this semester from the word-vector methods that came before them.
+{: .tb-key data-title="Why this matters"}
 
 Each token gets three vectors instead of one, playing three roles: a query $$\mathbf{q}$$ (what am I looking for?), a key $$\mathbf{k}$$ (what do I offer as a match?), and a value $$\mathbf{v}$$ (what content do I contribute if I am chosen?).  Think of a library search: your search term is the query, the index cards are the keys, and the books are the values.  The analogy stops there, because in attention every book contributes a share, weighted by how well its card matched.  To find how relevant token $$j$$ is to token $$i$$, take the dot product $$\mathbf{q}_i \cdot \mathbf{k}_j$$ (the same operation as the numerator of cosine similarity in Part 2).  Run those relevance scores through softmax so they become weights that sum to 1, then build the token's new vector as a weighted blend of everyone's values.  Written compactly:
 
@@ -261,6 +264,7 @@ Three tokens, two dimensions, all arithmetic visible.  The vectors below are alr
 | river | (1, 0) | (1, 0) | (1, 1) |
 | bank  | (1, 1) | (0, 1) | (2, 0) |
 | loan  | (0, 1) | (1, 1) | (0, 2) |
+{: .tb-full}
 
 Compute the new representation of **bank**, using $$\mathbf{q}_{\text{bank}} = (1, 1)$$ and $$d_k = 2$$, so $$\sqrt{d_k} \approx 1.41$$.
 
@@ -343,7 +347,8 @@ Your paper and the output agree to two decimal places.  The small gap between 0.
 
 3.  **Break the scaling.**  Delete the `/ np.sqrt(2)` and run again.  Now multiply every vector by 10 and run both versions.  Watch what the unscaled softmax does to the weights.  You've succeeded when you can explain what $$\sqrt{d_k}$$ is protecting against, using the numbers you saw rather than the formula.
 
-> **Common Misconception:** "Attention means the model is focusing the way a person does."  The name is a metaphor for a weighted average, nothing more.  Every token attends to every other token every time, with a weight; none is ignored, and none is being concentrated on.  What you computed above is the entire phenomenon: dot products, a softmax, and a weighted sum.
+> "Attention means the model is focusing the way a person does."  The name is a metaphor for a weighted average, nothing more.  Every token attends to every other token every time, with a weight; none is ignored, and none is being concentrated on.  What you computed above is the entire phenomenon: dot products, a softmax, and a weighted sum.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -380,7 +385,8 @@ Your paper and the output agree to two decimal places.  The small gap between 0.
 
 Softmax turns raw scores into probabilities that sum to 1, and temperature divides the scores first, which sharpens or flattens the result.
 
-> **Why this matters:** A language model outputs a logit for every token in its vocabulary, then samples one token from the softmax of those logits, appends it, and repeats.  The randomness lives in the sampling step, not in the weights.  Temperature is the dial you turned in *Running Your Own AI*, and this is what it is.
+> A language model outputs a logit for every token in its vocabulary, then samples one token from the softmax of those logits, appends it, and repeats.  The randomness lives in the sampling step, not in the weights.  Temperature is the dial you turned in *Running Your Own AI*, and this is what it is.
+{: .tb-key data-title="Why this matters"}
 
 Given the tokens so far, the model outputs a raw score (a logit, $$z_i$$) for every token $$i$$ in its vocabulary, then converts scores to probabilities with softmax at temperature $$T$$:
 
@@ -420,6 +426,7 @@ At $$T = 2$$:
 | T = 0.5 | 0.998 | 0.002 | 0.000 | 1.000 |
 | T = 1.0 | 0.950 | 0.047 | 0.002 | 1.000 |
 | T = 2.0 | 0.786 | 0.175 | 0.039 | 1.000 |
+{: .tb-full}
 
 Recap: the logits never changed; only the divisor did.  Halving the temperature doubled every scaled logit, which widened the gaps between exponentials and pushed Paris toward certainty, while doubling it shrank the gaps and let banana climb from 0.2 percent to 3.9 percent.
 
@@ -453,6 +460,7 @@ At $$T = 2$$:
 | T = 0.5 | 0.980 | 0.018 | 0.002 | 1.000 |
 | T = 1.0 | 0.844 | 0.114 | 0.042 | 1.000 |
 | T = 2.0 | 0.629 | 0.231 | 0.140 | 1.000 |
+{: .tb-full}
 
 What the numbers demonstrate: as temperature decreases toward zero, the probability of the highest-logit token climbs toward 1 and the others toward 0, because dividing by a small $$T$$ stretches the gaps between logits and the exponential turns a larger gap into a much larger ratio.  As temperature increases, the same gaps shrink and the distribution flattens toward uniform.
 
@@ -568,7 +576,8 @@ Recap: temperature reshapes one fixed set of logits, and entropy rises monotonic
 
 A forward pass multiplies inputs by weights, adds a bias, applies ReLU, and repeats the same pattern at the next layer until an output falls out.
 
-> **Why this matters:** Every agent you build rides on a forward pass: numbers multiplied by weights, summed, squashed, repeated.  If you can trace one by hand, "the model computed logits" stops being a phrase and becomes arithmetic you can audit.  The [From Text Generation to a Neural Network]({{ site.baseurl }}/Tutorials/TextGenToNN) article places this network inside the generation loop; this part is where you compute it.
+> Every agent you build rides on a forward pass: numbers multiplied by weights, summed, squashed, repeated.  If you can trace one by hand, "the model computed logits" stops being a phrase and becomes arithmetic you can audit.  The [From Text Generation to a Neural Network]({{ site.baseurl }}/Tutorials/TextGenToNN) article places this network inside the generation loop; this part is where you compute it.
+{: .tb-key data-title="Why this matters"}
 
 ### Worked Example: a 2-2-1 network on two inputs
 
@@ -593,6 +602,7 @@ Trace for $$\mathbf{x} = (1.0, 1.0)$$:
 | $$h_2$$ pre-activation | $$(-1.0)(1.0) + 1.0(1.0) + (-0.5) = -1.0 + 1.0 - 0.5$$ | $$-0.5$$ |
 | $$h_2$$ activation | $$\text{ReLU}(-0.5) = \max(0, -0.5)$$, clipped to zero | $$0.0$$ |
 | output $$y$$ | $$2.0(0.5) + 1.0(0.0) + 1.0 = 1.0 + 0.0 + 1.0$$ | $$2.0$$ |
+{: .tb-full}
 
 Neuron $$h_1$$ is active and $$h_2$$ is clipped.
 
@@ -605,6 +615,7 @@ Trace for $$\mathbf{x} = (0.0, 2.0)$$:
 | $$h_2$$ pre-activation | $$(-1.0)(0.0) + 1.0(2.0) + (-0.5) = 0.0 + 2.0 - 0.5$$ | $$1.5$$ |
 | $$h_2$$ activation | $$\text{ReLU}(1.5) = \max(0, 1.5)$$ | $$1.5$$ |
 | output $$y$$ | $$2.0(0.0) + 1.0(1.5) + 1.0 = 0.0 + 1.5 + 1.0$$ | $$2.5$$ |
+{: .tb-full}
 
 Now $$h_2$$ is active and $$h_1$$ is clipped.  The active-neuron pattern flipped between the two inputs, which demonstrates that a ReLU network is piecewise linear: each input selects which neurons are switched on, and the switched-on set determines which linear formula the output follows.
 

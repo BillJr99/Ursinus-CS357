@@ -1,10 +1,11 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/ObsidianSync
 title: 'CS357: Foundations of Artificial Intelligence - Syncing Obsidian to GitHub and Wiring Agents to Your Vault'
 info:
   coursenum: CS357
   purpose: "To get your vault onto GitHub and give agents a navigation contract, a read path, and a write path that will not quietly corrupt your notes."
+  eyebrow: "Tutorial"
 tags:
 - obsidian
 - github
@@ -12,15 +13,10 @@ tags:
 - memory
 ---
 
-# CS357: Foundations of Artificial Intelligence - Syncing Obsidian to GitHub and Wiring Agents to Your Vault
-
-## Purpose
-
-To get your vault onto GitHub and give agents a navigation contract, a read path, and a write path that will not quietly corrupt your notes.
-
 ## About This Tutorial
 
 Your Obsidian vault contains your best thinking: class notes, project plans, decisions you've made and why.  But right now it lives entirely on one machine, invisible to every agent you run.  The fix is architectural: **put the vault on GitHub, write a navigation contract agents can read, give agents a write-back path so knowledge accumulates across sessions, and wire the whole loop through the local tools you already use**.  This tutorial builds that system from zero: why GitHub is the right host → the Obsidian Git community plugin and its configuration → pointing agents at your vault as read context → letting agents write back to it as persistent memory → standing up an LLM wiki, the pattern all of this is in service of.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -35,6 +31,7 @@ Your Obsidian vault contains your best thinking: class notes, project plans, dec
 | **File-based context injection** | Passing relevant file contents directly in the context window before an agent starts work, as opposed to embedding+retrieval (RAG). | Concatenating `agent-context/*.md` files and prepending them to an OpenCode session prompt gives the agent your standing instructions and recent decisions without a vector database. |
 | **Write-back / agent memory** | An agent appending what it learned during a session to a persistent file in your vault, so future sessions start with that knowledge already present. | At the end of a coding session, OpenCode appends a YAML-headed entry to `memories/session-log.md` noting the date, the project, and the key decisions made. |
 | **Append-only memory** | A memory convention where agents always add a new dated section rather than overwriting existing content. | An agent writing to `memories/session-log.md` adds `## 2026-06-21` at the bottom and writes new content there; it never modifies the sections above that line. |
+{: .tb-full}
 
 ---
 
@@ -63,6 +60,7 @@ The Obsidian Git community plugin handles the sync automatically: it runs `git a
 | Initialize git in your vault | `git init` in your vault directory; `git remote add origin https://github.com/YOURUSERNAME/obsidian-vault.git`; push the first commit | Nothing yet; the plugin reads the existing `.git` folder |
 | Install the Obsidian Git plugin | Settings -> Community plugins -> Browse -> search "Obsidian Git" -> Install -> Enable | Reads `.obsidian/plugins/obsidian-git/data.json` for its own config |
 | Configure the plugin | Set **Auto-pull interval** and **Auto-push interval** (5 minutes is a good starting point); set **Commit message template** (see below) | Runs on a timer: pulls on the pull interval, commits any changes and pushes on the push interval |
+{: .tb-full}
 
 ### Installing Community Plugins in Obsidian
 
@@ -104,9 +102,10 @@ vault: {{date}} {{time}} - {{numFiles}} file(s) changed
 
 {% raw %}`{{date}}` and `{{time}}`{% endraw %} are built-in template variables the plugin replaces at commit time.  You will see entries like `vault: 2026-06-21 14:32 - 3 file(s) changed` in your history, which makes it easy to verify sync is working and to correlate agent commits with your own edits.
 
-> **Common Misconception:** "Obsidian sync and Obsidian Git are the same thing."
+> "Obsidian sync and Obsidian Git are the same thing."
 >
 > They are not.  **Obsidian Sync** is the paid cloud service run by the Obsidian team; it stores your vault on Obsidian's servers and syncs across devices automatically.  **Obsidian Git** is a free community plugin that uses git and any git host you choose.  They solve the same problem (cross-device sync) by entirely different mechanisms.  For this tutorial, we use Obsidian Git with a private GitHub repository because it gives you a versioned, agent-accessible copy of your vault under your own control; Obsidian Sync's servers are not accessible to agents you run locally.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Security Note: What NOT to Put in a Synced Vault
 
@@ -153,6 +152,7 @@ There are two ways to get your vault contents into an agent's context window.  U
 |----------|-------------|----------------|------------|
 | **File-based injection** | Read specific Markdown files and prepend them to the prompt before the agent starts. | Small-to-medium vaults; notes whose topic is known in advance; standing instructions that apply every session. | You must know (or decide) which files to inject. If the vault has 500 notes, you cannot inject all of them; the context window has a limit. |
 | **RAG (Retrieval-Augmented Generation)** | Embed every note as a vector; at query time, retrieve the top-k most similar notes and inject only those. | Large vaults (hundreds of notes) where you cannot predict which notes are relevant to any given query. | Requires a running embedding model and vector store (e.g., Chroma, Qdrant). More infrastructure, more failure modes. |
+{: .tb-full}
 
 For the local agents in this course (OpenCode, pi.ai, Ollama-backed tools), file-based injection is almost always the right starting point.  It requires no infrastructure, it is transparent (you can see exactly what the agent sees), and it is fast.
 
@@ -289,9 +289,10 @@ Use a vault index so the agent can identify which subset of notes to read, then 
 
 </details>
 
-> **Common Misconception:** "The agent will figure out which notes are relevant if I just give it the vault directory path."
+> "The agent will figure out which notes are relevant if I just give it the vault directory path."
 >
 > An agent given a directory path can list the files in that directory, but listing 400 filenames tells it almost nothing about which two or three notes are relevant to your question.  The vault index solves this by providing a human-curated summary of each note's topic: the agent reads the index (one file, one context window), decides which notes to request, and reads only those.  Without the index, the agent must either read everything (often too much) or guess from filenames (unreliable).
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -429,9 +430,10 @@ Add a new section with today's date at the bottom of the file, below all existin
 
 </details>
 
-> **Common Misconception:** "Creating a new file per session avoids all conflict issues, so it's safer than appending."
+> "Creating a new file per session avoids all conflict issues, so it's safer than appending."
 >
 > Separate files avoid write conflicts but create a different problem: the vault index must be updated every time a new session file is created, or the agent won't know the file exists.  Worse, an agent reading context must now decide how many session files to read and which ones are most relevant.  The append-only log in a single file is searchable, readable top-to-bottom, and requires only one index entry.  A one-line git conflict in an append-only file is trivially resolved; a vault with 300 individual session files and a stale index is not.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -585,6 +587,7 @@ The topical folders are a starting suggestion, not a rule; use whatever categori
 | **Use `[[Wikilinks]]`** | Settings → Files and links → Use `[[Wikilinks]]` (on) | The agent writes `[[concepts/kv-cache]]`; with wikilinks off, Obsidian renders that as literal text and you lose backlinks and the graph |
 | **New link format: relative or absolute path** | Settings → Files and links → New link format | Pick one and state it in `AGENTS.md`. Mixed link formats are the most common reason a page looks linked but has no backlink |
 | **Show unresolved links in the graph** | Graph view → Filters | An unresolved link is the agent promising a page it never wrote; the graph surfaces those in seconds |
+{: .tb-full}
 
 Then use the two views the pattern is designed around.  **Backlinks** (in the right sidebar) answer "what else in my wiki cites this claim?", which is the check you run before you trust a page.  **Graph view** answers "what did the agent leave stranded?"  An island in the graph is either a page nothing needed or a missing link, and both are worth ten seconds of your attention.
 

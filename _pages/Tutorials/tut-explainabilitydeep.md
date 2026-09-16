@@ -1,22 +1,17 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/ExplainabilityDeep
 title: 'CS357: Foundations of Artificial Intelligence - Explainability in Depth'
 info:
   coursenum: CS357
   purpose: "To work through SHAP, LIME, and attention as explanation methods, and to be honest about the limits of what each one actually tells you."
+  eyebrow: "Tutorial"
 tags:
 - explainability
 - shap
 - lime
 - interpretation
 ---
-# CS357: Foundations of Artificial Intelligence - Explainability in Depth
-
-## Purpose
-
-To work through SHAP, LIME, and attention as explanation methods, and to be honest about the limits of what each one actually tells you.
-
 ## About This Tutorial
 
 **CS357: Foundations of Artificial Intelligence / Agentic AI**
@@ -32,6 +27,7 @@ Ursinus College
 | **Faithfulness** | Whether an explanation actually describes what the model computed internally, not just what sounds plausible to a human reader | A faithful explanation of a spam decision correctly identifies that "free money" drove the decision; an unfaithful one invents a sensible-sounding but incorrect reason |
 | **Chain-of-thought (CoT)** | A prompting technique where a model is asked to write out its reasoning step by step before giving a final answer, making its "thinking" visible, though that thinking may not perfectly reflect the model's internal computation | "Step 1: The applicant's income is below the threshold... Step 2: Therefore, I recommend denial." |
 | **Post-hoc rationalization** | When a model (or person) produces a plausible-sounding explanation for a decision that was actually driven by different factors; the explanation is constructed after the fact rather than being the actual reasoning | A model correctly classifies a sentence as negative but "explains" it by highlighting words that are not actually responsible for the prediction |
+{: .tb-full}
 
 ---
 
@@ -53,6 +49,7 @@ A critical distinction: **"explanation" does not equal "understanding."**  Post-
 | **Counterfactual** | "If feature X had been Y instead, the prediction would have changed to Z", the minimum change needed to flip the outcome | Why the model learned to use feature X at all; whether the suggested counterfactual change is realistic or actionable for the affected person | DiCE, Wachter et al. | Recourse (telling a user concretely how to get a different outcome); fairness auditing |
 | **Rule extraction** | A simple rule or decision tree that approximates the model's behavior globally or for a specific input region | Whether the rule covers all cases; the model may behave very differently outside the rule's coverage area | Anchors (Ribeiro), decision tree surrogates | Regulatory documentation; auditing; communicating with non-technical stakeholders |
 | **Natural language** | A prose explanation of the reasoning in human-readable form, as produced by a chain-of-thought LLM | Whether the prose actually reflects what the model computed (faithfulness); it may be coherent and confident but still post-hoc | GPT-4 CoT, Claude CoT | User-facing explanations; interactive Q&A about decisions |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -86,6 +83,7 @@ Suppose we have a simple model that predicts sentiment on a scale from 0 (very n
 | "absolutely" | −0.08 | Moderately amplified the negativity |
 | "film" | +0.02 | Tiny push toward positive (films tend to get reviewed positively) |
 | "was", "The" | ~0.00 each | Essentially irrelevant to this prediction |
+{: .tb-full}
 
 **Check the efficiency property:** 0.5 (baseline) + (−0.28) + (−0.08) + 0.02 + 0.00 + 0.00 ≈ 0.16 ≈ 0.12 (actual prediction).  The values sum correctly.  This is the "receipt" quality of SHAP: the numbers tell you exactly how much each ingredient contributed to the final total.
 
@@ -126,6 +124,7 @@ Critical finding: **Jain & Wallace (2019), "Attention is not Explanation"** show
 | **SHAP** | High for tree models (exact); approximation errors possible for black-box models (KernelSHAP) | High: deterministic given a fixed sampling seed | Slow for large models (KernelSHAP can take minutes per prediction); fast for tree models (TreeSHAP runs in milliseconds) | Medium: requires understanding of what the numerical values mean relative to the baseline |
 | **LIME** | Medium: the local linear surrogate may not accurately capture the true decision boundary, especially in nonlinear regions | Low: random sampling means different runs produce different results for the same input | Fast: typically seconds per prediction | High: linear coefficients are intuitive ("this word made it 30% more likely to be spam") |
 | **Attention** | Low: Jain & Wallace (2019) showed attention is not reliably correlated with causal feature importance | Medium: deterministic for the same input and tokenization, but sensitive to minor input changes | Very fast: computed during inference with no extra cost | High: visual heat-map highlighting is immediately intuitive, but this intuitiveness can be actively misleading |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -145,7 +144,8 @@ The limitations of SHAP, LIME, and attention weights become even more pronounced
 
 ---
 
-> **Common Misconception:** Students often assume that because attention weights are produced by the model itself (not by an external approximation method like LIME), they must be more faithful to the model's true reasoning than SHAP or LIME. This is backwards.  SHAP and LIME, despite being external approximations, are specifically designed and evaluated for faithfulness.  Attention weights were designed for the model to function correctly, not to explain itself to humans.  The fact that a mechanism is internal to the model does not make it a reliable explanation of the model's decisions.
+> Students often assume that because attention weights are produced by the model itself (not by an external approximation method like LIME), they must be more faithful to the model's true reasoning than SHAP or LIME. This is backwards.  SHAP and LIME, despite being external approximations, are specifically designed and evaluated for faithfulness.  Attention weights were designed for the model to function correctly, not to explain itself to humans.  The fact that a mechanism is internal to the model does not make it a reliable explanation of the model's decisions.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -162,7 +162,8 @@ A plausible but potentially unstable local approximation that should complement 
 
 </details>
 
-> *Hint:* Recall that LIME generates a local approximation by perturbing the input; running it on a different random seed would produce a different highlighted region.  "Definitive evidence" requires a level of stability and causal connection that LIME does not provide.  The last option conflates explanation (what the model attended to) with fairness (whether the model learned spurious patterns); these are separate questions.
+> Recall that LIME generates a local approximation by perturbing the input; running it on a different random seed would produce a different highlighted region.  "Definitive evidence" requires a level of stability and causal connection that LIME does not provide.  The last option conflates explanation (what the model attended to) with fairness (whether the model learned spurious patterns); these are separate questions.
+{: .tb-tip data-title="Hint"}
 
 ---
 
@@ -219,7 +220,8 @@ When an *agent* (not just a classifier) is making decisions, explanation require
 
 *Starter hint:* The code below loads a pre-trained sentiment model and runs SHAP to produce token-level attributions; look for which words receive negative SHAP values (pushing toward "negative") versus positive ones, and notice whether the attributions match your intuition about why the sentence has that sentiment:
 
-> **Runs on your machine, not here.**  This cell needs libraries that are installed in your course container rather than in the page.  Copy it there and run it.
+> This cell needs libraries that are installed in your course container rather than in the page.  Copy it there and run it.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 

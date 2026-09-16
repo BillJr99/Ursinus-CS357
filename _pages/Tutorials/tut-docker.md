@@ -1,25 +1,22 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Docker
 title: 'CS357: Foundations of Artificial Intelligence - Docker from Zero'
 info:
   coursenum: CS357
   purpose: "To explain what containers, images, volumes, and ports actually are, so that the local AI stack you run all semester is something you understand rather than something you copy."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - docker
 - containers
 - setup
 ---
 
-# CS357: Foundations of Artificial Intelligence - Docker from Zero
-
-## Purpose
-
-To explain what containers, images, volumes, and ports actually are, so that the local AI stack you run all semester is something you understand rather than something you copy.
-
 ## About This Tutorial
 
 Our entire local AI stack (the model servers, the gateways, the agent frameworks, the web frontends) runs in **Docker containers**, and so will the agents you build.  This tutorial assumes you have never touched Docker and ends with you writing Dockerfiles and composing multi-service stacks.  We move today from **images versus containers -> run, exec, logs, stop -> ports -> volumes -> writing a Dockerfile -> docker compose -> talking to the host**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -33,6 +30,7 @@ Anchor these terms before you start.  You will see every one of them below; look
 | **Tag** | A version label appended after `:` in an image name that identifies a specific build of that image. | In `ollama/ollama:latest`, the tag `latest` means "the most recent published version." |
 | **Volume / Bind Mount** | A link between a folder on your real machine and a path inside the container, so data written inside the container is actually saved on your disk. | `-v "$HOME/agents/data:/app/data"` makes the container write its data to your home directory instead of into its own temporary layer. |
 | **Port Mapping** | A rule that forwards traffic from a port on your machine to a port inside the container, making the containerized service reachable from your browser. | `-p 3000:8080` means "my browser visits port 3000; Docker delivers that traffic to port 8080 inside the container." |
+{: .tb-full}
 
 ---
 
@@ -76,6 +74,7 @@ The table below pairs every key command with a plain-English translation and a f
 | `docker rm web` | Deletes the stopped container record. The image is untouched. | You must stop a container before removing it, or add `-f` to force. |
 | `docker rmi nginx` | Deletes the `nginx` image from your local disk. | You must remove all containers using the image first. |
 | `docker run --rm -it ubuntu bash` | Runs an interactive Ubuntu shell and automatically deletes the container the moment you exit. | `--rm` is perfect for throwaway experiments; no cleanup required. |
+{: .tb-full}
 
 The pair worth internalizing is **run versus exec**: `run` creates a *new* container from an image; `exec` enters an *existing, running* one.  Confusing them produces the classic beginner mystery of "I installed it but it is gone," because each `run` starts from the frozen image again; your changes from the previous run are not carried over.
 
@@ -131,6 +130,7 @@ Read `-p 3000:8080` as "host port 3000 forwards to container port 8080."  The ho
 | Run two services that both internally use 8080 without a conflict | `-p 3000:8080` for the first, `-p 3001:8080` for the second | Start each `docker run` separately with different host ports |
 | Find what is already using port 3000 on your host | (not a Docker flag; use the shell) | `lsof -i :3000` |
 | Check which host ports a running container has published | (inspect, not a run flag) | `docker port <container-name>` |
+{: .tb-full}
 
 ## 4.  Volumes: Letting Data Survive
 
@@ -152,6 +152,7 @@ Now the application's data directory lives on *your* disk; destroy and recreate 
 | Persist application data to your home directory | `-v "HOST_PATH:CONTAINER_PATH"` | `docker run -v "$HOME/mydata:/app/data" myimage` |
 | Give a container read-only access to a reference folder | `-v "HOST_PATH:CONTAINER_PATH:ro"` | `docker run -v "$HOME/vault:/vault:ro" myimage` |
 | Mount the current working directory into the container | `-v "$(pwd):/app"` | Useful during development so code changes take effect without rebuilding the image |
+{: .tb-full}
 
 You run a model server with `docker run -p 8080:11434 ...` and the docs say the server listens on port 11434 inside the container.  Which URL does your browser use to reach it?
 
@@ -223,6 +224,7 @@ The ordering rule (stable layers first, volatile layers last) is the single most
 | `RUN command` | Executes a shell command during the build and saves the result as a new layer. | `RUN pip install --no-cache-dir -r requirements.txt` installs Python packages. |
 | `EXPOSE port` | Documents which port the container expects to receive traffic on. Does not actually publish the port; you still need `-p` at run time. | `EXPOSE 8000` |
 | `CMD ["exec", "args"]` | The default command run when the container starts. Overridable at `docker run` time. | `CMD ["python", "server.py"]` |
+{: .tb-full}
 
 *A single Dockerfile defines one service.  When your stack needs multiple services (a model gateway, a chat UI, your agent) Compose lets you define and start them all with one command.*
 
@@ -274,6 +276,7 @@ Within a Compose file, services reach each other *by name* (`http://gateway:4000
 | `docker compose logs -f` | Streams live, interleaved log output from all services, each line prefixed with the service name. | Debugging: watch what happens across services in real time. |
 | `docker compose down` | Stops and removes all containers and networks for this stack. Named volumes are preserved by default. | Cleanly shutting down between sessions. |
 | `docker compose down -v` | Same as `down` but also deletes named volumes, wiping all persisted data. | Starting completely fresh; use with caution. |
+{: .tb-full}
 
 *Compose puts your services on a private network where they can reach each other by name.  But they cannot automatically reach things on your host machine (your laptop or workstation) because the container's network is isolated.  This section explains the special address that bridges that gap.*
 
@@ -294,6 +297,7 @@ or, in Compose, the `extra_hosts` block shown above.  Forgetting this flag on Li
 | Docker Desktop on macOS | Yes, available in every container without any extra flags. | Nothing; it just works. |
 | Docker Desktop on Windows | Yes, available in every container without any extra flags. | Nothing; it just works. |
 | Docker Engine on Linux | No, you must opt in per container. | Add `--add-host=host.docker.internal:host-gateway` to every `docker run`, or add an `extra_hosts` block to every service in `docker-compose.yml`. |
+{: .tb-full}
 
 ---
 
@@ -319,7 +323,8 @@ A teammate's Open WebUI container cannot reach Ollama.  From the host, `curl htt
 
 ---
 
-> **Common Misconception:** Many beginners assume that because `curl http://localhost:11434` works from the host, the containerized service should "just see it" too.  This is wrong.  Each container runs in its own network namespace.  Inside the container, `localhost` (or `127.0.0.1`) refers to the container's own loopback interface, not the host's.  The Ollama server bound to the host's port 11434 is completely invisible at that address from inside the container.  The fix is always to use `host.docker.internal` as the hostname, and on Linux, to explicitly enable it with `--add-host=host.docker.internal:host-gateway`.
+> Many beginners assume that because `curl http://localhost:11434` works from the host, the containerized service should "just see it" too.  This is wrong.  Each container runs in its own network namespace.  Inside the container, `localhost` (or `127.0.0.1`) refers to the container's own loopback interface, not the host's.  The Ollama server bound to the host's port 11434 is completely invisible at that address from inside the container.  The fix is always to use `host.docker.internal` as the hostname, and on Linux, to explicitly enable it with `--add-host=host.docker.internal:host-gateway`.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -349,8 +354,10 @@ docker run --rm -v "$HOME/agents/work:/work" alpine ls /work
 | Windows + WSL2 (our setup) | `$HOME/agents/work` *inside WSL* | Keep project files in the Linux filesystem. |
 | Windows + WSL2, files on `C:` | `/mnt/c/Users/you/work` | Works, but **much** slower, and file permissions behave oddly. |
 | Windows PowerShell | `C:\Users\you\work` | Docker Desktop translates it; forward slashes also work. |
+{: .tb-full}
 
-> **Watch out!**  On WSL, a project living under `/mnt/c/...` can be five to ten times slower for the many-small-files work that agents do (git operations, `npm install`, test runs).  If your agent feels inexplicably sluggish, check which filesystem the folder is on before you blame the model.
+> On WSL, a project living under `/mnt/c/...` can be five to ten times slower for the many-small-files work that agents do (git operations, `npm install`, test runs).  If your agent feels inexplicably sluggish, check which filesystem the folder is on before you blame the model.
+{: .tb-warning data-title="Watch out"}
 
 **Step 4: verify from inside.**  Never assume the mount landed:
 
@@ -466,7 +473,8 @@ docker run -it --rm \
 
 Read that command as a sentence: *the agent may act without asking, and the worst it can do is damage one git-tracked folder.*  Every clause earns the first one.
 
-> **Watch out!** `--network none` also blocks the agent from reaching the model API. Use it for offline refactoring against a local model reachable another way, or drop it and accept network egress.  There is no configuration where an agent can call a hosted model and also be unable to send data outward; decide which property you need.  There is, however, a middle setting worth knowing: put the agent on a network whose only reachable host is your own gateway, so it can call models but cannot reach anything else on the internet.  That is rung 5 in the next section's ladder, and the gateway it points at is the one the [Agentic CLI Tools tutorial]({{ site.baseurl }}/Tutorials/AgentCLIs) routes through.
+> `--network none` also blocks the agent from reaching the model API. Use it for offline refactoring against a local model reachable another way, or drop it and accept network egress.  There is no configuration where an agent can call a hosted model and also be unable to send data outward; decide which property you need.  There is, however, a middle setting worth knowing: put the agent on a network whose only reachable host is your own gateway, so it can call models but cannot reach anything else on the internet.  That is rung 5 in the next section's ladder, and the gateway it points at is the one the [Agentic CLI Tools tutorial]({{ site.baseurl }}/Tutorials/AgentCLIs) routes through.
+{: .tb-warning data-title="Watch out"}
 
 ### 9.4 Read-only root, writable workspace
 
@@ -495,6 +503,7 @@ docker run -it --rm \
 | 4 | Rung 3 + `--read-only --tmpfs` | Change one project only | The kernel, and nothing persists |
 | 5 | Rung 4 + egress only to your gateway | Change one project, reach models but no other host | The gateway's routing and its logs |
 | 6 | Rung 4 + `--network none` | Change one project, offline | Nothing leaves |
+{: .tb-full}
 
 ### 9.5 Verify the fence before you trust it
 
@@ -529,7 +538,8 @@ Running it in a container whose only writable mount is one git-tracked project f
 
 </details>
 
-> **Common Misconception:** "Skip permissions" is often read as a statement about the *agent*, that you trust it now.  It is really a statement about the *environment*: you have made the consequences of any single action small enough that approving each one adds no information.  If you cannot describe the worst case in one sentence, you have not earned the flag.
+> "Skip permissions" is often read as a statement about the *agent*, that you trust it now.  It is really a statement about the *environment*: you have made the consequences of any single action small enough that approving each one adds no information.  If you cannot describe the worst case in one sentence, you have not earned the flag.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

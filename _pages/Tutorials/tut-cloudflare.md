@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Cloudflare
 title: 'CS357: Foundations of Artificial Intelligence - Hosting with Cloudflare'
 info:
   coursenum: CS357
   purpose: "To get your work off localhost and somewhere a collaborator, a poster session, or a community partner can reach it, using Workers, Pages, and Wrangler."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - deployment
 - cloudflare
 - hosting
 ---
-# CS357: Foundations of Artificial Intelligence - Hosting with Cloudflare
-
-## Purpose
-
-To get your work off localhost and somewhere a collaborator, a poster session, or a community partner can reach it, using Workers, Pages, and Wrangler.
-
 ## About This Tutorial
 
 Your local stack is private by design, which is its virtue and its limit: nothing on `localhost` can be shown to a collaborator, demoed at a poster session, or used by anyone else.  **Cloudflare's developer platform** fills that gap with a generous free tier: **Pages** hosts static sites, **Workers** runs serverless code at the edge, and **Wrangler** is the CLI that drives both from your terminal.  This tutorial goes from no account to a deployed, secret-bearing API. Today's path runs **the platform map → Wrangler from zero → your first Worker → secrets and configuration → a Pages site → what belongs at the edge versus at home → automating the deploy safely (CI, secrets, and guardrails)**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -38,6 +35,7 @@ Your local stack is private by design, which is its virtue and its limit: nothin
 | **Least privilege** | Grant an identity exactly the permissions it needs and no more: a deploy token scoped to "edit Workers on this one account," never an all-powerful Global API Key | A scoped Cloudflare API token can deploy a Worker but cannot read your billing or delete your DNS |
 | **Deployment guardrail** | A control that governs *who* can deploy, *from where*, and *with whose approval*: environment protection with required reviewers, an actor allowlist, a branch restriction, or a concurrency/rate limit | The workflow refuses to deploy unless the actor is on the allowlist, the branch is `main`, and a reviewer approves the `production` environment |
 | **Idempotent / non-interactive script** | A script that produces the same end state whether run once or five times, and that never pauses for keyboard input, mandatory in CI, where there is no human to answer a prompt | `deploy.sh` creates the KV namespace only if it does not already exist, and passes assume-yes flags so nothing waits on `read` |
+{: .tb-full}
 
 ---
 
@@ -313,7 +311,8 @@ Before ruling, name the deciding principle for each case out loud; if you are wo
 
 ---
 
-> **Common Misconception:** Students often assume that because a Worker is serverless (no server to manage, no container to maintain), it is also stateless in the sense that nothing persists between users or between requests.  This is true for in-memory variables (each request gets a fresh execution context), but Cloudflare provides persistent storage primitives like KV that Workers can bind to.  More importantly, the distinction between "does not persist" and "does not store" is crucial for governance: a Worker that forwards data to a third-party LLM provider does not store data itself, but it does transmit data to a service that may log, train on, or retain it.  "We use a Worker, so we don't store data" is not a complete data-handling answer; it is the beginning of one.
+> Students often assume that because a Worker is serverless (no server to manage, no container to maintain), it is also stateless in the sense that nothing persists between users or between requests.  This is true for in-memory variables (each request gets a fresh execution context), but Cloudflare provides persistent storage primitives like KV that Workers can bind to.  More importantly, the distinction between "does not persist" and "does not store" is crucial for governance: a Worker that forwards data to a third-party LLM provider does not store data itself, but it does transmit data to a service that may log, train on, or retain it.  "We use a Worker, so we don't store data" is not a complete data-handling answer; it is the beginning of one.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -416,6 +415,7 @@ GitHub gives you three places to put values, and choosing correctly is the whole
 | **Repository secret** | Yes (encrypted, masked) | Every workflow in the repo | A credential many workflows share |
 | **Environment secret** | Yes (encrypted, masked) | Only jobs targeting that environment (e.g. `production`), *and* only after the environment's protection rules pass | The deploy token: tie it to the protected `production` environment so approval is required to use it |
 | **Variable** | No (plain, visible) | Repo or environment | Non-secret config: the Worker name, the account subdomain |
+{: .tb-full}
 
 **The one rule that prevents most leaks:** a registered secret is automatically masked as `***` in logs, *unless you print it yourself*.  These two lines defeat the mask and leak the token into a world-readable log:
 
@@ -526,7 +526,8 @@ And the *permission* policy the role grants should be least-privilege too, only 
 }
 ```
 
-> **Common Misconception:** "OIDC is complicated, so a stored token must be the simpler and therefore safer choice."  The opposite is usually true.  A stored long-lived token is a standing liability: it can leak, and until someone notices and rotates it, an attacker has your access.  An OIDC token is minted per run, expires in minutes, and is bound by its subject to one repository and branch.  The *setup* is a bit more involved; the *ongoing risk* is far lower.  Cloudflare's Wrangler flow uses a scoped API token today, so you still hold one carefully-scoped secret, but the direction every mature pipeline moves is: smallest scope, shortest life, no key at rest.
+> "OIDC is complicated, so a stored token must be the simpler and therefore safer choice."  The opposite is usually true.  A stored long-lived token is a standing liability: it can leak, and until someone notices and rotates it, an attacker has your access.  An OIDC token is minted per run, expires in minutes, and is bound by its subject to one repository and branch.  The *setup* is a bit more involved; the *ongoing risk* is far lower.  Cloudflare's Wrangler flow uses a scoped API token today, so you still hold one carefully-scoped secret, but the direction every mature pipeline moves is: smallest scope, shortest life, no key at rest.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -890,6 +891,7 @@ Run this checklist against your pipeline before you call it done.  Every box sho
 | [ ] | The deploy script is **non-interactive** (assume-yes / `</dev/null`) and **idempotent** | It cannot hang the runner, and a re-run is harmless |
 | [ ] | Deploy logic lives in a **script** the workflow calls, runnable and testable locally | Not trapped in CI-only YAML |
 | [ ] | `.dev.vars` / `.env` are in `.gitignore` | Local secrets never reach the repo |
+{: .tb-full}
 
 ---
 

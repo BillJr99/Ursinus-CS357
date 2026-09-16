@@ -1,25 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Hardware
 title: 'CS357: Foundations of Artificial Intelligence - The Hardware Behind AI'
 info:
   coursenum: CS357
   purpose: "To explain GPUs, VRAM, and quantization well enough that you can predict whether a given model will run on a given machine, and at what cost in quality."
+  eyebrow: "Tutorial"
 tags:
 - hardware
 - quantization
 - local-ai
 ---
 
-# CS357: Foundations of Artificial Intelligence - The Hardware Behind AI
-
-## Purpose
-
-To explain GPUs, VRAM, and quantization well enough that you can predict whether a given model will run on a given machine, and at what cost in quality.
-
 ## About This Tutorial
 
 CS357 - Foundations of Artificial Intelligence / Agentic AI | Ursinus College
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -31,6 +27,7 @@ CS357 - Foundations of Artificial Intelligence / Agentic AI | Ursinus College
 | **Perplexity** | A measure of how "surprised" a language model is when it reads a test document; lower means better; used to quantify quality loss from quantization | A Q4_K_M model has roughly 1.5% higher perplexity than the FP16 baseline for a 7B model |
 | **Unified Memory** | An architecture (used by Apple Silicon) where the CPU, GPU, and Neural Engine all share the same physical RAM pool, so there is no separate VRAM limit | An M3 Ultra with 192 GB of RAM can load a 70B model at Q4 that would be impossible on any single NVIDIA consumer GPU |
 | **Edge Inference** | Running an AI model locally on a device (laptop, workstation, embedded system) rather than sending queries to a remote cloud server | A rural clinic running a clinical documentation assistant on a local Mac Mini because there is no reliable internet connection |
+{: .tb-full}
 
 ---
 
@@ -71,6 +68,7 @@ Use the table below to determine which hardware tier can run which model sizes. 
 | Cloud (H100 SXM) | 80 GB | ~989 TFLOPS (FP8 mode) | ~$2-4/hour cloud rental | Up to ~40B single GPU; 70B+ via NVLink multi-GPU |
 | Apple Silicon (M3 Ultra) | 192 GB unified memory | ~17 TFLOPS GPU core (Neural Engine: ~60 TOPS) | ~$5,000-$10,000 | 70B+ at FP16; entire system memory is available to the GPU |
 | TPU v4 (Google Cloud) | 32 GB per chip in multi-chip pods | ~275 TFLOPS (bfloat16) | Variable pod pricing | Large models via multi-chip pods; primarily for training |
+{: .tb-full}
 
 **Unified memory (Apple Silicon):** Apple's M-series chips use a shared memory architecture where the CPU, GPU, and Neural Engine all access the same physical DRAM pool.  There is no separate VRAM limit; the entire system memory (up to 192 GB on an M3 Ultra) is available to the GPU. This fundamentally changes what is runnable on consumer hardware: a 70B model that is impossible on any single NVIDIA consumer GPU can run on a Mac Studio.
 
@@ -78,7 +76,8 @@ Use the table below to determine which hardware tier can run which model sizes. 
 
 **Question 1.**  VRAM capacity and memory bandwidth are both constraints on LLM inference, but they matter at different phases.  Explain why **memory bandwidth** is typically the binding constraint during inference (token-by-token generation), while **VRAM capacity** is the binding constraint during model loading.  Under what conditions would the raw FLOPS ceiling become the binding constraint instead?
 
-> *Hint:* During generation, the model weights must be streamed through the compute units for every single token; this is a bandwidth-bound operation because the GPU keeps re-reading all those weights.  But before generation can even begin, the weights must fit in VRAM at all; this is a capacity constraint.  FLOPS become the dominant limit when you batch many users' queries together (large batch size), so the GPU is doing more work per memory read.  What batch size makes a GPU "compute-bound" rather than "memory-bound," and why does a single-user local deployment almost never reach that threshold?
+> During generation, the model weights must be streamed through the compute units for every single token; this is a bandwidth-bound operation because the GPU keeps re-reading all those weights.  But before generation can even begin, the weights must fit in VRAM at all; this is a capacity constraint.  FLOPS become the dominant limit when you batch many users' queries together (large batch size), so the GPU is doing more work per memory read.  What batch size makes a GPU "compute-bound" rather than "memory-bound," and why does a single-user local deployment almost never reach that threshold?
+{: .tb-tip data-title="Hint"}
 
 ---
 
@@ -94,13 +93,15 @@ Use the table below to determine which hardware tier can run which model sizes. 
 
 (c) How does quantization change what you can run on this laptop GPU?
 
-> *Hint:* At FP16: 7B × 2 bytes = 14 GB weights + 1.5 GB KV cache = 15.5 GB total.  With 16 GB VRAM, this is technically possible but dangerously tight; any additional overhead from the runtime or a longer context will cause out-of-memory errors.  At Q4: 7B × 0.5 bytes = 3.5 GB weights + 1.5 GB KV cache = 5 GB total.  This fits comfortably with room to spare for longer contexts or runtime buffers.
+> At FP16: 7B × 2 bytes = 14 GB weights + 1.5 GB KV cache = 15.5 GB total.  With 16 GB VRAM, this is technically possible but dangerously tight; any additional overhead from the runtime or a longer context will cause out-of-memory errors.  At Q4: 7B × 0.5 bytes = 3.5 GB weights + 1.5 GB KV cache = 5 GB total.  This fits comfortably with room to spare for longer contexts or runtime buffers.
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 3.**  A developer argues: "Apple Silicon is not a serious AI workstation because it cannot match an H100 in FLOPS." A second developer argues: "For local inference of models up to 70B parameters, Apple Silicon is better than any single consumer NVIDIA GPU." Evaluate both claims carefully.  Which specific models and use cases would run better on an M3 Ultra (192 GB unified memory) than on an RTX 4090 (24 GB VRAM), and which would run better on the RTX 4090?
 
-> *Hint:* The M3 Ultra wins decisively for any model between about 12 GB and 192 GB in size, models that simply do not fit on the RTX 4090 at all.  The RTX 4090 wins for smaller models (7B at Q4 or FP16) that fit comfortably in 24 GB, because its CUDA compute and bandwidth are faster than Apple's GPU cores for that workload.  The H100 wins for everything involving large batch sizes, training, or multi-user throughput at scale.  When does each choice make sense in practice?
+> The M3 Ultra wins decisively for any model between about 12 GB and 192 GB in size, models that simply do not fit on the RTX 4090 at all.  The RTX 4090 wins for smaller models (7B at Q4 or FP16) that fit comfortably in 24 GB, because its CUDA compute and bandwidth are faster than Apple's GPU cores for that workload.  The H100 wins for everything involving large batch sizes, training, or multi-user throughput at scale.  When does each choice make sense in practice?
+{: .tb-tip data-title="Hint"}
 
 ---
 
@@ -121,6 +122,7 @@ Neural networks store weights as floating-point or integer numbers.  The precisi
 | INT4 / Q4 | 4 | 0.5 bytes | The "practical sweet spot" for local inference; the format used by most Ollama and llama.cpp models you've run in labs |
 | Q3 | 3 | 0.375 bytes | Noticeable quality degradation on complex reasoning and multi-step tasks |
 | Q2 | 2 | 0.25 bytes | Severe degradation; only useful in extreme memory-constrained situations where any output is better than none |
+{: .tb-full}
 
 **The core math you need to know:**
 
@@ -152,6 +154,7 @@ The table below shows the quality-versus-size tradeoff for a 7B model at each qu
 | Q4_K_M | 4 | ~4.1 GB | ~1.5% increase | **The practical sweet spot**: good quality, fits in 6-8 GB VRAM, used in most course labs |
 | Q3_K_M | 3 | ~3.3 GB | ~4-6% increase | Noticeable quality loss on complex multi-step reasoning and code generation |
 | Q2_K | 2 | ~2.7 GB | ~15-30% increase | Significant degradation; only use when no better option exists |
+{: .tb-full}
 
 ### Quantization-Aware Training vs. Post-Training Quantization
 
@@ -159,7 +162,8 @@ The table below shows the quality-versus-size tradeoff for a 7B model at each qu
 
 - **Quantization-Aware Training (QAT)**: Simulate quantization noise *during* training, so the model learns to compensate for the precision loss while still at full precision.  Produces significantly better accuracy at very low bit depths (INT4, INT2).  Requires access to training infrastructure and significant compute; used in techniques like QLoRA that allow fine-tuning quantized models.
 
-> **Common Misconception:** Many students assume that quantization always makes models noticeably worse.  In practice, Q4_K_M gives roughly 1.5% higher perplexity than the FP16 baseline for a 7B model, a difference that is often imperceptible in conversation, coding assistance, and most practical tasks.  The sharp quality cliff only occurs at Q2 and below.  For most use cases in this course, Q4_K_M is the correct starting point: it cuts memory requirements by 4× compared to FP16 while preserving the vast majority of model quality.
+> Many students assume that quantization always makes models noticeably worse.  In practice, Q4_K_M gives roughly 1.5% higher perplexity than the FP16 baseline for a 7B model, a difference that is often imperceptible in conversation, coding assistance, and most practical tasks.  The sharp quality cliff only occurs at Q2 and below.  For most use cases in this course, Q4_K_M is the correct starting point: it cuts memory requirements by 4× compared to FP16 while preserving the vast majority of model quality.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -173,19 +177,22 @@ The table below shows the quality-versus-size tradeoff for a 7B model at each qu
 
 (d) Which quantization level(s) fit in 8 GB? What quality trade-off are you accepting for each one that fits?
 
-> *Hint:* Q8: 13B × 1 byte = 13 GB × 1.15 overhead = **14.95 GB**, does not fit in 8 GB. Q4_K_M: 13B × 0.5 bytes = 6.5 GB × 1.15 = **7.47 GB**, fits, with about 500 MB to spare for a modest context.  Q3_K_M: 13B × 0.375 bytes = 4.875 GB × 1.15 = **5.6 GB**, fits comfortably with room for a larger context.  Q4_K_M is the sweet spot: it fits in 8 GB and accepts only ~1.5% perplexity increase.  Q3_K_M fits more comfortably but costs 4-6% perplexity.
+> Q8: 13B × 1 byte = 13 GB × 1.15 overhead = **14.95 GB**, does not fit in 8 GB. Q4_K_M: 13B × 0.5 bytes = 6.5 GB × 1.15 = **7.47 GB**, fits, with about 500 MB to spare for a modest context.  Q3_K_M: 13B × 0.375 bytes = 4.875 GB × 1.15 = **5.6 GB**, fits comfortably with room for a larger context.  Q4_K_M is the sweet spot: it fits in 8 GB and accepts only ~1.5% perplexity increase.  Q3_K_M fits more comfortably but costs 4-6% perplexity.
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 5.**  Q2 quantization reduces a 70B model's VRAM requirement from 140 GB (FP16) to approximately 17.5 GB, an 8× reduction.  However, it increases perplexity by roughly 15-30%. Identify two specific use cases where this trade-off is acceptable, and two where it is not.  For each case, identify what the task requires that either tolerates or cannot tolerate the perplexity increase.
 
-> *Hint:* Acceptable: (1) A retrieval-augmented search interface where the model only needs to select which retrieved passage is most relevant; this is a classification-like task where the exact wording of the output matters less than the selection decision.  (2) An extremely resource-constrained embedded device where Q2 is the only way to run any LLM at all, and even a degraded model is more useful than no model.  Not acceptable: (1) Medical question-answering where a confidently stated but subtly wrong answer could lead to patient harm.  (2) Code generation where subtle logic errors are difficult for a non-expert user to detect and could introduce security vulnerabilities.
+> Acceptable: (1) A retrieval-augmented search interface where the model only needs to select which retrieved passage is most relevant; this is a classification-like task where the exact wording of the output matters less than the selection decision.  (2) An extremely resource-constrained embedded device where Q2 is the only way to run any LLM at all, and even a degraded model is more useful than no model.  Not acceptable: (1) Medical question-answering where a confidently stated but subtly wrong answer could lead to patient harm.  (2) Code generation where subtle logic errors are difficult for a non-expert user to detect and could introduce security vulnerabilities.
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 6.**  Perplexity is the standard benchmark for quantization quality, but it is a proxy metric: it measures how well the model predicts tokens in a reference corpus, not how well it performs on actual tasks.  Name two tasks where a model with higher perplexity might actually perform better than a lower-perplexity model on real benchmarks.  What does this suggest about using perplexity as the sole quality criterion for quantization decisions?
 
-> *Hint:* A model fine-tuned to be more decisive and direct (such as an instruction-tuned assistant) may have higher perplexity on a general text corpus because it assigns high probability to one specific answer rather than spreading probability across many plausible completions, but it performs better on instruction-following tasks.  A coding model fine-tuned on Python code will have higher perplexity on a natural language benchmark but dramatically better performance on HumanEval.  What should you measure instead of, or in addition to, perplexity when making quantization decisions for a specific deployment?
+> A model fine-tuned to be more decisive and direct (such as an instruction-tuned assistant) may have higher perplexity on a general text corpus because it assigns high probability to one specific answer rather than spreading probability across many plausible completions, but it performs better on instruction-following tasks.  A coding model fine-tuned on Python code will have higher perplexity on a natural language benchmark but dramatically better performance on HumanEval.  What should you measure instead of, or in addition to, perplexity when making quantization decisions for a specific deployment?
+{: .tb-tip data-title="Hint"}
 
 ---
 
@@ -204,7 +211,8 @@ Quantize to Q4 (approximately 0.5 bytes/parameter, yielding ~35 GB) or Q3 (~26 G
 
 </details>
 
-> **Why this answer?**  At Q4, 70B × 0.5 bytes = 35 GB, slightly over the 32 GB limit, so Q3_K_M at approximately 26 GB is the better choice.  Apple Silicon's unified memory architecture means the GPU accesses all system memory, so the 32 GB applies to the combined model and KV cache budget.  FP32 would require 280 GB, nearly 9× the available memory.  CPU-only inference is technically possible but produces token generation rates often below 1 token per second, making it impractical for interactive use.
+> At Q4, 70B × 0.5 bytes = 35 GB, slightly over the 32 GB limit, so Q3_K_M at approximately 26 GB is the better choice.  Apple Silicon's unified memory architecture means the GPU accesses all system memory, so the 32 GB applies to the combined model and KV cache budget.  FP32 would require 280 GB, nearly 9× the available memory.  CPU-only inference is technically possible but produces token generation rates often below 1 token per second, making it impractical for interactive use.
+{: .tb-intuition data-title="Why this answer?"}
 
 ---
 
@@ -222,6 +230,7 @@ The table below compares edge and cloud inference across six dimensions.  As you
 | Cost at scale | Hardware cost is amortized over time; ongoing cost is electricity only | Per-query pricing that can add up significantly at volume |
 | Model size | Constrained by local hardware; VRAM or unified memory sets a hard ceiling | Effectively unlimited; providers run multi-GPU clusters for very large models |
 | Updates | Requires manual model download and update by the operator | Model upgrades happen transparently on the provider's side |
+{: .tb-full}
 
 **Use cases where edge deployment is the correct architectural choice:**
 
@@ -253,19 +262,22 @@ All three tools load GGUF models, handle GPU offloading of as many layers as fit
 
 **Question 7.**  You are designing the hardware and software stack for a local AI agent deployment in a rural primary care clinic with no reliable internet connection.  The clinic sees 40 patients per day and needs the agent to assist with clinical documentation: SOAP note drafting, ICD-10 code lookup, and medication interaction checking.  Design the hardware selection process: what model size do you target, what specific hardware do you specify, what quantization level do you use, and how do you justify the cost to the clinic administrator?
 
-> *Hint:* 40 patients per day is a sequential, latency-sensitive workload; the bottleneck is response quality and speed for one user at a time, not throughput for many simultaneous users.  For clinical documentation, you likely need a model with strong instruction-following and medical domain knowledge, probably 7B-13B at minimum, ideally larger.  Consider a Mac Mini M2 Pro (32 GB unified memory, ~$1,300) running a 13B Q4_K_M model (~7.5 GB footprint).  How does HIPAA interact with your hardware choice: can data ever leave the device?  Is a Mac Mini a defensible clinical edge device, or does it need to be a specialized medical-grade computer?
+> 40 patients per day is a sequential, latency-sensitive workload; the bottleneck is response quality and speed for one user at a time, not throughput for many simultaneous users.  For clinical documentation, you likely need a model with strong instruction-following and medical domain knowledge, probably 7B-13B at minimum, ideally larger.  Consider a Mac Mini M2 Pro (32 GB unified memory, ~$1,300) running a 13B Q4_K_M model (~7.5 GB footprint).  How does HIPAA interact with your hardware choice: can data ever leave the device?  Is a Mac Mini a defensible clinical edge device, or does it need to be a specialized medical-grade computer?
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 8.**  Your agent application requires a 32K token context window to process long clinical documents, but your GPU has only 8 GB of VRAM. Running a model large enough for quality output at 32K context would require 20+ GB. List three distinct technical strategies for operating within this constraint, and identify the specific trade-off each strategy imposes on the agent's behavior and output quality.
 
-> *Hint:* (1) **Context compression and summarization**: periodically summarize earlier conversation turns and replace them with a compact summary, then truncate the full history.  Trade-off: the agent loses verbatim access to specific details from earlier in the conversation.  (2) **RAG (Retrieval-Augmented Generation) instead of long context**: chunk the document into passages, embed them, and retrieve the most relevant passages for each query.  Trade-off: retrieval quality determines what the model "sees"; relevant passages may be missed.  (3) **CPU offloading**: load the layers that don't fit in VRAM into CPU RAM, processing them on the CPU. Trade-off: significant latency increase because CPU-to-GPU data transfer is slow.  (4) Use a smaller model that fits within 8 GB at 32K context.  Trade-off: lower reasoning capability across all tasks.
+> (1) **Context compression and summarization**: periodically summarize earlier conversation turns and replace them with a compact summary, then truncate the full history.  Trade-off: the agent loses verbatim access to specific details from earlier in the conversation.  (2) **RAG (Retrieval-Augmented Generation) instead of long context**: chunk the document into passages, embed them, and retrieve the most relevant passages for each query.  Trade-off: retrieval quality determines what the model "sees"; relevant passages may be missed.  (3) **CPU offloading**: load the layers that don't fit in VRAM into CPU RAM, processing them on the CPU. Trade-off: significant latency increase because CPU-to-GPU data transfer is slow.  (4) Use a smaller model that fits within 8 GB at 32K context.  Trade-off: lower reasoning capability across all tasks.
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 9.**  Running a Q4 70B model on a 150W Apple Silicon system for 8 hours per day consumes about 1.2 kWh daily.  A cloud API call offloads the energy cost, but to a large data center that may or may not run on renewable energy.  Compare the environmental impact of these two deployment strategies.  What information would you need to make this comparison accurately, and what does your analysis suggest for sustainable AI agent deployment?
 
-> *Hint:* To compare fairly, you need: the local power grid's carbon intensity (g CO₂ per kWh) for your region, the cloud provider's reported Power Usage Effectiveness (PUE, a measure of how efficiently the data center uses energy) and their renewable energy percentage, the number of tokens generated per hour for each option, and whether the local device is otherwise idle (in which case the inference is a marginal cost on top of base power draw).  There is no universal answer: running a model on solar-powered local hardware in a sunny region may have lower carbon footprint than a coal-powered data center, or vice versa.  What does this imply for where AI inference workloads should physically be located?
+> To compare fairly, you need: the local power grid's carbon intensity (g CO₂ per kWh) for your region, the cloud provider's reported Power Usage Effectiveness (PUE, a measure of how efficiently the data center uses energy) and their renewable energy percentage, the number of tokens generated per hour for each option, and whether the local device is otherwise idle (in which case the inference is a marginal cost on top of base power draw).  There is no universal answer: running a model on solar-powered local hardware in a sunny region may have lower carbon footprint than a coal-powered data center, or vice versa.  What does this imply for where AI inference workloads should physically be located?
+{: .tb-tip data-title="Hint"}
 
 ---
 
@@ -285,6 +297,7 @@ Models: Llama 3 8B and Llama 3 70B. Formats for each: FP16 (2 bytes/weight), INT
 | Llama 3 70B | FP16 | 2.0 | ? | ? | ? | ? |
 | Llama 3 70B | INT8 | 1.0 | ? | ? | ? | ? |
 | Llama 3 70B | Q4_K_M | 0.5 | ? | ? | ? | ? |
+{: .tb-full}
 
 *Starter hint:* Start with Llama 3 8B at FP16: 8B × 2 bytes = 16 GB, then × 1.15 = 18.4 GB. Does that fit on an RTX 4090 with 24 GB? Yes, with about 5.6 GB to spare for KV cache and context.  Now work through the remaining five rows the same way.
 
@@ -320,7 +333,8 @@ If you do not have Ollama access, find two published model cards that report bot
 
 **Technical:** One of the central tensions in AI deployment is between **centralization and decentralization**.  Cloud AI concentrates compute, data, and capability in the hands of a small number of large companies.  Edge AI distributes that capability outward to individuals and organizations.  Does widespread local model inference democratize AI, or does it just shift the dependency, from cloud providers to GPU manufacturers and open-weight model developers?
 
-> *Hint:* Consider who manufactures the GPUs running Ollama, who trained the open-weight models you download, and whether the open-weight license gives you the right to modify the model weights or just to use them.
+> Consider who manufactures the GPUs running Ollama, who trained the open-weight models you download, and whether the open-weight license gives you the right to modify the model weights or just to use them.
+{: .tb-tip data-title="Hint"}
 
 **Societal:** A rural clinic with a local model is less dependent on OpenAI, but is now dependent on NVIDIA for GPUs, Qualcomm or Apple for edge chips, and Meta or another organization for open model weights.  Is that a meaningful improvement?  And at the individual level: if a CS graduate can deploy a capable 70B model on a $2,000 workstation, what does that mean for who can build AI-powered products and who can afford to?
 

@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AIMaker
 title: 'CS357: Foundations of Artificial Intelligence - The AI Maker'
 info:
   coursenum: CS357
   purpose: "To close the distance between a working artifact and a good one: the engineering discipline and human-centred design that agentic tools do not supply for you."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - design
 - engineering
 - making
 ---
-# CS357: Foundations of Artificial Intelligence - The AI Maker
-
-## Purpose
-
-To close the distance between a working artifact and a good one: the engineering discipline and human-centred design that agentic tools do not supply for you.
-
 ## About This Tutorial
 
 Agentic tools have collapsed the distance between an idea and a working artifact, for professional engineers and for people who have never written a line of code.  What they have *not* collapsed is the distance between "it ran once" and "it deserves someone's trust," and that distance is crossed by the same three disciplines in both cases: **testing**, **continuous integration**, and **human-centric design**.  This tutorial runs in two parallel tracks (choose yours by background, and read both: the other track is your future collaborator).  Today's route runs **the trust gap -> Track A for software engineers -> Track B for non-coders -> the shared discipline of CI -> designing for the humans on the other end**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -32,6 +29,7 @@ Before diving in, keep this reference table handy.  Every term below appears in 
 | **Scope creep** | The tendency for a project to grow beyond its original intent as new features are added without removing corresponding complexity, especially dangerous when an agent can generate new capabilities in seconds | Starting with "write a tip calculator" and ending up with a multi-currency restaurant booking assistant because each agent response suggested a new feature |
 | **API integration** | Connecting your agent or application to an external service through its published interface, the point where your code sends a request and someone else's service responds | Calling a weather API to retrieve real forecast data for Collegeville rather than having the agent hallucinate weather information |
 | **"Hello World" equivalent for AI systems** | The simplest possible working AI pipeline that proves your environment is set up correctly and your mental model of the system is right, before adding any real complexity | An agent that reads one file, summarizes it in one sentence, and prints the result: if this works, your model, your tools, and your permissions are all configured correctly |
+{: .tb-full}
 
 ---
 
@@ -81,7 +79,8 @@ Treat agent output exactly as you would a pull request from a bright, fast, cont
 
 The code below illustrates the "test first" pattern: notice that the tests exist before any implementation does, and each test case is a precise contract the agent must satisfy; look for how the `test_rejects_nonnumeric` test pre-decides the comma-bug behavior that would otherwise be a specification gap.
 
-> **Runs on your machine, not here.**  This is a test file: save it in your repository and run it with `pytest`.
+> This is a test file: save it in your repository and run it with `pytest`.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 
@@ -224,7 +223,8 @@ Pair across tracks: each Track A member brings a tested change with its CI run; 
 
 ---
 
-> **Common Misconception:** A complex multi-tool agent is more impressive than a simple one that works reliably, so building something with many moving parts signals more skill.  In practice, the opposite is true in deployment.  Complexity is where failures hide: every additional tool is an additional failure mode, every additional API call is an additional network dependency, and every additional model invocation is an additional opportunity for hallucination to compound.  The most trusted production AI systems are often the simplest ones that do one thing well with measurable reliability.  Scope creep (adding features because the agent can generate them in seconds) is one of the most common ways student projects fail at the verification stage.  Build the Minimum Viable Agent first, verify it thoroughly, and only then add complexity if the problem requires it.
+> A complex multi-tool agent is more impressive than a simple one that works reliably, so building something with many moving parts signals more skill.  In practice, the opposite is true in deployment.  Complexity is where failures hide: every additional tool is an additional failure mode, every additional API call is an additional network dependency, and every additional model invocation is an additional opportunity for hallucination to compound.  The most trusted production AI systems are often the simplest ones that do one thing well with measurable reliability.  Scope creep (adding features because the agent can generate them in seconds) is one of the most common ways student projects fail at the verification stage.  Build the Minimum Viable Agent first, verify it thoroughly, and only then add complexity if the problem requires it.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

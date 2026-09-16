@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/VibeCoding
 title: 'CS357: Foundations of Artificial Intelligence - AI-Assisted Development and Vibe Coding'
 info:
   coursenum: CS357
   purpose: "To separate working from correct when an agent writes your program from a few sentences of English, and to build the review discipline that tells them apart."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - coding-agents
 - review
 - discipline
 ---
-# CS357: Foundations of Artificial Intelligence - AI-Assisted Development and Vibe Coding
-
-## Purpose
-
-To separate working from correct when an agent writes your program from a few sentences of English, and to build the review discipline that tells them apart.
-
 ## About This Tutorial
 
 Coding agents can now write working programs from a few sentences of English, but "working" and "correct" are not the same thing.  Researcher Andrej Karpathy coined the term **vibe coding** for the practice of giving an agent full latitude to implement a feature while you focus on the specification and the review.  We move from **the spectrum of AI assistance → specification-first development → rigorous diff review → the red-green-refactor-agent repair cycle**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,6 +27,7 @@ Coding agents can now write working programs from a few sentences of English, bu
 | **Diff Review** | Examining the exact line-by-line changes an agent produced (insertions and deletions) rather than reading the final file from scratch, so you catch what the agent *changed* rather than what it *left alone*. | Spotting `eval(query)` in a 30-line diff that would otherwise be easy to miss |
 | **Red-Green-Refactor** | The three TDD phases: **Red**, write a test that fails because the code does not yet exist; **Green**, write the minimum code that makes the test pass; **Refactor**, clean up the code without breaking the test. | A `pytest` run showing `FAILED` (red), then the agent's code making it `PASSED` (green) |
 | **Agent Supervision Level** | How closely a human monitors and reviews the agent's output, ranging from autocomplete (every token supervised) to pair (every file reviewed) to vibe (only the final result reviewed). | Choosing "pair" for a security-sensitive module vs. "vibe" for a low-stakes utility script |
+{: .tb-full}
 
 ---
 
@@ -48,6 +46,7 @@ In this part, you will map the range of ways AI can assist with coding (from aut
 | **Autocomplete** | Agent suggests the next token, line, or block; human accepts or rejects inline | Boilerplate, well-understood APIs, single-function completions | Low | Every token as it is accepted |
 | **Pair** | Human describes a task; agent produces a full file or function; human reads every line before accepting | New features in production code, security-sensitive modules | Medium | Every changed file, every line |
 | **Vibe** | Human writes a spec and tests; agent implements the whole feature; human reviews only the diff | Well-tested utility code, prototypes, features with complete acceptance criteria | High (without tests) / Medium (with tests) | The diff against the spec and the test results |
+{: .tb-full}
 
 ---
 
@@ -69,7 +68,8 @@ At vibe supervision level, the agent has autonomy over *how* to implement; the h
 
    > *Hint: Tests check the behaviors you thought to test.  What categories of security behavior might a developer forget to write tests for?  Name at least two.*
 
-> **Common Misconception:** "Vibe coding means you do not have to understand what the agent did."  At vibe supervision level the agent writes the code, but *you* are responsible for every line that ships.  The diff review and the test suite are not optional extras; they are what makes the "let me cook" approach safe rather than reckless.
+> "Vibe coding means you do not have to understand what the agent did."  At vibe supervision level the agent writes the code, but *you* are responsible for every line that ships.  The diff review and the test suite are not optional extras; they are what makes the "let me cook" approach safe rather than reckless.
+{: .tb-pitfall data-title="Common Misconception"}
 
 At which supervision level is the diff the primary artifact you review before accepting the agent's work?
 
@@ -118,7 +118,8 @@ In this part, you will practice the spec-first workflow: writing a clear functio
 
 **Failing tests (red phase):**
 
-> **Runs on your machine, not here.**  This is a test file: save it in your repository and run it with `pytest`.
+> This is a test file: save it in your repository and run it with `pytest`.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import pytest
@@ -172,7 +173,8 @@ Running `pytest` on this file before any implementation shows five `FAILED` line
 
    > *Hint: "Silent failure" means the function returns without raising an exception, but returns a wrong, empty, or nonsensical value.  For example: returning `[]` when `k` exceeds the corpus size, instead of raising `ValueError`.  Why is silent failure dangerous in a system that other code depends on?*
 
-> **Common Misconception:** "TDD means you write tests after you write code to make sure it works."  In true TDD the tests come first and they must *fail* before any implementation exists.  A test that passes before the implementation is written either tests the wrong thing or has a bug in the test itself.  The "red" phase is not a formality; it confirms that your test is actually measuring something.
+> "TDD means you write tests after you write code to make sure it works."  In true TDD the tests come first and they must *fail* before any implementation exists.  A test that passes before the implementation is written either tests the wrong thing or has a bug in the test itself.  The "red" phase is not a formality; it confirms that your test is actually measuring something.
+{: .tb-pitfall data-title="Common Misconception"}
 
 In the TDD cycle, what does "red" mean?
 
@@ -210,7 +212,8 @@ In this part, you will read a realistic AI-generated diff with a planted bug, pr
 
 Below is a 35-line implementation of `search_memory` that an agent might plausibly produce.  It passes all five tests above.  It contains **three deliberate issues**.  Read it carefully before answering the questions.
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -283,7 +286,8 @@ def search_memory(query, k):
 
     > *Hint: Bug 1: what input to `search_memory` would trigger code execution if `eval()` is present? Bug 2: how would you simulate an embedding failure and check that an exception (not an empty list) is raised? Bug 3: what corpus size would make the full-scan computation visible as a performance problem?*
 
-> **Common Misconception:** "If all tests pass, the code is correct."  Tests can only verify the behaviors you thought to test.  A function can pass 100 tests and still contain a security vulnerability, a resource leak, or an incorrect behavior on an input the tests did not cover.  Passing tests are necessary but not sufficient for correctness, which is precisely why diff review exists alongside testing.
+> "If all tests pass, the code is correct."  Tests can only verify the behaviors you thought to test.  A function can pass 100 tests and still contain a security vulnerability, a resource leak, or an incorrect behavior on an input the tests did not cover.  Passing tests are necessary but not sufficient for correctness, which is precisely why diff review exists alongside testing.
+{: .tb-pitfall data-title="Common Misconception"}
 
 A coding agent produces an implementation that passes all five acceptance-criterion tests.  A diff reviewer then notices `eval(query)` on line 4.  What does this finding demonstrate?
 

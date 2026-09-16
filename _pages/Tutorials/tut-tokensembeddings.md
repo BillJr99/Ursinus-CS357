@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/TokensEmbeddingsAttention
 title: 'CS357: Foundations of Artificial Intelligence - Tokens, Embeddings, and Attention: How Models Represent Meaning'
 info:
   coursenum: CS357
   purpose: "To open the model at the point that pays off soonest: how text becomes numbers, how those numbers carry meaning, and how the words around a token change what it means."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - tokenization
 - embeddings
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - Tokens, Embeddings, and Attention: How Models Represent Meaning
-
-## Purpose
-
-To open the model at the point that pays off soonest: how text becomes numbers, how those numbers carry meaning, and how the words around a token change what it means.
-
 ## About This Tutorial
 
 So far the model has been a box you send text to.  This tutorial opens the box in the one place that pays off soonest: how text becomes numbers, and how those numbers carry meaning.  Your agents will soon need to search documents by meaning rather than by keyword, and everything that makes that possible is here.
+{: .tb-lede}
 
 Three ideas, each built on the one before it.  A **token** is a piece of text a model can read.  An embedding turns a piece of text into a point in space, so that closeness means similarity.  Attention lets the tokens around a token adjust its meaning, which is what makes a modern language model modern.  Part I shows how a tokenizer learns its rules and checks the result against a production tokenizer.  Sections 2 through 2c cover embeddings, attention, and what attention costs you.  Part II builds a working semantic search engine in twenty lines.  The final Part carries one prompt end to end through a toy transformer, from token ids through a single weight update.
 
@@ -40,6 +37,7 @@ This article explains the mechanisms and shows the worked examples.  The by-hand
 | **Attention** | The mechanism that lets each token's meaning be adjusted by the tokens around it, instead of being fixed by a lookup table.  Each token asks every other token "how relevant are you to me?" and blends in a share of their meaning accordingly. | Section 2b: the vector for "bank" moves toward the financial sense when "loan" is standing next to it |
 | **Query, key, value** | The three roles every token plays in attention.  The query is what this token is looking for, the key is what it offers as a match, and the value is the content it contributes if it is selected.  A library search: your search term, the index cards, and the books. | The three vectors defined in Section 2b |
 | **Transformer** | The neural-network architecture that stacks attention many times over, and the thing the "T" in GPT stands for.  Every model you have talked to this semester is one. | One layer of the arithmetic in Section 2b, which a real model repeats billions of times a second |
+{: .tb-full}
 
 ---
 
@@ -86,6 +84,7 @@ w i d e s t </w>      3
 | `l o` | low (5), lower (2) | 7 |
 | `o w` | low (5), lower (2) | 7 |
 | `w e` | newest (6) | 6 |
+{: .tb-full}
 
 `e s` and `s t` tie at 9.  Break the tie by order encountered and merge **`e s` -> `es`**:
 
@@ -127,6 +126,7 @@ This step explains the failures the course keeps invoking.  Take the learned mer
 | after merge 2 | `l o w est </w>` | `es t` -> `est` |
 | after merge 3 | `l o w est</w>` | `est </w>` -> `est</w>` |
 | final | **`l` `o` `w` `est</w>`** | no more rules apply |
+{: .tb-full}
 
 Four tokens, for a word the model has never seen.  It sees a prefix spelled out letter by letter plus a suffix it knows well.
 
@@ -136,7 +136,8 @@ Now ask a model how many `r`s are in *strawberry*.  A production tokenizer split
 
 Hand-tracing is the point, but seeing where the toy diverges from production is worth fifteen lines.
 
-> **Runs on your machine, not here.**  This cell needs the `tiktoken` package, which you install in your course container rather than in the page.  Copy it there and run it.
+> This cell needs the `tiktoken` package, which you install in your course container rather than in the page.  Copy it there and run it.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 # pip install tiktoken
@@ -177,7 +178,8 @@ $$
 
 The numerator is the dot product: multiply matching entries and add the products.  Each $$\lVert \mathbf{a} \rVert$$ in the denominator is a vector's length (its norm).  The result ranges from $$-1$$ (opposite meaning) through $$0$$ (unrelated) to $$1$$ (identical direction, so identical meaning).  Embedding models are trained so that paraphrases score high and unrelated texts score low.  This single idea powers semantic search, clustering, and recommendation.
 
-> **Common Misconception:** A high cosine similarity score does NOT mean the two sentences share the same words, that one logically implies the other, or that either is factually true.  It only means the embedding model placed them in a similar direction in meaning-space; they are topically close.  Two completely wrong sentences about the same topic can score 0.95 with each other.
+> A high cosine similarity score does NOT mean the two sentences share the same words, that one logically implies the other, or that either is factually true.  It only means the embedding model placed them in a similar direction in meaning-space; they are topically close.  Two completely wrong sentences about the same topic can score 0.95 with each other.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Remember two things from this section.  An embedding is a point, and cosine similarity measures the angle between two points as seen from the origin, ignoring their lengths.  Similar direction means similar topic, and nothing more.
 
@@ -233,7 +235,8 @@ $$
 
 where $$Q$$, $$K$$, and $$V$$ stack every token's query, key, and value into matrices, and $$\sqrt{d_k}$$ (the square root of the vector length) divides the scores to keep them from growing large enough to make softmax saturate.  A transformer stacks this operation dozens of times, in parallel "heads," with small neural networks in between.  That is the architecture.  The companion article has you do one layer of it by hand with three tokens, and the final Part of this article runs it inside a complete request.
 
-> **Common Misconception:** "Attention means the model is focusing, or paying attention, the way a person does."  The name is a metaphor for a weighted average, nothing more.  Every token attends to every other token every time, with a weight; none of them is ignored, and none of them is being concentrated on.  Dot products, a softmax, and a weighted sum are the entire phenomenon.
+> "Attention means the model is focusing, or paying attention, the way a person does."  The name is a metaphor for a weighted average, nothing more.  Every token attends to every other token every time, with a weight; none of them is ignored, and none of them is being concentrated on.  Dot products, a softmax, and a weighted sum are the entire phenomenon.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Remember two things from this section.  Attention replaces one fixed vector per word with a blend that depends on the neighbors, so "bank" next to "loan" ends up nearer the financial sense.  The blend weights come from query-key dot products passed through softmax.
 
@@ -288,7 +291,8 @@ This Part uses a real embedding model (a neural network that converts text to ve
 
 Ollama serves embedding models too.  The code below embeds a handful of campus FAQ sentences and searches them by meaning, not keywords.  It first calls the embedding model to convert each document to a vector (a list of numbers representing its meaning), stores all the vectors in a matrix, and then finds the closest match to any new query using cosine similarity.
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -402,6 +406,7 @@ Nothing in Parts I through III assumes what follows.  It is here because at some
 | **Unembedding / logits** | A matrix that scores the final vector against every vocabulary token, producing one logit per token | 5 logits, one per word |
 | **Cross-entropy loss** | How surprised the model is by the correct next token: $$-\log p(\text{target})$$ | $$-\log(0.5791) = 0.5464$$ |
 | **Gradient descent step** | Nudge a weight opposite its gradient so the loss goes down | one entry of $$W_U$$: $$1.0 \to 1.3514$$ |
+{: .tb-full}
 
 Throughout we use 2-dimensional vectors and a 5-word vocabulary so the arithmetic fits on a napkin.  Real models use thousands of dimensions and vocabularies of 100,000+ tokens, but every operation is exactly the one you will do here, only larger.
 
@@ -422,6 +427,7 @@ Our toy vocabulary has five tokens, each with an integer id and a learned 2-D em
 | sat | 2 | $$(1, 1)$$ |
 | ran | 3 | $$(-1, 1)$$ |
 | mat | 4 | $$(1, -1)$$ |
+{: .tb-full}
 
 **Step 1: Tokenize.**  The prompt "the cat" becomes the id sequence $$[0, 1]$$.
 
@@ -484,6 +490,7 @@ Doing this for all tokens and all three matrices:
 |---|---|---|---|
 | the $$(1,0)$$ | $$(0, 1)$$ | $$(1, 1)$$ | $$(0, 1)$$ |
 | cat $$(1,1)$$ | $$(1, 1)$$ | $$(1, 2)$$ | $$(1, 1)$$ |
+{: .tb-full}
 
 Notice that $$q$$, $$k$$, and $$v$$ are all different from the input $$x$$ and from each other; that is the whole point of the projection.  The query asks "what am I looking for?"; the key advertises "what do I offer?"; the value is "what I contribute if attended to."
 
@@ -587,6 +594,7 @@ Both components here are positive, so $$h = \text{ReLU}(z) = (1.6698, 1.0)$$ pas
 | **sat** | $$(1, 1)$$ | $$\mathbf{2.6698}$$ |
 | ran | $$(-1, 1)$$ | $$-0.6698$$ |
 | mat | $$(1, -1)$$ | $$0.6698$$ |
+{: .tb-full}
 
 **Step 3: Softmax over the vocabulary** turns logits into next-token probabilities:
 
@@ -599,10 +607,12 @@ The sum is $$24.9313$$, giving:
 | the | cat | **sat** | ran | mat |
 |---|---|---|---|---|
 | $$0.2130$$ | $$0.1090$$ | $$\mathbf{0.5791}$$ | $$0.0205$$ | $$0.0784$$ |
+{: .tb-full}
 
 **Step 4: Sample.**  At temperature 0 (greedy) the model emits the argmax: "sat."  The full request "the cat" -> "sat" is complete.  (Temperature and top-p reshape this distribution before sampling; see the *Why Different Answers Every Time?  Sampling, Temperature, and Generation* activity.)
 
-> **Common Misconception:** It is tempting to picture the model "looking up" the answer to "the cat" in some stored table of sentences.  It does no such thing.  There is no sentence "the cat sat" stored anywhere.  The model holds only weights: the embedding rows, the projection matrices $$W_Q, W_K, W_V$$, the FFN weights, and the unembedding $$W_U$$.  Given "the cat," it *computes* a fresh probability distribution over its entire vocabulary every single time, through exactly the matrix operations above.  "sat" is not retrieved; it is the token that wins an arithmetic competition.
+> It is tempting to picture the model "looking up" the answer to "the cat" in some stored table of sentences.  It does no such thing.  There is no sentence "the cat sat" stored anywhere.  The model holds only weights: the embedding rows, the projection matrices $$W_Q, W_K, W_V$$, the FFN weights, and the unembedding $$W_U$$.  Given "the cat," it *computes* a fresh probability distribution over its entire vocabulary every single time, through exactly the matrix operations above.  "sat" is not retrieved; it is the token that wins an arithmetic competition.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -696,7 +706,8 @@ The weight moved opposite its gradient, raising the "sat" logit and thus $$p(\te
 
 The cell below runs the entire request (embed, project, attend, feed-forward, unembed, softmax, sample) and then the single training step, printing each intermediate value.  Compare every line to your by-hand work; they should match to rounding.  It also does a numerical gradient check: it perturbs $$W_U[\text{sat},0]$$ slightly and confirms the measured slope of the loss equals the analytic gradient $$-0.7029$$.
 
-> **Predict first.**  This cell recomputes every number in the walkthrough above.  Pick any three of them from your own paper trace, write them down, and check those three against the output rather than skimming the whole thing.  Three numbers you verified are worth more than a page you nodded at.
+> This cell recomputes every number in the walkthrough above.  Pick any three of them from your own paper trace, write them down, and check those three against the output rather than skimming the whole thing.  Three numbers you verified are worth more than a page you nodded at.
+{: .tb-intuition data-title="Predict first"}
 
 This cell runs in your browser, so there is nothing to install.  Change the numbers and run it again as often as you like.
 
@@ -817,6 +828,7 @@ Values $$\mathbf{v}$$: river $$(1,1)$$, bank $$(2,0)$$, loan $$(0,2)$$.
 | **river** | 1 | 0 | 1 |
 | **bank** | 1 | 1 | 2 |
 | **loan** | 1 | 1 | 2 |
+{: .tb-full}
 
 **Scaled by $$\sqrt{d_k} = \sqrt{2} \approx 1.414$$:**
 
@@ -825,6 +837,7 @@ Values $$\mathbf{v}$$: river $$(1,1)$$, bank $$(2,0)$$, loan $$(0,2)$$.
 | **river** | 0.71 | 0.00 | 0.71 |
 | **bank** | 0.71 | 0.71 | 1.41 |
 | **loan** | 0.71 | 0.71 | 1.41 |
+{: .tb-full}
 
 **Softmax, row by row** (each row sums to 1; that is what makes it a distribution over "where do I look"):
 
@@ -833,6 +846,7 @@ Values $$\mathbf{v}$$: river $$(1,1)$$, bank $$(2,0)$$, loan $$(0,2)$$.
 | **river** | 0.40 | 0.20 | 0.40 | $$(0.80,\; 1.20)$$ |
 | **bank** | 0.25 | 0.25 | 0.50 | $$(0.74,\; 1.26)$$ |
 | **loan** | 0.25 | 0.25 | 0.50 | $$(0.74,\; 1.26)$$ |
+{: .tb-full}
 
 Check the "river" row: $$e^{0.71} = 2.03$$, $$e^{0} = 1.00$$, $$e^{0.71} = 2.03$$, sum $$= 5.06$$, so weights $$2.03/5.06 = 0.40$$, $$1.00/5.06 = 0.20$$, $$0.40$$.  Then $$0.40(1,1) + 0.20(2,0) + 0.40(0,2) = (0.80, 1.20)$$.
 

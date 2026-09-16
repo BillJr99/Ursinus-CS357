@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AIAccessibility
 title: 'CS357: Foundations of Artificial Intelligence - AI for Accessibility: Opportunity, Gaps, and Universal Design'
 info:
   coursenum: CS357
   purpose: "To hold two truths at once: the same AI that opens a door for a person with a disability can also fail that person at scale, and you need to be able to tell which one is happening."
+  eyebrow: "Tutorial"
 tags:
 - accessibility
 - ethics
 - universal-design
 ---
-# CS357: Foundations of Artificial Intelligence - AI for Accessibility: Opportunity, Gaps, and Universal Design
-
-## Purpose
-
-To hold two truths at once: the same AI that opens a door for a person with a disability can also fail that person at scale, and you need to be able to tell which one is happening.
-
 ## About This Tutorial
 
 Accessibility is where the promise of AI and its risk sit closest together.  The same captioning, image description, and text simplification that opens a door for one person can also encode a wrong assumption about that person, and then repeat it for everyone like them.  This self-paced tutorial is not assumed by the governance activity.  If your project touches a community partner with access needs, start here.
+{: .tb-lede}
 
 You will work through three sections.  First, you map where AI accessibility tools succeed and where they fail.  Second, you see how a single headline accuracy number can hide the failures that matter most.  Third, you audit a typical AI chat interface against real disability contexts and connect the results to concrete engineering choices.
 
@@ -32,12 +28,14 @@ You will work through three sections.  First, you map where AI accessibility too
 | **WCAG (Web Content Accessibility Guidelines)** | A set of internationally recognized standards (published by the W3C) defining what makes web content accessible to people with a wide range of disabilities. | A rule requiring sufficient color contrast between text and background so users with low vision can read the page. |
 | **Universal design** | The practice of building products and environments to be usable by the broadest possible range of people from the start, rather than retrofitting accessibility as an add-on. | Designing a ramp at a building entrance benefits wheelchair users, parents with strollers, and delivery workers alike. |
 | **Nothing about us without us** | A principle from disability justice advocacy stating that people with disabilities must be included as decision-makers (not just as test subjects) in designing tools that affect them. | Inviting actual AAC users to co-design the phrase-prediction algorithm, rather than testing the finished product on them afterward. |
+{: .tb-full}
 
 ---
 
 ## The Opportunity and the Gap
 
-> **Why this matters:** An ethical AI practitioner needs one habit above all others: holding a tool's benefit and its harm in mind at the same time.  Accessibility tools make that habit easy to practice, because every one of them has a clear benefit and a clear failure mode sitting side by side.
+> An ethical AI practitioner needs one habit above all others: holding a tool's benefit and its harm in mind at the same time.  Accessibility tools make that habit easy to practice, because every one of them has a clear benefit and a clear failure mode sitting side by side.
+{: .tb-key data-title="Why this matters"}
 
 ### Opportunity vs. Risk Matrix
 
@@ -51,6 +49,7 @@ AI-powered accessibility tools cover a wide range of capabilities and population
 | **Reading assistance** (e.g., natural language simplification, TTS) | Simplifies complex text; reads content aloud; supports users who struggle with dense written language for a variety of reasons. | Users with dyslexia, cognitive disabilities, emerging readers, and non-native English speakers. | Web-based tools require accounts; school-licensed tools are only available while enrolled at a participating institution. | Oversimplification can strip important nuance; simplification models are trained mostly on majority-style text and may handle specialized or cultural language poorly. |
 | **AAC enhancement** (augmentative and alternative communication) | Predictive text and symbol suggestion for non-speaking users, enabling faster and more natural communication than unassisted letter-by-letter selection. | Non-speaking autistic users; users with ALS, cerebral palsy, or other conditions affecting speech production. | AAC devices themselves are expensive; AI-enhanced features often require ongoing subscription fees on top of device cost. | AI-predicted phrases may not reflect the individual user's voice, personal vocabulary, or communication style, replacing their authentic expression with a statistical average. |
 | **Sign language recognition** | Translates sign language to text or speech in real time, enabling deaf signers to communicate directly with hearing non-signers without a human interpreter. | Deaf signers communicating in environments where interpreters are unavailable or unaffordable. | Requires good camera hardware and consistent lighting to function reliably; not integrated into most standard devices. | Most models are trained on a small number of signers and a single regional sign language; ASL models may fail on BSL, PSE, or regional ASL dialects. |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -72,7 +71,8 @@ Two things to remember from this section.  Nearly every access risk in the matri
 
 ## The Training Data Gap
 
-> **Why this matters:** A single accuracy number can be mathematically correct and still hide serious inequity.  This pattern recurs in every domain where AI affects underrepresented groups, and captioning is the clearest place to see it.
+> A single accuracy number can be mathematically correct and still hide serious inequity.  This pattern recurs in every domain where AI affects underrepresented groups, and captioning is the clearest place to see it.
+{: .tb-key data-title="Why this matters"}
 
 ### When Aggregate Accuracy Hides Inequity
 
@@ -86,6 +86,7 @@ An impressive overall number can hide serious failures for specific groups.  Tha
 | Regional accent (Southern US, AAVE, etc.) | 12% of test speakers | 96.8% accuracy, noticeably lower but still often described as "good." | Errors cluster on culturally specific vocabulary and pronunciation patterns underrepresented in training. |
 | Non-native English speaker | 7% of test speakers | 93.1% accuracy, approximately one error per sentence in continuous speech. | Non-native speakers are often excluded from training data collection entirely due to language and logistics barriers. |
 | Speaker with dysarthria or other motor speech difference | 3% of test speakers | 84.3% accuracy, roughly one word in six is wrong, making captions difficult to follow. | This is the group for whom real-time captioning is most critical, and they experience the worst performance. |
+{: .tb-full}
 
 The weighted average across these groups is about 99%, the headline number.  The group with the highest error rate (15.7% of words wrong) is the group for whom captioning is not a convenience but a necessary communication bridge.
 
@@ -118,9 +119,10 @@ The first option: the 2% error rate likely concentrates among speakers with spee
 
 ---
 
-> **Common Misconception:** "A high accuracy number means the system works well for everyone."
+> "A high accuracy number means the system works well for everyone."
 >
 > Aggregate accuracy metrics can be mathematically accurate and deeply misleading at the same time.  If 78% of your test set performs at 99.5% accuracy, that group will dominate any weighted average, even if a minority group experiences 84% accuracy.  In accessibility contexts, the groups with the worst performance are often the groups with the fewest alternatives.  Reporting only the aggregate number is not a statistical oversight; it is a choice about whose experience counts.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Two things to remember from this section.  A weighted average is dominated by whoever dominates the test set, so it tells you almost nothing about the smallest groups.  Report accuracy per subgroup, and pay closest attention to the subgroup with the fewest alternatives if the tool fails.  The next section turns to the design question: how do you build AI interfaces that do not recreate those gaps by accident?
 
@@ -128,7 +130,8 @@ Two things to remember from this section.  A weighted average is dominated by wh
 
 ## Universal Design and the AI Interface
 
-> **Why this matters:** Universal design means building for the broadest range of users from the start, not adding accessibility as an afterthought.  The ramp analogy captures it: a ramp built into a building's entrance on day one serves wheelchair users, parents with strollers, and delivery workers alike, while a ramp bolted onto the side six months later costs more, is harder to reach, and signals that some users were an afterthought.  The analogy stops there, though.  An interface has many more "entrances" than a building, and each default you choose is one of them.
+> Universal design means building for the broadest range of users from the start, not adding accessibility as an afterthought.  The ramp analogy captures it: a ramp built into a building's entrance on day one serves wheelchair users, parents with strollers, and delivery workers alike, while a ramp bolted onto the side six months later costs more, is harder to reach, and signals that some users were an afterthought.  The analogy stops there, though.  An interface has many more "entrances" than a building, and each default you choose is one of them.
+{: .tb-key data-title="Why this matters"}
 
 ### Accessibility Audit of a Generic AI Chat Interface
 
@@ -141,6 +144,7 @@ The table below takes five concrete design choices in a typical AI chatbot inter
 | **Keyboard navigation** | Tab order follows visual layout; some interactive elements (e.g., copy buttons) are not reachable by keyboard. | Harmful: non-linear tab order causes disorientation; some functions are completely unreachable. | Harmful: focus management is lost after the AI's response appears; the screen reader cursor is stranded. | Neutral: keyboard navigation doesn't inherently affect cognitive load. | Harmful: a poor tab order requires many extra keystrokes to reach common functions. |
 | **Response length** | The AI produces verbose multi-paragraph responses by default, with no option to request a shorter version. | Neutral: keyboard users can scroll without extra effort. | Harmful: the screen reader reads the entire response aloud before the user can interrupt or skip ahead. | Harmful: long responses overwhelm working memory; users may lose track of the question they originally asked. | Harmful: longer responses require more navigation to reach the input field for a follow-up. |
 | **Audio feedback** | No audio confirmation when a message is sent or when a new response appears. | Neutral: keyboard users can see the response appear visually. | Neutral: the screen reader automatically announces DOM changes when a response arrives. | Helpful for some users who benefit from multimodal confirmation; harmful if the sound is non-dismissible. | Helpful: confirms that an action succeeded without requiring the user to visually scan the screen. |
+{: .tb-full}
 
 ### Questions to Work Through
 

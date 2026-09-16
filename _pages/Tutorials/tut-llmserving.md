@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/LLMServing
 title: 'CS357: Foundations of Artificial Intelligence - Serving LLMs in Production'
 info:
   coursenum: CS357
   purpose: "To balance the three things that fight each other once a model is running: time to first response, cost per request, and how many requests you can serve at once."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - serving
 - latency
 - throughput
 ---
-# CS357: Foundations of Artificial Intelligence - Serving LLMs in Production
-
-## Purpose
-
-To balance the three things that fight each other once a model is running: time to first response, cost per request, and how many requests you can serve at once.
-
 ## About This Tutorial
 
 Once a model is trained and running locally, the next challenge is *serving* it efficiently: balancing how fast users get their first response, how cheaply the system runs, and how many requests it can handle simultaneously, and these three goals trade off in ways that every AI practitioner must understand.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -37,6 +34,7 @@ Once a model is trained and running locally, the next challenge is *serving* it 
 | **Prefix caching** | Reusing the already-computed KV cache for a shared prompt prefix (e.g., a common system prompt) across requests, so its prefill is computed once and pointed to, not recomputed | Ten chat requests share a 400-token system prompt; with prefix caching the prefill for those 400 tokens runs once, not ten times |
 | **Chunked prefill** | A scheduling strategy that breaks a long prefill into smaller chunks and interleaves them with ongoing decode steps, so decode latency does not stall behind a big prompt | A 4,000-token prompt is prefilled 512 tokens at a time between decode steps, keeping other users' tokens flowing |
 | **Speculative decoding** | A latency optimization where a small *draft* model proposes several tokens and the large model verifies them in one forward pass; output is mathematically identical to the large model alone | The draft model guesses "the cat sat on the"; the large model confirms 4 of 5 guesses in a single pass instead of five |
+{: .tb-full}
 
 ---
 
@@ -57,6 +55,7 @@ The table below maps five realistic use cases to the metric that dominates user 
 | **Overnight batch summarizer** | Throughput (tokens/sec) | No human is watching; the goal is total documents processed per hour per dollar | TTFT irrelevant; maximize tokens/hour |
 | **Voice assistant** | TTFT (strict) | Text-to-speech cannot begin until the first sentence is available; silence feels like a crash | TTFT < 300 ms to first sentence |
 | **Document-grounded Q&A (RAG)** | TTFT + total latency | The retrieval step already adds latency before generation begins; users expect a complete answer, not streaming | TTFT < 1 s; complete in < 5 s |
+{: .tb-full}
 
 ### Why Prefill Dominates TTFT
 
@@ -93,7 +92,8 @@ TTFT: the time to first token is too high, causing the perceived "blank" period 
 
 </details>
 
-> **Common Misconception:** Many practitioners treat "latency" as a single number and optimize it uniformly.  In reality, TTFT and TPOT are controlled by different system components: TTFT depends heavily on prompt length, model prefill speed, and queue wait time; TPOT depends on model size, quantization level, and hardware memory bandwidth.  Reducing one does not necessarily reduce the other.  Always measure both separately before deciding where to invest engineering effort.
+> Many practitioners treat "latency" as a single number and optimize it uniformly.  In reality, TTFT and TPOT are controlled by different system components: TTFT depends heavily on prompt length, model prefill speed, and queue wait time; TPOT depends on model size, quantization level, and hardware memory bandwidth.  Reducing one does not necessarily reduce the other.  Always measure both separately before deciding where to invest engineering effort.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -121,7 +121,8 @@ The code cell below simulates both strategies with a simple Python scheduler.  I
 
 The following simulation models a queue of requests with different prompt lengths and response budgets.  It estimates total wall-clock time and throughput (tokens/sec) for batch sizes of 1, 4, and 8 under both static and continuous batching strategies.  Read the comments carefully; they explain each assumption made.
 
-> **Runs on your machine, not here.**  This cell makes network calls that the page sandbox blocks.  Copy it into your course container and run it there.
+> This cell makes network calls that the page sandbox blocks.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import math
@@ -267,7 +268,8 @@ It sits idle until all 7 remaining requests finish their 400 tokens, then the en
 
 </details>
 
-> **Common Misconception:** Students often assume that "increasing batch size always improves user experience."  Batch size is a throughput knob, not a latency knob.  Increasing batch size increases the total number of tokens the system generates per second across all requests, which reduces cost and improves hardware utilization, but it can *increase* TTFT for individual requests, because a newly arriving request may have to wait in the queue for a batch slot to open.  The user-level perception is: the system handles more total load, but individual responses may start later.  Choose batch size based on your service's primary objective.
+> Students often assume that "increasing batch size always improves user experience."  Batch size is a throughput knob, not a latency knob.  Increasing batch size increases the total number of tokens the system generates per second across all requests, which reduces cost and improves hardware utilization, but it can *increase* TTFT for individual requests, because a newly arriving request may have to wait in the queue for a batch slot to open.  The user-level perception is: the system handles more total load, but individual responses may start later.  Choose batch size based on your service's primary objective.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -302,6 +304,7 @@ A startup serves a customer-support chatbot.  It handles 500,000 user turns per 
 | Hosted large model | $3.00 | $12.00 | $0 |
 | Hosted small model | $0.25 | $0.80 | $0 |
 | Local GPU server (7B model at 4-bit) | $0 | $0 | $2,400 (hardware + power amortized) |
+{: .tb-full}
 
 - *What to do*: Compute the monthly cost for each option.  Assume 30 days per month and that the local model can handle 100% of queries at acceptable quality (an optimistic assumption the team should validate).  Then compute the cost if the startup routes 70% of queries to the small hosted model and 30% to the large hosted model (a routing policy).
 - *Starter hint*: Monthly tokens = 500,000 turns/day × 30 days × (400 input + 150 output) tokens/turn.  For the routing policy, apply 70/30 to each model's per-token price separately.
@@ -340,6 +343,7 @@ Traditional serving systems manage that 35% badly, in three distinct ways:
 | **Internal** | Each request pre-reserves a *contiguous* block sized for the maximum possible output length, then leaves most of it empty | Max context 2,048 tokens, but the average user sends 200 and gets 300 back -> ~1,500 tokens of cache reserved and empty, per request |
 | **External** | Requests of different lengths finish and free their blocks, leaving gaps too small or too scattered to reuse | 500 tokens of free memory exists in total, but no single contiguous 500-token region -> a new request cannot be admitted |
 | **Redundant duplication** | The same system prompt is prefilled and cached separately for every concurrent request | 100 requests sharing one 400-token system prompt store 100 copies of its KV cache |
+{: .tb-full}
 
 The published PagedAttention research measured the result: traditional systems waste roughly **60-80% of the KV-cache memory**, the very memory that determines how many users you can serve at once.  The pattern should feel familiar: it is exactly the internal/external fragmentation that motivated paged virtual memory in operating systems half a century ago.
 
@@ -381,6 +385,7 @@ PagedAttention applies the operating-system insight directly.  Instead of one co
 | **When allocated** | Up front, at request admission | On demand, as tokens are generated |
 | **Internal fragmentation** | Up to (max length − actual length) per request | At most 15 tokens in the last partial block |
 | **Shared prefixes** | Impossible: each block is private | Two requests can point their block tables at the *same* physical blocks |
+{: .tb-full}
 
 Two consequences fall out of this design.  First, internal fragmentation drops from "up to thousands of tokens per request" to "at most 15 tokens in the final partial block."  Second (and this is what enables prefix caching in the next model) because logical blocks map through a table to physical blocks, **two different requests can map their logical blocks to the *same* physical blocks**, so a shared system prompt is stored once and pointed to many times, exactly like copy-on-write shared pages in an OS.
 
@@ -411,7 +416,8 @@ A request's logical block addresses to the physical block addresses in VRAM wher
 
 </details>
 
-> **Common Misconception:** Students often conclude that PagedAttention makes token generation *faster*.  It does not speed up the per-token math at all; attention over a paged cache runs at essentially the same speed as over a contiguous one.  What PagedAttention removes is *wasted memory*.  By reclaiming the 60-80% of KV-cache memory lost to fragmentation, it lets you fit far more concurrent requests on the same GPU. Higher throughput comes from **serving more requests at once**, not from any individual request running faster.  Memory efficiency is the lever; concurrency is the payoff.
+> Students often conclude that PagedAttention makes token generation *faster*.  It does not speed up the per-token math at all; attention over a paged cache runs at essentially the same speed as over a contiguous one.  What PagedAttention removes is *wasted memory*.  By reclaiming the 60-80% of KV-cache memory lost to fragmentation, it lets you fit far more concurrent requests on the same GPU. Higher throughput comes from **serving more requests at once**, not from any individual request running faster.  Memory efficiency is the lever; concurrency is the payoff.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ## Four Knobs You Actually Tune
 
@@ -423,6 +429,7 @@ PagedAttention and continuous batching are built into modern serving engines (vL
 | **Prefix caching** | Hashes each KV block by its token content so requests that share a prefix (system prompt, RAG boilerplate, few-shot examples) point to the same cached blocks; prefill is computed once | Enable for RAG pipelines, multi-turn chat, and coding agents, where **75-95%** prefix-hit rates are common. Time-to-first-token drops sharply because the shared prefill is skipped entirely. This is the fragmentation-fix from Model 7 turned into a feature. |
 | **Chunked prefill** | Breaks a long prefill into chunks and interleaves them with ongoing decode steps, so a big incoming prompt does not stall everyone else's streaming | Enable for throughput-heavy, mixed workloads; production reports cite **~50%** throughput gains. Tune `max_num_batched_tokens` upward alongside it. |
 | **Speculative decoding** | A small draft model proposes several tokens; the large model verifies them in one forward pass. Output is *mathematically identical* to the large model alone | Reach for it when **interactive latency matters more than raw throughput**. The gains shrink at very high concurrency, because a full batch already keeps the GPU busy; there is no idle compute for the draft model to exploit. |
+{: .tb-full}
 
 The unifying idea: the first three knobs are all about **using the KV-cache memory that PagedAttention freed up more effectively** (pack more, reuse more, stall less), while speculative decoding attacks a different resource: the GPU compute that sits *idle* between memory reads during decode.
 
@@ -453,7 +460,8 @@ Prefix caching: shared prefixes are hashed and stored once, then pointed to
 
 </details>
 
-> **Common Misconception:** It is tempting to treat `gpu_memory_utilization` as a "make it faster" dial and crank it to the maximum.  It is really a **risk/packing tradeoff**.  A higher value admits more concurrent requests (better throughput) but leaves less slack to absorb sudden bursts; when a spike arrives with no headroom, the engine hits out-of-memory and *drops* requests, worse than running slightly under-packed.  The right value is workload-specific and found by benchmarking, not by maximizing.
+> It is tempting to treat `gpu_memory_utilization` as a "make it faster" dial and crank it to the maximum.  It is really a **risk/packing tradeoff**.  A higher value admits more concurrent requests (better throughput) but leaves less slack to absorb sudden bursts; when a spike arrives with no headroom, the engine hits out-of-memory and *drops* requests, worse than running slightly under-packed.  The right value is workload-specific and found by benchmarking, not by maximizing.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -481,4 +489,5 @@ We have a model running efficiently in production, but what happens when a user 
 - "KV Cache and PagedAttention explained" (video): https://www.youtube.com/watch?v=o0gkdZBtwEg (A short, accessible walkthrough of the two mechanisms and the four tuning knobs covered in Part IV.)
 - This tutorial pairs with the *Running Your Own AI* activity (running Ollama locally) and [Hosting with Cloudflare]({{ site.baseurl }}/Tutorials/Cloudflare) (hosting inference behind a gateway facade).
 
-> **Citation**: AI Engineering from Scratch, Phase 17.  Pairs with the *Running Your Own AI* activity and [Hosting with Cloudflare]({{ site.baseurl }}/Tutorials/Cloudflare).
+> : AI Engineering from Scratch, Phase 17.  Pairs with the *Running Your Own AI* activity and [Hosting with Cloudflare]({{ site.baseurl }}/Tutorials/Cloudflare).
+{: .tb-note data-title="Citation"}

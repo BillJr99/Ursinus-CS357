@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AgentGovernance
 title: 'CS357: Foundations of Artificial Intelligence - Governing Coding Agents'
 info:
   coursenum: CS357
   purpose: "To follow one real multi-month modernization run by a rotating cast of coding agents, and to extract the charters, handoffs, and durable memory that kept it coherent."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - case-study
 - coding-agents
 - governance
 ---
-# CS357: Foundations of Artificial Intelligence - Governing Coding Agents
-
-## Purpose
-
-To follow one real multi-month modernization run by a rotating cast of coding agents, and to extract the charters, handoffs, and durable memory that kept it coherent.
-
 ## About This Tutorial
 
 This is a case study of a real production system, anonymized.  A single engineer ran a **multi-month modernization of a legacy codebase** using a rotating cast of coding agents: different vendors, different CLIs, different context windows, sessions that died mid-task when quotas ran out.  The project survived every one of those interruptions, because it was governed by one organizing idea:
+{: .tb-lede}
 
 > **The repository is the durable memory for the project.  Conversation history is not durable project state.**
 
@@ -34,6 +31,7 @@ You have already learned to write project instructions in an `AGENTS.md` file an
 | **Kickoff Prompt** | A versioned, paste-into-a-fresh-agent prompt that boots a session: role, source of authority, read order, scope boundary, prohibitions, and a required closing report. | A kickoff prompt on its fourth revision; the prompt itself is engineered and iterated like code |
 | **Decision Record** | A durable trace of *why* the project evolved as it did: RFCs for proposals, a decision log for outcomes, a forensics table for inherited work. | A log entry with decision, rationale, alternatives considered, and long-term implications |
 | **Milestone Gate** | A hard stop between project phases: the agent must halt at the end of a milestone and wait for explicit human direction before starting the next. | "Stop after Milestone 0 is complete. Do not begin Milestone 1 until explicitly directed." |
+{: .tb-full}
 
 ---
 
@@ -68,6 +66,7 @@ A new agent with no conversation history is pointed at the funnel.  After each r
 | `.ai/CURRENT_TASK.md` | "What is the active subtask, its completion criteria, and the next immediate action?" | "What did the last session actually do and verify?" |
 | `.ai/SESSION.md` | "What happened last session, what was validated, and what is the Next Safe Action?" | "Does the working tree really match what the log claims?" |
 | `git log` / working tree | Everything above, *verified against reality* | - |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -83,7 +82,8 @@ A new agent with no conversation history is pointed at the funnel.  After each r
 
    > *Hint: In the Why Different Answers Every Time?  Sampling, Temperature, and Generation tutorial you saw that models generate plausible continuations.  What makes "the file we created last time is still there" an extremely plausible (and frequently wrong) continuation?*
 
-> **Common Misconception:** "Good agents have long context windows now, so this bookkeeping is obsolete."  Context length does not survive a *vendor switch*, a *quota reset*, or a *conversation you deleted*.  The funnel is not a workaround for small contexts; it is what makes the project independent of any one agent, vendor, or session.  It is the same reason teams of humans write documentation even though each human has an excellent memory.
+> "Good agents have long context windows now, so this bookkeeping is obsolete."  Context length does not survive a *vendor switch*, a *quota reset*, or a *conversation you deleted*.  The funnel is not a workaround for small contexts; it is what makes the project independent of any one agent, vendor, or session.  It is the same reason teams of humans write documentation even though each human has an excellent memory.
+{: .tb-pitfall data-title="Common Misconception"}
 
 The Documentation Authority Rule says that when an agent's remembered context conflicts with the project documentation, the agent must:
 
@@ -128,6 +128,7 @@ A community template known as the "Karpathy `CLAUDE.md`," distilled from Andrej 
 | **Simplicity first** | The minimum code that solves the problem; nothing speculative | "Implement the smallest useful change"; the `FUTURE_WORK.md` parking lot keeps speculation out of the diff |
 | **Surgical changes** | Touch only what needs to change | "One logical engineering change" per commit; the git policy against duplicate/backup files |
 | **Goal-driven execution** | Verifiable success criteria, tests-first | Completion criteria in `CURRENT_TASK.md`; the regression rule; milestone success criteria |
+{: .tb-full}
 
 The two documents were written independently; the convergence is the interesting part.  Both discover that the failure modes of capable agents are *eagerness* failures (acting before understanding, changing more than asked, declaring victory without verification), so both spend most of their rules slowing the agent down at exactly those three moments.
 
@@ -145,7 +146,8 @@ The two documents were written independently; the convergence is the interesting
 
    > *Hint: One mechanism runs during the task loop; the other is created in response to a failure.  Consider the difference between "my change works" and "my fix stays fixed."*
 
-> **Common Misconception:** "A charter is just a longer system prompt."  A system prompt configures *one agent in one session*.  The charter is **agent-independent**: it is read by whichever agent shows up, it is versioned in Git, it survives every session boundary, and (because of the Documentation Authority Rule) it outranks whatever any individual session believes.  The system prompt is the *voice*; the charter is the *law*.
+> "A charter is just a longer system prompt."  A system prompt configures *one agent in one session*.  The charter is **agent-independent**: it is read by whichever agent shows up, it is versioned in Git, it survives every session boundary, and (because of the Documentation Authority Rule) it outranks whatever any individual session believes.  The system prompt is the *voice*; the charter is the *law*.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Why does the case-study charter make Milestone 0 (initialization: docs, scaffolding, inventory, no features) mandatory with a hard stop at its end?
 
@@ -178,6 +180,7 @@ In this part, you will examine the six files that let an agent be swapped mid-pr
 | `.ai/KNOWN_ISSUES.md` | "What verified defects and constraints should I not rediscover?" | As defects are confirmed |
 | `.ai/FUTURE_WORK.md` | "Which good ideas are deliberately deferred so they stop competing with the milestone?" | Rarely |
 | `.ai/AGENT_HANDOFF_KICKOFF.md` | "If I am a brand-new agent taking over right now, what is my first move?" | Static template |
+{: .tb-full}
 
 Two disciplines make the directory trustworthy:
 
@@ -212,7 +215,8 @@ E. A new agent (different vendor) is started later with the `AGENT_HANDOFF_KICKO
 
    > *Hint: The next agent must treat docs as authoritative, but the Reality Check row tells it exactly how to re-establish the claim against live state.  What does that turn a stale claim into, instead of a landmine?*
 
-> **Common Misconception:** "Handoff notes are for when you switch agents."  The case-study rule says *before stopping for any reason*, including finishing normally.  That is because you cannot reliably predict which stop is a swap: the session that "completed its task" on Friday becomes a handoff on Monday when the vendor has an outage and a different CLI picks up the work.  Every stop is treated as a potential handoff, so no stop is a bad one.
+> "Handoff notes are for when you switch agents."  The case-study rule says *before stopping for any reason*, including finishing normally.  That is because you cannot reliably predict which stop is a swap: the session that "completed its task" on Friday becomes a handoff on Monday when the vendor has an outage and a different CLI picks up the work.  Every stop is treated as a potential handoff, so no stop is a bad one.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Every entry in the case-study `SESSION.md` ends with a "Next Safe Action" because:
 

@@ -1,25 +1,22 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Publishing
 title: 'CS357: Foundations of Artificial Intelligence - Publishing Your Work'
 info:
   coursenum: CS357
   purpose: "To do the second half of making: publishing to GHCR, Docker Hub, or npm so that anyone can pull or install what you built."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - publishing
 - ghcr
 - npm
 - docker
 ---
-# CS357: Foundations of Artificial Intelligence - Publishing Your Work
-
-## Purpose
-
-To do the second half of making: publishing to GHCR, Docker Hub, or npm so that anyone can pull or install what you built.
-
 ## About This Tutorial
 
 Building something that works on your machine is the first half of making; **publishing** it so anyone can `docker pull` or `npm install` your work is the second half, and it is far less mysterious than it looks.  This tutorial takes you from zero accounts to published artifacts on the three registries that matter for this course: **GitHub Container Registry (GHCR)**, **Docker Hub**, and **npm**.  Today's path runs **what registries are → names, tags, and versions → publishing a container image (both registries) → publishing an npm package → automating it with CI → publishing responsibly**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -31,6 +28,7 @@ Building something that works on your machine is the first half of making; **pub
 | **Personal Access Token (PAT)** | A unique, revocable string that proves your identity to a registry, like a temporary badge you generate and can cancel, instead of sharing your actual password | `echo $CR_PAT \| docker login ghcr.io -u yourusername --password-stdin` |
 | **Scoped npm package** | An npm package prefixed with your username (`@yourusername/package-name`) to guarantee it does not collide with any other package in the global registry | `@billjr99/hello-agent` can only be published by `billjr99` |
 | **`npm pack --dry-run`** | A command that shows you exactly which files would be included in your published package, without actually publishing anything, the "check before you ship" command | Run this before every `npm publish` to make sure no credentials or scratch files are accidentally included |
+{: .tb-full}
 
 ---
 
@@ -296,7 +294,8 @@ The pre-publish review mindset (audit before you ship, not after) applies to eve
 
 ---
 
-> **Common Misconception:** Students often assume that because a file is listed in `.npmignore`, it is definitely excluded from the published package.  The safer mental model is the reverse: use the `"files"` allowlist in `package.json` to explicitly declare what *is* included, and treat everything else as excluded.  With an allowlist, a new file you add to the directory is excluded by default; you must consciously add it.  With an ignore-list, a new file is included by default; you must consciously exclude it.  The allowlist is safer precisely because the default is to exclude rather than to include, which means the cost of forgetting is "file is missing from the package" rather than "credential is published to npm."
+> Students often assume that because a file is listed in `.npmignore`, it is definitely excluded from the published package.  The safer mental model is the reverse: use the `"files"` allowlist in `package.json` to explicitly declare what *is* included, and treat everything else as excluded.  With an allowlist, a new file you add to the directory is excluded by default; you must consciously add it.  With an ignore-list, a new file is included by default; you must consciously exclude it.  The allowlist is safer precisely because the default is to exclude rather than to include, which means the cost of forgetting is "file is missing from the package" rather than "credential is published to npm."
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

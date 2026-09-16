@@ -1,25 +1,22 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/LocalModels
 title: 'CS357: Foundations of Artificial Intelligence - The Local Model Landscape'
 info:
   coursenum: CS357
   purpose: "To map the major open-weight model families (Llama, Mistral, Phi, Gemma, and their relatives) so that you can choose what to pull next instead of guessing."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - local-ai
 - models
 - ollama
 ---
 
-# CS357: Foundations of Artificial Intelligence - The Local Model Landscape
-
-## Purpose
-
-To map the major open-weight model families (Llama, Mistral, Phi, Gemma, and their relatives) so that you can choose what to pull next instead of guessing.
-
 ## About This Tutorial
 
 The assumption that useful AI requires an API call to a remote server is no longer true.  A modern laptop can run a capable language model offline, and a mid-range workstation can run models that outperform GPT-3.  This module maps **why you would run locally → the major model families and their strengths → quantization as the hardware equalizer → how to match models to tasks**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -31,6 +28,7 @@ The assumption that useful AI requires an API call to a remote server is no long
 | Ollama | A free, open-source tool (install from https://ollama.com) that manages downloading, running, and serving local LLMs through a simple CLI and REST API compatible with the OpenAI API format. | `ollama run phi4` downloads Phi-4 and starts an interactive chat session in your terminal. |
 | Mixture of Experts (MoE) | A model architecture where each input token is routed to only a subset of "expert" networks instead of the full model, giving large-model capability at lower per-token compute cost. | Mixtral 8×7B has 46.7B total parameters but activates only ~12.9B per token. |
 | Function Calling | The ability of a model to produce structured JSON that specifies which tool to call and with what arguments, required for reliable agentic pipelines. | Hermes-3-Llama-3.1-8B outputs `{"tool_call": {"name": "get_weather", "arguments": {"city": "Philadelphia"}}}` instead of describing the call in prose. |
+{: .tb-full}
 
 ---
 
@@ -79,6 +77,7 @@ Sending text to a commercial API means your text leaves your machine, traverses 
 | Qwen 2.5 | Alibaba | 0.5B-72B | Apache 2.0 for most sizes | Strongest multilingual performance across East Asian, Arabic, and European languages; specialized Qwen2.5-Coder and Qwen2.5-Math variants exceed general models on those tasks | `ollama pull qwen2.5:7b` or `ollama pull qwen2.5-coder:7b` |
 | DeepSeek-R1 | DeepSeek AI | 1.5B-671B (distilled: 7B, 14B, 70B) | MIT | Explicit chain-of-thought reasoning in output; competitive with proprietary reasoning models; distilled versions run locally and are significantly better at multi-step math than same-size general models | `ollama pull deepseek-r1:7b` or `ollama pull deepseek-r1:14b` |
 | Hermes series | Nous Research | Varies (built on Llama/Mistral base) | Inherits base model license | Fine-tuned specifically for function calling, tool use, and structured JSON outputs; widely used in production agentic pipelines where schema adherence is critical | `ollama pull hermes3:8b` |
+{: .tb-full}
 
 **Sparse Mixture of Experts (MoE):** Mixtral's architecture routes each token through only 2 of 8 expert feed-forward networks.  The model has 46.7B total parameters but uses only ~12.9B per token.  This gives large-model quality at small-model inference cost, but requires loading all 46.7B parameters into memory.
 
@@ -115,6 +114,7 @@ These are practical minimums for comfortable (not just technically possible) inf
 | 13-14B params | 16 GB RAM | 8-10 GB VRAM | 4-10 tok/s (usable for non-interactive tasks) | 8-9 GB | Higher-end laptops and desktops with dedicated GPU |
 | 30-34B params | 32 GB RAM | 20-24 GB VRAM | 1-4 tok/s (slow for interactive use) | 18-20 GB | Workstations with RTX 3090/4090 |
 | 70B params | 64 GB RAM | 40-48 GB VRAM | 0.5-2 tok/s (batch processing only) | 38-42 GB | Servers with dual A100s or large unified-memory Macs (M2 Ultra) |
+{: .tb-full}
 
 Ollama manages model download, quantization selection, and GPU/CPU layer splitting automatically.  Common commands:
 
@@ -171,6 +171,7 @@ The table below maps task categories to recommended models.  Use it as a startin
 | Long document summarization | Gemma 3 12B | 128K context window handles very long documents; strong multilingual coverage | Llama 3.1 8B (also has 128K context, slightly smaller) | `ollama pull gemma3:12b` |
 | Creative writing / narrative | Llama 3 70B (if hardware allows) | Larger models show qualitatively better creative coherence, vocabulary variety, and plot structure | Mistral 7B (surprisingly strong creative writing for its size) | `ollama pull llama3.1:70b` (requires 64 GB RAM) |
 | Multilingual support (non-English) | Qwen 2.5 7B | Strongest multilingual training across East Asian, Arabic, and European languages | Gemma 3 (strong multilingual, long context) | `ollama pull qwen2.5:7b` |
+{: .tb-full}
 
 ---
 
@@ -225,7 +226,8 @@ This is prose *describing* a function call.  An agent framework trying to parse 
 
 This is valid JSON conforming to the tool schema.  The agent framework can parse, validate, and execute it directly.  The difference is not intelligence; it is format training.  Hermes-3 was explicitly fine-tuned on thousands of examples of correct tool-call JSON so the output format is highly reliable.
 
-> **Common Misconception:** Many beginners assume that a more capable (larger) general model will automatically be better at function calling than a smaller specialized model.  In practice, **a 7B model fine-tuned for function calling (like Hermes-3) reliably outperforms a 70B general model** on structured tool-call tasks.  The 70B model is smarter but doesn't reliably produce the right JSON structure.  Use the right tool for the job.
+> Many beginners assume that a more capable (larger) general model will automatically be better at function calling than a smaller specialized model.  In practice, **a 7B model fine-tuned for function calling (like Hermes-3) reliably outperforms a 70B general model** on structured tool-call tasks.  The 70B model is smarter but doesn't reliably produce the right JSON structure.  Use the right tool for the job.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Q4 quantization of a 7B language model means:
 

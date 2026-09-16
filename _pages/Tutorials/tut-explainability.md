@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Explainability
 title: 'CS357: Foundations of Artificial Intelligence - Explainability and Human-Centric Design'
 info:
   coursenum: CS357
   purpose: "To answer the question your Demo Day audience will actually ask, which is why they should trust the thing you built."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - explainability
 - design
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - Explainability and Human-Centric Design
-
-## Purpose
-
-To answer the question your Demo Day audience will actually ask, which is why they should trust the thing you built.
-
 ## About This Tutorial
 
 Fresh from the *Governance, Policy, and the Cost of Inference* session, the final design lecture asks the question your Demo Day audience will ask: *why should I trust this?*  **Explainability** is the engineering of justified trust: surfacing evidence, exposing reasoning, communicating uncertainty, and designing the human's role on purpose.  We move from **kinds of explanation → what agents can honestly show → calibration → human-centric design heuristics for your demos**.
+{: .tb-lede}
 
 ### Key Concepts
 
@@ -33,6 +30,7 @@ Fresh from the *Governance, Policy, and the Cost of Inference* session, the fina
 | **Over-Reliance** | The failure mode where a human defers to an AI system's output without exercising independent judgment, treating AI as always correct rather than as one source of evidence to verify. | A student who copies a chatbot's answer without checking whether the cited paper actually exists is exhibiting over-reliance. |
 | **Under-Reliance** | The failure mode where a human ignores or discounts a reliable AI system's output, losing the benefit of the tool entirely. | Dismissing a well-calibrated AI-assisted diagnosis tool because "I don't trust computers" when the system is demonstrably more accurate than unaided judgment. |
 | **Expected Calibration Error (ECE)** | A number measuring how far off a model's stated confidence is from its actual accuracy, averaged across all confidence levels. An ECE of 0 means perfectly calibrated; higher is worse. | If your agent claims 90% confidence on 10 outputs but gets 6 right, its ECE contribution from that bucket is large; it was overconfident. |
+{: .tb-full}
 
 ---
 
@@ -131,7 +129,8 @@ Sketch (on paper) the confirmation screen your project shows a human before its 
 
    *Hint: Collect 10 outputs with stated confidence levels.  For each, mark whether it was correct.  Group them by confidence level (e.g., high/medium/low).  In each group, compare the average stated confidence to the actual accuracy rate.  If your "high confidence" outputs are only right 40% of the time, your system is overconfident.*
 
-> **Common Misconception:** "A more detailed explanation always means a more trustworthy system."  More words do not mean more transparency.  A long, fluent paragraph explaining an AI's reasoning can be entirely confabulated, generated to sound plausible rather than to accurately describe the computation.  The evidence hierarchy (tool logs > citations > traces > narrated rationale) matters precisely because length and fluency are not measures of accuracy.  A single cited source the user can verify is worth more than three paragraphs of confident prose.
+> "A more detailed explanation always means a more trustworthy system."  More words do not mean more transparency.  A long, fluent paragraph explaining an AI's reasoning can be entirely confabulated, generated to sound plausible rather than to accurately describe the computation.  The evidence hierarchy (tool logs > citations > traces > narrated rationale) matters precisely because length and fluency are not measures of accuracy.  A single cited source the user can verify is worth more than three paragraphs of confident prose.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -185,7 +184,8 @@ In this Part, you will translate the analysis from Parts I and II into deployabl
 
 *Societal:* Most users of AI systems have no access to traces, citations, or calibration scores.  They see a confident answer.  What obligations do AI builders have to surface explainability in ways that non-technical users can actually act on?  Who is responsible for closing the gap between what AI systems *can* explain and what they *do* explain?
 
-> *Hint:* Consider the analogy to nutritional labeling on food: the information exists but must be mandated and formatted to be actionable.  Who mandated food labels, and what did the industry argue before it was required?  Now ask: which stakeholder (developer, deployer, regulator, user) has the most leverage to close the explainability gap for AI, and which has the least incentive to do so voluntarily?
+> Consider the analogy to nutritional labeling on food: the information exists but must be mandated and formatted to be actionable.  Who mandated food labels, and what did the industry argue before it was required?  Now ask: which stakeholder (developer, deployer, regulator, user) has the most leverage to close the explainability gap for AI, and which has the least incentive to do so voluntarily?
+{: .tb-tip data-title="Hint"}
 
 ---
 

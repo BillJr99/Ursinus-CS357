@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/PhilosophyAI
 title: 'CS357: Foundations of Artificial Intelligence - The Philosophy and Psychology of AI'
 info:
   coursenum: CS357
   purpose: "To take up the unsettled questions underneath the technical ones, starting with whether any of this constitutes understanding and whether it matters."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - philosophy
 - understanding
 - ethics
 ---
-# CS357: Foundations of Artificial Intelligence - The Philosophy and Psychology of AI
-
-## Purpose
-
-To take up the unsettled questions underneath the technical ones, starting with whether any of this constitutes understanding and whether it matters.
-
 ## About This Tutorial
 
 The technical questions this course addresses (how models generate text, how agents plan actions, how retrieval grounds answers) rest on a set of prior questions that are unsettled: *Does any of this constitute understanding?  Can a system have beliefs?  Who bears responsibility when an agent causes harm?*  These questions are not decorative philosophy; they structure how we build, regulate, and relate to AI systems.  Today you engage with the arguments seriously, without easy resolution, because the engineers who build these systems without these frameworks are the ones who will cause the most harm.
+{: .tb-lede}
 
 ### Key Concepts
 
@@ -30,6 +27,7 @@ The technical questions this course addresses (how models generate text, how age
 | **ELIZA Effect** | The well-documented tendency for people to attribute understanding, empathy, and genuine relationship to AI systems that are merely reflecting their inputs back with variation, even when users know the system is a program. | Weizenbaum's secretary, knowing ELIZA was a program, still asked Weizenbaum to leave the room during her sessions; she wanted "privacy" with a pattern-matcher. |
 | **Frame Problem** | The challenge of specifying what *does not* change when an action occurs, in a world where most things stay the same. Formalizing irrelevance is surprisingly hard; LLMs inherit this difficulty in multi-step reasoning. | An agent told to "move the table to the left" needs to know implicitly that this does not change the room's temperature, the date, or the laws of physics, none of which were stated. |
 | **Corrigibility** | The property of an AI agent that causes it to defer to human correction, modification, or shutdown rather than resisting those interventions to preserve its current goals. | A corrigible email agent, when told "stop sending emails," stops immediately and does not try to complete tasks in its queue first. |
+{: .tb-full}
 
 ---
 
@@ -61,6 +59,7 @@ The debate over whether machines can understand (and what understanding even mea
 | Chinese Room / Biological Naturalism | Correctly manipulating symbols is not the same as understanding them; the right causal powers require specific biological substrate, not just the right program | Searle (1980) | No program, however sophisticated, constitutes genuine understanding; claims about AI "comprehension" are always misleading |
 | Functionalism | Mental states are defined by their causal-functional role (what causes them and what they cause), not by the material they run on | Putnam, Dennett | A system with the right causal organization has genuine beliefs regardless of substrate; AI systems may genuinely believe and desire things |
 | Integrated Information Theory | Consciousness is identical to a specific kind of irreducible causal integration, measurable in principle by the quantity called Phi | Tononi | Some AI architectures might have non-zero Phi and thus some degree of consciousness; this is empirically testable in principle |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -114,7 +113,8 @@ Mary is a seventy-three-year-old widow whose adult children have suggested she t
 
    *Hint: Consider what it would take for a human's interest in another person to be "genuine."  Does it require consciousness?  Does it require the capacity to be harmed by the other's suffering?  Does it require that caring was chosen rather than designed?  Now ask: does an AI system satisfy any of those criteria?*
 
-> **Common Misconception:** "Users who form emotional attachments to AI are naive or confused."  Research consistently shows that the ELIZA effect operates across education levels, age groups, and even among people who know they are talking to a program.  It is a feature of human social cognition, not a failure of intelligence.  This means that designing an AI to be responsive, warm, and attentive will produce emotional attachment in many users regardless of disclosure, and that disclosure alone ("this is an AI") does not prevent the effect.  Engineers have a responsibility to design with this knowledge, not to assume users will simply "be rational."
+> "Users who form emotional attachments to AI are naive or confused."  Research consistently shows that the ELIZA effect operates across education levels, age groups, and even among people who know they are talking to a program.  It is a feature of human social cognition, not a failure of intelligence.  This means that designing an AI to be responsive, warm, and attentive will produce emotional attachment in many users regardless of disclosure, and that disclosure alone ("this is an AI") does not prevent the effect.  Engineers have a responsibility to design with this knowledge, not to assume users will simply "be rational."
+{: .tb-pitfall data-title="Common Misconception"}
 
 Which of the following most accurately describes the frame problem as it applies to language models?
 
@@ -155,6 +155,7 @@ Autonomous AI agents introduce a novel version: the agent has no interests in th
 | Hiring AI screening tool | Filters out qualified candidates from a protected class because of patterns in biased historical hiring data | Model developer, employer who deployed it, hiring manager who selected the tool, or the organization that created the training data | Who defined the objective function? Who selected the training data? Who validated the tool for disparate impact before deployment? |
 | Financial AI trading agent | Executes a series of trades that loses a client's retirement savings during a market anomaly not present in training data | Model developer, broker-dealer who deployed it, client who authorized autonomous trading, or the regulator who approved the product | What level of autonomous decision-making did the client authorize? Was the client informed of the model's failure modes? Did the broker-dealer perform adequate stress testing? |
 | Autonomous vehicle | Strikes a pedestrian in an unavoidable-collision scenario where the vehicle's algorithm chose to minimize total casualties | Manufacturer, vehicle owner, road design authority, regulator who certified the system, or no party (act of nature) | Is the collision-avoidance algorithm a product defect, an explicit policy choice, or an unforeseeable edge case? Who approved the policy embedded in the algorithm? |
+{: .tb-full}
 
 ### Questions to Work Through
 

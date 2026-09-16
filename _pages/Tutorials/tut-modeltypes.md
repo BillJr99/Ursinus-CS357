@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/ModelTypes
 title: 'CS357: Foundations of Artificial Intelligence - Model Types and the Model Lifecycle'
 info:
   coursenum: CS357
   purpose: "To read a model picker correctly: base, instruct, reasoning, and vision are labels for where a model stopped along a training pipeline, not marketing adjectives."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - models
 - lifecycle
 - reasoning
 ---
-# CS357: Foundations of Artificial Intelligence - Model Types and the Model Lifecycle
-
-## Purpose
-
-To read a model picker correctly: base, instruct, reasoning, and vision are labels for where a model stopped along a training pipeline, not marketing adjectives.
-
 ## About This Tutorial
 
 When you open a model picker and see names like *base*, *instruct*, *reasoning*, or *vision*, those are not marketing adjectives; they are labels for **where a model stopped along a training pipeline**.  Every one of them begins life as the same thing: a next-token predictor.  What separates a chatbot from a "thinking" model from a model that can read a screenshot is which additional training stages were applied, and in what order.  This tutorial is the **hub** that ties together pieces the course teaches separately (pretraining, alignment, fine-tuning, and multimodality) into one lifecycle you can reason about.  When you need the mechanics of any single stage, we point you to the deep-dive activity that covers it.
+{: .tb-lede}
 
 Our arc: **pretraining → supervised fine-tuning → preference alignment → reasoning training → multimodal training**, and then a taxonomy that lets you *choose* the right model type for a task instead of guessing.
 
@@ -33,6 +30,7 @@ Our arc: **pretraining → supervised fine-tuning → preference alignment → r
 | **Chain-of-thought (CoT)** | Intermediate reasoning written out as generated tokens, which condition the tokens that follow | The mechanism behind "think step by step" |
 | **Test-time compute** | Spending more inference tokens/time on a single query to get a better answer | The cost/quality dial in Part II |
 | **Vision / multimodal model** | A model with an image encoder that projects pixels into the token stream, trained on image-text pairs | The short tour in Part III |
+{: .tb-full}
 
 ---
 
@@ -71,6 +69,7 @@ Read the pipeline top to bottom.  Each row is a training stage; the "Model type 
 | Preference alignment (RLHF / DPO) | Matching human preference rankings | Aligned **instruct** model | *RL and RLHF* |
 | Reasoning training (RL on verifiable rewards) | Long chains of thought that reach correct answers | **Reasoning** model | Part II (below) |
 | Multimodal training (encoder + projection) | Aligning image tokens with text on image-text pairs | **Vision / multimodal** model | *Multimodal Agents* |
+{: .tb-full}
 
 ```text
                     +-------------+
@@ -133,12 +132,14 @@ Chain-of-thought is just generated tokens.  When a model "reasons," it is doing 
 | "Fix this failing function and explain the bug" | Yes | Reasoning model | Errors cascade; self-checking pays off |
 | "Rephrase this sentence more politely" | No | Fast instruct model | One-shot transformation; latency matters |
 | "Plan a 5-stop trip within budget and time" | Yes | Reasoning model | Constraint satisfaction over many steps |
+{: .tb-full}
 
 The code cell below makes the mechanism concrete.  It sends the *same* arithmetic-heavy word problem to a local model two ways: once asking for the answer directly, and once asking it to think step by step first.  Watch how the number of intermediate tokens can change the final answer.  Uses the course's `chat(messages)` convention over an OpenAI-compatible local endpoint; run it locally against your running model.
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 
@@ -258,6 +259,7 @@ Now we turn the lifecycle into a decision tool.  The point of naming model types
 | **Instruct / chat** | + supervised fine-tuning + RLHF/DPO alignment | Following instructions, dialogue, drafting, classification, most everyday tasks | Named "instruct", "chat", or "-it"; answers your question directly | Balanced; the sensible default for most tasks |
 | **Reasoning** | + RL on verifiable rewards (long correct chains of thought) | Multi-step math, code, logic, planning, self-checking | Named "reasoning", "thinking", or "-o"/"-R" style; emits or hides a long think phase | Highest per-query cost and latency (pays test-time compute every call); worth it only for hard, checkable problems |
 | **Vision / multimodal** | Instruct model + image encoder + projection, trained on image-text pairs | Reading images, documents, charts, screenshots, UI | Named "vision", "-V", or "multimodal"; accepts image inputs | Higher cost than text-only; image tokens are lossy on fine detail |
+{: .tb-full}
 
 The decision, in one line: **default to a fast instruct model; escalate to a reasoning model only when the task is hard, multi-step, and checkable; reach for a vision model only when the input really is an image.**  Fine-tuning a model of any of these types for your own data or domain is a further choice; the fine-tuning-vs-RAG activity covers when to fine-tune, when to retrieve, and the LoRA shortcut.
 

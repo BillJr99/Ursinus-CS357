@@ -1,10 +1,11 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AgentSkills
 title: "CS357: Foundations of Artificial Intelligence - Agent Skills and Plugins: What They Are, How They Are Stored, and How to Publish One"
 info:
   coursenum: CS357
   purpose: "To explain what an agent skill is, how it differs from a system prompt, a context file, a plugin, and a tool, where opencode and pi find skills on disk, how to write one that fires reliably, which of its clauses a hook can actually enforce and which are requests no matter how you word them, how to publish one so a classmate can install it, and what a claim protocol has to specify when two agents share a medium."
+  eyebrow: "Tutorial"
 tags:
 - skills
 - agents
@@ -13,15 +14,10 @@ tags:
 - hooks
 ---
 
-# CS357: Foundations of Artificial Intelligence - Agent Skills and Plugins: What They Are, How They Are Stored, and How to Publish One
-
-## Purpose
-
-To explain what an agent skill is, how it differs from a system prompt, a context file, a plugin, and a tool, where opencode and pi find skills on disk, how to write one that fires reliably, which of its clauses a hook can actually enforce and which are requests no matter how you word them, how to publish one so a classmate can install it, and what a claim protocol has to specify when two agents share a medium.
-
 ## About This Tutorial
 
 A skill is a named, reusable instruction set that an agent loads and follows.  This tutorial is the reference for writing one.  It covers the spectrum from a prompt to a packaged skill, where opencode and pi look for skills on disk, the authoring principles your skills are graded against, how to publish a skill repository, and the claim protocol two agents need when they hand work to each other through a shared medium.  You use all of it in the [Skill Design Study]({{ site.baseurl }}/Assignments/SkillDesignStudy), where you author, install, and invoke two skills of your own, and in the Local Agent Lab's optional extension, where an AI tool generates one for you and you find where it is wrong.  The claim-protocol section at the end is also the reading behind the handoff design document the syllabus assigns.
+{: .tb-lede}
 
 ---
 
@@ -42,6 +38,7 @@ Start with the vocabulary.  Every term in this table appears in the lab.  Return
 | **caveman** | A community skill (`JuliusBrussee/caveman`, MIT) that compresses the agent's output by forcing terse, article-free responses. Three intensity levels, `lite`, `full`, and `ultra`, the last intended for token-budget-constrained pipelines. It reverts to normal communication for security warnings and irreversible actions, which is a design decision worth reading before you install it | `opencode skills install git+https://github.com/JuliusBrussee/caveman.git`, and the compression condition in the lab's deliberation-harness experiment |
 | **Token meter** | Reading the token counts a provider actually reports, rather than estimating them from word counts. Ollama returns `prompt_eval_count` and `eval_count` on every non-streaming call, so the measurement costs nothing | `tools/token_meter.py` in the deliberation-harness starter, whose numbers land in `summary.json` |
 | **Amortized training cost** | A request's share of the one-time carbon cost of training the model that serves it: the training total divided by an assumed number of lifetime requests. Additive to the request's own operational cost | `config/energy-profiles.json`. The denominator is an assumption, and the term moves by orders of magnitude with it |
+{: .tb-full}
 
 ---
 
@@ -55,12 +52,14 @@ There are four ways to give an agent standing guidance, and they differ in scope
 | Context file (`AGENTS.md`, `CLAUDE.md`) | Project, read at startup | Yes | Automatically at launch | Markdown file in the project root |
 | Skill | Named, surfaced on demand | No | By name, or by the agent matching its `description` | A directory containing `SKILL.md`, found on the filesystem |
 | Tool (function call) | Named, executes real code | No | By name, returns data | Code function registered with the agent runtime |
+{: .tb-full}
 
 ### Skill Versus Tool
 
 The distinction that matters most is skill versus tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a diff, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
 
-> **Watch out.** Many students assume that adding a skill to `opencode.json` makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
+> Many students assume that adding a skill to `opencode.json` makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
+{: .tb-warning data-title="Watch out"}
 
 ---
 
@@ -89,6 +88,7 @@ Both walk up from your working directory to the repository root, then fall back 
 |---|---|---|
 | **opencode** | `.opencode/skills/`, `.claude/skills/`, `.agents/skills/` | `~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/` |
 | **pi** | `.pi/skills/`, `.agents/skills/` | `~/.pi/agent/skills/`, `~/.agents/skills/` |
+{: .tb-full}
 
 Notice the overlap.  Both tools read `.agents/skills/`, so one directory of skills works in either tool with no porting step.  Use it for everything you write in this course unless you have a specific reason not to.  You get portability for free, and "it only works in my tool" is a real cost when a teammate uses the other one.
 
@@ -111,7 +111,8 @@ description: Pause and require explicit confirmation before any destructive file
 - `description` is required, and it does more work than it looks like (see below).
 - `license`, `compatibility`, and `metadata` are optional.
 
-> **Watch out.** The description is the trigger.  There is no `when` field, and this trips people up.  The agent decides whether to pull in a skill by reading its `description` against what you are currently doing.  The description is not documentation; it is the matching surface.  "Safety utilities" will not fire.  "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" will.  Write the description as *when to use this*, in the words a user would type, and your skills will fire when you expect them to.
+> The description is the trigger.  There is no `when` field, and this trips people up.  The agent decides whether to pull in a skill by reading its `description` against what you are currently doing.  The description is not documentation; it is the matching surface.  "Safety utilities" will not fire.  "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" will.  Write the description as *when to use this*, in the words a user would type, and your skills will fire when you expect them to.
+{: .tb-warning data-title="Watch out"}
 
 ### What `opencode.json` Still Holds
 
@@ -186,7 +187,8 @@ Specify exactly what the agent should produce: which headings, which labels, whi
 
 One common skill shape is the menued-question pattern, sometimes called a grill-me or interview-me skill.  The skill asks you numbered multiple-choice questions, each with a recommended default, before the agent builds anything.  The point is to collect decisions up front so the agent does not fill the gaps with guesses.  The charter interview in the lab's deliberation-harness pathway works the same way: it collects your decisions before the controller does any work.
 
-> **Watch out.** Students often write skills that say "follow best practices for X."  This phrase is not a skill instruction; it is a deference to an undefined standard.  The agent will infer "best practices" from its training data, which may not match your project's conventions at all.  Replace "follow best practices" with the specific practices you want: the exact linting rule, the exact naming convention, the exact checklist item.  A skill you authored and a skill that says "use best practices" will produce very different results on the same input.
+> Students often write skills that say "follow best practices for X."  This phrase is not a skill instruction; it is a deference to an undefined standard.  The agent will infer "best practices" from its training data, which may not match your project's conventions at all.  Replace "follow best practices" with the specific practices you want: the exact linting rule, the exact naming convention, the exact checklist item.  A skill you authored and a skill that says "use best practices" will produce very different results on the same input.
+{: .tb-warning data-title="Watch out"}
 
 ---
 
@@ -211,6 +213,7 @@ The events, and what each can see and do about a skill:
 | `PreToolUse` | Before a tool runs | The tool name and its real arguments | Block an operation the skill said not to perform |
 | `PostToolUse` | After a tool runs | The tool's output | Record what happened; rewrite an MCP result before the model reads it |
 | `Stop` | The agent wants to end its turn | Whatever a program can check | Refuse the stop while the skill's contract is unmet |
+{: .tb-full}
 
 The full treatment of these events, with eight worked recipes in both Claude Code and opencode and a table of what each recipe cannot do, is in [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part IIb and Part E.  A worked pair for a skill specifically, built on the `kickoff-interview` contract, is Model 1b in [Skills: Design One, Then Measure It](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-skills.md).
 
@@ -266,7 +269,8 @@ Two details decide whether this works for someone else:
 
 The Skill Design Study asks you to package one skill as a `.skill` archive and post it to the course discussion.  That archive is a zip of one skill directory with `SKILL.md` at its top level, which is exactly the layout above, one folder deep.
 
-> **Checkpoint.** A skill is a directory with a `SKILL.md`, found by path and fired by its description.  It is guidance the model follows by choice, so anything that must hold no matter what belongs in code.
+> A skill is a directory with a `SKILL.md`, found by path and fired by its description.  It is guidance the model follows by choice, so anything that must hold no matter what belongs in code.
+{: .tb-practice data-title="Checkpoint"}
 
 ---
 
@@ -303,6 +307,7 @@ Three media do the job.  Which one you pick matters less than whether your proto
 | **GitHub** | Issues, pull requests, and review comments in a repo both agents can reach | You want the pattern from the *Coding Agents* session, and you already have `gh` working |
 | **Obsidian vault** | `vault/handoff/inbox/` and `vault/handoff/done/`, under the same zone rules as a vault memory skill | You want to extend a vault skill you already built, and your sync is already working |
 | **A plain shared folder** | Two directories on disk. No Git, no accounts, no network | You want the no-code version, or you do not have a second agent runtime handy |
+{: .tb-full}
 
 The plain-folder route is not the lesser option.  Strip away the tooling and every one of these is the same thing: a place to put work, a place to put finished work, and a rule about who may move what between them.  If your protocol only works because GitHub happens to serialize writes for you, you have not written a protocol.
 
@@ -325,4 +330,5 @@ State each rule as a path and a condition, not as a sentiment.  "Agents should c
 2.  If your second agent were running a different model, which rule would be the first to break?
 3.  What does your protocol do if an agent claims an item and then writes a *wrong* result to `done`?
 
-> **Checkpoint.** Two agents pointed at the same unclaimed item at the same time do not have a "correct" outcome.  Either your claim protocol held, in which case you should be able to say what mechanism held it, or you produced the double work or the lost write.  The second outcome is a passing result if you diagnose it: show the evidence, name the rule that would have prevented it, and say whether that rule is enforceable in your medium or only advisory.
+> Two agents pointed at the same unclaimed item at the same time do not have a "correct" outcome.  Either your claim protocol held, in which case you should be able to say what mechanism held it, or you produced the double work or the lost write.  The second outcome is a passing result if you diagnose it: show the evidence, name the rule that would have prevented it, and say whether that rule is enforceable in your medium or only advisory.
+{: .tb-practice data-title="Checkpoint"}

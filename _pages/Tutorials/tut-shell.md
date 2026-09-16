@@ -1,25 +1,22 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Shell
 title: 'CS357: Foundations of Artificial Intelligence - The Shell, in Full'
 info:
   coursenum: CS357
   purpose: "To take you from your first terminal prompt to fluent command-line work, so that you can read and supervise every shell command an agent proposes to run on your behalf."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - shell
 - tooling
 - setup
 ---
 
-# CS357: Foundations of Artificial Intelligence - The Shell, in Full
-
-## Purpose
-
-To take you from your first terminal prompt to fluent command-line work, so that you can read and supervise every shell command an agent proposes to run on your behalf.
-
 ## About This Tutorial
 
 Your coding agent this semester, **opencode**, lives in the **terminal**, and when it acts, it acts by running shell commands on your behalf.  You cannot supervise what you cannot read.  This tutorial takes you from your very first prompt to fluent command-line work, assuming nothing.  We move from **what a shell is**, to **moving around**, to **working with files**, to **pipes and redirection**, to **environment and PATH**, to **processes**, and finally to **the terminal inside VS Code**.
+{: .tb-lede}
 
 ### If you are here from the Overview assignment
 
@@ -46,6 +43,7 @@ These terms turn up all through this tutorial.  Read them once before you start;
 | **PATH** | An ordered list of directories the shell searches, left to right, whenever you type a command name; if a program is not in any of those directories, the shell says "command not found." | `echo $PATH` reveals something like `/usr/local/bin:/usr/bin:/bin` |
 | **Pipe** | The `|` character that connects two commands by routing the first command's output directly into the second command's input, without saving anything to a file in between. | `grep "ERROR" agent.log \| wc -l` counts error lines |
 | **Environment Variable** | A named value stored in the shell's memory and passed automatically to every program the shell launches, the standard way to supply configuration and secrets without hardcoding them. | `OLLAMA_HOST=http://localhost:11434` tells the Ollama tools where the model server is |
+{: .tb-full}
 
 ---
 
@@ -95,7 +93,8 @@ The filesystem is a tree.  Paths beginning with `/` are **absolute** (measured f
 
 **In PowerShell**, `pwd`, `ls`, `cd projects`, `cd ..`, and `cd ~` all work as written.  Two differ: `ls -la` becomes `Get-ChildItem -Force` (or `dir -Force`), and `cd -` has no equivalent, so type the path instead.  `history` becomes `Get-History`.
 
-> **Try it.**  Run `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la` (in PowerShell: `mkdir ~/cs357; cd ~/cs357; pwd; ls`).  Expected: `pwd` prints a path ending in `cs357`, and the listing is empty apart from `.` and `..`.  That is the first half of the Overview's Part 1.5, Step 1.
+> Run `mkdir -p ~/cs357 && cd ~/cs357 && pwd && ls -la` (in PowerShell: `mkdir ~/cs357; cd ~/cs357; pwd; ls`).  Expected: `pwd` prints a path ending in `cs357`, and the listing is empty apart from `.` and `..`.  That is the first half of the Overview's Part 1.5, Step 1.
+{: .tb-example data-title="Try it"}
 
 ---
 
@@ -153,6 +152,7 @@ The table below covers the ten commands you will use most often when working wit
 | `tail -f agent.log` | Follows a file as it grows, printing new lines as they arrive; essential for watching live logs; press `Ctrl+C` to stop | `tail -f agent.log` | `Get-Content agent.log -Wait` |
 | `rm scratch.txt` | Permanently deletes `scratch.txt`; there is NO undo and NO trash can | `rm scratch.txt` | same |
 | `rm -r scratch_dir/` | Recursively deletes `scratch_dir/` and everything inside it; treat this like a chainsaw | `rm -r scratch_dir/` | `rm -r scratch_dir` (same, and just as permanent) |
+{: .tb-full}
 
 **Saving a file from the terminal.**  A step that says "save this as `notes.txt`" means: `cd` into the folder the file belongs in, then use one of these.
 
@@ -165,7 +165,8 @@ Confirm with `ls`, which must show the name, and `cat notes.txt`, which must sho
 
 **The two commands that deserve fear.** `rm` is permanent, and `rm -rf` (force + recursive, often combined) is the chainsaw of the shell.  The `-f` flag suppresses all confirmation prompts.  Our course governance principle applies to you exactly as it applies to your agents: destructive actions get a pause, a re-read, and ideally a backup first. `tail -f` is the opposite: a gift, and the standard way to watch a container or agent log scroll by in real time.
 
-> **Try it.**  In your `~/cs357` folder, run `touch notes.txt` (PowerShell: `New-Item notes.txt`), then `ls -la` (PowerShell: `ls`).  Expected: `notes.txt` appears with a size of 0.  An empty file is fine here; the next section fills it, because a search over an empty file finds nothing.
+> In your `~/cs357` folder, run `touch notes.txt` (PowerShell: `New-Item notes.txt`), then `ls -la` (PowerShell: `ls`).  Expected: `notes.txt` appears with a size of 0.  An empty file is fine here; the next section fills it, because a search over an empty file finds nothing.
+{: .tb-example data-title="Try it"}
 
 ## 4.  Pipes and Redirection: The Unix Superpower
 
@@ -232,7 +233,8 @@ They were overwritten and are gone, because > truncates the file before writing;
 
 ---
 
-> **Common Misconception:** Many beginners read `>` as "send output to" and assume it accumulates, the way a chat window adds new messages.  It does not.  The `>` operator truncates (erases) the destination file to zero bytes before writing the first byte of new output.  If you run `python eval.py > results.txt` a second time, the first run's data is gone before the second run even finishes.  Always use `>>` when you intend to keep previous results, and consider naming output files by run number or timestamp (e.g., `results_run1.txt`, `results_run2.txt`) when you need to compare them later.
+> Many beginners read `>` as "send output to" and assume it accumulates, the way a chat window adds new messages.  It does not.  The `>` operator truncates (erases) the destination file to zero bytes before writing the first byte of new output.  If you run `python eval.py > results.txt` a second time, the first run's data is gone before the second run even finishes.  Always use `>>` when you intend to keep previous results, and consider naming output files by run number or timestamp (e.g., `results_run1.txt`, `results_run2.txt`) when you need to compare them later.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -250,7 +252,7 @@ They were overwritten and are gone, because > truncates the file before writing;
 
    *Hint:* Consider (a) whether `logs/` might contain files that cannot be recreated, and (b) what `/dev/null` does to error messages that would otherwise warn you the deletion failed.
 
-> **Try it.**  Put three lines into the file from Section 3 and search it.  This is the second half of the Overview's Part 1.5, Step 1:
+> Put three lines into the file from Section 3 and search it.  This is the second half of the Overview's Part 1.5, Step 1:
 >
 > ```bash
 > printf 'model: llama3.2\nhost: http://localhost:11434\nagent: opencode\n' > notes.txt
@@ -259,6 +261,7 @@ They were overwritten and are gone, because > truncates the file before writing;
 > ```
 >
 > Expected: `cat` prints the three lines, and `grep -n` prints `2:host: http://localhost:11434`, the line number and the matching line.  In PowerShell, `Set-Content notes.txt "model: llama3.2","host: http://localhost:11434","agent: opencode"` writes the file and `Select-String localhost notes.txt` searches it.
+{: .tb-example data-title="Try it"}
 
 ---
 
@@ -297,7 +300,8 @@ Variables set with `export` last only until the terminal closes; to make them pe
 
 PATH is the list of directories the shell searches to find commands.  When you type `opencode` and the shell says `command not found`, the diagnosis is almost always one of two things: the tool is not installed, or it is installed somewhere not on your PATH. `which python3` shows where a command resolves (PowerShell: `Get-Command python`); `echo $PATH` shows the search list (PowerShell: `$env:Path -split ";"`).  This single concept explains most installation frustration you will ever feel.
 
-> **Try it.**  Run `which ollama` (PowerShell: `Get-Command ollama`).  Expected: a path such as `/usr/local/bin/ollama`.  If you get nothing, and you installed Ollama, open a new terminal and try again; the Overview's Troubleshooting table has the next step.
+> Run `which ollama` (PowerShell: `Get-Command ollama`).  Expected: a path such as `/usr/local/bin/ollama`.  If you get nothing, and you installed Ollama, open a new terminal and try again; the Overview's Troubleshooting table has the next step.
+{: .tb-example data-title="Try it"}
 
 ### Questions to Work Through
 
@@ -353,7 +357,8 @@ When a port is "already in use" (a constant companion in the Docker module), `ls
 
 **In PowerShell**, `Get-Process ollama` lists the process, `Stop-Process -Id 12345` stops it (add `-Force` for the `kill -9` equivalent), `Get-NetTCPConnection -LocalPort 3000` names what holds a port, and a background job is started with `Start-Job { ollama serve }` rather than `&`.
 
-> **Try it.**  With Ollama running, run `ps aux | grep ollama` (PowerShell: `Get-Process ollama`).  Expected: at least one line naming the `ollama` server, with its PID in the second column.  That PID is what `kill` would take; do not kill it now, because the Overview's Step 2 needs the server up.
+> With Ollama running, run `ps aux | grep ollama` (PowerShell: `Get-Process ollama`).  Expected: at least one line naming the `ollama` server, with its PID in the second column.  That PID is what `kill` would take; do not kill it now, because the Overview's Step 2 needs the server up.
+{: .tb-example data-title="Try it"}
 
 ### Questions to Work Through
 
@@ -441,7 +446,8 @@ In your notebook, respond at three levels:
 
 **Societal level:** Professionals who can read and write shell commands have historically had significant power over systems and data that non-technical users cannot see or audit.  As agent tools extend shell access to people who never learned the command line, what responsibilities do the builders of those permission gates carry?  Who should decide what counts as "dangerous enough to require approval"?
 
-> *Hint:* Consider two analogies: (1) a car's power steering makes driving easier without exposing the hydraulics, but driving instructors still teach the underlying mechanics.  (2) A bank's mobile app lets non-experts move money without understanding ACH transfers, but regulators set limits on what the app can do without extra authentication.  Which analogy fits agent shell tools better, and what does the better-fit analogy imply about where the "dangerous enough" threshold should be set and who should set it?
+> Consider two analogies: (1) a car's power steering makes driving easier without exposing the hydraulics, but driving instructors still teach the underlying mechanics.  (2) A bank's mobile app lets non-experts move money without understanding ACH transfers, but regulators set limits on what the app can do without extra authentication.  Which analogy fits agent shell tools better, and what does the better-fit analogy imply about where the "dangerous enough" threshold should be set and who should set it?
+{: .tb-tip data-title="Hint"}
 
 ---
 

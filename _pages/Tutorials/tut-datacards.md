@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/DataCards
 title: 'CS357: Foundations of Artificial Intelligence - Model Cards and Datasheets'
 info:
   coursenum: CS357
   purpose: "To document a dataset and a model well enough that someone else can judge whether it is fit for their purpose, and to see what an absent Distribution section costs."
+  eyebrow: "Tutorial"
 tags:
 - documentation
 - ethics
 - data
 ---
-# CS357: Foundations of Artificial Intelligence - Model Cards and Datasheets
-
-## Purpose
-
-To document a dataset and a model well enough that someone else can judge whether it is fit for their purpose, and to see what an absent Distribution section costs.
-
 ## About This Tutorial
 
 An AI system is only as trustworthy as the data it was trained on and the documentation that describes its behavior.  Yet for most of the industry's history, models have shipped with no documentation at all: no description of what they can do, what they cannot do, who they were designed for, or what biases they may carry.  This tutorial introduces two foundational documentation frameworks: **Datasheets for Datasets** (Gebru et al., 2018) and **Model Cards** (Mitchell et al., 2019).  These frameworks establish what responsible disclosure looks like for the data and models that power AI systems, including the agents you build in this course.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,12 +26,14 @@ An AI system is only as trustworthy as the data it was trained on and the docume
 | **Sampling Bias** | A systematic error that occurs when the data collection process over-represents some groups and under-represents others, causing a model trained on that data to perform worse on underrepresented groups. | The 2015 image classifier was trained on data scraped from platforms where white users predominated, so darker-skinned faces were underrepresented, leading to harmful misclassifications discovered after public deployment. |
 | **Right to Erasure** | A right under GDPR (Article 17) that allows individuals to request that their personal data be deleted from a dataset or system. Technically challenging for AI because it may require removing data from training sets and retraining the model. | If a user whose posts appear in a customer service transcript dataset requests deletion under GDPR, compliance may require retraining the model, a process that can cost tens of thousands of dollars. |
 | **Disaggregated Evaluation** | Reporting model performance separately for different demographic subgroups (by age, gender, language, race, etc.) rather than only reporting an overall average. An aggregate accuracy of 92% can hide 65% accuracy for a minority subgroup. | A model card that reports "overall accuracy: 92%" without disaggregation may be hiding the fact that accuracy for non-native English speakers is 71%. |
+{: .tb-full}
 
 ---
 
 ## Why Documentation Matters
 
-> **Why this matters:** Think of a datasheet as a nutrition label for AI. You would not serve food at a school cafeteria without knowing the ingredients, especially if students have allergies.  Yet for most of the last decade, AI systems were deployed at scale with no equivalent disclosure.  The failures that resulted were not random: they were predictable from the training data's properties, but no one looked because no one was required to document those properties.
+> Think of a datasheet as a nutrition label for AI. You would not serve food at a school cafeteria without knowing the ingredients, especially if students have allergies.  Yet for most of the last decade, AI systems were deployed at scale with no equivalent disclosure.  The failures that resulted were not random: they were predictable from the training data's properties, but no one looked because no one was required to document those properties.
+{: .tb-key data-title="Why this matters"}
 
 The most common way AI systems fail in deployment is not because the model made a random error; it is because the model was trained on data that did not represent the deployment context, and no one knew.  This failure pattern is called **undocumented dataset risk**: the training data has properties (bias, staleness, skewed provenance, missing consent) that are unknown to the team deploying the model, so they cannot account for those properties in their system design.
 
@@ -45,6 +43,7 @@ The most common way AI systems fail in deployment is not because the model made 
 | **Legal** | License, consent, and copyright information is on record; legal review can proceed before launch; the team knows which data can be used commercially and which cannot | Legal exposure is unknown until a lawsuit or regulator inquiry arrives; data may need to be deleted and the model retrained from scratch; fines and takedowns arrive as surprises |
 | **Reproducibility** | Dataset version number, collection date, and preprocessing steps are logged; future teams can replicate results, compare against baselines, and detect if the model's behavior has drifted | Results cannot be reproduced; different teams reach different conclusions from "the same" experiment; you cannot tell if a new model version is actually better because you cannot reconstruct the original evaluation conditions |
 | **Auditability** | Regulators, courts, and third-party auditors can inspect the data provenance trail and verify that the system was built responsibly; you can demonstrate compliance under the EU AI Act's High Risk conformity assessment | Auditability is impossible without provenance; regulatory penalties increase when you cannot demonstrate due diligence; litigation discovery becomes the first time anyone maps what data went into the system |
+{: .tb-full}
 
 **Real failure pattern**: In 2015, a major tech company's image classifier labeled photographs of Black people with animal-related categories.  Postmortem analysis revealed the training set underrepresented darker skin tones because the web scrape that created it oversampled images from predominantly white-user platforms.  No datasheet existed.  No one had documented the sampling strategy, so no one caught the problem during development.  The harm was discovered by the public, not the team, and by then, the model had been deployed at scale.
 
@@ -66,7 +65,8 @@ The most common way AI systems fail in deployment is not because the model made 
 
 ## The Datasheet for Datasets Framework
 
-> **Why this matters:** The Datasheet for Datasets framework works like a standardized intake form at a doctor's office; it forces you to ask the same structured questions about every dataset so that nothing important is omitted.  Without a template, teams document whatever they happen to think of, which means they consistently skip the questions that are hardest to answer but most important for identifying risk.
+> The Datasheet for Datasets framework works like a standardized intake form at a doctor's office; it forces you to ask the same structured questions about every dataset so that nothing important is omitted.  Without a template, teams document whatever they happen to think of, which means they consistently skip the questions that are hardest to answer but most important for identifying risk.
+{: .tb-key data-title="Why this matters"}
 
 Gebru et al. (2018) proposed a standard template for dataset documentation, analogous to datasheets for electronic components.  Each datasheet answers a structured set of questions so that anyone who uses the dataset knows what it contains, where it came from, how it was processed, and what it may or may not be used for.
 
@@ -79,6 +79,7 @@ Gebru et al. (2018) proposed a standard template for dataset documentation, anal
 | **Uses** | What tasks is this dataset appropriate for? What tasks should it NOT be used for, and why? Are there potential harms from specific misuses that the creators are aware of? | Provides the "out of scope" warning that enables downstream developers to make informed decisions rather than assuming the dataset is general-purpose |
 | **Distribution** | Under what license is the dataset released? Are there export restrictions, consent limitations, or platform terms of service that restrict redistribution? Does distribution comply with applicable privacy law (GDPR, CCPA, HIPAA)? | The most commonly incomplete section, and the one with the largest legal consequences when missing |
 | **Maintenance** | Who is responsible for the dataset going forward? How will errors or newly discovered harms be corrected? Will the dataset be updated as the world changes? Is there a mechanism for data subjects to request removal of their data? | Without a maintenance plan, datasets become stale, incorrect, and non-compliant with privacy rights laws like GDPR's right to erasure (Article 17 of the EU's General Data Protection Regulation, which gives EU residents the legal right to demand their personal data be deleted) |
+{: .tb-full}
 
 A team publishes a dataset of 50,000 customer service chat transcripts scraped from a public online forum.  The transcripts contain real user complaints and agent responses.  The team's datasheet includes the file format, total size, and a sample of ten transcripts.  Which of the following is the MOST serious omission from their datasheet?
 
@@ -93,7 +94,8 @@ They did not document consent, licensing, or whether users of the public forum a
 
 </details>
 
-> **Common Misconception:** Many developers assume that if data is "public" (visible without a login, indexed by search engines), then collecting, storing, and redistributing it is legally and ethically unproblematic.  In reality, "publicly visible" is a technical fact about accessibility.  "Consent to redistribution" is a legal and ethical fact about what rights the data subject granted.  A comment posted on a public forum is visible to anyone who visits, but the person who wrote it did not necessarily consent to having it scraped, stored permanently in a dataset, used to train a commercial AI, or redistributed globally under a CC0 license.  The Distribution section of the Datasheet is where this distinction must be addressed.
+> Many developers assume that if data is "public" (visible without a login, indexed by search engines), then collecting, storing, and redistributing it is legally and ethically unproblematic.  In reality, "publicly visible" is a technical fact about accessibility.  "Consent to redistribution" is a legal and ethical fact about what rights the data subject granted.  A comment posted on a public forum is visible to anyone who visits, but the person who wrote it did not necessarily consent to having it scraped, stored permanently in a dataset, used to train a commercial AI, or redistributed globally under a CC0 license.  The Distribution section of the Datasheet is where this distinction must be addressed.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -113,7 +115,8 @@ They did not document consent, licensing, or whether users of the public forum a
 
 ## Model Cards
 
-> **Why this matters:** A model card is the document a deployer needs to answer the question "should I use this model for my specific application?"  Without it, deployers are guessing, and the consequences of a wrong guess in a high-stakes domain (hiring, healthcare, education) fall on the people the model affects, not the developer who deployed it.  Publishing a model card is the minimum act of professional responsibility for anyone who releases a model for others to use.
+> A model card is the document a deployer needs to answer the question "should I use this model for my specific application?"  Without it, deployers are guessing, and the consequences of a wrong guess in a high-stakes domain (hiring, healthcare, education) fall on the people the model affects, not the developer who deployed it.  Publishing a model card is the minimum act of professional responsibility for anyone who releases a model for others to use.
+{: .tb-key data-title="Why this matters"}
 
 Mitchell et al. (2019) proposed **Model Cards** as the model-level analogue to Datasheets for Datasets, a standardized document that accompanies a trained model and describes its intended use, performance across subgroups, and ethical considerations.  Model Cards are now published by major AI labs (Google, HuggingFace, Anthropic) and are increasingly required by enterprise procurement policies.
 
@@ -129,6 +132,7 @@ Mitchell et al. (2019) proposed **Model Cards** as the model-level analogue to D
 | **Quantitative Analyses** | Disaggregated evaluation results (results reported separately for each demographic group, not just a single overall average that can hide poor performance on subgroups), performance broken down by subgroup, domain, language, or demographic, not just aggregate averages | The section where "92% accuracy" becomes "92% overall, 71% for non-native English speakers, 88% for medical domain"; the disaggregated numbers tell the real story |
 | **Ethical Considerations** | Known risks from using the model; populations that may be harmed by specific use cases; mitigation measures the developer has implemented; residual risks the deployer must address | Transfers risk-awareness to the deployer; without this section, deployers cannot make an informed decision about whether the residual risks are acceptable for their context |
 | **Caveats and Recommendations** | What deployers should know before deploying; recommended additional testing in the deployer's specific context; known gaps in the evaluation that the deployer should fill | A practical "read before deploying" checklist, often the most actionable section for teams making deployment decisions |
+{: .tb-full}
 
 **Course connection**: The Hermes-3 model used in the local AI lab is an open-weight model.  Its HuggingFace page includes a partial model card.  As part of the exercise below, you will identify which sections are missing or incomplete.
 

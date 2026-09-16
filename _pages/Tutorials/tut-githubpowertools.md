@@ -1,25 +1,22 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/GitHubPowerTools
 title: 'CS357: Foundations of Artificial Intelligence - GitHub Superpowers for AI Developers'
 info:
   coursenum: CS357
   purpose: "To turn any GitHub repository into something an agent can actually read, using gitingest, deepwiki, github.dev, and the other domain-swap tricks."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - github
 - tooling
 - agents
 ---
 
-# CS357: Foundations of Artificial Intelligence - GitHub Superpowers for AI Developers
-
-## Purpose
-
-To turn any GitHub repository into something an agent can actually read, using gitingest, deepwiki, github.dev, and the other domain-swap tricks.
-
 ## About This Tutorial
 
 This tutorial introduces five URL **domain-swap tricks** that unlock new superpowers when working with GitHub repositories.  We move from **the problem of feeding code to AI → domain-swap tools that solve it → grounding agents in real code → navigating unfamiliar codebases in minutes**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -31,6 +28,7 @@ This tutorial introduces five URL **domain-swap tricks** that unlock new superpo
 | **Architecture diagram** | A visual map of a codebase's modules, their responsibilities, and how data flows between them | `gdagram.com` generates one automatically from a repo URL |
 | **Hallucination** | A model generating plausible-sounding but factually incorrect output, often about APIs it learned about during training but that have since changed | A model inventing a method name that never existed in the `requests` library |
 | **Grounding** | Connecting a model's responses to verified, current information rather than relying solely on training data | Pointing an agent at a live MCP server instead of asking it to recall an API from memory |
+{: .tb-full}
 
 ---
 
@@ -53,6 +51,7 @@ The table below maps each tool to its purpose.  Some tools belong in your daily 
 | `getmcp.io` | Turns a repo into a live MCP server | Ground an agent in real, current API code | Situational | Yes, public repos only |
 | `deepwiki.com` | Auto-generates Wikipedia-style docs + Q&A for any repo | Understand a framework you've never seen before | Situational | Yes, public repos only |
 | `gdagram.com` | Generates an interactive architecture diagram | See module structure and data flow before reading code | Situational | Yes, public repos only |
+{: .tb-full}
 
 ---
 
@@ -107,7 +106,8 @@ Work through the following steps using the `litellm` repository (`github.com/Ber
 
    > *Hint: The gitingest text dump preserves file boundaries but loses the IDE's navigation features.  The browser editor preserves navigation but requires you to open files one at a time.*
 
-> **Common Misconception:** Students often assume that pasting a codebase into a model's context gives the model "access" to the code in the way a compiler has access, allowing it to run the code or verify that it compiles.  The model only reads the text.  It cannot execute the code, check for import errors, or confirm that dependencies are installed.  It will reason about the code as text, which means it can misinterpret dynamic behavior, miss runtime configuration, and confidently describe code paths that are never actually reached.
+> Students often assume that pasting a codebase into a model's context gives the model "access" to the code in the way a compiler has access, allowing it to run the code or verify that it compiles.  The model only reads the text.  It cannot execute the code, check for import errors, or confirm that dependencies are installed.  It will reason about the code as text, which means it can misinterpret dynamic behavior, miss runtime configuration, and confidently describe code paths that are never actually reached.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -197,7 +197,8 @@ The agent can query the MCP server for current method signatures and include tha
 
 </details>
 
-> **Common Misconception:** "Grounding" does not change the model itself; no weights are updated, and the model does not "learn" the library.  It is simply given accurate, current text in its context window at the moment it needs to generate API calls.  Remove the MCP server from the configuration and the hallucinations return, because the underlying model still only knows what was in its training data.
+> "Grounding" does not change the model itself; no weights are updated, and the model does not "learn" the library.  It is simply given accurate, current text in its context window at the moment it needs to generate API calls.  Remove the MCP server from the configuration and the hallucinations return, because the underlying model still only knows what was in its training data.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -259,7 +260,8 @@ This is a useful starting point but should be verified with a code search, becau
 
 </details>
 
-> **Common Misconception:** Automatically generated architecture diagrams show the relationships that are visible through static analysis of import statements and class definitions.  They typically miss plugins loaded at runtime, modules imported conditionally based on configuration, and monkey-patching.  Treat the diagram as a hypothesis about the structure (a helpful starting point) and confirm any dependency you plan to remove with a full-text search (`Ctrl+Shift+F` in `github.dev`).
+> Automatically generated architecture diagrams show the relationships that are visible through static analysis of import statements and class definitions.  They typically miss plugins loaded at runtime, modules imported conditionally based on configuration, and monkey-patching.  Treat the diagram as a hypothesis about the structure (a helpful starting point) and confirm any dependency you plan to remove with a full-text search (`Ctrl+Shift+F` in `github.dev`).
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

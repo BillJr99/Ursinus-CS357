@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/RESTLLMAPI
 title: 'CS357: Foundations of Artificial Intelligence - RESTful LLM Access'
 info:
   coursenum: CS357
   purpose: "To talk to a language model over HTTP directly, which is the protocol every provider-agnostic AI library is using under the hood."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - api
 - rest
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - RESTful LLM Access
-
-## Purpose
-
-To talk to a language model over HTTP directly, which is the protocol every provider-agnostic AI library is using under the hood.
-
 ## About This Tutorial
 
 This tutorial develops the mechanics of talking to a language model over HTTP, the protocol that all provider-agnostic AI code uses under the hood.  We move from **what REST is → the two key LLM endpoints → writing the same request three ways → tool calling over the API → switching providers by changing one line → building prompts from templates, voting for consensus, and chaining stages with JSON**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -37,6 +34,7 @@ This tutorial develops the mechanics of talking to a language model over HTTP, t
 | **Prompt Template** | A string with named `{}` blanks that you fill at call time; the model sees only the rendered result | `"Context:\n{context}\n\nQuestion: {question}".format(...)` |
 | **Consensus / Self-Consistency** | Sampling the same prompt several times at nonzero temperature and aggregating (e.g., majority vote) to reduce variance | 5 samples of a sentiment label -> `Counter` majority vote |
 | **Pipeline / Chaining** | Feeding one prompt's structured (JSON) output into the blanks of the next prompt's template | Stage 1 emits `{"topic": "billing", "urgent": true}` -> fills Stage 2's `{topic}` blank |
+{: .tb-full}
 
 ---
 
@@ -58,7 +56,8 @@ This tutorial uses a locally running Ollama instance.  Verify it is running befo
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -94,6 +93,7 @@ You have used websites and mobile apps your whole life without knowing they comm
 |---|---|---|---|
 | `/v1/models` | `GET` | List all models currently loaded on the server | Before sending a chat request, to confirm the model name |
 | `/v1/chat/completions` | `POST` | Send a conversation and receive the model's reply | Every inference call in your agent |
+{: .tb-full}
 
 The `/v1/` prefix is the **version marker**: it signals that this is the first stable version of the API. If the API changes incompatibly in the future, a new `/v2/` prefix can coexist.  This versioning pattern is standard REST design.
 
@@ -112,6 +112,7 @@ The difference matters in practice because the two APIs use different field name
 | Request field for disabling streaming | `"stream": false` | `"stream": false` (same) |
 | **Response field for the reply text** | `message.content` | `choices[0].message.content` |
 | **Default streaming behavior** | Streams by default | Does not stream by default |
+{: .tb-full}
 
 The critical difference is in the response structure.  Code that reads `response["message"]["content"]` works against the native API but breaks silently against the OpenAI-compatible API, which wraps the reply inside a `choices` array.  This is the source of many confusing "empty response" bugs.
 
@@ -128,7 +129,8 @@ In a response from `POST /v1/chat/completions`, which JSON path contains the mod
 
 </details>
 
-> **Common Misconception:** "The OpenAI Python SDK only works if you have an OpenAI account and API key."  This is false.  The SDK's `OpenAI` client accepts a `base_url` parameter that redirects every call to any server that speaks the same protocol.  You still need to pass an `api_key` argument, but the server ignores it; Ollama accepts any string, including `"ollama"` or `"not-a-real-key"`.  The SDK is a convenience wrapper around HTTP; it does not enforce which server you talk to.
+> "The OpenAI Python SDK only works if you have an OpenAI account and API key."  This is false.  The SDK's `OpenAI` client accepts a `base_url` parameter that redirects every call to any server that speaks the same protocol.  You still need to pass an `api_key` argument, but the server ignores it; Ollama accepts any string, including `"ollama"` or `"not-a-real-key"`.  The SDK is a convenience wrapper around HTTP; it does not enforce which server you talk to.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -144,7 +146,8 @@ Understanding what the SDK does for you requires seeing what happens without it.
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import subprocess
@@ -237,7 +240,8 @@ The server sends the complete response in a single HTTP response body instead of
 
 </details>
 
-> **Common Misconception:** "Streaming makes the model generate faster."  The model generates tokens at the same rate regardless of whether streaming is enabled.  Streaming changes how the tokens are *delivered*: in chunks as they are produced versus all at once at the end.  For a user watching a chat interface, streaming feels faster because text appears immediately.  For a program that processes the final answer, non-streaming is simpler because the full JSON arrives in one piece.
+> "Streaming makes the model generate faster."  The model generates tokens at the same rate regardless of whether streaming is enabled.  Streaming changes how the tokens are *delivered*: in chunks as they are produced versus all at once at the end.  For a user watching a chat interface, streaming feels faster because text appears immediately.  For a program that processes the final answer, non-streaming is simpler because the full JSON arrives in one piece.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -264,6 +268,7 @@ $$
 | `stream` | bool | No (default false for /v1/) | Whether to use server-sent events for incremental delivery |
 | `tools` | array | No | Function definitions the model may invoke |
 | `tool_choice` | string or object | No | Whether the model must call a tool, may call one, or must not |
+{: .tb-full}
 
 ---
 
@@ -277,7 +282,8 @@ The model does not execute the function.  The model only decides *which* functio
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import json
@@ -382,7 +388,8 @@ Examine the printed trace from the tool loop above, or walk through it with your
 
    > *Hint: `tool_choice: "auto"` means the model decides whether a tool call is appropriate.  A math question does not match the description of `get_weather`, so the model should return plain text with `tool_calls` absent or `None` from the response.*
 
-> **Common Misconception:** Setting `tool_choice: "auto"` does not guarantee the model will always call a tool.  It means the model may call a tool if it judges one to be appropriate.  The model will return plain text when it believes it can answer without using a tool.  If you need to force a tool call (for testing, or to guarantee structured output), set `tool_choice: {"type": "function", "function": {"name": "your_tool_name"}}`.
+> Setting `tool_choice: "auto"` does not guarantee the model will always call a tool.  It means the model may call a tool if it judges one to be appropriate.  The model will return plain text when it believes it can answer without using a tool.  If you need to force a tool call (for testing, or to guarantee structured output), set `tool_choice: {"type": "function", "function": {"name": "your_tool_name"}}`.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -400,7 +407,8 @@ The developer experience is identical across providers.  You write the request o
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 
@@ -494,7 +502,8 @@ Instantiate the `OpenAI` client with `base_url="http://localhost:11434/v1"` and 
 
 </details>
 
-> **Common Misconception:** Switching providers is not always as simple as changing `base_url` and `model`.  The OpenAI-compatible specification defines a common *structure*, but not every optional field is supported by every server.  Features like `logprobs`, `response_format`, `parallel_tool_calls`, and streaming with tool calls are implemented inconsistently.  Always test a new provider with the specific features your agent relies on before treating portability as guaranteed.
+> Switching providers is not always as simple as changing `base_url` and `model`.  The OpenAI-compatible specification defines a common *structure*, but not every optional field is supported by every server.  Features like `logprobs`, `response_format`, `parallel_tool_calls`, and streaming with tool calls are implemented inconsistently.  Always test a new provider with the specific features your agent relies on before treating portability as guaranteed.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -514,7 +523,8 @@ The clearest demonstration is a **before/after** contrast on a `{context}` blank
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -593,7 +603,8 @@ A single fully rendered string with `docs` and `q` substituted in place of the b
 
 </details>
 
-> **Common Misconception:** "Injecting context into a template gives the model a persistent knowledge base."  It does not.  The injected text lives only in *this one request*.  The next call starts from a blank template again; if you want the model to still "know" the fact, you must fill the blank again.  Templating is stateless by construction; persistence is your program's job (re-fill from memory or re-retrieve from a store every call).
+> "Injecting context into a template gives the model a persistent knowledge base."  It does not.  The injected text lives only in *this one request*.  The next call starts from a blank template again; if you want the model to still "know" the fact, you must fill the blank again.  Templating is stateless by construction; persistence is your program's job (re-fill from memory or re-retrieve from a store every call).
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -607,7 +618,8 @@ A single sample from a model is a roll of the dice: at `temperature > 0` the sam
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -675,7 +687,8 @@ The tally reports both a winner *and* an agreement fraction.  A 5/5 sweep and a 
 
     > *Hint: The current `next(..., ans)` fallback stuffs the raw model text in as a "vote," which can create spurious singleton labels. Mapping unrecognized output to `ABSTAIN` keeps the denominator honest: `3 POSITIVE / 1 NEGATIVE / 1 ABSTAIN` truthfully reports that one sample failed, rather than hiding it or inflating a real label's count.*
 
-> **Common Misconception:** "More samples always means a more correct answer."  Voting reduces *variance*, not *bias*.  If the model is systematically wrong about something (it consistently misreads a domain term), all five samples will agree on the wrong answer and consensus will report high confidence in a mistake.  Self-consistency improves reliability only when the correct answer is the single most likely one and errors are scattered; it cannot fix a model that is confidently and consistently wrong.
+> "More samples always means a more correct answer."  Voting reduces *variance*, not *bias*.  If the model is systematically wrong about something (it consistently misreads a domain term), all five samples will agree on the wrong answer and consensus will report high confidence in a mistake.  Self-consistency improves reliability only when the correct answer is the single most likely one and errors are scattered; it cannot fix a model that is confidently and consistently wrong.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -691,7 +704,8 @@ The most powerful use of templates is **pipelining**: the output of one prompt b
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests, json
@@ -791,7 +805,8 @@ JSON is machine-parseable, so the program can branch, route, and fill later temp
 
 </details>
 
-> **Common Misconception:** "If I ask for JSON, I will always get valid JSON." Local models frequently return JSON wrapped in Markdown fences, prefaced with prose, or subtly malformed (trailing commas, single quotes).  A production pipeline treats stage output as *untrusted* until parsed: extract the brace-delimited span, `json.loads` inside a `try`, validate the expected keys, and fall back to a safe default or a re-ask.  Never let a downstream stage assume the upstream JSON was well-formed.
+> "If I ask for JSON, I will always get valid JSON." Local models frequently return JSON wrapped in Markdown fences, prefaced with prose, or subtly malformed (trailing commas, single quotes).  A production pipeline treats stage output as *untrusted* until parsed: extract the brace-delimited span, `json.loads` inside a `try`, validate the expected keys, and fall back to a safe default or a re-ask.  Never let a downstream stage assume the upstream JSON was well-formed.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
