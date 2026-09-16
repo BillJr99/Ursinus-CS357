@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/SamplingAndTemperature
 title: 'CS357: Foundations of Artificial Intelligence - Why Different Answers Every Time? Sampling, Temperature, and Generation'
 info:
   coursenum: CS357
   purpose: "To explain why the same prompt gives different answers: a language model computes a probability distribution over the next token, the system samples from it, and temperature reshapes that distribution before the draw."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - sampling
 - temperature
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - Why Different Answers Every Time? Sampling, Temperature, and Generation
-
-## Purpose
-
-To explain why the same prompt gives different answers: a language model computes a probability distribution over the next token, the system samples from it, and temperature reshapes that distribution before the draw.
-
 ## About This Tutorial
 
 You have already turned this dial twice.  In *Running Your Own AI* you set temperature to 0, then to 1, and watched six answers to the same prompt.  In the *Agent Loop* activity you pinned it to 0 so the loop's parser would find the same strings every run.  You know what the dial does.  This tutorial explains what it is.
+{: .tb-lede}
 
 The short answer, and the resolution of the mystery your team formed hypotheses about in *Welcome: What Is AI, and What Is an Agent?*: a language model computes a **probability distribution over the next word-piece (token)**, and the system samples from it, rolling a weighted die at each step.  Temperature is the number that reshapes the die before the roll.
 
@@ -39,6 +36,7 @@ The tutorial moves from next-token prediction → softmax and temperature → to
 | **Greedy decoding** | Always picking the single most probable next token, equivalent to temperature = 0.  Deterministic, but sometimes repetitive, and the locally best pick is not always the globally best one | An agent with temperature=0.0 that always picks the same action regardless of context |
 | **Test-time compute** | Computation spent while answering rather than while training.  A fixed-depth model can spend more of it only by emitting more tokens, so the length of what a model writes is the amount of thinking it does | A model that writes two hundred words of steps before its answer has run two hundred more forward passes than one that answers immediately |
 | **Reasoning (thinking) model** | A model additionally trained with reinforcement learning against automatically checkable outcomes, so it writes a long intermediate reasoning stream before its answer and learns to backtrack and self-check | `deepseek-r1` emitting its work between `<think>` tags in Part III, catching its own misreading of a discount problem |
+{: .tb-full}
 
 ---
 
@@ -99,12 +97,14 @@ Temperature, top-k, and top-p decide *which* token to pick.  A few other paramet
 | `repeat_penalty` | `frequency_penalty` / `presence_penalty` | Down-weights tokens the model has already produced, discouraging loops and repetition. | The model gets stuck repeating a word or phrase, especially at low temperature. |
 | `stop` | `stop` | A list of strings that, when generated, immediately end the response. | You want the model to halt at a delimiter: e.g. `"\n\n"`, `"</answer>"`, or a role tag. |
 | `seed` | `seed` | Fixes the random draw so a given prompt + settings reproduces the same output (see Exercise 1). | You need reproducible experiments or tests. |
+{: .tb-full}
 
 Two notes on the penalties.  Ollama exposes a single `repeat_penalty` (a multiplier, typically 1.0-1.3).  The OpenAI API splits the idea into `frequency_penalty` (scales with how *often* a token has appeared) and `presence_penalty` (a flat penalty once a token appears *at all*).  Both attack the same failure, degenerate repetition, from slightly different angles.
 
 The cell below exercises three of these knobs: a short `num_predict` cap, a `repeat_penalty` to break loops, and a `stop` sequence.
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 {% raw %}
 ```python
@@ -138,7 +138,8 @@ print(generate("Write a numbered list of three fruits.", temperature=0.0, stop=[
 
 > **Note:** On an OpenAI-compatible endpoint (including OpenWebUI's `/api/chat/completions`), these move out of the `options` dict to the top level of the request body, and `num_predict` becomes `max_tokens`.
 
-> **Common Misconception:** The `top_k` in this tutorial is a **sampling** parameter; it limits which *next tokens* the model may choose from.  It is a different knob from the `top_k` (often written `k` or `n_results`) you will meet in Retrieval-Augmented Generation (RAG), where it means "how many *document chunks* to retrieve."  Same name, different layer of the system: one truncates a probability distribution over the vocabulary; the other sets the size of a search result set.  See the *RAG Knowledge Base: Code and No-Code Routes* activity, where retrieval `k` is tuned.
+> The `top_k` in this tutorial is a **sampling** parameter; it limits which *next tokens* the model may choose from.  It is a different knob from the `top_k` (often written `k` or `n_results`) you will meet in Retrieval-Augmented Generation (RAG), where it means "how many *document chunks* to retrieve."  Same name, different layer of the system: one truncates a probability distribution over the vocabulary; the other sets the size of a search result set.  See the *RAG Knowledge Base: Code and No-Code Routes* activity, where retrieval `k` is tuned.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Two things to remember from this part.  Truncation (top-k and top-p) removes candidates before the draw, and top-p adapts its cut to the model's confidence while top-k does not.  The remaining parameters (`num_predict`, `repeat_penalty`, `stop`, `seed`) control length, repetition, stopping, and reproducibility rather than which token wins.
 
@@ -154,7 +155,8 @@ To quantify "how different are the answers," sample the same prompt several time
 
 The code below asks the model to name a single animal eight times at each of three temperature settings.  It uses a `Counter` (a Python dictionary that counts occurrences) to tally how many distinct answers appear.  A temperature of 0.0 should produce the same answer every time; higher temperatures should spread answers across more options.
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 {% raw %}
 ```python
@@ -212,7 +214,8 @@ You have seen what temperature does to one distribution.  Now turn the dial syst
 
 The experiment is four task types × four temperature settings × three repetitions, which gives you 48 data points to analyze.  If you work in a team, take one task row each for the first sweep, then rotate and check each other's rows.  Fill in the observation table as you go and post it to the discussion board.
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 {% raw %}
 ```python
@@ -261,6 +264,7 @@ for task, prompt in TEST_PROMPTS.items():
 | creative | | | | | |
 | code | | | | | |
 | list | | | | | |
+{: .tb-full}
 
 "Consistent?" column: yes (all 3 identical) / partial (2/3 same) / no (all different).
 
@@ -304,6 +308,7 @@ Now that you have data, use it to build a principled parameter guide.  The table
 | Extracting JSON fields from a form | | | | |
 | Writing a first-draft blog post intro | | | | |
 | Answering student quiz questions with explanation | | | | |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -351,7 +356,8 @@ If you work in a team, share the guide with the class and note where the three g
 
 The cell below checks your policies by running the same prompt across the recommended ranges.
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 {% raw %}
 ```python
@@ -458,7 +464,8 @@ Behaviors appear that imitation does not produce.  Because the reward is the out
 
 A new dial appears, and it is a different kind of dial.  Reasoning models expose something like a *thinking budget* or *reasoning effort*.  Notice what kind of quantity that is.  Temperature, top-k, and top-p all reshape a distribution; they change what gets sampled.  A thinking budget changes how much computation runs before an answer exists.  You have spent this whole tutorial on shape dials.  This is the first amount dial you have met.
 
-> **Watch out!**  The parameter guide you built in Part IIb does not transfer to these models unchanged.  Providers commonly advise leaving temperature at its default for reasoning models rather than driving it to 0, because the RL training already tuned the reasoning stream, and pinning it to greedy decoding tends to produce loops and worse answers rather than more reliable ones.  Check the model card before you apply your low-temperature-for-facts rule here.
+> The parameter guide you built in Part IIb does not transfer to these models unchanged.  Providers commonly advise leaving temperature at its default for reasoning models rather than driving it to 0, because the RL training already tuned the reasoning stream, and pinning it to greedy decoding tends to produce loops and worse answers rather than more reliable ones.  Check the model card before you apply your low-temperature-for-facts rule here.
+{: .tb-warning data-title="Watch out"}
 
 ### Model 5: Two Transcripts, Same Question
 
@@ -532,7 +539,8 @@ Small local models get less out of it than the headlines suggest.  The distilled
 
 If you have a reasoning-capable model pulled locally, this takes about ten minutes and answers the question for your hardware rather than in general.
 
-> **Runs on your machine, not here.**  This talks to Ollama at `localhost:11434`.  Run `ollama list` first; if you have no reasoning model, `ollama pull deepseek-r1:7b` gets one that emits its thinking between `<think>` tags.  Compare against any standard model you already have.
+> This talks to Ollama at `localhost:11434`.  Run `ollama list` first; if you have no reasoning model, `ollama pull deepseek-r1:7b` gets one that emits its thinking between `<think>` tags.  Compare against any standard model you already have.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 {% raw %}
 ```python
@@ -607,6 +615,7 @@ Start from the logits of the *AI by Hand* example, Paris $$z=5$$, Lyon $$z=2$$, 
 | Marseille | 1 | 2.718 | 0.0165 |
 | banana | −1 | 0.368 | 0.0022 |
 | | | **158.89** | **0.9642** |
+{: .tb-full}
 
 (The probabilities shown are rounded; they sum to 1 before rounding.)
 
@@ -619,6 +628,7 @@ Surviving mass: $$0.9007 + 0.0448 = 0.9455$$.  This is not 1, so it is not yet a
 | Paris | 0.9007 | $$0.9007 / 0.9455 =$$ **0.9526** |
 | Lyon | 0.0448 | $$0.0448 / 0.9455 =$$ **0.0474** |
 | | | sum = **1.0000** yes |
+{: .tb-full}
 
 Notice that Paris's probability *went up* (from 0.9007 to 0.9526) without its logit changing at all.  Truncation is not a neutral filter; it redistributes the discarded mass onto the survivors, proportionally.  Every token you cut makes the leaders more likely.
 
@@ -628,6 +638,7 @@ Notice that Paris's probability *went up* (from 0.9007 to 0.9526) without its lo
 |---|---|---|---|
 | Paris | 0.9007 | 0.9007 | yes, and 0.9007 ≥ 0.9, so we stop |
 | Lyon | 0.0448 | - | no |
+{: .tb-full}
 
 The nucleus is Paris alone.  Renormalizing a single survivor gives $$0.9007 / 0.9007 = 1.0$$; the sampler is now deterministic, at a temperature you never set to zero.
 
@@ -646,9 +657,11 @@ On the distribution above, you set top-p = 0.95 instead of 0.9.  What is Lyon's 
 
 </details>
 
-> **Watch out!**  Because truncation renormalizes, top-k and top-p interact with temperature in ways that are easy to get backwards.  Raising temperature flattens the distribution, which *widens* the top-p nucleus (more tokens are needed to reach $$p$$), so turning temperature up while leaving top-p fixed increases randomness twice over.  For an agent that must emit an exact tool call, this compounding is exactly what you do not want.
+> Because truncation renormalizes, top-k and top-p interact with temperature in ways that are easy to get backwards.  Raising temperature flattens the distribution, which *widens* the top-p nucleus (more tokens are needed to reach $$p$$), so turning temperature up while leaving top-p fixed increases randomness twice over.  For an agent that must emit an exact tool call, this compounding is exactly what you do not want.
+{: .tb-warning data-title="Watch out"}
 
-> **Common Misconception:** Students often assume that top-p = 0.9 means "keep the top 90% of tokens by count", for example keeping 45,000 out of 50,000 vocabulary entries.  In reality, top-p keeps the *smallest set of tokens* needed to reach 90% of the *total probability mass*.  Because probability mass is extremely concentrated in the top few tokens, top-p = 0.9 typically keeps only 5-50 tokens, not thousands.  The long tail of the vocabulary collectively holds very little probability.
+> Students often assume that top-p = 0.9 means "keep the top 90% of tokens by count", for example keeping 45,000 out of 50,000 vocabulary entries.  In reality, top-p keeps the *smallest set of tokens* needed to reach 90% of the *total probability mass*.  Because probability mass is extremely concentrated in the top few tokens, top-p = 0.9 typically keeps only 5-50 tokens, not thousands.  The long tail of the vocabulary collectively holds very little probability.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Two things to remember from this example.  Truncation always renormalizes, so cutting tokens makes the survivors more likely than their logits alone would say.  Top-p and temperature compound, because a flatter distribution needs more tokens to reach the same threshold.
 
@@ -790,12 +803,15 @@ Examples outside AI: Monte Carlo retirement simulations, weather forecast models
 | A 10-day weather forecast model | | |
 | `SELECT * FROM students WHERE grade = 'A'` | | |
 | An LLM generating the next token at temperature = 0.7 | | |
+{: .tb-full}
 
-> *Hint:* Ask yourself: "If I run this again with exactly the same input, am I guaranteed the same output?"  Be careful with the search engine; the answer may surprise you.
+> Ask yourself: "If I run this again with exactly the same input, am I guaranteed the same output?"  Be careful with the search engine; the answer may surprise you.
+{: .tb-tip data-title="Hint"}
 
 **Q2.**  A classmate argues: "LLMs aren't really random; they just look at patterns in training data and output the most likely word."  What is accurate about this claim, and what is it missing?
 
-> *Hint:* Recall what the temperature parameter does.  Even at temperature = 0, many production implementations produce slightly different results across runs because of floating-point rounding and GPU non-determinism.  The model samples from a distribution; it does not look up a deterministic answer.
+> Recall what the temperature parameter does.  Even at temperature = 0, many production implementations produce slightly different results across runs because of floating-point rounding and GPU non-determinism.  The model samples from a distribution; it does not look up a deterministic answer.
+{: .tb-tip data-title="Hint"}
 
 **Q3.**  The table below shows two outputs from the same prompt ("What is the capital of France?") submitted to the same model twice.  Which output is more dangerous from a user-trust perspective, and why?
 
@@ -834,7 +850,8 @@ In this section you examine the research on *automation bias* (the tendency to o
 
 Automation bias arises even among trained experts, even when the automated system has a known error rate, and even when stakes are high.  In a landmark study, Skitka et al. (1999) found that experienced pilots failed to detect autopilot errors at significantly higher rates when an automation aid was present, *even after being explicitly warned that the aid was imperfect*.
 
-> **Common Misconception:** Automation bias is a problem only for non-technical or "tech-naive" users.  Research consistently shows that trained professionals (pilots, radiologists, financial analysts, software engineers) exhibit automation bias at similar or higher rates than non-experts, precisely because their professional workflow incorporates these tools and they have learned to trust them.
+> Automation bias is a problem only for non-technical or "tech-naive" users.  Research consistently shows that trained professionals (pilots, radiologists, financial analysts, software engineers) exhibit automation bias at similar or higher rates than non-experts, precisely because their professional workflow incorporates these tools and they have learned to trust them.
+{: .tb-pitfall data-title="Common Misconception"}
 
 #### A Taxonomy of Trust Failure Modes
 
@@ -846,6 +863,7 @@ Not all trust miscalibration looks the same.  The following four modes each caus
 | **Over-trust / automation bias** | Human accepts an incorrect automated recommendation | Following GPS directions into a lake |
 | **Complacency** | Human stops monitoring an automated system once it is running | Autopilot disengages silently; pilot doesn't notice for 90 seconds |
 | **Skill fade** | Long-term loss of the ability to perform the task manually after years of automation | Unable to navigate without GPS after a decade of relying on it |
+{: .tb-full}
 
 #### Questions to Work Through
 
@@ -853,13 +871,15 @@ Not all trust miscalibration looks the same.  The following four modes each caus
 
 Which failure mode from the taxonomy above best describes what happened?  What would "appropriately calibrated trust" have looked like?
 
-> *Hint:* Attorneys have a professional and ethical obligation to verify every citation before submitting a brief.  The question is not whether they trusted the tool, but why the trust was not bounded by the verification step they knew was required.
+> Attorneys have a professional and ethical obligation to verify every citation before submitting a brief.  The question is not whether they trusted the tool, but why the trust was not bounded by the verification step they knew was required.
+{: .tb-tip data-title="Hint"}
 
 **Q5.**  A hospital deploys an AI system that flags potential drug interactions for nursing review.  A nurse, disagreeing with a specific flag based on her clinical experience, overrides it without documenting her reasoning.
 
 Is this automation bias, appropriate expert judgment, or something else?  What information would you need to determine which?
 
-> *Hint:* Both under-trust and over-trust are errors.  The right answer depends on: the nurse's track record vs. the AI's precision and recall on this flag type, whether the patient is harmed by the override, and whether lack of documentation creates institutional risk regardless of outcome.
+> Both under-trust and over-trust are errors.  The right answer depends on: the nurse's track record vs. the AI's precision and recall on this flag type, whether the patient is harmed by the override, and whether lack of documentation creates institutional risk regardless of outcome.
+{: .tb-tip data-title="Hint"}
 
 **Q6.**  Which of the following best explains why automation bias persists even when humans consciously know that a system is fallible?
 
@@ -901,7 +921,8 @@ AI:   The 1987 Ursinus College intramural chess tournament was won by
 
 The first answer is verifiable and correct.  The second is almost certainly fabricated, but the model delivers both in identical, authoritative prose with no hedging, no uncertainty signal, and no difference in tone.
 
-> **Common Misconception:** If an AI "sounds confident," it probably is correct.  In fact, the fluency and grammatical correctness of an LLM's output are driven by the language modeling objective (predict the next plausible token), not by the accuracy of the underlying claim.  A model can generate a perfectly grammatical, confidently phrased, completely false sentence.
+> If an AI "sounds confident," it probably is correct.  In fact, the fluency and grammatical correctness of an LLM's output are driven by the language modeling objective (predict the next plausible token), not by the accuracy of the underlying claim.  A model can generate a perfectly grammatical, confidently phrased, completely false sentence.
+{: .tb-pitfall data-title="Common Misconception"}
 
 #### Three Compounding Risk Factors
 
@@ -917,11 +938,13 @@ When probabilistic AI outputs are treated as authoritative, three factors compou
 
 **Q7.**  Design a concise "sanity check" protocol (at most four steps) that a student should apply before using any piece of AI-generated information in a graded assignment.  Be specific; avoid vague steps like "check if it's right."
 
-> *Hint:* Think about: (1) Is this the kind of claim that *can* be verified with a primary source?  (2) What would happen if it were wrong?  (3) How would I explain to an instructor that I verified this?
+> Think about: (1) Is this the kind of claim that *can* be verified with a primary source?  (2) What would happen if it were wrong?  (3) How would I explain to an instructor that I verified this?
+{: .tb-tip data-title="Hint"}
 
 **Q8.**  A classmate argues: "This problem will go away once AI systems always display explicit confidence scores on every output."  Do you agree?  What risk factors from the Three Compounding Risk Factors table would still remain even if confidence scores were perfect?
 
-> *Hint:* Think about calibration: does "80% confidence" mean the model is right 80% of the time on this type of claim?  Who would check?  And consider: does a confidence score on each sentence solve the volume problem, or does reading 200 scores per document add another layer of cognitive load?
+> Think about calibration: does "80% confidence" mean the model is right 80% of the time on this type of claim?  Who would check?  And consider: does a confidence score on each sentence solve the volume problem, or does reading 200 scores per document add another layer of cognitive load?
+{: .tb-tip data-title="Hint"}
 
 **Q9.**  Match each real-world scenario to the primary risk factor from the Three Compounding Risk Factors table (Surface Credibility, Volume, or Domain Opacity) that makes it most dangerous:
 

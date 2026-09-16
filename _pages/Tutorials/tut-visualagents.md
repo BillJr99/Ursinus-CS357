@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/VisualAgents
 title: 'CS357: Foundations of Artificial Intelligence - Visual Agents'
 info:
   coursenum: CS357
   purpose: "To give an agent eyes: screenshots, diagrams, and interface state as inputs it can actually reason about."
+  eyebrow: "Tutorial"
 tags:
 - vision
 - agents
 - multimodal
 ---
-# CS357: Foundations of Artificial Intelligence - Visual Agents
-
-## Purpose
-
-To give an agent eyes: screenshots, diagrams, and interface state as inputs it can actually reason about.
-
 ## About This Tutorial
 
 Every pattern coded by hand up through *Orchestration and Multi-Agent Patterns* (pipelines, RAG, routers, specialists, agents with tools), exists as a **drag-and-drop component** in visual builders such as **Langflow**.  Today we rebuild a known system visually, not to abandon code, but to learn when each medium wins, and to gain a shared vocabulary for collaborating with non-programmers, which your project presentations will require.  The path today: **why visual builders exist → rebuilding our RAG bot in Langflow → reading a flow as an architecture diagram → the limits of low-code**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,6 +26,7 @@ Every pattern coded by hand up through *Orchestration and Multi-Agent Patterns* 
 | **REST API (Representational State Transfer Application Programming Interface)** | A standard way for programs to communicate over the internet by sending and receiving structured data; Langflow can turn any flow into a REST API endpoint that your Python code can call. | After building your RAG flow visually, you export it and call it from three lines of Python using the `requests` library. |
 | **Low-code** | A style of software development where most logic is assembled visually with minimal hand-written code, making it accessible to people without programming backgrounds. | Wiring a complete RAG pipeline in Langflow by dragging boxes (no Python required) so a club officer could set it up themselves. |
 | **Chunk size** | The number of characters or words each piece of a document is split into before being stored in the vector database; larger chunks preserve more context but cost more to embed and retrieve. | In the RAG Knowledge Base Lab you chose a chunk size (e.g., 500 characters); today you enter the same number in Langflow's Text Splitter component. |
+{: .tb-full}
 
 ---
 
@@ -57,6 +54,7 @@ You already know every component.  A Prompt node is your system-prompt string; a
 | `embed(text)` function | **Ollama Embeddings** node | Same embedding model (e.g., `nomic-embed-text`) | Wired visually rather than called explicitly |
 | ChromaDB vector store | **Chroma** node with collection name and persist directory | The collection name and directory path are the same | Ingest and query are two separate wired paths on the canvas |
 | Critique-refine loop | A cycle in the graph from checker node back to writer node | The same critique prompt logic | Loops in Langflow require special handling; some loops must stay in code |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -96,7 +94,8 @@ Visual flows don't have to stay visual; you can export them and call them from r
 
 Every flow exports as JSON (a text-based data format), and Langflow can serve any flow as a REST API endpoint.  Export your RAG flow, open the JSON in a text editor and find your prompt text and chunk size by searching for keywords you used.  Then call the flow endpoint from three lines of Python `requests`:
 
-> **Runs on your machine, not here.**  This cell makes network calls that the page sandbox blocks.  Copy it into your course container and run it there.
+> This cell makes network calls that the page sandbox blocks.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -134,7 +133,8 @@ Both express the same underlying patterns; visual excels at communication and ra
 
 </details>
 
-> **Common Misconception:** It is tempting to conclude that visual builders are "easier" and therefore produce systems that are less capable or less rigorous than hand-written code.  This is wrong in two directions.  First, Langflow can express any pattern that Python can (with the exception of certain dynamic structures like runtime loops).  Second, "easier to build" does not mean "easier to audit"; a visually assembled system can be harder to review for security, bias, or correctness than well-structured Python code, because the implementation details are hidden inside opaque node icons.  Ease of construction and rigor of understanding are independent dimensions.
+> It is tempting to conclude that visual builders are "easier" and therefore produce systems that are less capable or less rigorous than hand-written code.  This is wrong in two directions.  First, Langflow can express any pattern that Python can (with the exception of certain dynamic structures like runtime loops).  Second, "easier to build" does not mean "easier to audit"; a visually assembled system can be harder to review for security, bias, or correctness than well-structured Python code, because the implementation details are hidden inside opaque node icons.  Ease of construction and rigor of understanding are independent dimensions.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -183,7 +183,8 @@ The system message in the `messages` list (the dict with `"role": "system"`)
 
 </details>
 
-> **Common Misconception:** Students often assume adding a Prompt node changes what the model "knows."  It does not; it changes what *instructions* the model receives at the start of each conversation.  The model's weights (its actual knowledge) are fixed; only the prompt changes.
+> Students often assume adding a Prompt node changes what the model "knows."  It does not; it changes what *instructions* the model receives at the start of each conversation.  The model's weights (its actual knowledge) are fixed; only the prompt changes.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

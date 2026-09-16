@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AgentTeams
 title: 'CS357: Foundations of Artificial Intelligence - Agent Teams'
 info:
   coursenum: CS357
   purpose: "To treat pipelines, critics, and debaters as roles, and to compose them into a team of specialists rather than one monolithic agent."
+  eyebrow: "Tutorial"
 tags:
 - agents
 - orchestration
 - teams
 ---
-# CS357: Foundations of Artificial Intelligence - Agent Teams
-
-## Purpose
-
-To treat pipelines, critics, and debaters as roles, and to compose them into a team of specialists rather than one monolithic agent.
-
 ## About This Tutorial
 
 Everything in Unit 3 converges here: the pipelines and routers of *Orchestration and Multi-Agent Patterns*, and the critics, debaters, and judges of *Critique, Consensus, and the LLM Judge* are *roles*, and an **agent team** is a deliberate composition of roles around a shared task, exactly what your final project will build.  The design thesis of this course is that **a team of small, specialized agents with focused contexts beats one monolithic agent with a giant prompt**, and today we argue it, architect with it, and stress-test it.  Here is where today goes: **the case for specialists → team topologies → shared state and handoffs → designing your project team**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,6 +26,7 @@ Everything in Unit 3 converges here: the pipelines and routers of *Orchestration
 | **Blackboard** | A shared dictionary that all agents can read from and write to, recording the current state of the whole task so every agent knows what has happened and what still needs to happen. | `state = {"notes": "...", "actions": None, "minutes": None, "status": "extracting"}` |
 | **State machine** | A formal way of tracking which stage a system is in and which transitions are allowed, preventing agents from acting out of turn or skipping steps. | The `status` field advances from `"extracting"` to `"drafting"` to `"checking"` to `"done"` in order. |
 | **Context window** | The maximum amount of text a model can read at once; keeping each agent's context small means instructions stay near the top where the model pays most attention. | A checker agent that only sees the notes, the minutes, and the summary, not the full conversation history. |
+{: .tb-full}
 
 ---
 
@@ -54,6 +51,7 @@ Teams also fail in new ways.  Handoffs lose information; roles deadlock awaiting
 | **Extractor** | Pulls action items from raw notes into a structured list | Raw meeting notes text | Lines in format `owner \| task \| deadline` | 0.2 (accuracy matters, not creativity) |
 | **Writer** | Produces formal minutes and a public-facing summary from verified facts | Raw notes + action item list | Formal minutes (under 90 words) and one-sentence summary with no names or budget figures | 0.3 (light creativity for prose quality) |
 | **Checker** | Verifies that minutes do not contradict notes and summary does not leak private information | Notes + minutes + summary | `PASS` or `FAIL: <specific reason>` | 0.0 (deterministic verification) |
+{: .tb-full}
 
 A student org wants an agent system that turns raw meeting notes into (a) a polished minutes document, (b) an action-item list with owners, and (c) a one-paragraph public summary.
 
@@ -106,6 +104,7 @@ The `status` field is a tiny state machine; each agent's contract is "when statu
 | **Hierarchical** | All specialists report to a supervisor who delegates and integrates results | Complex tasks where subtasks are not predictable in advance | Supervisor bottleneck; supervisor failure breaks the whole team |
 | **Peer-to-peer** | Specialists pass output directly to the next specialist in a fixed sequence | Well-understood workflows where each step's output is the next step's input | Implicit dependencies; hard to add a new step without redesigning the chain |
 | **Blackboard** | All agents read and write a shared state dictionary; each agent fires when its preconditions are met | Tasks where multiple agents may need to revisit earlier steps or work in parallel | Concurrent writes can conflict; state can become large and hard to audit |
+{: .tb-full}
 
 An agent team keeps stalling: the checker waits for verified facts while the researcher believes its job is done.  The most diagnostic artifact to inspect first is:
 
@@ -126,7 +125,8 @@ The shared state object and each role's precondition/postcondition contract
 
 The code below implements the three-agent meeting-notes team using a blackboard pattern: a shared `state` dictionary holds all the data, and a `while` loop fires whichever agent matches the current `status` field.  Read the `extractor`, `writer`, and `checker` functions in order; each one reads only the slice of the state it needs, writes its output back to a specific key, and advances the `status` to the next stage.
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -199,7 +199,8 @@ print("\nSUMMARY:\n", state["summary"])
 
    > *Hint: For example, the extractor does not see `state["minutes"]` because minutes have not been written yet, but also because seeing a draft might bias the action-item extraction.  What analogous risks exist for the writer and checker?*
 
-> **Common Misconception:** Students often assume that giving every agent access to the *full* state object is safer: "the more context, the better."  In practice, the opposite is often true.  An agent given irrelevant context is more likely to be distracted by it, to over-fit its output to previous stages, or to reproduce upstream errors with false confidence.  The discipline of passing only what each role needs is not a technical limitation; it is a deliberate design choice that makes each agent's behavior more predictable and more testable in isolation.
+> Students often assume that giving every agent access to the *full* state object is safer: "the more context, the better."  In practice, the opposite is often true.  An agent given irrelevant context is more likely to be distracted by it, to over-fit its output to previous stages, or to reproduce upstream errors with false confidence.  The discipline of passing only what each role needs is not a technical limitation; it is a deliberate design choice that makes each agent's behavior more predictable and more testable in isolation.
+{: .tb-pitfall data-title="Common Misconception"}
 
 With the pattern fully understood, Part III applies it directly to your final project; this is where the activity becomes a design session for the work you will submit.
 

@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/ChessAICoach
 title: 'CS357: Foundations of Artificial Intelligence - Building an AI Chess Coach'
 info:
   coursenum: CS357
   purpose: "To dissect a complete working web app and see exactly how a language model gets wired into real software through API calls."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - api
 - web-app
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - Building an AI Chess Coach
-
-## Purpose
-
-To dissect a complete working web app and see exactly how a language model gets wired into real software through API calls.
-
 ## About This Tutorial
 
 This tutorial dissects a complete, working web app (the **Chess AI Coach**) to show exactly how a language model gets wired into real software through **API calls**.  We move from **what the app is → the three-layer architecture → one function that talks to three different providers → prompt engineering and structured JSON output for coaching → keeping your API keys safe → wiring the AI into the user interface**.
+{: .tb-lede}
 
 The app is a single self-contained HTML file.  You can open it, read every line, and change it.  Everything you learned in the [RESTful LLM Access]({{ site.baseurl }}/Tutorials/RESTLLMAPI) activity (the `/v1/chat/completions` payload, the `choices[0].message.content` response path, provider portability) reappears here, this time in JavaScript running inside a browser instead of Python in a notebook.
 
@@ -38,6 +35,7 @@ The app is a single self-contained HTML file.  You can open it, read every line,
 | **Client-side key exposure** | The risk that an API key placed in browser code is visible to anyone using or inspecting that browser | The key shows up in the browser's Network tab on every request |
 | **Backend proxy** | A small server you own that holds the secret key and forwards browser requests to the provider | Browser -> your `/api/coach` endpoint -> provider; the key never leaves your server |
 | **Graceful degradation** | The app stays fully usable when the optional AI is unavailable | With no provider configured, the board still plays against a local engine |
+{: .tb-full}
 
 ---
 
@@ -100,6 +98,7 @@ $$
 | **Chess engine** | Enforces the rules, generates legal moves, plays the computer's move, scores a position | `initialState`, `legalMoves`, `applyMove`, `minimax`, `computerMove`, `evaluate`, `boardToFEN`, `moveToSAN`, `buildPGN` | No, pure, deterministic |
 | **React UI** | Draws the board, handles clicks and drags, shows commentary and meters | the `ChessAICoach` component and its `useState`/`useEffect` hooks | No |
 | **AI layer** | Turns a position into a prompt, calls a provider, parses the reply | `callTextModel`, `getAICommentary`, `getAIEvaluation`, `getSideAIElo` | **Yes, this is where the API calls live** |
+{: .tb-full}
 
 The engine is the kind of code you can unit-test exhaustively: given this board, `legalMoves` must return exactly these moves.  The AI layer is the opposite: it calls a probabilistic model over the network, so it can be slow, cost money, fail, or return something unexpected.  **Keeping them apart means a bug in the coach can never make the board illegal, and the game never depends on a server being reachable.**
 
@@ -136,7 +135,8 @@ Which group of functions makes the HTTP requests to a language-model provider?
 
 </details>
 
-> **Common Misconception:** "The AI plays the chess."  It does not.  The **computer opponent** is the local `minimax` search in the engine layer: pure code, no network.  The **language model** only *comments on* moves and *estimates* numbers.  You could delete every AI function and still have a working chess game.  Conflating "the program that plays" with "the model that talks" is the first confusion to clear up.
+> "The AI plays the chess."  It does not.  The **computer opponent** is the local `minimax` search in the engine layer: pure code, no network.  The **language model** only *comments on* moves and *estimates* numbers.  You could delete every AI function and still have a working chess game.  Conflating "the program that plays" with "the model that talks" is the first confusion to clear up.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -290,7 +290,8 @@ Here is the whole idea, reduced to a **runnable Python cell** you can execute ag
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -329,6 +330,7 @@ The request bodies are nearly identical; the **auth** and the **reply location**
 | **Prompt goes in** | `messages: [{role, content}]` | `messages: [{role, content}]` | `messages: [{role, content}]` |
 | **Reply text is at** | `data.content[].text` | `data.choices[0].message.content` | `data.choices[0].message.content` |
 | **Needs a paid key?** | Yes | Yes | No (local model) |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -357,7 +359,8 @@ In a response from `POST https://api.anthropic.com/v1/messages`, where is the mo
 
 </details>
 
-> **Common Misconception:** "If it's the same prompt, it's the same response object."  No. Providers agree on very little beyond "send messages, get a completion."  The **request** can look almost identical while the **response shape** and the **auth headers** differ.  Write one small parse function per response family (OpenAI-style, Anthropic-style) and route to the right one; never assume `choices[0]` exists.
+> "If it's the same prompt, it's the same response object."  No. Providers agree on very little beyond "send messages, get a completion."  The **request** can look almost identical while the **response shape** and the **auth headers** differ.  Write one small parse function per response family (OpenAI-style, Anthropic-style) and route to the right one; never assume `choices[0]` exists.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -411,7 +414,8 @@ You can prove the prompt matters with a runnable cell, the same coach prompt, ag
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 
@@ -499,6 +503,7 @@ You are White.  You play `Nf3`.  Walk the sequence the app performs (see `execut
 | 4 | Each builds a prompt (FEN + SAN + PGN), calls `callTextModel` -> `fetch` | AI layer |
 | 5 | Replies parsed (prose as text; Elo as JSON) and shown | AI layer |
 | 6 | The **local** `minimax` picks Black's reply and the board updates | Engine |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -527,7 +532,8 @@ So a malformed or fenced model reply returns a fallback instead of throwing and 
 
 </details>
 
-> **Common Misconception:** "If I ask for JSON, I get JSON." Language models are *usually* obedient but never guaranteed.  They add prose, wrap output in code fences, or drop a field.  Treat every structured reply as untrusted input: constrain the prompt, strip known wrappers, parse defensively, and default every field.  Robust structured output is 20% prompt and 80% parsing discipline.
+> "If I ask for JSON, I get JSON." Language models are *usually* obedient but never guaranteed.  They add prose, wrap output in code fences, or drop a field.  Treat every structured reply as untrusted input: constrain the prompt, strip known wrappers, parse defensively, and default every field.  Robust structured output is 20% prompt and 80% parsing discipline.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -576,7 +582,8 @@ The browser calls **your** endpoint.  Your server reads the key from an environm
 
 ## Code Cell
 
-> **Runs on your machine, not here.**  This cell starts a server and binds a port, which a web page cannot do.  Copy it into your course container and run it there.
+> This cell starts a server and binds a port, which a web page cannot do.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 
@@ -616,6 +623,7 @@ Three deployment scenarios.  For each, decide where the key should live.
 | A. You experiment on your own laptop | Only you | In the browser session (typed into the field), fine |
 | B. A shared classroom instance for 20 students | Many people | On a backend, **or** use a keyless local model |
 | C. A public website anyone can visit | The whole internet | On a backend proxy; **never** in the browser |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -644,7 +652,8 @@ On a backend server you control, read from an environment variable
 
 </details>
 
-> **Common Misconception:** "`type='password'` protects the key."  It only masks the characters on screen.  The key is still in memory, still sent over the network in plain view of the Network tab, and still readable by any script on the page.  Masking ≠ protecting.  The real protections are: keep the key off the client entirely (backend proxy) or use a provider that needs no key (local model).
+> "`type='password'` protects the key."  It only masks the characters on screen.  The key is still in memory, still sent over the network in plain view of the Network tab, and still readable by any script on the page.  Masking ≠ protecting.  The real protections are: keep the key off the client entirely (backend proxy) or use a provider that needs no key (local model).
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/TextGenToNN
 title: 'CS357: Foundations of Artificial Intelligence - From Text Generation to a Neural Network'
 info:
   coursenum: CS357
   purpose: "To open the box between the prompt and the logits, and compute a forward pass by hand before checking it against code."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - neural-networks
 - forward-pass
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - From Text Generation to a Neural Network
-
-## Purpose
-
-To open the box between the prompt and the logits, and compute a forward pass by hand before checking it against code.
-
 ## About This Tutorial
 
 You have sampled from a softmax, tuned temperature, and measured cosine similarity between embeddings, but so far the "model" between the prompt and the logits has been a mysterious box.  Today we open that box.  We move from **the generation loop as a pipeline → a neural network you can compute entirely by hand → visualizing what the numbers inside are doing → the bridge: an embedding IS a learned representation**.
+{: .tb-lede}
 
 **Purpose (why we are doing this):** Every agent you build this semester rides on a forward pass: numbers multiplied by weights, summed, squashed, repeated.  If you can trace one forward pass by hand, then "the model computed logits" stops being magic words and becomes arithmetic you can audit, debug, and question.  **Task:** trace one short prompt through every stage of the generation loop with real (tiny) numbers, then compute a complete 2-2-1 neural network forward pass by hand and verify it in code.  **Criteria for success:** your trace table matches the Python verification to two decimal places, and you can state in one sentence where the neural network lives inside the generation loop.
 
@@ -37,6 +34,7 @@ You have sampled from a softmax, tuned temperature, and measured cosine similari
 | **Forward Pass** | One complete flow of numbers from inputs, through every layer's weights and activations, to outputs. Generation runs one forward pass per token generated. | The trace table in Model 2: inputs $(1.0, 2.0)$ flow to output $3.25$ |
 | **Embedding** | A learned vector of numbers representing a token. It is literally the first layer of the network: a lookup table of weights, trained like every other weight. | Token id 464 mapped to the 4-number vector $(0.2, -1.1, 0.7, 0.3)$ |
 | **Activation** | The output value of a neuron after its activation function, the "signal" that layer sends forward. Visualizing activations shows what the network responds to. | $$h = (2.0, 0.0)$$ in the trace table; the heatmaps in Model 3 |
+{: .tb-full}
 
 Notice that each concept above appears in at least two forms today: in the Key Concepts table (words), in a diagram or trace table (pictures and numbers), and in runnable Python (code).  If one representation does not click, use another; they all describe the same thing.
 
@@ -128,6 +126,7 @@ The table below traces the prompt "The sky is" through one full turn of the loop
 | Softmax, $$T=1$$ | logits | probabilities $(0.763, 0.170, 0.038, 0.023, 0.005)$ | deterministic formula |
 | Sample | probabilities | "blue" | random draw |
 | Append | "The sky is" + "blue" | "The sky is blue" | deterministic code |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -156,7 +155,8 @@ Embedding lookup, transformer layers, and output layer
 
 </details>
 
-> **Common Misconception:** Students often believe the tokenizer is part of the neural network, or that it is learned by gradient descent along with the weights.  It is not: the tokenizer is a fixed, deterministic program (built once, before training, from corpus statistics) that converts text to integers.  If the tokenizer splits "CS357" into strange pieces, no amount of temperature tuning will fix it; the problem is upstream of the network entirely.
+> Students often believe the tokenizer is part of the neural network, or that it is learned by gradient descent along with the weights.  It is not: the tokenizer is a fixed, deterministic program (built once, before training, from corpus statistics) that converts text to integers.  If the tokenizer splits "CS357" into strange pieces, no amount of temperature tuning will fix it; the problem is upstream of the network entirely.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -208,6 +208,7 @@ We push the input $$\mathbf{x} = (1.0, 2.0)$$ through the network.  Every arithm
 | $h_2$ pre-activation | $1.0(1.0) + (-1.0)(2.0) + 0.5 = 1.0 - 2.0 + 0.5$ | $-0.5$ |
 | $h_2$ activation | $$\text{ReLU}(-0.5) = \max(0, -0.5)$$ | $0.0$ |
 | output | $1.5(2.0) + 2.0(0.0) + 0.25 = 3.0 + 0 + 0.25$ | $3.25$ |
+{: .tb-full}
 
 So this network maps $$(1.0, 2.0) \mapsto 3.25$$. Notice that $h_2$ "died" for this input: its pre-activation was negative, so ReLU clipped it to zero and its outgoing weight $$v_2 = 2.0$$ contributed nothing.
 
@@ -244,7 +245,8 @@ Its pre-activation ($-0.5$) was negative and ReLU clips negative values to zero
 
 The code below implements the exact network above using plain Python lists (no libraries needed), prints every intermediate value in trace-table order, and checks the three inputs from the Model and questions.  Your hand values and the printed values must match to two decimal places.
 
-> **Predict first.**  You traced this forward pass by hand in the table above.  Write your two hidden activations and your output value down now, before you run anything.  The cell prints the same numbers; if they disagree, the disagreement tells you exactly which step of your trace drifted.
+> You traced this forward pass by hand in the table above.  Write your two hidden activations and your output value down now, before you run anything.  The cell prints the same numbers; if they disagree, the disagreement tells you exactly which step of your trace drifted.
+{: .tb-intuition data-title="Predict first"}
 
 ```python
 W1 = [[0.5, 1.0],    # weights into h1
@@ -293,7 +295,8 @@ The code below draws three heatmaps: the hidden-layer weight matrix $W_1$ (rows 
 
 ## Code Cell
 
-> **Predict first.**  Before you run this, mark on your trace table which of the two inputs you expect to light up which hidden unit more strongly.  The heatmap makes the answer visible in one glance, so commit to a guess while it still costs you something.
+> Before you run this, mark on your trace table which of the two inputs you expect to light up which hidden unit more strongly.  The heatmap makes the answer visible in one glance, so commit to a guess while it still costs you something.
+{: .tb-intuition data-title="Predict first"}
 
 ```python
 import matplotlib.pyplot as plt

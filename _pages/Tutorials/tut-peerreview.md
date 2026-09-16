@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/PeerReview
 title: 'CS357: Foundations of Artificial Intelligence - Structured Peer Review'
 info:
   coursenum: CS357
   purpose: "To use the two review instruments that run through the whole Project Thread: SQR cards and team check-ins, so review happens before the grade rather than after."
+  eyebrow: "Tutorial"
 tags:
 - peer-review
 - teams
 - process
 ---
-# CS357: Foundations of Artificial Intelligence - Structured Peer Review
-
-## Purpose
-
-To use the two review instruments that run through the whole Project Thread: SQR cards and team check-ins, so review happens before the grade rather than after.
-
 ## About This Tutorial
 
 Professionals do not wait for the final grade to find out what is wrong with their work; they build review into the process.  Today you learn the two review instruments used across the entire [Project Thread](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread): **SQR cards** for reviewing *other teams' artifacts*, and the **structured check-in** for giving private, candid feedback about *your own team*.  We move from **the inter-group review cycle → the intra-group check-in → how to receive feedback without flinching**.
+{: .tb-lede}
 
 ---
 
@@ -58,6 +54,7 @@ Following the TILT (Transparency in Learning and Teaching) framework ([tilthighe
 | **Genuine question** | A question you actually do not know the answer to, as opposed to criticism wearing a question mark ("did you even consider...?"). | Model 1, question 2 |
 | **Repair move** | The four-step response to a rupture: *name it, own your part, restate the other side, propose a next step*. Introduced in the Team Charter activity; used here for receiving hard feedback. | Model 3 |
 | **Psychological safety** | The shared belief that the team is safe for interpersonal risk-taking (Edmondson, 1999). Structured review protects it by aiming feedback at artifacts and behaviors, never at persons. | Everywhere |
+{: .tb-full}
 
 ---
 
@@ -72,6 +69,7 @@ Following the TILT (Transparency in Learning and Teaching) framework ([tilthighe
 | **Strength** | One concrete thing that works, **with evidence**: point to the sentence, section, or design choice and say what it accomplishes. | Generic praise ("well written!") with no location |
 | **Question** | One **genuine** question: something you actually wondered while reading, whose answer would improve the work. | Criticism disguised as a question |
 | **Risk** | One way this could fail or mislead, **with a suggested mitigation**: you may not name a risk without offering a way out. | A complaint with no exit |
+{: .tb-full}
 
 The card travels through the Project Thread's standing **review cycle** (*artifact -> peer review -> revise -> present*) at three scheduled moments:
 
@@ -125,6 +123,7 @@ The form, per teammate (and for yourself):
 | **Communication** | How does information flow to and from this person? | "Responds within our charter's 24h norm; surfaces blockers in standup" / "Goes silent under pressure; we learn about problems at the deadline" |
 | **One appreciation** | One specific thing this person did that you want them to keep doing. | "When the synthesis stalled, you proposed the outline that unstuck us." |
 | **One request** | One specific behavior change that would help the team. | "Please post 'seen, will respond tomorrow' instead of silence; the silence reads as absence." |
+{: .tb-full}
 
 Rules that make it work: answers describe **behaviors and artifacts, never character** ("delivered X late twice," not "is lazy"); it is **private to the instructor**; it is how the instructor sees inside teams without ambushes, and it feeds the *individual contribution* component of the final grade; and it is **not a substitute for talking to your team**; a request that appears in a check-in but has never been said aloud (kindly, via a repair move) is feedback the teammate never got a chance to act on.
 

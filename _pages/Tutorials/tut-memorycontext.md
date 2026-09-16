@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/MemoryAndContext
 title: 'CS357: Foundations of Artificial Intelligence - Memory and the Small Context Window Principle'
 info:
   coursenum: CS357
   purpose: "To name the trouble that a growing conversation history causes an agent, and to adopt this course's central design principle: keep each agent's context window small and focused."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - memory
 - context-window
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - Memory and the Small Context Window Principle
-
-## Purpose
-
-To name the trouble that a growing conversation history causes an agent, and to adopt this course's central design principle: keep each agent's context window small and focused.
-
 ## About This Tutorial
 
 In *The Agent Loop: Perceive, Plan, Act* you predicted that an agent's growing conversation memory would eventually cause trouble.  This tutorial names the trouble and adopts the course's central design principle: **keep each agent's context window small and focused**.  It moves from why context fills up, to what degrades when it does, to memory architectures, to a summarizing-memory agent in code.
+{: .tb-lede}
 
 Part I explains the three forces that work against long contexts and derives the principle.  Part II shows that "memory" is prompt-building, with a code cell that proves it.  Part IIb gives you a vocabulary of four memory types, treats the context window as working memory with a token budget, and compares the strategies for remembering across sessions.  Part III runs a summarizing-memory agent so you can watch compression happen, then closes with exercises, a reflection prompt, and further reading.  Both code cells send requests to the Ollama server at `localhost:11434`, so they need a machine where Ollama is running, such as your course container.
 
@@ -35,6 +32,7 @@ Part I explains the three forces that work against long contexts and derives the
 | **Long-Term Memory** | Facts stored outside the context window in a file or vector database and retrieved by similarity only when relevant.  The agent does not carry them every turn; it fetches them on demand, the way you look something up. | A RAG vector store of user preferences, retrieved when the current question seems relevant |
 | **Lost-in-the-Middle Effect** | The measured tendency of language models to pay most attention to the beginning and end of their context and to under-attend to the middle.  Named after the Liu et al. 2024 paper. | A system prompt placed at position 300 of a 5,000-token context may be partially ignored |
 | **Attention Cost ($$O(n^2)$$)** | The compute needed to process a context of $$n$$ tokens grows as $$n^2$$; doubling the context quadruples the cost.  This is why long contexts are slow and expensive. | Step 1 with a 340-token context costs 1×; step 31 with a 4,840-token context costs about 200× |
+{: .tb-full}
 
 ---
 
@@ -44,7 +42,8 @@ Part I explains the three forces that work against long contexts and derives the
 
 Giving an agent unlimited memory hurts its performance in three separate ways: compute cost, attention quality, and distraction.  This section explains each force and derives the principle that shapes the rest of the module.
 
-> **Why this matters:** Your instinct might be to give the agent the longest possible memory, on the theory that more context makes a smarter agent.  That instinct is wrong in three separate ways.  Picture a student taking an exam with every textbook, notebook, and handout they have ever used open on the desk.  The relevant page is there, but it is buried under everything else, and the search takes so long that the exam ends.  The analogy stops in one place: the student at least knows which book to open, while the model pays to reread every page on every turn.  Focused, selective memory beats total recall.
+> Your instinct might be to give the agent the longest possible memory, on the theory that more context makes a smarter agent.  That instinct is wrong in three separate ways.  Picture a student taking an exam with every textbook, notebook, and handout they have ever used open on the desk.  The relevant page is there, but it is buried under everything else, and the search takes so long that the exam ends.  The analogy stops in one place: the student at least knows which book to open, while the model pays to reread every page on every turn.  Focused, selective memory beats total recall.
+{: .tb-key data-title="Why this matters"}
 
 *Compute.*  Attention is the mechanism that lets a transformer model (the architecture behind GPT, Llama, and every model in this course) relate any word in the context to any other word.  Its cost grows as $$O(n^2)$$ in the context length $$n$$, so an agent that appends every thought and observation pays quadratically for its own history.  In concrete terms: if step 1 processes 340 tokens and step 31 processes 4,840 tokens, step 31's attention cost is $$(4840/340)^2 \approx 202$$ times higher.  On a laptop, you feel this as seconds per token.
 
@@ -112,7 +111,8 @@ The code cell below makes the point twice.  First, a before/after contrast: the 
 
 ## Code Cell: Before, After, and Growing
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -182,7 +182,8 @@ Two things to remember from this section.  The server is stateless, so the only 
 
 ## Model 2: The Template View of Memory
 
-> **Why this matters:** The before/after pair is the whole idea in miniature.  Two calls hit the exact same model with the exact same `{question}`; the only difference is what got pasted into `{history}`.  If the "after" call answers correctly and the "before" call cannot, then the memory was never in the model; it was in the string you built.  Everything else in this module (summaries, retrieval, working-memory windows) is a smarter way to decide *what to paste into that blank*.
+> The before/after pair is the whole idea in miniature.  Two calls hit the exact same model with the exact same `{question}`; the only difference is what got pasted into `{history}`.  If the "after" call answers correctly and the "before" call cannot, then the memory was never in the model; it was in the string you built.  Everything else in this module (summaries, retrieval, working-memory windows) is a smarter way to decide *what to paste into that blank*.
+{: .tb-key data-title="Why this matters"}
 
 ### Questions to Work Through
 
@@ -198,7 +199,8 @@ Two things to remember from this section.  The server is stateless, so the only 
 
    *Hint:* When you concatenate user text into one big string, the model cannot tell your instructions apart from the user's; the boundary that `role: "system"` versus `role: "user"` provides is gone.  This is the prompt-injection surface you saw in the *Prompt Injection* activity.  Structured `messages` arrays preserve the role boundary; flattening everything into one templated string erases it.
 
-> **Common Misconception:** "The model has a memory that fills up as we talk."  The model has no memory of your conversation at all; each request is independent, and the server forgets you the instant it replies.  The *program* has the memory: a variable (here, the `conversation` list) that it re-renders into the prompt on every call.  Once you see this, it is liberating: you have total control over what the model "remembers," because you control the string.  Summarization, retrieval, and windowing are all policies for deciding what to put in that blank.
+> "The model has a memory that fills up as we talk."  The model has no memory of your conversation at all; each request is independent, and the server forgets you the instant it replies.  The *program* has the memory: a variable (here, the `conversation` list) that it re-renders into the prompt on every call.  Once you see this, it is liberating: you have total control over what the model "remembers," because you control the string.  Summarization, retrieval, and windowing are all policies for deciding what to put in that blank.
+{: .tb-pitfall data-title="Common Misconception"}
 
 Part III builds the summarizing version of this loop and gives you a model for watching compression happen.  Before that, Part IIb supplies the vocabulary you need to talk about what an agent remembers.
 
@@ -210,7 +212,8 @@ Part III builds the summarizing version of this loop and gives you a model for w
 
 ## Four Types of Agent Memory
 
-> **Why this matters:** An agent's context window works like human working memory: finite, fast, and gone when the session closes.  A student can hold about 7 items in working memory at once; an LLM can "see" only what fits in its context window.  Knowing the four memory types helps you design agents that remember the right things for the right reasons, and that fail gracefully when memory runs out instead of silently dropping critical information.
+> An agent's context window works like human working memory: finite, fast, and gone when the session closes.  A student can hold about 7 items in working memory at once; an LLM can "see" only what fits in its context window.  Knowing the four memory types helps you design agents that remember the right things for the right reasons, and that fail gracefully when memory runs out instead of silently dropping critical information.
+{: .tb-key data-title="Why this matters"}
 
 Cognitive scientists describe human memory as several systems (working, episodic, semantic, and procedural).  Agent designers adopted the same taxonomy because the categories map cleanly onto the storage mechanisms available in modern AI systems.
 
@@ -220,6 +223,7 @@ Cognitive scientists describe human memory as several systems (working, episodic
 | **Episodic memory** | Records of specific past interactions with timestamps: what the user said on turn 3, what the agent replied, what tool was called and what it returned | An external database (SQL or document store), an external log file, or a vector store indexed by session ID and timestamp | Database storage plus a retrieval query per session lookup | Retrieval fails if events are not indexed correctly; the log grows without bound if no retention policy is set; old episodes become irrelevant as context changes | Saving conversation turns to a PostgreSQL table so they survive container restarts; this is the Session Database pattern from the Deployment activity |
 | **Semantic memory** | General world knowledge, domain facts, and concept relationships that are not tied to specific events: the "encyclopedia" the agent can consult | Trained model weights (baked in during training); an external RAG vector store (retrieved at query time) | A vector store query per retrieval; training cost is amortized across all uses of the model | Stale or conflicting facts when the world changes after training; retrieval misses when the query does not match the relevant chunk's embedding | The RAG lab stores course documents as embeddings in a vector database; this is semantic memory the agent retrieves at query time |
 | **Procedural memory** | How to perform tasks: code style conventions, step-by-step problem-solving approaches, formatting preferences, behavioral patterns | Fine-tuned model weights; persistent few-shot examples in the system prompt | Very expensive to update: it requires retraining or fine-tuning the model, not editing a database row | Catastrophic forgetting: retraining on new tasks can overwrite previously learned behaviors; updating one procedure may degrade others | A model fine-tuned to always format code responses in a specific way has procedural memory baked into its weights |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -241,7 +245,8 @@ Knowing the types of memory is the starting point.  The harder constraint is tha
 
 ## Context Window as Working Memory
 
-> **Why this matters:** The context window is the hardest constraint in agent design.  You cannot ignore it or wish it away, and a larger window does not remove the problem; it changes the scale.  *Where* you put things in the window also affects whether the model uses them.  A system prompt that buries the critical safety rule on page 3 protects less than one that leads with it.  Context layout is a design decision, not an afterthought.
+> The context window is the hardest constraint in agent design.  You cannot ignore it or wish it away, and a larger window does not remove the problem; it changes the scale.  *Where* you put things in the window also affects whether the model uses them.  A system prompt that buries the critical safety rule on page 3 protects less than one that leads with it.  Context layout is a design decision, not an afterthought.
+{: .tb-key data-title="Why this matters"}
 
 The context window is the agent's desk: everything on the desk is immediately usable, and anything not on the desk must be fetched.  The analogy stops in one place: a real desk does not charge you more for every extra sheet on it, and the context window does.  Modern LLMs offer context windows from 4K to 1M+ tokens, but larger windows do not eliminate the problem; they change its scale and add cost.
 
@@ -276,7 +281,8 @@ The context window was truncated and the early turns containing the introduction
 
 </details>
 
-> **Common Misconception:** Students often assume that a larger context window removes the need to think carefully about memory architecture.  In reality, larger context windows introduce new problems: they cost more per token (inference cost scales with context length), they are slower (attention is quadratic in sequence length for most architectures), and the "Lost in the Middle" effect grows more pronounced as context grows.  A 100K-token context window does not mean you can dump 100K tokens of information into it and trust the model to find what it needs; it means the layout and relevance of what you put in matters even more.
+> Students often assume that a larger context window removes the need to think carefully about memory architecture.  In reality, larger context windows introduce new problems: they cost more per token (inference cost scales with context length), they are slower (attention is quadratic in sequence length for most architectures), and the "Lost in the Middle" effect grows more pronounced as context grows.  A 100K-token context window does not mean you can dump 100K tokens of information into it and trust the model to find what it needs; it means the layout and relevance of what you put in matters even more.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -298,7 +304,8 @@ No context window can hold everything forever, so the next question is how to pr
 
 ## External Memory Strategies
 
-> **Why this matters:** A study assistant that remembers only the last 23 turns of a conversation is not very useful over a 16-week semester.  External memory strategies make long-horizon personalization possible, but they bring their own costs, failure modes, and privacy risks.  Choosing the right strategy (or combination) for your use case is one of the first architectural decisions you make when designing a production agent system.
+> A study assistant that remembers only the last 23 turns of a conversation is not very useful over a 16-week semester.  External memory strategies make long-horizon personalization possible, but they bring their own costs, failure modes, and privacy risks.  Choosing the right strategy (or combination) for your use case is one of the first architectural decisions you make when designing a production agent system.
+{: .tb-key data-title="Why this matters"}
 
 When conversations outlast the context window, the system must choose what to keep in the active window, what to drop entirely, and what to store externally for possible future retrieval.
 
@@ -308,6 +315,7 @@ When conversations outlast the context window, the system must choose what to ke
 | **Sliding window** | Keep only the most recent N turns in the context; older turns are dropped permanently | Low and constant: the cost is the same on turn 1 and turn 1,000 | Lossy for anything discussed more than N turns ago | Low: trivial to implement with a fixed deque | Forgets important early context (the user's name, their stated preferences, the problem they are working on) once it scrolls out of the window |
 | **Summary compression** | Use an LLM to summarize old turns into a compact representation; keep the summary in the context instead of the raw turns | Medium: the summary is typically 5-10x smaller than the original turns it replaces | Moderate: summaries capture the gist but lose detail; the LLM may hallucinate facts it did not actually see | Medium: requires a summarization step with its own prompt and latency | The summarization LLM may hallucinate or omit important details; the original turns are gone once summarized |
 | **Vector store retrieval** | Embed all turns as vectors; at each new turn, retrieve the K most semantically relevant prior turns and include only those | Medium-high: embedding cost plus vector search cost; you pay only for what is retrieved | High if retrieved, but misses are invisible (the relevant turn may not be retrieved if the query does not match well) | High: requires embedding infrastructure, a vector database, relevance tuning, and retrieval quality evaluation | Retrieval misses: a turn from two weeks ago that is highly relevant to today's question may not be retrieved because today's phrasing does not match the original embedding |
+{: .tb-full}
 
 Long-term user preference memory can live in a vector store.  After each session, an LLM extracts key facts (user preferences, progress milestones, important decisions) and stores them as structured embeddings.  At the start of the next session, the system retrieves these facts and injects them at the top of the context window as a "user profile," before the conversation history begins.
 
@@ -331,7 +339,8 @@ Long-term user preference memory can live in a vector store.  After each session
 
 Professional agent systems layer three of these tiers: working memory, episodic summary, and long-term retrieval.  In Part III you run a Python class that compresses old conversation turns into a summary, so you can observe exactly what information survives compression and what is lost.
 
-> **Why this matters:** Human memory is not a single thing.  We distinguish what you are thinking about right now (working memory), your episodic memories of specific past events, and procedural knowledge such as how to ride a bike.  Effective agent architectures mirror this layering and assign each kind of information to the storage tier that fits its access pattern.  The thing to see is that an agent should never carry information it is unlikely to need in its next decision.
+> Human memory is not a single thing.  We distinguish what you are thinking about right now (working memory), your episodic memories of specific past events, and procedural knowledge such as how to ride a bike.  Effective agent architectures mirror this layering and assign each kind of information to the storage tier that fits its access pattern.  The thing to see is that an agent should never carry information it is unlikely to need in its next decision.
+{: .tb-key data-title="Why this matters"}
 
 Practical agents layer several memory types.  Working memory holds the last few turns verbatim, because the model needs exact wording for what was just said.  The episodic summary is a running compressed narrative of the session (for example, "user wants X; we tried Y, it failed because Z"), rewritten by the model itself every few turns.  Long-term memory holds facts persisted *outside* the context in files or a vector store and retrieved by similarity when relevant; this is exactly the RAG machinery repurposed as memory.  The agent's prompt is assembled fresh each turn:
 
@@ -346,6 +355,7 @@ Read it left to right: the standing system instructions, then the running summar
 | Working memory | The last 3-5 turns verbatim | In the prompt, always present | Every turn | The 4 most recent messages in `self.turns` |
 | Episodic summary | A bullet-point compression of older turns, written by the model | In the prompt, always present | Every turn, replacing old verbatim turns | `self.summary`: "Chemistry exam Dec 14; user is weaker in chemistry" |
 | Long-term memory | Persistent user preferences, past decisions, reference facts | External file or vector database | On demand, when the current question seems relevant | A Chroma collection of user facts retrieved by similarity to the current question |
+{: .tb-full}
 
 An agent must recall a user preference stated 200 turns ago in a months-long relationship.  Which architecture handles this *without* growing the prompt?
 
@@ -374,7 +384,8 @@ The `SummarizingMemory` class below has three moving parts.  `add()` appends a t
 
 ## Code Cell: Watching the Summary Evolve
 
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+> This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 import requests
@@ -426,7 +437,8 @@ for msg in ["I have exams in chemistry on Dec 14 and statistics on Dec 16.",
 
 ## Model 3: Watching Compression
 
-> **Why this matters:** The `SummarizingMemory` class is a concrete implementation of a principle you have seen abstractly: replace bulk with essence.  Watch carefully which facts survive compression and which are lost.  The summary is the agent's only link to conversations that have scrolled out of the verbatim window, so a fact lost from the summary is lost for good (until retrieved from long-term storage).  This is not a theoretical problem: real production agents fail tasks because their summaries dropped a key constraint stated early in the conversation.
+> The `SummarizingMemory` class is a concrete implementation of a principle you have seen abstractly: replace bulk with essence.  Watch carefully which facts survive compression and which are lost.  The summary is the agent's only link to conversations that have scrolled out of the verbatim window, so a fact lost from the summary is lost for good (until retrieved from long-term storage).  This is not a theoretical problem: real production agents fail tasks because their summaries dropped a key constraint stated early in the conversation.
+{: .tb-key data-title="Why this matters"}
 
 ### Questions to Work Through
 
@@ -442,7 +454,8 @@ for msg in ["I have exams in chemistry on Dec 14 and statistics on Dec 16.",
 
    *Hint:* With `keep=1`, only the single most recent message is kept verbatim; everything else is in the summary.  With `keep=10`, 10 messages are kept verbatim before any summarization begins.  Predict for each: (a) how often does summarization happen?  (b) how large does the prompt grow?  (c) how faithful is the agent's memory?  Then run both and compare your predictions to the actual output.
 
-> **Common Misconception:** Many students assume that a longer context window removes the need for memory management.  Even with a 1-million-token context (which exists in some frontier models), the lost-in-the-middle effect means the model under-attends to content in the vast middle of the context.  And the quadratic attention cost makes 1-million-token contexts dramatically slower and more expensive.  Memory architecture is not a workaround for small context windows; it is good engineering practice even when large windows are available.
+> Many students assume that a longer context window removes the need for memory management.  Even with a 1-million-token context (which exists in some frontier models), the lost-in-the-middle effect means the model under-attends to content in the vast middle of the context.  And the quadratic attention cost makes 1-million-token contexts dramatically slower and more expensive.  Memory architecture is not a workaround for small context windows; it is good engineering practice even when large windows are available.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

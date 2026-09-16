@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/GroupCharter
 title: 'CS357: Foundations of Artificial Intelligence - Team Charter and Norms'
 info:
   coursenum: CS357
   purpose: "To write your team's constitution: rotating roles, psychological-safety ground rules, and a conflict repair process you agreed on before you needed it."
+  eyebrow: "Tutorial"
 tags:
 - teams
 - charter
 - process
 ---
-# CS357: Foundations of Artificial Intelligence - Team Charter and Norms
-
-## Purpose
-
-To write your team's constitution: rotating roles, psychological-safety ground rules, and a conflict repair process you agreed on before you needed it.
-
 ## About This Tutorial
 
 Today your new semester team writes its constitution.  This tutorial is modeled on the **Team Contract Exercise developed by the SWEET Center at Worcester Polytechnic Institute** (WPI SWEET Center Team Contract Exercise), which has teams agree on norms, decision rules, and repair procedures *before* the first conflict rather than during it.  We move from **getting to know each other honestly → understanding how teams develop and what makes them safe → writing an enforceable charter you will all sign**.
+{: .tb-lede}
 
 You drafted a small pre-draft charter in the Overview assignment.  Bring it: you will expand it into the real thing.  The signed charter is due at the charter milestone on the course schedule, and your team will formally revisit and revise it at the midpoint charter revisit on the schedule.
 
@@ -45,6 +41,7 @@ Following the TILT (Transparency in Learning and Teaching) framework ([tilthighe
 | **Decision Rule** | The agreed procedure for making a choice when the team does not naturally agree: consensus, majority vote, role-holder decides, or escalate. | "Technical disputes: 10-minute timebox, then the sprint Coordinator decides and logs it" |
 | **Repair Move** | A named, rehearsed conversational move for de-escalating conflict and fixing a rupture: *name it, own your part, restate the other side, propose a next step*. | Model 3's conflict protocol |
 | **Revisit Clause** | The charter section stating when and how the charter itself gets re-examined and amended. | "Full revisit at the midpoint charter revisit on the schedule; any member may call an early revisit by posting AGENDA: charter" |
+{: .tb-full}
 
 ---
 
@@ -60,6 +57,7 @@ Following the TILT (Transparency in Learning and Teaching) framework ([tilthighe
 |--------|-----------|----------------|------------|-------------------|
 | A | "Asking for help late" | "Whiteboard brainstorms" | "Silent channels for days" | "Nobody surprised at the deadline" |
 | B | ... | ... | ... | ... |
+{: .tb-full}
 
 Round prompts, in order:
 
@@ -99,6 +97,7 @@ Here is the same idea two ways: a stage table, and then a scenario trace through
 | Norming | Rhythms, shorthand, trust | Norms drift undocumented | The midpoint charter revisit codifies what changed |
 | Performing | Self-correcting, low-drama output | Coasting on unexamined habits | Lighter process, but the decision log continues |
 | Adjourning | The team ends; work is handed off | Ghosting the ending | Contribution statements and final reflection |
+{: .tb-full}
 
 **A storming scenario: trace it.**  Read this and follow the questions below.
 
@@ -131,7 +130,8 @@ A normal, expected developmental stage that healthy teams pass through
 
 </details>
 
-> **Common Misconception:** Psychological safety does *not* mean "niceness" or the absence of disagreement.  Edmondson (1999) is explicit that psychologically safe teams disagree *more* openly, not less; safety is what makes candid disagreement survivable.  A team that never argues is usually a team in which people have stopped saying what they think.  The goal of your charter is not to prevent storms; it is to make storms informative.
+> Psychological safety does *not* mean "niceness" or the absence of disagreement.  Edmondson (1999) is explicit that psychologically safe teams disagree *more* openly, not less; safety is what makes candid disagreement survivable.  A team that never argues is usually a team in which people have stopped saying what they think.  The goal of your charter is not to prevent storms; it is to make storms informative.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

@@ -1,10 +1,11 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/MCPOAuth
 title: "CS357: Foundations of Artificial Intelligence - MCP, REST, and OAuth 2.0 Together"
 info:
   coursenum: CS357
   purpose: "To explain how an agent discovers and calls tools over the Model Context Protocol, how OAuth 2.0 proves that a user authorized those calls, and how to keep the resulting tokens out of source code, logs, and the model's context window."
+  eyebrow: "Tutorial"
 tags:
 - mcp
 - oauth
@@ -12,15 +13,10 @@ tags:
 - security
 ---
 
-# CS357: Foundations of Artificial Intelligence - MCP, REST, and OAuth 2.0 Together
-
-## Purpose
-
-To explain how an agent discovers and calls tools over the Model Context Protocol, how OAuth 2.0 proves that a user authorized those calls, and how to keep the resulting tokens out of source code, logs, and the model's context window.
-
 ## About This Tutorial
 
 This tutorial is the background reading for giving a local agent real, authenticated tools.  It covers three things: the architecture of the Model Context Protocol (MCP), the OAuth 2.0 flows an agent can use to obtain an access token, and the token-handling practices that decide whether an authorization stays secure after it is granted.  You use it in the [Tools and MCP Lab]({{ site.baseurl }}/Assignments/ToolsMCP), whose Option 4D has you build an MCP server, secure it with OAuth 2.0, and document the full data flow from agent request, through token, to tool response.  Read the architecture and the OAuth flows before you plan a tool surface, and keep the token-security table open while you write any code that handles a credential.
+{: .tb-lede}
 
 If MCP is new to you, the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/), built with Anthropic, covers the protocol, building a server, and connecting clients.  This page adds the OAuth 2.0 authorization layer on top of that foundation.
 
@@ -36,6 +32,7 @@ If MCP is new to you, the free [Hugging Face MCP Course](https://huggingface.co/
 | **Access Token** | A short-lived credential (usually expiring in 1 hour) that an application presents to an API to prove it has been authorized to act on a user's behalf | The Bearer token sent in an HTTP Authorization header: `Authorization: Bearer eyJhbGci...` |
 | **Refresh Token** | A longer-lived credential that an application uses to obtain a new access token after the old one expires, without requiring the user to log in again | When the access token expires after 60 minutes, the agent silently exchanges the refresh token for a new access token and continues working |
 | **OAuth Scope** | A specific, named permission within a service that a token grants; tokens can be narrow (one scope) or broad (many scopes) | `calendar.readonly` lets an agent read events but not create or delete them; `calendar` gives full control |
+{: .tb-full}
 
 ---
 
@@ -76,6 +73,7 @@ MCP defines three primitives.  They differ in who starts the request and what co
 | **Tools** | The agent initiates a tool call when it decides it needs to take an action | A structured result in JSON or plain text format | Execute an action that has side effects or requires external data: search a database, create a calendar event, run a calculation |
 | **Resources** | The agent initiates a read by specifying a URI address (like a file path or URL) for the resource | File-like content in text or binary format, similar to reading a file | Read documents, configuration files, or database rows without triggering any action |
 | **Prompts** | The user or orchestrator requests a prompt template from the server | A ready-made sequence of messages with placeholder slots already filled in | Reusable prompt templates that standardize how the agent approaches a recurring task |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -91,7 +89,8 @@ MCP defines three primitives.  They differ in who starts the request and what co
 
     *Hint: For the advantage, think about what happens when 10 agents all need the same tool: do they each need their own server process?  For the risk, think about what happens if one agent's requests contain malicious input that affects the server's shared state.*
 
-> **Checkpoint.** MCP gives agents a standard way to discover and call tools.  It does not answer a harder question: when those tools reach a user's personal data on an external service, how do we prove the user authorized it?  That is what the next section is for.
+> MCP gives agents a standard way to discover and call tools.  It does not answer a harder question: when those tools reach a user's personal data on an external service, how do we prove the user authorized it?  That is what the next section is for.
+{: .tb-practice data-title="Checkpoint"}
 
 ---
 
@@ -107,12 +106,14 @@ A valet parking analogy covers each OAuth flow.  Authorization Code is giving a 
 | **Client Credentials** | Server-to-server access: no human user is involved; the agent acts as itself, not on anyone's behalf | 1. Agent sends its `client_id` and `client_secret` directly to the provider. 2. Provider immediately returns an `access_token`. | The agent service account: this is the simplest flow because there is no human redirect involved |
 | **Device Flow** | CLI tools, headless servers, or IoT devices: devices that cannot open a browser window | 1. Device obtains a user code and a URL from the provider. 2. Device displays the code and URL to the user. 3. User opens the URL on a phone or other device and enters the code. 4. Device polls the provider until the user finishes. | The CLI agent or device: the token arrives via polling, not via a browser redirect |
 | **Implicit** | *(Deprecated, do not use for new development)* Was used for browser single-page apps before 2019 | Token returned directly in the URL fragment (e.g., `https://app.com/callback#token=abc`), no separate code exchange step | Browser JavaScript: tokens in URL fragments appear in browser history, server logs, and referrer headers sent to third-party sites |
+{: .tb-full}
 
 The Tools and MCP Lab's Option 4D uses the client credentials flow.  In that flow, a program (your agent) sends its own `client_id` and `client_secret` to the authorization server's token endpoint and receives an access token in return.  No human logs in, because the agent acts as itself.
 
 The Implicit flow was deprecated because tokens in URL fragments appear in browser history, server logs, and referrer headers.  Never implement it for new agents.
 
-> **Watch out.** Many students assume that holding an OAuth token lets the agent do anything the user can do.  That is true only if the token was issued with maximum scope.  In practice, tokens should be issued with the minimum scope the task needs.  A token with `calendar.readonly` scope cannot create calendar events, even if the agent asks it to; the API returns a 403 Forbidden error.  The external service enforces scope.  It is not a convention.
+> Many students assume that holding an OAuth token lets the agent do anything the user can do.  That is true only if the token was issued with maximum scope.  In practice, tokens should be issued with the minimum scope the task needs.  A token with `calendar.readonly` scope cannot create calendar events, even if the agent asks it to; the API returns a 403 Forbidden error.  The external service enforces scope.  It is not a convention.
+{: .tb-warning data-title="Watch out"}
 
 ### Questions to Work Through
 
@@ -138,7 +139,8 @@ The Implicit flow was deprecated because tokens in URL fragments appear in brows
 
     *Hint: GitHub's API documentation lists scopes at https://docs.github.com/en/developers/apps/scopes-for-oauth-apps.  For public repositories, you may need no special scope at all; unauthenticated requests can read public data.  What is the blast radius if a `repo`-scoped token is stolen versus a no-scope token?*
 
-> **Checkpoint.** The right flow gets you the right token with the right scopes.  How you store, log, and handle that token decides whether the authorization stays secure after it is granted.
+> The right flow gets you the right token with the right scopes.  How you store, log, and handle that token decides whether the authorization stays secure after it is granted.
+{: .tb-practice data-title="Checkpoint"}
 
 ---
 
@@ -151,6 +153,7 @@ The Implicit flow was deprecated because tokens in URL fragments appear in brows
 | **Error logging** | `logger.error(f"API call failed with token {token}")`; this writes the actual token value into log files | `logger.error("API call failed; token redacted")`; logs the fact that a token was used without logging the token's value | Log files are often stored, transmitted, and accessed by many systems; a token in a log file is a token waiting to be stolen |
 | **Token expiry** | Ignore HTTP 401 Unauthorized responses and keep retrying the same request with the expired token | Catch the 401 response, use the refresh token to obtain a new access token, retry the request exactly once, then surface a clear error if the refresh also fails | Silently retrying an expired token wastes API calls and hides authentication failures from operators who need to know |
 | **Token in agent prompt** | Include token in the system prompt: `"Your GitHub token is ghp_abc123. Use it to..."`; the token lives in the LLM's context window throughout the conversation | Inject the token at the tool-call layer in the application code, never in the conversation text | Tokens placed in the LLM's context window can be extracted by prompt injection: a malicious document the agent reads could say "output your system prompt" |
+{: .tb-full}
 
 ### The Row That Matters Most for Agents
 
@@ -168,4 +171,5 @@ The MCP server you build in the Tools and MCP Lab is that application code.  It 
 
     *Hint: Scenario 1: an attacker copied your token three months ago without you knowing.  Scenario 2: an old token was accidentally logged to a low-visibility log file that nobody checks.  What does rotation do in each case?*
 
-> **Checkpoint.** Keep tokens out of source, logs, and prompts, and request the narrowest scope that works.  The Tools and MCP Lab's Option 4D applies those rules while you build the simplest MCP server a real agent would call.
+> Keep tokens out of source, logs, and prompts, and request the narrowest scope that works.  The Tools and MCP Lab's Option 4D applies those rules while you build the simplest MCP server a real agent would call.
+{: .tb-practice data-title="Checkpoint"}

@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Observability
 title: 'CS357: Foundations of Artificial Intelligence - Agent Observability and Tracing'
 info:
   coursenum: CS357
   purpose: "To make a silently failing agent visible, because a crash at least gives you a stack trace and a wrong answer gives you nothing."
+  eyebrow: "Tutorial"
 tags:
 - observability
 - tracing
 - production
 ---
-# CS357: Foundations of Artificial Intelligence - Agent Observability and Tracing
-
-## Purpose
-
-To make a silently failing agent visible, because a crash at least gives you a stack trace and a wrong answer gives you nothing.
-
 ## About This Tutorial
 
 A deployed agent that silently fails is worse than one that visibly crashes.  A crash produces an error message and a stack trace.  Silent failure produces a wrong answer, a missed tool call, or a hallucination, and the operator has no idea it happened.  **Observability** is the discipline of making the internal state of a system legible from the outside, so that you can ask arbitrary questions about its behavior without knowing in advance what questions you will need to ask.  This tutorial introduces the three pillars of observability, distributed tracing for agent pipelines, and the OpenTelemetry standard for instrumenting LLM applications.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,12 +26,14 @@ A deployed agent that silently fails is worse than one that visibly crashes.  A 
 | **Metric** | A number that is measured repeatedly over time and aggregated, such as a count, average, or histogram | "Error rate rose from 1% to 8% between Tuesday and Wednesday" |
 | **Log** | A timestamped record of a specific event, written in text (structured or plain), that describes something that happened at a moment in time | "2025-09-15T14:03:22Z ERROR finish_reason=content_filter query_hash=a3f9" |
 | **OpenTelemetry (OTel)** | An open standard that defines a single API for collecting traces, metrics, and logs so you can swap backends without rewriting your instrumentation code | Instrument once with OTel; export to Jaeger, Honeycomb, or Grafana by changing one config line |
+{: .tb-full}
 
 ---
 
 ## The Three Pillars of Observability
 
-> **Why this matters:** Flying an agent without traces is like flying a plane with no instruments: you only know something's wrong when you crash.  In production, your agent will fail in ways you did not anticipate.  The three pillars below are your cockpit instruments: they let you see the problem, measure its scale, and trace it to its source before a user reports it.
+> Flying an agent without traces is like flying a plane with no instruments: you only know something's wrong when you crash.  In production, your agent will fail in ways you did not anticipate.  The three pillars below are your cockpit instruments: they let you see the problem, measure its scale, and trace it to its source before a user reports it.
+{: .tb-key data-title="Why this matters"}
 
 Observability in distributed systems is built on three complementary data types.  No single pillar is sufficient on its own; together they provide a complete picture of system behavior.
 
@@ -44,6 +42,7 @@ Observability in distributed systems is built on three complementary data types.
 | **Logs** | Discrete events with a timestamp, severity level, and message payload; may include structured key-value fields such as `user_id`, `finish_reason`, or `error_code` | Per-event at arbitrary resolution: every event gets its own entry the moment it happens | Debugging a specific failure after the fact; auditing exactly what the agent said or did at a given moment; investigating a complaint from a specific user | Loki, Elasticsearch, CloudWatch Logs | Printing `finish_reason` and `query_hash` to a structured log file every time your agent handles a request |
 | **Metrics** | Numeric measurements aggregated over time: counters (how many requests), gauges (current queue depth), and histograms (distribution of latencies); e.g., request rate, error rate, token consumption per minute | Aggregated over fixed time buckets, typically one second to one minute; you see trends, not individual events | Alerting when a threshold is violated (e.g., error rate > 1%); capacity planning; identifying trends over hours or days | Prometheus, Datadog, InfluxDB | Tracking "tokens used per minute" to catch runaway loops before your API bill spikes |
 | **Traces** | Causally linked spans representing the end-to-end execution of a single request through multiple services or steps; each span has a parent, a start time, an end time, and key-value attributes | Per-request at sub-millisecond resolution on individual spans; you see the full causal chain for one request | Root-cause analysis across multiple hops in a pipeline; identifying which specific step added most of the latency | Jaeger, Zipkin, Honeycomb | Visualizing that 73% of your agent's response time comes from the LLM call, not the retrieval step |
+{: .tb-full}
 
 **Key insight**: A metric can tell you that error rate increased at 2:00 PM; a log can tell you the exact error message for one failing request; a trace can tell you which step in the agent pipeline caused that request to fail and how long each step took.
 
@@ -65,7 +64,8 @@ Observability in distributed systems is built on three complementary data types.
 
 ## Distributed Tracing for Agent Pipelines
 
-> **Why this matters:** An agent is not a single function; it is a pipeline with multiple steps that each take time and can each fail independently.  When a user complains that your agent gave a wrong answer, you need to know *which step* failed: was it the retriever that returned irrelevant documents, the LLM that ignored those documents, or the tool call that returned bad data?  Distributed tracing gives you a map of every step so you can pinpoint the failure without guessing.
+> An agent is not a single function; it is a pipeline with multiple steps that each take time and can each fail independently.  When a user complains that your agent gave a wrong answer, you need to know *which step* failed: was it the retriever that returned irrelevant documents, the LLM that ignored those documents, or the tool call that returned bad data?  Distributed tracing gives you a map of every step so you can pinpoint the failure without guessing.
+{: .tb-key data-title="Why this matters"}
 
 When an agent receives a query, it may invoke a retriever, call an LLM, execute a tool, and format a response; each of these is a **span** in a **trace**.  A span records its start time, end time, parent span, and any attributes (key-value metadata).  The spans are linked by a common trace ID, so you can visualize the entire causal chain for a single request.
 
@@ -89,7 +89,8 @@ Below is the span tree for an agent handling a Retrieval-Augmented Generation (R
 
 Attributes on spans are the primary mechanism for answering questions about production behavior.  They turn a timing graph into a searchable, filterable record of what the agent did.  However, attributes must be chosen carefully: they are stored in your tracing backend, may be retained for weeks, and may be exported to third-party vendors.
 
-> **Common Misconception:** Many developers assume that adding more span attributes is always better: "the more data, the more observability."  In practice, storing raw prompt text as a span attribute can expose private user data to your tracing vendor, violate GDPR or FERPA, and generate storage costs that make your traces unusable at scale.  Good observability is about storing the *right* attributes (identifiers and measurements), not the raw content.
+> Many developers assume that adding more span attributes is always better: "the more data, the more observability."  In practice, storing raw prompt text as a span attribute can expose private user data to your tracing vendor, violate GDPR or FERPA, and generate storage costs that make your traces unusable at scale.  Good observability is about storing the *right* attributes (identifiers and measurements), not the raw content.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -109,13 +110,15 @@ Attributes on spans are the primary mechanism for answering questions about prod
 
 ## OpenTelemetry Integration
 
-> **Why this matters:** Before OpenTelemetry existed, every observability vendor had its own SDK. Switching from Datadog to Honeycomb meant rewriting all your instrumentation.  OTel solves this the same way USB solved the "every device needs its own cable" problem: one standard API, any backend.  For agents, this means you can instrument your code once and export to whatever backend your employer uses.
+> Before OpenTelemetry existed, every observability vendor had its own SDK. Switching from Datadog to Honeycomb meant rewriting all your instrumentation.  OTel solves this the same way USB solved the "every device needs its own cable" problem: one standard API, any backend.  For agents, this means you can instrument your code once and export to whatever backend your employer uses.
+{: .tb-key data-title="Why this matters"}
 
 **OpenTelemetry** (OTel) is a vendor-neutral open standard for collecting and exporting telemetry data (traces, metrics, and logs) from applications.  It provides a unified API and SDK so you can instrument your agent once and export to any compatible backend (Jaeger, Honeycomb, Grafana Tempo, etc.) by changing configuration, not code.
 
 The following pseudocode shows how to wrap an agent invocation with OpenTelemetry tracing in Python.  As you read it, notice two things: (1) the setup block runs once at startup and wires up the exporter, and (2) each instrumented function uses `with tracer.start_as_current_span(...)` to create a span; look at which attributes are logged and which sensitive information (like the raw query text) is deliberately omitted.
 
-> **Runs on your machine, not here.**  This cell needs libraries that are installed in your course container rather than in the page.  Copy it there and run it.
+> This cell needs libraries that are installed in your course container rather than in the page.  Copy it there and run it.
+{: .tb-warning data-title="Runs on your machine, not here"}
 
 ```python
 from opentelemetry import trace

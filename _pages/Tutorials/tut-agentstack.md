@@ -1,21 +1,17 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AgentStack
 title: 'CS357: Foundations of Artificial Intelligence - The Local Agent Stack'
 info:
   coursenum: CS357
   purpose: "To wire the containers you can already run into one system, which is the prep the Responsible AI Capstone's container-hardening direction assumes."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - containers
 - stack
 - local-ai
 ---
-# CS357: Foundations of Artificial Intelligence - The Local Agent Stack
-
-## Purpose
-
-To wire the containers you can already run into one system, which is the prep the Responsible AI Capstone's container-hardening direction assumes.
-
 ## About This Tutorial
 
 > **Supplemental: required prep only for the Responsible AI Capstone's container-hardening direction (Direction 4).**  This is self-paced reference material rather than a class session.  Do the installs and image pulls before you start the direction that needs them: Docker Desktop plus roughly 6 GB of images.  Build the **3-container minimal stack** first (Ollama, `llmproxy`, Open WebUI); the full 20-service tour below is reference.  Bring what will not start to the open studio in *How I AI*, Part III.
@@ -32,6 +28,7 @@ The *Docker from Zero: Containers for Agent Builders* tutorial gave you one cont
 | **Port** | A numbered "door" on a computer through which one specific service listens for connections. Two services cannot share the same port number on the same machine. | Ollama listens on port 11434; Open WebUI on port 3000 |
 | **`host.docker.internal`** | A special hostname that, from inside a Docker container, refers back to the host machine where Docker is running. Essential for containers that need to call services running on the host. | The gateway uses this to reach Ollama running natively on the host |
 | **Identity Directory** | A folder on the host machine that is mounted into a container as its persistent storage. When the container is deleted and recreated, its state survives because it lived on the host. | `$HOME/agents/hermes/home` persists the Hermes agent's memory |
+{: .tb-full}
 
 ---
 
@@ -52,6 +49,7 @@ Memorizing two dozen container names is hopeless; memorizing **five tiers** is e
 | Tools | Give agents capabilities beyond text generation: web search, databases, external APIs | `mcpproxy`, `searxng`, `surrealdb` | SearXNG lets agents search the web privately; SurrealDB stores results persistently |
 | Frontends | Provide human-facing interfaces (chat UIs, notebooks, voice, slides) that talk to the gateway | `open-webui`, `open-terminal`, `open-design`, `open-notebook`, `voicebox`, `presenton`, `calibre-web` | Open WebUI at port 3000 gives you a ChatGPT-style chat interface connected to your local models |
 | Agents | Run autonomous or task-bounded workers that can take multi-step actions without human input at each step | `hermes`, `freebuff`, `agent0`, `openhands-server`/`openhands`, `nanoclaw`, `nanoclaw-dind`, `zeroclaw`, `openclaw-gateway`, `n8n` | n8n at port 5678 runs scheduled workflows; Hermes handles tool-calling tasks |
+{: .tb-full}
 
 Two structural principles govern everything.  First, **all inference flows through the gateway**: every frontend and agent sends OpenAI-compatible requests to `llmproxy`, which routes to Ollama, LocalAI, or a cloud free tier per one YAML file, so swapping a model never touches more than that file.  Second, **every service gets its own identity directory** under `$HOME/agents/<service>/`, bind-mounted in, so any container can be destroyed and recreated without losing state, and no two services can contaminate each other.
 
@@ -74,6 +72,7 @@ Containers collide on ports before they collide on anything else, so the plan co
 | `calibre-web` | 8083 | E-book library management with a web interface | Index your PDF collection and let agents search it |
 | `agent0` | 8082 | Autonomous agent with a full web UI for monitoring its actions | Watch Agent Zero plan and execute multi-step tasks in real time |
 | remaining services | assigned | One row each in your stack's port table, no exceptions | Before adding any new service, add its row first |
+{: .tb-full}
 
 Notice the `searxng` row: its image default (8080) collides with `local-ai`, so we remap on the host side with `-p 8081:8080`, which is the entire point of the `-p HOST:CONTAINER` Docker flag.  **The rule: before any `docker run`, the service gets a row.**  Port conflicts then become impossible by construction rather than debugged at midnight.
 

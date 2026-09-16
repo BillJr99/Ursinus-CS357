@@ -1,24 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/MultimodalAgents
 title: 'CS357: Foundations of Artificial Intelligence - Multimodal Agents'
 info:
   coursenum: CS357
   purpose: "To treat images, documents, and code as first-class inputs to an agent rather than attachments it cannot see."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - multimodal
 - vision
 - documents
 ---
-# CS357: Foundations of Artificial Intelligence - Multimodal Agents
-
-## Purpose
-
-To treat images, documents, and code as first-class inputs to an agent rather than attachments it cannot see.
-
 ## About This Tutorial
 
 A multimodal agent is like a colleague who can not only read your email but also glance at the whiteboard photo you attached, scan the PDF contract you dropped in the chat, and look at the screenshot of the error you're seeing.  The ability to reason across formats (not just text) dramatically expands what an agent can perceive and act on.  But every modality conversion introduces new failure modes, and understanding those failures is essential for building reliable systems.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,6 +27,7 @@ A multimodal agent is like a colleague who can not only read your email but also
 | Grounding | The ability of a model to point to the specific region of an image, sentence in a document, or line of code that supports its claim, connecting the output back to the input. | A grounded model says "The invoice total is $1,247 (found in the bottom-right cell of the table at row 14)" rather than just "$1,247". |
 | OCR (Optical Character Recognition) | A technique that renders a document as an image and then identifies and extracts the text characters visible in that image; used when a PDF has no text layer. | Tesseract (`pip install pytesseract`) can extract text from a scanned photo of a handwritten form, though with higher error rates than text-layer extraction. |
 | CLIP | Contrastive Language-Image Pretraining, a model that jointly trains image and text encoders so that an image and its description produce similar embeddings, enabling text-to-image search and vice versa. | `pip install clip` from OpenAI enables queries like "find me images of broken login forms" against an image database; no manual labels required. |
+{: .tb-full}
 
 ---
 
@@ -52,6 +50,7 @@ Multimodality is not magic; it is an extension of the fundamental token-processi
 | Audio | WAV, MP3, OGG | Transcribed to text via a speech recognition model (most commonly Whisper: `pip install openai-whisper`) then treated as text, OR processed as audio tokens by a native audio model | Varies by speech rate: ~150 words/minute -> ~200 tokens/minute | Transcription, speaker identification, meeting summarization | Transcription errors (wrong words) propagate through the entire pipeline; accents and background noise increase error rate; tone and emotion are lost in text transcription |
 | Video | MP4, MOV, frames | Sampled as a sequence of image frames (typically 1 frame/second to 1 frame/5 seconds); audio track transcribed separately | Very high: 100 frames × 512 tokens/frame = 51,200 tokens for a 100-second video | Temporal scene understanding, action recognition, caption generation per frame | Extremely high token cost makes long videos expensive; temporal reasoning across hundreds of frames is unreliable; sampling strategy loses frames containing important moments |
 | Code File | .py, .js, .ts, .java, etc. | Passed as plain text (most common), as a serialized Abstract Syntax Tree, or queried incrementally via tools (look up function definition, list imports) | Proportional to file size; a 500-line Python file ≈ 2,000-3,000 tokens | Explanation, refactoring, bug detection, docstring generation, test writing | Files larger than ~1,000 lines exceed context windows; structural relationships (call graphs, inheritance) are invisible in flat text |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -88,6 +87,7 @@ Notable VLMs include:
 | LLaVA (open-source) | Multiple research groups | Local via Ollama (`ollama pull llava:7b`) | Visual instruction tuning on LLaMA base; good for research experiments; free to run locally | Research and education; tasks where data privacy prohibits sending images to the cloud | Free to run locally; requires 8+ GB RAM |
 | Moondream (open-source) | Vikhyat Kopula | Local via Ollama (`ollama pull moondream`) | Very small (1.8B parameters); designed for edge deployment; fast even on CPU | Embedded devices, offline use, situations where a 7B model is too large | Free; fits in 4 GB RAM |
 | Gemma 3 multimodal | Google DeepMind | Local via Ollama (`ollama pull gemma3:12b`) | Vision-capable variant; strong grounding; 128K context for long documents | Long-document vision tasks locally | Free to run locally; requires 16 GB RAM |
+{: .tb-full}
 
 The common thread: the image becomes tokens.  The model never "looks" at pixels the way a human does; it processes a patch-level compressed representation.  This is why fine detail, small text, and complex layouts can confuse VLMs even when they look clear to a human eye.
 
@@ -102,10 +102,12 @@ When an agent needs to work with a PDF, there are three main approaches, each wi
 | Text Layer Extraction | PyMuPDF (`fitz`) | `pip install pymupdf` | Digitally created PDFs with an embedded text layer (most modern office documents, contracts, reports) | Scanned documents (image-only PDFs) where there is no text layer; multi-column layouts where text order is extracted incorrectly | Very fast: 100 pages in under 1 second |
 | OCR (Optical Character Recognition) | Tesseract via pytesseract | `pip install pytesseract` (requires Tesseract binary: `brew install tesseract` or `apt-get install tesseract-ocr`) | Scanned documents, photos of text, handwritten forms (with lower accuracy) | Handwriting, unusual fonts, very poor scan quality, rotated text | Slow: 2-5 seconds per page |
 | Vision-Based Extraction | Any VLM (GPT-4o, Claude Vision, LLaVA) | `pip install openai` or `pip install anthropic` | Complex layouts where context matters for interpretation (e.g., "the amount in the 'Total' row"), forms with unusual structures, documents where text and graphics must be interpreted together | Dense tables with many small numbers (high hallucination risk); documents requiring pixel-perfect numeric accuracy | Medium: 3-10 seconds per page via API |
+{: .tb-full}
 
 In practice, robust document processing pipelines combine all three: extract text where available, fall back to OCR for scanned pages, and use vision for validation or for documents that defeat both.
 
-> **Common Misconception:** Many developers assume that a VLM "sees" a PDF the way a human reads it: understanding layout, inferring meaning from position, and reading left-to-right correctly.  In reality, **VLMs frequently misread tables, merge adjacent cells, transpose rows and columns, and hallucinate values in dense numeric regions**.  Always validate extracted numbers against a range check (is this dollar amount plausible for this type of invoice?) before using them downstream.
+> Many developers assume that a VLM "sees" a PDF the way a human reads it: understanding layout, inferring meaning from position, and reading left-to-right correctly.  In reality, **VLMs frequently misread tables, merge adjacent cells, transpose rows and columns, and hallucinate values in dense numeric regions**.  Always validate extracted numbers against a range check (is this dollar amount plausible for this type of invoice?) before using them downstream.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -146,6 +148,7 @@ These losses are not bugs; they are the cost of compression.  The implication fo
 | Audio transcription mishears a drug name | "Metformin" transcribed as "Metformine" | Dictionary constraint: only accept drug names on an approved formulary | After transcription, check every noun against a drug name database; flag unrecognized names for human review |
 | VLM hallucinates a value for an unclear region | Invoice field is partially obscured; VLM guesses "$500" | Confidence scoring: extract logprobs or re-extract and compare | Use model's logprobs (available in OpenAI API) to estimate confidence; alternatively, extract the same field three times and flag majority-vote disagreements |
 | Video frame sampling misses a key event | A 1-frame-per-second sample misses a 0.5-second event at 0:47 | Adaptive sampling: use motion detection to identify high-activity frames | `pip install opencv-python`; compute frame-to-frame pixel difference and oversample during high-motion periods |
+{: .tb-full}
 
 ## 4.  Grounding
 
@@ -217,6 +220,7 @@ Consider an agent tasked with digitizing handwritten hospital intake forms.  Eac
 | 3. Validate JSON against schema | Pydantic or JSON Schema | `pip install pydantic` | Extracted JSON string | Validated Pydantic model object, or validation error | Schema mismatch if model invents fields; type errors for dates formatted as "Jan 5" instead of "2024-01-05" | Use `model = IntakeForm.model_validate_json(raw_json)` and catch `ValidationError` explicitly |
 | 4. Flag low-confidence fields | Re-extraction comparison heuristic | No additional install; re-run Step 2 with same prompt | Validated JSON + second extraction run | Same JSON with added `"confidence": "low"` on fields where two runs disagree | Overconfidence: model can be wrong and highly confident; double extraction does not catch systematic errors | Add range checks independent of the model: dates must be plausible birth years (1900-2010), medication names must appear in a formulary |
 | 5. Write to database | Database write tool (psycopg2 for Postgres, etc.) | `pip install psycopg2-binary` | Validated (and flagged) JSON | Database record with timestamp, form_id, operator_id | Race condition if form submitted twice; flagged fields written without human review; PII handling requirements not met | Use database transactions for idempotency (`INSERT ... ON CONFLICT DO NOTHING`); route flagged records to a human review queue rather than writing directly |
+{: .tb-full}
 
 Note that Steps 4 and 5 are critical controls: flagging low-confidence fields prevents bad data from entering the database silently, and Step 5 should route flagged records to a human reviewer rather than writing them directly.
 

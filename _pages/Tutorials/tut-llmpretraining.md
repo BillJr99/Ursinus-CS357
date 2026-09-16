@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/LLMPretraining
 title: 'CS357: Foundations of Artificial Intelligence - How LLMs Are Built'
 info:
   coursenum: CS357
   purpose: "To trace the engineering decisions behind a trained model: how text is cut into pieces, what objective the model optimizes, and how scaling changes the answer."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - pretraining
 - tokenization
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - How LLMs Are Built
-
-## Purpose
-
-To trace the engineering decisions behind a trained model: how text is cut into pieces, what objective the model optimizes, and how scaling changes the answer.
-
 ## About This Tutorial
 
 The LLMs powering today's AI applications are not magic; they are the result of well-understood engineering decisions made during construction: how text is cut into pieces, what objective the model is trained to optimize, how many parameters and how much data are needed, and how weights are compressed for deployment.  This tutorial traces the full construction path from **tokenization → byte-pair encoding by hand → causal vs. masked language modeling → cross-entropy loss in code → Chinchilla scaling laws → quantization for deployment**, building enough mechanical understanding to make informed choices about which models to use and how.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -37,6 +34,7 @@ The LLMs powering today's AI applications are not magic; they are the result of 
 | **Quantization** | Compressing model weights from high-precision floating-point (float32, 32 bits per number) to lower-precision integers (int8 or int4, 8 or 4 bits per number), trading a small accuracy loss for a large reduction in memory and inference speed | A 7B model in float32 requires ~28 GB of GPU memory; in int4 it requires ~4 GB, small enough to run on a laptop GPU |
 | **Perplexity** | A measurement of how well a language model predicts a test set: the geometric mean of the inverse probability the model assigns to each token; lower is better | A perplexity of 10 means the model is, on average, as confused as if it had to choose uniformly among 10 equally likely options at each step |
 | **Bits per Parameter** | The number of bits used to store each model weight: float32 = 32 bits, float16 = 16 bits, int8 = 8 bits, int4 = 4 bits; lower bits per parameter = smaller model file but potentially lower quality | A 7B int4 model uses 4 × 7,000,000,000 = 28 billion bits = ~3.5 GB; the same model in float32 uses 28 GB |
+{: .tb-full}
 
 ---
 
@@ -185,6 +183,7 @@ Given the four-character sequence "abbc" tokenized at the character level (token
 | $$t=2$$ | a | b | 0.6 | 0.511 |
 | $$t=3$$ | a, b | b | 0.4 | 0.916 |
 | $$t=4$$ | a, b, b | c | 0.7 | 0.357 |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -396,6 +395,7 @@ The intuition: float32 can represent values between roughly $$-3.4 \times 10^{38
 | LLaMA-3 8B | 8B | 15T | Overtrained for inference efficiency (optimal: ~160B tokens) | int4, single GPU | Small N, massive D: great for deployment |
 | BERT-base | 110M | 16B | Well-trained for era | float32, CPU feasible | Smaller model, lower data era |
 | Chinchilla (original) | 70B | 1.4T | Exactly optimal | float16, multi-GPU | Reference point for scaling law |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -469,4 +469,5 @@ In the next activity we look inside the transformer itself: how the attention me
 - Radford et al. "Language Models are Unsupervised Multitask Learners."  OpenAI (2019).  The GPT-2 paper, which clearly describes the CLM pre-training objective.
 - Devlin et al. "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding."  *NAACL* (2019).  The MLM pre-training paper.
 
-> **Sources:** This tutorial draws on material from *AI Engineering from Scratch*, Phase 10 (LLMs from Scratch), supplemented by the primary papers listed above.
+> This tutorial draws on material from *AI Engineering from Scratch*, Phase 10 (LLMs from Scratch), supplemented by the primary papers listed above.
+{: .tb-note data-title="Sources"}

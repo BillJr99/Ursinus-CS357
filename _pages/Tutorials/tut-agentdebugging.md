@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AgentDebugging
 title: 'CS357: Foundations of Artificial Intelligence - Debugging AI Agents'
 info:
   coursenum: CS357
   purpose: "To give you a method for finding out what an agent actually did when it went wrong, and the logging that makes an unreproducible failure reproducible next time."
+  eyebrow: "Tutorial"
 tags:
 - debugging
 - agents
 - observability
 ---
-# CS357: Foundations of Artificial Intelligence - Debugging AI Agents
-
-## Purpose
-
-To give you a method for finding out what an agent actually did when it went wrong, and the logging that makes an unreproducible failure reproducible next time.
-
 ## About This Tutorial
 
 CS357 - Foundations of Artificial Intelligence / Agentic AI | Ursinus College
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,6 +26,7 @@ CS357 - Foundations of Artificial Intelligence / Agentic AI | Ursinus College
 | **Context Overflow** | When a conversation exceeds the model's context window length, causing the model to lose access to earlier instructions, tool outputs, or conversation history | An agent that follows its system prompt perfectly for 30 turns but "forgets" its formatting rules by turn 60 |
 | **Persona Drift** | The gradual shift in an agent's behavior away from its system prompt instructions as the conversation history accumulates and earlier instructions become relatively less influential | An agent instructed to be concise that starts giving long answers after many turns of conversation with a user who prefers verbose responses |
 | **Observability Platform** | A tool such as LangSmith or Langfuse that captures detailed traces of every LLM call and tool invocation in an agent run, enabling post-hoc inspection of exactly what happened | Using LangSmith to see that the agent received a valid weather API response but then generated text saying it couldn't retrieve the data |
+{: .tb-full}
 
 ---
 
@@ -60,24 +57,28 @@ Debugging a non-deterministic system is like diagnosing a car that only breaks d
 | **Off-by-one** | A loop runs one extra iteration, processing one more item than intended | The model miscounts items in a list that appears in context | Test with lists of varying lengths; look for length-dependent failure patterns |
 | **Missing case** | An unhandled null input causes the function to crash with an unhandled exception | An unhandled tool failure causes the model to hallucinate a plausible-sounding result rather than reporting the error | Insert deliberate tool failures in testing; check whether the model's recovery behavior is correct or confabulated |
 | **Race condition** | Two processes write to the same file simultaneously, corrupting the data | Two agent branches produce conflicting context updates that are both inserted into the prompt | Review concurrency controls in the orchestration layer; serialize context writes; test with parallel branches |
+{: .tb-full}
 
 ### Questions to Work Through
 
 **Question 1.**  Why can't you simply add `print()` statements to debug an LLM? What is the LLM's equivalent of a "variable's value," and why is it inaccessible in the way that a Python variable's value is accessible in conventional code?
 
-> *Hint:* In a traditional program, a variable holds a specific value at each point in execution: you can print it, inspect it in a debugger, and reason about how it got there.  An LLM's "state" is distributed across billions of floating-point weights that encode statistical patterns learned from training data.  There is no variable that holds "what the model is currently thinking."  The only observable output is the token probability distribution, and even that is only partially informative about why the model generated a specific output.  If you can't inspect internal state, what can you observe?  What logs and outputs are available, and what can you infer from them?
+> In a traditional program, a variable holds a specific value at each point in execution: you can print it, inspect it in a debugger, and reason about how it got there.  An LLM's "state" is distributed across billions of floating-point weights that encode statistical patterns learned from training data.  There is no variable that holds "what the model is currently thinking."  The only observable output is the token probability distribution, and even that is only partially informative about why the model generated a specific output.  If you can't inspect internal state, what can you observe?  What logs and outputs are available, and what can you infer from them?
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 2.**  A user reports: "Sometimes the agent is rude, but I can't reproduce it."  What is the minimum set of information you need before you can begin investigating?  List at least four specific pieces of information and explain why each is necessary for your investigation.
 
-> *Hint:* Think about everything that could differ between the run that produced rudeness and the run you would try to reproduce it with: the exact text of the system prompt (including its version); the model name and version (model providers update models silently); the temperature and any other sampling parameters; the full conversation history including the exact text of every user and assistant turn; any tool call inputs and outputs; the exact timestamp (in case a tool's data source changed over time).  Without each of these, you cannot know whether a different reproduction attempt is testing the same conditions or different ones.
+> Think about everything that could differ between the run that produced rudeness and the run you would try to reproduce it with: the exact text of the system prompt (including its version); the model name and version (model providers update models silently); the temperature and any other sampling parameters; the full conversation history including the exact text of every user and assistant turn; any tool call inputs and outputs; the exact timestamp (in case a tool's data source changed over time).  Without each of these, you cannot know whether a different reproduction attempt is testing the same conditions or different ones.
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 3.**  What is the difference between a bug in the *prompt* and a bug in the *code surrounding the prompt*?  Give a concrete example of each.  Why does the distinction matter for how you fix it and how you test the fix?
 
-> *Hint:* A prompt bug is an error in the text instructions given to the model: for example, a system prompt that says "always respond in Spanish" when it should say "always respond in the user's language," or a tool description that incorrectly describes the format of the tool's output.  A code bug is an error in the Python (or other language) code that constructs the prompt, calls the model, parses the response, or invokes tools: for example, a bug that accidentally truncates the system prompt when the conversation history is long, or a bug that passes tool results in the wrong format.  The distinction matters because fixing a prompt bug requires no code deployment; fixing a code bug does.  Testing a prompt fix requires running the model; testing a code fix can sometimes be done with unit tests that mock the model.
+> A prompt bug is an error in the text instructions given to the model: for example, a system prompt that says "always respond in Spanish" when it should say "always respond in the user's language," or a tool description that incorrectly describes the format of the tool's output.  A code bug is an error in the Python (or other language) code that constructs the prompt, calls the model, parses the response, or invokes tools: for example, a bug that accidentally truncates the system prompt when the conversation history is long, or a bug that passes tool results in the wrong format.  The distinction matters because fixing a prompt bug requires no code deployment; fixing a code bug does.  Testing a prompt fix requires running the model; testing a code fix can sometimes be done with unit tests that mock the model.
+{: .tb-tip data-title="Hint"}
 
 ---
 
@@ -102,25 +103,29 @@ Agent debugging benefits enormously from a structured approach.  Without structu
 
 **Stage 5: Fix and regression-test.**  After fixing the root cause, write a test case that would have caught the bug before the fix was applied.  Add it to your regression test suite.  Verify that the fix resolves the bug without breaking other agent behaviors.
 
-> **Common Misconception:** Many developers try to fix agent bugs by tweaking the prompt slightly and running the agent a few times to see if the bug disappears.  If the bug is non-deterministic, this approach is unreliable; the bug may appear to be fixed when it has actually just not triggered randomly.  The systematic five-stage process above forces you to confirm a specific, testable hypothesis before declaring the bug fixed, which is the only way to have confidence that your fix actually addresses the root cause.
+> Many developers try to fix agent bugs by tweaking the prompt slightly and running the agent a few times to see if the bug disappears.  If the bug is non-deterministic, this approach is unreliable; the bug may appear to be fixed when it has actually just not triggered randomly.  The systematic five-stage process above forces you to confirm a specific, testable hypothesis before declaring the bug fixed, which is the only way to have confidence that your fix actually addresses the root cause.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
 **Question 4.**  A user's agent starts giving unhelpful, off-topic answers beginning around turn 35 of a long conversation.  Describe step-by-step how you would use prompt bisection to find the exact turn where behavior diverged.  How many bisection steps would you need in the worst case if the conversation has 64 turns total?
 
-> *Hint:* Start by replaying turns 1 through 32 and checking whether the behavior is correct at the end.  If correct at turn 32, the bug is in turns 33-64; replay turns 33-48.  If still correct, the bug is in turns 49-64; replay turns 49-56.  Continue halving the range.  For a 64-turn conversation, log₂(64) = 6 bisection steps are sufficient to identify the single turn that introduces the failure.  At each step, you need to actually run the model with exactly that prefix of the conversation and observe the output.  What are you looking for at each step: what does "correct behavior" mean at an intermediate turn, before the conversation has fully developed?
+> Start by replaying turns 1 through 32 and checking whether the behavior is correct at the end.  If correct at turn 32, the bug is in turns 33-64; replay turns 33-48.  If still correct, the bug is in turns 49-64; replay turns 49-56.  Continue halving the range.  For a 64-turn conversation, log₂(64) = 6 bisection steps are sufficient to identify the single turn that introduces the failure.  At each step, you need to actually run the model with exactly that prefix of the conversation and observe the output.  What are you looking for at each step: what does "correct behavior" mean at an intermediate turn, before the conversation has fully developed?
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 5.**  You need to build a logging system that makes agent failures reproducible.  However, your agent handles sensitive user data, so you cannot store raw conversation text in logs.  Describe a logging schema that captures enough information to reproduce failures without capturing any PII. For each field you log, explain what it enables you to diagnose.
 
-> *Hint:* You can log: a SHA-256 hash of the system prompt (tells you which version was running without storing the text); the model name and version as a string (identifies the model behavior); temperature and other sampling parameters as structured JSON (enables non-determinism reproduction); tool call arguments in redacted form (if arguments contain PII, log a schema-level description or redacted version); tool response status codes and response length in tokens (distinguishes tool success from failure without storing content); token counts for prompt and completion from the API response (detects context overflow).  What you cannot log without PII risk: raw user messages, assistant responses containing user information, tool outputs that echo user data back.  How does losing this information affect your ability to debug certain categories of failures?
+> You can log: a SHA-256 hash of the system prompt (tells you which version was running without storing the text); the model name and version as a string (identifies the model behavior); temperature and other sampling parameters as structured JSON (enables non-determinism reproduction); tool call arguments in redacted form (if arguments contain PII, log a schema-level description or redacted version); tool response status codes and response length in tokens (distinguishes tool success from failure without storing content); token counts for prompt and completion from the API response (detects context overflow).  What you cannot log without PII risk: raw user messages, assistant responses containing user information, tool outputs that echo user data back.  How does losing this information affect your ability to debug certain categories of failures?
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 6.**  Your agent calls a weather tool.  The tool sometimes returns HTTP 503 (service unavailable).  Examining logs, you find that the agent sometimes correctly says "I was unable to retrieve current weather data" and sometimes gives a confident but fabricated forecast.  How would you distinguish "tool failure causing correct graceful degradation" from "tool failure causing hallucination" using only your logs?  What specific log fields would tell you which category a given incident belongs to?
 
-> *Hint:* The critical question is: what did the model see in the context at the moment it generated the response?  Log: (1) the tool's HTTP status code and response body separately from the model's subsequent response; if the tool returned 503 but the model's response contains specific temperature and precipitation values, the model hallucinated because no valid data was available; (2) the exact text inserted into the context from the tool result; if it says "Error: service unavailable" but the model responded with a forecast, you know the model didn't follow the error signal; (3) the token count of the tool result: a 503 error response is typically short; a rich forecast is longer.  What would you see in your logs for the hallucination case vs. the graceful degradation case?
+> The critical question is: what did the model see in the context at the moment it generated the response?  Log: (1) the tool's HTTP status code and response body separately from the model's subsequent response; if the tool returned 503 but the model's response contains specific temperature and precipitation values, the model hallucinated because no valid data was available; (2) the exact text inserted into the context from the tool result; if it says "Error: service unavailable" but the model responded with a forecast, you know the model didn't follow the error signal; (3) the token count of the tool result: a 503 error response is typically short; a rich forecast is longer.  What would you see in your logs for the hallucination case vs. the graceful degradation case?
+{: .tb-tip data-title="Hint"}
 
 ---
 
@@ -139,7 +144,8 @@ Add logging to capture the full conversation context (system prompt version, con
 
 </details>
 
-> **Why this answer?**  A single unreproducible failure is the hardest category of agent bug to address, but the correct response is to instrument the system so the *next* occurrence can be reproduced.  Rolling back without understanding the cause leaves you unable to know whether the previous version also had the bug or a different one.  Adjusting temperature does not address any root cause and may introduce new non-deterministic failures.  Declaring it an anomaly is risky because a failure in an agent could affect safety, correctness, or user trust if it recurs at a higher rate than one observed case suggests.
+> A single unreproducible failure is the hardest category of agent bug to address, but the correct response is to instrument the system so the *next* occurrence can be reproduced.  Rolling back without understanding the cause leaves you unable to know whether the previous version also had the bug or a different one.  Adjusting temperature does not address any root cause and may introduce new non-deterministic failures.  Declaring it an anomaly is risky because a failure in an agent could affect safety, correctness, or user trust if it recurs at a higher rate than one observed case suggests.
+{: .tb-intuition data-title="Why this answer?"}
 
 ---
 
@@ -167,6 +173,7 @@ Add logging to capture the full conversation context (system prompt version, con
 | Tool call: input arguments | Log serialized tool arguments (redact PII fields) | Distinguishes "the model called the tool incorrectly" from "the tool received correct input but returned wrong output" |
 | Tool call: output status code and body length | Log separately from the model's next response | If the tool returned HTTP 200 but the model said it failed, the issue is in the model's interpretation, not the tool |
 | Token count for prompt and completion | Log from the API response metadata | The single most reliable detector of context overflow: when prompt tokens approach the model's context limit, earlier content is being dropped |
+{: .tb-full}
 
 ### Regression Testing for Agents
 
@@ -182,19 +189,22 @@ Run the full regression suite on every prompt change, model upgrade, and tool sc
 
 **Question 7.**  What is a "prompt hash" and why would you log the SHA-256 hash of a prompt instead of the full prompt text?  What debugging information does the hash give you?  What information does it deny you?  Under what circumstances would you need to store the actual full prompt text?
 
-> *Hint:* A SHA-256 hash is a fixed-length fingerprint of the prompt text: if two runs have the same hash, they used the exact same prompt; if the hashes differ, the prompts differ.  This tells you whether a behavioral difference between two runs is due to a prompt change or to model non-determinism.  What the hash cannot tell you: what the prompt said, which part of it changed, or how to fix a prompt bug.  You would need the actual prompt text when: (a) you are debugging a suspected prompt bug and need to read the text; (b) a run produced a harmful output and you need to audit exactly what instruction was active; or (c) you need to reproduce a run for a legal or compliance investigation.  Under what data retention policies is storing full prompt text acceptable?
+> A SHA-256 hash is a fixed-length fingerprint of the prompt text: if two runs have the same hash, they used the exact same prompt; if the hashes differ, the prompts differ.  This tells you whether a behavioral difference between two runs is due to a prompt change or to model non-determinism.  What the hash cannot tell you: what the prompt said, which part of it changed, or how to fix a prompt bug.  You would need the actual prompt text when: (a) you are debugging a suspected prompt bug and need to read the text; (b) a run produced a harmful output and you need to audit exactly what instruction was active; or (c) you need to reproduce a run for a legal or compliance investigation.  Under what data retention policies is storing full prompt text acceptable?
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 8.**  Your agent's tool call log shows that the weather tool returned HTTP 200 with a syntactically valid JSON response containing temperature and precipitation data.  However, the model's next output says "I couldn't retrieve that information."  What does this tell you about where the failure occurred?  What specifically would you examine next to diagnose the root cause?
 
-> *Hint:* The tool succeeded: it returned 200 with valid data.  The failure is in how that data was processed or presented to the model.  Possible locations: (1) the code that inserts the tool result into the context may be inserting it incorrectly: wrong format, wrong location in the prompt, or truncated; (2) the model may have received the data but interpreted the JSON in a way that made it look like an error (e.g., a null field for one value caused the model to generalize to "all data is unavailable"); (3) context overflow may have pushed the tool result out of the effective context window before the model generated its response.  Examine: the exact text of the tool result as it appeared in the assembled context (not just the raw API response), and the token count at that point in the conversation.
+> The tool succeeded: it returned 200 with valid data.  The failure is in how that data was processed or presented to the model.  Possible locations: (1) the code that inserts the tool result into the context may be inserting it incorrectly: wrong format, wrong location in the prompt, or truncated; (2) the model may have received the data but interpreted the JSON in a way that made it look like an error (e.g., a null field for one value caused the model to generalize to "all data is unavailable"); (3) context overflow may have pushed the tool result out of the effective context window before the model generated its response.  Examine: the exact text of the tool result as it appeared in the assembled context (not just the raw API response), and the token count at that point in the conversation.
+{: .tb-tip data-title="Hint"}
 
 ---
 
 **Question 9.**  A support engineer needs to investigate complaint tickets about agent misbehavior.  The engineer should not have access to raw user conversation data for privacy reasons.  Design a specific 5-step debugging protocol the support engineer can follow using only the logged metadata (no raw user text).  Describe what information each step uses and what category of failure it rules out.
 
-> *Hint:* Step 1: Check the model version and prompt hash for the failing session against the baseline from the same time period; rules out "something changed in the infrastructure" vs. "this is an edge case in normal operation."  Step 2: Check the token counts for each turn; rules out context overflow as a cause if all turns are well below the context limit.  Step 3: Check tool call status codes and response sizes; rules out tool failure if all tools returned 200 with non-trivial response sizes.  Step 4: Check the conversation turn count; rules out early-turn bugs if the failure occurred after many turns.  Step 5: Check whether the prompt hash matches known-bad prompt versions flagged in the incident log; rules out prompt regression.  After all five steps, what categories of failure remain uninvestigated, and what additional (non-PII) information could you request to narrow further?
+> Step 1: Check the model version and prompt hash for the failing session against the baseline from the same time period; rules out "something changed in the infrastructure" vs. "this is an edge case in normal operation."  Step 2: Check the token counts for each turn; rules out context overflow as a cause if all turns are well below the context limit.  Step 3: Check tool call status codes and response sizes; rules out tool failure if all tools returned 200 with non-trivial response sizes.  Step 4: Check the conversation turn count; rules out early-turn bugs if the failure occurred after many turns.  Step 5: Check whether the prompt hash matches known-bad prompt versions flagged in the incident log; rules out prompt regression.  After all five steps, what categories of failure remain uninvestigated, and what additional (non-PII) information could you request to narrow further?
+{: .tb-tip data-title="Hint"}
 
 ---
 

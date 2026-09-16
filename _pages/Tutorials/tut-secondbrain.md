@@ -1,25 +1,21 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/SecondBrain
 title: 'CS357: Foundations of Artificial Intelligence - The Second Brain'
 info:
   coursenum: CS357
   purpose: "To build one Markdown vault that you own, that GitHub hosts, that Obsidian edits, and that every agent you run can read and write safely."
+  eyebrow: "Tutorial"
 tags:
 - obsidian
 - memory
 - knowledge-management
 ---
 
-# CS357: Foundations of Artificial Intelligence - The Second Brain
-
-## Purpose
-
-To build one Markdown vault that you own, that GitHub hosts, that Obsidian edits, and that every agent you run can read and write safely.
-
 ## About This Tutorial
 
 Every AI tool you use maintains its own little memory of you, in its own format, in its own silo, and none of them agree.  The cure is architectural: **one Markdown vault, hosted on GitHub, edited by you in Obsidian, and readable and writable by every agent you run**, so that your context becomes a single, versioned, portable artifact instead of five inconsistent copies.  This tutorial builds that system from zero: the vault, the gitless sync, the personal access token, the agent contract, and the wiring to an agent like **hermes** from our stack.  Here is the path for today: **why a vault → the LLM wiki pattern it implements → Obsidian and the repository → gitless sync with a PAT → the three-zone structure and AGENTS.md → the metadata protocol agents must honor → wiring hermes by prompting**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -33,6 +29,7 @@ Every AI tool you use maintains its own little memory of you, in its own format,
 | **Blob SHA** | The specific hash value Git uses to uniquely identify file contents. It is computed differently from a plain SHA-1 hash; Git prefixes the content with `blob {bytecount}\0` before hashing. | When an agent writes a file to the vault, it may need to compute the blob SHA to correctly update the sync metadata file. |
 | **Zone boundary** | A deliberate structural rule about which areas of the vault serve which purpose and who is allowed to write to them. Zone boundaries are what make the vault safe to open to agents. | The `raw/` zone is read-only for everyone including agents; the `wiki/` zone is write-enabled for agents; the `.obsidian/` zone is off-limits except for the specific metadata file. |
 | **Memory scope** | Whether a remembered fact applies everywhere (global) or only inside one project. Zone boundaries govern *where* an agent may write; memory scope governs *how widely* what it writes should apply. | A global memory lives in `LLMMEMORIES.md`; a project memory lives in `wiki/projects/<project>/MEMORIES.md`, and your `AGENTS.md` states which is the default. |
+{: .tb-full}
 
 ---
 
@@ -59,6 +56,7 @@ The design has four pieces, each independently replaceable:
 | **GitHub as host** | Local storage that agents can only reach if they're on the same machine. | GitHub provides a versioned REST API that agents on any machine, in any container, can reach with a token. | Portability and versioning: no history, no access from remote agents, no audit trail of changes. |
 | **Gitless sync plugin** | Running `git` commands on every device and handling merge conflicts manually. | One sync mechanism, owned by one plugin, means one consistent state machine instead of three fighting ones. | Simplicity: without the plugin, every device needs git installed and you'll deal with merge conflicts between your phone and laptop. |
 | **AGENTS.md contract** | Per-tool configuration of what each agent is allowed to do. | The contract travels inside the repository; every agent reads it automatically, requiring zero per-tool configuration. | Safety and consistency: without a contract, agents may write anywhere in the vault, including overwriting your source files. |
+{: .tb-full}
 
 ## The Pattern Has a Name: Karpathy's LLM Wiki
 
@@ -71,6 +69,7 @@ The pattern has three layers, and our vault is one arrangement of them:
 | **Raw sources** | You. Articles, papers, PDFs, transcripts, dropped in and never edited again | `raw/` |
 | **The wiki** | The model. Source summaries, entity pages, concept pages, and the cross-links between them | `wiki/` |
 | **The schema** | You. The conventions, zone rules, and workflows the model must follow | `AGENTS.md` (plus `LLMMEMORIES.md` and `SYSTEMPROMPT.md`) |
+{: .tb-full}
 
 Two files inside `wiki/` do the navigating, and an LLM wiki that lacks them degrades into a folder of disconnected notes:
 
@@ -149,9 +148,10 @@ Leave the PDF untouched (raw/ is read-only), add the index link, and note the so
 
 ---
 
-> **Common Misconception:** "Since it's my private repository, agents can write anywhere they want; I can always fix mistakes."
+> "Since it's my private repository, agents can write anywhere they want; I can always fix mistakes."
 >
 > This reasoning underestimates two risks.  First, agents that overwrite source files in `raw/` destroy the pristine record of what your original sources actually said, and if the agent's interpretation was wrong, you've lost the ability to reprocess from scratch.  Second, agents that write to `.obsidian/` can corrupt the plugin's sync state in ways that cause silent data loss (your edits in Obsidian stop syncing to GitHub without any error message).  The zone boundaries exist precisely because "I can fix it later" is not a recovery strategy when the failure is silent.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -179,6 +179,7 @@ Ask one question: **is this still true after the project ends?**
 | "This team chose SQLite over Postgres, and why" | Project | `wiki/projects/<project>/MEMORIES.md` |
 | "The grader runs `pytest -q` and treats warnings as failures" | Project | `wiki/projects/<project>/MEMORIES.md` |
 | "This repository protects `main`; open a pull request" | Project | that repository's own `AGENTS.md` |
+{: .tb-full}
 
 The last row is easy to miss.  A rule about a *code repository* belongs in that repository's `AGENTS.md`, where it travels with the code.  A rule about your *vault* belongs in the vault's `AGENTS.md`.  Two contracts, two homes, and an agent reads whichever one it is standing in.
 
@@ -218,9 +219,10 @@ Your agent finishes a lab and learns that your course's grader rejects any commi
 
 ---
 
-> **Common Misconception:** "More memory is always better, so write everything to the global file where no agent can miss it."
+> "More memory is always better, so write everything to the global file where no agent can miss it."
 >
 > This confuses recall with relevance.  A global file that accumulates every project's decisions becomes long, internally contradictory, and expensive to read, and the agent cannot tell which entries still apply.  Worse, the failure is silent: an agent confidently applies your last project's database choice, or your last team's review rule, to work that never agreed to either.  Scope is not a filing preference.  It is what keeps a memory's authority attached to the context that earned it.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 

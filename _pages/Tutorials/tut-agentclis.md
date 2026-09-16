@@ -1,25 +1,22 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/AgentCLIs
 title: 'CS357: Foundations of Artificial Intelligence - Agentic CLI Tools'
 info:
   coursenum: CS357
   purpose: "To install and compare the major terminal coding agents (Claude Code, Codex, Gemini CLI, opencode, and pi) and to teach the review discipline their generated diffs demand."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - coding-agents
 - cli
 - tooling
 ---
 
-# CS357: Foundations of Artificial Intelligence - Agentic CLI Tools
-
-## Purpose
-
-To install and compare the major terminal coding agents (Claude Code, Codex, Gemini CLI, opencode, and pi) and to teach the review discipline their generated diffs demand.
-
 ## About This Tutorial
 
 The agent loop you study in this course ships today as a family of **terminal programs**: you describe a goal, the agent reads your files, proposes shell commands and edits, asks permission at the gates, and iterates.  This tutorial installs the major tools from zero, teaches the shared workflow they all follow, and shows how to drive them from inside VS Code.  We take today in this order: **the shared anatomy → installing the big five → project context files → permission gates and supervision → routing them through our local gateway → VS Code integration**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -33,6 +30,7 @@ Make sure these terms are solid before you start.  You will meet all of them bel
 | **Context file** | A project-specific text file (e.g., `CLAUDE.md`) the agent reads automatically at startup, containing standing instructions about the project | You write "never modify files under `data/raw/`" in `CLAUDE.md` and the agent respects that boundary every session without you repeating it |
 | **MCP (Model Context Protocol)** | An open standard that lets agents connect to external tools (databases, APIs, browsers) in a uniform way | Both Claude Code and Gemini CLI can call the same MCP server to query your database; you only write the server once |
 | **Gateway / base URL** | A local proxy server that sits between your CLI tool and any AI model, letting you swap models without changing the tool | Setting `ANTHROPIC_BASE_URL=http://localhost:4000` makes Claude Code talk to your local Ollama instance instead of Anthropic's cloud |
+{: .tb-full}
 
 ---
 
@@ -45,6 +43,7 @@ Before you install a single tool, it helps to know *which kind* of tool you are 
 | **Chat** | Converse in a window; copy answers and code out yourself | **You** are the runtime; you paste and run the code by hand | Anyone; ideation, explanation, quick snippets | None (no file or shell access) | ChatGPT, Claude.ai, **LM Studio** (chat mode), Ollama chat |
 | **Code** | Give a goal in your terminal or IDE; the agent reads files, edits them, runs commands and tests, and loops | **The agent** acts on your repository, behind permission gates | Developers working inside a codebase | Medium-high, but gated | **Claude Code**, **opencode**, Codex CLI, Gemini CLI, pi, and, at scale, managed by **herdr** |
 | **Cowork** | Delegate general computer and document tasks on a desktop | The agent drives apps, files, and the desktop directly | **Non-developers** and knowledge work beyond code | High, task-scoped | **Claude Cowork**, **OpenWork** (open-source, opencode-powered) |
+{: .tb-full}
 
 The whole of this tutorial lives in the **code** column: an agent scoped to a project directory, acting through gates.  But the paradigms are worth holding in your head together for two reasons.  First, they mark a ladder of blast radius: chat can only mislead you, code can change your repository, and cowork can touch anything on your machine, so the human-oversight lessons in Parts II and III matter *more* as you climb, not less.  Second, the boundaries are blurring.  **LM Studio Bionic** is a case in point: it began as a chat app for open, local models and grew a code-project mode (point it at a folder and it investigates, edits, and debugs) plus local voice input; one tool spanning chat and code, run entirely on models you host yourself.
 
@@ -78,6 +77,7 @@ Think of these tools the way you think about web browsers: Chrome, Firefox, and 
 | Gemini CLI | Google | `npm install -g @google/gemini-cli`, installs the `gemini` binary; authenticate with `gemini auth login` the first time | `GEMINI.md` in your project root | Comes with the most generous free tier of the commercial tools; uses a three-tier skill discovery system (local -> project -> global) to find custom capabilities |
 | opencode | opencode.ai | `curl -fsSL https://opencode.ai/install \| bash`, a single-line installer that detects your OS and places the binary on your PATH | `AGENTS.md` in your project root (same spec as Codex) | The most provider-flexible of the group: it speaks to any OpenAI-compatible backend, which means you can point it at Claude, Gemini, local Ollama, or any API that follows the spec, all via a small JSON config file |
 | pi | pi.dev | `npm install -g @mariozechner/pi-coding-agent`, installs the `pi` binary; no gate configuration needed because there are no gates | Minimal, reads a small `pi.md` if present but does not require it | Deliberately stripped down: no permission gates, no plan mode, no subagents. This is not a limitation to fix; it is a design choice that makes pi fast and low-ceremony for quick experiments. Use it for low-stakes exploration where speed matters more than oversight |
+{: .tb-full}
 
 A few more belong to our course ecosystem and are covered where they live: **freebuff**, a task harness we run as a container in the local stack (the agent stack module deploys it; configure per its README); **KiloCode**, the VS Code-native member, in Part III; and **LM Studio Bionic**, a desktop **agent for open, local models** (GLM- and Kimi-class) that spans the chat and code paradigms and adds local voice input, with an optional Zero-Data-Retention cloud path for the largest open models.  Bionic is the same data-minimization story as the local gateway in Section 6: the model runs on hardware you control, so privacy-sensitive coursework never leaves your machine.  Each tool authenticates on first run (`claude` then `/login`, or an exported API key per its docs); the course site lists the current free-access path for each.
 
@@ -122,8 +122,10 @@ If `node` is missing and you would rather not install it on your host, skip to �
 | **opencode** | `npm i -g opencode-ai` | `opencode` | `~/.config/opencode/opencode.json`, project `opencode.json` | Provider key, or a local gateway |
 | **Aider** | `pip install aider-chat` | `aider` | `~/.aider.conf.yml`, project `CONVENTIONS.md` | Provider key in env |
 | **pi** | `npm i -g @mariozechner/pi-coding-agent` | `pi` | `~/.config/pi/`, optional project `pi.md` | Provider key, or a local endpoint via the compat plugin (§6c) |
+{: .tb-full}
 
-> **Watch out!** `npm i -g` on some systems wants `sudo`, which installs the tool as root and then complains about permissions later.  The clean fix is a Node version manager (`nvm`) so your global installs land in your home directory, or a container, which sidesteps the question entirely.
+> `npm i -g` on some systems wants `sudo`, which installs the tool as root and then complains about permissions later.  The clean fix is a Node version manager (`nvm`) so your global installs land in your home directory, or a container, which sidesteps the question entirely.
+{: .tb-warning data-title="Watch out"}
 
 ### First run, in order
 
@@ -258,6 +260,7 @@ Four postures have converged across the tools, ordered here from most supervised
 | **Default (ask)** | The normal loop: the agent acts, but pauses at each consequential gate for a yes/no | Every write, shell command, and irreversible action | Ordinary supervised work, the calibration Section 4 describes |
 | **Auto-accept edits** | File edits apply without a per-edit prompt; shell commands and irreversible actions *still* gate | Shell commands, network calls, `rm`, `git push` | A well-scoped task where you trust the edits but not the side effects, e.g., renaming a symbol across many files in a git repo you can `reset` |
 | **Full-auto / bypass** ("YOLO") | No gates at all; the agent reads, writes, and runs commands unattended | None | Almost never for coursework, only inside a throwaway container with no network and no credentials |
+{: .tb-full}
 
 The labels differ by tool, but it is the same dial.  In **Claude Code** you cycle modes with **Shift+Tab** (default -> auto-accept edits -> plan), and the fully ungated mode is the `--dangerously-skip-permissions` flag, whose name is itself the warning.  **Codex** exposes approval modes plus a `--full-auto` flag; **Gemini CLI** has a `--yolo` flag; **opencode** offers a plan-style review before it applies a change.  **pi**, true to its personality in the Part I table, effectively has *only* the last row; it is always full-auto, which is exactly why the course reserves it for low-stakes throwaway work.
 
@@ -315,6 +318,7 @@ Every local endpoint in this section is reachable at one of three addresses, and
 |---|---|---|---|
 | Natively on your laptop | `http://localhost:11434/v1` | `http://localhost:3000/api/v1` | `http://localhost:4000/v1` |
 | Inside a container | `http://host.docker.internal:11434/v1` | `http://host.docker.internal:3000/api/v1` | `http://host.docker.internal:4000/v1` |
+{: .tb-full}
 
 Two things to know before you debug anything:
 
@@ -400,7 +404,8 @@ Now that your tool is scoped, instructed, and routed, Part III shows how to brin
 
 ---
 
-> **Common Misconception:** Many students assume that "permission gates" and "the working directory" are two separate safety measures that each protect against different risks.  In practice, they compose: the working directory limits *what* the agent can touch (only files under that directory are reachable by the file tools), while permission gates limit *when* the agent acts (it must pause and ask before each consequential step).  Disabling either one alone cuts your safety roughly in half.  Turning off gates while keeping a narrow working directory still lets the agent delete every file in your project without a pause.  Keeping gates active while launching from `~` means every gate prompt covers a blast radius of your entire home directory.  You need both, calibrated together.
+> Many students assume that "permission gates" and "the working directory" are two separate safety measures that each protect against different risks.  In practice, they compose: the working directory limits *what* the agent can touch (only files under that directory are reachable by the file tools), while permission gates limit *when* the agent acts (it must pause and ask before each consequential step).  Disabling either one alone cuts your safety roughly in half.  Turning off gates while keeping a narrow working directory still lets the agent delete every file in your project without a pause.  Keeping gates active while launching from `~` means every gate prompt covers a blast radius of your entire home directory.  You need both, calibrated together.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ---
 
@@ -464,6 +469,7 @@ That one addition changes the job from *babysitting one agent* to *supervising a
 | Split panes for many agents at once | yes | yes |
 | **Knows which agent is blocked / working / done** | no (just panes of text) | yes |
 | Purpose-built for coding-agent workflows | no | yes |
+{: .tb-full}
 
 The relationship is not "herdr *versus* `tmux`"; it is `tmux`'s persistence *plus* the observability an agent workflow needs.  Learn the plain multiplexer first (it is everywhere, on every server); reach for herdr when you are running enough agents that "which one needs me?" becomes the real question.
 
@@ -493,7 +499,8 @@ This same idea (an agent that keeps working while you are away) scales up in the
 
    *Hint:* Walk the blast radius.  What can the agent reach (the `-v` mounts and `-w` working dir)?  What can it do without asking (the permission mode)?  What credentials are within reach if it goes wrong (what did you *not* mount)?  How do you undo an hour of bad edits (what makes the workspace reversible)?
 
-> **Common Misconception:** Many students believe that detaching from a multiplexer *pauses* the agent, the way closing a laptop lid sleeps a machine, so "I'll detach to stop it for a bit" feels safe.  It does the opposite: detaching only removes your *view*.  The agent keeps running at full speed on the persistent server, reading files, executing commands, and spending tokens with no one watching the gates.  Persistence is the feature you came for and the risk you must plan around, which is why the permission mode and the container boundary are set *before* you walk away, not after you come back.
+> Many students believe that detaching from a multiplexer *pauses* the agent, the way closing a laptop lid sleeps a machine, so "I'll detach to stop it for a bit" feels safe.  It does the opposite: detaching only removes your *view*.  The agent keeps running at full speed on the persistent server, reading files, executing commands, and spending tokens with no one watching the gates.  Persistence is the feature you came for and the risk you must plan around, which is why the permission mode and the container boundary are set *before* you walk away, not after you come back.
+{: .tb-pitfall data-title="Common Misconception"}
 
 You start a long agent task inside `tmux`, press `Ctrl-b d`, and close your SSH connection.  Thirty minutes later you `tmux attach` from a different machine.  What do you find?
 
@@ -622,7 +629,8 @@ In your notebook, respond at three levels:
 
 **Personal level:** These tools place a capable agent one keystroke from your filesystem, and the differences between them are mostly differences in how much friction they put between intention and action.  After today, where do you personally want that friction?  Did your answer change from what it was before you ran your first session, and if so, what in the session shifted it?
 
-> *Hint:* Think about the permission gates you met above.  Did any gate prompt make you pause and reconsider?  Did any gate fire for an action you had not anticipated?  Your intuition about friction may have updated from the session itself.
+> Think about the permission gates you met above.  Did any gate prompt make you pause and reconsider?  Did any gate fire for an action you had not anticipated?  Your intuition about friction may have updated from the session itself.
+{: .tb-tip data-title="Hint"}
 
 **Technical level:** The working directory, the context file, and the permission gates form a three-layer scoping system.  Describe in your own words what each layer controls and what breaks if you remove any one of them.  Is there a fourth layer you think is missing?
 

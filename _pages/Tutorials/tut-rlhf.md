@@ -1,10 +1,12 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/RLHF
 title: 'CS357: Foundations of Artificial Intelligence - From Rewards to Preferences'
 info:
   coursenum: CS357
   purpose: "To see how an agent learns good decisions when nobody can write down every rule, from reinforcement learning through RLHF."
+  eyebrow: "Tutorial"
+  numbering: false
 tags:
 - rlhf
 - reinforcement-learning
@@ -13,15 +15,10 @@ tags:
 
 {% include mathjax.html %}
 
-# CS357: Foundations of Artificial Intelligence - From Rewards to Preferences
-
-## Purpose
-
-To see how an agent learns good decisions when nobody can write down every rule, from reinforcement learning through RLHF.
-
 ## About This Tutorial
 
 Before language models could be aligned to human values, AI researchers had to solve a more fundamental problem: how do you teach an agent to make good decisions when you cannot write down every rule?  The answer (reinforcement learning) turns out to be both powerful and tricky to harness for the subtlety of human preferences.  In this tutorial we trace the path from **basic RL mechanics → Q-learning intuition → the RLHF training loop → DPO as a simpler alternative → Constitutional AI**.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -37,6 +34,7 @@ Before language models could be aligned to human values, AI researchers had to s
 | **DPO (Direct Preference Optimization)** | A training method that skips the reward model and PPO entirely; it directly adjusts model weights using preference pairs, making RLHF-style training dramatically simpler | Instead of training a separate reward neural network and then running PPO, DPO uses a single mathematical loss function applied straight to the preference data |
 | **Constitutional AI (CAI)** | An alignment approach where the model critiques and revises its own outputs according to a written list of principles, generating AI-labeled preference data that replaces or supplements human annotators | Anthropic's Claude is trained with CAI: the model reads its own draft response, asks "does this violate principle #4?", revises it, and the revised response is treated as the preferred output |
 | **KL divergence** | A measure of how different two probability distributions are; in RLHF/PPO, it constrains the updated policy to stay close to the base model, preventing "reward hacking" the reward model | If KL divergence is not constrained, the model quickly learns to produce responses that fool the reward model while becoming gibberish to real users |
+{: .tb-full}
 
 ---
 
@@ -67,6 +65,7 @@ The RL training loop, applied to a language model:
 | Environment transitions | $$s_{t+1}$$ | The token is appended; the new state is the extended conversation |
 | Receive reward | $r_t$ | A human (or reward model) rates the completed response |
 | Update policy | $$\pi \leftarrow \pi + \Delta$$ | Adjust model weights so actions that led to high reward become more probable |
+{: .tb-full}
 
 The Markov property ("the current state contains all information needed for the decision") means history beyond the current state is ignored.  For LLMs, the "state" is the context window, and the Markov property holds approximately (a longer context window is a better state representation).
 
@@ -114,6 +113,7 @@ A toy Q-table for a tiny two-state ("question-answering" vs. "question-pending")
 | question-answering | ask clarifying question | 3.0 |
 | question-pending | answer directly | 1.0 |
 | question-pending | ask clarifying question | 9.0 |
+{: .tb-full}
 
 ### Questions to Work Through
 
@@ -171,8 +171,10 @@ The three-phase structure creates significant practical challenges: you need sep
 | **1. SFT** | Raw pretrained model + human demonstrations | Supervised fine-tuning on curated (prompt, response) pairs | SFT model: knows roughly how to respond helpfully |
 | **2. Reward Model** | SFT model + human preference labels (A > B for same prompt) | Train a separate classifier to predict human preferences | Reward model (RM): scores (prompt, response) pairs |
 | **3. PPO** | SFT model + reward model | RL loop: generate responses, score with RM, update policy; KL penalty keeps policy near SFT model | Aligned model: maximizes RM scores while staying coherent |
+{: .tb-full}
 
-> **Common Misconception:** Many students assume the reward model *is* the language model, or that RLHF means "training the model to get positive ratings."  In reality, RLHF trains a *separate* reward model on human preference data, then uses that reward model as the environment's reward signal in an RL loop that updates the *language model*.  There are three models involved: the SFT model, the reward model, and the PPO-updated policy.
+> Many students assume the reward model *is* the language model, or that RLHF means "training the model to get positive ratings."  In reality, RLHF trains a *separate* reward model on human preference data, then uses that reward model as the environment's reward signal in an RL loop that updates the *language model*.  There are three models involved: the SFT model, the reward model, and the PPO-updated policy.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -198,7 +200,8 @@ The code below generates three prompt-response pairs, simulates a human labeling
 
 ## Code Cell
 
-> **Predict first.**  Three prompts, two candidate responses each.  Before you run this, write down which response you expect the "better" model to prefer in each pair, and how confident you are.  Then run it and see where your intuition and the simulated annotator disagree.  The disagreements are the interesting part: they are where real annotator noise comes from.
+> Three prompts, two candidate responses each.  Before you run this, write down which response you expect the "better" model to prefer in each pair, and how confident you are.  Then run it and see where your intuition and the simulated annotator disagree.  The disagreements are the interesting part: they are where real annotator noise comes from.
+{: .tb-intuition data-title="Predict first"}
 
 ```python
 
@@ -331,8 +334,10 @@ The result: a model that has been trained on thousands of critique-and-revision 
 | **Scalability** | Scales with annotation budget: expensive | Scales with compute: once the constitution is written, AI generates unlimited preference data | CAI can be extended to new domains by adding principles; RLHF requires new human annotation |
 | **Primary failure mode** | Reward hacking; annotator bias | Conflicting principles; bias in the constitution itself | Both fail differently; production systems often combine both |
 | **Who encodes values** | Annotators (implicitly, through choices) | Constitution authors (explicitly, in writing) | CAI's values are more legible but concentrate power in the team that writes the constitution |
+{: .tb-full}
 
-> **Common Misconception:** Students often assume Constitutional AI eliminates human judgment from alignment.  It does not: humans still write the constitution, and the specific wording of each principle directly shapes how the model resolves edge cases.  The difference is *where* the human judgment occurs: at the level of individual response labels (RLHF) versus at the level of general principles (CAI).  CAI makes values more transparent but does not make them more neutral.
+> Students often assume Constitutional AI eliminates human judgment from alignment.  It does not: humans still write the constitution, and the specific wording of each principle directly shapes how the model resolves edge cases.  The difference is *where* the human judgment occurs: at the level of individual response labels (RLHF) versus at the level of general principles (CAI).  CAI makes values more transparent but does not make them more neutral.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -402,4 +407,5 @@ In the next activity we examine how the transformer architecture and attention m
 - Rafailov et al. "Direct Preference Optimization: Your Language Model is Secretly a Reward Model."  *NeurIPS* (2023).  The DPO paper.
 - Sutton and Barto.  *Reinforcement Learning: An Introduction* (2nd ed., 2018).  Chapters 1-6 cover MDP, Q-learning, and the exploration-exploitation tradeoff.
 
-> **Sources:** This tutorial draws on material from *AI Engineering from Scratch* (Phases 9, 10, and 18) and the "ML Animated" YouTube series (Reinforcement Learning chapters), supplemented by the primary papers listed above.
+> This tutorial draws on material from *AI Engineering from Scratch* (Phases 9, 10, and 18) and the "ML Animated" YouTube series (Reinforcement Learning chapters), supplemented by the primary papers listed above.
+{: .tb-note data-title="Sources"}

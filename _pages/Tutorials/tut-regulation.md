@@ -1,24 +1,20 @@
 ---
-layout: default-standard
+layout: textbook
 permalink: /Tutorials/Regulation
 title: 'CS357: Foundations of Artificial Intelligence - AI Regulation'
 info:
   coursenum: CS357
   purpose: "To place a working agent inside the law that governs it: the EU AI Act, the NIST AI Risk Management Framework, and the sector rules that may bind your project."
+  eyebrow: "Tutorial"
 tags:
 - regulation
 - policy
 - compliance
 ---
-# CS357: Foundations of Artificial Intelligence - AI Regulation
-
-## Purpose
-
-To place a working agent inside the law that governs it: the EU AI Act, the NIST AI Risk Management Framework, and the sector rules that may bind your project.
-
 ## About This Tutorial
 
 Building an agent that works is only half the challenge.  Deploying it legally and responsibly requires understanding the regulatory landscape that governs where and how AI can be used.  This tutorial covers the three most influential frameworks you will encounter: the **EU AI Act** (the world's first comprehensive AI law), the **NIST AI Risk Management Framework** (the leading voluntary standard in the United States), and **sector-specific rules** in healthcare, finance, education, and law enforcement.  By the end of this tutorial, you will be able to classify an agent system by risk tier, apply the NIST RMF functions to a real project, and identify the compliance obligations your own course agents may carry.
+{: .tb-lede}
 
 ## Key Concepts
 
@@ -30,12 +26,14 @@ Building an agent that works is only half the challenge.  Deploying it legally a
 | **HIPAA** | The Health Insurance Portability and Accountability Act, a U.S. federal law that protects the privacy of individually identifiable health information (called Protected Health Information, or PHI). | An agent that reads patient intake forms or suggests diagnoses must comply with HIPAA and cannot send that data to an external LLM API without a signed Business Associate Agreement. |
 | **FERPA** | The Family Educational Rights and Privacy Act, a U.S. federal law that protects student education records (grades, transcripts, disciplinary records) and restricts who can access them without student consent. | A course agent given read access to a grade database must be configured so it only returns a student's own grades, never another student's records. |
 | **Conformity Assessment** | The EU AI Act's required process for High Risk AI systems before they can be deployed, similar to a building permit for a skyscraper. The developer must document the system, assess its risks, and either self-certify or have a third party audit it. | A company deploying an AI hiring tool in the EU must complete conformity assessment, register the system in the EU database, and implement human oversight before any job applicant is ever evaluated. |
+{: .tb-full}
 
 ---
 
 ## The EU AI Act Risk Pyramid
 
-> **Why this matters:** The EU AI Act is like a building code for AI systems: you do not build a skyscraper however you like, and you do not deploy AI however you like either.  The law assigns different requirements based on how much harm a system could cause.  Even if you are a student in Pennsylvania, the EU AI Act affects you: any agent you deploy that could be accessed by EU residents, or any commercial product you build in the future, must comply.  Understanding the tier structure now lets you design with compliance in mind from the start.
+> The EU AI Act is like a building code for AI systems: you do not build a skyscraper however you like, and you do not deploy AI however you like either.  The law assigns different requirements based on how much harm a system could cause.  Even if you are a student in Pennsylvania, the EU AI Act affects you: any agent you deploy that could be accessed by EU residents, or any commercial product you build in the future, must comply.  Understanding the tier structure now lets you design with compliance in mind from the start.
+{: .tb-key data-title="Why this matters"}
 
 The EU AI Act (entered into force August 2024, with phased enforcement through 2027) classifies AI systems into four tiers based on the risk they pose to health, safety, and fundamental rights.  Requirements and prohibitions are tied to the tier, not to the technology.
 
@@ -45,6 +43,7 @@ The EU AI Act (entered into force August 2024, with phased enforcement through 2
 | **High Risk** | An AI system that screens resumes and ranks job applicants before a human recruiter reviews them; software that scores loan applications and creditworthiness; a tool that recommends which students should be flagged for additional academic support; an AI used in a medical device to detect tumors in X-rays | Before deployment: complete a conformity assessment; implement a risk management system; maintain technical documentation; register the system in the EU database; implement meaningful human oversight; ensure accuracy and robustness testing; document data governance practices | A course agent that automatically grades student work, or one that predicts which students are at risk of failing, would likely fall here; these make consequential decisions about individuals. |
 | **Limited Risk** | A general-purpose chatbot like ChatGPT or a customer service bot; an AI that generates marketing copy or synthetic images; a deepfake video generator | Transparency obligations only: users must be clearly told they are talking with an AI; AI-generated content must be labeled as such; the system need not justify its decisions, but it must not pretend to be human | Most of the course chatbots and RAG agents fall here; you must disclose AI involvement in every deployment, including the welcome message. |
 | **Minimal Risk** | A spam filter that flags unwanted email; an AI opponent in a video game; a Netflix recommendation algorithm suggesting what to watch next | No mandatory requirements beyond ordinary EU consumer and product law; deploy and iterate freely | Course agents used only internally for research, never shown to real users outside the course, generally fall here. |
+{: .tb-full}
 
 **GPAI Models** (General Purpose AI, such as large foundation models): The EU AI Act introduces specific obligations for GPAI model providers: transparency, copyright documentation, and safety evaluations for "systemic risk" models (above a compute threshold).  This affects providers like Anthropic and Meta, not student developers, but it shapes which APIs you can legally use in commercial products.
 
@@ -66,7 +65,8 @@ The EU AI Act (entered into force August 2024, with phased enforcement through 2
 
 ## NIST AI Risk Management Framework
 
-> **Why this matters:** If the EU AI Act is the law, NIST AI RMF is the instruction manual for being a responsible AI developer everywhere else.  In the U.S. federal government and in most large companies, NIST RMF compliance is either required by contract or expected as a sign of professional maturity.  Learning to apply its four functions now means you will already speak the language that employers use when they say "we need to manage AI risk."
+> If the EU AI Act is the law, NIST AI RMF is the instruction manual for being a responsible AI developer everywhere else.  In the U.S. federal government and in most large companies, NIST RMF compliance is either required by contract or expected as a sign of professional maturity.  Learning to apply its four functions now means you will already speak the language that employers use when they say "we need to manage AI risk."
+{: .tb-key data-title="Why this matters"}
 
 The NIST AI Risk Management Framework (AI RMF 1.0, released January 2023) is a voluntary framework organized around four core functions.  Unlike the EU AI Act, it does not mandate specific outcomes; instead it provides a structured process for identifying and managing AI risk.  It is widely adopted in the U.S. federal government and is increasingly referenced in industry contracts.
 
@@ -76,10 +76,12 @@ The NIST AI Risk Management Framework (AI RMF 1.0, released January 2023) is a v
 | **Map** | For a specific AI system in its specific deployment context, identify and categorize all the ways it could cause harm, before it is deployed | Enumerate every stakeholder group affected by the system, including groups who never interact with it directly; list potential harms for each stakeholder; classify the system using a risk framework (similar to EU AI Act tiers); document all intended uses and foreseeable unintended uses | A risk register listing harms, likelihoods, and severities; a stakeholder impact assessment; a use-case inventory |
 | **Measure** | Quantify and evaluate the identified risks using data, testing, and ongoing monitoring; do not just describe risks, measure them | Evaluate accuracy and error rates; audit for demographic bias; test robustness against adversarial inputs; run red-team exercises; track performance metrics in production over time | An evaluation report with disaggregated results by subgroup; bias audit results with statistical significance; an SLA dashboard showing live metrics |
 | **Manage** | Respond to measured risks through controls, mitigations, and contingency plans; close the loop between measurement and action | Implement technical controls (input filters, output validators, rate limits); formally accept, transfer, or avoid residual risks you cannot eliminate; maintain an incident response plan for when something goes wrong; plan for decommissioning | A risk treatment plan documenting each mitigation; an incident response runbook; a decommission checklist for when the agent is retired |
+{: .tb-full}
 
 The four functions are not a linear sequence; they form a cycle.  Measurement findings feed back into Governance decisions; new Governance policies trigger new Mapping exercises.
 
-> **Common Misconception:** Many students assume "voluntary framework" means "optional in practice."  In reality, the NIST AI RMF is increasingly referenced in U.S. federal procurement contracts, state laws, and corporate vendor requirements.  A startup that ignores NIST RMF may find itself ineligible to sell to government agencies or large enterprises, even without any direct legal mandate.
+> Many students assume "voluntary framework" means "optional in practice."  In reality, the NIST AI RMF is increasingly referenced in U.S. federal procurement contracts, state laws, and corporate vendor requirements.  A startup that ignores NIST RMF may find itself ineligible to sell to government agencies or large enterprises, even without any direct legal mandate.
+{: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
@@ -99,7 +101,8 @@ The four functions are not a linear sequence; they form a cycle.  Measurement fi
 
 ## Sector-Specific Rules
 
-> **Why this matters:** Knowing the EU AI Act and NIST RMF is necessary but not sufficient.  Each industry sector has its own regulatory body and its own rules that layer on top of the general frameworks.  A healthcare AI application must comply with the EU AI Act *and* HIPAA *and* FDA device regulations simultaneously.  Understanding sector rules now will prevent you from deploying an agent into a regulated industry and discovering (after launch) that you needed a federal clearance.
+> Knowing the EU AI Act and NIST RMF is necessary but not sufficient.  Each industry sector has its own regulatory body and its own rules that layer on top of the general frameworks.  A healthcare AI application must comply with the EU AI Act *and* HIPAA *and* FDA device regulations simultaneously.  Understanding sector rules now will prevent you from deploying an agent into a regulated industry and discovering (after launch) that you needed a federal clearance.
+{: .tb-key data-title="Why this matters"}
 
 General frameworks like the EU AI Act and NIST RMF establish broad principles, but specific industries have their own regulatory bodies and rules that layer on top of (or sometimes conflict with) the general frameworks.
 
@@ -109,6 +112,7 @@ General frameworks like the EU AI Act and NIST RMF establish broad principles, b
 | **Finance** | Federal Reserve SR 11-7 Model Risk Management guidance; EU AI Act (credit scoring is explicitly High Risk) | Every model used to make or support credit decisions must be validated by an independent team, not the team that built it. Black-box models face heightened scrutiny and must provide explainable reasoning for adverse decisions so applicants can contest them. | Build and maintain a model inventory; conduct independent validation by a separate team; run champion/challenger testing where the new model competes against the old one on live traffic; document all model limitations explicitly in the model card |
 | **Education** | FERPA (U.S.); state student privacy laws (e.g., California SOPIPA); proposed NIST AI in Education guidance | Student education records (grades, transcripts, disciplinary actions, course enrollment) are protected and cannot be accessed or shared without student consent. Any AI vendor that accesses student data must sign a data sharing agreement and is limited in how it can use that data. | Sign data processing agreements with all AI vendors before granting data access; implement consent workflows for students who are minors; maintain audit trails for any automated decision that could affect a grade or academic standing |
 | **Law Enforcement** | EU AI Act Unacceptable Risk tier (real-time remote biometric ID in public spaces); ACLU litigation risk in U.S.; state-level bans in some U.S. cities | Real-time facial recognition in public spaces (like scanning a crowd at a train station to identify wanted persons) is banned in the EU. Predictive policing systems that rely solely on AI profiling (without individualized suspicion) are also banned in the EU. The U.S. has no federal ban but faces significant civil rights litigation risk. | In the EU: do not deploy these systems, period. In the U.S.: require legal review before any deployment; mandate a human decision-maker who can override any AI flag; conduct disparate impact testing disaggregated by race; publish public disclosure policies describing how the system is used |
+{: .tb-full}
 
 A startup builds a chatbot that screens job applications by analyzing resumes and ranking candidates before a human recruiter reviews the shortlist.  Under the EU AI Act, this system is most accurately classified as:
 
