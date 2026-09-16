@@ -245,7 +245,15 @@ def cosine(a, b):
     return dot / (na * nb) if na and nb else 0.0
 
 def search_memory(query, k):
-    # BUG 1: eval() on user-controlled input
+    # BUG 1: eval() on user-controlled input.  Note what the quotes in f'"{query}"' do:
+    # a bare payload such as __import__('os').system('rm -rf <TARGET>') lands inside a
+    # string literal, so it is evaluated to a harmless str and never executes.  That is
+    # an accident of this particular f-string, not a defense.  A query containing a
+    # double quote closes the literal early and everything after is evaluated as code.
+    # The <TARGET> placeholder is deliberate: spelled out in full, this line would be a
+    # working destructive command sitting in a file students copy and paste.  As written
+    # it cannot run anywhere: Python keeps it inside the string literal, and a shell
+    # rejects <TARGET> as a syntax error before rm is ever invoked.
     processed_query = eval(f'"{query}"')
 
     if k <= 0:
@@ -261,18 +269,28 @@ def search_memory(query, k):
     if not q_vec:
         return []
 
+    # BUG 3: k is already bounded by the k > len(CORPUS) check above, so the slice is
+    # safe.  The cost is this line: every document in CORPUS is embedded and scored
+    # before the slice takes k of them, so the work is proportional to the corpus, not
+    # to k.
     scored = [(cosine(q_vec, embed(doc)), doc) for doc in CORPUS]
     scored.sort(reverse=True)
 
-    # BUG 3: no upper bound on k, caller could request millions of results
     return [doc for _, doc in scored[:k]]
 ```
 
+> The payload in Question 7 is written here to be read, not run.  Never type a destructive command into a program to find out whether it executes, on your machine or anyone else's; you are one quoting mistake away from finding out that it does.  When you need to prove an injection hole to yourself, use a payload whose only effect is visible and harmless, such as `" + __import__("os").getcwd() + "`, which at worst prints a directory name.
+{: .tb-warning data-title="Do not run the payload"}
+
 ### Questions to Work Through
 
-7.  **Bug 1:** Find the line containing `eval()`.  Explain why calling `eval()` on `query` (a string provided by the user) is a security issue.  What would happen if a user passed `query = "__import__('os').system('rm -rf /')"` to this function?
+7.  **Bug 1:** Find the line containing `eval()`.  Explain why calling `eval()` on `query`, a string provided by the user, is a security issue.  Then work out what actually happens when a user passes `query = "__import__('os').system('rm -rf <TARGET>')"`, where `<TARGET>` stands in for a path and is left unwritten on purpose so that nothing on this page is a working destructive command.  Read the f-string carefully before you answer, because the obvious answer is wrong.  Having worked out why that payload does not run, describe the kind of query that would, and say what the difference is.
 
-   > *Hint: Python's `eval()` executes arbitrary Python expressions.  If `query` comes from an HTTP request, a form field, or any external source, the caller controls what gets executed.  What is the correct way to handle the string without `eval()`?*
+   > *Hint: The expression handed to `eval()` is `"{query}"` with the quotes included, so a payload containing no double quote of its own lands inside a string literal and is simply evaluated to a string.  What happens to that literal if the query itself contains a double quote?  A query of the form `" + <expression> + "` is the shape you are looking for.*
+
+    Why is it a mistake to call this implementation "safe" on the grounds that a payload like that one does not execute?
+
+    > *Hint: What would have to stay true, forever, for that to keep being the case?  Who controls it?*
 
 8.  **Bug 2:** Find the block that begins `if not q_vec`.  The spec says the function must "raise a clear error rather than silently failing."  Does this line follow the spec?  What should it do instead, and write the one-line fix.
 
@@ -315,7 +333,7 @@ Tests verify sampled behaviors; reading the implementation against the spec catc
 2.  *Write the three "missing" tests.*
 
    - *What to do:* Add three new `pytest` test cases to your test file: one that checks `eval` injection is not possible (pass a query like `"__import__('os')"` and assert no `OSError` or side effect occurs), one that checks that an embedding failure raises an exception rather than returning an empty list, and one that checks the function raises `ValueError` when `k` equals `len(CORPUS) + 1`.
-   - *Starter hint:* For the injection test, simply call `search_memory('__import__(\"os\")', k=1)` and assert the result is a list of strings; if `eval` were present, this would execute the import.  For the embedding failure test, use `unittest.mock.patch` to make `embed` return `[]` and confirm `RuntimeError` is raised.
+   - *Starter hint:* For the injection test, a bare payload like `'__import__(\"os\")'` will not do: inside `eval(f'\"{query}\"')` it raises `SyntaxError`, so the test would fail whether or not the bug is present and prove nothing either way.  Use a quote breakout with a harmless, observable result instead.  Patch `embed` to record the text it receives, call `search_memory('\" + __import__(\"os\").getcwd() + \"', k=1)`, and assert that what `embed` received is still the payload itself rather than a filesystem path: if `eval` is present, the path is what arrives.  Do not probe this with a destructive payload.  For the embedding failure test, use `unittest.mock.patch` to make `embed` return `[]` and confirm `RuntimeError` is raised.
    - *You've succeeded when:* Your three new tests pass against the fixed implementation and, if you temporarily re-introduce the bugs, the corresponding new tests fail.
 
 3.  *Design a three-test minimum suite.*
