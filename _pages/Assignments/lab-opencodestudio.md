@@ -36,7 +36,7 @@ info:
       preemerging: No interview transcript is submitted, and nothing was written to .ai/MEMORY.md
       beginning: The agent was asked to interview you but the questions were open-ended prose rather than a numbered menu with options and a stated default, or the memory file exists but is empty or was written entirely by hand
       progressing: The interview asks a bounded numbered menu and the memory file carries entries, but the answers are not written into .ai/CURRENT_TASK.md and read back, or the writeup does not say whether the answers changed what got built, or no fresh session was tested against the memory file
-      proficient: "The interview transcript shows at most five numbered questions in groups of three or fewer, each with lettered options and an explicit default, asked before any file was touched, with the answers written into .ai/CURRENT_TASK.md and read back; the writeup names one question the menu got wrong on its first run, quotes the wording that replaces it, and says what the answers visibly changed about what the agent then proposed; .ai/MEMORY.md carries dated append-only entries the agent wrote, verified with git diff rather than from the agent's summary, with the one particular it got wrong quoted and corrected; and a fresh session, asked only what it already knows about the project, answers from the memory file, or the writeup names which instructions entry was missing and shows the fix"
+      proficient: "The interview transcript shows at most five numbered questions in groups of three or fewer, each with lettered options and an explicit default, asked before any file was touched, with the answers written into .ai/CURRENT_TASK.md and read back; the writeup names one question the menu got wrong on its first run, quotes the wording that replaces it, and says what the answers visibly changed about what the agent then proposed; .ai/MEMORY.md carries dated append-only entries the agent wrote, verified by reading the file rather than from the agent's summary, with the one particular it got wrong quoted and corrected; and a fresh session, asked only what it already knows about the project, answers from the memory file, or the writeup names which instructions entry was missing and shows the fix"
     - weight: 20
       description: "The Artifact, the Rubric Score, and the Refine Turn"
       preemerging: No artifact is submitted, or the artifact has no relationship to the charter's mission
@@ -54,7 +54,7 @@ info:
       preemerging: An incomplete submission is provided
       beginning: The artifact and files are submitted, but not according to the directions in one or more ways
       progressing: The submission follows the directions with a minor omission, with at least superficial responses to the reflection prompts
-      proficient: "The submission contains every deliverable in the stated layout; the readme names the artifact route taken and lists every template section deleted with its reason; the model name and the opencode version are recorded; and every reflection answer cites a specific line from your own transcript, session log, or diff rather than restating the prompt"
+      proficient: "The submission contains every deliverable in the stated layout; the readme names the artifact route taken and lists every template section deleted with its reason; the model name and the opencode version are recorded; and every reflection answer cites a specific line from your own transcript, session log, or scored rubric rather than restating the prompt"
   readings:
     - rtitle: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff; Section 2c is the plan mode Part 4 starts in, and Part IIb is the gate Part 3 builds"
       rlink: "Activities/liascript-codingagents.md"
@@ -120,7 +120,7 @@ These are totals rather than increments, and the rows are in the order you work 
 | Part 2: the specification, the contract, and the system prompt | 1 hour |
 | Part 3: one gate, and the rule it replaces | 1 hour |
 | Part 4: the first agent run, from plan mode, plus the interview | 1.75 hours |
-| Part 5: diff review, critique, and one refine turn | 1 hour |
+| Part 5: scoring the candidate, critique, and one refine turn | 1 hour |
 | Part 6: traceability and the cold handoff | 1 hour |
 | Writeup, learning log, and packaging | 0.5 hours |
 | **Core total** | **≈ 9 hours** |
@@ -145,7 +145,7 @@ Conversation history only ever goes into the context window, and context does no
 |------|--------------------------|--------------------|
 | **Charter** | The constitution of a project: mission, ranked values, definition of done, and the guardrails an agent may never cross.  Written once, amended deliberately, reread at the start of every session | `CHARTER.md`, Part 1 |
 | **Agent contract** | A file at the root of a repository stating the rules any agent must follow inside it | `AGENTS.md`, Parts 0 and 2 |
-| **Observability** | Can I see what it did?  Bought by writing things down in files: a plan, a diff, and a session entry as three separate records | `.ai/SESSION.md` and the diff, Parts 4 and 5 |
+| **Observability** | Can I see what it did?  Bought by writing things down: a plan, a commit history, and a session entry as three separate records | `.ai/SESSION.md` and the commit log, Parts 4 and 5 |
 | **Traceability** | Being able to answer, weeks later, *why* something is the way it is: which goal it served, what was decided, and what was rejected | The four-link chain, Part 6 |
 | **Handoff** | A deliberate stop in which an agent writes down enough state that a *different* agent can continue safely | `KICKOFF_PROMPT.txt` and the cold session, Part 6 |
 | **Durable memory** | A file the agent appends what it learned to, loaded into every session by the tool, so knowledge outlives the conversation that produced it | `.ai/MEMORY.md`, Parts 0 and 4 |
@@ -179,7 +179,7 @@ Step 8.5 of *Your AI Workbench* named the three properties that make delegating 
 
 | Property | The question it answers | How you buy it |
 |---|---|---|
-| **Observability** | Can I see what it did? | By writing things down in files: the plan, the diff, and the session log, kept separate |
+| **Observability** | Can I see what it did? | By writing things down: the plan, the commit history, and the session log, kept separate |
 | **Isolation** | Can I bound what it reaches? | By boundaries the system enforces rather than boundaries you ask for.  You inherited most of this from the container your workbench runs in, and Part 3 adds one boundary of your own |
 | **Reversibility** | Can I undo it? | By never having exactly one copy of anything that matters.  In this lab that means committing *before* the agent runs |
 
@@ -187,18 +187,18 @@ Step 8.5 of *Your AI Workbench* named the three properties that make delegating 
 
 ### Traceability: the chain that answers "why is it like this?"
 
-Your charter, your task file, your diffs, and your session log form one loop, and each piece does a job the others cannot:
+Your charter, your task file, your commit history, and your session log form one loop, and each piece does a job the others cannot:
 
 ```text
 CHARTER.md            why this project exists, and what always wins   (rarely changes)
 .ai/CURRENT_TASK.md   what is being worked on right now               (changes per session)
 the plan              what the agent intends to do, before it does it (per session)
-the diff              what actually changed                           (per change)
+the commit            what actually changed, and when                 (per increment)
 .ai/SESSION.md        what happened, and what was deliberately not    (append-only)
 docs/DECISION_LOG.md  what was chosen, and what was rejected, and why (per decision)
 ```
 
-Read that column from bottom to top and you have **traceability**: long after you have forgotten the details, a line of your artifact still traces back to a diff, which traces to a session entry, which traces to a task, which traces to a charter goal.  Nobody has to remember anything, and "why is it like this?" gets a written answer instead of an argument.  Part 6 walks that chain for real, and it is entirely normal for it to break the first time, since naming the broken link precisely is worth as much to me as an unbroken chain.
+Read that column from bottom to top and you have **traceability**: long after you have forgotten the details, a line of your artifact still traces back to a commit, which traces to a session entry, which traces to a task, which traces to a charter goal.  Nobody has to remember anything, and "why is it like this?" gets a written answer instead of an argument.  Part 6 walks that chain for real, and it is entirely normal for it to break the first time, since naming the broken link precisely is worth as much to me as an unbroken chain.
 
 ### Handoffs: stopping so that someone else can start
 
@@ -422,7 +422,7 @@ ask by default, git allowed".
 
 **The agent never mentions the charter.** Check the `instructions` array for a typo in the path, and check that the path is relative to the config file. Then check that `AGENTS.md` is at the project root rather than inside `.ai/`.
 
-**The agent says it appended to `.ai/MEMORY.md` and the file is unchanged.** Verify against the file, never against the summary: `git diff .ai/MEMORY.md`. This will happen at least once, and it is the lab's whole thesis arriving early.
+**The agent says it appended to `.ai/MEMORY.md` and the file is unchanged.** Verify against the file, never against the summary: open `.ai/MEMORY.md` and look for the entry, or run `git status` to see whether the file was modified at all. This will happen at least once, and it is the lab's whole thesis arriving early.
 
 > **Checkpoint 0.** Which of your two routes produced the file you trust more, and why? Name one thing in your `permission` block that a persuasive sentence in a README could not talk the tool out of, and one rule in `AGENTS.md` that it could.
 
@@ -438,13 +438,13 @@ Pick one.  All three are graded identically by the same rubric, and none of them
 
 This table is the only place the three routes are spelled out. Everything after it is written for the software route, and the last two columns give the substitutions for the other two. Your row carries everything you need; the rest of the lab adds no further route asides.
 
-| Route | The artifact is | Pick this if | What "done" looks like | Your `spec.md` is | "The diff" means |
+| Route | The artifact is | Pick this if | What "done" looks like | Your `spec.md` is | The candidate you score is |
 |---|---|---|---|---|---|
-| **Software** | A small program or script with one documented entry point | You want the agent editing code you will read line by line | It runs, and the run output is in your submission | The worked example below: entry point, inputs, outputs, error cases, testing criteria | The diff of your code |
-| **Document** | A real document you actually need: a runbook, a study guide, a technical explainer, a project one-pager | Your Project Thread's next need is prose, or you want the charter to govern writing standards | It renders, and a reader outside this course can follow it | An outline with an audience, a length, a required structure, and the criteria a reader would judge it by | The diff of your prose |
-| **Automation** | A shell script, a Makefile, a scheduled job, or a repository chore you run rather than read | You would rather automate something tedious you already do by hand | It runs twice and produces the same result both times | The command, its inputs, its exit codes, and what "run it twice, same result" means concretely | The diff of your script |
+| **Software** | A small program or script with one documented entry point | You want the agent editing code you will read line by line | It runs, and the run output is in your submission | The worked example below: entry point, inputs, outputs, error cases, testing criteria | The code the agent wrote |
+| **Document** | A real document you actually need: a runbook, a study guide, a technical explainer, a project one-pager | Your Project Thread's next need is prose, or you want the charter to govern writing standards | It renders, and a reader outside this course can follow it | An outline with an audience, a length, a required structure, and the criteria a reader would judge it by | The prose the agent wrote |
+| **Automation** | A shell script, a Makefile, a scheduled job, or a repository chore you run rather than read | You would rather automate something tedious you already do by hand | It runs twice and produces the same result both times | The command, its inputs, its exit codes, and what "run it twice, same result" means concretely | The script the agent wrote |
 
-All three are graded identically by the same rubric, and none is the "real" one. The worked example throughout this handout is a small search endpoint, because a REST route makes a diff easy to talk about. Read it as an example rather than as the assignment. Whatever your route, `spec.md` must end with the same two sections: which files are the agent's workspace, and which are off-limits.
+All three are graded identically by the same rubric, and none is the "real" one. The worked example throughout this handout is a small search endpoint, because a command-line program makes every criterion easy to check by running it. Read it as an example rather than as the assignment. Whatever your route, `spec.md` must end with the same two sections: which files are the agent's workspace, and which are off-limits.
 
 ### Scope it with a menu
 
@@ -540,7 +540,7 @@ Three documents, each doing a different job.  The **specification** says what to
 
 ### Step-by-step guide
 
-**Step 1: Write the specification in `spec.md`.**  Be exhaustive.  Every ambiguity you leave is a decision the agent will make for you, and you will meet that decision in the diff.
+**Step 1: Write the specification in `spec.md`.**  Be exhaustive.  Every ambiguity you leave is a decision the agent will make for you, and you will meet that decision when you score what it built.
 
 For the software route, the worked example is a search endpoint, and this is the shape to imitate:
 
@@ -644,7 +644,7 @@ Two prompts run your session, and students routinely confuse them, so separate t
 | Where it lives | A file, named by an agent definition in `opencode.json` | Typed at the prompt, or passed to `opencode run` |
 | Example | "Never edit anything outside `artifact/`" | "Implement spec.md" |
 
-Write the standing behavior in `system_prompt.txt`. It is shorter than the contract, and it is what you check compliance against in Part 5, so every line in it must be verifiable from a diff.
+Write the standing behavior in `system_prompt.txt`. It is shorter than the contract, and it is what you check compliance against in Part 5, so every line in it must be verifiable by running the candidate or inspecting the repository.
 
 ```text
 You are a careful software engineer working in a repository you did not write.
@@ -725,7 +725,7 @@ Accept when: every material criterion is at Meets.
 |----|--------------------------------|-------|-------------|---------------|----------|---------------|
 | C1 | Results sorted by score (criterion 1) | Scores non-increasing | Sorted except ties | Unsorted | Yes | Query with three known matches |
 | C4 | Missing knowledge base (criterion 4) | Exit 3, message names the path | Exit 3, vague message | Traceback | Yes | Rename the file, run once |
-| P1 | Never edits spec.md (prohibition) | Not present in the candidate | n/a | Any edit | Yes | `git diff --name-only` |
+| P1 | Never edits spec.md (prohibition) | Not present in the candidate | n/a | Any edit | Yes | `git status --porcelain`, then `git log --name-only` |
 | N1 | Docstring wording | "Returns" | "Return" | Absent | No | Read the file |
 ```
 
@@ -877,7 +877,7 @@ In the desktop application, run the identical instruction the same way you ran t
 
 The transcript must show the refusal coming from the tool rather than from the model: the permission denial printed by opencode, or the error message your plugin threw.  If the agent never attempted the command this time, say so and run it once more with the same README; the gate is only demonstrated when something hits it.
 
-**Step 6: Write the paragraph.**  In your readme, under a heading `Why the gate held`, explain in one paragraph why the gate held when the rule did not.  Say where each one runs, what each one sees, and what a persuasive sentence in a file would have to do to change the gate's answer.  Then add two sentences on what the gate cannot judge: it cannot tell a needed delete from a harmful one, and it cannot tell a good implementation from one with `eval()` in it.  Gates enforce operations; intent and quality are still yours, which is why Part 5 still reads the diff.
+**Step 6: Write the paragraph.**  In your readme, under a heading `Why the gate held`, explain in one paragraph why the gate held when the rule did not.  Say where each one runs, what each one sees, and what a persuasive sentence in a file would have to do to change the gate's answer.  Then add two sentences on what the gate cannot judge: it cannot tell a needed delete from a harmful one, and it cannot tell a good implementation from one with `eval()` in it.  Gates enforce operations; intent and quality are still yours, which is why Part 5 still scores the candidate against your rubric.
 
 **Step 7: Commit the gate**, with `edit` back to `ask` or removed, and keep it installed for the rest of the lab.
 
@@ -897,11 +897,11 @@ The transcript must show the refusal coming from the tool rather than from the m
 
 ## Part 4: The First Agent Run
 
-Now the agent builds.  The discipline here is that you capture what happened *before* you accept it, because a change you have already merged is a change you will review less carefully.  Plan mode moves that capture one step earlier: you read the agent's intent before any file changes, and a plan you reject never becomes a diff.
+Now the agent builds.  The discipline here is that you capture what happened *before* you accept it, because a change you have already merged is a change you will review less carefully.  Plan mode moves that capture one step earlier: you read the agent's intent before any file changes, and a plan you reject never becomes code.
 
 ### Step-by-step guide
 
-**Step 1: Commit first.**  A clean tree is what makes `git diff` meaningful and `git checkout` safe.
+**Step 1: Commit first.**  A clean tree is what makes `git status` readable and `git checkout` safe.
 
 ```bash
 git status          # must be clean before you continue
@@ -969,21 +969,25 @@ Approve in writing, step by step, the way the class exchange did: "Approve steps
 
 This is the single most important required event in the lab, so be honest about it rather than manufacturing it.  If no plan ever conflicts with your charter across the whole lab, that is itself a finding, and it almost always means the ranking is too agreeable to be operational.  Say so in your readme and name the two values you would swap.
 
-**Step 6: Let it work, then save the candidate without accepting it.**
+**Step 6: Let it work, then mark the candidate without accepting it.**
+
+Commit what the agent produced and tag it, so the first attempt has a name you can return to:
 
 ```bash
-git diff > candidate_0.patch                 # unstaged work
-git diff --cached >> candidate_0.patch       # anything the agent staged
+git add -A
+git commit -m "Candidate 0: agent's first implementation"
+git tag candidate-0
 ```
 
 Or ask opencode to do it:
 
 ```text
-Write the current unstaged diff and any staged diff into a single file called
-candidate_0.patch. Do not commit anything.
+Commit everything the run produced with the message "Candidate 0: agent's first
+implementation" and tag that commit candidate-0.  Then tell me in one sentence
+which files the commit contains.
 ```
 
-Do not commit yet.  Part 5 scores this candidate against the rubric you wrote in Part 2, and scoring something you have already accepted is a different and much weaker exercise.  Saving it now also gives you a fixed baseline, so that when the refine turn changes the working tree you can still say what the first attempt did.
+A commit here is a save point, not an endorsement.  Part 5 scores this candidate against the rubric you wrote in Part 2, and scoring something you have already decided to accept is a different and much weaker exercise, so nothing about this commit says the work is good.  What it buys you is a fixed baseline: when the refine turn rewrites the working tree, `candidate-0` still names exactly what the first attempt did, and `git log --oneline` reads as the record of how the artifact got here.
 
 **Step 7: Make the agent write down what it learned.**  Part 0 put a rule in `AGENTS.md` telling the agent to append durable project knowledge to `.ai/MEMORY.md`.  Now find out whether it obeys one.  At the end of the session, type:
 
@@ -994,7 +998,7 @@ to .ai/SESSION.md with Scope, Completed, what you deliberately did not do,
 Validation, and exactly one Next Safe Action.  Append only.  Change no existing entry.
 ```
 
-Then do two things. Run `git diff .ai/` and read what actually landed, because the agent's own account of what it wrote is not evidence and will not always match. Then correct what it got wrong, since it will be wrong in at least one particular, and quote the sentence you had to fix in your readme. That gap between what the agent believed happened and what happened is the finding.
+Then do two things. Open the files under `.ai/` and read what actually landed, because the agent's own account of what it wrote is not evidence and will not always match. `git status` tells you which of them it touched at all, which is often the first surprise. Then correct what it got wrong, since it will be wrong in at least one particular, and quote the sentence you had to fix in your readme. That gap between what the agent believed happened and what happened is the finding.
 
 Do this at the end of every remaining session in this lab rather than only this one. Part 6 is where you find out whether it worked, and two entries written honestly beat one written the night before the deadline.
 
@@ -1006,11 +1010,11 @@ Do this at the end of every remaining session in this lab rather than only this 
 
 **The local model produces an edit that makes no sense.**  This is the honest capability ceiling of a small model, not a failure on your part.  `git checkout -- <file>` and a smaller, more specific instruction is the answer.  Record the attempt; a documented failure is worth full credit here.
 
-**The agent says it did something it did not do.**  Verify against state rather than against its summary: `git diff`, `ls`, and running the thing.  This is precisely why the plan, the diff, and the session log are kept as three separate records.
+**The agent says it did something it did not do.**  Verify against state rather than against its summary: `git status`, `git log --oneline`, `ls`, and running the thing.  This is precisely why the plan, the commit history, and the session log are kept as three separate records.
 
 **The session ended and nothing was written to `.ai/SESSION.md` or `.ai/MEMORY.md`.**  The `AGENTS.md` rule was in context and the model did not act on it.  Ask for the write explicitly, then record in your readme that the rule alone did not carry it.  That is a finding, not a setback: it is the same rule-versus-gate result Part 3 measured, arriving somewhere you did not plant it.
 
-> **Checkpoint 4.**  What did the plan show you that the diff alone would not have?  Which ranked value rejected a plan, and would you have caught that conflict yourself at three in the afternoon?  What did the diff show that the agent's own summary did not?  What did you have to fix in the entry the agent wrote to `.ai/SESSION.md`?  Which of the interview's questions changed what got built?
+> **Checkpoint 4.**  What did the plan show you that running the finished candidate would not have?  Which ranked value rejected a plan, and would you have caught that conflict yourself at three in the afternoon?  What did `git status` or the commit show that the agent's own summary did not?  What did you have to fix in the entry the agent wrote to `.ai/SESSION.md`?  Which of the interview's questions changed what got built?
 
 ---
 
@@ -1192,10 +1196,10 @@ These are the items people actually miss. Hold the rest of your submission again
 - [ ] `critique.md` carries a row per criterion with its level and materiality, a weighted score, an acceptance line, one named blocking criterion, and evidence on every prohibition row.
 - [ ] The artifact meets **its own** definition of success, with the output pasted in.
 - [ ] `.ai/SESSION.md` has **two or more** dated, append-only entries, each with what was **not** done and one Next Safe Action.
-- [ ] `.ai/MEMORY.md` entries were written by the **agent** and verified with `git diff` rather than from its summary.
+- [ ] `.ai/MEMORY.md` entries were written by the **agent** and verified by reading the file rather than from its summary.
 - [ ] `traceability.md` quotes four links, or names the broken link and the sentence that would have kept it.
 - [ ] Every question the cold session asked is listed with the document edit it caused.
-- [ ] Model name and opencode version are recorded, and every reflection answer cites a line from your own transcript, log, or diff.
+- [ ] Model name and opencode version are recorded, and every reflection answer cites a line from your own transcript, log, or scored rubric.
 
 ---
 
@@ -1214,7 +1218,7 @@ submission/
 |-- rubric.json                      the same criteria, weighted, with a threshold
 |-- followup_prompt.txt              the refine turn
 |-- critique.md                      one row per criterion, scored, with evidence per prohibition
-|-- candidate_0.patch                the first attempt, saved before you scored it
+|-- (candidate-0 is a git tag, not a file: the first attempt, marked before you scored it)
 |-- KICKOFF_PROMPT.txt               filled, and the exact text used in Part 6
 |-- opencode.json                    provider, instructions, and the Part 3 permission block
 |-- .ai/
@@ -1270,7 +1274,7 @@ All four of these are optional, and each is about one sitting. Two of them pick 
 
 **Challenge 1: Measure the refine turn.** Part 5 stopped after one follow-up and one re-score, and this is the round-over-round version.
 
-You already have `candidate_0.patch` from Part 4, Step 6, and its scored table from Part 5. Run the follow-up, re-score, and save the second attempt the same way, as `candidate_1.patch`.
+You already have the `candidate-0` tag from Part 4, Step 6, and its scored table from Part 5. Run the follow-up, re-score, then commit and tag the second attempt the same way, as `candidate-1`.
 
 Now put the two scored tables side by side and add a column headed "Moved in round 2?", filled in with yes, no, or partially for every criterion. Take each entry from your own re-run of the verification method rather than from the agent's summary of what it fixed. Anything still below Meets gets one sentence explaining why.
 
@@ -1278,7 +1282,7 @@ What you learn is which of your instructions actually landed, and it is usually 
 
 **Challenge 2: Show that the contract does something.** The core lab never tests `AGENTS.md` on its own, and this is the cheapest possible controlled comparison. Pick a trivial task, such as adding a one-line comment at the top of a file in `artifact/`. Run it once with `AGENTS.md` in place. Then rename the file with `mv AGENTS.md AGENTS.md.off`, run the identical task again, and rename it back. Save both transcripts side by side and write a paragraph on what differed. The interesting outcome is often that nothing did, which tells you the contract was carrying less weight than you assumed and points at which sentence to rewrite.
 
-**Challenge 3: The interrupted session.** Stop an agent mid-edit, deliberately, at an inconvenient moment: cancel it while it is partway through writing a file. Then look at what is actually on disk. Did anything reach `.ai/SESSION.md` or `.ai/MEMORY.md`? Run `git status` and `git diff` to find out what state the working tree is in, and whether you can tell from the repository alone how far it got. Report what you find, and say what it implies about any instruction that only fires on a graceful exit. This is the failure mode that a well-written wrap-up rule does not cover, and knowing that changes where you put the rule.
+**Challenge 3: The interrupted session.** Stop an agent mid-edit, deliberately, at an inconvenient moment: cancel it while it is partway through writing a file. Then look at what is actually on disk. Did anything reach `.ai/SESSION.md` or `.ai/MEMORY.md`? Run `git status` and `git log --oneline` to find out what state the working tree is in, and whether you can tell from the repository alone how far it got. Report what you find, and say what it implies about any instruction that only fires on a graceful exit. This is the failure mode that a well-written wrap-up rule does not cover, and knowing that changes where you put the rule.
 
 **Challenge 4: The instruction that did not survive the model.** Point opencode at a second model, then run the same session against both, three runs each, with the same prompt and the same repository. Read the transcripts against your `AGENTS.md` line by line and find one instruction that one model honors and the other drops. Report the instruction, both behaviors, and your account of why that particular sentence was fragile. This is the hardest of the four and the one most worth doing, because it tells you which of your rules depend on a model you happen to be using rather than on anything you actually wrote down.
 
