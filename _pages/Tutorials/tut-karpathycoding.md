@@ -24,7 +24,7 @@ Coding agents can now write working programs from a few sentences of English, bu
 | **Vibe Coding** | Describing the desired outcome to a coding agent in natural language and letting it produce the full implementation, then reviewing the result rather than writing code line-by-line. | "Implement `search_memory` to pass these five tests", then reviewing what the agent produces |
 | **Specification-First Development** | Writing a clear natural-language spec, acceptance criteria, and failing tests *before* any code exists, so there is an objective standard the implementation must meet. | Writing five `pytest` cases for `search_memory` before prompting the agent to implement it |
 | **Test-Driven Development (TDD)** | A discipline in which every new behavior is defined by a failing test first; code is written to make the test pass; then the code is refactored. Often summarized as **red -> green -> refactor**. | A test that asserts `len(results) <= k` fails before the agent writes any code; it passes after |
-| **Acceptance Review** | Reading the implementation an agent produced against the specification it was given, so you catch behaviors the tests never sampled. | Spotting `eval(query)` in a 35-line implementation that passes every test |
+| **Acceptance Review** | Reading the implementation an agent produced against the specification it was given, so you catch behaviors the tests never sampled. | Spotting the `eval()` call buried in an implementation that passes every test |
 | **Red-Green-Refactor** | The three TDD phases: **Red**, write a test that fails because the code does not yet exist; **Green**, write the minimum code that makes the test pass; **Refactor**, clean up the code without breaking the test. | A `pytest` run showing `FAILED` (red), then the agent's code making it `PASSED` (green) |
 | **Agent Supervision Level** | How closely a human monitors and reviews the agent's output, ranging from autocomplete (every token supervised) to pair (every file reviewed) to vibe (only the final result reviewed). | Choosing "pair" for a security-sensitive module vs. "vibe" for a low-stakes utility script |
 {: .tb-full}
@@ -68,7 +68,7 @@ At vibe supervision level, the agent has autonomy over *how* to implement; the h
 
    > *Hint: Tests check the behaviors you thought to test.  What categories of security behavior might a developer forget to write tests for?  Name at least two.*
 
-"Vibe coding means you do not have to understand what the agent did."  At vibe supervision level the agent writes the code, but *you* are responsible for every line that ships.  The specification and the test suite are not optional extras; they are what makes the "let me cook" approach safe rather than reckless.
+> "Vibe coding means you do not have to understand what the agent did."  At vibe supervision level the agent writes the code, but *you* are responsible for every line that ships.  The specification and the test suite are not optional extras; they are what makes the "let me cook" approach safe rather than reckless.
 {: .tb-pitfall data-title="Common Misconception"}
 
 At vibe supervision level, what has the human delegated, and what have they kept?
@@ -210,7 +210,7 @@ In this part, you will read a realistic AI-generated implementation with a plant
 
 ## A Planted Bug
 
-Below is a 35-line implementation of `search_memory` that an agent might plausibly produce.  It passes all five tests above.  It contains **three deliberate issues**.  Read it carefully before answering the questions.
+Below is a 50-line implementation of `search_memory` that an agent might plausibly produce.  It passes all five tests above.  It contains **three deliberate issues**.  Read it carefully before answering the questions.
 
 > This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
 {: .tb-warning data-title="Runs on your machine, not here"}
@@ -344,7 +344,7 @@ When a human wrote every line, code review, tests, and architecture reviews were
 
 ## Reflection Prompt
 
-*Personal:* Looking back at the planted bug in Model 3, did you spot all three issues before reading the questions?  Be honest.  What made the dangerous ones easy or hard to see?
+*Personal:* Looking back at the planted bug in Section 3, did you spot all three issues before reading the questions?  Be honest.  What made the dangerous ones easy or hard to see?
 
 *Technical:* In your notebook: how does TDD change the *cost* of an AI error?  If the agent introduces a bug that violates an acceptance criterion, at what point in the workflow is that bug caught, and how does that compare to a workflow with no pre-written tests?
 
