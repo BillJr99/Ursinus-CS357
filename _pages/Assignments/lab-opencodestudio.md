@@ -8,7 +8,7 @@ info:
   purpose: "To build the instruction layer of an agent system first, so that a configured project, a charter, a contract, a system prompt, a project memory, and one gate exist before any artifact does, and so that everything the agent produces traces back to a rule you wrote."
   tilt:
     task: "Configure an opencode project that asks before every command except git, write a charter, an agent contract, a system prompt, and a project memory, build one gate the harness enforces, then drive opencode against your local model from plan mode until it produces one real artifact whose every line traces to a commit, a session entry, a task, and a charter goal, and prove it by resuming the work in a session that has never seen your project."
-    criteria: "I assess the instruction layer you wrote before you built anything, a menu-driven interview you obtained by asking for it and a memory file the agent wrote, a gate that held where a model rule did not, an artifact you drove and then critiqued diff by diff, a four-link traceability chain, and a cold handoff a fresh session could actually resume from.  The rubric below spells out each row."
+    criteria: "I assess the instruction layer you wrote before you built anything, a menu-driven interview you obtained by asking for it and a memory file the agent wrote, a gate that held where a model rule did not, an artifact you drove and then scored against a rubric you wrote before it ran, a four-link traceability chain, and a cold handoff a fresh session could actually resume from.  The rubric below spells out each row."
   points: 100
   goals:
     - To write a project charter with a ranked value list, a definition of success another student could check without asking you, and workspace zones stated as paths rather than as cautions
@@ -17,9 +17,9 @@ info:
     - To configure an opencode project so that the tool asks before every command except git, and so that it loads the charter and the project memory into every session
     - To obtain a menu-driven clarification protocol by asking the agent directly for one, in which it asks a bounded set of numbered questions, each with explicit options and a stated default, before it touches any file
     - To instruct an agent to record what it learned in a project memory file, and to verify from the file rather than from the agent's summary that it did
-    - "Use a coding agent to implement a specification you wrote, then critique the generated diff line by line for correctness, security, and test coverage, and drive one refine turn from that critique"
+    - "Use a coding agent to implement a specification you wrote, then score the result against an acceptance rubric you wrote beforehand, covering correctness, security, and test coverage, and drive one refine turn from that scoring"
     - To produce one real artifact (a small program, a document artifact, or an automation) under those instructions, committing before the agent runs so that every change it makes is reversible
-    - To instrument your own work for observability by keeping the plan, the diff, and the session log as three separate records, and to name one thing the record showed that the agent's own summary did not
+    - To instrument your own work for observability by keeping the plan, the scored rubric, and the session log as three separate records, and to name one thing the record showed that the agent's own summary did not
     - To construct a traceability chain from one line of the artifact to a commit, a session entry, a task, and a charter goal, and to identify precisely which link breaks when it breaks
     - To record decisions together with the alternatives you rejected, so that a later session cannot re-propose them
     - To prove a handoff by resuming the work in a session that has never seen the project, using only what is written in the repository
@@ -38,11 +38,11 @@ info:
       progressing: The interview asks a bounded numbered menu and the memory file carries entries, but the answers are not written into .ai/CURRENT_TASK.md and read back, or the writeup does not say whether the answers changed what got built, or no fresh session was tested against the memory file
       proficient: "The interview transcript shows at most five numbered questions in groups of three or fewer, each with lettered options and an explicit default, asked before any file was touched, with the answers written into .ai/CURRENT_TASK.md and read back; the writeup names one question the menu got wrong on its first run, quotes the wording that replaces it, and says what the answers visibly changed about what the agent then proposed; .ai/MEMORY.md carries dated append-only entries the agent wrote, verified with git diff rather than from the agent's summary, with the one particular it got wrong quoted and corrected; and a fresh session, asked only what it already knows about the project, answers from the memory file, or the writeup names which instructions entry was missing and shows the fix"
     - weight: 20
-      description: "The Artifact, the Diff, and the Refine Turn"
+      description: "The Artifact, the Rubric Score, and the Refine Turn"
       preemerging: No artifact is submitted, or the artifact has no relationship to the charter's mission
-      beginning: An artifact exists, but the agent's output was accepted without review and the repository history is one commit
-      progressing: The artifact meets the charter's definition of success and the diff was reviewed, but the critique is a paragraph rather than a categorized table, or no acceptance line and blocking finding are stated, or the refine turn was never run
-      proficient: "The artifact satisfies the charter's own definition of success, demonstrated by running it, rendering it, or executing the documented check, with the output included; the first diff was saved before it was accepted; critique.md states an acceptance line and names exactly one blocking finding, carries a row per finding categorized as correct, incorrect, missing, or risk, and carries a compliance row for each system-prompt prohibition with the diff line or 'not present in diff' as evidence; a follow-up prompt addresses every incorrect, missing, and risk finding by name; and anything the refine turn left unresolved is named with one sentence on why it was accepted or what comes next"
+      beginning: An artifact exists, but the agent's output was accepted without being scored and the repository history is one commit
+      progressing: The artifact meets the charter's definition of success and the candidate was scored, but the rubric was written after the agent ran, or the critique is a paragraph rather than a scored table, or no acceptance line and blocking criterion are stated, or the refine turn was never run
+      proficient: "The artifact satisfies the charter's own definition of success, demonstrated by running it, rendering it, or executing the documented check, with the output included; rubric.md and rubric.json were written before the agent ran and carry a row for every testing criterion and every prohibition; the first candidate was saved before it was scored; critique.md states an acceptance line, reports the weighted score against the threshold, and names exactly one blocking criterion, carries a row per criterion with its level and whether it is material, and carries a row for each system-prompt prohibition with the evidence run or 'not present in the candidate'; a follow-up prompt addresses every material failure by name; every criterion was re-scored after the refine turn rather than only the ones revised; and anything left below Meets is named with one sentence on why it was accepted or what comes next"
     - weight: 20
       description: "Observability, Traceability, and the Cold Handoff"
       preemerging: No session log and no transcripts are submitted
@@ -588,6 +588,18 @@ spec.md, AGENTS.md, CHARTER.md, .ai/, docs/, transcripts/
 
 Whatever your route, the last two sections above are required: the agent must know which files are its workspace and which are off-limits.  Part 1's route table says what the rest of this specification becomes on the document and automation routes.
 
+Or ask opencode to do it:
+
+```text
+Read CHARTER.md.  Draft spec.md for the artifact it describes, using these sections:
+feature summary, entry point, inputs table, outputs, error behavior with exit codes,
+testing criteria numbered 1 through 5, files the agent may create or modify, and
+files the agent must NOT touch.  Ask me about anything the charter leaves open
+instead of choosing for me, and mark every place you had to guess.
+```
+
+Read what comes back against the charter rather than accepting it.  The sections an agent fills in most confidently are the ones it had the least information for, and the testing criteria are where that shows.
+
 **Step 2: Grow `AGENTS.md` into a real contract.**  You wrote a first version in Part 0, and Part 3 added one rule to it.  *Prompt Engineering as Agent Design* gives you the five elements that describe what the agent *is*.  A contract adds what the agent may do *without asking*, which is a different question and the one that starts to matter once the agent can write files.
 
 Required content, kept to roughly one page:
@@ -608,6 +620,18 @@ Good (a gate):      STOP and confirm before any `rm` under artifact/ or any `git
 ```
 
 Keep the whole thing to about a page. A contract the model will not read to the end is a contract it does not have, and length is the usual reason it stops reading.
+
+Or ask opencode to do it:
+
+```text
+Read AGENTS.md, CHARTER.md, and spec.md.  Rewrite AGENTS.md as a one-page contract
+with these sections: what this project is, read-first files, zones the agent may and
+may not edit, confirmation gates, durable memory rules, and an escalation rule.
+Write every gate as a named operation and path, never as a category.  Keep the rule
+Part 3 added, unchanged.
+```
+
+Then read it for the failure the step just warned about.  An agent asked for a contract tends to produce categories, because categories sound comprehensive, and a category is exactly the thing a model can talk itself past.
 
 **Step 3: Write the system prompt in `system_prompt.txt`, then wire it to an agent.**
 
@@ -671,7 +695,72 @@ opencode run --agent builder "Implement spec.md."
 
 Confirm the wiring before you rely on it. Start opencode, switch to the `builder` agent, and ask it to name one file it is forbidden to edit. If it cannot, the `prompt` path is wrong and every compliance check in Part 5 would be measuring nothing.
 
-**Step 4: Commit all three documents** before Part 4.
+Or ask opencode to do it:
+
+```text
+Read spec.md and AGENTS.md.  Write system_prompt.txt using the five-element frame:
+ROLE, GOAL, TOOLS, FORMAT, GUARDRAILS.  End it with an explicit plan-first
+instruction: show the plan and stop before editing.  Then add an "agent" block to
+opencode.json defining a primary agent named builder whose prompt loads
+system_prompt.txt with the {file:./system_prompt.txt} form.  Show me both before
+writing them.
+```
+
+Whichever route you take, run the confirmation above yourself.  It is the one check in this part that tells you the file actually reached the model, and an agent that wrote the file is no more able to confirm that than you are.
+
+**Step 4: Write the acceptance rubric, before the agent has produced anything.**
+
+Parts 4 and 5 judge what the agent builds.  The rubric is what they judge it against, and it has to exist first.  A check you write after seeing the output is not a check; it is a description of the output.  Writing it now, while the only thing you have is `spec.md` and `system_prompt.txt`, is what keeps Part 5 from becoming a search for reasons to accept what you already have.
+
+Write it in two forms.  They hold the same criteria, and each is better at a different job.
+
+The qualitative form, `rubric.md`, carries a judgment a sentence can describe.  One row per testing criterion in `spec.md`, plus one row per prohibition in `system_prompt.txt`:
+
+```markdown
+# Acceptance Rubric
+
+Accept when: every material criterion is at Meets.
+
+| ID | Criterion (where it comes from) | Meets | Approaching | Does not meet | Material | How to verify |
+|----|--------------------------------|-------|-------------|---------------|----------|---------------|
+| C1 | Results sorted by score (criterion 1) | Scores non-increasing | Sorted except ties | Unsorted | Yes | Query with three known matches |
+| C4 | Missing knowledge base (criterion 4) | Exit 3, message names the path | Exit 3, vague message | Traceback | Yes | Rename the file, run once |
+| P1 | Never edits spec.md (prohibition) | Not present in the candidate | n/a | Any edit | Yes | `git diff --name-only` |
+| N1 | Docstring wording | "Returns" | "Return" | Absent | No | Read the file |
+```
+
+The quantitative form, `rubric.json`, carries a number you can compare across rounds:
+
+```json
+{
+  "threshold": 0.85,
+  "criteria": [
+    {"id": "C1", "requirement": "results sorted by score descending", "weight": 3, "material": true},
+    {"id": "C4", "requirement": "missing knowledge base exits 3", "weight": 3, "material": true},
+    {"id": "P1", "requirement": "spec.md unchanged", "weight": 4, "material": true},
+    {"id": "N1", "requirement": "docstrings say Returns", "weight": 1, "material": false}
+  ]
+}
+```
+
+Two rules keep either form honest, and Part 5 depends on both.  A non-material criterion may fail without blocking acceptance, which is why materiality is recorded per criterion rather than decided later by whoever is reading the output.  And the weighted score is a summary rather than the decision: a candidate above the threshold with one material criterion failed has not passed.
+
+Every prohibition in `system_prompt.txt` gets a row.  This is where that document stops being decorative, because a prohibition with no row is a rule nobody will check.
+
+Or ask opencode to do it:
+
+```text
+Read spec.md and system_prompt.txt.  Write rubric.md with one row per testing
+criterion and one row per prohibition: ID, criterion with its source, Meets,
+Approaching, Does not meet, Material, and how to verify.  Then write rubric.json
+with the same IDs, a weight, and a material flag for each, plus a threshold.
+Invent no criterion that is not in spec.md or system_prompt.txt.  Instead, list
+anything in spec.md too vague to verify, and stop so I can decide it.
+```
+
+That last instruction matters more than it looks.  A vague line in your spec is the fog Part 4 will otherwise resolve on its own, in the implementation, where you will not notice it.
+
+**Step 5: Commit all four documents** before Part 4.
 
 ### Troubleshooting, Part 2
 
@@ -880,21 +969,21 @@ Approve in writing, step by step, the way the class exchange did: "Approve steps
 
 This is the single most important required event in the lab, so be honest about it rather than manufacturing it.  If no plan ever conflicts with your charter across the whole lab, that is itself a finding, and it almost always means the ranking is too agreeable to be operational.  Say so in your readme and name the two values you would swap.
 
-**Step 6: Let it work, then save the diff without accepting it.**
+**Step 6: Let it work, then save the candidate without accepting it.**
 
 ```bash
-git diff > diff_1.patch                 # unstaged work
-git diff --cached >> diff_1.patch       # anything the agent staged
+git diff > candidate_0.patch                 # unstaged work
+git diff --cached >> candidate_0.patch       # anything the agent staged
 ```
 
 Or ask opencode to do it:
 
 ```text
 Write the current unstaged diff and any staged diff into a single file called
-diff_1.patch. Do not commit anything.
+candidate_0.patch. Do not commit anything.
 ```
 
-Do not commit yet.  The next part is a review of `diff_1.patch`, and reviewing a diff you have already accepted is a different and much weaker exercise.
+Do not commit yet.  Part 5 scores this candidate against the rubric you wrote in Part 2, and scoring something you have already accepted is a different and much weaker exercise.  Saving it now also gives you a fixed baseline, so that when the refine turn changes the working tree you can still say what the first attempt did.
 
 **Step 7: Make the agent write down what it learned.**  Part 0 put a rule in `AGENTS.md` telling the agent to append durable project knowledge to `.ai/MEMORY.md`.  Now find out whether it obeys one.  At the end of the session, type:
 
@@ -925,52 +1014,66 @@ Do this at the end of every remaining session in this lab rather than only this 
 
 ---
 
-## Part 5: Diff Review, Critique, and One Refine Turn
+## Part 5: Scoring the Candidate, the Critique, and One Refine Turn
 
-You are the critic now, and what I am assessing is not whether the agent got it right first time. It is whether your review discipline can drive it somewhere you would actually trust.
+You are the reviewer now, and what I am assessing is not whether the agent got it right the first time.  It is whether your review discipline can drive it somewhere you would actually trust.
+
+The rubric you wrote in Part 2 is what makes that discipline checkable.  You wrote it before the agent ran, so it cannot have been shaped by what the agent produced, and that is the only reason its verdict means anything.
 
 ### Step-by-step guide
 
-**Step 1: Read the entire diff.** Every line of it, including the parts that look like boilerplate, because boilerplate is exactly where an unwanted dependency or a quietly swallowed exception goes to hide, and no gate from Part 3 will catch either one. Read it against `spec.md` and against `system_prompt.txt` together.
+**Step 1: Score the candidate against every criterion.**  Every one, including the criteria you expect to pass, because a revision later in this part can break something that passed earlier and you will want the baseline.  Run the verification method each row names.  Record what you observed, not what the code appears to do: a criterion is decided by running its check, not by reading for intent.
 
-**Step 2: Produce `critique.md`.** One table, one row per finding. The category column is doing real work here: findings marked incorrect, missing, or risk become instructions in Step 3, while findings marked correct need nothing from you but are worth recording so that you know the review was thorough rather than lucky.
+```bash
+opencode run "Score artifact/search.py against every criterion in rubric.md.  For each, report the ID, the level, material or not, and the evidence you ran.  Fix nothing."
+```
+
+In the desktop application, paste that same sentence into the message bar.  Or do it yourself, row by row, which is worth doing at least once so you know what the agent is doing on your behalf.
+
+Then compute the weighted score from `rubric.json`.  Two rules decide the outcome, and they are not the same rule: any material criterion below Meets blocks acceptance no matter how high the score climbs, and the threshold only decides cases where everything material already passes.
+
+**Step 2: Produce `critique.md`.**  One table, one row per criterion.  The level and materiality columns are doing the real work: criteria below Meets and marked material become instructions in Step 3, while the rest need nothing from you but are worth recording so that you know the review was thorough rather than lucky.
 
 ```markdown
 # Critique Document
 
 - Agent, model, and opencode version:
-- Diff reviewed: diff_1.patch
+- Candidate scored: the first implementation, saved before any revision
 - Reviewer and date:
+- Weighted score: [X.XX] against a threshold of [Y.YY]
 - I will accept this when: [one line: what has to be true]
-- The one finding that blocks acceptance outright: [name exactly one]
+- The one criterion that blocks acceptance outright: [name exactly one]
 
-| # | Diff line(s) | Category | What I found | What the spec or prompt required |
-|---|---|---|---|---|
-| 1 | | correct / incorrect / missing / risk | | |
-| 2 | | | | |
+| ID | Criterion | Level | Material | Evidence (what you ran, what you saw) |
+|----|-----------|-------|----------|---------------------------------------|
+| C1 | | Meets / Approaching / Does not meet | Yes / No | |
+| C2 | | | | |
 ```
 
-Two of those header lines matter more than they look. A critique with no stated acceptance line is taste rather than review, and taste is not something anyone can check. And if you cannot name exactly one finding that blocks acceptance, you have not prioritized, so the agent will spread a single turn's attention evenly across everything you listed.
+Two of those header lines matter more than they look.  A critique with no stated acceptance line is taste rather than review, and taste is not something anyone can check.  And if you cannot name exactly one blocking criterion, you have not prioritized, so the agent will spread a single turn's attention evenly across everything you listed.  When several material criteria fail, the blocking one is the heaviest of them.
 
-Then add a row for each prohibition you wrote into `system_prompt.txt`, using the category `compliance` and putting your evidence in the last column, including the words "not present in diff" when the agent simply never did the thing you forbade. This is where the system prompt stops being decorative: every prohibition gets a row, and every row gets evidence.
+Every prohibition from `system_prompt.txt` already has a row in the rubric, so it already has a row here.  Put your evidence in the last column, including the words "not present in the candidate" when the agent simply never did the thing you forbade.  A prohibition with no evidence is a rule you did not actually check.
 
-**Step 3: Write `followup_prompt.txt`.** One message that addresses every incorrect, missing, and risk finding by name, in the order your blocking finding sets. Precision is the whole game, so name the line and the exact change rather than the general concern.
+**Step 3: Write `followup_prompt.txt`.**  One message that addresses every material failure by name, in the order your blocking criterion sets.  Precision is the whole game, so name the criterion, the line, and the exact change rather than the general concern.
 
 ```text
-I have reviewed the diff and found the following, which must be corrected before I accept it.
+I have scored this against rubric.md.  The following material criteria are below
+Meets and must be corrected before I accept it.
 
-1. [INCORRECT] The default for max_results is 10, but spec.md requires 5.  Change the
+1. [C6] The default for max_results is 10, but spec.md requires 5.  Change the
    default on line [X] of artifact/search.py.
 
-2. [MISSING] There is no test for the case where max_results limits the number of results
-   (spec testing criterion 2).  Add a test named test_max_results_limit.
+2. [C9] There is no test for the case where max_results limits the number of
+   results (spec testing criterion 2).  Add a test named test_max_results_limit.
 
-3. [SECURITY] The handler on line [X] returns str(e) in the output, which leaks internal
+3. [C8] The handler on line [X] returns str(e) in the output, which leaks internal
    detail.  Replace it with a generic message and log the traceback instead.
 
-Do not change anything else.  Do not touch spec.md, system_prompt.txt, AGENTS.md,
-CHARTER.md, critique.md, or anything under .ai/ or docs/.
+Do not change anything else.  Do not touch spec.md, rubric.md, rubric.json,
+system_prompt.txt, AGENTS.md, CHARTER.md, critique.md, or anything under .ai/ or docs/.
 ```
+
+Notice what the last line protects.  `rubric.md` and `rubric.json` are on it for the same reason `spec.md` is: an agent that can edit the standard it is judged against can pass by editing the standard.
 
 **Step 4: Run the refine turn, then accept or do not.**
 
@@ -983,17 +1086,23 @@ opencode run --agent builder "$(cat followup_prompt.txt)" \
 
 In the desktop application, switch to your `builder` agent, paste the contents of `followup_prompt.txt`, and export or copy the session into `transcripts/agent_trace_2.txt` when it finishes.
 
-Then look at what changed, run whatever your charter's definition of success says to run, and paste that output into your readme. Add one line to `critique.md` naming any finding the refine turn did not resolve, with a sentence on why you accepted it anyway or what you would do next. If you would rather measure the refine turn properly, diff by diff, that is the first extension challenge at the end of this handout.
+Then re-score.  Every criterion again, not only the ones you asked about:
+
+```bash
+opencode run "Re-score artifact/search.py against every criterion in rubric.md and report the full table again."
+```
+
+Run whatever your charter's definition of success says to run, and paste that output into your readme.  Add one line to `critique.md` naming any material criterion the refine turn did not resolve, with a sentence on why you accepted it anyway or what you would do next.  If you would rather measure the refine turn properly, round by round, that is the first extension challenge at the end of this handout.
 
 ### Troubleshooting, Part 5
 
-**The agent repeated the same mistake.** Your follow-up was not specific enough, so rewrite that one instruction with an explicit line reference and the exact text you want. A third pass costs you nothing in the rubric as long as you document it.
+**The agent repeated the same mistake.**  Your follow-up was not specific enough, so rewrite that one instruction with an explicit criterion ID, line reference, and the exact text you want.  A third pass costs you nothing in the rubric as long as you document it.
 
-**The agent fixed what you asked and introduced a new bug.** This happens constantly, and it is worth a row of its own in the table plus a note in your session log that another iteration was needed.
+**The agent fixed what you asked and broke a criterion that had passed.**  This happens constantly, and it is the reason Step 4 re-scores everything rather than only the failures.  It is worth a row of its own in the table plus a note in your session log that another round was needed.
 
-**The agent edited a file your system prompt prohibited.** Do not accept it. `git checkout -- <file>` puts it back, and the violation goes in the table as a compliance row with the diff line as evidence. A caught and documented violation is a better result here than a run in which nothing got tested.
+**The agent edited a file your system prompt prohibited.**  Do not accept it.  `git checkout -- <file>` puts it back, and the violation is a material failure on that prohibition's row with the evidence beside it.  A caught and documented violation is a better result here than a run in which nothing got checked.
 
-> **Checkpoint 5.** Which finding did the agent resolve most cleanly, and which of your instructions was least effective? Did any prohibition in your system prompt turn out to be unverifiable from a diff, and if so, how would you rewrite it?
+> **Checkpoint 5.**  Which material criterion did the agent resolve most cleanly, and which of your instructions was least effective?  Did any prohibition in your system prompt turn out to be unverifiable by any method you could name, and if so, how would you rewrite it so that it is?
 
 ---
 
@@ -1012,17 +1121,42 @@ This part answers one question in two ways: can somebody who is not you pick thi
 3. The **task** in `.ai/CURRENT_TASK.md` it served
 4. The **charter goal** that task served
 
+Or ask opencode to do it:
+
+```text
+Pick one line of artifact/search.py.  Trace it upward through four links and write
+traceability.md, quoting each: the commit that introduced it (find it with git log
+-S), the .ai/SESSION.md entry for that session, the .ai/CURRENT_TASK.md task it
+served, and the CHARTER.md goal that task served.  If a link is missing, say which
+one and stop.  Do not invent a link to complete the chain.
+```
+
+That last sentence is the whole instruction.  An agent asked for a four-link chain will produce four links, and the one it cannot find is exactly the one you need to know about.
+
 Expect the chain to break somewhere, most often between the commit and the session entry. A precisely named break is worth as much to me as an unbroken one, so say which link failed and what single sentence, written at the time, would have held it, then go write that sentence into the document that should have had it.
 
 **Step 3: Fill `KICKOFF_PROMPT.txt`.** Real project name, real read order, real scope. If you can arrange to stop mid-task rather than at a tidy boundary, use `ai/AGENT_HANDOFF_KICKOFF.md` instead, which is both the harder test and the more honest one.
 
 **Step 4: Go cold.** Close every open session and start a fresh one with no conversation history, in whichever face you have been working in. Paste the kickoff prompt and nothing else, and say nothing that is not written in the repository however tempting it gets.
 
+There is no shell command for this step and no prompt that can stand in for it, because the cold start *is* the prompt.  Everything the session gets, it has to read out of the repository.  In the desktop application, start a new session rather than clearing the current one, since a cleared session can still carry project context.  In the terminal interface, quit `opencode` and start it again in the project directory.
+
 **Step 5: Require it to restate before it acts.** The session has to tell you the mission, the active task, and the Next Safe Action before it touches anything, and then perform that action. Save the whole exchange as `transcripts/05-cold-handoff.md`.
 
 While you are there, check the memory file you have been writing since Part 4. Ask the cold session what it already knows about this project, and see whether anything from `.ai/MEMORY.md` comes back. If nothing does, confirm that the file is named in the `instructions` array of `opencode.json`, because a memory the tool never loads is a diary rather than a memory.
 
 **Step 6: List every question it had to ask.** This is the real deliverable, and it is worth more than a handoff that happened to go smoothly. Every question the fresh session asked you out loud is a missing section in one of your documents, so write them down, make the edit that answers each one, and note in your readme which edit each question caused.
+
+Or ask opencode to do it, once the cold session has finished and you are back in an ordinary session:
+
+```text
+Read transcripts/05-cold-handoff.md.  List every question the session asked me.
+For each, name which project document should have answered it and draft the
+sentence that would.  Do not edit the documents; I will decide which drafts to
+take.
+```
+
+Hold on to that last restriction.  The value of this step is in deciding what belongs in which document, and an agent that silently writes all six answers has done the typing and skipped the thinking.
 
 ### Troubleshooting, Part 6
 
@@ -1054,7 +1188,8 @@ These are the items people actually miss. Hold the rest of your submission again
 - [ ] The interview asked **five or fewer** numbered questions, each with lettered options and a stated default, before any file was touched.
 - [ ] `transcripts/03-rule-alone.md` and `transcripts/04-gate-held.md` show the same guarded operation, and in the second the **tool** refused.
 - [ ] The readme says in one paragraph, under `Why the gate held`, why the gate held when the rule did not.
-- [ ] `critique.md` carries a row for every finding and a compliance row for **every** prohibition, each with evidence.
+- [ ] `rubric.md` and `rubric.json` were written in Part 2, **before** the agent ran, and carry a row for every testing criterion and **every** prohibition.
+- [ ] `critique.md` carries a row per criterion with its level and materiality, a weighted score, an acceptance line, one named blocking criterion, and evidence on every prohibition row.
 - [ ] The artifact meets **its own** definition of success, with the output pasted in.
 - [ ] `.ai/SESSION.md` has **two or more** dated, append-only entries, each with what was **not** done and one Next Safe Action.
 - [ ] `.ai/MEMORY.md` entries were written by the **agent** and verified with `git diff` rather than from its summary.
@@ -1075,9 +1210,11 @@ submission/
 |-- AGENTS.md                        the contract, about one page
 |-- system_prompt.txt                the launch-time prompt you check compliance against
 |-- spec.md                          what you asked the agent to build
+|-- rubric.md                        the acceptance rubric, written before the agent ran
+|-- rubric.json                      the same criteria, weighted, with a threshold
 |-- followup_prompt.txt              the refine turn
-|-- critique.md                      one findings table, with a compliance row per prohibition
-|-- diff_1.patch                     the first diff, saved before you accepted anything
+|-- critique.md                      one row per criterion, scored, with evidence per prohibition
+|-- candidate_0.patch                the first attempt, saved before you scored it
 |-- KICKOFF_PROMPT.txt               filled, and the exact text used in Part 6
 |-- opencode.json                    provider, instructions, and the Part 3 permission block
 |-- .ai/
@@ -1131,7 +1268,13 @@ Keep a metacognitive learning log for this lab in your readme: in the spirit of 
 
 All four of these are optional, and each is about one sitting. Two of them pick up work the core lab deliberately set down, and two go somewhere the core lab does not.
 
-**Challenge 1: Measure the refine turn.** Part 5 stopped after one follow-up without checking it diff against diff, and this is that check. Before you run the refine turn, save the first diff with `git diff > diff_1.patch`. Run the follow-up, then save the second with `git diff > diff_2.patch`. Now add a column to your `critique.md` table headed "Resolved in diff_2?" and fill it in with yes, no, or partially for every row, reading the second diff rather than trusting the agent's summary of it. Anything still unresolved gets one sentence explaining why. What you learn is which of your instructions actually landed, and it is usually not the ones you thought were clearest.
+**Challenge 1: Measure the refine turn.** Part 5 stopped after one follow-up and one re-score, and this is the round-over-round version.
+
+You already have `candidate_0.patch` from Part 4, Step 6, and its scored table from Part 5. Run the follow-up, re-score, and save the second attempt the same way, as `candidate_1.patch`.
+
+Now put the two scored tables side by side and add a column headed "Moved in round 2?", filled in with yes, no, or partially for every criterion. Take each entry from your own re-run of the verification method rather than from the agent's summary of what it fixed. Anything still below Meets gets one sentence explaining why.
+
+What you learn is which of your instructions actually landed, and it is usually not the ones you thought were clearest. Watch in particular for a criterion that moved the wrong way.
 
 **Challenge 2: Show that the contract does something.** The core lab never tests `AGENTS.md` on its own, and this is the cheapest possible controlled comparison. Pick a trivial task, such as adding a one-line comment at the top of a file in `artifact/`. Run it once with `AGENTS.md` in place. Then rename the file with `mv AGENTS.md AGENTS.md.off`, run the identical task again, and rename it back. Save both transcripts side by side and write a paragraph on what differed. The interesting outcome is often that nothing did, which tells you the contract was carrying less weight than you assumed and points at which sentence to rewrite.
 

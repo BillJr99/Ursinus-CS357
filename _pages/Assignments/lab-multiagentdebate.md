@@ -72,7 +72,15 @@ tags:
 
 ---
 
-You and your partner will build the patterns that make an agent system more reliable than a single model call, then measure whether the extra calls bought anything.  The lab has two halves and one grade.  In **Part A** you build a generator/critic/refine loop: a **generator** writes a draft, a **critic** checks it against a written rubric and returns "accept" or "revise" with a list of issues, and the **refine loop** feeds those issues back until the critic accepts or the round budget runs out.  You then calibrate that critic on defects you planted, break your own rubric on purpose, and measure what the loop cost against single-shot generation.  In **Part B** you build the two aggregation architectures from class: **debate**, where agents see and rebut each other, and **stochastic consensus**, where independent samples are clustered by meaning and merged by a synthesizer.  Do Part A first.  The debate work reuses its scaffolding, and a critic you already trust is what makes a debate round worth reading.  You leave with a loop you can read, a working debate, a working sample-cluster-synthesize pipeline, and a measurement of your own that says when aggregation helps and when correlated errors defeat it.
+You and your partner will build the patterns that make an agent system more reliable than a single model call, then measure whether the extra calls bought anything.  The lab has two halves and one grade.
+
+In **Part A** you build a generator/critic/refine loop.  A **generator** writes a draft, a **critic** checks it against a written rubric and returns "accept" or "revise" with a list of issues, and the **refine loop** feeds those issues back until the critic accepts or the round budget runs out.  You then calibrate that critic on defects you planted, break your own rubric on purpose, and measure what the loop cost against single-shot generation.
+
+In **Part B** you build the two aggregation architectures from class: **debate**, where agents see and rebut each other, and **stochastic consensus**, where independent samples are clustered by meaning and merged by a synthesizer.
+
+Do Part A first.  The debate work reuses its scaffolding, and a critic you already trust is what makes a debate round worth reading.
+
+You leave with a loop you can read, a working debate, a working sample-cluster-synthesize pipeline, and a measurement of your own that says when aggregation helps and when correlated errors defeat it.
 
 Work in pairs with driver/navigator roles, swap at least every 30 minutes, and keep a swap log.  This lab is handed out alongside the deck *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*.  See the course schedule for the assigned and due dates.
 
@@ -980,7 +988,9 @@ Implement the sample, cluster, synthesize pipeline: $$k$$ high-temperature draft
 
 Section 7 of *Critique, Consensus, and the LLM Judge* (Voting on Meaning Instead of Strings) introduces this pattern in class.  Here is the core idea again before you build.  **Stochastic consensus** uses the fact that a language model at high temperature is a *sampler*, not an oracle: ask it the same question six times and you get six different drafts drawn from a distribution of plausible answers.  Any one draft might be idiosyncratic or wrong.  But if you group the drafts by *meaning* (not by exact wording), the sizes of the groups tell you something no single draft can: which positions the model keeps returning to (high support) and which are one-off flukes (low support).
 
-The grouping step is where embeddings come in.  An embedding model maps each draft to a vector, and drafts with similar meaning land close together even when they share few words.  Normalize those vectors and cluster them with cosine distance, and "six drafts" becomes "three positions, with support counts of 3, 2, and 1."  A final low-temperature **synthesizer** then receives one representative draft per cluster (plus its support count), never all six raw transcripts, and writes a single answer that follows the majority and *discloses* any close disagreement instead of papering over it.  That disclosure rule is the pattern's honesty mechanism: when the samples split, the user deserves to know.
+The grouping step is where embeddings come in.  An embedding model maps each draft to a vector, and drafts with similar meaning land close together even when they share few words.  Normalize those vectors and cluster them with cosine distance, and "six drafts" becomes "three positions, with support counts of 3, 2, and 1."
+
+A final low-temperature **synthesizer** then receives one representative draft per cluster, plus its support count, and never all six raw transcripts.  It writes a single answer that follows the majority and *discloses* any close disagreement instead of papering over it.  That disclosure rule is the pattern's honesty mechanism: when the samples split, the user deserves to know.
 
 ```text
 question --> sample k drafts at high temperature      (k model calls)
@@ -1417,7 +1427,9 @@ Debate: accuracy=80.0%, avg_calls=6.0
 
 ### Optional route: exchange positions through a channel
 
-You may run the debate condition of the shootout as two agents that exchange positions through a shared channel, instead of three agents inside one Python process.  The channel is a GitHub issue thread or a Dropbox-style shared folder, and the agents follow the claim protocol from the session *Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling*.  This route earns the same credit on the same rubric rows (Debate Implementation and Comparative Evaluation).  The channel transcript takes the place of the in-process 3-agent, 2-round transcript, and the written protocol (how to claim, what a second agent does on seeing a claim, what makes a claim stale, what "done" looks like) takes the place of the round loop in `run_debate`.
+You may run the debate condition of the shootout as two agents that exchange positions through a shared channel, instead of three agents inside one Python process.  The channel is a GitHub issue thread or a Dropbox-style shared folder, and the agents follow the claim protocol from the session *Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling*.
+
+This route earns the same credit on the same rubric rows, Debate Implementation and Comparative Evaluation.  Two substitutions make it equivalent.  The channel transcript takes the place of the in-process 3-agent, 2-round transcript.  And the written protocol, meaning how to claim, what a second agent does on seeing a claim, what makes a claim stale, and what "done" looks like, takes the place of the round loop in `run_debate`.
 
 A **claim** is a visible mark in the channel that says "this item is mine now," made before any work starts.  On GitHub it is a "Claiming this" comment plus an `in-progress` label.  In a folder it is a rename from `inbox/` to `claimed/` followed by a `.claim` file holding `claimed_by` and `claimed_at`.  The rule that matters for a debate is that an agent claims the other agent's position before it reads it, so the transcript proves who read what, and when.
 
@@ -1428,7 +1440,13 @@ A **claim** is a visible mark in the channel that says "this item is mine now," 
 > 4. Aggregate.  Extract the `ANSWER:` line from each round-2 post with the same `extract_answer` rule as the in-process debate, including the located warning when the line is missing.  Two agents can tie, so your protocol must state the tie rule: a judge agent (one extra call) picks the answer, or the pair records the tie as no answer.  Post the result as the closing comment or as `S01.vote.md` in `done/`.
 > 5. Match the budget.  The channel debate costs two agents times two rounds, plus one call if the judge ran.  Set `k` for self-consistency to that same number so the three conditions stay matched, and report the actual call count per condition in your table.
 
-Your transcript must show the exchange with timestamps.  On the GitHub route, submit the issue URL and a saved copy of each thread (an export or screenshots) showing, in order: the question, each agent's round-1 comment, each claim comment with its label, each round-2 comment, and the closing comment with the vote.  GitHub timestamps every comment for you.  On the folder route, submit a listing of `handoff/` with full timestamps (for example `ls -l --time-style=full-iso -R handoff/`, or the Dropbox file activity view) alongside the contents of every file in `inbox/`, `claimed/`, and `done/`, including each `.claim` file with its `claimed_by` and `claimed_at`.  In either case a reader must be able to see that each claim happened before the read it authorized, and that every round-2 post is a reply to a specific round-1 position.
+Your transcript must show the exchange with timestamps.
+
+On the **GitHub route**, submit the issue URL and a saved copy of each thread, as an export or screenshots, showing in order: the question, each agent's round-1 comment, each claim comment with its label, each round-2 comment, and the closing comment with the vote.  GitHub timestamps every comment for you.
+
+On the **folder route**, submit a listing of `handoff/` with full timestamps, for example from `ls -l --time-style=full-iso -R handoff/` or the Dropbox file activity view.  Include the contents of every file in `inbox/`, `claimed/`, and `done/`, and every `.claim` file with its `claimed_by` and `claimed_at`.
+
+In either case a reader must be able to see that each claim happened before the read it authorized, and that every round-2 post is a reply to a specific round-1 position.
 
 > **Watch out.** One reminder from that session applies here: a comment in the thread is an instruction the other agent will read, so a stray or injected line in a position becomes part of the next agent's context.
 

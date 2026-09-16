@@ -49,7 +49,11 @@ tags:
 
 ---
 
-In this warmup you'll install your local AI stack and your coding agent, and write a short baseline reflection on your experiences with AI.  I have kept the stakes low here on purpose.  It exists to make sure your tools work before the labs depend on them, and to capture a snapshot of your thinking that you'll come back to at the end of the semester.  (Your team charter is **not** part of this assignment; it is handed out separately once teams are announced; see the [Project Thread]({{ site.baseurl }}/Projects/PBLThread#the-team-charter-a-signed-team-contract).)  There are no wrong answers in the reflection.  This is a starting point, and I am not evaluating what you know.  See the course schedule for this onboarding assignment's due date; it is assessed within the Class Activities and Participation category.
+In this warmup you'll install your local AI stack and your coding agent, and write a short baseline reflection on your experiences with AI.  I have kept the stakes low here on purpose.  It exists to make sure your tools work before the labs depend on them, and to capture a snapshot of your thinking that you'll come back to at the end of the semester.
+
+There are no wrong answers in the reflection.  This is a starting point, and I am not evaluating what you know.
+
+Two administrative notes.  Your team charter is **not** part of this assignment; it is handed out separately once teams are announced (see the [Project Thread]({{ site.baseurl }}/Projects/PBLThread#the-team-charter-a-signed-team-contract)).  And see the course schedule for this onboarding assignment's due date; it is assessed within the Class Activities and Participation category.
 
 ---
 
@@ -238,13 +242,30 @@ In PowerShell, spell them `python --version` and `python -m pip --version`.  If 
 | **Windows, PowerShell** | Download the Windows installer from [python.org/downloads](https://www.python.org/downloads/), run it, and on its first screen check the box that adds Python to `PATH` before you click **Install Now**.  Or, in PowerShell, `winget install --id Python.Python.3.12 -e` | Open a new PowerShell window, so the updated `PATH` loads |
 | **WSL2 Ubuntu, or Linux** | `sudo apt update && sudo apt install python3 python3-pip python3-venv`.  Ubuntu ships Python 3 but not pip or `venv`, which is why all three packages are named | Nothing; the commands work in the same window |
 
-> **What pip is, and why every pip command on this page starts with `python3 -m`.**  pip is Python's package installer, the tool that fetches libraries such as `requests` from the [Python Package Index](https://pypi.org/) and puts them where `import` can find them.  It has shipped inside Python since version 3.4, so installing Python installs pip.  A machine can hold several Pythons, though (Apple's developer tools add one, Homebrew adds another, and each `uv` environment has its own), and a bare `pip install` may target a different one than the `python3` you run scripts with.  `python3 -m pip install requests` runs pip *from inside* the Python you name, so the library lands where that Python will look for it.  This is the whole cause of the `ModuleNotFoundError` in Step 4's troubleshooting, and the reason the page writes it this way throughout.  Natively, pip also belongs inside a *virtual environment*, a per-project copy of the library folder; *Route B: installing `requests`* in Step 4 shows how to make and activate one, and every native `pip install` on this page assumes you have.
+> **What pip is, and why every pip command on this page starts with `python3 -m`.**
+>
+> pip is Python's package installer, the tool that fetches libraries such as `requests` from the [Python Package Index](https://pypi.org/) and puts them where `import` can find them.  It has shipped inside Python since version 3.4, so installing Python installs pip.
+>
+> A machine can hold several Pythons, though.  Apple's developer tools add one, Homebrew adds another, and each `uv` environment has its own.  A bare `pip install` may therefore target a different Python than the `python3` you run scripts with.  Writing `python3 -m pip install requests` runs pip *from inside* the Python you name, so the library lands where that Python will look for it.
+>
+> That one detail is the whole cause of the `ModuleNotFoundError` in Step 4's troubleshooting, and the reason this page writes every pip command the long way.
+>
+> Natively, pip also belongs inside a *virtual environment*, a per-project copy of the library folder.  *Route B: installing `requests`* in Step 4 shows how to make and activate one, and every native `pip install` on this page assumes you have.
 
 **What you should see.**  In a new terminal, `python3 --version` prints `Python 3.12.x` (or whatever you installed), and `python3 -m pip --version` prints a pip version followed by the path of the Python it belongs to.  Check that the path points at the Python you just installed.
 
 **Paste.**  On Route B, both version lines, next to your operating system name in Stage 0.
 
-> **Troubleshooting:** `python3: command not found` (or `'python' is not recognized`) right after installing means the terminal predates the install; open a new one.  On Windows, if typing `python` opens the Microsoft Store, Python is not installed yet: close the Store and run the installer above, and if the Store keeps opening afterwards, open **Manage app execution aliases** from the Start menu and turn off the `python.exe` and `python3.exe` entries.  `No module named pip` means pip was skipped: `python3 -m ensurepip --upgrade` restores it on macOS and Windows, and `sudo apt install python3-pip` does on Ubuntu.  On a fresh Mac, typing `python3` may offer to install Apple's Command Line Tools instead; that copy of Python 3 runs Step 4, but it is several versions old, so install a current one from the table anyway.  If Homebrew complains that your macOS version is unsupported or a pre-release, run `brew update` first and retry.  `error: externally-managed-environment` on Ubuntu or Debian is handled under Step 4.  See the Stage 0 rows in Troubleshooting.
+> **Troubleshooting.**
+>
+> - `python3: command not found`, or `'python' is not recognized`, right after installing means the terminal predates the install.  Open a new one.
+> - On Windows, typing `python` opens the Microsoft Store when Python is not installed yet.  Close the Store and run the installer above.  If the Store keeps opening afterwards, open **Manage app execution aliases** from the Start menu and turn off the `python.exe` and `python3.exe` entries.
+> - `No module named pip` means pip was skipped.  `python3 -m ensurepip --upgrade` restores it on macOS and Windows; `sudo apt install python3-pip` does on Ubuntu.
+> - On a fresh Mac, typing `python3` may offer to install Apple's Command Line Tools instead.  That copy of Python 3 runs Step 4, but it is several versions old, so install a current one from the table anyway.
+> - If Homebrew says your macOS version is unsupported or a pre-release, run `brew update` first and retry.
+> - `error: externally-managed-environment` on Ubuntu or Debian is handled under Step 4.
+>
+> See the Stage 0 rows in Troubleshooting.
 
 > **Note.**  `uv`, which Part 1.5 installs, can also fetch a Python of its own (`uv python install 3.12`) and run scripts with it (`uv run python ollama_check.py`).  Install a system Python first anyway, so that `python3` works in every terminal and every editor, and so that the `python -m venv` fallback has something to run.
 
@@ -495,7 +516,12 @@ opencode --version
 
 **Paste.**  All three outputs, with the container prompt visible.
 
-> **Troubleshooting:** a line reading `ExperimentalWarning: DecompressInterceptor is experimental` above the promptfoo version is harmless noise from promptfoo's own dependencies, not a problem with your setup; the version string underneath it is what counts.  If promptfoo instead refuses to start and says your Node.js is too old, your image predates the Node 24 update, and *Appendix: Updating Your Container* has the fix.  `command not found` for any of the three means an older build of the course image; rerun `docker compose build` from your `.devcontainer/` folder.  `permission denied` writing files in `/workspace` on a Linux host means the container's `student` user does not match your host UID; run the container with `docker compose run --rm --user "$(id -u):$(id -g)" cs357`.
+> **Troubleshooting.**
+>
+> - `ExperimentalWarning: DecompressInterceptor is experimental` above the promptfoo version is harmless noise from promptfoo's own dependencies, not a problem with your setup.  The version string underneath it is what counts.
+> - If promptfoo refuses to start and says your Node.js is too old, your image predates the Node 24 update.  *Appendix: Updating Your Container* has the fix.
+> - `command not found` for any of the three means an older build of the course image.  Rerun `docker compose build` from your `.devcontainer/` folder.
+> - `permission denied` writing files in `/workspace` on a Linux host means the container's `student` user does not match your host UID.  Run the container with `docker compose run --rm --user "$(id -u):$(id -g)" cs357`.
 
 **Next:** A6.
 
@@ -733,7 +759,13 @@ python3 ollama_check.py
 
 **Paste.**  The printed JSON.
 
-> **Troubleshooting:** `ModuleNotFoundError: No module named 'requests'` means the install landed in a different Python than the one you ran; use `python3 -m pip install requests` (or `python -m pip` on Windows) from the same terminal, then rerun.  `error: externally-managed-environment` (Ubuntu, Debian, and therefore a fresh WSL2 Ubuntu) is the operating system refusing to let pip change its own Python, which means you skipped the virtual environment in the pip row above: create and activate it (the prompt gains a `(.venv)` prefix), then rerun the `pip install` and the script from that same terminal.  Or jump ahead to Part 1.5, Step 3, and let `uv` manage it.  `Activate.ps1 cannot be loaded because running scripts is disabled` in PowerShell is the execution policy; the pip row has the one-time fix.  A `ConnectionError` inside the container means the address rule was not applied.  `can't open file ... No such file or directory` means you are in a different directory than the one you saved into; `ls` (or `dir`) shows which.
+> **Troubleshooting.**
+>
+> - `ModuleNotFoundError: No module named 'requests'` means the install landed in a different Python than the one you ran.  Use `python3 -m pip install requests`, or `python -m pip` on Windows, from the same terminal, then rerun.
+> - `error: externally-managed-environment` on Ubuntu, Debian, and therefore a fresh WSL2 Ubuntu, is the operating system refusing to let pip change its own Python.  It means you skipped the virtual environment in the pip row above.  Create and activate it, so the prompt gains a `(.venv)` prefix, then rerun the `pip install` and the script from that same terminal.  Or jump ahead to Part 1.5, Step 3, and let `uv` manage it.
+> - `Activate.ps1 cannot be loaded because running scripts is disabled` in PowerShell is the execution policy.  The pip row has the one-time fix.
+> - A `ConnectionError` inside the container means the address rule was not applied.
+> - `can't open file ... No such file or directory` means you are in a different directory than the one you saved into.  `ls`, or `dir` on Windows, shows which.
 
 > **You've succeeded when** the four boxes below are checked.  That is Part 1A.
 
@@ -792,7 +824,11 @@ open-webui serve
 3. Send one message ("Say hello in one sentence.") and read the reply.
 4. **Create an API key**: click your initials (bottom left), then **Settings**, **Account**, **API Keys**, **Create new key**.  Keep it somewhere you will find again.  It authenticates you to a server on your own machine; it is not a payment credential.  The Local AI session and the Local Agent lab both use it.
 
-> **Troubleshooting:** the model dropdown is empty when OpenWebUI cannot reach Ollama.  On the Docker route, confirm the `--add-host` flag was present, then open **Admin Panel**, **Settings**, **Connections** and set the Ollama URL to `http://host.docker.internal:11434` (not `localhost`, which inside the container means the container itself; see *The address rule* above).  On the pip route the URL is `http://localhost:11434`, and `ollama serve` must be running.  If `http://localhost:3000` refuses to connect on the Docker route, run `docker ps`; when the container is missing, `docker logs open-webui` says why, and a port conflict means something else owns 3000, so re-run with `-p 3001:8080` and browse to 3001.  If `pip install open-webui` fails with a resolver or build error, it is almost always a Python version issue: create a 3.11 environment (`python3.11 -m venv owui && source owui/bin/activate`) and install inside it.
+> **Troubleshooting.**
+>
+> - An empty model dropdown means OpenWebUI cannot reach Ollama.  On the Docker route, confirm the `--add-host` flag was present, then open **Admin Panel**, **Settings**, **Connections** and set the Ollama URL to `http://host.docker.internal:11434`.  Not `localhost`, which inside the container means the container itself; see *The address rule* above.  On the pip route the URL is `http://localhost:11434`, and `ollama serve` must be running.
+> - If `http://localhost:3000` refuses to connect on the Docker route, run `docker ps`.  When the container is missing, `docker logs open-webui` says why.  A port conflict means something else owns 3000, so re-run with `-p 3001:8080` and browse to 3001.
+> - If `pip install open-webui` fails with a resolver or build error, it is almost always a Python version issue.  Create a 3.11 environment with `python3.11 -m venv owui && source owui/bin/activate` and install inside it.
 
 **Next:** Step 5.
 
@@ -953,7 +989,13 @@ grep -n "localhost" notes.txt
 | **Route B** | Do 2a through 2f |
 | **You paste** | The `ssh -T` greeting and the `git log --oneline` output |
 
-> **If you built the course container (Route A).**  You already have a repository: `cs357-work` from A2, cloned over HTTPS, with a scoped token from A6.  So for 2e, skip creating or cloning anything, and for 2f make your commit and push **from the container prompt** in `/workspace`; the token authenticates the push, and `git log --oneline` there is your transcript.  Still do 2a through 2d on your host, because the labs drive git from a host terminal too and the SSH key is the credential that belongs there.  If you built the container in class, the practice loop in Step 7 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) (create `hello_agent.py`, run it against host Ollama, commit, push) is exactly this checkpoint, and its transcript satisfies it.
+> **If you built the course container (Route A).**
+>
+> You already have a repository: `cs357-work` from A2, cloned over HTTPS, with a scoped token from A6.  So for 2e, skip creating or cloning anything.  For 2f, make your commit and push **from the container prompt** in `/workspace`; the token authenticates the push, and `git log --oneline` there is your transcript.
+>
+> Still do 2a through 2d on your host.  The labs drive git from a host terminal too, and the SSH key is the credential that belongs there.
+>
+> If you built the container in class, the practice loop in Step 7 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md), which creates `hello_agent.py`, runs it against host Ollama, commits, and pushes, is exactly this checkpoint.  Its transcript satisfies it.
 
 You will push to GitHub every week this semester, so set authentication up once, now, with a key.  GitHub no longer accepts your account password over HTTPS, and a key is the option that keeps working without a prompt on every push.  SSH (Secure Shell) is the protocol; the key is a file pair, one half private and one half public.  Follow 2a through 2f in order; the map below shows the whole path, and the alternatives after it are optional and replace specific sub-steps.
 
@@ -1041,7 +1083,14 @@ git push -u origin main
 
 > **What you should see:** `git commit` prints a line beginning `[main` with your message, and `git push` ends with `main -> main`.  Then run `git log --oneline` and **paste its output**, which shows your commit.
 
-> **Troubleshooting:** `git commit` without `-m` drops you into an editor, and `:q!` leaves it if that editor turns out to be `vim`.  `git push` complains if your default branch is not named `main`, which `git branch -M main` fixes.  If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, then verify with `git remote -v`.  On native Windows, PowerShell ships OpenSSH, so the commands above work as written; if `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell with `Set-Service -Name ssh-agent -StartupType Manual` followed by `Start-Service ssh-agent`.  See the Stage 7 rows in Troubleshooting.
+> **Troubleshooting.**
+>
+> - `git commit` without `-m` drops you into an editor.  If that editor turns out to be `vim`, `:q!` leaves it.
+> - `git push` complains if your default branch is not named `main`.  `git branch -M main` fixes it.
+> - If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, then verify with `git remote -v`.
+> - On native Windows, PowerShell ships OpenSSH, so the commands above work as written.  If `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell with `Set-Service -Name ssh-agent -StartupType Manual` followed by `Start-Service ssh-agent`.
+>
+> See the Stage 7 rows in Troubleshooting.
 
 > **Route A and credentials inside the container.**  The key you just made lives on your host, which is where it belongs.  Inside the course container, A6 above recommends a fine-grained personal access token (PAT) scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  That is why A2 clones `cs357-work` over HTTPS: the token authenticates HTTPS pushes.  Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) goes deeper, and A6 shows the read-only `~/.ssh` mount if you would rather use your key there.
 
@@ -1055,9 +1104,19 @@ Each of these replaces specific sub-steps; verify with `ssh -T git@github.com` e
 | **VS Code** | The `git clone` in 2e | Anyone already working in VS Code | `git log --oneline` in the integrated terminal |
 | **GitHub Desktop** | 2e and 2f | Anyone who would rather not type git commands yet | `git log --oneline` from Repository > Open in terminal |
 
-**The GitHub CLI.**  The [GitHub CLI](https://cli.github.com/), the `gh` command, does the whole exchange in 2b through 2c for you.  Install it (`winget install --id GitHub.cli` in PowerShell, `brew install gh` on macOS, or your package manager on Linux), then run `gh auth login`, choose **GitHub.com**, choose **SSH** as the protocol, and answer yes when it offers to generate a new SSH key and upload it to your account.  That one prompt replaces `ssh-keygen`, the `cat` of the `.pub` file, and the paste into Settings.  Verify with `ssh -T git@github.com` and paste that output; `gh repo clone <your-username>/<your-repo>` then clones over the protocol you just authorized, in place of the `git clone` in 2e.
+**The GitHub CLI.**  The [GitHub CLI](https://cli.github.com/), the `gh` command, does the whole exchange in 2b through 2c for you.
 
-**VS Code, for the clone in 2e.**  It drives the same git underneath, so the result is identical.  With no folder open, the Source Control view (Ctrl+Shift+G, or Cmd+Shift+G on macOS) offers a **Clone Repository** button; from anywhere, the Command Palette (Ctrl+Shift+P, or Cmd+Shift+P) runs **Git: Clone**.  Either one asks for the repository address, where you paste the same SSH URL, then asks which local folder to put it in, `~/cs357` here, and offers to open the clone when it finishes.  Say yes: the integrated terminal (Ctrl+\`) then opens already inside the repository, which is where you run `git log --oneline` for your transcript.  The palette also offers **Clone from GitHub**, which lets you pick from a list of your repositories instead of pasting a URL, though it signs you in to GitHub inside VS Code and authenticates as that account rather than with your key.
+Install it with `winget install --id GitHub.cli` in PowerShell, `brew install gh` on macOS, or your package manager on Linux.  Then run `gh auth login`, choose **GitHub.com**, choose **SSH** as the protocol, and answer yes when it offers to generate a new SSH key and upload it to your account.  That one prompt replaces `ssh-keygen`, the `cat` of the `.pub` file, and the paste into Settings.
+
+Verify with `ssh -T git@github.com` and paste that output.  `gh repo clone <your-username>/<your-repo>` then clones over the protocol you just authorized, in place of the `git clone` in 2e.
+
+**VS Code, for the clone in 2e.**  It drives the same git underneath, so the result is identical.
+
+With no folder open, the Source Control view (Ctrl+Shift+G, or Cmd+Shift+G on macOS) offers a **Clone Repository** button.  From anywhere, the Command Palette (Ctrl+Shift+P, or Cmd+Shift+P) runs **Git: Clone**.  Either one asks for the repository address, where you paste the same SSH URL, then asks which local folder to put it in, `~/cs357` here, and offers to open the clone when it finishes.
+
+Say yes.  The integrated terminal (Ctrl+\`) then opens already inside the repository, which is where you run `git log --oneline` for your transcript.
+
+The palette also offers **Clone from GitHub**, which lets you pick from a list of your repositories instead of pasting a URL.  Note that it signs you in to GitHub inside VS Code and authenticates as that account rather than with your key.
 
 **GitHub Desktop, for 2e and 2f.**  If you would rather not type git commands yet, [GitHub Desktop](https://desktop.github.com/) is a supported option and handles authentication for you: install it, sign in, use File > New repository (or Add local repository) on your `cs357` folder, commit from the Changes tab, and Publish repository to push.  Then paste the output of `git log --oneline` from Repository > Open in terminal, which is the same transcript the command-line route produces.  Set the key up anyway, because the labs and the coding agent drive git from a terminal.
 
@@ -1270,4 +1329,10 @@ docker compose build
 docker compose run --rm cs357
 ```
 
-That first `curl` matters more than it looks.  The Dockerfile lives in *your* repository, not in a registry somewhere, so rebuilding without fetching the new one just rebuilds the image you already have.  Expect the rebuild to take roughly as long as your original build did, because a change near the top of the file invalidates every layer beneath it, and the large library downloads run again.  If you work through VS Code Dev Containers, run **Dev Containers: Rebuild Container** from the command palette; plain **Reopen in Container** reuses the old image and will not pick up the change.  Once you are back at the container prompt, rerun the A5 checks to confirm the update landed, and then `docker image prune` to reclaim the disk the replaced image was still holding.
+That first `curl` matters more than it looks.  The Dockerfile lives in *your* repository, not in a registry somewhere, so rebuilding without fetching the new one just rebuilds the image you already have.
+
+Expect the rebuild to take roughly as long as your original build did.  A change near the top of the file invalidates every layer beneath it, so the large library downloads run again.
+
+If you work through VS Code Dev Containers, run **Dev Containers: Rebuild Container** from the command palette.  Plain **Reopen in Container** reuses the old image and will not pick up the change.
+
+Once you are back at the container prompt, rerun the A5 checks to confirm the update landed, then run `docker image prune` to reclaim the disk the replaced image was still holding.

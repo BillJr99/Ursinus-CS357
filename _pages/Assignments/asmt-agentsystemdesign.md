@@ -85,7 +85,9 @@ tags:
 
 **See the course schedule for the assigned and due dates.**
 
-Every trustworthy agent system exists twice: once as running code, and once on paper, as the specification, contract, and gates that say what it is supposed to do, what it must never do, and how anyone would know the difference.  In this assignment you write that paper system.  You choose one of two directions.  Direction A designs a system that does not exist yet: a spec-first design document of the kind engineering teams call a design proposal, system spec, or RFC.  Direction B designs the operating system *around* an agent: the charter, contract, gates, and handoff state that make it trustworthy, interruptible, and independent of any single model or vendor, and then proves it works by interrupting a session mid-task.
+Every trustworthy agent system exists twice: once as running code, and once on paper, as the specification, contract, and gates that say what it is supposed to do, what it must never do, and how anyone would know the difference.  In this assignment you write that paper system.
+
+You choose one of two directions.  **Direction A** designs a system that does not exist yet: a spec-first design document of the kind engineering teams call a design proposal, system spec, or RFC.  **Direction B** designs the operating system *around* an agent: the charter, contract, gates, and handoff state that make it trustworthy, interruptible, and independent of any single model or vendor, and then proves it works by interrupting a session mid-task.
 
 Both directions include an Observability, Traceability, and Handoff Protocol: the part of the design that says what gets logged, how a decision traces back to the rule that produced it, and what a fresh process reads when it starts or restarts.  In both, the document *is* the deliverable, and polish matters exactly as much as it would in production, because in Direction B these documents are the production system.  Read both directions before choosing, then complete **one** in full depth.  Depth on one is worth far more than a shallow pass over both.
 
@@ -297,7 +299,9 @@ Delete every template section you cannot honestly enforce, and list what you del
 
 ### Step 3: Run the Governed Loop
 
-A single handoff proves your documents survive one interruption.  What you actually want to know is whether they survive *repetition*: whether an agent that starts over from nothing, again and again, keeps making forward progress instead of relitigating what the last one already did.  So you run your document set as a **governed loop**: repeated unattended iterations, each beginning with a fresh context, with your `.ai/` files and workspace as the only thing carried between them.  This is the pattern *The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent* calls a self-running loop, and the reason it works is the one the *How I AI* session insists on: the memory lives on disk, not in the conversation.
+A single handoff proves your documents survive one interruption.  What you actually want to know is whether they survive *repetition*: whether an agent that starts over from nothing, again and again, keeps making forward progress instead of relitigating what the last one already did.
+
+So you run your document set as a **governed loop**: repeated unattended iterations, each beginning with a fresh context, with your `.ai/` files and workspace as the only thing carried between them.  This is the pattern *The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent* calls a self-running loop, and the reason it works is the one the *How I AI* session insists on: the memory lives on disk, not in the conversation.
 
 Any agent CLI or chat agent from this course works, and any harness works: a shell `while` loop that re-invokes your agent, or hand-restarts with the history cleared between them.  The requirement is a **fresh context per iteration**, not a particular tool.  If your domain has no digital surface an agent can touch, a rigorous simulated transcript is acceptable; mark it as simulated.
 

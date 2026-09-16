@@ -95,7 +95,19 @@ tags:
 
 **See the course schedule for the assigned and due dates.**
 
-By this point in the course you have built systems that answer questions, retrieve documents, call tools, and make or support decisions.  Responsible AI starts when you stop asking "does it work?" and start asking "should anyone rely on it, and on what terms?"  In this assignment you take one of five angles on that question (whether it matters that these systems understand anything, whether their data and behavior are documented honestly, whether enforceable rules govern their operation, whether they comply with the regulations that increasingly bind them, and what their energy and carbon cost really is) and apply it to a **concrete artifact**: an essay defending a position, a datasheet and model card for a system you have used, a governance document for your own project, a regulatory mapping of a real deployed system, or a carbon audit of your own AI use.  You leave with a piece of written work precise enough that a deployer, regulator, auditor, or fellow practitioner could act on it.
+By this point in the course you have built systems that answer questions, retrieve documents, call tools, and make or support decisions.  Responsible AI starts when you stop asking "does it work?" and start asking "should anyone rely on it, and on what terms?"
+
+In this assignment you take one of five angles on that question:
+
+- whether it matters that these systems understand anything,
+- whether their data and behavior are documented honestly,
+- whether enforceable rules govern their operation,
+- whether they comply with the regulations that increasingly bind them, and
+- what their energy and carbon cost really is.
+
+You then apply your angle to a **concrete artifact**: an essay defending a position, a datasheet and model card for a system you have used, a governance document for your own project, a regulatory mapping of a real deployed system, or a carbon audit of your own AI use.
+
+You leave with a piece of written work precise enough that a deployer, regulator, auditor, or fellow practitioner could act on it.
 
 This page is **Component 2 (Govern) of the [Responsible AI Capstone]({{ site.baseurl }}/Assignments/ResponsibleAI)**, not a separate assignment, and it has no deadline of its own.  This component is 50 of the capstone's 100 points, and I grade it with the rubric on this page; each rubric weight is a percentage of those 50 points.  You submit it together with Component 1, and the capstone page gives the due date and the submission instructions.  Ground your argument here in the findings you produced in Component 1: the audit you ran, not a study you read.
 
@@ -270,7 +282,14 @@ Apply these to every sentence before submitting.  They are the same tests real c
 
 > **Do this.**  Your task (30 minutes):
 > 1.  **Identify two NIST AI RMF gaps** in the hospital's approach.  Map each to one of the four NIST functions (Map, Measure, Manage, Govern) and write one sentence explaining what that function would have caught.
-> 2.  **Write one policy clause** (100 words or fewer) that would have prevented the primary failure, specifying **scope** (who and what it applies to), **requirement** (what must happen, specifically), **enforcement** (what happens if violated), and **exception** (one valid exception to prevent over-application).  Example format, from a different domain: *"Automated resume-screening tools shall flag all candidates rejected by the AI for human review before any rejection letter is sent.  Reviews shall be logged with the reviewer's name and reasoning.  Violations by hiring managers shall be escalated to the Chief People Officer within 48 hours.  Exception: internal transfer applications are exempt."*
+>  2.  **Write one policy clause** of 100 words or fewer that would have prevented the primary failure.  Specify all four parts:
+>
+>      - **Scope**: who and what it applies to.
+>      - **Requirement**: what must happen, specifically.
+>      - **Enforcement**: what happens if it is violated.
+>      - **Exception**: one valid exception, to prevent over-application.
+>
+>      Example format, from a different domain: *"Automated resume-screening tools shall flag all candidates rejected by the AI for human review before any rejection letter is sent.  Reviews shall be logged with the reviewer's name and reasoning.  Violations by hiring managers shall be escalated to the Chief People Officer within 48 hours.  Exception: internal transfer applications are exempt."*
 > 3.  **Stress-test your clause:** identify one way it could be gamed (met in letter but not spirit) and write a one-sentence amendment that closes the gap.
 
 ### Step 1: Author the Governance Document
@@ -309,7 +328,16 @@ Version 1.0 | Date | Authors: [team members and roles]
 
 ### Step 3: Peer Review and Red Team
 
-Exchange your governance document with another team.  That team applies the third-party test to every sentence, flags failures, and finds **one loophole**: a way to use the system harmfully that is not explicitly prohibited or gated.  (Example loophole: prohibiting "processing medical records" but not "processing a diary entry that describes health conditions"; or gating email *sending* but not *drafting*, so a draft can be sent by accident.)  You will receive the same treatment.  Include: the peer review verbatim (Appendix C); the loophole quoted from their review; your patch showing the original clause alongside the revised clause; and a one-paragraph revision memo (Appendix D) explaining what the original clause permitted that it should not have, and how the patch closes it.
+Exchange your governance document with another team.  That team applies the third-party test to every sentence, flags failures, and finds **one loophole**: a way to use the system harmfully that is not explicitly prohibited or gated.  You will receive the same treatment.
+
+Two example loopholes, so you know the shape of the thing you are hunting.  A document might prohibit "processing medical records" but not "processing a diary entry that describes health conditions."  Or it might gate email *sending* but not *drafting*, so a draft can be sent by accident.
+
+Include four things:
+
+- the peer review verbatim (Appendix C);
+- the loophole quoted from their review;
+- your patch, showing the original clause alongside the revised clause; and
+- a one-paragraph revision memo (Appendix D) explaining what the original clause permitted that it should not have, and how the patch closes it.
 
 ### Direction C Deliverable
 
@@ -363,7 +391,17 @@ Write a structured risk register with exactly 5 rows:
 | Risk ID | Risk Description | Likelihood (H/M/L) | Impact (H/M/L) | Regulatory Touchpoint | Proposed Mitigation |
 |---------|-----------------|-------------------|----------------|----------------------|---------------------|
 
-**Requirements:** at least one **technical** risk (model accuracy failure, adversarial attack), at least one **social/fairness** risk (disparate impact on a protected group), and at least one **legal/compliance** risk (GDPR right to explanation, sector rule violation).  Every cell must be substantive; single words like "bias" or "high" will not earn proficient credit.  Mitigations must be implementable, not generic.  "Ensure fairness" is not a mitigation; "run a quarterly disparate impact analysis broken down by gender and race, reviewed by the ethics board, with a remediation protocol triggered if the 4/5ths rule is violated" is.  Example row (AI hiring screener): *R-01, model trained on historical hiring data produces lower scores for candidates from HBCUs, creating disparate impact on Black applicants, H/H, EU AI Act Art. 10 (data governance); US EEOC adverse impact doctrine; annual adverse impact analysis by race and school type, with human review for any candidate within 5 points of the threshold.*
+**Requirements.**  Cover three kinds of risk at minimum:
+
+- one **technical** risk, such as a model accuracy failure or an adversarial attack;
+- one **social or fairness** risk, such as disparate impact on a protected group; and
+- one **legal or compliance** risk, such as a GDPR right to explanation or a sector rule violation.
+
+Every cell must be substantive.  Single words like "bias" or "high" will not earn proficient credit.
+
+Mitigations must be implementable rather than generic.  "Ensure fairness" is not a mitigation.  "Run a quarterly disparate impact analysis broken down by gender and race, reviewed by the ethics board, with a remediation protocol triggered if the 4/5ths rule is violated" is.
+
+Example row, for an AI hiring screener: *R-01, model trained on historical hiring data produces lower scores for candidates from HBCUs, creating disparate impact on Black applicants, H/H, EU AI Act Art. 10 (data governance); US EEOC adverse impact doctrine; annual adverse impact analysis by race and school type, with human review for any candidate within 5 points of the threshold.*
 
 For each row, ask in order: What could go wrong?  Who is harmed and how seriously?  What existing law or standard already speaks to this failure mode?  If nothing does, that regulatory gap is itself worth noting.
 
@@ -415,7 +453,13 @@ Pick a value within each range that matches your best estimate of model size and
 
 **Start logging on Day 1 of the assignment week.**  Real-time logs beat memory reconstruction, and a gap honestly acknowledged beats reconstructed data presented as complete.  For one full week, record every AI interaction: tool and model (if known), one-sentence task description, **input and output tokens**, whether those counts are measured or estimated, and cloud-hosted vs. local.  Expect 10-30 rows.
 
-**Measure the tokens where the tool will tell you, and estimate them where it will not.**  Any request you make to your own Ollama returns `prompt_eval_count` and `eval_count`, and [token_meter.py]({{ site.baseurl }}/files/agent-templates/deliberation-harness/tools/token_meter.py) reads them for you.  Many hosted APIs return an equivalent `usage` block.  A browser chat window will not tell you anything, and for those rows the old rule stands: estimate at roughly four characters per token, or use the word-length buckets (short: <50 words; medium: 50-200; long: >200) and convert.  **Add a column saying which each row is.**  A log that is half measured and says so is worth more than one that is uniformly estimated and does not admit it, and far more than one that presents estimates as measurements.
+**Measure the tokens where the tool will tell you, and estimate them where it will not.**
+
+Any request you make to your own Ollama returns `prompt_eval_count` and `eval_count`, and [token_meter.py]({{ site.baseurl }}/files/agent-templates/deliberation-harness/tools/token_meter.py) reads them for you.  Many hosted APIs return an equivalent `usage` block.
+
+A browser chat window will not tell you anything.  For those rows the old rule stands: estimate at roughly four characters per token, or use the word-length buckets (short: under 50 words; medium: 50 to 200; long: over 200) and convert.
+
+**Add a column saying which each row is.**  A log that is half measured and says so is worth more than one that is uniformly estimated and does not admit it, and far more than one that presents estimates as measurements.
 
 At the end of the week, estimate your total CO2eq using the reference values, **showing every conversion step**.  "50 medium prompts × 0.005 g/query (GPT-4 midpoint, cloud) = 0.25 g CO2eq" earns proficient; "my AI use produced 2 g" earns beginning.  Then compute the CO2eq of three other activities from that same week that are comparable in frequency (commuting, streaming, meals) and write a one-paragraph reflection on what surprised you most.  Analysis and reflection: approximately 250-350 words, plus the log table as an appendix.
 
@@ -433,7 +477,15 @@ Analyze your final project agent team design through an environmental lens (appr
 
 ### Part 3: Redesign for Efficiency
 
-Propose **three concrete, project-specific design changes** that reduce your project's footprint (approximately 350-450 words).  For each: name the change precisely ("cache the retrieval agent's output for identical queries within a 30-minute window"; not "use a smaller model," which is a category, not a recommendation); estimate the percentage reduction in CO2eq per session with reasoning; and analyze honestly what capability is sacrificed.  If the answer is "none," explain why.  At least one change must involve model selection (a specific smaller model for a specific subtask) and at least one must involve system architecture (eliminating or batching calls).  Prioritize the three.  Start from your Part 2 hot spots and ask: "What would I give up by cutting this?"
+Propose **three concrete, project-specific design changes** that reduce your project's footprint, in approximately 350 to 450 words.  For each one:
+
+- Name the change precisely.  "Cache the retrieval agent's output for identical queries within a 30-minute window" is a change; "use a smaller model" is a category, not a recommendation.
+- Estimate the percentage reduction in CO2eq per session, with your reasoning.
+- Analyze honestly what capability is sacrificed.  If the answer is "none," explain why.
+
+At least one change must involve model selection, meaning a specific smaller model for a specific subtask, and at least one must involve system architecture, meaning eliminating or batching calls.  Prioritize the three.
+
+Start from your Part 2 hot spots and ask: "What would I give up by cutting this?"
 
 ### Part 4: Jevons Paradox Analysis
 

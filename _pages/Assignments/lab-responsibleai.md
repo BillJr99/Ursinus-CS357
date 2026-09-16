@@ -164,7 +164,13 @@ Carry these three techniques forward.  When you write the shared threat model be
 
 ## Shared Threat Model
 
-Everyone starts the same way.  Choose one agent you have already built and put it on the examination table.  Write a short **threat and risk model**: name the agent, describe what it does and who would use it, and trace its data and decision flow from the moment input arrives to the moment a result leaves.  At each boundary (user input, system prompt, retrieved or tool-supplied content, logs, and the final output or decision), ask what could go wrong if an adversary, a careless user, or a regulator were on the other side.  Give each risk a likelihood and an impact, and prioritize them.  End with the specific scenario in which this agent would cause harm if nothing were done; that scenario motivates the direction you choose next.
+Everyone starts the same way.  Choose one agent you have already built and put it on the examination table.
+
+Write a short **threat and risk model**.  Name the agent, describe what it does and who would use it, and trace its data and decision flow from the moment input arrives to the moment a result leaves.
+
+At each boundary, meaning user input, the system prompt, retrieved or tool-supplied content, logs, and the final output or decision, ask what could go wrong if an adversary, a careless user, or a regulator were on the other side.  Give each risk a likelihood and an impact, and prioritize them.
+
+End with the specific scenario in which this agent would cause harm if nothing were done.  That scenario motivates the direction you choose next.
 
 This framing step is required of every submission, regardless of direction, because you cannot harden what you have not honestly mapped.  It is graded under the Threat and Risk Analysis row (25 percent of Component 1).
 
@@ -283,7 +289,11 @@ Choose this direction if the agent you built reads untrusted text: user question
 **Choose your target.**  Step 1.2 asks you to stand up a deliberately vulnerable agent.  Two ways are equally acceptable:
 
 - **Target A (default): build the minimal reference agent below.**  This is the fastest path.  The RAG-style knowledge-base agent is fully specified here and maps cleanly onto the five attack categories.
-- **Target B: use the [OWASP labStudentLLM](https://github.com/leinn32/labStudentLLM) vulnerable app suite.**  This open-source teaching repo ships ten deliberately vulnerable FastAPI apps (one per OWASP LLM Top-10 category), each with attack scripts, a fix, tests, and a **deterministic mock LLM**, so the labs run fully offline (or you can point them at your local Ollama).  If your agent's real risk is broader than prompt injection alone (excessive agency, sensitive-information disclosure, or vector/embedding weaknesses in your RAG store), start from the matching labStudentLLM app as your baseline.  Carry it through the same red-team, defend, residual-risk cycle.  Cite the specific app(s) you used and keep the exploit, fix, and test artifacts in your submission.
+- **Target B: use the [OWASP labStudentLLM](https://github.com/leinn32/labStudentLLM) vulnerable app suite.**  This open-source teaching repo ships ten deliberately vulnerable FastAPI apps, one per OWASP LLM Top-10 category, each with attack scripts, a fix, tests, and a **deterministic mock LLM**.  The labs therefore run fully offline, or you can point them at your local Ollama.
+
+    Choose this target if your agent's real risk is broader than prompt injection alone, such as excessive agency, sensitive-information disclosure, or vector and embedding weaknesses in your RAG store.  Start from the matching labStudentLLM app as your baseline and carry it through the same red-team, defend, residual-risk cycle.
+
+    Cite the specific apps you used and keep the exploit, fix, and test artifacts in your submission.
 
 Whichever target you choose, the four graded parts (threat model, red-team, layered defense, residual-risk analysis) are identical.
 
@@ -763,7 +773,13 @@ Submit through the course's secure submission portal.
 
 ### Extension Challenges (Direction 1, optional)
 
-1. **Meta-judge defense.**  Add a sixth defense: a separate LLM call that reads the user question and the proposed response and answers YES if the response reveals system instructions, adopts another persona, follows instructions embedded in the question, or contains content unrelated to Ursinus academics, and NO if it is a legitimate answer to a legitimate question.  Wrap the question and response in `<question>` and `<response>` tags in the judge prompt, ask for only YES or NO, call `claude-haiku-4-5` with `max_tokens=10`, and suppress the response when the judge says YES.  Test it against your full attack suite and document which attacks it catches that Defense 4 missed and its false positive rate on legitimate questions.
+1. **Meta-judge defense.**  Add a sixth defense: a separate LLM call that reads the user question and the proposed response and returns a single verdict.
+
+    It answers YES if the response reveals system instructions, adopts another persona, follows instructions embedded in the question, or contains content unrelated to Ursinus academics.  It answers NO if the response is a legitimate answer to a legitimate question.
+
+    Wrap the question and response in `<question>` and `<response>` tags in the judge prompt, ask for only YES or NO, call `claude-haiku-4-5` with `max_tokens=10`, and suppress the response when the judge says YES.
+
+    Test it against your full attack suite.  Document which attacks it catches that Defense 4 missed, and its false positive rate on legitimate questions.
 2. **Automated attack harness.**  Build `run_attacks.py` that runs all five attack prompts against `agent_defended.py` (all defenses active) and saves a CSV with columns `attack_id`, `prompt`, `response`, `blocked`, `defense_state`, `timestamp`.  `python run_attacks.py --output results.csv` should reproduce your full attack log in one command; if you change a defense, re-run it to see whether any previously blocked attack broke through.
 3. **Vector database retrieval.**  With `pip install chromadb sentence-transformers`, store knowledge-base sentences as embeddings in ChromaDB and retrieve only the top-3 most relevant for each question.  Show that Attack B with the original pirate instruction fails against this architecture and explain why; design an injection that *does* work (the content must be topically similar to the question to be retrieved) and test it; write one paragraph on how this architecture changes the attack surface compared to full-context loading.
 

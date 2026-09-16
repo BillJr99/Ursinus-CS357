@@ -434,6 +434,17 @@ docker run --rm -it --user "$(id -u):$(id -g)" \
   -e PI_OLLAMA_MODEL=llama3.2 course-pi-ollama
 ```
 
+Or ask opencode to do it, from the folder holding the Dockerfile:
+
+```text
+Build the image in this folder as course-pi-ollama, then run it with --rm, my own
+uid and gid, host.docker.internal mapped to the host gateway, this folder mounted
+at /workspace as the working directory, and PI_OLLAMA_MODEL set to llama3.2.  Show
+me the command before you run it.
+```
+
+Ask for the command before the run.  A container invocation is mostly flags, and the flags are the whole lesson here.
+
 `--rm` is the part worth noticing.  It throws the container away when you exit.  The work stays, because the work is in your project folder; the machine it ran on is disposable.  If the agent makes a mess of its own environment, the mess is gone the next time you start.
 
 ## One thing that will trip you up
@@ -442,6 +453,14 @@ Your model is not where the agent expects.  Inside a container, `localhost` mean
 
 ```bash
 OLLAMA_CONTEXT_LENGTH=8192 OLLAMA_HOST=0.0.0.0 ollama serve
+```
+
+Or ask opencode to do it:
+
+```text
+Restart Ollama so it listens on all interfaces and serves an 8192-token context:
+OLLAMA_HOST=0.0.0.0 and OLLAMA_CONTEXT_LENGTH=8192.  Tell me first whether an
+ollama process is already running, because the old one has to stop first.
 ```
 
 The second setting is the familiar one from Section 3a.  The first is new, and it is the one that will stop you cold: the agent setup below refuses to start if the model has less than 8192 tokens of working memory, and Ollama hands out 4096 by default.  That refusal is deliberate, and the reason it is deliberate is worth reading.
@@ -456,6 +475,17 @@ curl -fsSL -o smo.skill https://www.billmongan.com/Ursinus-CS357-Fall2026/files/
 unzip -q smo.skill -d .skills/ && rm smo.skill
 ls .skills/small-model-orchestrator/SKILL.md
 ```
+
+Or ask opencode to do it:
+
+```text
+Create a .skills folder here, download
+https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill,
+unzip it into .skills, delete the archive, and then confirm that
+.skills/small-model-orchestrator/SKILL.md exists.  Tell me the exact path you find.
+```
+
+Make it report the path rather than say it succeeded, for the reason the next paragraph gives.
 
 That last line is the check that matters.  You are looking for `SKILL.md` exactly one folder deep, at `.skills/small-model-orchestrator/SKILL.md`.  Some unzip tools add an extra folder named after the archive, and if yours did, move the inner folder up one level.  On Windows, download it as `smo.zip` and use `Expand-Archive -Path smo.zip -DestinationPath .skills`, because `Expand-Archive` refuses any other extension.
 
