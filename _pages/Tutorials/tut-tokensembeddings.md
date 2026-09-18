@@ -361,6 +361,8 @@ These exercises extend the search engine to reveal the geometry of meaning: buil
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can embed your own sentences and measure the distances rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Similarity matrix.*  Embed eight sentences of your choosing spanning two obvious topics.  Compute the full 8x8 cosine similarity matrix, render it as a heatmap, and verify that the block structure matches the topics.
 
     - *What to do:* Choose 4 sentences about Topic A (e.g., dining) and 4 about Topic B (e.g., parking).  Call `embed()` on each, build the 8x8 matrix using the cosine formula, and visualize with `matplotlib` using `imshow`.
@@ -791,6 +793,8 @@ print("numerical grad = %.4f   analytic grad = %.4f  (match!)" % (num, grad))
 ---
 
 ### Exercises
+
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can trace one prompt through the matrices by hand rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
 
 **Exercise 1: Change the prompt to "the mat."**
 

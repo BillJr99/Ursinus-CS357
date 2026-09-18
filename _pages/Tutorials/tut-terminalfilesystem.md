@@ -999,6 +999,8 @@ Two more things to notice, both of which are testable claims you can check again
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can lay out the mounts and permissions yourself rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Build a safe agent workspace.**
 
    *What to do:* Write the complete sequence of `mkdir`, `chmod`, and `docker run` commands to set up a safe workspace for a three-agent pipeline (ResearchAgent, WriterAgent, CriticAgent).  Each agent should have its own identity directory.  Data flow: ResearchAgent writes to its own workspace; WriterAgent reads ResearchAgent's workspace (read-only) and writes to its own; CriticAgent reads WriterAgent's workspace (read-only) and writes its verdict to a shared `/output` directory.  No agent should be able to read another agent's `config/` or `logs/` directory.

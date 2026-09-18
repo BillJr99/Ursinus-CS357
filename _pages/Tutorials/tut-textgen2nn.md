@@ -405,6 +405,8 @@ An embedding table is a layer of learned weights, so an embedding is a learned r
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can push the numbers through the network by hand rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Complete forward-pass practice.*
 
    - *What to do:* Work at least the first forward-pass problem of the printable worksheet [nn_by_hand_quadratic_full.pdf](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/activity-neuralnets/nn_by_hand_quadratic_full.pdf) by hand, showing a trace table in exactly the Model 2 format.  Then adapt today's code cell to verify it.

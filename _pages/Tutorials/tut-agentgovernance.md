@@ -332,6 +332,8 @@ The container is disposable, privilege-restricted, and exposes only the mounted 
 
 ## 6.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can write the governance documents and run a handoff against them rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 Copy-paste starting points for every document in this tutorial are in the course template set: [Agent Operating System Templates](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md).
 
 1.  *Charter a project you actually have.*

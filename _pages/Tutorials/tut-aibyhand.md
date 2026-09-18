@@ -667,6 +667,8 @@ Recap: a forward pass is a trace table, and every cell is a multiply, an add, or
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can work the arithmetic by hand rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Encode two words with the learned merge table.**
 
     *What to do:* Using the merge table `[es, est, est</w>]` from Part 1, encode `slowest` and `widest`, showing the sequence after each merge as in the `lowest` table.

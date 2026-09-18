@@ -231,10 +231,12 @@ Pair across tracks: each Track A member brings a tested change with its CI run; 
 
 ## 7.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can run an agent session against a spec you wrote first rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1: Spec First**
 
-- *What to do*: Before your next agent session (for any project in this course), write the complete specification first: Track A writes failing tests, Track B writes an acceptance checklist with the five-questions instruction prepended.  Run the agent session against it and submit the spec, the transcript, and the verification evidence showing that the artifact meets the spec.
-- *Starter hint*: For Track B, your very first message to the agent should be exactly: "Before writing anything, ask me five questions about what I have not specified."  Copy the five questions and your answers into your submission; those questions are part of your deliverable, because they show what the spec was missing before you were asked.  For Track A, write the test file first, run it to confirm it fails, then hand it to the agent with "make these pass without modifying the tests."
+- *What to do*: Before your next agent session (for any project in this course), write the complete specification first: Track A writes failing tests, Track B writes an acceptance checklist with the five-questions instruction prepended.  Run the agent session against it, then read the spec, the transcript, and your verification evidence together and judge for yourself whether the artifact actually meets the spec.
+- *Starter hint*: For Track B, your very first message to the agent should be exactly: "Before writing anything, ask me five questions about what I have not specified."  Keep the five questions and your answers with the spec; they are the most useful part of the record, because they show what the spec was missing before you were asked.  For Track A, write the test file first, run it to confirm it fails, then hand it to the agent with "make these pass without modifying the tests."
 - *You've succeeded when*: Every item in your spec (test or checklist item) has a corresponding piece of evidence in the transcript or verification run showing it was checked, and you can identify at least one thing the agent would have gotten wrong if you had not specified it.
 
 **Exercise 2: Red to Green to Guarded (Track A) / The Stranger Test (Track B)**

@@ -193,6 +193,8 @@ Running agent-executed code in a sandbox with no network egress and human approv
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can apply the trifecta to a setup you actually use rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1: Audit an agent's trifecta.**
 
 - *What to do*: Pick a coding-agent setup you have used this semester (Claude Code, Cursor, OpenWebUI tools, or your Lab agent).  List, concretely, what plays each role of the lethal trifecta: what private data it can read, what untrusted content it ingests, and how it can communicate externally.  Then propose the *single* removal that most cheaply breaks the chain for a common task.

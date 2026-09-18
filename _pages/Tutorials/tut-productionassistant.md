@@ -336,6 +336,8 @@ Two assistant instances from silently duplicating or disabling one another when 
 
 ## 7.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can write the gates and routines for your own accounts rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 Copy-paste starting points (the vault contract, standing prompt, memory file, and runbook) are in the course template set: [Agent Operating System Templates](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md).
 
 1.  *Write your own gates.*

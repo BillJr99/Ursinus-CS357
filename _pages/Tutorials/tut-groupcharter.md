@@ -191,6 +191,8 @@ Which of the following charter clauses passes the enforceability test?
 
 ## Exercises
 
+This page is a tutorial, so nothing on it is collected or graded on its own, and the drafting time below is a suggestion rather than a rule.  The charter itself is the exception worth naming: your signed team charter is a Project Thread deliverable in its own right, described on the Team Charter page, and this exercise is how teams usually produce it.  Work the exercise for the charter, not for this page.
+
 **Draft the charter (30-40 minutes).**  Using your Overview pre-draft as the starting point and your Model 1 grid as raw material:
 
 1.  Draft all six required sections.  Every member is **primary author of at least one section** (name the author under each section heading), the standing Project Thread rule for all team documents.

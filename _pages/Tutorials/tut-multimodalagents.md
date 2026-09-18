@@ -233,6 +233,8 @@ In this part, you will build and evaluate real multimodal pipelines using the to
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can push real documents and audio through a pipeline and measure what it gets wrong rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *VLM extraction benchmark.*  Take 10 screenshots of web forms, invoices, or structured documents.  Using a VLM of your choice (LLaVA locally via `ollama pull llava:7b`, or GPT-4o/Claude via API), extract the structured fields from each.  Manually compare the extracted values to the ground truth.  Report: field-level accuracy, which field types are most often wrong, and the cost of API calls if you used a cloud model.
 
     *What to do:* Create a simple evaluation script that compares extracted JSON to a manually labeled ground truth JSON. Use exact match for numeric fields and case-insensitive match for text fields.

@@ -252,6 +252,8 @@ Next you will pull and compare real models on your own hardware, test the quanti
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can run two local models side by side and measure the difference yourself rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Model selection audit.*  Using `ollama list` and `ollama pull`, download two models you can run on your available hardware.  For the same five prompts (one factual, one creative, one code, one reasoning, one multilingual), run both models and rate the outputs on a 1-5 scale.  Report which model wins each task and whether the result matches the recommendations in Model 2.
 
     *What to do:* Choose two models that fit your RAM (use the hardware table).  Run each model with `ollama run <model>` and type the same five prompts.  Use the same prompt text for both models; do not rephrase.

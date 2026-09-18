@@ -711,7 +711,9 @@ Restrict the trigger to `main` (plus `paths` filters) and move the full deploy b
 
 ## Exercises
 
-**Exercise 1.**  Hello, edge.  Scaffold, run locally, and deploy the JSON Worker from Section 4.  Submit the public URL and the `curl` outputs for all three routes, including the 404.
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can deploy a Worker and watch it answer rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
+**Exercise 1.**  Hello, edge.  Scaffold, run locally, and deploy the JSON Worker from Section 4.  Confirm that the public URL answers, and keep the `curl` outputs for all three routes, including the 404, for yourself.
 
 *What to do:* Follow Sections 3-5 exactly.  After `wrangler deploy`, test all three routes with `curl` and copy the outputs.
 

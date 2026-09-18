@@ -283,6 +283,8 @@ All three tools load GGUF models, handle GPU offloading of as many layers as fit
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can work the VRAM arithmetic yourself and compare quantization levels on real hardware rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1.**
 
 *What to do:* Calculate the VRAM requirements for six configurations using the formula: VRAM ≈ (parameters × bytes/weight) × 1.15.  Present your results in a completed table.

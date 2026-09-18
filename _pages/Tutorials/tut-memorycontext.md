@@ -466,7 +466,9 @@ for msg in ["I have exams in chemistry on Dec 14 and statistics on Dec 16.",
 
 ## Exercises
 
-These exercises quantify the memory savings from summarization, stress-test the approach with a conflicting update, and draft the memory architecture specification your final project will use.  Keep your work; you will paste it directly into your project proposal.
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can measure the compression yourself and watch a summary go stale rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
+These exercises quantify the memory savings from summarization, stress-test the approach with a conflicting update, and draft the memory architecture specification your final project will use.  Keep your work, because the architecture you draft here is the one your project proposal will want.
 
 1.  **Token budget ledger.**  For the final exchange above, count (or estimate at four characters per token) the tokens in the assembled prompt with summarization versus without.  Report the compression ratio.
 

@@ -185,6 +185,8 @@ And three norms that keep the room safe for candid review, whichever side of it 
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can write a real SQR card and compare it with the ones your teammates write rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Practice SQR on a sample brief excerpt (15 minutes).**  Individually write one complete SQR card on the excerpt below; then compare cards within your team, and the Recorder posts the team's best S, best Q, and best R (they may come from different cards) to the discussion board.
 
 > **Excerpt from a sample Stakeholder Brief (section 2 and 4, abridged):**

@@ -273,6 +273,8 @@ In this part, you will combine the tools from Parts I-IV in a real codebase spri
 
 ## 7.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can point these tools at a repository of your own choosing and see what each one reveals rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Domain-swap scavenger hunt.*
 
     - *What to do*: Choose any open-source agent project from GitHub (not one used in this tutorial's examples).  Apply all five domain-swap tools to it and fill in one row of the key-concepts table from this activity: domain swap, what it revealed, whether it was useful for this particular repo.

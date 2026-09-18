@@ -548,6 +548,8 @@ Running it in a container whose only writable mount is one git-tracked project f
 
 ## 10.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can run the containers yourself rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *First container.*
 
     *What to do:* Run an interactive Ubuntu container, install `curl` inside it with `apt-get update && apt-get install -y curl`, verify it works with `curl --version`, then exit.  Next, run a *new* Ubuntu container with `docker run -it ubuntu bash` and show that `curl` is missing.  Finally, use `docker start` and `docker exec` to re-enter the *original* container and confirm `curl` is still there.  Document both behaviors with copy-pasted terminal output.
@@ -558,7 +560,7 @@ Running it in a container whose only writable mount is one git-tracked project f
 
 2.  *Persistent service.*
 
-    *What to do:* Run Open WebUI with a published port and a bind-mounted data directory.  Create a user account inside the web interface.  Stop and remove the container completely with `docker stop webui && docker rm webui`.  Then recreate the container using the exact same `-v` flag pointing to the same host directory, and log back in to demonstrate your account survived container destruction.  Submit both `docker run` commands.
+    *What to do:* Run Open WebUI with a published port and a bind-mounted data directory.  Create a user account inside the web interface.  Stop and remove the container completely with `docker stop webui && docker rm webui`.  Then recreate the container using the exact same `-v` flag pointing to the same host directory, and log back in to demonstrate your account survived container destruction.  Write both `docker run` commands down and check for yourself that they are identical.
 
     *Starter hint:* Your two run commands should look like this (fill in the blanks):
     ```bash
@@ -586,7 +588,7 @@ Running it in a container whose only writable mount is one git-tracked project f
 
 4.  *Compose conversion.*
 
-    *What to do:* Convert exercise 2's `docker run` command into a `docker-compose.yml` file with at least two services: Open WebUI and one additional service of your choosing (Ollama, a simple Nginx server, or anything from Docker Hub).  Start the stack with `docker compose up -d`, observe combined logs with `docker compose logs -f`, then tear it down with `docker compose down`.  Submit the complete `docker-compose.yml`.
+    *What to do:* Convert exercise 2's `docker run` command into a `docker-compose.yml` file with at least two services: Open WebUI and one additional service of your choosing (Ollama, a simple Nginx server, or anything from Docker Hub).  Start the stack with `docker compose up -d`, observe combined logs with `docker compose logs -f`, then tear it down with `docker compose down`.  Read your finished `docker-compose.yml` back and check that every flag from the `docker run` command has a YAML counterpart.
 
     *Starter hint:* Your Compose file should have a `services:` block with two named entries.  Each entry mirrors the flags of your `docker run` command (`image:`, `ports:`, `volumes:`) written as YAML keys instead of CLI flags.  Start from the example in Section 6 and adapt it.
 
@@ -594,7 +596,7 @@ Running it in a container whose only writable mount is one git-tracked project f
 
 5.  *The host bridge.*
 
-    *What to do:* Start any server on your host machine: Ollama if it is installed, or a simple Python HTTP server with `python3 -m http.server 8001` run in a terminal.  Then start a container with an interactive shell.  From inside the container, attempt `curl http://localhost:8001` and show that it fails.  Then attempt `curl http://host.docker.internal:8001` and show that it succeeds.  On Linux, include the required flag.  Paste both curl outputs as your deliverable.
+    *What to do:* Start any server on your host machine: Ollama if it is installed, or a simple Python HTTP server with `python3 -m http.server 8001` run in a terminal.  Then start a container with an interactive shell.  From inside the container, attempt `curl http://localhost:8001` and show that it fails.  Then attempt `curl http://host.docker.internal:8001` and show that it succeeds.  On Linux, include the required flag.  Read both curl outputs side by side and satisfy yourself that the only thing that changed was the hostname.
 
     *Starter hint:* On macOS or Windows with Docker Desktop, run:
     ```bash

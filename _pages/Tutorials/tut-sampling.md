@@ -669,6 +669,8 @@ Two things to remember from this example.  Truncation always renormalizes, so cu
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can turn the sampling knobs yourself and watch the output change rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Seeded reproducibility.**
 
    *What to do:* Set the `seed` option to a fixed integer (for example, 42) and run the same prompt five times.  Confirm that all five outputs are identical.  Then change the seed to 99 and show that a different (but again consistent) output results.  Explain in writing why reproducibility matters for grading, science, and agent debugging.

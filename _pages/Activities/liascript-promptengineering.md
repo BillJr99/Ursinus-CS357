@@ -577,6 +577,111 @@ Two things to remember from this part.  A difference between runs with everythin
 
 ---
 
+# Part IId: From System Prompt to Agent Definition
+
+Everything in Parts I and II lived in a string.  You wrote a persona, set a temperature, and handed both to a model in code.  That is enough for an experiment and falls apart the moment you want the same agent tomorrow, or want a teammate to get the same behavior, or want an agent to be *unable* to do something rather than merely instructed not to.  The fix is to stop passing the design as arguments and start declaring it in a file.
+
+## 5c.  The Agent Block
+
+In opencode an agent is an entry in the `agent` map in `opencode.json`.  Its keys are the design decisions you have been making all day, now written down somewhere they persist.
+
+| Key | What it sets | Why it is here |
+|---|---|---|
+| `description` | One sentence on when this agent should be used | Required.  It is also the routing signal: a primary agent reads it to decide whom to hand work to |
+| `prompt` | The system prompt, inline or read from a file | The persona from Part IIb, now versioned alongside the project |
+| `model` | A `provider/model` identifier such as `ollama/llama3.2` | Part IIc's comparison becomes a per-agent choice instead of a global one |
+| `temperature` | The sampling dial from Section 5b | Set it per role: pinned for anything you intend to check, loose for anything you want variety from |
+| `top_p` | The other sampling dial | Same reasoning.  Change one of the two, never both at once |
+| `permission` | Which tools the agent may use, as `allow`, `ask`, or `deny` | The part a prompt cannot do.  An instruction can be argued with; a `deny` cannot |
+| `mode` | `primary` or `subagent` | Whether you talk to it directly or another agent calls it |
+| `steps` | A ceiling on how many iterations it may take | A stop condition, so a confused agent halts instead of looping |
+
+Read the `permission` row twice, because it carries the real lesson of this part.  Parts I and II taught you to write a careful instruction.  A careful instruction shapes a distribution; it does not remove a capability.  Once an agent has a shell, "please do not delete anything" and "you cannot delete anything" are different claims, and only the second one is enforced by something other than goodwill.
+
+## Model 5: Three Agents, Three Jobs
+
+Below are three agents defined against one project.  Each is a persona from earlier in this deck plus the two things a persona alone never had: a model and a boundary.
+
+```json
+{
+  "agent": {
+    "reviewer": {
+      "description": "Reviews a diff for correctness and clarity. Never edits.",
+      "mode": "subagent",
+      "model": "ollama/llama3.2",
+      "temperature": 0.1,
+      "permission": {
+        "read": "allow",
+        "edit": "deny",
+        "bash": "deny"
+      },
+      "prompt": "You review diffs. Report what you find. Change nothing."
+    },
+    "builder": {
+      "description": "Implements a written spec inside artifact/. Use after a plan is approved.",
+      "mode": "primary",
+      "model": "ollama/llama3.2",
+      "temperature": 0.4,
+      "steps": 40,
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "bash": "ask"
+      },
+      "prompt": "Implement spec.md inside artifact/ and nowhere else."
+    },
+    "planner": {
+      "description": "Proposes an approach and stops. Never writes to disk.",
+      "mode": "subagent",
+      "temperature": 0.7,
+      "permission": {
+        "read": "allow",
+        "edit": "deny",
+        "bash": "deny"
+      },
+      "prompt": "Propose an implementation, then stop. Do not edit anything."
+    }
+  }
+}
+```
+
+Three choices in that block are worth defending out loud, because each one applies an argument from this deck to a file.
+
+**`reviewer` sits at temperature 0.1 and denies `edit`.**  A review gets checked against the diff, so you want the same reading twice from the same input, and that is what a low temperature buys.  A reviewer that *can* edit will quietly fix what it finds instead of reporting it, which destroys the only thing you wanted from it.
+
+**`builder` sits at 0.4 with `bash` set to `ask`.**  Implementation has more than one acceptable shape, so pinning it to zero buys nothing and costs variety.  `ask` rather than `allow` on the shell is the permission gate from *Agentic CLI Tools*, kept in place because this is the one agent here that can change your files.
+
+**`planner` sits at 0.7 and cannot write at all.**  You want alternatives from a planner, and the safe way to run a loose sampler is to make sure it cannot act on its own ideas.
+
+Notice also what is absent.  `planner` has no `model` key, so it inherits the default.  Set a key only where the choice actually matters, because every key you write is one more thing that can drift out of date.
+
+A teammate copies `builder` to make a second agent, rewrites the prompt, and leaves `"bash": "ask"` untouched.  What is the strongest reason this is fine?
+
+[( )] It is not fine; every agent should set `bash` to `deny`
+[(X)] `ask` preserves the gate, so the copy inherits a decision somebody made deliberately rather than a default nobody chose
+[( )] It is fine because the prompt changed, and the prompt is what controls behavior
+[( )] It is fine because the temperature is unchanged
+
+The prompt describes intent and the permission block decides capability.  Copying an agent carries both, which is most of the argument for writing them down instead of retyping them.
+
+## 5d.  Subagents: One Agent Calling Another
+
+`mode` is the key that turns a list of agents into a team.  A **primary** agent is one you talk to directly, and in the terminal you cycle between primaries with Tab.  A **subagent** is one that another agent calls, and you can also summon it yourself by name, as `@reviewer`.
+
+The mechanism is smaller than it sounds.  A primary agent is given the `description` of every available subagent.  When the work in front of it matches one of those descriptions, it hands that piece over, the subagent runs in its own context, and only the result comes back.  That is why `description` is the one required key, and why the advice from the skills activity applies here without modification: write it as *when to use this*, not as a title.
+
+Two properties fall out of that design, and both are the point rather than side effects.
+
+**Context stays small.**  The subagent's intermediate work, its file reads and its false starts, never enters the primary agent's history.  Only the answer does.  *Tool Use and Function Calling* makes this argument at length; the agent block is where you act on it.
+
+**Blast radius stays small.**  The `reviewer` above cannot edit, whichever agent calls it and whatever that agent was talked into asking for.  A capability a subagent does not have is not a capability its caller can lend it.
+
+`steps` is the third control, and it is the same idea you will write by hand in *Orchestration and Multi-Agent Patterns* as a spawn budget: a hard ceiling that turns "the agent got confused" from an unbounded cost into a bounded one.
+
+## 5e.  Where This Goes Next
+
+What you have here is the declarative half of orchestration.  The `agent` block lets you name workers and fix their boundaries.  It does not decide who runs when.  That question, covering pipelines, routers, and the supervisor loop that chooses the next worker each turn, belongs to *Orchestration and Multi-Agent Patterns*, and one observation is worth carrying into that session.  Every pattern you meet there is some arrangement of the three things you just declared: a role, a boundary, and a stop condition.  The file is where they live; the pattern is how they are sequenced.
+
 # Part III: Synthesis and Practice
 
 In this part you write and red-team real system prompts: first a prompt for a course-scheduling agent, then a stress test of a teammate's design.  This is the closest thing to real prompt engineering work, and the goal is to find where a prompt breaks before a real user does.

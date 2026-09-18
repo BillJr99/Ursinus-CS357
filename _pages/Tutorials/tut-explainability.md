@@ -143,6 +143,8 @@ In this Part, you will translate the analysis from Parts I and II into deployabl
 
 ## 3.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can make your own system's reasoning visible and test whether a stranger can verify it rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Trace viewer.*
 
     *What to do:* Add to your project the simplest possible "why" affordance: a collapsible pane showing the trace and citations behind each answer.  Screenshot before and after.

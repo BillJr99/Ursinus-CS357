@@ -413,6 +413,8 @@ Remember two things from Case C.  A global invariant belongs to a deterministic 
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can run the autopsy protocol on real systems yourself rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Teach-back.*
 
    *What to do:* Teach one case to a classmate or study partner in three minutes using only the five-question autopsy protocol as a guide.  Write down at least one repair idea per case that you had not considered before the conversation.
@@ -431,7 +433,7 @@ Remember two things from Case C.  A global invariant belongs to a deterministic 
 
 3.  *Pre-mortem.*
 
-   *What to do:* Run the autopsy protocol prospectively on your own project proposal: predict its Case-A-style specification gap, its Case-B-style irreversible action, and its Case-C-style global invariant.  Write up the pre-mortem and append it to your project proposal as a required deliverable.
+   *What to do:* Run the autopsy protocol prospectively on your own project proposal: predict its Case-A-style specification gap, its Case-B-style irreversible action, and its Case-C-style global invariant.  Write up the pre-mortem.  If you are drafting the Final Project Proposal, it is worth appending there as well, where it does real work; that is a choice you make on the proposal rather than a requirement of this page.
 
    *Starter hint:* For the specification gap: what assumption are you making about your data format, naming convention, or user behavior that you have not written down?  For the irreversible action: what is the worst thing your agent could do if it misunderstands a user request?  For the global invariant: what constraint must be true across your entire output, not just locally?
 
@@ -638,6 +640,8 @@ Remember two things from the red team exercise.  A rule in the system prompt is 
 ---
 
 ### Exercises
+
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can map an agent's injection surface yourself rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
 
 1.  *Injection surface audit.*
 

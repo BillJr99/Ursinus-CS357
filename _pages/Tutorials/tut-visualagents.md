@@ -257,6 +257,8 @@ Now that you've built, tested, and exported flows, this part asks you to push th
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can wire the flows on the canvas and find where the canvas resists you rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Pattern rebuild.*
 
     *What to do:* Choose one Unit 3 pattern (router, critique-refine, or a two-stage pipeline) and realize it on the Langflow canvas.  Capture a screenshot of the working flow with at least one playground transcript showing the expected behavior.
