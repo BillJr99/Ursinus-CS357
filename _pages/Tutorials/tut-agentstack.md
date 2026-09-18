@@ -209,12 +209,21 @@ Agents are where the stack earns its name; they are the autonomous workers that 
 ```bash
 docker pull nousresearch/hermes-agent:latest
 mkdir -p "$HOME/agents/hermes/home"
+
+# Once, to create the identity: the wizard writes config and keys into the mount.
+docker run --rm -it \
+  -v "$HOME/agents/hermes/home:/opt/data" \
+  nousresearch/hermes-agent:latest setup
+
+# Thereafter, to run it:
 docker run --rm -it --name hermes \
   --add-host=host.docker.internal:host-gateway \
-  -v "$HOME/agents/hermes/home:/home/hermes/.hermes" \
+  -v "$HOME/agents/hermes/home:/opt/data" \
   -v "$HOME/agents/workspace:/workspace" \
   nousresearch/hermes-agent:latest
 ```
+
+Read the first `-v` carefully, because it is the one people get wrong.  The container keeps **all** of its user data, meaning configuration, keys, sessions, skills, and memories, in a single directory at `/opt/data`; the image declares that path as its volume and gives the in-container `hermes` user `/opt/data` as a home directory.  Mount the host identity directory there and nowhere else.  Mount it at a path the image does not use and the container still runs, still appears to work, and writes its real state to an anonymous volume that `docker rm` discards, which is a failure you only discover when the identity you were counting on is gone.
 
 The others slot in by personality: `agent0` (Agent Zero) is the fully autonomous, self-improving end of the spectrum with a web UI; `openhands-server` plus `openhands` provide a software-engineering agent with its own runtime sandbox; `freebuff` is our task-bounded harness (give it a task and a workspace, it executes and exits); the `nanoclaw`/`nanoclaw-dind`/`zeroclaw` family and `openclaw-gateway` are lightweight Claude-style workers behind a routing gateway; and `n8n` is the workflow scheduler that strings any of them into timed pipelines (its visual editor at port 5678 makes it the natural home for "every morning, summarize new items").  Deploy each the same way, without exception: a port row, an identity directory, `--add-host`, gateway URL in its config.  The uniformity *is* the lesson.
 
