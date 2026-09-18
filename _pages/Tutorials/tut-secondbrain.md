@@ -347,6 +347,12 @@ The session rhythm that results: you drop a PDF into `raw/` from your phone and 
 
 Obsidian becomes the comfortable viewer onto a knowledge base your agents largely maintain.  What becomes possible once that loop is running, a living wiki that grows more useful each session rather than a folder that grows larger, is the argument the *How I AI* session makes; this page is the deeper build behind it.
 
+### The Same Move, for Code
+
+The principle in this part generalizes past the vault.  hermes needs no plugin to work on a code repository either, for the same reason it needs none to work on your notes: it has a shell, and the tools you want it to use are commands.  Its bundled opencode skill is exactly that, an instruction sheet for invoking `opencode run` and reading back the result, with no integration code in between.  The *Local Agent Stack* module carries the mechanics, including the one prerequisite a container makes easy to miss and the question of which model actually writes the code.
+
+Knowing this here matters because a vault and a repository pose the same problem.  Both are directories under version control, both carry a contract at the root, and in both cases you wire the agent by telling it where that contract is.  Once you have watched `AGENTS.md` do that job for notes, letting an agent maintain code under the same discipline is a short step, and it is the step the *OpenCode Studio* lab has you take.
+
 ### Questions to Work Through
 
 7.  The wiring prompt above passes the PAT via an environment variable rather than including it in the prompt string.  Explain specifically why this matters: what are the two specific places where an inline PAT in a prompt could be exposed to unintended readers?

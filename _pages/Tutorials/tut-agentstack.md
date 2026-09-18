@@ -218,6 +218,32 @@ docker run --rm -it --name hermes \
 
 The others slot in by personality: `agent0` (Agent Zero) is the fully autonomous, self-improving end of the spectrum with a web UI; `openhands-server` plus `openhands` provide a software-engineering agent with its own runtime sandbox; `freebuff` is our task-bounded harness (give it a task and a workspace, it executes and exits); the `nanoclaw`/`nanoclaw-dind`/`zeroclaw` family and `openclaw-gateway` are lightweight Claude-style workers behind a routing gateway; and `n8n` is the workflow scheduler that strings any of them into timed pipelines (its visual editor at port 5678 makes it the natural home for "every morning, summarize new items").  Deploy each the same way, without exception: a port row, an identity directory, `--add-host`, gateway URL in its config.  The uniformity *is* the lesson.
 
+### Giving hermes a Coding Agent, Without Writing an Integration
+
+`hermes` is a tool-calling agent with a shell, and that turns out to be the entire integration story, because opencode is a command.  Hermes ships a bundled skill at `skills/autonomous-ai-agents/opencode/SKILL.md` which adds no plugin and no API client.  It teaches hermes how to invoke the opencode CLI through the terminal and process tools hermes already has.  Nothing is installed on the hermes side at all.
+
+The delegation takes three shapes, and what separates them is whether a terminal has to be attached.
+
+| What you want | How hermes runs it | Needs a pseudo-terminal |
+|---|---|---|
+| One bounded task, then a result | `opencode run 'make the failing test in tools/titles.py pass'` | no |
+| An ongoing session it can steer | bare `opencode`, launched with `background=true, pty=true` | yes |
+| A review of one pull request | `opencode pr 42`, which checks the branch out first | yes |
+{: .tb-full}
+
+The flags carry over unchanged from the *Agentic CLI Tools* tutorial: `--model provider/model` pins the model for that run, `-f` attaches a file, `-c` continues the last session.  One piece of trivia from the skill is worth repeating because it costs people a wedged container: `/exit` is not an opencode command, and you leave an interactive session with Ctrl+C or by killing the process.
+
+**Which model writes the code?**  Not hermes's.  Students guess this wrong almost every time, so state it plainly.  opencode resolves its own model in a fixed order: an explicit `--model` flag first, then provider environment variables in its environment, then whatever its own `opencode.json` already configures.  The two agents keep separate model configurations, and hermes never lends opencode its own.  Putting them on the same backend is possible and often sensible, but you do it by pointing both configurations at the same OpenAI-compatible endpoint, which is a decision you make in two files rather than something the delegation performs for you.
+
+**One prerequisite the container makes easy to miss.**  hermes can only run a command that exists where hermes is running.  In the stack above hermes runs inside a container, so opencode has to be installed in that image, or hermes has to reach a machine that has it through one of its non-local terminal backends such as SSH or Docker.  Installing it in the image is the simpler route here:
+
+```bash
+npm i -g opencode-ai@latest
+opencode auth list          # confirm a provider answers before hermes ever tries to use one
+```
+
+What you have at that point is a three-level chain, and it is worth naming because its shape recurs.  hermes decides *what* needs doing and delegates it.  opencode decides *how* to change the code and does it.  The model underneath each of them decides what to say.  Every level holds its own context, its own model, and its own boundary, which is the supervisor pattern the *Orchestration and Multi-Agent Patterns* activity builds by hand, arriving here as two commands and a skill file.
+
 ## 7.  Verification: The Wiring Matrix
 
 A stack is not up until its connections are proven, pairwise, from the right vantage points.  The matrix below tests each critical link: host-to-service, container-to-host, and end-to-end through the full chain.  Run these commands in order; a failure at any cell tells you exactly which link broke and where to look first.
