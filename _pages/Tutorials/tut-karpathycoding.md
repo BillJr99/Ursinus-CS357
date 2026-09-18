@@ -324,6 +324,8 @@ Tests verify sampled behaviors; reading the implementation against the spec catc
 
 ## 4.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can fix the planted bugs and write the tests that catch them rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Find and fix the three bugs.*
 
    - *What to do:* Copy the `search_memory` implementation above into a local file.  Fix Bug 1 (remove `eval`, use the query string directly), Bug 2 (raise `RuntimeError` on empty embedding), and Bug 3 (add a note about why this is only a problem at scale; no code change required, just a comment).  Run `pytest` to confirm all five original tests still pass.

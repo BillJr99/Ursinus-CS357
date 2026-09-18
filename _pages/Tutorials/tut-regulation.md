@@ -147,6 +147,8 @@ High risk; AI systems used in employment and worker management, including CV-scr
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can apply the rules to systems you have actually built rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **EU AI Act classification.**
 
     *What to do:* For each of the following agent systems from the course, assign an EU AI Act risk tier (Unacceptable / High / Limited / Minimal) and write a one-paragraph justification citing specific tier criteria: (a) the RAG agent that answers questions about course readings, (b) the coding agent that reviews student code and gives feedback, (c) a hypothetical agent that recommends mental health resources based on student chat patterns, (d) an agent that schedules campus events based on historical attendance data, (e) an agent that predicts which students are at risk of dropping a course.

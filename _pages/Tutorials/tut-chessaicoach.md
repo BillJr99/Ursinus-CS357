@@ -707,6 +707,8 @@ This is the template for adding AI to *any* existing app: **make the app fully w
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can extend the coach's code and watch the change land rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Add a fourth provider.*
 
    - *What to do*: Add a new branch to `callTextModel` for another OpenAI-compatible server (for example a second local endpoint, or a hosted gateway).  Reuse `extractOpenAIText` for parsing.  Add it to the provider `<select>` and the `aiEnabled` check.

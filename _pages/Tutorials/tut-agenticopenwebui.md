@@ -245,6 +245,8 @@ If the verdict begins with `REVISE`, the orchestrator loops the affected steps b
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can drive your own stack through its API rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Key in hand.*  Generate an OpenWebUI API key, run the minimal client from Part II against your stack, and then break it three ways: wrong port (11434), missing Bearer header, and a model name you have not pulled.  Record the three error responses.
 
     - *What to do:* Make each mistake deliberately and capture status codes and bodies.  Build yourself a one-paragraph troubleshooting table.

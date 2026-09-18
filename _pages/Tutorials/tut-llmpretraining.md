@@ -419,6 +419,8 @@ In this part, you will apply the technical concepts from Parts I and II to concr
 
 ## 5.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can work the tokenization and scaling arithmetic on a concrete deployment decision rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **1.  Tokenization, Chunk Size, and RAG Quality**
 
 *What to do:* In RAG (Retrieval-Augmented Generation), a document is split into chunks, each chunk is embedded, and the most relevant chunks are retrieved for each query.  Tokenization directly affects optimal chunk size and retrieval quality.  Your task: (a) using the rule of thumb that 1 token ≈ 4 characters ≈ 0.75 words, estimate the token count for a chunk of 512 characters.  (b) A RAG system is configured with a chunk size of 512 characters.  Describe one failure mode caused by splitting on character count (rather than token count or sentence boundaries).  (c) Explain how tokenizer behavior for a non-English language (e.g., Chinese characters, which have no spaces) affects the choice of chunk size for a multilingual RAG system.  (d) Propose a chunking strategy that is robust to these issues.

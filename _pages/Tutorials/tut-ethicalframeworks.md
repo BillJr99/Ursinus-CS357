@@ -216,6 +216,8 @@ In this final part, you will apply the frameworks and principles from Parts I th
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can apply these frameworks to a system you are actually building rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Pre-deployment ethics review.*
 
     *What to do:* For your course project, conduct a structured ethics review using all three frameworks from Part I. For each framework, identify: (a) one design choice your project makes that the framework endorses, and (b) one design choice or capability the framework would require you to constrain.  Write one paragraph per framework.

@@ -89,6 +89,8 @@ The design has four pieces.  Each one can be replaced on its own, and that repla
 
 Note what is *not* in that table: any particular AI company.  The vault outlives whichever model you are using this year, and that is most of the argument for building it this way.
 
+**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN, which is the part the table above leaves implicit; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is exactly the argument the table is making.
+
 ---
 
 ## Model 1: The Three-Zone Vault

@@ -98,6 +98,17 @@ Use `.agents/skills/`, which both opencode and pi read, so your skills are not w
 1. The directory name must match the `name:` field.  A mismatch means the skill silently never loads.
 2. The `description` is the trigger.  The agent reads it against what you typed and decides whether to load the skill, so write it as *when to use this*, in the words a user would actually type.  "Session setup helper" is a topic and never fires.  "Use whenever the user asks to start, resume, continue, or pick up work on this project" is a trigger and does.
 
+**Where opencode looks.**  The discovery paths are fixed, and knowing all of them prevents the most common failure, which is a skill sitting in a directory that nothing reads.  opencode walks up from your working directory to the root of the git worktree, checking each project path on the way, and it also checks the global paths in your home directory.  Each of these holds one directory per skill, with that skill's `SKILL.md` inside.
+
+| Scope | Paths opencode reads |
+|---|---|
+| Project, walking up to the worktree root | `.opencode/skills/`, `.claude/skills/`, `.agents/skills/` |
+| Global, for every project | `~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/` |
+
+Three project paths exist because three tools arrived at the same idea separately.  `.claude/skills/` is Claude Code's, `.opencode/skills/` is opencode's own, and `.agents/skills/` is the vendor-neutral one, which is why this deck uses it.  A skill under a project path is available in that project alone; a skill under a global path follows you into every project.  A `SKILL.md` anywhere else is not a skill.  It is a Markdown file, and no agent will ever mention it.
+
+**What the front matter may contain.**  Five keys are recognized and no others: `name` and `description`, both required, plus the optional `license`, `compatibility`, and `metadata`, which holds a map of strings.  Anything else you write there is ignored rather than rejected, so an invented key fails silently and looks exactly like success.
+
 Here is what happens when you type `Please review my latest changes.` in a session that has a `code-review` skill on disk.  The agent already knows every skill's `name` and `description` from startup.  It matches your request against those descriptions and finds `code-review`.  It reads that `SKILL.md` in full and treats the contents as guidance for this task.  It follows the instructions.  Then it drops them; they are not persistent, which is the difference between a skill and a system prompt.
 
 Remember two things from this section.  The directory name is the skill name, and the description is the trigger.  Everything else about a skill is ordinary Markdown.
@@ -606,15 +617,15 @@ metadata:
 
 Compare it with your own `description`.  Yours probably names what the skill does.  This one names **when it should fire**: the task types, then a condition (*when correctness matters more than latency or token cost*), then the behaviors it imposes.  A model decides whether to load a skill from this block alone, so a description that reads like a title gets loaded at the wrong times, or never.
 
-A `.skill` file is a zip archive, exactly like the one you will package your own skill into for the Skill Design Study.  To install it, extract it into a folder named `.skills` at the top of the project you want the agent to work in:
+A `.skill` file is a zip archive, exactly like the one you will package your own skill into for the Skill Design Study.  Installing it by hand is the whole procedure: extract it into one of the discovery paths from Section 2, at the top of the project you want the agent to work in.  Use `.agents/skills/`, the same path this deck has used throughout.
 
 ```bash
-mkdir -p .skills
-unzip -q small-model-orchestrator.skill -d .skills/
-ls .skills/small-model-orchestrator/SKILL.md
+mkdir -p .agents/skills
+unzip -q small-model-orchestrator.skill -d .agents/skills/
+ls .agents/skills/small-model-orchestrator/SKILL.md
 ```
 
-Check that last path rather than assuming.  `SKILL.md` belongs exactly one folder deep, at `.skills/small-model-orchestrator/SKILL.md`; if your unzip tool added an extra folder named after the archive, move the inner one up a level.  On Windows, rename it to `.zip` first and use `Expand-Archive -Path small-model-orchestrator.zip -DestinationPath .skills`.
+Check that last path rather than assuming, because the directory is the installation and a wrong directory fails without an error message.  `SKILL.md` belongs exactly one folder deep, at `.agents/skills/small-model-orchestrator/SKILL.md`; if your unzip tool added an extra folder named after the archive, move the inner one up a level.  On Windows, rename the file to `.zip` first and run `Expand-Archive -Path small-model-orchestrator.zip -DestinationPath .agents/skills`.  Start opencode afterward and ask it to list the skills it can see; a skill that does not appear is in the wrong place, not broken.
 
 It is a set of working habits for an AI model that has been given a long, fiddly job and no supervision.  Think of the model you ran today as a capable assistant with an excellent vocabulary and a terrible short-term memory.  Left alone for twenty minutes it will do three things, and only the third one is frightening:
 

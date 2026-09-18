@@ -629,9 +629,11 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can sync a vault of your own and watch an agent navigate it rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Set up Gitless Sync on your Obsidian vault and confirm push to GitHub.**
 
-    *What to do:* Complete the five-step setup from Model 1 (create private repo, generate fine-grained PAT, initialize git in vault, install Obsidian Git plugin, configure auto-push).  Create one new note titled `test-sync.md`, wait for the auto-push interval, and verify the note appears in your GitHub repository.  Submit a screenshot of the GitHub repository showing `test-sync.md` in the commit history, with your PAT redacted from any settings screenshots.
+    *What to do:* Complete the five-step setup from Model 1 (create private repo, generate fine-grained PAT, initialize git in vault, install Obsidian Git plugin, configure auto-push).  Create one new note titled `test-sync.md`, wait for the auto-push interval, and verify the note appears in your GitHub repository.  Check for yourself that the GitHub repository shows `test-sync.md` in the commit history, and confirm that your PAT does not appear in any screenshot or settings view you captured.
 
     *Starter hint:* If auto-push does not fire, check the plugin's status bar icon in Obsidian (bottom right); it shows sync status.  You can also trigger a manual push with the command palette (`Ctrl+P` or `Cmd+P`): search for "Obsidian Git: Commit and push all changes".
 
@@ -639,7 +641,7 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
 2.  **Write a `_index.md` for your vault and verify an agent can use it to navigate.**
 
-    *What to do:* Create `_index.md` at the root of your vault following the structure in Model 2.  Include at least 8 entries across at least 3 topic sections.  Then start an OpenCode or pi.ai session, give the agent only the path to `_index.md` and a question whose answer is in one of your listed notes, and observe whether the agent navigates correctly to that note.  Submit: the `_index.md` file content and a two-sentence description of whether the agent used it successfully and what (if anything) it missed.
+    *What to do:* Create `_index.md` at the root of your vault following the structure in Model 2.  Include at least 8 entries across at least 3 topic sections.  Then start an OpenCode or pi.ai session, give the agent only the path to `_index.md` and a question whose answer is in one of your listed notes, and observe whether the agent navigates correctly to that note.  Reread your `_index.md` next to the agent's answer and write yourself a two-sentence note on whether the agent used the index successfully and what (if anything) it missed.
 
     *Starter hint:* Ask the agent something specific: "Based on my vault index at `~/Documents/Obsidian/MyVault/_index.md`, which note should I look at for information about [topic]?  Read that note and summarize its key point."  This forces the agent to use the index rather than guessing.
 
@@ -647,7 +649,7 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
 3.  **Write a session memory entry by hand, then script it so OpenCode does it automatically.**
 
-    *What to do:* First, manually write one well-formed memory entry in `memories/session-log.md`, following the YAML frontmatter format from Model 3.  Commit and push it.  Then add the Memory Write-Back Protocol to your project's `AGENTS.md` and start an OpenCode session.  After completing any small task, verify that OpenCode appended a new entry at the bottom of `session-log.md` without modifying your hand-written entry.  Submit: the file content after the agent's write, with both entries visible.
+    *What to do:* First, manually write one well-formed memory entry in `memories/session-log.md`, following the YAML frontmatter format from Model 3.  Commit and push it.  Then add the Memory Write-Back Protocol to your project's `AGENTS.md` and start an OpenCode session.  After completing any small task, verify that OpenCode appended a new entry at the bottom of `session-log.md` without modifying your hand-written entry.  Read the file after the agent's write and confirm for yourself that both entries are visible.
 
     *Starter hint:* After adding the protocol to `AGENTS.md`, tell OpenCode explicitly at the end of the session: "We're done; please write the session memory entry now."  Review the result before committing.  Check that the YAML frontmatter is well-formed (valid YAML, no tab characters), and that the `## 2026-XX-XX` heading is at the bottom.
 
@@ -655,7 +657,7 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
 4.  **Design the folder structure for a vault that is both a personal knowledge base and an AI project memory.**
 
-    *What to do:* Design (on paper or in a Markdown file) the complete folder structure for a vault that you would actually use for the rest of this course and beyond.  The structure must support: (a) human-authored course notes that agents can read; (b) an agent context folder injected at session start; (c) an append-only session memory log; (d) a read-only inbox for source material (PDFs, transcripts); (e) at least one personal project area.  For each folder, write one sentence explaining its purpose and who (human, agent, or both) is expected to write to it.  Submit the annotated folder tree.
+    *What to do:* Design (on paper or in a Markdown file) the complete folder structure for a vault that you would actually use for the rest of this course and beyond.  The structure must support: (a) human-authored course notes that agents can read; (b) an agent context folder injected at session start; (c) an append-only session memory log; (d) a read-only inbox for source material (PDFs, transcripts); (e) at least one personal project area.  For each folder, write one sentence explaining its purpose and who (human, agent, or both) is expected to write to it.  Reread the annotated folder tree yourself and check that no folder is missing its sentence.
 
     *Starter hint:* Start from the reference structure in Model 4 and adapt it.  Ask yourself: where do my class notes actually live today?  Where should the agent's memories go so I can find them in Obsidian's graph view?  What is the one source of truth for "what am I working on right now"?  Your design should answer all three.
 

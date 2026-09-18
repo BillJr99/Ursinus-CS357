@@ -305,6 +305,8 @@ In this part, you will complete the full publish-verify cycle for real artifacts
 
 ## 9.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can publish a real package and pull it back down rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1.**  First image, two homes.  Containerize a trivial service (the Docker module's Dockerfile suffices), publish it to GHCR, make it public, and pull it from a teammate's machine.  Optionally mirror it to Docker Hub.
 
 *What to do:* Follow the four-step GHCR process from Section 3.  After pushing, change the package visibility to public in GitHub Settings.  Have a teammate confirm they can `docker pull` without being logged in.
@@ -323,11 +325,11 @@ docker pull ghcr.io/yourusername/hello-cs357:0.1.0
 docker run --rm ghcr.io/yourusername/hello-cs357:0.1.0
 ```
 
-*You've succeeded when:* A teammate can run `docker pull ghcr.io/yourusername/hello-cs357:0.1.0` from a fresh terminal without any credentials and get the image.  Submit the image name, the commands you ran, and the teammate's pull transcript.
+*You've succeeded when:* A teammate can run `docker pull ghcr.io/yourusername/hello-cs357:0.1.0` from a fresh terminal without any credentials and get the image.  Keep the image name, the commands you ran, and the teammate's pull transcript together, so you can retrace the publish if it ever stops working.
 
 **Exercise 2.**  First package.  Publish a scoped npm package with a working `bin`, a real README, and a `files` allowlist.  Have a teammate verify with `npx`.
 
-*What to do:* Follow Sections 5 and 6 exactly.  Before publishing, run `npm pack --dry-run` and submit that output as evidence you reviewed what would ship.
+*What to do:* Follow Sections 5 and 6 exactly.  Before publishing, run `npm pack --dry-run` and keep that output, so you can check the published package against the file list you reviewed.
 
 *Starter hint:*
 
@@ -341,7 +343,7 @@ npm publish --access public
 npx @yourusername/hello-agent "CS357 classmate"
 ```
 
-*You've succeeded when:* A teammate can run `npx @yourusername/hello-agent` and receive the expected JSON output.  Submit the dry-run output you reviewed before publishing.
+*You've succeeded when:* A teammate can run `npx @yourusername/hello-agent` and receive the expected JSON output.  Check the dry-run output you saved against what actually shipped, and confirm that nothing unexpected went out.
 
 **Exercise 3.**  Version walk.  Make a fix, bump with `npm version patch`, republish, and demonstrate that both the old and new versions remain installable by exact version number.
 
@@ -384,7 +386,7 @@ docker pull ghcr.io/yourusername/hello-cs357:v0.2.0
 
 *Starter hint:* For Docker images: `docker history ghcr.io/otherteam/their-image:0.1.0` shows the layers and the commands that built each layer.  Look for any `COPY` or `ADD` commands that might have included sensitive files.
 
-*You've succeeded when:* Each team has submitted a written review of the other's artifact.  Catching nothing after real effort is also a valid result, but you must document that you looked.
+*You've succeeded when:* Each team has written a review of the other's artifact and traded it back.  Catching nothing after real effort is also a valid result, but you must document that you looked.
 
 Container and npm publishing share a registry model with the Python ecosystem, but Python's toolchain has its own conventions that are worth knowing before you publish anything to PyPI.
 

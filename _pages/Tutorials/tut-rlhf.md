@@ -357,6 +357,8 @@ The result: a model that has been trained on thousands of critique-and-revision 
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can label the preferences and write the constitution yourself rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **1.  Design a Reward Model Training Set**
 
 *What to do:* Create a mini reward model training dataset: write 5 (prompt, response-A, response-B, preferred) quadruples for a CS course assistant.  Each prompt should be a plausible student question.  Your responses should differ in a specific, identifiable dimension (accuracy, specificity, length, hedging, or helpfulness).  For each pair, explain in one sentence why you labeled the preferred response as preferred, and identify which RLHF failure mode your labeling might accidentally introduce if extended to thousands of examples.

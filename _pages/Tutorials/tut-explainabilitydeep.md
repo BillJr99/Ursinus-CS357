@@ -214,6 +214,8 @@ When an *agent* (not just a classifier) is making decisions, explanation require
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can produce real attributions and judge for yourself whether they are faithful rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1.**  Using an accessible sentiment analysis model (e.g., via the `transformers` library in Python or a public API), run the model on five sentences you construct, including at least one sentence with negation (e.g., "not bad"), one with sarcasm, and one that is straightforwardly positive.  If SHAP is available for your chosen model, generate explanations for each.  If not, use the model's output probabilities and your knowledge of the input to reason about feature importance.
 
 *What to do:* Install `transformers` and `shap` (or use a free Colab notebook).  Run a sentiment model on your five sentences.  Use `shap.Explainer` on the model, or if SHAP is not available, compare model outputs after manually replacing words to estimate importance.

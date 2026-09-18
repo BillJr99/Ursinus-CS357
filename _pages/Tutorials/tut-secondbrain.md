@@ -366,9 +366,11 @@ Obsidian becomes the comfortable viewer onto a knowledge base your agents largel
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can stand the vault up and let an agent write into it rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Stand it up.*
 
-    *What to do:* Complete the five-step setup (install Obsidian, create a private GitHub repository, generate a fine-grained PAT with Contents read/write on that one repo, install and configure the GitHub Gitless Sync plugin, trigger the first sync).  Demonstrate a round trip: edit a note on one device, sync, observe the change on a second device (or a second Obsidian instance pointing at the same vault).  Submit your token-redacted plugin settings and the repository's commit history showing at least two sync commits.
+    *What to do:* Complete the five-step setup (install Obsidian, create a private GitHub repository, generate a fine-grained PAT with Contents read/write on that one repo, install and configure the GitHub Gitless Sync plugin, trigger the first sync).  Demonstrate a round trip: edit a note on one device, sync, observe the change on a second device (or a second Obsidian instance pointing at the same vault).  Check for yourself that your plugin settings redact the token and that the repository's commit history shows at least two sync commits.
 
     *Starter hint:* If you don't have two devices available, you can demonstrate the round trip by: (1) editing a file in Obsidian and syncing (commit appears in GitHub), (2) then editing the same file directly in the GitHub web editor, (3) then syncing in Obsidian and confirming the web edit appears locally.  This proves both directions of the sync work.
 
@@ -384,7 +386,7 @@ Obsidian becomes the comfortable viewer onto a knowledge base your agents largel
 
 3.  *First agent write.*
 
-    *What to do:* Drop one real document (a class reading, a paper, a saved article) into `raw/` and sync it to GitHub.  Run the ingestion prompt against hermes or your preferred agent CLI. Verify the result: (a) the agent did not modify the file in `raw/`, (b) a new wiki page was created in `wiki/`, (c) the metadata file was updated in the same commit as the wiki page.  Submit the agent's commit (showing the atomic file-plus-metadata change) and a screenshot of the synced wiki page in Obsidian after the next sync.
+    *What to do:* Drop one real document (a class reading, a paper, a saved article) into `raw/` and sync it to GitHub.  Run the ingestion prompt against hermes or your preferred agent CLI. Verify the result: (a) the agent did not modify the file in `raw/`, (b) a new wiki page was created in `wiki/`, (c) the metadata file was updated in the same commit as the wiki page.  Check the agent's commit yourself, confirming it shows the atomic file-plus-metadata change, and confirm the wiki page appears in Obsidian after the next sync.
 
     *Starter hint:* Before running the agent, check `wiki/` and the metadata file to establish a baseline.  After the agent commits, check: does the commit touch any file in `raw/`?  Does the commit contain exactly one new/modified wiki file and one metadata file update?  Are they in the same commit (not two separate commits)?  Open the GitHub commit view to verify all of this before syncing to Obsidian.
 

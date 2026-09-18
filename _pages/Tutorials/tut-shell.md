@@ -394,6 +394,8 @@ Open VS Code's integrated terminal with **Ctrl+`** (backtick). It is a full shel
 
 ## 8.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can drive the shell until the pipeline is yours rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Treasure hunt.**
 
    *What to do:* In your terminal, create a directory tree `lab/{data,logs,out}` (three subdirectories inside `lab/` all at once), create three `.md` files inside `data/`, then write a single pipeline that counts how many `.md` files exist anywhere under `lab/`.  Record the pipeline and the count.

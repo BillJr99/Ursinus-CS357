@@ -170,6 +170,8 @@ Two things to remember from this section.  A default is a design decision, and e
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can audit a real tool with a keyboard and a screen reader rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Accessibility audit.**
 
    *What to do:* Choose any publicly available AI-powered tool (a chatbot, a caption generator, an image describer, or another tool of your choice).  Using only a keyboard (no mouse) and, if possible, a screen reader (NVDA on Windows, JAWS, or VoiceOver on Mac/iOS), attempt to complete one full task with the tool.  Document every point where the interface failed, required a workaround, or produced an error.  Write a one-page audit report organized around the WCAG POUR principles.  Compare your findings to the tool's published accessibility statement, if one exists.

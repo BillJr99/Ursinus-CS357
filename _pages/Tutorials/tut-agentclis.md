@@ -30,6 +30,7 @@ Make sure these terms are solid before you start.  You will meet all of them bel
 | **Context file** | A project-specific text file (e.g., `CLAUDE.md`) the agent reads automatically at startup, containing standing instructions about the project | You write "never modify files under `data/raw/`" in `CLAUDE.md` and the agent respects that boundary every session without you repeating it |
 | **MCP (Model Context Protocol)** | An open standard that lets agents connect to external tools (databases, APIs, browsers) in a uniform way | Both Claude Code and Gemini CLI can call the same MCP server to query your database; you only write the server once |
 | **Gateway / base URL** | A local proxy server that sits between your CLI tool and any AI model, letting you swap models without changing the tool | Setting `ANTHROPIC_BASE_URL=http://localhost:4000` makes Claude Code talk to your local Ollama instance instead of Anthropic's cloud |
+| **Tailnet** | A private network your own devices join over the public internet, in which each device holds a stable address that only your other devices can reach | Your laptop, your phone, and the machine running your agents share one tailnet, so `ssh 100.92.14.7` works from the train without opening a port on any router |
 {: .tb-full}
 
 ---
@@ -456,6 +457,51 @@ tmux attach -t agents     # REATTACH from anywhere, even a fresh SSH login
 
 The session is a room that keeps its lights on after you leave.  Detaching is walking out the door; the work inside continues.  Multiplexers also **split** one terminal into several panes, so you can watch two or three agents side by side.  This is the mechanical foundation of every "walk away and come back" workflow: a long agent run belongs inside a multiplexer, never in a raw SSH shell that dies with the connection.
 
+## 9a.  Reaching the Machine: The Network Step
+
+Section 9 solved half the problem.  The multiplexer keeps the agent running after you disconnect, but you still have to get *back*, and from outside your own network you have no route to the machine at all.  Your workstation sits behind a home router or the campus network, and both of them accept outbound connections while refusing inbound ones.  That refusal is not a bug.  It is the one thing standing between your machine and everyone who scans the internet for open ports.
+
+Two answers are common, and both are worse than the problem they solve.  **Port forwarding** tells your router to hand inbound traffic on port 22 to your workstation, which publishes your SSH server to the entire internet; automated scanners find it within hours.  **A public IP address** is not something a dorm network, a campus network, or most home ISPs will reliably give you, and it changes without warning.  What you want is not a door into your network from the internet.  It is a private network that your own devices already belong to.
+
+A **tailnet** is that private network.  Tailscale builds one on top of WireGuard: you install it on each device, sign in to all of them with the same account, and every device receives a stable address in the `100.x` range that only your other devices can reach.  No router is reconfigured, no port is opened, and nothing of yours listens on the public internet.  Each machine makes an *outbound* connection to a coordination service, which is the one kind of connection every network already permits, and traffic between your devices is encrypted end to end.
+
+Set it up once on the machine that runs your agents:
+
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh   # macOS and Windows have installers instead
+sudo tailscale up                                  # opens a browser once, to sign in
+tailscale ip -4                                    # prints this machine's tailnet address
+```
+
+That last command prints something like `100.92.14.7`.  Write it down, because it does not change.  Now install Tailscale on your phone or your second laptop, sign in with the same account, and the two devices can find each other from anywhere:
+
+```bash
+ssh you@100.92.14.7        # from the phone or the second laptop
+tmux attach -t agents      # the session from Section 9, still running
+```
+
+That address works from the couch, from the library, and from the train, and it keeps working when your phone hands off from Wi-Fi to cellular, because a tailnet address belongs to the **device** rather than to the network the device happens to be sitting on.  This is what turns the scenario at the top of Section 9 from a promise into a procedure.  On a phone you need one more piece, a terminal application that speaks SSH: Termius and Blink are the usual choices on iOS, and Termux is the usual one on Android.
+
+**opencode does not need a terminal on the far end at all.**  It ships a server mode, which changes what reattaching can mean.  `opencode serve --hostname 0.0.0.0 --port 4096` starts a headless HTTP API, and `opencode web` starts that API together with a browser interface, so a phone browser pointed at `http://100.92.14.7:4096` picks up the work you left open on the workstation.  Set `OPENCODE_SERVER_PASSWORD` before you start either one; opencode then requires HTTP basic authentication, with the user name `opencode` unless you override it.  From a second terminal you can skip the browser entirely and drive the same server directly:
+
+```bash
+export OPENCODE_SERVER_PASSWORD=something-long
+opencode run --attach http://100.92.14.7:4096 "run the tests and summarize the failures"
+```
+
+In every one of these arrangements the heavy work stays on the workstation, where the repository, the models, and the tools already are.  The phone carries keystrokes in one direction and text in the other, which is why a slow connection costs you responsiveness rather than capability.
+
+| Approach | What it exposes to the internet | Setup cost | Use it when |
+|----------|---------------------------------|------------|-------------|
+| **Tailscale** or another WireGuard mesh | Nothing.  Only devices signed into your tailnet can reach the port | Install once per device, then nothing | Almost always.  This is the default for reaching your own machine |
+| **Cloudflare Tunnel** | A public HTTPS URL, protected only by what you put in front of it | A daemon on the host and a Cloudflare account | You have to show a running service to someone who is not on your tailnet |
+| **ngrok** | A public HTTPS URL, usually random and short-lived | One command, free tier available | A five-minute demonstration to a classmate, and nothing that matters |
+| **Port forwarding** | Your SSH or agent port, to every scanner on the internet | A router change you will forget you made | Never, for this purpose |
+{: .tb-full}
+
+> A tailnet is a **network route, not a permission boundary.**  It decides who can *reach* your agent and decides nothing at all about what that agent may *do* once reached.  An agent running unattended at the other end of a tailnet is still an unattended agent with your account's full blast radius, so every rule in Section 11 applies unchanged, and the scoped container from Section 8 matters more rather than less once you can start work from a phone.  Two concrete habits follow.  Set `OPENCODE_SERVER_PASSWORD` even on a private tailnet, because a tailnet is exactly as private as the devices signed into it.  And never port-forward port 22 or port 4096 to the open internet "just for now", because you will not remember to close it.
+{: .tb-pitfall data-title="Common Misconception"}
+
 ## 10. herdr: An Agent-Aware Multiplexer
 
 `tmux` is agent-*ignorant*: to it, a pane running Claude Code is just bytes on a screen.  It cannot tell you *which* of your five agents is stuck waiting for a permission answer and which is still churning.  **herdr** closes that gap.  It is a single Rust binary: think "`tmux` rebuilt from scratch with first-class awareness of coding agents."  Its architecture mirrors `tmux`: a persistent, **headless server** keeps every agent's pane and process alive, and a **TUI client** attaches to it.  What herdr adds is *state*: it watches each agent and shows you, at a glance, whether it is **blocked** (needs your input), **working**, or **done**.
@@ -479,7 +525,7 @@ Put the pieces together and the pattern has three properties, each supplied by s
 
 - **Persistence**: the background server keeps agents alive after you disconnect (the multiplexer, §9).
 - **Observability**: agent-state awareness tells you *who needs you* without your having to watch (herdr, §10).
-- **Reattachment**: you resume from any terminal, over SSH, from a phone (both).
+- **Reattachment**: you resume from any terminal, over SSH, from a phone (both), once the network step in Section 9a has given that phone a route to the machine.
 
 But persistence cuts both ways, and this is the governance point: **detaching does not pause an agent.**  It keeps reading, editing, running commands, and spending tokens the entire time you are gone.  An agent you would supervise closely for five minutes is the *same* agent, now acting for an hour with nobody at the gate.  That is exactly where the controls from Parts II and III stop being optional.  Before you walk away, set the permission **mode** deliberately (Section 5): an unattended agent in full-auto is an unattended agent with your whole account's blast radius, and prefer to run it inside the **scoped container** from Section 8, with no credentials mounted and a workspace you can `git reset`.  The rule of thumb: *the less you are watching, the more the environment, not your attention, has to be the thing keeping the agent safe.*  Never hand `--dangerously-skip-permissions` to an agent you are about to stop watching on a machine that matters.
 
@@ -498,6 +544,10 @@ This same idea (an agent that keeps working while you are away) scales up in the
 3.  "The environment, not your attention, keeps an unattended agent safe."  Take the containerized pattern from Section 8 and the permission modes from Section 5, and describe the specific configuration you would use before detaching from an agent overnight.  What is each choice protecting against?
 
    *Hint:* Walk the blast radius.  What can the agent reach (the `-v` mounts and `-w` working dir)?  What can it do without asking (the permission mode)?  What credentials are within reach if it goes wrong (what did you *not* mount)?  How do you undo an hour of bad edits (what makes the workspace reversible)?
+
+4.  Your workstation is at home behind a router.  You add it to a tailnet, note its `100.x` address, and reattach from your phone on campus Wi-Fi; an hour later you walk outside, the phone drops to cellular, and the session is still there.  Explain why that address survived the change, and why a port forward to your home IP address would not have.
+
+   *Hint:* Ask what each address is attached to.  A forwarded port is reachable at whatever public address your ISP is giving your router today, and only for as long as that address holds.  A tailnet address belongs to the device itself, so the connection is re-established to an identity rather than to a location.
 
 > Many students believe that detaching from a multiplexer *pauses* the agent, the way closing a laptop lid sleeps a machine, so "I'll detach to stop it for a bit" feels safe.  It does the opposite: detaching only removes your *view*.  The agent keeps running at full speed on the persistent server, reading files, executing commands, and spending tokens with no one watching the gates.  Persistence is the feature you came for and the risk you must plan around, which is why the permission mode and the container boundary are set *before* you walk away, not after you come back.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -519,9 +569,11 @@ The task kept running the whole time on the multiplexer's persistent server, and
 
 ## 12.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can run the ideas rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether the thing actually worked.
+
 1.  *Install two.*
 
-   *What to do:* Install Claude Code plus one other tool from the comparison table, complete authentication for both, and run the identical three-line task ("write a Python script that fetches the weather for Collegeville, prints the result, and handles errors with a traceback") in both tools inside a fresh empty directory.  Submit both full transcripts with one paragraph comparing the experience.
+   *What to do:* Install Claude Code plus one other tool from the comparison table, complete authentication for both, and run the identical three-line task ("write a Python script that fetches the weather for Collegeville, prints the result, and handles errors with a traceback") in both tools inside a fresh empty directory.  Keep both full transcripts and write one paragraph for yourself comparing the experience.
 
    *Starter hint:* Run these commands in order, substituting your second tool's install command from the table:
    ```bash
@@ -613,6 +665,8 @@ The task kept running the whole time on the multiplexer's persistent server, and
 
    *You've succeeded when:* Your reattached session shows progress the agent made *after* you detached (new files, more test output, or a completed task), and you can state in one sentence why the same task in a plain SSH shell would not have survived a disconnect.
 
+   *Optional extension, if you have read Section 9a:* reattach from a **second device** rather than the same one, and watch the session from somewhere else entirely.  Work it in this order.  First, on the machine running the agent, run `tailscale ip -4` and note the `100.x` address it prints.  Second, install Tailscale on your phone or a second laptop and sign in with the same account; both devices are now on one tailnet, which you can confirm from the second device with `ping 100.92.14.7`, substituting your own address.  Third, from that second device, run `ssh you@100.92.14.7` and then `tmux attach -t ex6`.  You should land in the same pane, mid-task, looking at output that accumulated while nobody was watching.  Two failures are worth recognizing on sight.  If the SSH connection **hangs** rather than refusing, Tailscale is running on only one of the two devices, and `tailscale status` on both will show it.  If it **refuses immediately**, the tailnet is fine and SSH is not running on the host, which is a problem you fix on the host rather than in Tailscale.
+
 7.  *Chat vs. code on local models (optional).*
 
    *What to do:* Install **LM Studio Bionic**, load an open model, and try the same small task twice: once in **chat** mode (you copy the code out and run it yourself) and once as a **Code project** pointed at a local folder (Bionic reads, edits, and runs).  Write three sentences comparing the two experiences and mapping each to a row of the Three Paradigms table.
@@ -651,5 +705,7 @@ In the *The Local Agent Stack: Wiring Containers into a System* activity you wil
 - The Model Context Protocol site (modelcontextprotocol.io): the tool-integration standard these CLIs converge on.
 - **herdr**: the agent-aware terminal multiplexer: github.com/ogulcancelik/herdr.
 - **tmux**: the ubiquitous terminal multiplexer that underlies the "detach / reattach" pattern: github.com/tmux/tmux/wiki.
+- **Tailscale**: the WireGuard-based mesh behind the `100.x` addresses in Section 9a: tailscale.com/kb.
+- **opencode's server mode**: `serve`, `web`, and the HTTP API that `--attach` talks to: opencode.ai/docs/server.
 - **LM Studio Bionic**: an agent for open, local models spanning chat and code: lmstudio.ai/blog/introducing-lm-studio-bionic.
 - **Cowork** and open alternatives: Claude Cowork (claude.ai), and **OpenWork**, the open-source, opencode-powered cowork tool: github.com/different-ai/openwork.

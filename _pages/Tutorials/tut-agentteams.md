@@ -212,6 +212,8 @@ In this section you will design the agent team for your final project, choose a 
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can design and test the agents for your own project rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Team charter, agent edition.*
 
    *What to do:* For your final project concept, produce the design table: one row per agent with columns for role, system-prompt summary, inputs, outputs, temperature, tools used, and the evaluation you will run on it in isolation.  This table is a required artifact of your project proposal.

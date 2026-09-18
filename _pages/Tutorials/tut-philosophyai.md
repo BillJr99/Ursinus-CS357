@@ -183,6 +183,8 @@ In this final part, you will apply the philosophical tools from Parts I-III to y
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can test the arguments against systems you actually use rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Thought experiment extension.*
 
     *What to do:* Extend Searle's Chinese Room to the case of an LLM fine-tuned on a specific person's writing.  Does the argument change?  Argue both for the extension holding and for it breaking down, then state which you find more persuasive and why.

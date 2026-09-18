@@ -516,6 +516,8 @@ The *decisions* as well: when to plan, when to spawn a sub-agent, and what to of
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can build the same small agent in two frameworks rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Framework audit.*  Choose any two frameworks from Model 1 and install them in a local environment.  Write the minimal code in each to call one LLM with one tool and print the result.  Count the lines of code.  Which boilerplate problems does each framework eliminate versus require you to handle?
 
    *What to do:* The task is a simple web-search agent: given a question, call a web search tool, pass the results to an LLM, and print the answer.  Implement this in both frameworks, count lines, and compare.

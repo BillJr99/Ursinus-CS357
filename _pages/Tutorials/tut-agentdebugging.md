@@ -212,6 +212,8 @@ Run the full regression suite on every prompt change, model upgrade, and tool sc
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can hunt a real bug with logs you designed rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1.**
 
 *What to do:* Introduce an intentional bug into a simple agent you have built or will build for this exercise.  Debug the bug using only the agent's output and whatever logging you design, without reading the source code to find it directly.

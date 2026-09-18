@@ -168,6 +168,8 @@ Think of it like editing a recipe: you adjusted the salt because last week's sou
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can run the tests against your own agent and read the failures rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Property test suite.*
 
    *What to do:* For your final project agent, write a Python test file that implements at least five property-based assertions.  Each assertion should be a standalone function that takes an agent output string and returns `True` if the property holds or `False` if it fails.  Run your suite against ten sampled outputs and report the overall pass rate.  If a property fails, diagnose whether the root cause is a test design problem or an agent quality problem.
@@ -195,7 +197,7 @@ Think of it like editing a recipe: you adjusted the salt because last week's sou
 
 2.  *Eval harness.*
 
-   *What to do:* Build a minimal eval harness for your project: a script that (a) loads a JSON file of test cases with `{input, expected_properties}` structure, (b) runs each input through your agent, (c) checks each property function against the output, (d) prints a summary table of pass/fail/score per test case, and (e) writes a timestamped results file so you can compare runs over time.  This harness is a required artifact of your project submission.
+   *What to do:* Build a minimal eval harness for your project: a script that (a) loads a JSON file of test cases with `{input, expected_properties}` structure, (b) runs each input through your agent, (c) checks each property function against the output, (d) prints a summary table of pass/fail/score per test case, and (e) writes a timestamped results file so you can compare runs over time.  If your final project needs an eval harness, this is the shape it wants, and building it here means you are not building it under deadline later.
 
    *Starter hint:* The harness below loads test cases from a JSON file, runs each through the agent, checks the defined property functions, and writes a timestamped results file; the timestamped file is what lets you compare two runs side-by-side later.
    ```python

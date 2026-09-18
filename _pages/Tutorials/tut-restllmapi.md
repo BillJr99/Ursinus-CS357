@@ -816,6 +816,8 @@ In this part, you will apply everything from Parts I-V in open-ended exercises: 
 
 ## 10.  Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can send the requests yourself and read the raw responses rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  *Endpoint explorer.*
 
    - *What to do*: Use `curl` or the Python `requests` library to call `GET /v1/models` against your local Ollama instance.  Parse the response and print a formatted table showing each model's `id` and (if present) its `created` timestamp.

@@ -339,6 +339,8 @@ No single defense is sufficient; production systems layer multiple mitigations. 
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can draft a threat model and a guardrail design of your own rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1: Threat Model for a Medical Chatbot**
 
 A hospital system is deploying a chatbot that answers patient questions about their upcoming procedures, prescription side effects, and post-operative care instructions.  It retrieves information from a curated medical knowledge base using RAG. Patients interact through a hospital patient portal.  Clinical staff may also query it for quick reference.

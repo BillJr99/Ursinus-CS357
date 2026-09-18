@@ -302,7 +302,56 @@ Build this one by hand, and put it at the root of `opencode-studio/`. Note the n
 }
 ```
 
-Add the provider block you wrote in the Workbench activity alongside these keys; the `provider` block and these keys are siblings in the same object.
+That file needs one more block, and this lab spells it out rather than pointing at it, because nothing else here works until opencode knows which model to call.
+
+**The `provider` block.**  opencode talks to any OpenAI-compatible endpoint, which is the reason this course uses it.  A provider entry carries three things: `npm`, naming the adapter package; `options`, holding the `baseURL` and any key; and `models`, listing what that endpoint serves.  The Ollama server you started in *Your AI Workbench* is one such endpoint.  Add the block as a sibling of `instructions` and `permission`, inside the same outer object:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["CHARTER.md", ".ai/MEMORY.md"],
+  "permission": {
+    "*": "ask",
+    "bash": {
+      "*": "ask",
+      "git *": "allow"
+    }
+  },
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "llama3.2": { "name": "llama3.2 (local)" } }
+    }
+  }
+}
+```
+
+Substitute `http://host.docker.internal:11434/v1` for `localhost` if opencode is running inside the course container, because inside a container `localhost` means the container rather than your machine.
+
+**Adding a second, hosted provider.**  `provider` is a map, so a second key gives you a second provider, both live and both listed by `/model`.  Any OpenAI-compatible service wires up identically; only the `baseURL`, the key, and the model names change.
+
+```json
+{
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "llama3.2": { "name": "llama3.2 (local)" } }
+    },
+    "hosted": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://api.example.com/v1",
+        "apiKey": "sk-REPLACE-ME"
+      },
+      "models": { "gpt-oss-120b": { "name": "gpt-oss-120b (hosted)" } }
+    }
+  }
+}
+```
+
+Read those keys closely, because they are the vocabulary the rest of the lab uses.  A provider key and a model key join with a slash to form the identifier that `--model` accepts and that an agent's `model` key accepts, so the block above defines `ollama/llama3.2` and `hosted/gpt-oss-120b`.  Never commit a real key.  Leave the placeholder in the repository and keep the actual value out of version control.
 
 Two things in that file decide whether it works.
 
@@ -695,6 +744,8 @@ opencode run --agent builder "Implement spec.md."
 
 Confirm the wiring before you rely on it. Start opencode, switch to the `builder` agent, and ask it to name one file it is forbidden to edit. If it cannot, the `prompt` path is wrong and every compliance check in Part 5 would be measuring nothing.
 
+An agent definition holds more than the three keys above.  `model`, `temperature`, `permission`, and `steps` all belong there too, and they are how a persona written in prose becomes a bounded worker in a file.  The *Prompt Engineering as Agent Design* activity works through the full set, with examples, and with the subagent and orchestration keys that let one agent hand work to another.
+
 Or ask opencode to do it:
 
 ```text
@@ -881,6 +932,32 @@ The transcript must show the refusal coming from the tool rather than from the m
 
 **Step 7: Commit the gate**, with `edit` back to `ask` or removed, and keep it installed for the rest of the lab.
 
+### Yolo mode, and the one place it belongs
+
+You have now used `--auto` twice, so it is worth naming what you were using.  **Yolo mode** is what people call running an agent with its permission gates switched off, approving its own actions and never stopping to ask.  opencode has no flag by that name.  It spells the idea two ways, and the two differ in how long they last.
+
+The flag is `--auto`, which auto-approves every permission that is not explicitly denied, for that one command:
+
+```bash
+opencode run --auto "clean up the build"
+```
+
+The configuration-file equivalent is a permissive `permission` block, which applies to every session until you change it back:
+
+```json
+{
+  "permission": {
+    "*": "allow"
+  }
+}
+```
+
+The flag is the safer of the two, because it expires when the command does.  A permissive block is a decision you will forget you made, which is the failure the charter exists to prevent.
+
+Neither belongs on work you care about.  The rule this lab teaches is that yolo mode is legitimate in exactly one situation: inside a scoped container, on a clean git tree, when you are deliberately measuring what an ungated agent does, which is what you just did in Part 3.  Remove any of those three conditions and the properties from the Background section fail together.  You lose observability, because nothing pauses to show you a command before it runs.  You lose reversibility, unless the tree was clean and `git checkout --` can take you back.  You lose isolation, unless a container is drawing the boundary the permission block has stopped drawing.
+
+One asymmetry is worth keeping in mind.  A `deny` rule still holds under `--auto`, because the flag approves only what is not explicitly denied.  If there is an operation you never want attempted, write it as `deny` rather than trusting `ask` to save you, since `--auto` silences `ask` and leaves `deny` standing.
+
 ### Troubleshooting, Part 3
 
 **The rule held both times.**  Good; small models are sometimes cautious.  Report both attempts, quote the sentence the model gave for declining, and say whether you believe that sentence would survive a third, better-written README.  The comparison in Step 6 still stands, because the gate's answer does not depend on the README at all.
@@ -1001,6 +1078,27 @@ Validation, and exactly one Next Safe Action.  Append only.  Change no existing 
 Then do two things. Open the files under `.ai/` and read what actually landed, because the agent's own account of what it wrote is not evidence and will not always match. `git status` tells you which of them it touched at all, which is often the first surprise. Then correct what it got wrong, since it will be wrong in at least one particular, and quote the sentence you had to fix in your readme. That gap between what the agent believed happened and what happened is the finding.
 
 Do this at the end of every remaining session in this lab rather than only this one. Part 6 is where you find out whether it worked, and two entries written honestly beat one written the night before the deadline.
+
+### Running it somewhere else: `serve` and `--attach`
+
+Everything so far assumes the agent runs in the terminal in front of you.  It does not have to.  opencode separates the agent from its interface, so the run can live on the machine that holds your repository while you drive it from another device.
+
+Start the server on the machine with the repository:
+
+```bash
+export OPENCODE_SERVER_PASSWORD=something-long
+opencode serve --hostname 0.0.0.0 --port 4096
+```
+
+Then drive it from anywhere that can reach that address:
+
+```bash
+opencode run --attach http://100.92.14.7:4096 --agent builder "Implement spec.md."
+```
+
+`opencode web` starts the same API together with a browser interface, so a second laptop or a phone browser at that address picks up the session instead of a terminal.  The address in the example is a tailnet address; *Agentic CLI Tools* Section 9a covers how a machine behind a home router or the campus network gets one, and why a port forward is the wrong way to arrange it.
+
+Two cautions carry straight over from Part 3.  The password is not optional, because an unauthenticated agent server is an open shell on whatever its working directory contains.  And a long run you started from a phone is an unattended run, which means the `permission` block and the container are doing the supervising rather than you.
 
 ### Troubleshooting, Part 4
 

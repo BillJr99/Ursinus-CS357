@@ -188,6 +188,8 @@ Logs; structured per-request logging of the input, model response, and finish re
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can design the spans, attributes, and alerts for a real agent rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Trace tree design.**
 
     *What to do:* A 3-step ReAct loop for a research agent consists of: (1) the agent deciding to search the web, (2) executing the web search tool, (3) the agent synthesizing results and deciding whether to search again or answer.  Draw the full span tree for one complete ReAct iteration that ends with an answer.  Label each span with its name, key attributes, and approximate duration.  Indicate parent-child relationships with indentation or arrows.

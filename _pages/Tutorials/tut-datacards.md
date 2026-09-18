@@ -156,6 +156,8 @@ Mitchell et al. (2019) proposed **Model Cards** as the model-level analogue to D
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can write real card sections for your own work rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 1.  **Intended use authoring.**
 
     *What to do:* For one of the agents you built this semester, write the **Intended Use** and **Out-of-Scope Use** sections of a Model Card.  Be specific: name the intended user population, the deployment context, the domain, the languages and formats supported, and at least three concrete out-of-scope uses with a one-sentence explanation of why each is out of scope.

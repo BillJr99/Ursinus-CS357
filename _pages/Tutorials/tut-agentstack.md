@@ -251,7 +251,9 @@ In this part, you will build and verify a working minimal stack, extend it with 
 
 ## 8.  Exercises
 
-1.  *Minimal viable stack.*  Deploy Ollama, llmproxy, and Open WebUI; complete a chat in the browser that round-trips through all three; submit your port table and the end-to-end curl output.
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can stand the stack up yourself rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
+1.  *Minimal viable stack.*  Deploy Ollama, llmproxy, and Open WebUI; complete a chat in the browser that round-trips through all three; write out your port table and keep the end-to-end curl output for yourself.
 
    - *What to do:* Follow sections 3 and 4 above.  Once both services are running, open `http://localhost:3000` in your browser, configure the OpenAI connection to point at `http://host.docker.internal:4000/v1`, and send one message.  Then run the end-to-end `curl` command from the Verification section and capture the output.
    - *Starter hint:* If the browser chat fails, run the end-to-end `curl` first.  If that works, the problem is the Open WebUI connection setting.  If the curl fails, check `docker logs llmproxy` and verify the `extra_hosts` line is present.

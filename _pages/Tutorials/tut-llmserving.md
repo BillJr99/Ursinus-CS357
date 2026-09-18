@@ -295,6 +295,8 @@ A routing policy needs three components: a **classifier** that predicts query di
 
 ## Exercises
 
+Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can compute the serving costs for a real workload and size the hardware yourself rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
+
 **Exercise 1: Cost Comparison Worksheet**
 
 A startup serves a customer-support chatbot.  It handles 500,000 user turns per day.  Each turn has an average input of 400 tokens (system prompt + history + user message) and an average output of 150 tokens.  They are choosing between three deployment options:
