@@ -328,7 +328,7 @@ Provide the PAT as an environment variable when launching the container (never i
 docker run --rm -it --name hermes \
   --add-host=host.docker.internal:host-gateway \
   -e GITHUB_TOKEN="$VAULT_PAT" \
-  -v "$HOME/agents/hermes/home:/home/hermes/.hermes" \
+  -v "$HOME/agents/hermes/home:/opt/data" \
   -v "$HOME/agents/workspace:/workspace" \
   nousresearch/hermes-agent:latest
 ```
