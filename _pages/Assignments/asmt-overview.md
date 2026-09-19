@@ -20,7 +20,7 @@ info:
       preemerging: Little or no evidence that the environment was attempted
       beginning: Some components installed, but the verification transcript is missing or incomplete
       progressing: Ollama installed and verified with a transcript, with a minor omission such as a missing model listing, missing version information, or a missing coding-agent check, or the command-line and git checkpoint is incomplete
-      proficient: The transcript shows all four Ollama steps completed with verbatim terminal output, the output of ollama --version, ollama list showing at least one model, the curl /api/tags JSON response, and the Python script output including a non-empty "content" field, plus the fifth step, the output of opencode --version and one answered prompt from your local model, plus the operating system name and version; the command-line and git checkpoint (Part 1.5) is also complete, showing the shell-navigation commands, a git commit/push transcript (command line or GitHub Desktop), and the uv environment creation; any failed step includes the verbatim error message, a stated hypothesis, and what was tried
+      proficient: The transcript shows all four Ollama steps completed with verbatim terminal output, the output of ollama --version, ollama list showing at least one model, the curl /api/tags JSON response, and the Python script output including a non-empty "content" field, plus the fifth step, the output of opencode --version and one answered prompt from your local model, plus the operating system name and version; the command-line and git checkpoint (Part 1.5) is also complete, showing the shell-navigation commands, the output of gh auth status, a git commit/push transcript (command line or GitHub Desktop), and the uv environment creation; any failed step includes the verbatim error message, a stated hypothesis, and what was tried
     - weight: 40
       description: Reflection Essay
       preemerging: The reflection is missing or does not address the prompts
@@ -82,7 +82,7 @@ If any of those is a problem, say so this week rather than in week four.  There 
 | Step 3 on your host, plus its Route A bridge check from inside the container | Step 3 |
 | Step 4 inside the container; nothing to install | Step 4, after installing Python, pip, and `requests` |
 | Step 5 from 5b; opencode is already installed | Step 5, after installing opencode |
-| Part 1.5, Steps 1 through 3; Step 2 pushes from the container with your A6 credential | Part 1.5, Steps 1 through 3 |
+| Part 1.5, Steps 1 through 3; `gh` is already in the image, and Step 2 pushes from the container with your A6 credential | Part 1.5, Steps 1 through 3 |
 | Part 2, the reflection | Part 2, the reflection |
 
 ### The setup map
@@ -100,7 +100,7 @@ This assignment is nine stages plus two optional ones.  Each stage ends with one
 | W | Optional, either route: install OpenWebUI, the chat interface over Ollama | Browse to `http://localhost:3000` (Docker) or `http://localhost:8080` (pip) | Nothing required; a screenshot of the model dropdown is welcome | Part 1, *Optional: Install OpenWebUI* |
 | 5 | Confirm the coding agent talks to that model | `opencode --version` | The version string and one answered prompt | Part 1, Step 5 |
 | 6 | Navigate a shell and search a file | `grep -n "localhost" notes.txt` | The commands and their output | Part 1.5, Step 1 |
-| 7 | Authenticate to GitHub, then commit and push | `git log --oneline` | The `ssh -T` greeting and the log | Part 1.5, Step 2 |
+| 7 | Install and authenticate `gh`, then commit and push | `gh auth status`, then `git log --oneline` | The `gh auth status` block and the log | Part 1.5, Step 2 |
 | 8 | Create a reproducible Python environment | `uv run python -c "import requests; print(requests.__version__)"` | The printed version | Part 1.5, Step 3 |
 | 9 | Write the baseline reflection | none | Four labeled sections | Part 2 |
 
@@ -108,7 +108,7 @@ This assignment is nine stages plus two optional ones.  Each stage ends with one
 
 > **If a stage fails, document it and move on.**  A documented failure earns full credit for that stage: quote the error verbatim, state your hypothesis about the cause, and say what you tried.  "It worked eventually" earns nothing.  Work down the Troubleshooting table at the end of this page before you post in the course channel.
 
-> **You've succeeded when** the four boxes in the Part 1A checklist and the three in the Part 1B checklist are checked, all three in the Part 1.5 checklist are checked, and your reflection has four labeled sections.  On Route A, the Route A checklist is checked as well.
+> **You've succeeded when** the four boxes in the Part 1A checklist and the three in the Part 1B checklist are checked, all four in the Part 1.5 checklist are checked, and your reflection has four labeled sections.  On Route A, the Route A checklist is checked as well.
 
 ---
 
@@ -156,7 +156,7 @@ A route decides *where* Steps 1 through 5 run.  The commands are the same on bot
 
 ### Before Step 1: Orientation (read once, come back as needed)
 
-Three short references before the steps begin.  Every *at a glance* box below says "your host terminal" or "the container prompt"; the first two sections are where those words are defined, and every step that says "open a terminal," "`cd`," or "save it" means the first of them.  The third installs Python and pip, which Route B needs before Step 4.
+Four short references before the steps begin.  Every *at a glance* box below says "your host terminal" or "the container prompt"; the first two sections are where those words are defined, and every step that says "open a terminal," "`cd`," or "save it" means the first of them.  The third installs Python and pip, which Route B needs before Step 4.  The fourth makes a GitHub token and puts it somewhere your tools can find it; A6 is the first place you need it, and the MCP session and several labs send you back here.
 
 #### Opening a terminal, moving around, and saving a file
 
@@ -268,6 +268,63 @@ In PowerShell, spell them `python --version` and `python -m pip --version`.  If 
 > See the Stage 0 rows in Troubleshooting.
 
 > **Note.**  `uv`, which Part 1.5 installs, can also fetch a Python of its own (`uv python install 3.12`) and run scripts with it (`uv run python ollama_check.py`).  Install a system Python first anyway, so that `python3` works in every terminal and every editor, and so that the `python -m venv` fallback has something to run.
+
+#### Making a token, and putting it in your environment
+
+A6 needs a GitHub token, and so does every tool you point at GitHub afterwards: `gh` inside the container, the GitHub tool server in the MCP session, and any agent you let file an issue on your behalf.  None of them should ever read that token out of a file you commit.  This section is where the token comes from and where it lives; come back whenever a page says "set `GH_TOKEN`" or writes something like `{env:GITHUB_PAT}` in a configuration file.
+
+**Do, the token.**  Go to [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new), which is the direct link for the menu path A6 spells out, and make a **fine-grained** token:
+
+| Field | What to choose | Why |
+|---|---|---|
+| Repository access | *Only select repositories*, then the one repository you mean | A token that reaches one repository can damage one repository |
+| Repository permissions | The narrowest set that does the job.  **Contents: Read and write** pushes code; add **Issues** and **Pull requests**, read and write, only if an agent will open them for you | Permissions you did not grant are failures you cannot cause |
+| Expiration | At or beyond the end of the semester | An expired token in week ten is a lab you cannot finish |
+
+> **Watch out!**  The token is displayed once.  Copy it before you leave that page, because the only repair is to delete it and make another.
+
+**Do, the variable.**  A configuration file should name a variable; your shell should hold the value.  Set it for this terminal, and then set it for good so a new window still has it:
+
+| System | For this terminal | To make it stick |
+|---|---|---|
+| macOS (zsh), Linux, WSL2 Ubuntu | `export GITHUB_PAT=github_pat_yourtokenhere` | Add that same line to `~/.zshrc` on macOS, or `~/.bashrc` on Linux and WSL2, then open a new terminal |
+| Windows, PowerShell | `$env:GITHUB_PAT = "github_pat_yourtokenhere"` | `[Environment]::SetEnvironmentVariable("GITHUB_PAT", "github_pat_yourtokenhere", "User")`, then open a new PowerShell window so it loads |
+| The course container, compose route | Nothing extra: set it on your host | The `environment:` block in `docker-compose.yml` passes it through by name on every `docker compose run` |
+| The course container, VS Code route | `export GITHUB_PAT=github_pat_yourtokenhere` at the container prompt | VS Code does not read the compose file, so this one lasts the session unless you add a `remoteEnv` entry to `devcontainer.json` |
+
+**What you should see.**  Nothing, which is the point.  Check that the variable is set without printing what is in it:
+
+```bash
+[ -n "$GITHUB_PAT" ] && echo set
+```
+
+In PowerShell, `if ($env:GITHUB_PAT) { "set" }`.
+
+> **Why not just `echo` it?**  Because a token you print is a token in your scrollback, your shell history, and any screenshot you paste into the course channel.  This is the same instinct as Part 1.5, where you print `id_ed25519.pub` and never `id_ed25519`.
+
+**Which name to use.**  Different tools read different variables, and that is worth one table rather than one guess:
+
+| What reads it | Variable |
+|---|---|
+| `gh`, the GitHub CLI | `GH_TOKEN`, or `GITHUB_TOKEN` |
+| An `opencode.json` or `.mcp.json` configuration | Whatever name you wrote inside the `{env:...}` reference |
+| A server you write yourself | Whatever name your own `os.environ` call asks for |
+
+Give a token the name of the thing it can reach, so `GITHUB_SCRATCH_PAT` for one scoped to a throwaway scratchpad repository and `GITHUB_PAT` for the one that reaches `cs357-work`.  Two tokens under two names is the correct end state, not a mess to tidy up: share one name between them and the wider token will quietly satisfy the narrower use, which is exactly the blast-radius argument A6 makes about the container credential, arriving one layer down as a naming convention.
+
+**If an environment variable is awkward.**  opencode can also read the value out of a file, which survives a new terminal and a reboot without editing a shell profile:
+
+```json
+"headers": { "Authorization": "Bearer {file:~/.secrets/github-scratch-pat}" }
+```
+
+Make it with `mkdir -p ~/.secrets`, put the token in `~/.secrets/github-scratch-pat`, and run `chmod 600 ~/.secrets/github-scratch-pat` so only you can read it.  The configuration still holds a reference rather than a value, so the rule survives intact.
+
+**If you would rather do neither.**  Pasting the token straight into `opencode.json` works, and it is the right call at midnight when nothing else does.  Two conditions.  Put the file in `.gitignore` *before* the token goes in, not after, because a commit that contains a token has leaked it whether or not the next commit removes it.  And expect GitHub's push protection to reject the push anyway, which is that lesson arriving from the other direction.  For work you hand in, use the variable or the file.
+
+**Where the configuration file goes.**  opencode reads `opencode.json` from the project directory as well as from `~/.config/opencode/`, and the choice is about scope rather than convenience.  A configuration that belongs to one repository belongs in that repository, where its tools load when you are working there and nowhere else; a configuration you want everywhere goes in the home-directory copy.  Step 5b comes back to this, and the MCP session leans on it hard.
+
+---
 
 ---
 
@@ -505,6 +562,7 @@ Three commands, each proving one tool is in the image.  The fourth thing the con
 | 3 | `opencode --version` | `opencode x.x.x` | The coding agent is baked into the image, so Step 5 has nothing left to install |
 | optional | `node --version` | `v24.21.0` | The image pins an exact Node release, because promptfoo requires 22.22 or newer; worth running first whenever promptfoo misbehaves.  Not graded |
 | optional | `herdr --version` | a version string | **herdr**, an agent-aware terminal multiplexer a later lab uses, is in the image too; this one is not graded |
+| optional | `gh --version` | `gh version 2.x.x` | **gh**, the GitHub CLI the *Coding Agents* session runs its whole loop through, is in the image as well, so Route A has nothing to install.  Part 1.5, Step 2 is where it is graded, not here |
 
 **Do.**  At the container prompt, the three graded checks, ready to paste:
 
@@ -553,13 +611,25 @@ git config user.email "you@example.com"
 **Do, credential.**  Create a fine-grained personal access token (PAT):
 
 1.  GitHub -> **Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens -> Generate new token**.
-2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.
+2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.  If you already know you will let an agent open issues or pull requests for you, which the *Coding Agents* session has you do two days from now, add **Issues: Read and write** and **Pull requests: Read and write** while you are here.  Adding them later means `gh auth refresh -s <scope>` or a new token, and the symptom that sends you looking is a bare 403.
 3.  Copy the token (shown once).  When `git push` prompts for a password, paste the token.
 4.  Cache it for a work session so you are not retyping:
 
 ```bash
 git config credential.helper 'cache --timeout=7200'
 ```
+
+**Do, `gh`.**  The image also carries `gh`, and it knows even less about you than git does.  Give it the token you just made, as an environment variable, from the host shell you start the container in:
+
+```bash
+export GH_TOKEN=github_pat_yourtokenhere      # on your host, before docker compose run
+```
+
+The `environment:` block in `docker-compose.yml` passes `GH_TOKEN` through by name, so the value stays in your shell and never enters a file.  *Making a token, and putting it in your environment*, back in the Part 1 orientation, is where the variable and its platform spellings live.  Confirm inside the container with `gh auth status`.
+
+> **Do not run `gh auth login` in the container, and do not mount `~/.config/gh` into it.**  Both work, and both are the wrong shape here.  `gh auth login` stores a credential with whatever reach your account has, inside a filesystem that is about to run agent code; mounting your host `gh` configuration hands that same code the token that can push to every repository you own.  The variable above carries exactly one repository-scoped token and disappears when the container does, which is the A6 argument in one more place.
+
+> **Note.**  `gh auth setup-git` makes `git push` over HTTPS use that same token, which replaces the credential-cache line above.  It is a fine trade on your host.  Inside the container, either works.
 
 The two credentials you could use inside the container, side by side:
 
@@ -860,11 +930,16 @@ The agent is **opencode**, and every install route lives at [opencode.ai](https:
 
 opencode reads one configuration file, and the file name matters: it is `opencode.json`, never `config.json`.  opencode silently ignores a file with the wrong name.
 
-| Where opencode runs | Where the file goes | The `baseURL` inside it |
+Where you put it decides **which projects it applies to**.  A copy in a project directory configures that repository and nothing else; a copy in your home directory configures everything you open.  Pick the row for what you want, and note that the address also changes with it, because `localhost` means something different inside a container:
+
+| Where the file goes | What it configures | The `baseURL` inside it |
 |---|---|---|
-| Inside the course container (Route A) | `/workspace/opencode.json`, at the root of your repository | `http://host.docker.internal:11434/v1` |
-| Natively on macOS, Linux, or WSL (Route B) | `~/.config/opencode/opencode.json` | `http://localhost:11434/v1` |
-| Natively on Windows (Route B) | `%USERPROFILE%\.config\opencode\opencode.json` | `http://localhost:11434/v1` |
+| `/workspace/opencode.json`, the root of your `cs357-work` repository (Route A) | That repository.  It is also the copy that survives `docker compose run --rm`, since the container's home directory does not | `http://host.docker.internal:11434/v1` |
+| Any other project directory, as `opencode.json` at its root | That project | Match it to where opencode runs |
+| `~/.config/opencode/opencode.json` on macOS, Linux, or WSL | Every project you open | `http://localhost:11434/v1` |
+| `%USERPROFILE%\.config\opencode\opencode.json` on Windows | Every project you open | `http://localhost:11434/v1` |
+
+For today either choice works, since the only thing being configured is a model provider you want everywhere.  The distinction starts to matter in the *MCP* session, where a configuration can attach a whole tool server to a project: a server that belongs to one repository costs you context in every other one if you put it in the home-directory copy.
 
 **Do.**  The smallest working file registers Ollama and nothing else.  Create the folder if it does not exist, save this as `opencode.json` in the location from the table, and use the `baseURL` from the table:
 
@@ -980,99 +1055,95 @@ grep -n "localhost" notes.txt
 
 ---
 
-### Step 2. Authenticate to GitHub with an SSH key, then commit and push
+### Step 2. Authenticate to GitHub with `gh`, then commit and push
 
 | Part 1.5, Step 2 at a glance | |
 |---|---|
-| **Where you type** | Your host terminal for 2a through 2d (the key lives on your host); your host terminal, or on Route A the container prompt, for 2e and 2f |
-| **Route A** | Do 2a through 2d on your host; for 2e and 2f, use `cs357-work` from A2 and push from the container with your A6 token |
-| **Route B** | Do 2a through 2f |
-| **You paste** | The `ssh -T` greeting and the `git log --oneline` output |
+| **Where you type** | Your host terminal for 2a through 2c (the credential lives on your host); your host terminal, or on Route A the container prompt, for 2d and 2e |
+| **Route A** | Do 2a through 2c on your host; for 2d and 2e, use `cs357-work` from A2 and push from the container with your A6 token |
+| **Route B** | Do 2a through 2e |
+| **You paste** | The `gh auth status` output and the `git log --oneline` output |
 
 > **If you built the course container (Route A).**
 >
-> You already have a repository: `cs357-work` from A2, cloned over HTTPS, with a scoped token from A6.  So for 2e, skip creating or cloning anything.  For 2f, make your commit and push **from the container prompt** in `/workspace`; the token authenticates the push, and `git log --oneline` there is your transcript.
+> You already have a repository: `cs357-work` from A2, cloned over HTTPS, with a scoped token from A6.  So for 2d, skip creating or cloning anything.  For 2e, make your commit and push **from the container prompt** in `/workspace`; the token authenticates the push, and `git log --oneline` there is your transcript.
 >
-> Still do 2a through 2d on your host.  The labs drive git from a host terminal too, and the SSH key is the credential that belongs there.
+> Still do 2a through 2c on your host.  The labs drive git and `gh` from a host terminal too, and that is where the credential belongs.
 >
 > If you built the container in class, the practice loop in Step 7 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md), which creates `hello_agent.py`, runs it against host Ollama, commits, and pushes, is exactly this checkpoint.  Its transcript satisfies it.
 
-You will push to GitHub every week this semester, so set authentication up once, now, with a key.  GitHub no longer accepts your account password over HTTPS, and a key is the option that keeps working without a prompt on every push.  SSH (Secure Shell) is the protocol; the key is a file pair, one half private and one half public.  Follow 2a through 2f in order; the map below shows the whole path, and the alternatives after it are optional and replace specific sub-steps.
+You will push to GitHub every week this semester, so set authentication up once, now.  GitHub stopped accepting your account password over HTTPS years ago, which leaves two credentials that work: an SSH key, and a token.  The fastest way to get either one is **`gh`, the GitHub CLI**, which creates the key, uploads it to your account, and hands git a credential, in one sign-in.
+
+Install it even if you already have a working key, and install it even if you prefer clicking.  Two days from now the *Coding Agents* session runs its entire loop through `gh`, an issue becomes the task and a pull request becomes the attempt, and the *Agents That Talk* session later uses the same commands as a message bus between two agents.  This is the step where you get it.
 
 | Sub-step | What you do | Command | Paste it? |
 |---|---|---|---|
-| 2a | Check for a key you already have | `ls -al ~/.ssh` | No |
-| 2b | Create one if you have none | `ssh-keygen -t ed25519 -C "you@example.com"` | No |
-| 2c | Register the public half with GitHub | `cat ~/.ssh/id_ed25519.pub`, then paste at [github.com/settings/keys](https://github.com/settings/keys) | No |
-| 2d | Test it | `ssh -T git@github.com` | **Yes**, the greeting |
-| 2e | Get the repository onto your machine | `git clone git@github.com:<your-username>/<your-repo>.git` | No |
-| 2f | Commit and push | `git add`, `git commit`, `git push -u origin main`, then `git log --oneline` | **Yes**, the log |
+| 2a | Install the GitHub CLI | `gh --version` | No |
+| 2b | Sign in, letting `gh` make and upload an SSH key | `gh auth login` | No |
+| 2c | Confirm | `gh auth status`, then `ssh -T git@github.com` | **Yes**, the status block |
+| 2d | Get the repository onto your machine | `gh repo clone <your-username>/<your-repo>` | No |
+| 2e | Commit and push | `git add`, `git commit`, `git push -u origin main`, then `git log --oneline` | **Yes**, the log |
 
-**2a. Check for a key you already have.**  A key you already trust is better than a second one, so look before you generate:
+**2a. Install the GitHub CLI.**  One row for your system:
+
+| System | How to install `gh` |
+|---|---|
+| **macOS, with Homebrew** | `brew install gh` |
+| **Windows, PowerShell** | `winget install --id GitHub.cli`, then open a new PowerShell window so `PATH` picks it up |
+| **WSL2 Ubuntu, Debian, Ubuntu** | Follow the four-line apt recipe on [cli.github.com](https://cli.github.com/), which adds GitHub's package repository.  Do not use plain `apt install gh` alone: the version Ubuntu ships lags far enough behind to be missing commands the labs use |
+| **Other Linux** | Your package manager (`dnf install gh`, `pacman -S github-cli`), or the release archive from [cli.github.com](https://cli.github.com/) |
+| **The course container (Route A)** | Nothing.  `gh` is in the image, and `gh --version` at the container prompt proves it |
+
+Confirm with `gh --version`.
+
+**2b. Sign in.**  Before you generate anything, look for a key you already trust, because `gh` will offer to use it rather than making a second one:
 
 ```bash
 ls -al ~/.ssh
 ```
 
-If `id_ed25519.pub` (or `id_rsa.pub`) is listed and you know its passphrase, skip to 2c.
-
-**2b. Create one.**  Use the email address tied to your GitHub account:
+Then:
 
 ```bash
-ssh-keygen -t ed25519 -C "you@example.com"
+gh auth login
 ```
 
-Press Enter to accept the default location, and set a passphrase rather than leaving it empty; the passphrase is what keeps the key useful to you and useless to someone who copies the file.  Then load it into the agent so you type that passphrase once per session rather than once per push:
+Answer the prompts: **GitHub.com**, then **SSH** as the protocol, then let it **generate a new SSH key** if `ls` showed none (give the key a passphrase; that passphrase is what keeps the key useless to somebody who copies the file), then **Login with a web browser**, which prints a one-time code to paste into the page it opens.
+
+That single exchange replaces three manual steps: `ssh-keygen`, printing the public half, and pasting it into GitHub's settings.  It also uploads the key under a name you can revoke later, which is the part people forget to do by hand.
+
+> **Note.**  If you would rather git push over HTTPS than over SSH, run `gh auth setup-git` afterwards.  It installs `gh` as git's credential helper, so `git push` stops asking who you are.  You do not need it on the SSH path.
+
+**2c. Confirm it.**
 
 ```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-```
-
-**2c. Register the public key with GitHub.**  Print the `.pub` file, which is the *public* half:
-
-```bash
-cat ~/.ssh/id_ed25519.pub
-```
-
-> **Watch out!**  Never paste or send the file without the extension, which is the private key.  Only the `.pub` line goes to GitHub.
-
-On GitHub, go to **Settings -> SSH and GPG keys -> New SSH key** (the direct link is [github.com/settings/keys](https://github.com/settings/keys)).  Title it after the machine it lives on, so you can revoke exactly one laptop later; leave the key type as **Authentication Key**; paste the whole line, and save.
-
-**2d. Test it.**
-
-```bash
+gh auth status
 ssh -T git@github.com
 ```
 
-> **What you should see:** the first connection asks you to accept GitHub's host fingerprint; answer `yes`.  Success is a greeting that names your GitHub username.  It does not open a shell, and the message that GitHub does not provide shell access is the expected result, not an error.  **Paste this output.**
+> **What you should see:** `gh auth status` names github.com, your account, the protocol, and the token's scopes.  `ssh -T` asks you to accept GitHub's host fingerprint the first time, which you answer `yes`, and then greets you by username.  It does not open a shell, and the line saying GitHub does not provide shell access is the success case, not an error.  **Paste the `gh auth status` block.**
 
-**2e. Get the repository onto your machine.**  Use your course GitHub Classroom repository, the `cs357-work` repository you created in A2 (Route A students already have it; skip to 2f), or a throwaway GitHub repository.  Which command starts you off depends on whether the repository already exists on GitHub:
+> **Watch out!**  Tokens expire and sessions lapse.  When a `gh` command fails later in the semester with a 401, a 403, or a flat refusal to authenticate, `gh auth status` tells you which, `gh auth login` signs you back in, and `gh auth refresh -s <scope>` adds a permission you did not originally grant.  You will want that last one in the *Coding Agents* session.
 
-| The repository | What you run |
-|---|---|
-| Already exists on GitHub | **Clone** it (the commands below) |
-| Does not exist yet | Create it on GitHub first (**+ > New repository**, with no README, which keeps the two histories from conflicting), then `git init` and `git remote add` (the second block below) |
-
-If it already exists on GitHub, clone it.  Cloning downloads the full repository, sets `origin` to the address you cloned from, and leaves you in a working copy that is already connected, so no `git remote add` follows.  Copy the address from the green **Code** button on the repository page, choosing the **SSH** tab so you get the `git@github.com:` form that the key you just registered authenticates:
+**2d. Get the repository onto your machine.**  Use your course GitHub Classroom repository, the `cs357-work` repository from A2 (Route A students already have it; skip to 2e), or a throwaway repository.  If it exists on GitHub already:
 
 ```bash
 cd ~/cs357
-git clone git@github.com:<your-username>/<your-repo>.git
+gh repo clone <your-username>/<your-repo>
 cd <your-repo>
 git remote -v
 ```
 
-> **What you should see:** `git clone` creates a *new folder* named after the repository, inside whatever directory you run it from, which is why you `cd` into it on the next line.  `git remote -v` should print your SSH address twice, once for fetch and once for push, which is your evidence that the working copy is wired to GitHub.  A repository with no commits yet clones with a warning that it is empty; that is fine, since the commit below is about to fill it.
+> **What you should see:** cloning creates a *new folder* named after the repository inside whatever directory you ran it from, which is why you `cd` into it on the next line.  `git remote -v` prints an address twice, once for fetch and once for push, and that is your evidence the working copy is wired to GitHub.  `gh repo clone` picks the protocol you authorized in 2b, so you never paste a URL.  A repository with no commits clones with a warning that it is empty; the commit below is about to fix that.
 
-If nothing exists on GitHub yet, create the repository there first, then initialize locally and attach the remote by hand:
+If nothing exists on GitHub yet, make it and clone it in one command:
 
 ```bash
-git init
-git remote add origin git@github.com:<your-username>/<your-repo>.git
+gh repo create <your-repo> --private --clone
+cd <your-repo>
 ```
 
-**2f. Commit and push.**  Git versions files, so the repository needs at least one file before there is anything to commit.  Create it the way you created `notes.txt` above:
+**2e. Commit and push.**  Git versions files, so the repository needs a file before there is anything to commit.  Make one the way you made `notes.txt`:
 
 ```bash
 printf '# CS357 scratch repository\n' > README.md
@@ -1087,30 +1158,64 @@ git push -u origin main
 >
 > - `git commit` without `-m` drops you into an editor.  If that editor turns out to be `vim`, `:q!` leaves it.
 > - `git push` complains if your default branch is not named `main`.  `git branch -M main` fixes it.
-> - If the repository already has an HTTPS remote, switch it in place rather than starting over: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, then verify with `git remote -v`.
-> - On native Windows, PowerShell ships OpenSSH, so the commands above work as written.  If `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell with `Set-Service -Name ssh-agent -StartupType Manual` followed by `Start-Service ssh-agent`.
+> - A repository that still has an HTTPS remote from an earlier clone can be switched in place rather than recloned: `git remote set-url origin git@github.com:<your-username>/<your-repo>.git`, then check with `git remote -v`.
+> - On native Windows, PowerShell ships OpenSSH, so these commands work as written.  If `ssh-add` reports that the agent is not running, start it once from an elevated PowerShell with `Set-Service -Name ssh-agent -StartupType Manual` followed by `Start-Service ssh-agent`.
 >
 > See the Stage 7 rows in Troubleshooting.
 
-> **Route A and credentials inside the container.**  The key you just made lives on your host, which is where it belongs.  Inside the course container, A6 above recommends a fine-grained personal access token (PAT) scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  That is why A2 clones `cs357-work` over HTTPS: the token authenticates HTTPS pushes.  Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) goes deeper, and A6 shows the read-only `~/.ssh` mount if you would rather use your key there.
+**2f. Or ask the agent to do it.**
 
-#### Alternatives to the command line for Step 2 (choose at most one)
+Everything in 2d and 2e is a command line, and you now have a program sitting in the next terminal whose job is composing command lines.  Try it once, here, where you already know what the right answer looks like:
 
-Each of these replaces specific sub-steps; verify with `ssh -T git@github.com` either way.
+> "Create a private GitHub repository called `cs357-scratch` using `gh`, clone it into this folder, add a README that says what it is, commit, and push.  Show me `git log --oneline` when you are done."
+
+> "Run `gh auth status` and tell me what it says.  If I am not signed in, stop and say so rather than trying to fix it yourself."
+
+The permission gate asks before each shell command, so you see exactly what the agent composed before it runs, which is the whole reason to do this the first time on a throwaway repository.  Neither prompt is graded.  They are here because the command line is how you learn what an operation *is*, and the prompt is how you will actually work once you know, and this course would rather you met both in week one.
+
+#### Alternative: do it by hand, with `ssh-keygen`
+
+`gh auth login` automates a three-step exchange that is worth seeing once, and if `gh` will not install on your machine you need it anyway.  Nothing below is required if 2b succeeded.
+
+**Check for a key you already have.**
+
+```bash
+ls -al ~/.ssh
+```
+
+If `id_ed25519.pub` (or `id_rsa.pub`) is listed and you know its passphrase, skip to registering it.
+
+**Create one.**  Use the email address tied to your GitHub account:
+
+```bash
+ssh-keygen -t ed25519 -C "you@example.com"
+```
+
+Press Enter to accept the default location, and set a passphrase rather than leaving it empty.  Then load it into the agent so you type that passphrase once per session rather than once per push:
+
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+**Register the public half with GitHub.**  Print the `.pub` file, which is the *public* one:
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+> **Watch out!**  Never paste or send the file without the extension, which is the private key.  Only the `.pub` line goes to GitHub.
+
+On GitHub, go to **Settings -> SSH and GPG keys -> New SSH key** (the direct link is [github.com/settings/keys](https://github.com/settings/keys)).  Title it after the machine it lives on, so you can revoke exactly one laptop later; leave the key type as **Authentication Key**; paste the whole line, and save.  Then test with `ssh -T git@github.com` and continue from 2d, using `git clone git@github.com:<your-username>/<your-repo>.git` in place of `gh repo clone`.
+
+#### Other alternatives for 2d and 2e (choose at most one)
 
 | Tool | Replaces | Best for | Verify with |
 |---|---|---|---|
-| **GitHub CLI** (`gh`) | 2b and 2c (key generation and upload), and the `git clone` in 2e | Native Windows; the one I would take there | `ssh -T git@github.com` |
-| **VS Code** | The `git clone` in 2e | Anyone already working in VS Code | `git log --oneline` in the integrated terminal |
-| **GitHub Desktop** | 2e and 2f | Anyone who would rather not type git commands yet | `git log --oneline` from Repository > Open in terminal |
+| **VS Code** | The clone in 2d | Anyone already working in VS Code | `git log --oneline` in the integrated terminal |
+| **GitHub Desktop** | 2d and 2e | Anyone who would rather not type git commands yet | `git log --oneline` from Repository > Open in terminal |
 
-**The GitHub CLI.**  The [GitHub CLI](https://cli.github.com/), the `gh` command, does the whole exchange in 2b through 2c for you.
-
-Install it with `winget install --id GitHub.cli` in PowerShell, `brew install gh` on macOS, or your package manager on Linux.  Then run `gh auth login`, choose **GitHub.com**, choose **SSH** as the protocol, and answer yes when it offers to generate a new SSH key and upload it to your account.  That one prompt replaces `ssh-keygen`, the `cat` of the `.pub` file, and the paste into Settings.
-
-Verify with `ssh -T git@github.com` and paste that output.  `gh repo clone <your-username>/<your-repo>` then clones over the protocol you just authorized, in place of the `git clone` in 2e.
-
-**VS Code, for the clone in 2e.**  It drives the same git underneath, so the result is identical.
+**VS Code, for the clone in 2d.**  It drives the same git underneath, so the result is identical.
 
 With no folder open, the Source Control view (Ctrl+Shift+G, or Cmd+Shift+G on macOS) offers a **Clone Repository** button.  From anywhere, the Command Palette (Ctrl+Shift+P, or Cmd+Shift+P) runs **Git: Clone**.  Either one asks for the repository address, where you paste the same SSH URL, then asks which local folder to put it in, `~/cs357` here, and offers to open the clone when it finishes.
 
@@ -1118,7 +1223,9 @@ Say yes.  The integrated terminal (Ctrl+\`) then opens already inside the reposi
 
 The palette also offers **Clone from GitHub**, which lets you pick from a list of your repositories instead of pasting a URL.  Note that it signs you in to GitHub inside VS Code and authenticates as that account rather than with your key.
 
-**GitHub Desktop, for 2e and 2f.**  If you would rather not type git commands yet, [GitHub Desktop](https://desktop.github.com/) is a supported option and handles authentication for you: install it, sign in, use File > New repository (or Add local repository) on your `cs357` folder, commit from the Changes tab, and Publish repository to push.  Then paste the output of `git log --oneline` from Repository > Open in terminal, which is the same transcript the command-line route produces.  Set the key up anyway, because the labs and the coding agent drive git from a terminal.
+**GitHub Desktop, for 2d and 2e.**  If you would rather not type git commands yet, [GitHub Desktop](https://desktop.github.com/) is a supported option and handles authentication for you: install it, sign in, use File > New repository (or Add local repository) on your `cs357` folder, commit from the Changes tab, and Publish repository to push.  Then paste the output of `git log --oneline` from Repository > Open in terminal, which is the same transcript the command-line route produces.
+
+> **Watch out!**  GitHub Desktop is not a substitute for 2a.  It bundles Git for Windows, not `gh`, and signing in to Desktop does not sign in `gh`.  Do 2a and 2b anyway, because the *Coding Agents* session and every agent you run afterwards drive GitHub from a terminal.
 
 The two GitHub downloads are easy to confuse on native Windows without WSL2:
 
@@ -1127,9 +1234,12 @@ The two GitHub downloads are easy to confuse on native Windows without WSL2:
 | **What it is** | The command-line tool, a separate install | The graphical client |
 | **What it bundles** | Nothing else | Git for Windows, which is where `ssh-keygen` and Git Bash come from |
 | **How it authenticates** | `gh auth login`, over SSH or HTTPS | Its own sign-in, handled for you |
+| **Does it give you the other one?** | No, and it does not need to | No.  Desktop cannot run `gh issue create` |
 | **Installing both** | Common, and they coexist happily | |
 
 The Ubuntu or WSL2 route gives you the standard Unix tooling instead, and every command on this page then works as written.
+
+> **Route A and credentials inside the container.**  The credential you just made lives on your host, which is where it belongs.  Inside the course container, A6 recommends a fine-grained personal access token scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  That is why A2 clones `cs357-work` over HTTPS: the token authenticates HTTPS pushes.  Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) goes deeper, and A6 shows the read-only `~/.ssh` mount if you would rather use your key there.
 
 **Next:** Step 3.
 
@@ -1202,11 +1312,12 @@ uv run python -c "import requests; print(requests.__version__)"
 | [ShellCheck](https://www.shellcheck.net/) | Catches bugs in shell scripts before they bite |
 | `curl` and [HTTPie](https://httpie.io/) plus [jq](https://jqlang.github.io/jq/) | You will hit JSON APIs (Ollama, MCP) all semester; `curl ... \| jq` is your friend |
 
-> **You've succeeded when** the three boxes below are checked.  That is Part 1.5.
+> **You've succeeded when** the four boxes below are checked.  That is Part 1.5.
 
 ### Part 1.5 Checklist
 
 - [ ] A shell transcript showing directory creation, navigation, and a `grep`/`rg` search
+- [ ] A `gh auth status` transcript showing you are signed in to GitHub
 - [ ] A `git log --oneline` transcript showing at least one commit pushed to a remote (command line or GitHub Desktop)
 - [ ] A `uv` (or documented fallback) transcript importing `requests`
 
@@ -1269,9 +1380,13 @@ Work down this table before you post in the course channel.  The Stage column ma
 | 5 | `opencode` reports no provider or no models | Almost always the config **file name**: it must be `opencode.json`, not `config.json` | Fix the name, then check the location (`/workspace/opencode.json` in the container, `~/.config/opencode/opencode.json` natively), then check that the JSON parses with `python3 -m json.tool` |
 | 5 | `opencode: command not found` inside the container | An older build of the course image, from before the agent was added | Rerun `docker compose build` from your `.devcontainer/` folder; cached layers make it quick |
 | 5 | `opencode: command not found` on Route B, right after the installer succeeded | The installer put the binary in `~/.local/bin`, which is not on your `PATH` yet | `export PATH="$HOME/.local/bin:$PATH"` for this session, and add the same line to `~/.bashrc` to make it stick |
-| 7 | `ssh-keygen` is not recognized on Windows | OpenSSH is not installed or the window predates it | Open a new PowerShell window; if it persists, install GitHub Desktop (which bundles Git for Windows) or the GitHub CLI and use the alternative in Step 2 |
-| 7 | `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | Set up the SSH key in Part 1.5, Step 2, then point the remote at it: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained personal access token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS, and is the default inside the container (A6) |
-| 7 | `git@github.com: Permission denied (publickey)` | The key is not loaded in the agent, or its public half was never added to GitHub | `ssh-add -l` lists loaded keys and `ssh-add ~/.ssh/id_ed25519` loads yours; confirm the contents of `id_ed25519.pub` appear under Settings -> SSH and GPG keys; then retest with `ssh -T git@github.com` |
+| 7 | `gh: command not found`, or `'gh' is not recognized` | Not installed, or the terminal predates the install | Install it from the 2a table, then open a new terminal.  Inside the course container it is already there; if it is not, your image predates this change and *Appendix: Updating Your Container* has the rebuild |
+| 7 | `gh auth status` says you are not logged in, or a `gh` command returns 401 | The sign-in lapsed or the token expired | `gh auth login` signs you back in.  Tokens do expire, so expect this once or twice a semester rather than never |
+| 7 | `gh issue create` or `gh pr create` returns 403 while `gh auth status` looks fine | The token authenticates but lacks that permission; A6's Contents-only scope does not cover issues or pull requests | `gh auth refresh -s <scope>` adds it, or edit the fine-grained token to include **Issues** and **Pull requests**, read and write.  A 403 is a permissions answer, not a sign-in problem, which is why the status looks healthy |
+| 7 | You ran `gh auth login` at the container prompt | It works, and it puts a credential inside the filesystem that runs your agent code | Log out with `gh auth logout`, and pass `GH_TOKEN` in from your host shell instead, as A6 describes |
+| 7 | `ssh-keygen` is not recognized on Windows | OpenSSH is not installed or the window predates it | Open a new PowerShell window; if it persists, install the GitHub CLI (Step 2a) and let `gh auth login` make the key, or install GitHub Desktop, which bundles Git for Windows |
+| 7 | `git push` rejected, "authentication failed" | GitHub no longer accepts account passwords over HTTPS | `gh auth login` and then `gh auth setup-git` gives git a credential over HTTPS.  Or move the remote to SSH: `git remote set-url origin git@github.com:<user>/<repo>.git`.  A fine-grained token scoped to that one repository, with Contents: read and write, is the fallback if you must stay on HTTPS, and is the default inside the container (A6) |
+| 7 | `git@github.com: Permission denied (publickey)` | The key is not loaded in the agent, or its public half was never added to GitHub | `gh auth status` tells you what `gh` thinks it has.  By hand: `ssh-add -l` lists loaded keys and `ssh-add ~/.ssh/id_ed25519` loads yours; confirm the contents of `id_ed25519.pub` appear under Settings -> SSH and GPG keys; then retest with `ssh -T git@github.com` |
 | 7 | GitHub Desktop says authentication failed, or cannot push | Not signed in, or the repository exists on GitHub but was never published from Desktop | File > Options > Accounts, sign in with the browser, then Publish repository; if the repository already exists online, use Add local repository and set the remote under Repository > Repository settings |
 | 8 | `uv: command not found` | Not installed, or not on `PATH` yet | Install it from the table in Part 1.5, Step 3 (`brew install uv` on a Mac with Homebrew, the `curl` or PowerShell installer elsewhere), then open a new terminal or run `source $HOME/.local/bin/env`; if it still fails, use the documented `python -m venv` fallback and say so |
 | 8 | `brew install uv` says your macOS version is unsupported | Homebrew is older than your macOS | `brew update`, then rerun `brew install uv` |
@@ -1287,7 +1402,7 @@ Hold your submission against the rubric's `proficient` column:
 - [ ] Setup transcript covers all five steps, including the coding-agent check, and states your **OS and version numbers**.  On Route A, it also shows the container prompt and the A5 output.
 - [ ] Transcript output is **copied verbatim**, not retyped or paraphrased.
 - [ ] Any failure is quoted exactly, with a hypothesis and what you tried.
-- [ ] Part 1.5: shell navigation and a search, a `git log --oneline` showing a pushed commit, and the uv (or documented fallback) output.
+- [ ] Part 1.5: shell navigation and a search, a `gh auth status` block, a `git log --oneline` showing a pushed commit, and the uv (or documented fallback) output.
 - [ ] Reflection has **four** labeled sections and is about a page.
 - [ ] The reflection says what you actually think, not what you expect the course to want.
 - [ ] Which route you took (A or B) is stated, and a Route A transcript shows the container prompt.
@@ -1299,7 +1414,7 @@ Hold your submission against the rubric's `proficient` column:
 
 Submit a single PDF or markdown file containing:
 - Your tool setup transcript (all five steps, including `opencode --version` and one answered prompt, plus version and OS info; on Route A, the container prompt and the A5 output as well)
-- Your command-line and git checkpoint transcript (Part 1.5: navigation, git commit/push, uv environment)
+- Your command-line and git checkpoint transcript (Part 1.5: navigation, `gh auth status`, git commit/push, uv environment)
 - Your baseline reflection (one page, four sections)
 
 ---
