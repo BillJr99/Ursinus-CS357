@@ -54,6 +54,16 @@ Periodically, or when asked, audit the vault:
 
 Before writing any file back to disk, diff the proposed content against the current content.  Do not write if the diff is empty.  Prefer surgical edits (targeted string replacement) over full file rewrites wherever possible.
 
+## GitHub: Try `gh`, Fall Back to `git`, Then Ask
+
+This vault is a GitHub repository, and you reach it over Git and the API rather than through the note-taking app.
+
+1.  Reach for `gh` first for anything repository-level: cloning, issues, pull requests, releases.  Confirm once per session with `gh auth status`.
+2.  Fall back to `git` for the verbs `gh` does not have: pull, add, commit, push, log, diff.  Say in your next message that you fell back, and why.
+3.  If neither can authenticate, **stop and tell the owner**.  A push that prompts for a password, or a 401 or 403 from either tool, means there is no working credential.  Name the command that failed and quote what it said.  Do not switch the remote between HTTPS and SSH, do not ask for a token to write into a file, and do not retry in a loop.
+
+The third rule matters more here than in an ordinary project.  A vault holds the owner's durable memory, so an improvised credential repair risks either writing to the wrong remote or leaving a token inside the repository itself, and both are worse than a session that stops and says what it needs.
+
 ## When in Doubt
 
 Prefer clean structure over clutter; prefer canonical pages over duplicates; prefer linking over copying; prefer thoughtful synthesis over raw aggregation; prefer preserving useful detail over vague summarization.

@@ -377,7 +377,7 @@ Check that opencode.json is valid JSON and tell me the line number of any error.
 
 The course ships a [set of agent operating system templates]({{ site.baseurl }}/files/agent-templates/README.md): a charter, an agent contract, a kickoff prompt, a decision log, and the `.ai/` handoff files. You will copy several of them over the course of this lab. Start with the charter: copy the [template]({{ site.baseurl }}/files/agent-templates/CHARTER.md) to `./CHARTER.md`. Leave the placeholders for now; Part 1 is where you fill them in and rank the values, and a charter written before you have scoped the artifact is a charter full of generalities.
 
-Now write `AGENTS.md` at the project root. This is the contract, and Part 2 grows it into a full page. For now it needs three rules:
+Now write `AGENTS.md` at the project root. This is the contract, and Part 2 grows it into a full page. For now it needs four rules:
 
 ```markdown
 # Agent Contract
@@ -396,7 +396,21 @@ When this file and the charter disagree, the charter wins.
 When you learn something about this project that would be useful to a session
 that has never seen it, append it to `.ai/MEMORY.md` under a dated heading.
 Append only. Never rewrite or delete an existing entry.
+
+## GitHub: try gh, fall back to git, then ask
+1. Reach for `gh` first for anything GitHub-side: creating and cloning
+   repositories, issues, pull requests, reviews. Confirm once per session
+   with `gh auth status`.
+2. Fall back to `git` for what it does on its own: pull, add, commit, push,
+   log, diff. Say in your next message that you fell back, and why.
+3. If both fail, stop and ask me. A push that prompts for a password, or a
+   401 or 403 from either tool, means there is no working credential here.
+   Tell me which command failed and quote what it said. Do not switch the
+   remote between HTTPS and SSH, do not ask me to paste a token into a
+   file, and do not retry in a loop.
 ```
+
+The fourth rule is about a specific failure you would otherwise debug at midnight. An agent that meets an authentication error will try to repair it, because repairing things is what you asked for, and every repair within its reach is worse than stopping: rewriting your remote, asking you to put a token somewhere it can read, or retrying until something times out. Stopping is not its instinct. It is a rule, and this is where you write it down.
 
 Notice what that first rule buys you. `opencode.json` loads the charter into context and `AGENTS.md` tells the agent what to do with it, so the array without the rule hands the agent a document it never asked for, while the rule without the array hands it an instruction about a file it may never open. You need both, and students who write only one of them usually cannot tell which half is missing.
 
