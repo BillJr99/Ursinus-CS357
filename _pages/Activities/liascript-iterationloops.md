@@ -35,7 +35,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Rubric** | The written check: what must be true, how to verify it, and whether a failure is material.  You write it before the agent runs | Section 7: the same rubric in a qualitative form and a quantitative one |
 | **Material defect** | A flaw that could change correctness, usefulness, compliance, interpretation, feasibility, safety, or a user's decision.  Style preferences usually are not | Default `max_results` of 10 when the spec says 5 |
 | **Permission block** | The `permission` section of `opencode.json`, which decides what opencode may do without stopping to ask you | Section 3: `git` allowed, `rm` denied, everything else asked |
-| **Auto mode** | opencode's `--auto` flag, which approves anything you did not explicitly deny | Section 9, with the isolation it requires |
+| **Auto mode** | opencode's `--auto` flag, which approves anything you did not explicitly deny.  Not for an agent running on your own machine: it belongs inside a container or a disposable VM, never on a host with your files and credentials on it | Section 9, with the isolation it requires |
 | **Handoff directory** | The `.ai/` files that hold the loop's state between turns and between agents | Section 5: where the Karpathy loop writes down what it just did |
 | **Gauntlet loop** | Parse the task, clear the fog, write the rubric, generate Candidate 0, critique it adversarially, revise, verify, and stop when no material defect remains | Model 3: one round against your `spec.md` |
 | **Source of truth** | The authoritative basis the work is judged against: your requirements, your spec, your approved decisions, then evidence, then the agent's own criteria, in that order | `spec.md` and the rubric outrank anything the agent decides on its own |
@@ -651,10 +651,14 @@ opencode run --auto "Work the next item in TODO.md, run the check, and commit if
 The configuration equivalent turns the whole permission block to `allow`:
 
 ```json
-{ "permission": "allow" }
+{
+  "permission": {
+    "*": "allow"
+  }
+}
 ```
 
-Two facts about the flag are worth having exactly right.  An explicit `deny` rule still applies under `--auto`, so a denied `rm *` stays denied.  And the desktop application has no flag to pass, so the configuration is the only route there.
+Three facts about the flag are worth having exactly right.  An explicit `deny` rule still applies under `--auto`, so a denied `rm *` stays denied.  The desktop application has no flag to pass, so the configuration block is the only route there.  And the block form above is the one the OpenCode Studio lab uses and grades: `permission` takes a map of tool names, with `"*"` as the catch-all, rather than a bare string.
 
 **Do not run this on your own machine.**  An agent acting without prompts acts on the real filesystem, the real network, and the real credentials of whatever host it runs on, and it does so while you are asleep.  The only responsible place for auto mode is a container or a virtual machine you are willing to discard: no credentials you care about, no directories outside the project, and a snapshot to roll back to.
 

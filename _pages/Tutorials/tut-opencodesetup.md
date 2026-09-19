@@ -35,6 +35,8 @@ Anchor these before you start.  Every one of them appears below, and most of the
 | **Skill** | A directory holding a `SKILL.md`, loaded on demand when its description matches the situation.  There is no install command | Part III, §6 |
 | **Plugin** | Code that runs at defined moments and can refuse a tool call outright.  Where a skill adds instructions, a plugin adds behavior | Part III, §7 |
 | **MCP server** | A process that advertises operations as named tools, so your rules match a tool name rather than a command line | Part IV, §8 |
+| **Bind mount** | The one directory of your machine a container can see.  It is the agent's entire reachable world, which is what makes it a blast radius you chose | Part V, §11 |
+| **Auto mode** | Running with the permission prompts off.  Defensible **only** inside a container, never on your host | Part V, §12 |
 {: .tb-full}
 
 ### Before You Start
@@ -347,6 +349,9 @@ Git is the one family allowed to run unattended, and that is deliberate rather t
 
 **Confirm it.**  Ask the agent to create a scratch file and watch it stop and ask.  Then ask it to run `git status` and watch it not stop.  Two prompts, and you have tested the gate in both directions.
 
+**This block is the default, and it stays on.**  Every lab, every project, every session on your own machine runs with permissions configured like this.  You will hear about a mode that skips the prompts; it belongs inside the container in Part V and nowhere else, for reasons that part makes concrete.  On your host, the answer to "this is a lot of prompts" is a better `permission` block, one that allows the specific commands you have decided are safe, not a flag that allows all of them.
+{: .tb-key data-title="Why this matters"}
+
 An already-running session does not pick up a file you just edited.  Quit and restart opencode after changing `permission`, or you will conclude the rule does not work when it simply has not been read.
 {: .tb-warning data-title="Watch out"}
 
@@ -542,9 +547,163 @@ Name the variable after what its token can reach.  `GITHUB_SCRATCH_PAT` for a to
 
 ---
 
-# Part V: Synthesis and Practice
+# Part V: Running It Isolated
 
-## 9.  Confirm the whole bench
+Everything so far assumed you approve actions as they come, and on your own machine that does not change: §5's permission block is the standing configuration for all normal work.
+
+This part is about the one exception. There is a mode where the agent runs to completion without stopping, which is what you want for a long refactor or an overnight task, and it is also the mode where a mistake costs the most. Those two facts are the same fact. So the mode is not something you turn on when the prompts get tiring; it is something you turn on **after** you have built a boundary that makes the prompts unnecessary. That boundary is a container, and building it is most of this part.
+
+## 9.  Why a container is the price of skipping the prompts
+
+Part II's argument was that a gate beats a rule because the harness enforces it. Turning the gates off does not return you to "the model behaves well." It returns you to "nothing between the model and your filesystem." The permission prompt was doing real work, and if you remove it you have to put something else in its place.
+
+A container is that something else. Instead of deciding per action whether it is safe, you decide **once**, in advance, what the agent can reach at all, and then stop deciding. That is a better trade than it sounds, because the per-action decision is the one you get wrong at hour three when every prompt looks like the last one.
+
+The boundary is the mount. A container with one bind mount can read and write exactly that directory and nothing else: not your SSH keys, not your other repositories, not your documents, not the rest of your disk. Everything the agent could damage is therefore everything you deliberately handed it, and that directory is a git repository with a GitHub remote, which means every change is a diff you can read and revert.
+{: .tb-key data-title="Why this matters"}
+
+Three properties make the arrangement work, and it is worth naming them because they are the same three the Workbench session introduces. **Isolation**: the mount bounds what it can reach. **Observability**: the work lands as commits you read. **Reversibility**: `git checkout` and a push you can revert. Remove any one and the arrangement stops being reasonable. Yolo mode inside a container with no git history is not isolation, it is just a faster way to lose work.
+
+## 10.  Build the image
+
+The course container already carries opencode, and if you are on Route A you can skip to §11 and use it. This is the minimal standalone version, which is worth building once because it is short enough to read in full.
+
+```dockerfile
+# Dockerfile.agent
+FROM node:24-bookworm-slim
+
+# git so the agent can commit its own work; ripgrep because agents reach for it
+# constantly; ca-certificates so HTTPS works at all.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git ripgrep ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g opencode-ai
+
+# The model lives on the host, not in here. Code inside the container reaches it
+# across the container wall at this address.
+ENV OLLAMA_HOST=http://host.docker.internal:11434
+
+# Never run an agent as root. If something does go wrong inside the container,
+# it goes wrong as an ordinary user.
+RUN useradd --create-home --shell /bin/bash agent
+USER agent
+
+WORKDIR /workspace
+CMD ["opencode"]
+```
+
+```bash
+docker build -f Dockerfile.agent -t course-agent .
+```
+
+Notice what is **not** in the image: no API key, no token, no `~/.ssh`, no `~/.config/gh`. The model is local and needs no credential, which is the property that makes this container safe to hand a running agent. An image that needs a secret is an image that can leak one.
+{: .tb-warning data-title="Watch out"}
+
+## 11.  Point it at one directory, and only one
+
+The container sees your project because you mount it, and it sees nothing else because you do not.
+
+```bash
+cd ~/cs357-work        # a git repository, with a GitHub remote
+
+docker run -it --rm \
+  --add-host=host.docker.internal:host-gateway \
+  -v "$PWD:/workspace" \
+  -w /workspace \
+  --cap-drop ALL --security-opt no-new-privileges \
+  course-agent
+```
+
+In PowerShell the line continuations are backticks rather than backslashes, and `$PWD` works the same way:
+
+```powershell
+docker run -it --rm `
+  --add-host=host.docker.internal:host-gateway `
+  -v "${PWD}:/workspace" `
+  -w /workspace `
+  --cap-drop ALL --security-opt no-new-privileges `
+  course-agent
+```
+
+Each flag earns its place. `--rm` deletes the container on exit, so an experiment cleans up after itself and your files survive because they were never in the container to begin with. `-v "$PWD:/workspace"` is the only door. `-w /workspace` makes that directory the agent's world from the first keystroke. `--add-host` makes `host.docker.internal` resolve on Linux, where Docker Engine does not provide it for free. `--cap-drop ALL` and `--security-opt no-new-privileges` remove kernel capabilities the agent has no use for.
+
+**Everything from the earlier parts comes along.** The directory you mounted is the directory that holds `opencode.json`, `AGENTS.md`, and `.agents/skills/`, so the provider, the contract, the permission block, and your skills are all present inside the container without being installed into it. That is the payoff of putting them in the project rather than in a home directory: they travel with the repository, into the container, and onto a classmate's machine when they clone it.
+{: .tb-key data-title="Why this matters"}
+
+One address changes. Inside the container, the provider's `baseURL` must be `http://host.docker.internal:11434/v1`, because `localhost` means the container. If your project `opencode.json` is written for your host, either change it for container use or keep the container's address in the project file and the host's in your global file, which is exactly the kind of split the merge rule from §2 exists to support.
+
+## 12.  Turn the gates off, deliberately
+
+Now, and only now, running without prompts is a defensible choice.
+
+**Only inside this container.**  Everything in this section assumes the `docker run` from §11: one bind mount, no credentials, a clean git tree.  Outside that boundary, on your host, the permission block from §5 stays exactly as it is.  If you find yourself typing `--auto` in a terminal that is not a container prompt, stop: you have removed the gate without adding the boundary that replaced it, which is strictly worse than either arrangement on its own.
+{: .tb-warning data-title="Watch out"}
+
+```bash
+opencode --auto
+```
+
+Or in the project's `opencode.json`, which is the route the desktop application needs since it has no flag to pass:
+
+```json
+{
+  "permission": {
+    "*": "allow"
+  }
+}
+```
+
+**A `deny` still holds.** The flag approves what is not explicitly denied, so a `deny` rule survives it. That makes `deny` the right tool for anything you never want attempted, even in this mode, and it is worth keeping a short list of those even inside a container:
+
+```json
+{
+  "permission": {
+    "*": "allow",
+    "bash": {
+      "rm -rf *": "deny",
+      "git push --force*": "deny"
+    }
+  }
+}
+```
+
+The first protects the mount's contents from the one command that empties it faster than you can react. The second protects the history on GitHub, which is the copy the container cannot reach and therefore the one thing here that is genuinely irreversible.
+
+**Commit before you start, and read the diff after.** The whole arrangement rests on git: a clean tree before the run makes `git diff` afterwards a complete account of what the agent did, and `git checkout -- .` an instant undo. Start from a dirty tree and you have given up the observability half of the trade while keeping all of the risk.
+{: .tb-warning data-title="Watch out"}
+
+The workflow, end to end, is four commands:
+
+```bash
+git status                      # start clean
+docker run ... course-agent     # the run above
+opencode --auto                 # inside the container
+# ...agent works, you go and do something else...
+git diff                        # what actually changed
+```
+
+Then review, commit, and push from the container or the host, whichever you prefer. The push is how the work leaves the blast radius.
+
+### Questions to Work Through
+
+11.  The container has no credential of any kind and the agent can still push to GitHub if you set one up. Explain how both can be true, and what you would have to add to the `docker run` line to make pushing work.
+
+    *Hint:* §10 says there is no token in the image. Part IV said a token can arrive as an environment variable. What does that imply about where the decision lives, and what does adding it cost you in blast radius?
+
+12.  A classmate runs `opencode --auto` on their host rather than in a container, reasoning that they have a clean git tree so anything bad is revertible. Name the property they still do not have, and give one concrete thing that git would not undo.
+
+    *Hint:* Three properties are named in §9. Git gives two of them. Which one is missing, and what lives outside the repository on their machine?
+
+13.  You mount `$HOME` instead of `$PWD`, on the grounds that it is more convenient. Walk through what the agent can now reach, and name three specific things from earlier in this tutorial that are suddenly in scope.
+
+    *Hint:* §2, §6, and Part IV each put something in a home directory. All three are now inside the boundary.
+
+---
+
+# Part VI: Synthesis and Practice
+
+## 13.  Confirm the whole bench
 
 One command per section.  If every line produces output, your setup is complete.
 
@@ -559,6 +718,8 @@ One command per section.  If every line produces output, your setup is complete.
 | Plugin | Restart and watch for load errors | The `plugin` entry resolved |
 | GitHub CLI | `gh auth status` | You are signed in, with scopes listed |
 | GitHub MCP | Ask the agent to list its tools | `github_*` tools are advertised |
+| Isolation | `docker run ... course-agent`, then `ls /workspace` | The mount carried your project in |
+| The boundary | `ls ~` at the container prompt | It is the container's home, not yours.  Your files are not there |
 {: .tb-full}
 
 ## Exercises
@@ -571,7 +732,9 @@ One command per section.  If every line produces output, your setup is complete.
 
 4.  **A skill that fires, and one that does not.**  Write two skills with identical bodies and different descriptions: one naming an occasion ("use when the user asks for a commit message"), one naming a topic ("about git"). Ask for a commit message and record which loads.  This is the description-as-trigger idea, tested rather than asserted.
 
-5.  **Both routes to one operation.**  Create a GitHub issue twice, once with `gh issue create` through the shell and once through the MCP server's tool.  Then write the permission rule that would deny each, and say which rule you would rather maintain.
+5.  **Find the boundary by hand.**  Start the container from §11, and at its prompt try to read something outside the mount: `cat ~/.ssh/id_ed25519`, `ls ~/Documents`, `cat /etc/hostname`.  Record which succeed and which fail, and explain the pattern.  The third one succeeding is not a hole; say why.
+
+6.  **Both routes to one operation.**  Create a GitHub issue twice, once with `gh issue create` through the shell and once through the MCP server's tool.  Then write the permission rule that would deny each, and say which rule you would rather maintain.
 
 ## Reflection Prompt
 
@@ -585,7 +748,7 @@ Take ten minutes in your notebook, at three levels.
 
 ## Where This Goes Next
 
-*Your AI Workbench* builds the container this runs in and sets up the credentials that belong on your host rather than inside it.  *Coding Agents* takes the permission block apart, writes a plugin, and drives the full issue-to-pull-request loop.  *Skills: Design One, Then Measure It* is about writing a skill worth loading rather than installing one.  *MCP* builds a tool server from nothing, so the configuration in section 8 stops being a magic incantation.  This page stays here as the thing you check when a piece of it stops loading.
+*Your AI Workbench* builds the container this runs in and sets up the credentials that belong on your host rather than inside it.  *Coding Agents* takes the permission block apart, writes a plugin, and drives the full issue-to-pull-request loop.  *Skills: Design One, Then Measure It* is about writing a skill worth loading rather than installing one.  *MCP* builds a tool server from nothing, so the configuration in Part IV stops being a magic incantation.  *Docker from Zero* and *Terminal and Filesystem Isolation for Agent Safety* are where the container in Part V is built from first principles, including what a mount does and does not isolate.  This page stays here as the thing you check when a piece of it stops loading.
 
 ## Further Reading
 
