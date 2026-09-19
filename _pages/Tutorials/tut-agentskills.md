@@ -134,7 +134,7 @@ Permissions live in `opencode.json`, and skills no longer do.  The config file s
 }
 ```
 
-Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also the fourth thing to check when a skill you installed never appears.  `ask` prompts you before the skill loads, and that is the one worth reaching for here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
+Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also the fourth thing to check when a skill you installed never appears.  `ask` prompts you before the skill loads, and it is the one that earns its keep here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
 
 ### Installing Someone Else's Skills
 
@@ -162,9 +162,9 @@ The middle two lines are the point of the detour.  A skill may ship a `scripts/`
 
 ### Prefer the Skill You Wrote
 
-Installing skills from the internet is the exception in this course, not the default, and the reason is not generic caution about strangers.  It is that the cost of writing your own is unusually low here.  There is no build step, no registry, and no publishing process; a skill is a directory and a Markdown file, and you can have a working one in about five minutes.  Weigh that against what a downloaded skill actually costs you.  You inherit instructions you did not write and will not remember in a month.  You may inherit scripts the agent can run.  And its `description` now competes with your own skills' descriptions for every trigger, so a vague one from someone else's repository can fire in the middle of work it has nothing to do with, which is a failure that looks like the model behaving strangely rather than like a skill you installed.
+Installing skills from the internet is the exception in this course, not the default, and the reason is not generic caution about strangers.  It is that the cost of writing your own is unusually low here.  There is no build step, no registry, and no publishing process; a skill is a directory and a Markdown file, and you can have a working one in about five minutes.  Weigh that against what a downloaded skill costs you.  You inherit instructions you did not write and will not remember in a month, along with whatever is in its `scripts/` directory.  Its `description` also competes with your own skills' descriptions for every trigger, so a vague one from someone else's repository can fire in the middle of work it has nothing to do with, which is a failure that looks like the model behaving strangely rather than like a skill you installed.
 
-Read published skills constantly, and borrow their structure freely; that is what the Further Reading links are for.  Install them when they do something you genuinely cannot write, and when you do, read the directory first and gate it with `"*": "ask"`.
+Read published skills constantly, and borrow their structure freely; that is what the Further Reading links are for.  Install them when they do something you cannot write yourself, and when you do, read the directory first and gate it with `"*": "ask"`.
 
 ---
 
@@ -302,7 +302,7 @@ Nothing announces the failure.  The skill is simply absent, and the agent behave
 2. **The directory name matches `name:` in the front matter.**  This is the most common cause, and renaming the directory during install is how it usually happens.
 3. **The front matter has both `name` and `description`.**  A skill missing either one is not a skill.
 4. **The name is unique across every discovery path.**  Two skills with the same name in different locations collide, and the one you are not thinking of may be the one that wins.
-5. **The directory is somewhere opencode actually looks.**  It walks up from your working directory to the root of the git worktree, so starting the agent outside the project holding `.agents/skills/` finds nothing.  Move the skill to `~/.agents/skills/` if you want it everywhere.
+5. **The directory sits in a path opencode reads.**  It walks up from your working directory to the root of the git worktree, so starting the agent outside the project holding `.agents/skills/` finds nothing.  Move the skill to `~/.agents/skills/` if you want it everywhere.
 6. **No `permission` rule denies it.**  A skill matched by a `deny` pattern is hidden from the agent rather than reported to you.
 7. **Restart.**  Skills are read at startup, so a file written during a session is not visible in that session.
 
