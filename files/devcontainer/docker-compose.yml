@@ -38,6 +38,25 @@ services:
 
     working_dir: /workspace
 
+    # Tokens reach the container from your host shell, by name only. A bare name
+    # here means "pass through whatever value this variable has outside," so the
+    # file names the variable and never holds the secret, which is the same rule
+    # the MCP session applies to opencode.json and the reason this file is safe
+    # to commit. Unset variables are simply not passed, so none of these three is
+    # has to be set for the container to start.
+    #
+    #   GITHUB_PAT          your cs357-work token (Overview, A6)
+    #   GITHUB_SCRATCH_PAT  a separate, narrower token for a scratchpad repository
+    #   GH_TOKEN            what `gh` itself reads, inside the container
+    #
+    # The VS Code Dev Containers route does not read this file, so on that route
+    # export the variable at the container prompt instead, or add a `remoteEnv`
+    # block to devcontainer.json.
+    environment:
+      - GITHUB_PAT
+      - GITHUB_SCRATCH_PAT
+      - GH_TOKEN
+
     # host.docker.internal is automatic on Docker Desktop (macOS/Windows),
     # but Docker Engine on Linux needs this explicit opt-in. Harmless on
     # the other platforms, essential on Linux -- so it stays in.

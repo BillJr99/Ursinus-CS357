@@ -3,9 +3,10 @@
 One environment that runs every CS357 lab: Python 3.11 with the course
 libraries (`requests`, `chromadb`, `sentence-transformers`, `scikit-learn`,
 `numpy`, `spacy` with `en_core_web_sm`, `shap`, `lime`, `matplotlib`,
-`pandas`, `flask`), plus Node.js 24 LTS with `promptfoo` for the evaluation lab and
-`opencode` for the coding-agent labs, and `git` so you commit and push from
-inside the container.
+`pandas`, `flask`), plus Node.js 24 LTS with `promptfoo` for the evaluation lab,
+`opencode` for the coding-agent labs and `herdr` for supervising several of them
+at once, and `git` and the `gh` GitHub CLI so you commit, push, and drive issues
+and pull requests from inside the container.
 
 **Ollama is the one thing that stays on your host.**  It runs natively for
 model performance; code inside the container reaches it at
@@ -25,8 +26,15 @@ This README is the quickstart version.
 | `docker-compose.yml` | One-command build/run with the workspace bind mount and the Linux `host.docker.internal` fix |
 | `devcontainer.json` | VS Code Dev Containers configuration |
 
-Everything the labs need is in the image, including `opencode`; the only thing
-that stays on your host is Ollama.
+Everything the labs need is in the image, including `opencode`, `herdr`, and
+`gh`; the only thing that stays on your host is Ollama.
+
+`gh` ships without credentials, as it should. Give it one by exporting `GH_TOKEN`
+on your host before you start the container: the `environment:` block in
+`docker-compose.yml` passes it through by name, so the token stays in your shell
+rather than in any file here. The Overview assignment's *Making a token, and
+putting it in your environment* section covers making the token and setting the
+variable on each system.
 
 ## Setup (common to routes A and B)
 
@@ -76,6 +84,8 @@ python3 -c "import requests; print(requests.get('http://host.docker.internal:114
 node --version                  # v24.21.0; promptfoo requires 22.22 or newer
 promptfoo --version
 opencode --version
+herdr --version
+gh --version
 python3 -c "import spacy; spacy.load('en_core_web_sm'); print('spacy OK')"
 ```
 
@@ -99,8 +109,10 @@ the retrieval lab, `scikit-learn numpy` for the ML labs, `spacy`/`shap`/
 the web-endpoint direction), install Node.js from [nodejs.org](https://nodejs.org/)
 (version **22.22 or newer**, since promptfoo refuses to start below it; the
 current 24 LTS is the safe choice) and `npm install -g promptfoo opencode-ai`
-for the evaluation and coding-agent labs, and use
-`http://localhost:11434` instead of `host.docker.internal` in every URL.
+for the evaluation and coding-agent labs, install the
+[GitHub CLI](https://cli.github.com/) (`brew install gh`,
+`winget install --id GitHub.cli`, or your package manager) and run `gh auth login`,
+and use `http://localhost:11434` instead of `host.docker.internal` in every URL.
 
 ## Troubleshooting
 
