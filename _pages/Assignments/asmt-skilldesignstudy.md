@@ -421,16 +421,18 @@ Then add one more sentence, set apart from the paragraph, stating what would mak
 
 ### Troubleshooting: the skill never fires
 
-Work down this list. The first four cover nearly every case.
+Work down this list. The first four cover nearly every case, and the full version, with the cross-tool details, is in [Agent Skills and Plugins]({{ site.baseurl }}/Tutorials/AgentSkills).
 
 1. The directory name and the `name:` field differ. They must match exactly, including case and hyphens.
 2. The `description` names a topic instead of a situation. "Docstring helper" never fires. "Use when the user asks to write, add, or fix a docstring for a function" does. Put the words a user types into the description.
 3. The skill is in the wrong place. opencode walks up from your working directory looking for `.agents/skills/`, so start it inside the project that holds the directory, or move the skill to `~/.agents/skills/`.
 4. You started opencode before the file existed. Skills are read at startup, so restart the session.
 5. The front matter is malformed. Both `---` lines must be present, `name:` and `description:` must each be on one line, or use the `>` block form for a long description, and no blank line may precede the first `---`.
-6. A `permission` block in `opencode.json` is denying the `skill` tool. Check the permission settings you wrote in the OpenCode Studio lab.
+6. A `permission` block in `opencode.json` is denying the `skill` tool. Check the permission settings you wrote in the OpenCode Studio lab. A skill matched by a `deny` pattern is hidden from the agent rather than reported to you, and a `"*": "ask"` wildcard will prompt rather than load silently.
+7. `SKILL.md` is not spelled in capitals. `Skill.md` and `skill.md` are not read.
+8. Two skills share a name. Names must be unique across every discovery path at once, so a skill in `~/.agents/skills/` can quietly win over the one you just wrote in the project.
 
-If the trigger still fails after all six, report the failure honestly, say which of the six you ruled out, and run Stage 3 by naming the skill explicitly in your request instead of waiting for the trigger. The measurement still stands, and you say in your writeup that it measures the instructions rather than the trigger.
+If the trigger still fails after all eight, report the failure honestly, say which of the eight you ruled out, and run Stage 3 by naming the skill explicitly in your request instead of waiting for the trigger. The measurement still stands, and you say in your writeup that it measures the instructions rather than the trigger.
 
 > **Checkpoint.** Quote the `description` that fired and the one that did not. Which of your two skills would you keep if you could only keep one, and what does that say about which end of a session actually loses information?
 
@@ -541,7 +543,7 @@ A: No.  Stage 1 is a tutorial and is not graded.  Stage 2 grades the two skills 
 A: No.  Report it.  A skill effect of zero is a finding.  Say whether the skill did nothing, or whether the model already followed the rules without being told, and check whether your five items can fail at all on this request.  A rubric the baseline cannot fail measures nothing.
 
 **Q: My skill never fires in opencode.**
-A: Work through the six-item troubleshooting list at the end of Part 2.  If it still does not fire, name the skill explicitly in your request and run the grid anyway.  You then report the trigger failure honestly, and say that your measurement covers the instructions rather than the trigger.
+A: Work through the eight-item troubleshooting list at the end of Part 2.  If it still does not fire, name the skill explicitly in your request and run the grid anyway.  You then report the trigger failure honestly, and say that your measurement covers the instructions rather than the trigger.
 
 **Q: My guardrail was bypassed in Pattern 4.  Should I hide that?**
 A: No; report it honestly.  A circumvention that succeeds is more interesting than one that fails, and your analysis of why it succeeded is what earns points.  Documenting a real limitation is better than pretending the guardrail is unbreakable.

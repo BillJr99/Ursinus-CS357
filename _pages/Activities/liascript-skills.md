@@ -109,7 +109,7 @@ Use `.agents/skills/`, which both opencode and pi read, so your skills are not w
 
 Three project paths exist because three tools arrived at the same idea separately.  `.claude/skills/` is Claude Code's, `.opencode/skills/` is opencode's own, and `.agents/skills/` is the vendor-neutral one, which is why this deck uses it.  A skill under a project path is available in that project alone; a skill under a global path follows you into every project.  A `SKILL.md` anywhere else is not a skill.  It is a Markdown file, and no agent will ever mention it.
 
-**What the front matter may contain.**  Five keys are recognized and no others: `name` and `description`, both required, plus the optional `license`, `compatibility`, and `metadata`, which holds a map of strings.  Anything else you write there is ignored rather than rejected, so an invented key fails silently and looks exactly like success.
+**What the front matter may contain.**  Five keys are recognized and no others: `name` and `description`, both required, plus the optional `license`, `compatibility`, and `metadata`, which holds a map of strings.  Anything else you write there is ignored rather than rejected, so an invented key fails silently and looks exactly like success.  The one that catches people is `allowed-tools`, which is a real field in Claude Code and dead text here: carry a skill over unchanged and that line sits in the file looking like a restriction while opencode never reads it.  Tool limits live in the `permission` block, not in front matter.
 
 Here is what happens when you type `Please review my latest changes.` in a session that has a `code-review` skill on disk.  The agent already knows every skill's `name` and `description` from startup.  It matches your request against those descriptions and finds `code-review`.  It reads that `SKILL.md` in full and treats the contents as guidance for this task.  It follows the instructions.  Then it drops them; they are not persistent, which is the difference between a skill and a system prompt.
 
@@ -573,7 +573,7 @@ Respond to all three levels in your notebook:
 
 ## Further Reading
 
-- OpenCode documentation. https://opencode.ai/docs/, the skills and permissions sections cover where skills are discovered and how `permission.skill` controls what loads.
+- OpenCode documentation. https://opencode.ai/docs/skills/, which covers where skills are discovered, the three values `permission.skill` takes (`allow`, `ask`, `deny`), and a short checklist to work through when a skill you wrote never appears.
 - Superpowers, a community skill bundle for agent CLIs: https://github.com/obra/superpowers.  Read a few of its `SKILL.md` files as further models of description-as-trigger.
 - Anthropic.  "Building Effective Agents." https://www.anthropic.com/research/building-effective-agents, the evaluator-optimizer pattern is today's measurement loop in general form.
 - On evaluation: this course's *Evaluating Agent Outputs*, *Benchmarking*, and *Testing Agents* activities extend today's five-item rubric into larger golden-test, benchmark, and property-based harnesses.
@@ -626,6 +626,8 @@ mkdir -p .agents/skills
 unzip -q small-model-orchestrator.skill -d .agents/skills/
 ls .agents/skills/small-model-orchestrator/SKILL.md
 ```
+
+Two habits belong with that command, because this is the moment you hand a stranger's instructions to your agent.  **Gate it.**  Once anything in a discovery path came from somewhere else, set `"skill": { "*": "ask" }` in `opencode.json` and allow your own skills by name; `ask` prompts you before a skill loads, where `allow` does not.  **And prefer the skill you wrote.**  Not out of suspicion, but because writing one costs you five minutes and no build step, while an installed one leaves you with instructions you did not write, possibly a `scripts/` directory the agent may run, and a `description` now competing with your own for every trigger.  Read published skills constantly and borrow their structure; install them when they do something you cannot write yourself, as this one does.
 
 Check that last path rather than assuming, because the directory is the installation and a wrong directory fails without an error message.  `SKILL.md` belongs exactly one folder deep, at `.agents/skills/small-model-orchestrator/SKILL.md`; if your unzip tool added an extra folder named after the archive, move the inner one up a level.  On Windows, rename the file to `.zip` first and run `Expand-Archive -Path small-model-orchestrator.zip -DestinationPath .agents/skills`.  Start opencode afterward and ask it to list the skills it can see; a skill that does not appear is in the wrong place, not broken.
 
