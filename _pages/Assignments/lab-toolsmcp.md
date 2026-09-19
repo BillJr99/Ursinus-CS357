@@ -820,6 +820,14 @@ For background, see the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_page
 
 Consume MCP instead of authoring it.  Point your agent (or a framework client) at an existing MCP server (for example a filesystem, fetch, or SQLite server) and let it discover the server's tools and call them to complete a task.  Background: the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md).
 
+**A worked example, if you want one: GitHub over its own server.**  You already have a repository, `cs357-work`, and in the *Coding Agents* session you drove GitHub from the shell with `gh`.  Point your agent at [GitHub's hosted MCP server](https://api.githubcopilot.com/mcp/) instead and you reach the same operations as named tools, which is the comparison that session set up and deferred to this one.  The opencode and Claude Code configurations are in the MCP activity, and the course ships a ready copy at [`opencode-scratchpad.json`]({{ site.baseurl }}/files/agent-templates/opencode-scratchpad.json).  Three things make this a better answer than a filesystem server if you take it:
+
+- Put the configuration in that repository's own `opencode.json`, not the one in your home directory, and say in your writeup what that decides.  A tool server attached to the global config is advertised in every project you open afterwards, and every advertised tool costs context whether or not it is used.
+- Use a fine-grained token scoped to one repository, referenced as `{env:GITHUB_SCRATCH_PAT}` or `{file:~/.secrets/github-scratch-pat}`, never pasted into the file.
+- Set `GITHUB_TOOLSETS` and `GITHUB_READ_ONLY` on the local (container) variant and report what disappeared from the tool list.  A server that never advertises a write tool is an allowlist enforced before the model gets a turn, which is a stronger claim than a system prompt asking it not to write.
+
+> **If `gh` or the server returns 401 or 403.** A 401 is about identity and `gh auth login` fixes it; a 403 is about permissions, so the token authenticates but lacks the scope, and `gh auth refresh -s <scope>` or an edited fine-grained token fixes that one. Tokens expire, so expect this at least once this semester.
+
 > **Paste into your submission.** The connection or config, a transcript showing tool discovery and at least one successful invocation, and one sentence on the trust question this raises (you are now running someone else's tool definitions).
 
 ### Option 4C: Obsidian Vault, Put Your Notes Behind MCP With a Gated Write
@@ -836,7 +844,7 @@ Expose an Obsidian vault (a folder of Markdown notes) to an agent over MCP, with
 
 Option 4A with a lock on the door.  You build the MCP server, wrap it so every request must carry a valid OAuth 2.0 access token with the right scope, drive it from an agent, and document the full data flow from agent request, through token, to tool response.  This option satisfies the MCP row on the same terms as 4A; the token gate is the extra.  Read [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth) first; it covers the flows and the token security this recipe assumes.  If MCP itself is new to you, the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/) walks through building a server and connecting clients.
 
-**You need.**  Python packages (`mcp[cli]`, `fastapi`, `uvicorn`, `python-jose[cryptography]`, `requests`) and Docker to run a local mock OAuth server (a few hundred MB).  No accounts and no API costs: the authorization server, the tokens, and the tools are all local.  Three services run at once, so plan your ports.  Budget 3-4 hours.
+**You need.**  Python packages (`mcp[cli]`, `fastapi`, `uvicorn`, `python-jose[cryptography]`, `requests`) and Docker **on your host** to run a local mock OAuth server (a few hundred MB).  Host, not the course container: that container has no Docker command in it, because it is a container rather than a machine that runs them.  No accounts and no API costs: the authorization server, the tokens, and the tools are all local.  Three services run at once, so plan your ports.  Budget 3-4 hours.
 
 > **Do this.**  Install and verify.  The last line should print a version such as `1.x.x`.  Keycloak (`docker pull quay.io/keycloak/keycloak:latest`) is an acceptable substitute for the mock server; its token endpoint and realm differ, so adapt the `curl` commands from its quickstart.
 >

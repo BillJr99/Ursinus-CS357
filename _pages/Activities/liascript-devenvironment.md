@@ -232,7 +232,15 @@ origin  https://github.com/YOURUSERNAME/cs357-work.git (fetch)
 origin  https://github.com/YOURUSERNAME/cs357-work.git (push)
 ```
 
-The clone is a git repository that already knows its GitHub remote, the versioned half of the environment.  The address is HTTPS on purpose: inside the container you will authenticate with a repository-scoped token (Step 6), and that token works over HTTPS.  The SSH key from Part 1.5 of the Overview assignment stays on your host, where it belongs.
+The clone is a git repository that already knows its GitHub remote, the versioned half of the environment.  The address is HTTPS on purpose: inside the container you will authenticate with a repository-scoped token (Step 6), and that token works over HTTPS.  The credential from Part 1.5 of the Overview assignment stays on your host, where it belongs.
+
+If you already installed and signed in to `gh` on your host, which is Part 1.5 Step 2 of the Overview assignment, both halves above collapse into one command:
+
+```bash
+gh repo create cs357-work --private --clone
+```
+
+Either route leaves you in the same place.  Do whichever you have the tools for right now; the rest of today does not care which you used.
 
 ---
 
@@ -300,7 +308,7 @@ You are the non-root user `student`, in `/workspace`, which *is* your `cs357-wor
 
 ## Step 5: Verify the Stack from Inside the Container
 
-Keep Ollama running on the host, enter the container, and run these four checks **at the container prompt**.  This transcript is what the Overview assignment asks for.
+Keep Ollama running on the host, enter the container, and run these five checks **at the container prompt**.  This transcript is what the Overview assignment asks for.
 
 **5.1: The host bridge to Ollama.**  One line of Python, straight through the container wall to the model server on your host:
 
@@ -352,7 +360,19 @@ opencode x.x.x
 
 The agent is baked into the image, so a version string here means Step 8 has nothing left to install and only needs its provider configured.
 
-If all four pass, your environment for every lab is done.
+**5.5: gh (the GitHub CLI, which Thursday's session runs its whole loop through):**
+
+```bash
+gh --version
+```
+
+```text
+gh version 2.x.x
+```
+
+Also baked in, for the same reason opencode is.  It has no credential yet, which Step 6 gives it.
+
+If all five pass, your environment for every lab is done.
 
 > **If this check fails, start here.**  The most common failure at this step is the host bridge, where the one-liner in 5.1 raises a connection error.  Check the two usual suspects before anything else.  First, is Ollama actually running on the host right now?  Second, on Linux, was the container started through the course compose file?  That file carries the `extra_hosts` mapping (`host.docker.internal:host-gateway`) that makes the hostname resolve at all.
 
@@ -386,12 +406,22 @@ Pushing needs credentials, and this is the one place in the course where your ow
 **Choice 1: HTTPS with a personal access token (PAT).  Recommended default inside the container.**
 
 1.  GitHub -> **Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens -> Generate new token**.
-2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.
+2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.  Add **Issues: Read and write** and **Pull requests: Read and write** if you already know you will let an agent open them for you, which is Thursday's session.  Granting them later means `gh auth refresh -s <scope>` or a fresh token, and the symptom that sends you looking is a bare 403 from a command that worked yesterday.
 3.  Copy the token (shown once).  When `git push` prompts for a password, paste the token.  Cache it for a work session so you are not retyping:
 
 ```bash
 git config credential.helper 'cache --timeout=7200'
 ```
+
+**And the same token, for `gh`.**  The image carries `gh` as well, and it authenticates from an environment variable rather than from a sign-in.  Export it on your **host**, in the shell you start the container from:
+
+```bash
+export GH_TOKEN=github_pat_yourtokenhere
+```
+
+The `environment:` block in `docker-compose.yml` passes `GH_TOKEN` through by name, so the value lives in your shell and never in a file.  Check it inside with `gh auth status`.
+
+Two things not to do here, and the reason is the same one this whole step is about.  Do not run `gh auth login` at the container prompt: it works, and it writes a credential carrying whatever reach your whole account has into a filesystem that is about to run agent code.  Do not mount `~/.config/gh` in either: that hands the same code a token that can push to every repository you own.  One scoped token, passed in by name, disappearing with the container, is the shape that matches the blast radius you actually want.
 
 **Choice 2: SSH keys, mounted read-only.**  If you already use SSH with GitHub, add one line to the `volumes:` list in `docker-compose.yml`:
 
@@ -527,7 +557,7 @@ Use the container route for this course, because every lab assumes it and a clas
 
 ### 8.2: Point it at your own model
 
-opencode reads a single global config file, and the name matters: it is `opencode.json`, not `config.json`.  If opencode later reports no provider or no models, this file name is the first thing to check.
+opencode reads a file called `opencode.json`, and the name matters: it is not `config.json`.  If opencode later reports no provider or no models, this file name is the first thing to check.  It reads that file from two places, a project directory and your home directory, and choosing between them is a decision about scope rather than about convenience.
 
 | Where you are | The file to create |
 |---|---|
@@ -535,7 +565,9 @@ opencode reads a single global config file, and the name matters: it is `opencod
 | macOS, Linux, or WSL, natively | `~/.config/opencode/opencode.json` |
 | Windows, native shell | `%USERPROFILE%\.config\opencode\opencode.json` (paste `%USERPROFILE%\.config\opencode` into the Run box with Win+R to open the folder) |
 
-Read that first row carefully, because it is the one that saves you an hour.  opencode reads a **project-level** `opencode.json` from the repository root as well as the global one in your home directory.  Inside the container, your home directory is deleted when the container exits and `/workspace` is not, so put the file in the repository.  It then survives, it is versioned along with everything else, and a classmate who clones your repository gets your provider setup for free.  (Do not commit a real API key this way.  The Ollama block below has none, which is one more reason to prefer it.)
+Read that first row carefully, because it is the one that saves you an hour.  A **project-level** `opencode.json` at a repository root configures that repository; the copy in your home directory configures everything you open.  Inside the container there is a second reason to prefer the project copy: your home directory is deleted when the container exits and `/workspace` is not.  The file then survives, it is versioned along with everything else, and a classmate who clones your repository gets your provider setup for free.  (Do not commit a real API key this way.  The Ollama block below has none, which is one more reason to prefer it.)
+
+Hold on to the scope half of that, because it comes back.  In the *MCP* session you will attach a whole tool server to a configuration, and a server that belongs to one repository will sit in every other project you open, spending context it has no business spending, if you put it in the home-directory copy.
 
 Before you write it, settle the address, because getting this wrong produces a connection error that looks like a broken install.  **`localhost` means "the machine this process is running on."**  Run opencode natively and that is your laptop; run it in the container and that is the container, where nothing is listening.
 
@@ -650,9 +682,24 @@ My CS357 lab workspace.
 - Python 3, standard library plus `requests`. Ask before adding a dependency.
 - Every script must handle network errors and print a located message, e.g. [lab1:chat].
 - Small, readable functions with docstrings. No cleverness I would not want to grade.
+
+## GitHub: try gh, fall back to git, then ask
+
+1. Reach for `gh` first for anything GitHub-side: creating and cloning
+   repositories, issues, pull requests, reviews. Confirm once per session
+   with `gh auth status`.
+2. Fall back to `git` for what it does on its own: pull, add, commit, push,
+   log, diff. Say in your next message that you fell back, and why.
+3. If both fail, stop and ask me. A push that prompts for a password, or a
+   401 or 403 from either tool, means there is no working credential here.
+   Tell me which command failed and what it said. Do not switch the remote
+   between HTTPS and SSH, do not ask me to paste a token into a file, and
+   do not retry in a loop.
 MD
 git add AGENTS.md hello_agent.py && git commit -m "First coding-agent session"
 ```
+
+Rule 3 is the one doing real work, and it is worth saying why it has to be written down.  An agent that hits an authentication failure will try to fix it, because fixing things is what you asked it to do, and every repair available to it is worse than stopping: rewriting your remote, asking you to paste a token into a file it can read, or retrying until something times out.  "Stop and tell me" is not the agent's instinct.  It is a rule you give it.
 
 That file is a **system prompt you keep in version control**.  The connection is exact: the `SYSTEM` string in the *Agent Loop* activity told a calculator agent what its job was and how to format its answers; `AGENTS.md` tells a coding agent what your project is and what "good work" means in it.  You will refine it all semester.
 
@@ -792,6 +839,10 @@ The entries are in step order.  Find the step you are on, and work down its entr
 **Step 5: model responses are slow inside the container.**  They should be exactly as fast as from the host; inference runs *on the host*; the container only sends HTTP requests.  If host-side `ollama run llama3.2 "hi"` is also slow, that is your hardware and a small model like `llama3.2` is the right call; if only the containerized call is slow, something is off in your networking; ask in the course channel with your Step 5.1 transcript.
 
 **Step 7: `git push` rejected: `Authentication failed` / `Support for password authentication was removed`.**  GitHub does not accept account passwords over HTTPS; paste a **personal access token** at the password prompt.  If a token is rejected, check its scope: it must list `cs357-work` under *Only select repositories* with **Contents: Read and write**, and it must not be expired.
+
+**Step 7: `gh` fails with 401, or says you are not logged in.**  The token expired or was never passed in.  `gh auth status` says which.  On your host, `gh auth login`; inside the container, export `GH_TOKEN` on the host before `docker compose run`, because the container has no browser to sign in with.
+
+**Step 7: `gh issue create` or `gh pr create` returns 403, but `gh auth status` looks healthy.**  This is a permissions answer rather than a sign-in problem, which is why the status looks fine.  A token scoped to **Contents** alone cannot touch issues or pull requests; add **Issues** and **Pull requests**, read and write, to the fine-grained token, or run `gh auth refresh -s <scope>`.
 
 **Step 7: line endings: every file shows modified, or scripts fail with `\r: command not found`.**  Windows CRLF vs. container LF. Add a `.gitattributes` containing `* text=auto eol=lf`, run `git add --renormalize .`, commit; set VS Code's status-bar line ending to `LF` for new files.
 

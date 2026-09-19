@@ -532,11 +532,19 @@ Most of the MCP servers your agent will use were written by someone else, and th
 
 ```json
 // opencode.json (opencode): same server, same variable, opencode's substitution syntax
-{ "mcp": { "github": {
-    "type": "remote",
-    "url": "https://api.githubcopilot.com/mcp/",
-    "enabled": true,
-    "headers": { "Authorization": "Bearer {env:GITHUB_PAT}" } } } }
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_SCRATCH_PAT}"
+      }
+    }
+  }
+}
 ```
 
 **GitHub, local, read-only.**  The same server runs in a container on your machine.  Two flags make it a smaller target: `GITHUB_TOOLSETS` limits which groups of tools it advertises, so the model is never offered a write it should not have, and `GITHUB_READ_ONLY` removes every mutating tool.  The token reaches the container as an environment variable and no further.
@@ -566,6 +574,12 @@ Most of the MCP servers your agent will use were written by someone else, and th
                      "GITHUB_READ_ONLY": "1" } } } }
 ```
 
+Two practical notes before you copy either one.
+
+**Which of those two you can run depends on where your agent is.**  The hosted server is an HTTPS endpoint, so it works from anywhere the network does, including the course container.  The local one is a `docker run`, so it needs a Docker command, and the course container does not have one: it is a container, not a machine that runs containers.  Configure the local server on your **host**, and use the hosted server from inside the container.  This is the same shape as the address rule from the Overview assignment, where `localhost` inside a container means the container; the question to ask before pasting any configuration is which side of the container wall the command in it has to run on.
+
+**Where the file goes decides which projects the server loads in.**  opencode reads `opencode.json` from a project directory as well as from `~/.config/opencode/`, and a tool server attached to the home-directory copy is advertised in every project you open afterwards.  Look back at the cost row in the *Coding Agents* comparison, the one about every advertised tool occupying context whether or not it is used: that row is the argument for putting a server that serves one repository in that repository's own `opencode.json`.  A GitHub server scoped to your scratchpad has no business spending context while you are working on a lab.  The course ships a ready copy of the block above at `files/agent-templates/opencode-scratchpad.json`, so nobody has to retype it.
+
 **Filesystem.**  The reference filesystem server takes the directories it may touch as command-line arguments and refuses everything else, which is the `read_note` path check as a whole server.  List the narrowest directories that will do; a vault folder, not your home directory.
 
 ```json
@@ -592,7 +606,9 @@ Most of the MCP servers your agent will use were written by someone else, and th
 { "mcpServers": { "notion": { "type": "http", "url": "https://mcp.notion.com/mcp" } } }
 ```
 
-Two habits carry across all four.  A configuration file names a variable and never contains a value, so `git diff` can never leak a token.  And a server you did not write still exposes only what you allow it to: toolsets, read-only flags, and directory arguments are the allowlists of Safeguard 2, set in the configuration instead of in code.
+Two habits carry across all four.  A configuration file holds a reference and never a value, so `git diff` cannot leak a token.  The reference can be a variable, `{env:GITHUB_SCRATCH_PAT}`, or a file, `{file:~/.secrets/github-scratch-pat}` with `chmod 600` on it, and the second is the friendlier one if editing a shell profile is a chore: either satisfies the rule, because neither puts the secret in the file you commit.  Making the token and setting the variable, on each operating system, is the *Making a token, and putting it in your environment* section of the [Overview assignment](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/Overview).  Name the variable after what the token can reach, so a scratchpad token is `GITHUB_SCRATCH_PAT` and not a second use of the one that reaches your coursework: share one name between two tokens and the wider one quietly satisfies the narrower use, which is the least-privilege argument arriving as a naming convention.
+
+And a server you did not write still exposes only what you allow it to: toolsets, read-only flags, and directory arguments are the allowlists of Safeguard 2, set in the configuration instead of in code.
 
 ---
 

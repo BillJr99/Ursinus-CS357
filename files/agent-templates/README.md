@@ -33,6 +33,22 @@ Every file here exists so that an agent can be reset, swapped for a different ag
 | `LLMMEMORIES.md` | `/LLMMEMORIES.md` | Self-updating durable memory about you and how to work with you |
 | `RUNBOOK.md` | `/wiki/Technical/agent-setup.md` | Living runbook: the agent's memory of its own infrastructure |
 
+**Layer 3: A shared scratchpad** (for two or more agents handing work to each other through one disposable repository, the pattern the *How I AI* and *Agents That Talk* sessions build):
+
+| Template | Deploy as | Role |
+|---|---|---|
+| `AGENTS-scratchpad.md` | `/AGENTS.md` (scratchpad root) | One writer per directory, new files rather than edited ones, and the credential rule |
+| `opencode-scratchpad.json` | `/opencode.json` (scratchpad root) | Attaches the hosted GitHub tool server to that repository and no other |
+
+Put `opencode-scratchpad.json` in the scratchpad repository rather than in
+`~/.config/opencode/opencode.json`, so the GitHub server's tools load when you are
+working there and cost you nothing in every other project.  It reads its token from
+`GITHUB_SCRATCH_PAT`, deliberately a different name from the token that reaches your
+coursework: give a token the name of what it can reach, and a wide token cannot
+quietly stand in for a narrow one.  Swap `{env:GITHUB_SCRATCH_PAT}` for
+`{file:~/.secrets/github-scratch-pat}` if you would rather keep the value in a file
+than in your shell profile.
+
 The `ai/` folder here is deployed as `.ai/` in your repository (it is unhidden in this template set only so the files are easy to browse and download).
 
 ## How to adopt

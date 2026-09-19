@@ -304,7 +304,7 @@ Three media do the job.  Which one you pick matters less than whether your proto
 
 | Medium | The channel is | Best if |
 |---|---|---|
-| **GitHub** | Issues, pull requests, and review comments in a repo both agents can reach | You want the pattern from the *Coding Agents* session, and you already have `gh` working |
+| **GitHub** | Issues, pull requests, and review comments in a repo both agents can reach | You want the pattern from the *Coding Agents* session.  You do have `gh`: the Overview assignment installs it and the course image carries it.  If it refuses, `gh auth status` says whether that is identity (401, so `gh auth login`) or scope (403, so `gh auth refresh -s <scope>`) |
 | **Obsidian vault** | `vault/handoff/inbox/` and `vault/handoff/done/`, under the same zone rules as a vault memory skill | You want to extend a vault skill you already built, and your sync is already working |
 | **A plain shared folder** | Two directories on disk. No Git, no accounts, no network | You want the no-code version, or you do not have a second agent runtime handy |
 {: .tb-full}

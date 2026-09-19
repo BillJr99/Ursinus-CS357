@@ -20,7 +20,7 @@
 FROM python:3.11-slim
 
 LABEL org.opencontainers.image.title="CS357 course development environment" \
-      org.opencontainers.image.description="Python 3.11 with the CS357 lab libraries (requests, chromadb, sentence-transformers, scikit-learn, spacy, shap, lime, flask, ...) plus Node.js 24 LTS, promptfoo, the opencode coding agent, and the herdr agent multiplexer; talks to host Ollama via host.docker.internal" \
+      org.opencontainers.image.description="Python 3.11 with the CS357 lab libraries (requests, chromadb, sentence-transformers, scikit-learn, spacy, shap, lime, flask, ...) plus Node.js 24 LTS, promptfoo, the opencode coding agent, the herdr agent multiplexer, and the gh GitHub CLI; talks to host Ollama via host.docker.internal" \
       org.opencontainers.image.authors="CS357 course staff" \
       org.opencontainers.image.url="https://www.billmongan.com/Ursinus-CS357/"
 
@@ -123,6 +123,44 @@ RUN npm install -g opencode-ai
 # its SHA-256; HERDR_INSTALL_DIR puts it on the PATH for every user in the
 # image rather than in root's ~/.local/bin, which `student` could not reach.
 RUN curl -fsSL https://herdr.dev/install.sh | HERDR_INSTALL_DIR=/usr/local/bin sh
+
+# gh -- the GitHub CLI. The Coding Agents session drives its whole loop through
+# it (an issue becomes the task, a pull request becomes the attempt, a review
+# comment becomes the next agent's instruction), Agents That Talk reuses those
+# same commands as a message bus between two agents that never share a context
+# window, and the Agent Skills tutorial assumes it is already on the PATH. It is
+# baked in for the same reason opencode is: `docker compose run --rm` deletes the
+# container on exit, so anything installed by hand is installed again tomorrow.
+#
+# As with Node above and herdr below, the release tarball is checked against the
+# checksums GitHub publishes beside it before it is unpacked, so a corrupted or
+# substituted download fails this build rather than failing in class.
+#
+# Two details worth knowing before you bump the version. gh names its builds
+# linux_amd64 and linux_arm64, which are dpkg's own names, where Node called the
+# same machine x64; copying the Node case statement verbatim gets you a 404. And
+# this block sits near the end of the file deliberately: a change to the pip
+# layers above invalidates everything beneath it, but a change to GH_VERSION here
+# re-runs only these lines, so a rebuild for a newer gh takes seconds instead of
+# downloading the ML libraries again.
+ARG GH_VERSION=2.101.0
+RUN set -eux; \
+        arch="$(dpkg --print-architecture)"; \
+        case "$arch" in \
+            amd64|arm64) garch="$arch" ;; \
+            *) echo "unsupported architecture: $arch" >&2; exit 1 ;; \
+        esac; \
+        dir="gh_${GH_VERSION}_linux_${garch}"; \
+        tarball="${dir}.tar.gz"; \
+        sums="gh_${GH_VERSION}_checksums.txt"; \
+        base="https://github.com/cli/cli/releases/download/v${GH_VERSION}"; \
+        curl -fsSLO "${base}/${tarball}"; \
+        curl -fsSLO "${base}/${sums}"; \
+        grep " ${tarball}\$" "${sums}" | sha256sum -c -; \
+        tar -xzf "${tarball}" -C /usr/local --strip-components=1 --no-same-owner \
+            "${dir}/bin/gh" "${dir}/share"; \
+        rm -f "${tarball}" "${sums}"; \
+        gh --version
 
 # Code inside the container reaches the HOST's Ollama server here. This is
 # the special DNS name Docker provides for "my host machine"; on Linux the
