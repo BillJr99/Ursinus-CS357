@@ -189,10 +189,10 @@ def main():
               "allocation; lower PI_FALLBACK_CONTEXT if your server allocates less.", flush=True)
     output, reserve, recent = token_budgets(context, config)
     skill = next((root / path for path in (
-        ".skills/small-model-orchestrator", ".pi/skills/small-model-orchestrator",
-        ".agents/skills/small-model-orchestrator") if (root / path / "SKILL.md").is_file()), None)
+        ".agents/skills/small-model-orchestrator",
+        ".pi/skills/small-model-orchestrator") if (root / path / "SKILL.md").is_file()), None)
     if skill is None:
-        raise ValueError("small-model-orchestrator/SKILL.md was not found under .skills, .pi/skills, or .agents/skills")
+        raise ValueError("small-model-orchestrator/SKILL.md was not found under .agents/skills or .pi/skills")
     home = Path(os.environ["HOME"]) / ".pi/agent"
     home.mkdir(parents=True, exist_ok=True)
     sessions = root / ".pi/sessions"

@@ -59,22 +59,20 @@ too small to hold the task is a correctness problem rather than a speed problem.
 
 ## Step 1: Put the skill in your project
 
-The launcher will not start without it. It looks in three places, in order, and
+The launcher will not start without it. It looks in two places, in order, and
 stops at the first `SKILL.md` it finds:
 
 ```
-.skills/small-model-orchestrator/SKILL.md
-.pi/skills/small-model-orchestrator/SKILL.md
 .agents/skills/small-model-orchestrator/SKILL.md   <-- use this one
+.pi/skills/small-model-orchestrator/SKILL.md
 ```
 
 **Extract the `.skill` file into `.agents/skills/`.**  A `.skill` file is a zip
 archive with the skill directory at its top level, so unzipping it into
 `.agents/skills/` produces `.agents/skills/small-model-orchestrator/SKILL.md`,
-which is the third path the launcher looks for.  Use that one because it is also
-one of the directories opencode reads, so a single skills directory serves both
-tools and you never have to remember which project uses which convention.  The
-other two paths still work if you set one of them up earlier.
+which is the first path the launcher looks for.  It is also one of the
+directories opencode reads, so a single skills directory serves both tools and
+you never have to remember which project uses which convention.
 From the root of the project you want the agent to work on:
 
 ```bash
@@ -100,8 +98,12 @@ version downloads it under that name.  The contents are identical.
 > `.agents/skills/small-model-orchestrator/small-model-orchestrator/SKILL.md`, move the
 > inner directory up one level or the launcher will not find it.
 
+> **If you set this up before and used a folder named `.skills`,** move it:
+> `mv .skills/small-model-orchestrator .agents/skills/`.  The launcher no longer
+> looks there, so it will stop with the error below until you do.
+
 > If you skip this step the launcher stops with
-> `small-model-orchestrator/SKILL.md was not found under .skills, .pi/skills, or .agents/skills`.
+> `small-model-orchestrator/SKILL.md was not found under .agents/skills or .pi/skills`.
 > That is the error telling you it did exactly what it promised, not a broken install.
 
 ## Step 2a: The Dockerfile route (recommended)
