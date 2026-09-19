@@ -507,27 +507,27 @@ The second setting is the familiar one from Section 3a.  The first is new, and i
 
 ## The other thing it insists on
 
-The setup also will not start without an instruction file called a *skill* sitting in your project, which the next class session is about.  Download it and unzip it into a folder named `.skills` at the top of whatever project you point the agent at:
+The setup also will not start without an instruction file called a *skill* sitting in your project, which the next class session is about.  Download it and unzip it into `.agents/skills/` at the top of whatever project you point the agent at.  That is the same directory next session uses for the skills you write yourself, and both tools read it, so you only ever learn one path:
 
 ```bash
-mkdir -p .skills
+mkdir -p .agents/skills
 curl -fsSL -o smo.skill https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill
-unzip -q smo.skill -d .skills/ && rm smo.skill
-ls .skills/small-model-orchestrator/SKILL.md
+unzip -q smo.skill -d .agents/skills/ && rm smo.skill
+ls .agents/skills/small-model-orchestrator/SKILL.md
 ```
 
 Or ask opencode to do it:
 
 ```text
-Create a .skills folder here, download
+Create a .agents/skills folder here, download
 https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill,
-unzip it into .skills, delete the archive, and then confirm that
-.skills/small-model-orchestrator/SKILL.md exists.  Tell me the exact path you find.
+unzip it into .agents/skills, delete the archive, and then confirm that
+.agents/skills/small-model-orchestrator/SKILL.md exists.  Tell me the exact path you find.
 ```
 
 Make it report the path rather than say it succeeded, for the reason the next paragraph gives.
 
-That last line is the check that matters.  You are looking for `SKILL.md` exactly one folder deep, at `.skills/small-model-orchestrator/SKILL.md`.  Some unzip tools add an extra folder named after the archive, and if yours did, move the inner folder up one level.  On Windows, download it as `smo.zip` and use `Expand-Archive -Path smo.zip -DestinationPath .skills`, because `Expand-Archive` refuses any other extension.
+That last line is the check that matters.  You are looking for `SKILL.md` exactly one folder deep, at `.agents/skills/small-model-orchestrator/SKILL.md`.  Some unzip tools add an extra folder named after the archive, and if yours did, move the inner folder up one level.  On Windows, download it as `smo.zip` and use `Expand-Archive -Path smo.zip -DestinationPath .agents\skills`, because `Expand-Archive` refuses any other extension.
 
 ## Where to go next
 
