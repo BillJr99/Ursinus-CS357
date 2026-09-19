@@ -266,6 +266,8 @@ Both opencode and pi walk up from your working directory to the repository root,
 | **opencode** | `.opencode/skills/`, `.claude/skills/`, `.agents/skills/` | `~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/` |
 | **pi** | `.pi/skills/`, `.agents/skills/` | `~/.pi/agent/skills/`, `~/.agents/skills/` |
 
+**On Windows.**  The same paths, with backslashes and `%USERPROFILE%` in place of `~`: `.opencode\skills\`, `.claude\skills\`, and `.agents\skills\` inside a project, and `%USERPROFILE%\.config\opencode\skills\`, `%USERPROFILE%\.claude\skills\`, and `%USERPROFILE%\.agents\skills\` globally.  Win+R and pasting a folder path opens any of them.  Because a skill is a directory rather than a registry entry, copying the folder there in File Explorer is a complete installation.
+
 Use `.agents/skills/`, which both read, so your skills are not welded to one tool.
 
 Two rules about the front matter account for almost every failure you are likely to hit.

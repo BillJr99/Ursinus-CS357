@@ -171,7 +171,7 @@ Two things to be clear about, because "API key" usually means "bill":
 
 You will need this key in the *Local Agent* lab and in the OpenWebUI agent tutorials.  Having it now costs a minute; not having it costs the first fifteen minutes of a lab.
 
-> **You've succeeded when** `curl http://localhost:11434/api/tags` returns JSON, and, if you set up OpenWebUI, `echo $OPENWEBUI_API_KEY` prints a key that starts with `sk-`.
+> **You've succeeded when** `curl http://localhost:11434/api/tags` returns JSON, and, if you set up OpenWebUI, `[ -n "$OPENWEBUI_API_KEY" ] && echo set` prints `set`.  Check a key that way rather than echoing it: a key you print is a key in your scrollback, your shell history, and any screenshot you paste into the course channel.
 
 ---
 
@@ -279,6 +279,46 @@ That last row is the point worth pausing on: the `temperature=0.7` your Python h
 4.  Suppose you are building the campus advising assistant your team keeps sketching.  Would you ship it at 0, at 1, or somewhere between?  Name the failure you are trading away, and the one you are accepting.
 
 > **Common Misconception:** Temperature is not a "creativity" slider, and it is certainly not an "accuracy" slider.  A model at temperature 0 will state a wrong fact just as confidently as one at temperature 1; it will simply state the *same* wrong fact every time.  Turning temperature down makes a system **repeatable**, which makes it testable.  It does not make it right.
+
+---
+
+## 3d.  Point opencode at Your Local Model
+
+You installed opencode in *Your AI Workbench* and pointed it at a model there.  Now that you have built the server yourself, it is worth seeing the wiring from this side, because the same three lines are how you will add every other model you pull.
+
+opencode reads one file, `opencode.json`, from either of two places.  A copy at a repository root configures that project; a copy in your home directory configures every project you open.  The two are merged rather than one replacing the other, so you can add a provider in one place without restating anything in the other.
+
+| System | Project | Global |
+|---|---|---|
+| macOS, Linux, WSL2 Ubuntu | `opencode.json` at the repository root | `~/.config/opencode/opencode.json` |
+| Windows | `opencode.json` at the repository root | `%USERPROFILE%\.config\opencode\opencode.json` |
+
+The block that registers the server you just started:
+
+```json
+{
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "llama3.2": { "name": "llama3.2 (local)" }
+      }
+    }
+  }
+}
+```
+
+Three things to notice, because they answer the three questions this block always raises.  `npm` names the adapter that speaks the endpoint's dialect, and Ollama serves an OpenAI-compatible API, which is why the generic adapter works.  `baseURL` is `localhost` when opencode runs on this machine and `http://host.docker.internal:11434/v1` when it runs inside the course container, for the reason you met in the Docker session.  And there is **no API key**, because Ollama takes none; this is the same point section 3b makes from the other direction.
+
+A provider key and a model key join with a slash, so the block above defines `ollama/llama3.2`, which is the identifier `/model` lists and `--model` accepts.
+
+Adding a provider is a file edit in every case.  The desktop application and the TUI both read this file, and neither offers a form for adding one: the TUI's `/model` selects among providers already defined, and `/connect` stores a credential for a service that needs one, which Ollama does not.  Restart opencode after editing, then type `/model` and look for your provider.
+
+The full walkthrough, with every platform and the rest of the file, is End-to-End OpenCode Setup at https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup, which is today's reading for the lab being handed out.
 
 ---
 

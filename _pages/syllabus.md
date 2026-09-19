@@ -365,6 +365,8 @@ schedule:
     rlink: "Tutorials/LocalModels"
   - rtitle: "The Hardware Behind AI: GPUs, quantization, and running models at the edge.  Read this if today's speeds surprised you"
     rlink: "Tutorials/Hardware"
+  - rtitle: "End-to-End OpenCode Setup: install, opencode.json at both scopes, providers and authentication, AGENTS.md, permissions, a skill, a plugin, and GitHub by CLI and MCP, on every platform.  The reference for today's lab handout"
+    rlink: "Tutorials/OpenCodeSetup"
 - week: "2"
   date: "1"
   title: "Skills: Design One, Then Measure It"

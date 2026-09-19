@@ -921,7 +921,7 @@ The agent is **opencode**, and every install route lives at [opencode.ai](https:
 |---|---|---|
 | **Install** | Nothing.  opencode is already in the course image, and A5 printed its version.  Skip to 5b | One of the three commands in the rows below, for your system |
 | **macOS, Linux, or WSL** | | `curl -fsSL https://opencode.ai/install \| bash` |
-| **Already have Node.js** (22.22 or newer; check with `node --version`) | | `npm i -g opencode-ai` |
+| **Already have Node.js** (20 or newer; check with `node --version`) | | `npm i -g opencode-ai` |
 | **Native Windows, in PowerShell** | | `choco install opencode` or `scoop install opencode` |
 
 > **Note.**  That page also offers a **desktop app**, in beta for macOS, Windows, and Linux, if you would rather work in a window than a terminal.  It drives the same agent, but install the command-line version even if you try the desktop one, because this assignment and every lab ask for terminal output.

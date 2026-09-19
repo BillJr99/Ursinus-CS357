@@ -901,25 +901,36 @@ Restore the build directory from the last commit, discarding any changes to it.
 
 **Step 4: Build the real gate for the tool you drive.**  Install exactly one of the following, and leave the `AGENTS.md` line in place so the two runs differ in the gate alone.
 
-Add a `permission` block to the `opencode.json` you wrote in Part 0.  Values are `allow`, `ask`, or `deny`; keys are tool names such as `bash`, `edit`, `read`, `webfetch`, and `external_directory`; a tool's value may be a map of patterns using `*` and `?`; the last matching rule wins.  Read the block from the top: ask about everything, allow any `git` command, deny any `rm`.
+**Edit** the `permission` block you already wrote in Part 0 Step 3; do not replace the file.  Values are `allow`, `ask`, or `deny`; keys are tool names such as `bash`, `edit`, `read`, `webfetch`, `external_directory`, and `skill`; a tool's value may be a map of patterns using `*` and `?`; the last matching rule wins.  You are adding two lines to what is already there: a `deny` for `rm`, and a tool-wide rule on `edit`.
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": ["CHARTER.md", ".ai/MEMORY.md"],
   "permission": {
     "*": "ask",
     "bash": {
+      "*": "ask",
       "git *": "allow",
       "rm *": "deny"
     },
     "edit": "deny"
+  },
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "llama3.2": { "name": "llama3.2 (local)" } }
+    }
   }
 }
 ```
 
-The last line, `"edit": "deny"`, shows the shape of a tool-wide rule.  Do not leave it in your project, or Part 4 cannot edit anything: set `edit` to `ask` or remove that line once you have seen it work.
+The whole file is shown on purpose.  Your `instructions` and `provider` blocks from Step 3 are still there, and pasting a file that contains only `$schema` and `permission` over the top of them is how students lose their model halfway through this lab and conclude that Part 3 broke opencode.
 
-*If you chose the write outside allowed files:* a `permission` block can deny the `edit` tool as a whole, which is stricter than you want. For a path-level check, write an opencode plugin: a JavaScript file in `.opencode/plugins/`. A plugin exports an async function returning an object of hooks, and throwing inside `tool.execute.before` blocks the call, with the error message becoming the reason the model sees. Change the tool name and the test below to match your own allowed files.
+Two lines deserve a second look.  The inner `"*": "ask"` is the one Step 3 argued for, and it has to stay above the `git` rule: with the last matching rule winning, moving it below turns every `git status` back into a prompt.  And `"edit": "deny"` shows the shape of a tool-wide rule but must not survive this part, or Part 4 cannot edit anything: set it to `ask` or delete the line once you have seen it refuse.
+
+*If you chose the write outside allowed files:* a `permission` block can deny the `edit` tool as a whole, which is stricter than you want. For a path-level check, write an opencode plugin: a JavaScript file in `.opencode/plugins/` (on Windows, `.opencode\plugins\`). A plugin exports an async function returning an object of hooks, and throwing inside `tool.execute.before` blocks the call, with the error message becoming the reason the model sees. Change the tool name and the test below to match your own allowed files.
 
 ```javascript
 // .opencode/plugins/guard.js

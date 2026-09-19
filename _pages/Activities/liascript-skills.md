@@ -104,6 +104,8 @@ Use `.agents/skills/`, which both opencode and pi read, so your skills are not w
 |---|---|
 | Project, walking up to the worktree root | `.opencode/skills/`, `.claude/skills/`, `.agents/skills/` |
 | Global, for every project | `~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/` |
+| Project, on Windows | `.opencode\skills\`, `.claude\skills\`, `.agents\skills\` |
+| Global, on Windows | `%USERPROFILE%\.config\opencode\skills\`, `%USERPROFILE%\.claude\skills\`, `%USERPROFILE%\.agents\skills\` |
 
 Three project paths exist because three tools arrived at the same idea separately.  `.claude/skills/` is Claude Code's, `.opencode/skills/` is opencode's own, and `.agents/skills/` is the vendor-neutral one, which is why this deck uses it.  A skill under a project path is available in that project alone; a skill under a global path follows you into every project.  A `SKILL.md` anywhere else is not a skill.  It is a Markdown file, and no agent will ever mention it.
 
