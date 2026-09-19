@@ -426,15 +426,17 @@ reasoning if it is not obvious.  Do not describe the diff line by line.
 Two rules cause almost every failure.  **The directory name must match the `name:` field**, or the skill silently never loads.  And **the `description` is the trigger**: the model reads it to decide whether this situation is that situation, so a description naming the occasion works and one naming the topic does not.
 {: .tb-warning data-title="Watch out"}
 
-Skills are read at startup, so restart opencode and ask it to list the skills it can see.  Which skills an agent may load is itself a gate, through the `skill` key in the permission block:
+Skills are read at startup, so restart opencode and ask it to list the skills it can see.  Which skills an agent may load is itself a gate, through the `skill` key in the permission block, which takes the same three values and the same last-matching-rule-wins ordering as the `bash` map in §5:
 
 ```json
 {
   "permission": {
-    "skill": { "*": "allow", "experimental-*": "deny" }
+    "skill": { "*": "ask", "commit-message": "allow", "experimental-*": "deny" }
   }
 }
 ```
+
+`ask` prompts you before the skill loads.  While every skill on disk is one you wrote, `"*": "allow"` is reasonable and saves you a keystroke.  The moment you install one from someone else, switch the wildcard to `"ask"` and allow your own by name, as above: a skill is instructions the model will follow, and a `deny` you forgot to write is not a gate.  [Agent Skills and Plugins]({{ site.baseurl }}/Tutorials/AgentSkills) covers what to read before installing someone else's.
 
 ---
 

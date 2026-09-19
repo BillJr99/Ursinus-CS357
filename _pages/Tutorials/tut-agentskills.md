@@ -110,8 +110,10 @@ description: Pause and require explicit confirmation before any destructive file
 ```
 
 - `name` is required.  It must be 1 to 64 characters of lowercase alphanumerics with single hyphens, and it must match the directory name.  A mismatch is the most common reason a skill silently does not load.
-- `description` is required, and it does more work than it looks like (see below).
+- `description` is required, and it may run to 1024 characters.  It does more work than it looks like (see below), so use the room.
 - `license`, `compatibility`, and `metadata` are optional.
+
+Those five keys are the whole list, and opencode ignores anything else rather than complaining about it.  That matters most when you bring a skill over from Claude Code, where `allowed-tools` is a real field: opencode does not recognize it, so the line sits in the file looking like a restriction while the agent reaches for whatever tool it likes.  A skill that was gated somewhere else is not gated here.  If a skill must not touch something, say so with a `permission` rule, which the next section covers, and not with front matter opencode never reads.
 
 > The description is the trigger.  There is no `when` field, and this trips people up.  The agent decides whether to pull in a skill by reading its `description` against what you are currently doing.  The description is not documentation; it is the matching surface.  "Safety utilities" will not fire.  "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" will.  Write the description as *when to use this*, in the words a user would type, and your skills will fire when you expect them to.
 {: .tb-warning data-title="Watch out"}
@@ -124,12 +126,15 @@ Permissions live in `opencode.json`, and skills no longer do.  The config file s
 {
   "permission": {
     "skill": {
-      "*": "allow",
+      "*": "ask",
+      "pr-review": "allow",
       "experimental-*": "deny"
     }
   }
 }
 ```
+
+Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also the fourth thing to check when a skill you installed never appears.  `ask` prompts you before the skill loads, and it is the one that earns its keep here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
 
 ### Installing Someone Else's Skills
 
@@ -142,6 +147,24 @@ pi install git:github.com/someone/their-skills -l   # project-local
 ```
 
 For opencode, a skill directory is installed by being in one of the discovery paths.  Cloning a repository of skills into `.agents/skills/` (or symlinking it there) is the whole installation.  That is simpler than a package manager, and it means you can read exactly what you installed before you run it.  Do read it.  A skill is instructions your agent will follow, and installing one you have not read is the same category of decision as running a script you have not read.
+
+Cloning the whole repository is right when you want the whole bundle and have read it.  Most published repositories carry dozens of skills, and you usually want one, so clone shallow into a scratch directory and copy out the single directory you came for:
+
+```bash
+git clone --depth 1 https://github.com/someone/their-skills /tmp/their-skills
+less /tmp/their-skills/skills/commit-tidy/SKILL.md     # read it BEFORE it is installed
+ls /tmp/their-skills/skills/commit-tidy/scripts        # and read anything executable
+mkdir -p .agents/skills
+cp -r /tmp/their-skills/skills/commit-tidy .agents/skills/
+```
+
+The middle two lines are the point of the detour.  A skill may ship a `scripts/` directory, and its instructions can tell the agent to run what is in there, so "read the skill" means the whole directory and not just the `SKILL.md`.
+
+### Prefer the Skill You Wrote
+
+Installing skills from the internet is the exception in this course, not the default, and the reason is not generic caution about strangers.  It is that the cost of writing your own is unusually low here.  There is no build step, no registry, and no publishing process; a skill is a directory and a Markdown file, and you can have a working one in about five minutes.  Weigh that against what a downloaded skill costs you.  You inherit instructions you did not write and will not remember in a month, along with whatever is in its `scripts/` directory.  Its `description` also competes with your own skills' descriptions for every trigger, so a vague one from someone else's repository can fire in the middle of work it has nothing to do with, which is a failure that looks like the model behaving strangely rather than like a skill you installed.
+
+Read published skills constantly, and borrow their structure freely; that is what the Further Reading links are for.  Install them when they do something you cannot write yourself, and when you do, read the directory first and gate it with `"*": "ask"`.
 
 ---
 
@@ -271,6 +294,20 @@ Two details decide whether this works for someone else:
 
 The Skill Design Study asks you to package one skill as a `.skill` archive and post it to the course discussion.  That archive is a zip of one skill directory with `SKILL.md` at its top level, which is exactly the layout above, one folder deep.
 
+### If a Skill Does Not Load
+
+Nothing announces the failure.  The skill is simply absent, and the agent behaves as though you never wrote it, so work down this list rather than rereading the instructions looking for a bug that is not there.
+
+1. **`SKILL.md` is spelled in capitals.**  `Skill.md` and `skill.md` are not read.
+2. **The directory name matches `name:` in the front matter.**  This is the most common cause, and renaming the directory during install is how it usually happens.
+3. **The front matter has both `name` and `description`.**  A skill missing either one is not a skill.
+4. **The name is unique across every discovery path.**  Two skills with the same name in different locations collide, and the one you are not thinking of may be the one that wins.
+5. **The directory sits in a path opencode reads.**  It walks up from your working directory to the root of the git worktree, so starting the agent outside the project holding `.agents/skills/` finds nothing.  Move the skill to `~/.agents/skills/` if you want it everywhere.
+6. **No `permission` rule denies it.**  A skill matched by a `deny` pattern is hidden from the agent rather than reported to you.
+7. **Restart.**  Skills are read at startup, so a file written during a session is not visible in that session.
+
+Then ask the agent to list the skills it can see, which is the only direct confirmation you get.
+
 > A skill is a directory with a `SKILL.md`, found by path and fired by its description.  It is guidance the model follows by choice, so anything that must hold no matter what belongs in code.
 {: .tb-practice data-title="Checkpoint"}
 
@@ -283,7 +320,7 @@ The Skill Design Study asks you to package one skill as a `.skill` archive and p
 | **Skill** | A named, composable instruction set an agent can invoke on demand, scoped to a specific purpose |
 | **Plugin / extension** | Executable integration specific to one harness (a pi TypeScript extension, for example), as opposed to a skill, which is instructions any harness can read |
 | **System prompt** | Always-on instructions injected before every conversation turn |
-| **`opencode.json`** | OpenCode's configuration file: model routing and `permission.skill` rules. Skills themselves are directories on disk |
+| **`opencode.json`** | OpenCode's configuration file: model routing and `permission.skill` rules, whose values are `allow`, `ask`, and `deny`. Skills themselves are directories on disk |
 | **`SKILL.md`** | The file that is the skill, in a directory named for it, under `.agents/skills/` for portability across opencode and pi |
 | **Tool (function call)** | Executable code the agent calls at runtime; returns structured data |
 | **Description-as-trigger** | The agent loads a skill by matching your request against its `description`; there is no separate trigger field |
