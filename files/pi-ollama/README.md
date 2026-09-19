@@ -59,46 +59,51 @@ too small to hold the task is a correctness problem rather than a speed problem.
 
 ## Step 1: Put the skill in your project
 
-The launcher will not start without it. It looks in three places, in order, and
+The launcher will not start without it. It looks in two places, in order, and
 stops at the first `SKILL.md` it finds:
 
 ```
-.skills/small-model-orchestrator/SKILL.md          <-- use this one
+.agents/skills/small-model-orchestrator/SKILL.md   <-- use this one
 .pi/skills/small-model-orchestrator/SKILL.md
-.agents/skills/small-model-orchestrator/SKILL.md
 ```
 
-**Extract the `.skill` file into `.skills/`.**  A `.skill` file is a zip archive
-with the skill directory at its top level, so unzipping it into `.skills/`
-produces `.skills/small-model-orchestrator/SKILL.md`, which is exactly the first
-path the launcher looks for.  From the root of the project you want the agent to
-work on:
+**Extract the `.skill` file into `.agents/skills/`.**  A `.skill` file is a zip
+archive with the skill directory at its top level, so unzipping it into
+`.agents/skills/` produces `.agents/skills/small-model-orchestrator/SKILL.md`,
+which is the first path the launcher looks for.  It is also one of the
+directories opencode reads, so a single skills directory serves both tools and
+you never have to remember which project uses which convention.
+From the root of the project you want the agent to work on:
 
 ```bash
-mkdir -p .skills
+mkdir -p .agents/skills
 curl -fsSL -o smo.skill https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-unzip -q smo.skill -d .skills/ && rm smo.skill
-ls .skills/small-model-orchestrator/SKILL.md
+unzip -q smo.skill -d .agents/skills/ && rm smo.skill
+ls .agents/skills/small-model-orchestrator/SKILL.md
 ```
 
 ```powershell
-New-Item -ItemType Directory -Force -Path .skills | Out-Null
+New-Item -ItemType Directory -Force -Path .agents\skills | Out-Null
 curl.exe -fsSL -o smo.zip https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-Expand-Archive -Path smo.zip -DestinationPath .skills -Force; Remove-Item smo.zip
-Get-Item .skills\small-model-orchestrator\SKILL.md
+Expand-Archive -Path smo.zip -DestinationPath .agents\skills -Force; Remove-Item smo.zip
+Get-Item .agents\skills\small-model-orchestrator\SKILL.md
 ```
 
 `Expand-Archive` needs the file to end in `.zip`, which is why the PowerShell
 version downloads it under that name.  The contents are identical.
 
 > **Check the shape, not just that it downloaded.**  `SKILL.md` must sit at
-> `.skills/small-model-orchestrator/SKILL.md`.  If your unzip tool created an
+> `.agents/skills/small-model-orchestrator/SKILL.md`.  If your unzip tool created an
 > extra folder level, so that the path is
-> `.skills/small-model-orchestrator/small-model-orchestrator/SKILL.md`, move the
+> `.agents/skills/small-model-orchestrator/small-model-orchestrator/SKILL.md`, move the
 > inner directory up one level or the launcher will not find it.
 
+> **If you set this up before and used a folder named `.skills`,** move it:
+> `mv .skills/small-model-orchestrator .agents/skills/`.  The launcher no longer
+> looks there, so it will stop with the error below until you do.
+
 > If you skip this step the launcher stops with
-> `small-model-orchestrator/SKILL.md was not found under .skills, .pi/skills, or .agents/skills`.
+> `small-model-orchestrator/SKILL.md was not found under .agents/skills or .pi/skills`.
 > That is the error telling you it did exactly what it promised, not a broken install.
 
 ## Step 2a: The Dockerfile route (recommended)

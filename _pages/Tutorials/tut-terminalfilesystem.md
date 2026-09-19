@@ -615,33 +615,36 @@ The script will also refuse to start if the orchestration skill is not in your p
 
 ```python
 skill = next((root / path for path in (
-    ".skills/small-model-orchestrator", ".pi/skills/small-model-orchestrator",
-    ".agents/skills/small-model-orchestrator") if (root / path / "SKILL.md").is_file()), None)
+    ".agents/skills/small-model-orchestrator",
+    ".pi/skills/small-model-orchestrator") if (root / path / "SKILL.md").is_file()), None)
 if skill is None:
-    raise ValueError("small-model-orchestrator/SKILL.md was not found under .skills, .pi/skills, or .agents/skills")
+    raise ValueError("small-model-orchestrator/SKILL.md was not found under .agents/skills or .pi/skills")
 ```
 
-Three locations are checked in order and the first `SKILL.md` found wins.  Use the first one, `.skills/`.
+Two locations are checked in order and the first `SKILL.md` found wins.  Use the first, `.agents/skills/`, because it is also one of the directories opencode reads.  One skills directory then serves both tools, and you never have to remember which project uses which convention.
 
-A `.skill` file is a zip archive with the skill's directory at its top level, so **extracting it into `.skills/` produces exactly the path the launcher checks first**.  Run this from the root of the project you want the agent to work on, before your first launch:
+A `.skill` file is a zip archive with the skill's directory at its top level, so **extracting it into `.agents/skills/` produces exactly the path the launcher checks last**, which is the one to use.  Run this from the root of the project you want the agent to work on, before your first launch:
 
 ```bash
-mkdir -p .skills
+mkdir -p .agents/skills
 curl -fsSL -o smo.skill https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-unzip -q smo.skill -d .skills/ && rm smo.skill
-ls .skills/small-model-orchestrator/SKILL.md
+unzip -q smo.skill -d .agents/skills/ && rm smo.skill
+ls .agents/skills/small-model-orchestrator/SKILL.md
 ```
 
 ```powershell
-New-Item -ItemType Directory -Force -Path .skills | Out-Null
+New-Item -ItemType Directory -Force -Path .agents\skills | Out-Null
 curl.exe -fsSL -o smo.zip https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
-Expand-Archive -Path smo.zip -DestinationPath .skills -Force; Remove-Item smo.zip
-Get-Item .skills\small-model-orchestrator\SKILL.md
+Expand-Archive -Path smo.zip -DestinationPath .agents\skills -Force; Remove-Item smo.zip
+Get-Item .agents\skills\small-model-orchestrator\SKILL.md
 ```
 
 The PowerShell version downloads under a `.zip` name because `Expand-Archive` insists on that extension.  The bytes are identical either way.
 
-> Check the shape of what you extracted, not merely that something arrived.  `SKILL.md` has to sit at `.skills/small-model-orchestrator/SKILL.md`.  Some unzip tools helpfully create a folder named after the archive, leaving you with `.skills/small-model-orchestrator/small-model-orchestrator/SKILL.md`, which the launcher will not find.  The `ls` and `Get-Item` lines above exist to catch that in one second rather than in ten minutes.
+> **Set this up in an earlier session, into a folder named `.skills`?**  Move it with `mv .skills/small-model-orchestrator .agents/skills/`.  The launcher used to check `.skills/` as well and no longer does, so it will refuse to start until the directory moves.  Nothing inside the skill changes; only where it sits.
+{: .tb-warning data-title="Watch out"}
+
+> Check the shape of what you extracted, not merely that something arrived.  `SKILL.md` has to sit at `.agents/skills/small-model-orchestrator/SKILL.md`.  Some unzip tools helpfully create a folder named after the archive, leaving you with `.agents/skills/small-model-orchestrator/small-model-orchestrator/SKILL.md`, which the launcher will not find.  The `ls` and `Get-Item` lines above exist to catch that in one second rather than in ten minutes.
 {: .tb-warning data-title="Watch out"}
 
 That skill is the subject of the next section.
