@@ -302,6 +302,12 @@ In PowerShell, `if ($env:GITHUB_PAT) { "set" }`.
 
 > **Why not just `echo` it?**  Because a token you print is a token in your scrollback, your shell history, and any screenshot you paste into the course channel.  This is the same instinct as Part 1.5, where you print `id_ed25519.pub` and never `id_ed25519`.
 
+> **And never paste one into an LLM.**  Not into a chat window, not into an agent prompt, not into a file you then ask an agent to read.  Text you send to a hosted model rests in that provider's logs, and it may be retained, reviewed, or trained on; deleting the conversation does not reach any of that.  Scrollback you can clear.  This you cannot.
+>
+> This course makes the mistake easy, which is the reason to say it here rather than later.  You will have a terminal with a live token in its environment and an agent in the next pane, and the natural move when something breaks is to paste the config and ask why.  Paste the *variable name*, never its value, and redact before you send.
+>
+> If it happens anyway, it is a two-minute problem and not a crisis: revoke the token at [github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens), issue a new one, update the variable.  Treat "I pasted it" as "it is compromised," because from the outside those are the same thing.  [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth) shows how a token sitting in a context window gets extracted by an injected instruction, and the *Coding Agents* session builds a hook that rejects such a message before the model ever sees it.
+
 **Which name to use.**  Different tools read different variables, and that is worth one table rather than one guess:
 
 | What reads it | Variable |
@@ -618,6 +624,8 @@ git config user.email "you@example.com"
 ```bash
 git config credential.helper 'cache --timeout=7200'
 ```
+
+> **The token you just made is now something you can leak.**  Keep it out of any message you send to a model, including the agent you are about to run in this container.  *Making a token, and putting it in your environment*, in the Part 1 orientation, says what to do if it gets out.
 
 **Do, `gh`.**  The image also carries `gh`, and it knows even less about you than git does.  Give it the token you just made, as an environment variable, from the host shell you start the container in:
 

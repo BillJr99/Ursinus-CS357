@@ -246,7 +246,9 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     from openai import OpenAI
     from pathlib import Path
 
-    client = OpenAI()  # uses OPENAI_API_KEY from environment
+    # Local, OpenAI-compatible endpoint. The literal "ollama" satisfies the client;
+    # it is not a credential and nothing is billed.
+    client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
 
     def extract_fields_from_image(image_path: str) -> dict:
         """Extract structured fields from a document image using GPT-4o."""

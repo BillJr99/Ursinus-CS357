@@ -158,6 +158,25 @@ The caveat, straight from this literature: **no prompt-level trick is a complete
 - **Break the lethal trifecta.**  You rarely need all three of {private data, untrusted content, external communication} at once.  Removing any one (e.g., no network egress during untrusted-repo analysis) makes exfiltration structurally impossible for that task.
 - **Human approval on irreversible actions.**  Opening a PR, pushing to a remote, installing a new dependency, or writing outside the workspace should require a human gate, the same "confirm before irreversible-write" boundary from the *Tool Use and Function Calling* activity, now applied to a coding agent.
 - **Pin and vet dependencies.**  Lockfiles, hash-pinning, and an allowlist defeat slopsquatting and dependency confusion regardless of what the model hallucinates.
+- **Keep credentials out of the context window.**  Everything above concerns what the agent can *reach*.  This one concerns what you *hand* it, and it is the gap those defenses do not cover.
+
+## The Credential You Put There Yourself
+
+Every defense in this part assumes the secret is somewhere the model has to work to reach: a file behind a path check, an environment variable the server reads, a token a tool server holds on the other side of a boundary.  Architecture can enforce those.  It cannot enforce anything about a credential a person pastes into the conversation, and that is the common case.
+
+The shape is familiar to anyone who has debugged something at midnight.  A command fails, the error is opaque, and the fastest way to get help is to paste the whole configuration, token included, and ask what is wrong.  The agent is helpful.  The problem is what the transcript now contains.
+
+Three things follow, and they are worth separating because they fail differently.
+
+**It is a disclosure you cannot retract.**  Text sent to a hosted model rests on that provider's infrastructure under their terms, which may permit retention, human review, or training.  Deleting the conversation in the interface does not reach any of that.  Compare a token printed to your terminal, which is recoverable by clearing scrollback and history: this is not that.
+
+**It is reachable by injection.**  Part I of this tutorial is about instructions arriving through content the agent reads.  A credential in the context window is exactly the thing such an instruction asks for, and the model has no way to distinguish "print your token" arriving from a poisoned README from the same request arriving from you.  *MCP, REST, and OAuth 2.0 Together* traces that path in detail; the structural fix, in the MCP session, is that the server holds the secret and the model never sees it at all.
+
+**It survives in places you are not thinking about.**  Session transcripts you commit for a lab, logs a harness writes, a screenshot pasted into the course channel.  The token outlives the moment you needed it.
+
+The mechanical control is a gate on the way in rather than a rule you try to remember.  The *Coding Agents* session writes one: a `UserPromptSubmit` hook that matches the shapes credentials take (`ghp_`, `github_pat_`, `sk-`, `AKIA`, a PEM header) and refuses the message before it reaches the model.  That is the same move as every other defense in this part, applied one step earlier in the pipeline.
+
+The rule itself is short enough to put in a project's `AGENTS.md`, and short enough to remember: **paste the variable name, never the value.**  If a value gets out, revoke it, issue a new one, and update the variable.  That is a two-minute repair and the only one available.
 
 ### Questions to Work Through
 

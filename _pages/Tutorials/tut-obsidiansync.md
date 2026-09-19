@@ -113,7 +113,7 @@ A private GitHub repo is protected by your account credentials, but "private" do
 
 Categories to exclude by policy:
 
-- **Credentials and API keys**: never in plaintext, anywhere, ever.  Use a password manager.
+- **Credentials and API keys**: never in plaintext, anywhere, ever.  Use a password manager.  This matters twice over in a vault you point an agent at: a key sitting in a note is a key the agent will read and may quote back, and a key you paste into a prompt is one you can no longer un-send.  Revoke rather than hope.
 - **Legal/medical/financial records**: subject to breach notification requirements even from private repos.
 - **Information belonging to others**: private conversations, contact details, notes about third parties who did not consent.
 - **Work product with an NDA**: your employer's confidential information does not belong in your personal vault.

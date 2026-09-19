@@ -64,6 +64,19 @@ This vault is a GitHub repository, and you reach it over Git and the API rather 
 
 The third rule matters more here than in an ordinary project.  A vault holds the owner's durable memory, so an improvised credential repair risks either writing to the wrong remote or leaving a token inside the repository itself, and both are worse than a session that stops and says what it needs.
 
+## Credentials
+
+Never ask me to paste a token, key, or password into this conversation, and
+never print one into your output. If a task needs a secret, stop and tell me
+which environment variable should hold it, then assume it is set. If you find
+a credential in a file, do not repeat it back to me: say where it is and that
+it should be moved and rotated.
+
+A vault is the likeliest place in this system to contain a credential by
+accident, because notes are written quickly and rarely reviewed. Treating one
+as something to report rather than repeat is what keeps a note-taking mistake
+from becoming a transcript mistake.
+
 ## When in Doubt
 
 Prefer clean structure over clutter; prefer canonical pages over duplicates; prefer linking over copying; prefer thoughtful synthesis over raw aggregation; prefer preserving useful detail over vague summarization.

@@ -303,19 +303,7 @@ Whichever target you choose, the four graded parts (threat model, red-team, laye
 
 ### Step 1.1: Install a Client and Verify the Model
 
-I will provide API credentials or a local model endpoint.  The attack and defense methodology is identical regardless of which model you use, but susceptibility differs a lot: Claude Sonnet is among the more resistant models, and older or less-aligned models (including many open-source models available via Ollama) comply with injection much more readily.  **Record which model you used in every entry of your attack log.**  If you switch models partway through, that switch is a variable you must document; results are not comparable across models without it.
-
-> **Do this (hosted model).**
-> 1. Install the Anthropic Python client and export your key in the terminal you will run the agent from.
-> 2. Run the one-line health check.
-
-```bash
-pip install anthropic
-export ANTHROPIC_API_KEY="your-key-here"
-python -c "from anthropic import Anthropic; c = Anthropic(); print('API key works:', c.models.list())"
-```
-
-> **You should see.**  A list of model names.  If the command raises `AuthenticationError`, your key is invalid or was not exported in this terminal session (`echo $ANTHROPIC_API_KEY` should print your key, not a blank line).
+Use your local Ollama stack; nothing in this direction requires a paid API key, and the methodology is identical either way.  Susceptibility is not identical, and that is worth knowing rather than working around: heavily aligned hosted models resist injection more, and many open models comply readily, which makes a local model the *better* subject for this exercise.  You are trying to observe the failure, not avoid it.  **Record which model you used in every entry of your attack log.**  If you switch models partway through, that switch is a variable you must document; results are not comparable across models without it.
 
 > **Do this (Ollama instead).**  `ollama serve` starts the local model server, `ollama pull` downloads a model, and the `curl` asks the server which models it has.
 
@@ -388,7 +376,8 @@ User question: {user_question}"""
     return response.content[0].text
 
 def main():
-    client = Anthropic()  # Uses ANTHROPIC_API_KEY from environment
+    # Points at your local Ollama server; no API key exists, and none is needed.
+    client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
     context = load_knowledge_base(KNOWLEDGE_BASE_PATH)
 
     print("Ursinus Academic Assistant (Vulnerable - No Defenses)")
@@ -417,7 +406,7 @@ Agent: Ursinus College was founded in 1869 and is located in Collegeville, PA.
 
 > **If it fails.**
 > - `ModuleNotFoundError: No module named 'anthropic'`: the library is not installed in the Python environment you are running (`pip install anthropic`, after `conda activate your-env` if you use conda).
-> - `AuthenticationError: 401`: the key is not exported in this terminal session; `export ANTHROPIC_API_KEY="sk-ant-..."` and check it with `echo $ANTHROPIC_API_KEY`.
+> - A connection error against `localhost:11434`: the Ollama server is not running.  Start it with `ollama serve` in its own terminal, and confirm with `curl http://localhost:11434/api/tags`.
 > - `FileNotFoundError: knowledge_base.txt`: run the script from the directory that holds the file (`ls knowledge_base.txt` should list it).
 
 > **Paste into your submission.**  Open your attack log (PDF or Markdown) and record System Prompt v1.  Every entry in your attack log must reference the system prompt version and defense configuration active at the time of the test; that is what makes your results reproducible.

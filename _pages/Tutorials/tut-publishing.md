@@ -63,7 +63,7 @@ Versions follow semver.  The convention `MAJOR.MINOR.PATCH` (like `1.4.2`) encod
 
 ## 2.  Authentication: Tokens, Not Passwords
 
-Every registry authenticates with **tokens** you generate, scope, and can revoke, never your account password.  For GHCR, create a GitHub Personal Access Token with the `write:packages` scope (Settings -> Developer settings -> Personal access tokens); for Docker Hub, an access token from Account Settings -> Security; for npm, `npm login` handles it interactively (with publish requiring a one-time password if you enable 2FA, which you should).  The handling rules from the shell module apply with full force: tokens live in environment variables or password managers, never in code, never in Dockerfiles, never in anything committed to a repository.
+Every registry authenticates with **tokens** you generate, scope, and can revoke, never your account password.  For GHCR, create a **fine-grained** GitHub token scoped to the single repository whose packages you are publishing (Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens), granting it package write on that repository alone; the older classic token with a `write:packages` scope reaches the packages of *every* repository you own, which is a wide grant for a narrow job; for Docker Hub, an access token from Account Settings -> Security; for npm, `npm login` handles it interactively (with publish requiring a one-time password if you enable 2FA, which you should).  The handling rules from the shell module apply with full force: tokens live in environment variables or password managers, never in code, never in Dockerfiles, never in anything committed to a repository.
 
 ---
 

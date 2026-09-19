@@ -408,6 +408,13 @@ Append only. Never rewrite or delete an existing entry.
    Tell me which command failed and quote what it said. Do not switch the
    remote between HTTPS and SSH, do not ask me to paste a token into a
    file, and do not retry in a loop.
+
+## Credentials
+Never ask me to paste a token, key, or password into this conversation, and
+never print one into your output. If a task needs a secret, stop and tell me
+which environment variable should hold it, then assume it is set. If you find
+a credential in a file, do not repeat it back to me: say where it is and that
+it should be moved and rotated.
 ```
 
 The fourth rule is about a specific failure you would otherwise debug at midnight. An agent that meets an authentication error will try to repair it, because repairing things is what you asked for, and every repair within its reach is worse than stopping: rewriting your remote, asking you to put a token somewhere it can read, or retrying until something times out. Stopping is not its instinct. It is a rule, and this is where you write it down.

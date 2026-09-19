@@ -131,10 +131,11 @@ If `node` is missing and you would rather not install it on your host, skip to ย
 ### First run, in order
 
 1.  **`cd` into the project first.**  The working directory is the agent's world.  Launching from `~` hands the agent your whole home directory, the same mistake as `-v $HOME:/work` in the Docker module.
-2.  **Authenticate.**  Most tools open a browser on first launch.  For a key-based setup, export it in your shell profile rather than pasting it into the session:
+2.  **Authenticate, if the tool needs it.**  The course default does not: opencode against local Ollama has no account and no key, which is the configuration ยง6 routes everything through.  A tool that does want a credential either opens a browser on first launch or reads an environment variable, and in the second case the variable belongs in your shell profile rather than in the session:
    ```bash
-   echo 'export ANTHROPIC_API_KEY="sk-ant-..."' >> ~/.bashrc && source ~/.bashrc
+   echo 'export SOME_PROVIDER_API_KEY="..."' >> ~/.bashrc && source ~/.bashrc
    ```
+   Never paste the value into the agent's own chat: what you send to a hosted model rests in that provider's logs, and revoking the credential is the only repair.
 3.  **Check the model and the mode** before you type a real task: `/model` to see what you are talking to, and the tool's status line for the current permission mode.
 4.  **Give it a small, checkable job first** ("add a docstring to every function in `parser.py`") so you see the review loop before you rely on it.
 5.  **`git status` when you are done.**  If you cannot see the agent's work as a diff, stop and fix that before continuing.
@@ -170,12 +171,12 @@ If you would rather not install a coding agent on your laptop at all (or you wan
 docker run -it --rm \
   -v "$PWD:/work" \
   -v "$HOME/notes/vault:/reference:ro" \
-  -e ANTHROPIC_API_KEY \
+  --add-host=host.docker.internal:host-gateway \
   --cap-drop ALL --security-opt no-new-privileges \
-  course-agent claude
+  course-agent opencode
 ```
 
-One writable mount (`/work`, git-tracked), one read-only mount, no host credentials.  The **[Docker from Zero]({{ site.baseurl }}/Tutorials/Docker)** module builds `course-agent` and explains each flag, including when disabling the permission prompts becomes a reasonable trade rather than a reckless one.
+One writable mount (`/work`, git-tracked), one read-only mount, and **no credential of any kind**, because the model is reached across `host.docker.internal` on hardware you own.  A container that needs no secret cannot leak one.  The **[Docker from Zero]({{ site.baseurl }}/Tutorials/Docker)** module builds `course-agent` and explains each flag, including when disabling the permission prompts becomes a reasonable trade rather than a reckless one.
 
 ---
 

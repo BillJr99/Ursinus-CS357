@@ -27,6 +27,11 @@ and do not retry in a loop.
    authentication failure above: stop and report it.
 6. Never store credentials, API keys, student data, or anything FERPA- or
    IRB-covered here.
+7. Never ask the user to paste a token, key, or password into the conversation,
+   and never print one into your output. If a task needs a secret, stop and say
+   which environment variable should hold it. If you find a credential in a
+   file, do not repeat it back: say where it is and that it should be moved and
+   rotated.
 
 ## Why the rules are shaped this way
 

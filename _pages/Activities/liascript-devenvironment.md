@@ -413,6 +413,8 @@ Pushing needs credentials, and this is the one place in the course where your ow
 git config credential.helper 'cache --timeout=7200'
 ```
 
+> **One rule that outlives this step.**  Never paste this token, or any other credential, into a chat with a model.  A hosted provider may retain, review, or train on what you send, and deleting the conversation does not reach it, so the only repair is to revoke the token and issue another.  Paste the variable name, never the value.  The Overview assignment's *Making a token, and putting it in your environment* section has the full rule at https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/Overview
+
 **And the same token, for `gh`.**  The image carries `gh` as well, and it authenticates from an environment variable rather than from a sign-in.  Export it on your **host**, in the shell you start the container from:
 
 ```bash
@@ -695,6 +697,12 @@ My CS357 lab workspace.
    Tell me which command failed and what it said. Do not switch the remote
    between HTTPS and SSH, do not ask me to paste a token into a file, and
    do not retry in a loop.
+
+## Credentials
+
+Never ask me to paste a token, key, or password into this conversation, and
+never print one into your output. If a task needs a secret, stop and tell me
+which environment variable should hold it, then assume it is set.
 MD
 git add AGENTS.md hello_agent.py && git commit -m "First coding-agent session"
 ```
