@@ -20,6 +20,31 @@ Every lab this semester runs through **opencode**, and every piece of it is conf
 Each section says briefly **what the element is and why it exists**, then gives the full implementation.  The arguments live elsewhere: *Your AI Workbench* builds the container, *Coding Agents* takes apart gates and the GitHub loop, *Skills* designs a skill worth writing, and *MCP* explains what a tool server buys you.  This page is the reference you come back to when something is not loading.
 {: .tb-lede}
 
+## Key Concepts
+
+Anchor these before you start.  Every one of them appears below, and most of the failures on this page are a confusion between two of them.
+
+| Term | Plain-English Definition | Where You'll Meet It |
+|---|---|---|
+| **`opencode.json`** | The one configuration file.  It holds providers, permissions, extra instruction files, plugins, and tool servers.  The name is exact; a file called `config.json` is ignored in silence | Part I, and every part after it |
+| **Scope** | Whether a setting applies to one project or to every project, decided by which of two directories the file sits in.  The two are merged, not replaced | Part I, §2 |
+| **Provider** | Where models come from: an adapter package, an address, and a list of models.  The course's provider is Ollama on your own machine | Part I, §3 |
+| **`AGENTS.md`** | Standing instructions for a project, read automatically from its root.  A system prompt you keep in version control | Part II, §4 |
+| **`instructions`** | A list in `opencode.json` naming *additional* files to load.  Not a replacement for `AGENTS.md`, which is discovered on its own | Part II, §4 |
+| **Permission** | A gate the harness enforces before a tool runs, as opposed to a rule the model is merely asked to follow | Part II, §5 |
+| **Skill** | A directory holding a `SKILL.md`, loaded on demand when its description matches the situation.  There is no install command | Part III, §6 |
+| **Plugin** | Code that runs at defined moments and can refuse a tool call outright.  Where a skill adds instructions, a plugin adds behavior | Part III, §7 |
+| **MCP server** | A process that advertises operations as named tools, so your rules match a tool name rather than a command line | Part IV, §8 |
+{: .tb-full}
+
+### Before You Start
+
+You need opencode installed or installable, Ollama running on your machine from *Your AI Workbench*, and a text editor.  A GitHub account is needed only for Part IV.  Nothing here costs money and nothing requires a paid model provider.
+
+Allow about an hour if you are starting from nothing, and rather less if you already did the Workbench session, since Part I will mostly be confirmation.
+
+---
+
 ## Two tables you will use in every section
 
 Nearly every problem in this page is one of two questions: where does the file go, and which of the three faces of opencode can do the thing I want?  Read these twice now and the rest of the page is mechanical.
@@ -50,6 +75,10 @@ Adding a provider, a plugin, or an MCP server is a file edit on every platform a
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---
+
+# Part I: The Agent and Its File
+
+Everything opencode does is configured in one file.  This part installs the agent, creates that file at the right scope for your machine, and points it at a model, which is the minimum that makes the rest of the page meaningful.
 
 ## 1.  Install opencode
 
@@ -221,6 +250,26 @@ Whichever group you are in, the file you commit holds a reference and never a va
 
 ---
 
+### Questions to Work Through
+
+1.  You put a provider in your global `opencode.json` and a different one in a project's `opencode.json`.  Which models does `/model` list when you open that project, and why is the answer not "only the project's"?
+
+    *Hint:* The word in §2 is *merged*.  Ask what merging means when both files define the same key, and then when they define different ones.
+
+2.  A classmate's agent starts, reports no models, and their JSON is valid.  Name the two remaining causes in the order you would check them, and say why that order.
+
+    *Hint:* One of the two is invisible in an editor and takes a second to check; the other requires knowing which of two directories they used.  Cheap checks first.
+
+3.  Ollama needs no API key.  Explain what that implies about where your prompts go, and name the one thing in this tutorial that does still need a credential.
+
+    *Hint:* §3's table has three rows for a reason.  Which row is the course in, and which row is Part IV in?
+
+---
+
+# Part II: Telling It What To Do
+
+A working agent with no instructions will do something reasonable and occasionally something you did not want.  This part gives the project a contract and then backs that contract with gates the model cannot talk its way past.
+
 ## 4.  Write `AGENTS.md`
 
 **What it is.**  A Markdown file at the root of your project holding the standing instructions you would otherwise retype every session: what this project is, what counts as good work in it, and what the agent must not decide on its own.  It is a system prompt you keep in version control, which means it is reviewable, diffable, and shared with anyone who clones the repository.
@@ -302,6 +351,26 @@ An already-running session does not pick up a file you just edited.  Quit and re
 {: .tb-warning data-title="Watch out"}
 
 ---
+
+### Questions to Work Through
+
+4.  `AGENTS.md` is never named in `opencode.json`, but `CHARTER.md` has to be.  State the rule that explains both facts in one sentence.
+
+    *Hint:* One file is found; the others are listed.  Which is which, and what happens to a file that is neither?
+
+5.  Take the permission block from §5 and move `"git *": "allow"` above `"*": "ask"` inside the `bash` map.  Predict what changes, then say which sentence in §5 told you.
+
+    *Hint:* The phrase is *last matching rule wins*.  Walk `git status` down the block in both orderings and see which rule it lands on.
+
+6.  Your `AGENTS.md` says "never delete files" and your permission block does not mention `rm`.  A model that has read the contract deletes a file anyway.  Was the model broken?
+
+    *Hint:* §5's first paragraph distinguishes a rule from a gate.  Which one did you write, and what is the other one for?
+
+---
+
+# Part III: Extending It
+
+Skills and plugins are the two ways to add capability.  The distinction is worth holding onto: a skill adds instructions the model may load, and a plugin adds code that runs whether the model likes it or not.
 
 ## 6.  Add a skill
 
@@ -390,6 +459,22 @@ Restart opencode after adding a plugin.  The *Coding Agents* session writes one 
 
 ---
 
+### Questions to Work Through
+
+7.  A skill is a directory and a plugin is a file named in an array.  Both change what the agent does.  Give the sharpest one-sentence difference you can, then say which one the model can decline to use.
+
+    *Hint:* §6 says a skill loads *on demand*, when its description matches.  Who decides that a plugin runs?
+
+8.  Your skill does not fire.  You have restarted opencode and the `SKILL.md` parses.  Name the two remaining causes.
+
+    *Hint:* §6 flags both as the ones that cause almost every failure.  One is about a name matching; the other is about what the description is describing.
+
+---
+
+# Part IV: Reaching Outside
+
+An agent that can only edit local files is a text editor with opinions.  This part connects it to GitHub, twice, because the two routes differ in exactly the way your permission rules care about.
+
 ## 8.  Reach GitHub, two ways
 
 **What it is.**  Your agent needs to file issues, open pull requests, and read review comments, because that is where the work lives.  There are two routes to the same operations, and the course uses both deliberately.
@@ -445,6 +530,20 @@ Name the variable after what its token can reach.  `GITHUB_SCRATCH_PAT` for a to
 
 ---
 
+### Questions to Work Through
+
+9.  You want to deny merging a pull request.  Write the `bash` pattern for the `gh` route, then say why the tool-server route needs no pattern at all.
+
+    *Hint:* Count the ways a command line can spell the same operation, including inside a script the agent writes.  Then count the spellings of a tool name.
+
+10.  You get a 403 from `gh issue create` and `gh auth status` looks healthy.  Say what is wrong and what you would run, then say what a 401 would have meant instead.
+
+    *Hint:* One number is about who you are, the other about what you may do.  Only one of them is fixed by signing in again.
+
+---
+
+# Part V: Synthesis and Practice
+
 ## 9.  Confirm the whole bench
 
 One command per section.  If every line produces output, your setup is complete.
@@ -462,6 +561,36 @@ One command per section.  If every line produces output, your setup is complete.
 | GitHub MCP | Ask the agent to list its tools | `github_*` tools are advertised |
 {: .tb-full}
 
+## Exercises
+
+1.  **Two scopes, one provider.**  Put a provider in your global config and a second, differently named provider in a project's config.  Open that project, run `/model`, and record which models appear.  Then open a different project and run it again.  Write one sentence explaining the difference in terms of merging.
+
+2.  **Break it on purpose, three ways.**  Starting from a working setup, cause each of these failures and record the symptom: rename `opencode.json` to `config.json`; delete a closing brace; put a skill directory under a name that does not match its `name:` field.  You now recognize all three on sight, which is the point.
+
+3.  **Prove the gate.**  With the §5 block in place, ask the agent for a scratch file and then for `git status`.  Capture both.  Then move `"git *": "allow"` above the inner `"*": "ask"`, restart, and repeat.  Explain what changed using the last-matching-rule rule.
+
+4.  **A skill that fires, and one that does not.**  Write two skills with identical bodies and different descriptions: one naming an occasion ("use when the user asks for a commit message"), one naming a topic ("about git"). Ask for a commit message and record which loads.  This is the description-as-trigger idea, tested rather than asserted.
+
+5.  **Both routes to one operation.**  Create a GitHub issue twice, once with `gh issue create` through the shell and once through the MCP server's tool.  Then write the permission rule that would deny each, and say which rule you would rather maintain.
+
+## Reflection Prompt
+
+Take ten minutes in your notebook, at three levels.
+
+**Personal level:**  This page asked you to give a program permission to run commands on your machine, and then to write down exactly which ones.  Before this course, what did you actually grant to the software you installed, and how would you know?  Name one tool you use whose permissions you have never inspected.
+
+**Technical level:**  The distinction between a rule the model is asked to follow and a gate the harness enforces appears everywhere once you see it: file permissions, API scopes, database grants, firewall rules.  Describe one system you have used where the two were confused, and what the consequence was.
+
+**Societal level:**  Every credential in this tutorial is scoped deliberately: one repository rather than an account, an environment variable rather than a file, a local model rather than a hosted one.  Those choices cost convenience.  Who should bear the cost of least privilege in systems ordinary people use, and what happens when the secure path is also the slower one?
+
 ## Where This Goes Next
 
 *Your AI Workbench* builds the container this runs in and sets up the credentials that belong on your host rather than inside it.  *Coding Agents* takes the permission block apart, writes a plugin, and drives the full issue-to-pull-request loop.  *Skills: Design One, Then Measure It* is about writing a skill worth loading rather than installing one.  *MCP* builds a tool server from nothing, so the configuration in section 8 stops being a magic incantation.  This page stays here as the thing you check when a piece of it stops loading.
+
+## Further Reading
+
+- **opencode documentation**, [opencode.ai/docs](https://opencode.ai/docs/): the configuration reference, the provider list, and the permissions page.  When this tutorial and the documentation disagree, the documentation is newer.
+- **Your AI Workbench**, the Week 1 session, which builds the container this runs inside and sets up the credentials that belong on your host rather than in the container.
+- **Coding Agents**, the Week 1 Thursday session, which takes the permission block apart, writes a plugin from scratch, and drives the full issue-to-pull-request loop.
+- **Skills: Design One, Then Measure It**, the Week 2 Thursday session, on writing a skill worth loading rather than merely installing one.
+- **MCP: Connecting Agents to Tools and Your Obsidian Vault**, the Week 5 session, which builds a tool server so that Part IV's configuration stops being an incantation.
