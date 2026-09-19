@@ -163,7 +163,16 @@ You started a coding agent from your home directory instead of the project folde
 
 This is the working pattern I use daily.  Adopt it early, because it scales from one agent to a team of them without any new infrastructure: issues, pull requests, and review comments are already a durable, threaded, permissioned, notification-driven message bus, and both humans and agents can read and write them.  A chat window is none of those things.  Today we take the pattern on faith and use it to get work into and out of the agent; the [Agents That Talk](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-agentcommunication.md) session studies it as a communication medium, names the coordination problems it does and does not solve, and threat-models the channel.
 
-What the loop needs is `gh`, the [GitHub CLI](https://cli.github.com/), which the Overview assignment offered as the shortcut through key generation.  If you took the other path, install it now (`brew install gh` on macOS, `winget install --id GitHub.cli` on Windows, your package manager on Linux) and run `gh auth login`.  The loop, concretely, with `opencode run` standing in for whichever agent you drive, since every tool in this family takes a goal on the command line:
+What the loop needs is `gh`, the [GitHub CLI](https://cli.github.com/), and you have it: Part 1.5 Step 2 of the Overview assignment installs and authenticates it on your host, and it is baked into the course image, so the container prompt has it too.  Confirm before you start, because the rest of this section fails in confusing ways without it:
+
+```bash
+gh --version
+gh auth status
+```
+
+One scope detail decides whether the next ten minutes work.  The token A6 has you make is scoped to **Contents: Read and write**, which pushes code and nothing else.  Creating an issue and opening a pull request are different permissions, so if `gh issue create` comes back with a bare 403 while `gh auth status` looks perfectly healthy, that is the reason: add **Issues** and **Pull requests**, read and write, to the fine-grained token, or run `gh auth refresh -s <scope>`.  A 403 is an answer about permissions; a 401 is an answer about identity, and `gh auth login` is the fix for that one.
+
+The loop, concretely, with `opencode run` standing in for whichever agent you drive, since every tool in this family takes a goal on the command line:
 
 ```bash
 # 1. The task becomes an issue (agents can read it by number)
