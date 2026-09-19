@@ -92,7 +92,11 @@ Both walk up from your working directory to the repository root, then fall back 
 **On Windows.**  The same paths, with backslashes and `%USERPROFILE%` in place of `~`: `.opencode\skills\`, `.claude\skills\`, and `.agents\skills\` inside a project, and `%USERPROFILE%\.config\opencode\skills\`, `%USERPROFILE%\.claude\skills\`, and `%USERPROFILE%\.agents\skills\` globally.  Win+R and pasting a folder path opens any of them.  Because a skill is a directory rather than a registry entry, copying the folder there in File Explorer is a complete installation.
 {: .tb-full}
 
-Notice the overlap.  Both tools read `.agents/skills/`, so one directory of skills works in either tool with no porting step.  Use it for everything you write in this course unless you have a specific reason not to.  You get portability for free, and "it only works in my tool" is a real cost when a teammate uses the other one.
+Notice the overlap.  Both tools read `.agents/skills/`, so one directory of skills works in either tool with no porting step.  That is the universal path, and it is the one this course uses for everything you write, unless you have a specific reason not to.  You get portability for free, and "it only works in my tool" is a real cost when a teammate uses the other one.
+
+Two scopes cut across that choice, and they answer different questions.  A skill under a project path is available in that project alone, and it travels with the repository, so a teammate who clones the project gets it.  A skill under a user-level path follows you into every project on that machine and travels nowhere else.  opencode's own global path is `~/.config/opencode/skills/`, beside the `opencode.json` you already keep there, and it is where a published skill you want everywhere belongs.
+
+**Every instruction in this course uses the project path**, `.agents/skills/` at the root of the repository you are working in.  That is a simplification, chosen because it keeps a skill next to the `AGENTS.md` and `opencode.json` that go with it, makes the skill reviewable in a pull request, and means a broken skill is scoped to one project rather than following you everywhere.  Once you have a skill you want in every project, move it to `~/.config/opencode/skills/` or `~/.agents/skills/`; nothing about the file changes, only the directory it sits in.
 
 ### The `SKILL.md` Front Matter
 

@@ -389,7 +389,9 @@ Installing one is therefore putting a folder in a place opencode looks.  Any she
 | **Windows** | `.opencode\skills\`, `.claude\skills\`, `.agents\skills\` | `%USERPROFILE%\.config\opencode\skills\`, `%USERPROFILE%\.claude\skills\`, `%USERPROFILE%\.agents\skills\` |
 {: .tb-full}
 
-Use `.agents/skills/`, which both opencode and pi read, so your skills are not welded to one tool.
+Use `.agents/skills/`, which both opencode and pi read, so your skills are not welded to one tool.  It is the universal path; the other two exist because Claude Code and opencode each arrived at the idea separately.
+
+This page installs into the **project** path, at the root of the repository you are working in, and that is the form to learn first.  The skill then sits beside the `opencode.json` and `AGENTS.md` it belongs with, it goes into version control with them, and a mistake in it is scoped to one project.  opencode also reads a global path, `~/.config/opencode/skills/`, beside the global config from §3, and that is where a skill you want in every project belongs.  The file is identical either way; only the directory changes.
 
 **macOS, Linux, WSL2:**
 

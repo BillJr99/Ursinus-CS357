@@ -268,7 +268,7 @@ Both opencode and pi walk up from your working directory to the repository root,
 
 **On Windows.**  The same paths, with backslashes and `%USERPROFILE%` in place of `~`: `.opencode\skills\`, `.claude\skills\`, and `.agents\skills\` inside a project, and `%USERPROFILE%\.config\opencode\skills\`, `%USERPROFILE%\.claude\skills\`, and `%USERPROFILE%\.agents\skills\` globally.  Win+R and pasting a folder path opens any of them.  Because a skill is a directory rather than a registry entry, copying the folder there in File Explorer is a complete installation.
 
-Use `.agents/skills/`, which both read, so your skills are not welded to one tool.
+Use `.agents/skills/`, which both read, so your skills are not welded to one tool.  Put it in the **project** path, at the root of the repository you are working in, which is what this assignment asks for and what the deliverable links to.  opencode also reads `~/.config/opencode/skills/` globally, and that is the right home for a skill you want in every project later; it is not what you submit here, because a project path is the one a reviewer can clone and check.
 
 Two rules about the front matter account for almost every failure you are likely to hit.
 
