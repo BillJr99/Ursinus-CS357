@@ -185,6 +185,17 @@ In this model you read a completed agent table for a three-agent research pipeli
 
 The agent table is the core design artifact for a multi-agent system.  One row per agent.  Before you write a line of code, you should be able to fill in every cell.  Empty cells are not gaps in the document; they are unresolved risks in your system.
 
+> **A table you have already filled in by hand.**  `config.json`, the file that drives `persona_pipeline.py` in *Prompt Engineering as Agent Design*, is an agent table written as data.  It holds one entry per step, and each entry carries four things:
+>
+> - a persona,
+> - a temperature,
+> - a skill binding, and
+> - a `sees` list naming that step's inputs.
+>
+> Open one entry beside one row of the table below.  The columns line up almost exactly.  That match is the point of both artifacts.
+>
+> Read the gap too.  `config.json` has no failure-mode column.  It handles exactly one failure, a missing skill file, and it handles that in code by raising.  Nobody filled in a cell for it.  Download [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip) and open `config.json` beside the table.
+
 The table below carries the original columns plus one that Tuesday's protocol makes possible: for each agent, what is logged, which rule each action traces back to, and what the handoff file contains when the agent stops.  When you build your own table for *Design Your Agent System*, also add the three from the section above: **observed how**, **reaches what**, and **undone how**.
 
 | Agent Name | Role and Goal | System Prompt Skeleton | Inputs | Outputs | Temperature | Tools Available | Failure Mode | Logged, Traced, Handed Off |

@@ -688,7 +688,7 @@ If you want to see the arrangement outside a classroom, the hermes agent from th
 
 Part IId declared three agents in a file and stopped short of saying who runs when.  This part answers that question in the smallest way that still teaches something: four calls to one model, in order, each carrying its own persona, its own temperature, and its own answer to a question no single prompt ever has to face, which is what this step is allowed to read.  There is no framework here, and that is the argument.  The orchestration is a for-loop, and everything that makes the result a system rather than four unrelated prompts lives in three decisions made before the loop runs.
 
-The chain writes a system prompt, attacks it, and repairs it.  The full program, `persona_pipeline.py`, along with the five files it reads and four experiments to run against it, is in the [Persona Pipeline tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PersonaPipeline).  Read this part for the design argument and that tutorial for the code.
+The chain writes a system prompt, attacks it, and repairs it.  The [Persona Pipeline tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PersonaPipeline) carries the full program, `persona_pipeline.py`, and the five files it reads.  It also sets out four experiments to run against it.  Download the runnable copy as [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip).  Read this part for the design argument, and that tutorial for the code.
 
 ## 5f.  The Four Steps
 
@@ -699,7 +699,7 @@ Each row below is one call to one model.  Read the `sees` column first, because 
 | `interviewer` | A requirements analyst who asks before proposing | 0.7 | none | the task |
 | `author` | A prompt engineer who writes the artifact | 0.4 | `system-prompt-author` | the task, the interview, the human decisions |
 | `redteam` | An adversarial user hunting for failure | 0.9 | none | the candidate prompt, and nothing else |
-| `reviser` | An editor who fixes only what was demonstrated | 0.4 | `system-prompt-author` | the candidate, the attacks, the decisions |
+| `reviser` | An editor who fixes only what was demonstrated | 0.4 | `system-prompt-author` | the candidate and the attacks |
 
 The personas are the Part IIb material applied four times.  The temperatures are the Part IIc dial set per role rather than per run.  The interviewer sits high, at 0.7, because a question you did not expect is the whole product of that step.  The author and the reviser sit at 0.4, loose enough that the artifact is not one fixed phrasing and tight enough that two runs are comparable.  The red team sits highest of all, at 0.9, because three attacks that resemble one another have tested one thing three times.  The skill is Route 3 from the skills activity, a body pasted into a system prompt on the two steps that name it and absent everywhere else.
 

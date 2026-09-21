@@ -73,6 +73,18 @@ The planner is the one pattern missing from that table on purpose: a model, not 
 
 A design heuristic follows from all of this: **choose the least dynamic pattern that solves the problem.**  Pipelines before routers, routers before planners, planners before free-roaming autonomy.
 
+> **You have already built the first one.**  In *Prompt Engineering as Agent Design* you ran `persona_pipeline.py`, a four-step chain.  One model answered four times, and each call carried three things of its own:
+>
+> - a persona,
+> - a temperature, and
+> - an answer to one question: what may this step read?
+>
+> That chain is the pipeline row of the table above, and it earns what the row claims.  Every stage saw only what it needed.  The `sees` list in a config file enforced that isolation.  The code never asked the model to respect it.
+>
+> So today is not your first pipeline.  Carry one difference into it.  There, you wrote the order as a list before the run.  Here, and in the planner above all, something else decides the order.  Everything this session adds sits in that gap.
+>
+> The program is in [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip), and the reasoning behind every decision in it is in the [Persona Pipeline tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PersonaPipeline).
+
 ---
 
 ## Model 1: Match the Pattern
