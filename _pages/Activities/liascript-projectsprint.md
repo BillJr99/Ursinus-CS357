@@ -259,7 +259,7 @@ Each team reports two things in one minute: the sprint card's done-when and whet
 
 [[___ Your post-mortem here ___]]
 
-**Exercise 2.**  Add one architectural control from row 4 to your system, or write the exact diff you would make.
+**Exercise 2.**  Add one architectural control from row 4 to your system, or write the exact change you would make.
 
 *What to do:* Pick the cheapest of: an output check for addresses and URLs not in an allowlist, a pre-indexing scan for HTML comment blocks and instruction-like patterns, or a canary token in the system prompt that a test greps for in every output.  Add a harness assertion that exercises it.
 

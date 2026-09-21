@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent
 
-In *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff*, you wrote a specification before any code existed and watched an agent implement it.  Today you put that work inside a loop, and you set the loop up so the agent runs it.
+In *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log*, you wrote a specification before any code existed and watched an agent implement it.  Today you put that work inside a loop, and you set the loop up so the agent runs it.
 
 Two loops do the job, and one of them has a variant you should recognize.  The **Karpathy loop** moves in small steps, each one verified by a check that already exists; its **autoresearch** variant keeps the same shape but lets a measured number stand in for the check.  The **Gauntlet loop** writes the check first, as a rubric, and then attacks each candidate until no material defect remains.  All of them are configuration plus a command.  You leave today with the files that configure them, the commands that run them, one gauntlet round scored against a rubric you wrote, and one metric round that discards its own best idea.
 
@@ -908,7 +908,7 @@ The `kept` line inside the loop is the discard rule from Model 4, so the cell de
 
 - This course: [AI-Assisted Development and Vibe Coding](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/VibeCoding), the three supervision levels and the spec-first development this deck builds on.
 - This course: [Governing Coding Agents: Charters, Handoffs, and Durable Memory](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentGovernance), the Karpathy rules beside a production charter, and the `.ai/` handoff directory in full.
-- This course: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Section 2c on plan mode and Part IIb on the permission block and plugin hooks.
+- This course: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Section 2c on plan mode and Part IIb on the permission block and plugin hooks.
 - This course: [Lab: OpenCode Studio](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/OpenCodeStudio), the `spec.md`, `system_prompt.txt`, and rubric that Model 3 runs against.
 - opencode permissions and CLI: https://opencode.ai/docs/permissions/ and https://opencode.ai/docs/cli/, the source for the `permission` block, the pattern rules, and the `--auto` flag.
 - Andrej Karpathy, [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) (gist, April 2026): the pattern behind keeping the agent's memory in files it maintains and you curate.

@@ -10,13 +10,13 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 -->
 
-# Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff
+# Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log
 
-In *Your AI Workbench: Shell, Git, Containers, and Your First Coding Agent*, you built your workbench and, in Step 8 of the Week 1 activity, installed **opencode** and pointed it at the model on your own machine.  You gave it one small job, read the diff, and approved it.  Today we turn that ten-minute demonstration into a working practice, and the OpenCode Studio lab asks you to keep practicing it for a week.
+In *Your AI Workbench: Shell, Git, Containers, and Your First Coding Agent*, you built your workbench and, in Step 8 of the Week 1 activity, installed **opencode** and pointed it at the model on your own machine.  You gave it one small job, read the action log, and approved it.  Today we turn that ten-minute demonstration into a working practice, and the OpenCode Studio lab asks you to keep practicing it for a week.
 
 A **coding agent** is not a smarter autocomplete.  An editor completion reads your cursor position and offers the next line.  A coding agent reads your repository, takes a goal ("add OAuth2 login"), breaks it into file-level tasks, edits several files, runs your test suite, reads the failures, and loops until the goal is met or its budget runs out.  The difference is agency: a persistent goal, actions that change the world, and a loop that continues until done.  It is the perceive-plan-act loop you built by hand in *The Agent Loop*, with your file system as the world.
 
-That moves your judgment.  You are no longer reviewing keystrokes.  You are reviewing a **plan** before the agent acts, a **gate** that holds when the plan goes wrong, and a **diff** before you keep the result.  Today builds four skills, in the order in which they save you time: write a specification precise enough to be checked, read a plan and reject it while rejection is cheap, put a gate in the harness where a rule in the prompt is not enough, and read a diff adversarially.  Two readings frame the tool choices and the risks: the [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs) tutorial compares opencode with Claude Code, Codex, Gemini CLI, and pi, and the [AI Coding Agent Security](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/CodingAgentSecurity) tutorial explains what a poisoned repository can do to an agent that trusts what it reads.
+That moves your judgment.  You are no longer reviewing keystrokes.  You are reviewing a **plan** before the agent acts, a **gate** that holds when the plan goes wrong, and an **action log** before you keep the result.  Today builds four skills, in the order in which they save you time: write a specification precise enough to be checked, read a plan and reject it while rejection is cheap, put a gate in the harness where a rule in the prompt is not enough, and read an action log adversarially.  Two readings frame the tool choices and the risks: the [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs) tutorial compares opencode with Claude Code, Codex, Gemini CLI, and pi, and the [AI Coding Agent Security](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/CodingAgentSecurity) tutorial explains what a poisoned repository can do to an agent that trusts what it reads.
 
 ---
 
@@ -33,20 +33,20 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Coding Agent** | An AI system that reads a codebase, makes a plan, edits files, runs commands, and loops until a programming goal is met, without you steering each step | An agent that adds GitHub login to a Flask app by editing five files and running tests on its own |
 | **Agent Loop** | The repeated cycle of Perceive -> Plan -> Act -> Verify that an agent runs until its goal is achieved or its budget runs out. The same loop you wrote by hand in *The Agent Loop*, with your repository as the world | The agent reading test output (Verify) and going back to fix the code (Plan -> Act) when a test fails |
 | **Context Window** | The fixed-size "working memory" an LLM can read at one time; older information scrolls out as new information is added | A large codebase has millions of tokens; the agent must choose which files to load and which to skip |
-| **Diff / Patch** | A file showing exactly which lines were removed (marked −) and which were added (marked +) when a file is changed | The agent's changes to `app.py` shown as a diff before you decide whether to merge them |
+| **Action log** | The running record an agent writes of what it did: every file it opened, every edit it made, and every command it ran, in order | The log naming `app.py` as edited, which sends you to open `app.py` and read the result before you keep it |
 | **Step Budget** | A maximum number of actions or loop iterations the agent is allowed to take before it must stop, preventing runaway cost | Setting `MAX_ITERATIONS = 25` so a stuck agent cannot loop forever and run up API bills |
 | **Acceptance Criteria** | A checklist of specific, testable conditions that must all be true before the agent (or a human) declares the task "done" | "The `/auth/callback` route returns HTTP 200" and "All existing tests still pass" |
 | **Specification-First Development** | Writing a plain-English spec, then its acceptance criteria, then a failing test per criterion, all *before* any implementation exists, so there is an objective standard the code must meet | Model 2: writing five `pytest` cases for `search_memory` and watching them fail before the agent writes a line |
 | **Test-Driven Development (TDD)** | The discipline of defining every new behavior with a failing test first, writing the least code that makes it pass, then cleaning up. **Red -> green -> refactor** | `pytest` showing five `FAILED` lines (red), then the agent's implementation turning them `PASSED` (green) |
-| **Supervision Level** | How closely you watch: **autocomplete** (every token), **pair** (every changed line), or **vibe** (only the diff and the test results). Chosen to match the task's stakes, not your mood | Section 3: choosing "pair" for a security-sensitive module and "vibe" for well-tested utility code |
-| **Diff Review** | Reading the exact lines an agent added and removed, rather than reading the finished file, so you see what it *changed* instead of what it left alone | Model 3: spotting `eval(query)` in an implementation that passes every test |
-| **Plan** | A written statement of what the agent intends to do, produced *before* it touches anything: the files it will change, the order, and why. The cheapest artifact to reject | Section 2b: rejecting a four-file plan in ten seconds instead of reviewing a four-file diff in ten minutes |
+| **Supervision Level** | How closely you watch: **autocomplete** (every token), **pair** (every changed line), or **vibe** (only the action log and the test results). Chosen to match the task's stakes, not your mood | Section 3: choosing "pair" for a security-sensitive module and "vibe" for well-tested utility code |
+| **Log review** | Reading the agent's record of its own actions, then opening each file it names, so your attention lands on what it touched instead of on the parts it left alone | Model 3: spotting `eval(query)` in an implementation that passes every test |
+| **Plan** | A written statement of what the agent intends to do, produced *before* it touches anything: the files it will change, the order, and why. The cheapest artifact to reject | Section 2b: rejecting a four-file plan in ten seconds instead of reviewing a four-file change in ten minutes |
 | **Plan mode** | A mode of the agent in which it may read the repository and propose steps but may not edit anything until you approve | Section 2c: Claude Code's plan mode and opencode's plan agent, both stopping at "waiting for approval" |
 | **Thinking / reasoning trace** | The agent's written-out deliberation before it commits to an action. Text you can read, not a window into the model's mind | The `Thought:` lines from *The Agent Loop*, now produced by a tool you did not write |
 | **Model rule vs. gate** | A rule is text the model reads (`AGENTS.md`, a system prompt) and may forget or be talked out of. A gate is a check the harness runs outside the model, before the tool executes | Part IIb: "never run `rm -rf`" in `AGENTS.md`, and the same rule as a hook that returns deny |
 | **Hook** | A command or function the harness runs automatically at a fixed point, such as before a tool call. It sees the real arguments and can block the call with a reason | Model 3b: a `PreToolUse` hook that exits 2 on a recursive delete |
 | **Tool server** | A separate process that offers an agent each operation as its own named tool, called directly instead of composed as a shell command.  **MCP (Model Context Protocol)** is the standard for it, and a later session builds one | Section 2a: `gh pr merge` typed into the shell, against a merge tool a gate can match by name |
-| **Observability, isolation, reversibility** | The three properties that make delegating safe: can I see what it did, can I bound what it reaches, can I undo it. Named in *Your AI Workbench*, Step 8.5 | The plan and the diff, the container mount, and `git checkout .` |
+| **Observability, isolation, reversibility** | The three properties that make delegating safe: can I see what it did, can I bound what it reaches, can I undo it. Named in *Your AI Workbench*, Step 8.5 | The plan and the change, the container mount, and `git checkout .` |
 
 ---
 
@@ -61,7 +61,7 @@ git -C ~/cs357-work status
 
 **If any of that is missing,** Section 1 below is the two-minute recovery path; do it now rather than during the models.
 
-**What you will have at the end:** a specification with executable acceptance criteria, an agent-written implementation of it, a gate that refuses a command your instructions alone could not stop, and a documented review of a diff in which you found three real problems.
+**What you will have at the end:** a specification with executable acceptance criteria, an agent-written implementation of it, a gate that refuses a command your instructions alone could not stop, and a documented review of a change in which you found three real problems.
 
 ---
 
@@ -71,10 +71,10 @@ Four parts inside our seventy-five minutes, a report-out, and an extension you t
 
 | | What you do | Roughly |
 |---|---|---|
-| **Part I** | Get your agent driving again, move work through GitHub, see the two routes an agent has to a service, and read a plan before the diff | 20 min |
+| **Part I** | Get your agent driving again, move work through GitHub, see the two routes an agent has to a service, and read a plan before the change | 20 min |
 | **Part II** | Write a specification and its failing tests *before* any code exists, then let the agent implement against them | 20 min |
 | **Part IIb** | See a model rule bend and a harness gate hold, and read the hook that makes the difference | 15 min |
-| **Part III** | Read a diff that passes every test and is still dangerous | 15 min |
+| **Part III** | Read a change that passes every test and is still dangerous | 15 min |
 | **Report-out** | Presenters share one disagreement per team | 5 min |
 | **Part IV** | Exercises, cowork agents, and reflection | take-home |
 | **Extension** | Self-paced: architecture comparison, a full worked scenario, the opencode configuration reference, and hook recipes for eight scenarios in both harnesses | self-paced |
@@ -131,7 +131,7 @@ Three habits, and they matter more than the tool:
 
 ```bash
 cd ~/cs357-work        # the working directory IS the agent's world
-git status             # start clean, so the diff at the end is only the agent's work
+git status             # start clean, so the change at the end is only the agent's work
 opencode
 ```
 
@@ -141,12 +141,18 @@ opencode
 
 > "Add a `--verbose` flag to `hello_agent.py` that prints the full request body before sending it.  Do not change anything else."
 
-**Read the diff, not the summary.**  The agent's prose describes what it believes it changed.  `git diff` shows what it changed.  Those are different documents.
+**Read the action log, not the summary.**  The agent's prose at the end describes what it believes it changed.  The action log is the running record of what it actually did: every file it opened, every edit it made, every command it ran.  Those are different documents, and only the second one is evidence.
+
+Run the job non-interactively so that record lands in a file you can read at your own pace rather than scrolling a live screen:
 
 ```bash
-git diff               # what actually changed
-git add -p             # stage it hunk by hunk, rejecting what you did not want
+opencode run "Add a --verbose flag to hello_agent.py that prints the full \
+  request body before sending it. Do not change anything else." 2>&1 | tee agent-run.log
+less agent-run.log     # read it once through, then open every file it names
+git add -p             # stage it one region at a time, rejecting what you did not want
 ```
+
+Keep `agent-run.log` out of version control.  It is evidence for this run and noise in every later one, so add it to `.gitignore` now and read it from your working directory.
 
 If the change is wrong, `git checkout -- .` costs you nothing, which is the whole reason for the clean tree.
 
@@ -189,7 +195,7 @@ opencode run "Fix issue #42. Read it with 'gh issue view 42', write a failing te
 gh pr create --fill
 
 # 4. Review happens in the PR, not in the chat
-gh pr diff 17
+gh pr view 17 --json files --jq '.files[].path'
 gh pr review 17 --comment -b "The fix works but the test only covers LF. Add a CRLF case."
 
 # 5. A second agent can pick up that comment
@@ -232,24 +238,24 @@ Hold your answer loosely on the right-hand column until you have built a server 
 
 ---
 
-## 2b.  Read the Plan Before You Read the Diff
+## 2b.  Read the Plan Before You Read the Change
 
-The review discipline in Part III is about the diff, and by then the work is done.  There is a cheaper place to catch a mistake, and every serious coding agent gives it to you: **the plan**.
+The review discipline in Part III is about the change, and by then the work is done.  There is a cheaper place to catch a mistake, and every serious coding agent gives it to you: **the plan**.
 
-Before an agent edits anything, it can be made to write down what it intends to do: which files, in what order, and why.  That artifact costs one screen to read and is free to reject.  A diff costs ten minutes to review, and if you reject it, the agent's work is thrown away and so was yours.
+Before an agent edits anything, it can be made to write down what it intends to do: which files, in what order, and why.  That artifact costs one screen to read and is free to reject.  An action log costs ten minutes to read, and if you reject what it records, the agent's work is thrown away and so was yours.
 
-| | Plan review | Diff review |
+| | Plan review | Change review |
 |---|---|---|
 | **What you are reading** | Intent: files, order, rationale | Consequence: exact lines added and removed |
 | **Catches** | Wrong file, wrong layer, missing dependency, scope creep, a misunderstanding of the goal | Security holes, hidden assumptions, resource problems, spec drift |
 | **Cost to reject** | Seconds. Nothing has happened yet | The agent's whole run, and your review time |
 | **Cannot catch** | Anything about the code that does not exist yet | A plan that was wrong in a way the code faithfully implemented |
 
-Neither replaces the other.  The plan catches "you are about to edit the generated file instead of the generator"; only the diff catches `eval(query)`.
+Neither replaces the other.  The plan catches "you are about to edit the generated file instead of the generator"; only the change catches `eval(query)`.
 
 ### Getting a plan out of your agent
 
-Every tool in this family exposes some version of it, and the labels differ more than the idea does.  **Claude Code** has an explicit plan mode you cycle to with Shift+Tab.  **opencode** has a plan agent that reviews before it applies a change.  **Plandex** is built around the separation: it emits a full diff plan as a reviewable document, and no file changes until you approve it.  **pi** deliberately has none of this, which is why the course reserves it for throwaway work.
+Every tool in this family exposes some version of it, and the labels differ more than the idea does.  **Claude Code** has an explicit plan mode you cycle to with Shift+Tab.  **opencode** has a plan agent that reviews before it applies a change.  **Plandex** is built around the separation: it emits a full change plan as a reviewable document, and no file changes until you approve it.  **pi** deliberately has none of this, which is why the course reserves it for throwaway work.
 
 If your tool has no mode for it, ask for one in words.  This works everywhere:
 
@@ -260,16 +266,16 @@ will touch them, with one sentence each on why. Then stop and wait. Do not edit.
 
 ### The trace, and how much to trust it
 
-Many agents also show you their thinking: the deliberation they write out before choosing an action.  Read it.  It is useful, and it is the same `Thought:` line you built by hand in *The Agent Loop*, produced by a tool you did not write.  Read it for what it is, though.  The trace is text the model generated because we asked it to, not a recording of a hidden reasoning process.  It can be perfectly coherent and describe a step the agent then does not take.  It can rationalize an action rather than explain it.  Treat it as the agent's stated intent: useful for spotting a misunderstanding early, worthless as proof that the code is right.  That is why you still read the diff.
+Many agents also show you their thinking: the deliberation they write out before choosing an action.  Read it.  It is useful, and it is the same `Thought:` line you built by hand in *The Agent Loop*, produced by a tool you did not write.  Read it for what it is, though.  The trace is text the model generated because we asked it to, not a recording of a hidden reasoning process.  It can be perfectly coherent and describe a step the agent then does not take.  It can rationalize an action rather than explain it.  Treat it as the agent's stated intent: useful for spotting a misunderstanding early, worthless as proof that the code is right.  That is why you still read the action log.
 
 Your agent's plan says it will modify `parser.py`, `parser_test.py`, and `build/generated_tokens.py`.  You know `build/` is regenerated by a script on every build.  What is the correct response, and at what cost?
 
 [( )] Approve the plan; the generated file will be overwritten anyway, so it is harmless
 [(X)] Reject the plan now and say the token list is generated from `tokens.yaml`.  Cost: about fifteen seconds
-[( )] Approve it, review the diff, and revert the `build/` hunk afterwards
+[( )] Approve it, review the change, and revert the `build/` hunk afterwards
 [( )] Approve it and add `build/` to `.gitignore` so the change stops showing up
 
-> **Why this answer?**  The third option reaches the same end state and pays for it with a full agent run and a full diff review.  The fourth hides the symptom and leaves the agent believing the generated file is where token definitions live, so it will do the same thing next time.  Rejecting at the plan stage is cheaper than both, and it corrects the agent's model of the project rather than the file.
+> **Why this answer?**  The third option reaches the same end state and pays for it with a full agent run and a full log review.  The fourth hides the symptom and leaves the agent believing the generated file is where token definitions live, so it will do the same thing next time.  Rejecting at the plan stage is cheaper than both, and it corrects the agent's model of the project rather than the file.
 
 ---
 
@@ -277,7 +283,7 @@ Your agent's plan says it will modify `parser.py`, `parser_test.py`, and `build/
 
 Section 2b asked for a plan in words.  Two of the tools you will use make it a mode.  In **Claude Code's plan mode** and with **opencode's plan agent**, the agent may read the repository, run read-only commands, and propose steps, but it may not edit a file or run a command that changes anything until you approve.  The tool enforces the stop; you do not have to hope the model remembers "do not edit."
 
-Plan mode fits the three supervision levels in Part II, Section 3, as the same discount at every level.  At the pair level it tells you which files you are about to read every line of.  At the vibe level it is what makes the level survivable: you cannot read every line, so you read the intent first and the diff second, and a plan you rejected never becomes a diff.  Reading the plan first is a habit, and the mode is the tool's way of making the habit hard to skip.
+Plan mode fits the three supervision levels in Part II, Section 3, as the same discount at every level.  At the pair level it tells you which files you are about to read every line of.  At the vibe level it is what makes the level survivable: you cannot read every line, so you read the intent first and the change second, and a plan you rejected never becomes a change.  Reading the plan first is a habit, and the mode is the tool's way of making the habit hard to skip.
 
 Here is the shape of one exchange, using the spec you will write in Model 2:
 
@@ -305,7 +311,7 @@ For one extra turn you learned that the agent intends to call the embedding serv
 
 When is plan mode worth its extra turn, and when is it theater?  Give one example of each from a task you could give opencode today.
 
-> *Hint: The plan catches the wrong file, the wrong layer, scope creep, and a misread goal.  Worth it when any of those is plausible or when the diff would be long.  Theater when the change is one line you could read faster than the plan, or when you approve plans without reading them, which is the same as having no mode at all.*
+> *Hint: The plan catches the wrong file, the wrong layer, scope creep, and a misread goal.  Worth it when any of those is plausible or when the change would be long.  Theater when the change is one line you could read faster than the plan, or when you approve plans without reading them, which is the same as having no mode at all.*
 
 ## Model 1: The Coding Agent Loop
 
@@ -335,7 +341,7 @@ The table traces a coding agent through its five stages.  As you read each row, 
 
    *Hint: Estimate the number of distinct files that probably need to change, multiply by the number of verify-and-fix cycles you expect, and add a buffer.  What information would you want to collect from past runs to refine this estimate?*
 
-> **Common Misconception:** Many students assume that a coding agent "understands" the codebase the way a senior developer does, holding a mental model of every function, every dependency, and every implicit assumption.  It does not.  The agent only knows what it has loaded into its context window during the current run.  If a critical convention (like "never use raw SQL strings; always use the ORM") was established in a file the agent did not load, the agent will violate it without noticing.  This is why human diff review remains essential even when the test suite passes: tests verify behavior, not design adherence.
+> **Common Misconception:** Many students assume that a coding agent "understands" the codebase the way a senior developer does, holding a mental model of every function, every dependency, and every implicit assumption.  It does not.  The agent only knows what it has loaded into its context window during the current run.  If a critical convention (like "never use raw SQL strings; always use the ORM") was established in a file the agent did not load, the agent will violate it without noticing.  This is why human log review remains essential even when the test suite passes: tests verify behavior, not design adherence.
 
 In the coding agent loop, the *Verify* stage fails silently when:
 
@@ -346,7 +352,7 @@ In the coding agent loop, the *Verify* stage fails silently when:
 
 # Part II: You Own the Spec, the Agent Owns the Code
 
-In this part you practice the division of labor that makes coding agents useful instead of merely fast.  The core observation, which Andrej Karpathy has stated as clearly as anyone: **humans are better at writing specifications than at reviewing arbitrary code, and models are better at writing code than at writing specifications.**  So you write the spec.  The agent writes the code.  The diff is the handoff.
+In this part you practice the division of labor that makes coding agents useful instead of merely fast.  The core observation, which Andrej Karpathy has stated as clearly as anyone: **humans are better at writing specifications than at reviewing arbitrary code, and models are better at writing code than at writing specifications.**  So you write the spec.  The agent writes the code.  The change is the handoff.
 
 ## 3.  Three Supervision Levels
 
@@ -358,7 +364,7 @@ The three levels sit on a continuum.  The right choice depends on the stakes, th
 |-------------------|-------------|-----------------|------------|------------------------|
 | **Autocomplete** | Agent suggests the next token, line, or block; you accept or reject inline | Boilerplate, well-understood APIs, single-function completions | Low | Every token as it is accepted |
 | **Pair** | You describe a task; the agent produces a full file or function; you read every line before accepting | New features in production code, security-sensitive modules | Medium | Every changed file, every line |
-| **Vibe** | You write a spec and tests; the agent implements the whole feature; you review only the diff | Well-tested utility code, prototypes, features with complete acceptance criteria | High without tests, medium with them | The diff against the spec, and the test results |
+| **Vibe** | You write a spec and tests; the agent implements the whole feature; you review only the change | Well-tested utility code, prototypes, features with complete acceptance criteria | High without tests, medium with them | The change against the spec, and the test results |
 
 One column is missing from that table on purpose, and Sections 2b and 2c supplied it: at every level, you can also review the plan before the agent acts.  Plan review is not a fourth supervision level; it is a discount available at all three.  It is what makes the third row survivable on a task where the tests are thinner than you would like.  Notice what the third row requires.  "Vibe" is only the low-risk option when the tests exist first.  Without them it is not a supervision level at all; it is hoping.  Your Week 1 session was closest to "pair": you read every line of a three-line change.  Today we earn our way to the third row by building the thing that makes it safe.
 
@@ -456,7 +462,7 @@ Read what comes back.  If the plan proposes editing the tests, or inventing a co
 Good. Implement it. Do not modify the tests. Do not modify CORPUS.
 ```
 
-> **You've succeeded when** you have a plan you approved in your scrollback, `pytest` is green, you did not touch the tests, and `git diff` shows changes confined to the body of `search_memory` and any helpers it needed.
+> **You've succeeded when** you have a plan you approved in your scrollback, `pytest` is green, you did not touch the tests, and the changed files are confined to the body of `search_memory` and any helpers it needed.
 
 > **Start the run, then keep reading.** `llama3.2` is a 3-billion-parameter model on your laptop, and implementing five tests' worth of behavior may take it several minutes and more than one attempt.  That is the honest capability of a small local model, not a broken setup.  Kick off the implementation, then read Parts IIb and III while it works, and come back to the result.  If it is still flailing after two attempts, shrink the ask to one failing test and write down what you changed: the size of instruction this model can follow is a real finding, and it is worth more than a green test suite you got by luck.  If you had to reject a plan first, say so in your notes; that rejection is the most valuable thing that happened in this exercise.
 
@@ -609,7 +615,7 @@ The model reasoned the same way both times, and its reasoning was persuasive: th
 
    > *Hint: The hook is a script outside the model.  It sees the real `tool_input.command`, not the model's description of it.  No sentence in any file changes what `grep` matches.*
 
-9.  Name two things this hook cannot judge.  Then explain why Part III, reading the diff, still happens in a project with a full set of gates.
+9.  Name two things this hook cannot judge.  Then explain why Part III, reading the action log, still happens in a project with a full set of gates.
 
    > *Hint: The hook cannot tell a needed delete from a harmful one; both are `rm -rf`.  It cannot tell a good implementation of `search_memory` from one with `eval()` in it; neither is a shell command it matches.  Gates enforce operations.  Intent and quality are still yours.*
 
@@ -624,22 +630,22 @@ Where does a `PreToolUse` hook run?
 [(X)] In the harness, after the model has produced the tool call and before the tool executes, on the actual arguments
 [( )] In the model's plan mode, where it can be approved or rejected like any other step
 
-# Part III: Reading the Diff
+# Part III: Reading the Log
 
 In this part you do the thing that no model and no hook does for you.  Your tests are green.  That is necessary and it is not sufficient, and the gap between those two words is where this part lives.
 
 ## 5.  What to Look For
 
-Tests are not a complete specification of correct behavior; they are a sample of the behaviors you thought to check.  Diff review is how you find the behaviors you forgot to test.  Four questions, every time:
+Tests are not a complete specification of correct behavior; they are a sample of the behaviors you thought to check.  Change review is how you find the behaviors you forgot to test.  Four questions, every time:
 
 1.  **Spec fidelity.**  Does the implementation match the *spec*, or only the letter of the tests?
 2.  **Hidden assumptions.**  Does it assume sorted input, single-threaded access, ASCII-only text, a network that is always up, or some other precondition the spec never stated?
 3.  **Security.**  Does it use `eval()`, build a shell command out of user input, write outside the working directory, or otherwise let external input become executable?
 4.  **Resources.**  Does it leave files open, build unbounded data structures, or loop with no exit condition?
 
-Read the diff, not the summary the agent gives you.  `git diff` shows what changed; the agent's prose describes what it *believes* it changed, and those are different documents.
+Read the action log, not the summary the agent gives you.  the action log records what it did; the agent's prose describes what it *believes* it changed, and those are different documents.
 
-## Model 3: A Planted-Bug Diff
+## Model 3: A Planted-Bug Change
 
 Below is an implementation of `search_memory` that an agent might plausibly produce.  **It passes all five tests from Model 2.**  It contains three deliberate problems.  Read it as a team before answering; the Recorder marks the line number of each problem your team finds.
 
@@ -713,13 +719,13 @@ def search_memory(query, k):
 
 15.  Now the uncomfortable one.  Every problem above survived a green test suite.  Go back to the acceptance criteria in Model 2 and propose **one additional criterion** that would have made at least one of these bugs impossible to ship.  What does the difficulty of writing that criterion tell you about the limits of specification?
 
-> **Common Misconception:** "If all the tests pass, the code is correct."  Tests verify the behaviors you thought to test.  A function can pass a hundred tests and still hold a security hole, a resource leak, or a wrong answer on an input nobody imagined.  Passing tests are necessary and not sufficient, which is exactly why diff review sits alongside testing rather than being replaced by it.
+> **Common Misconception:** "If all the tests pass, the code is correct."  Tests verify the behaviors you thought to test.  A function can pass a hundred tests and still hold a security hole, a resource leak, or a wrong answer on an input nobody imagined.  Passing tests are necessary and not sufficient, which is exactly why log review sits alongside testing rather than being replaced by it.
 
 A coding agent produces an implementation that passes all five acceptance-criterion tests.  A reviewer then spots `eval(query)` on line 4.  What does that demonstrate?
 
 [( )] The tests were badly written and should be discarded
 [( )] The agent made a mistake the test suite should have caught automatically
-[(X)] Tests verify sampled behaviors; diff review catches behaviors outside the tests' scope, such as security properties
+[(X)] Tests verify sampled behaviors; log review catches behaviors outside the tests' scope, such as security properties
 [( )] The reviewer is being overly cautious; passing tests mean the code is safe to ship
 
 # Part IV: Synthesis and Practice
@@ -752,11 +758,11 @@ A coding agent produces an implementation that passes all five acceptance-criter
 
    *You've succeeded when* you have a table with at least 4 external services, a specific failure mode for each, and at least one mitigation for the most dangerous failure.
 
-3.  **Diff review exercise.**
+3.  **Change review exercise.**
 
-   *What to do:* Your instructor will display a git diff from an actual coding agent session.  As a team, identify: (a) one change that is clearly correct and requires no further review, (b) one change that requires domain knowledge to evaluate and cannot be verified by reading code alone, and (c) one change you would reject and why.  The Presenter explains the team's reasoning.
+   *What to do:* Your instructor will display the action log and the changed files from an actual coding agent session.  As a team, identify: (a) one change that is clearly correct and requires no further review, (b) one change that requires domain knowledge to evaluate and cannot be verified by reading code alone, and (c) one change you would reject and why.  The Presenter explains the team's reasoning.
 
-   *Starter hint:* When reading a diff, lines beginning with `+` were added and lines beginning with `-` were removed.  Context lines (no prefix) show surrounding code that was not changed.  Look for: added imports that were not needed, deleted lines that might have been load-bearing, and test changes that reduce coverage rather than add it.
+   *Starter hint:* When reading a change, lines beginning with `+` were added and lines beginning with `-` were removed.  Context lines (no prefix) show surrounding code that was not changed.  Look for: added imports that were not needed, deleted lines that might have been load-bearing, and test changes that reduce coverage rather than add it.
 
    *You've succeeded when* your Presenter can explain the team's rejection reasoning in terms of a specific risk: "if this change ships, then X could happen," rather than "it looks wrong."
 
@@ -791,9 +797,9 @@ Everything today assumed the agent's world is a codebase.  The same loop (percei
 
 A general agent does not have to live on a desktop.  **Hermes** is a general local agent: a tool-calling agent with a persistent identity directory, driven through a gateway rather than a terminal.  The [Local Agent Stack tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentStack) runs it in a container as the agent tier of a local stack, and you can drive one small, checkable change through opencode and through a cowork-style agent against the same local model, so you can say from the two traces which kind of agent fits which kind of task.
 
-The move to cowork raises the stakes on everything this session taught about review.  A wrong diff in the code setting is caught by tests and reversed by `git`.  A cowork agent that edits the wrong document, emails the wrong person, or deletes the wrong file has no test suite and often no undo.  Your judgment does not disappear as agents leave the codebase; it moves, from "review the diff" to "define the gates of a world that has no `git revert`."  Part IIb is the first of those gates.
+The move to cowork raises the stakes on everything this session taught about review.  A wrong change in the code setting is caught by tests and reversed by `git`.  A cowork agent that edits the wrong document, emails the wrong person, or deletes the wrong file has no test suite and often no undo.  Your judgment does not disappear as agents leave the codebase; it moves, from "review the change" to "define the gates of a world that has no `git revert`."  Part IIb is the first of those gates.
 
-16.  In the code setting, `git` and the test suite give you a safety net: you can review a diff and roll back a bad change.  When a cowork agent operates across your whole desktop, what plays the role of "the diff" and "the rollback", and where does that leave the human's responsibility?
+16.  In the code setting, `git` and the test suite give you a safety net: you can review a change and roll back a bad change.  When a cowork agent operates across your whole desktop, what plays the role of "the change" and "the rollback", and where does that leave the human's responsibility?
 
 [[___ Your answer here ___]]
 
@@ -832,7 +838,7 @@ Two flags do most of the work.  `--memory 2g` stops an agent stuck in a tool-cal
 
 The Responsible AI Capstone's [containerization direction](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ResponsibleAI#direction-4-containerizing-an-ai-system-safely) turns these questions into a hardened deployment with a written threat model.  What matters today is that you stop treating the sandbox as a detail and start treating it as part of the design, alongside the gate.
 
--> Coming Up Next: Today you drove opencode against a specification and read the diff it produced.  *Skills: Design One, Then Measure It* works on the instructions the agent reads before it produces anything: what a skill file is, when it fires, and how to tell whether it changed the output at all, by running the same task with and without it and scoring the runs.  The menu-driven kickoff skill from Section 4 is the first skill you will write for the OpenCode Studio lab.  You watched the agent produce a different plan each time you asked; the [Sampling and Temperature](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SamplingAndTemperature) tutorial explains where that variation comes from.  Keep `spec_search_memory.py`: writing the check before the work is the through-line of the next several weeks.
+-> Coming Up Next: Today you drove opencode against a specification and read the action log it produced.  *Skills: Design One, Then Measure It* works on the instructions the agent reads before it produces anything: what a skill file is, when it fires, and how to tell whether it changed the output at all, by running the same task with and without it and scoring the runs.  The menu-driven kickoff skill from Section 4 is the first skill you will write for the OpenCode Studio lab.  You watched the agent produce a different plan each time you asked; the [Sampling and Temperature](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SamplingAndTemperature) tutorial explains where that variation comes from.  Keep `spec_search_memory.py`: writing the check before the work is the through-line of the next several weeks.
 
 # Extension: Coding Agents in Depth (self-paced)
 
@@ -845,7 +851,7 @@ Three open or widely-used coding agents take different architectural approaches 
 | Agent | Architecture | How It Plans | File Access Method | How It Executes | Safety Model |
 |---|---|---|---|---|---|
 | **OpenCode** | Terminal-native; single LLM session with tool calls | Inline reasoning: the agent plans and acts in the same generation loop without separating these phases | Shell tools (`read_file`, `list_dir`, shell exec) called directly from the agent loop with no intermediary | Executes shell commands directly in the user's live environment, affecting real files immediately | Permission prompts before destructive operations, declared in the `permission` block; the `--auto` flag approves everything not explicitly denied and lets the agent act freely |
-| **Plandex / pi.dev** | Plan-first; explicitly separates the planning phase from the execution phase | Generates a full *diff plan* as a structured, human-readable artifact before touching any file | Loads relevant file segments into context via semantic search, finds the most relevant code rather than reading everything | Applies the pre-approved plan as a batch operation; the user reviews the plan document before any file is changed | Human approval gate sits between plan and apply; no file is changed until the human clicks approve; changes are reversible until committed |
+| **Plandex / pi.dev** | Plan-first; explicitly separates the planning phase from the execution phase | Generates a full *change plan* as a structured, human-readable artifact before touching any file | Loads relevant file segments into context via semantic search, finds the most relevant code rather than reading everything | Applies the pre-approved plan as a batch operation; the user reviews the plan document before any file is changed | Human approval gate sits between plan and apply; no file is changed until the human clicks approve; changes are reversible until committed |
 | **Hermes (tool-calling orchestrator)** | LLM acts as an orchestrator that selects and sequences registered function tools | Selects and sequences tool calls; each tool call is one discrete "action" the agent chooses | Registered filesystem tools (`read_file`, `write_file`) with defined JSON schemas that specify exactly what each tool can do | Tool functions run in the host process and return results to the LLM as observations it can reason about | Controlled entirely by which tools are registered; if a tool is not registered, that action is simply impossible |
 
 ### Critical Thinking Questions
@@ -1248,7 +1254,7 @@ export const ConfirmWrites = async ({ directory }) => ({
 | E.7 audit line | After the tool | Everything | Yes |
 | E.8 human before a write | Before the tool | The tool's name | Yes; the decision is a person's |
 
-One more distinction belongs in this table.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model and ask it to decide.  Those are useful for judgment ("does this diff touch billing code?") and they are not gates in the sense of this section: a model asked to judge can be argued with, the same as the model it is judging.  Use a `command` hook for what must hold every time and a `prompt` hook for what needs an opinion.
+One more distinction belongs in this table.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model and ask it to decide.  Those are useful for judgment ("does this change touch billing code?") and they are not gates in the sense of this section: a model asked to judge can be argued with, the same as the model it is judging.  Use a `command` hook for what must hold every time and a `prompt` hook for what needs an opinion.
 
 ### Critical Thinking Questions
 
@@ -1269,7 +1275,7 @@ One more distinction belongs in this table.  Claude Code hooks also come in `pro
 ## Further Reading
 
 - Shunyu Yao et al. "ReAct: Synergizing Reasoning and Acting in Language Models."  *ICLR* (2023).  The reasoning pattern underlying most coding agents.
-- Plandex documentation: https://docs.plandex.ai, especially the "plans" concept and diff review workflow.
+- Plandex documentation: https://docs.plandex.ai, especially the "plans" concept and log review workflow.
 - OpenCode GitHub repository: https://github.com/sst/opencode, read the README for architecture decisions, and https://opencode.ai/docs/cli/ for the `--auto` flag that turns permission prompts off.
 - OpenCode permissions and plugins: https://opencode.ai/docs/permissions/ and https://opencode.ai/docs/plugins/, the source for the `permission` block and the `tool.execute.before` hook in Part IIb.
 - Claude Code hooks: https://code.claude.com/docs/en/hooks, the source for the `PreToolUse` hook shape, exit codes, and JSON decisions in Part IIb.

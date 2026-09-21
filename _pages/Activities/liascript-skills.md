@@ -12,9 +12,9 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Skills: Design One, Then Measure It
 
-In *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff*, you drove opencode against a specification and read the diff it produced.  Today we work on the instructions the agent reads before it produces anything.  A **skill** is a small file of instructions that the agent loads when your request matches the skill's description, and the OpenCode Studio lab asks you to write two of them.  The question this session answers is the one that lab leaves open: after you write a skill, how do you know it changed anything?
+In *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log*, you drove opencode against a specification and read the action log it produced.  Today we work on the instructions the agent reads before it produces anything.  A **skill** is a small file of instructions that the agent loads when your request matches the skill's description, and the OpenCode Studio lab asks you to write two of them.  The question this session answers is the one that lab leaves open: after you write a skill, how do you know it changed anything?
 
-We do three things.  First we read a skill and decide when it fires.  Then we design one together, spec-first: job, trigger, instructions, test.  Then we measure it, by running the same task with and without the skill on two local models and scoring every run against a five-item rubric.  The written assignment *Skill Design Study* repeats that experiment at home, so the protocol in Part III is the one you will follow.
+We do three things.  First we read a skill and decide when it fires.  Then we design one together, spec-first: job, trigger, instructions, test.  Then we measure it, by running the same task with and without the skill on two local models and scoring every run against a six-item rubric.  The written assignment *Skill Design Study* repeats that experiment at home, so the protocol in Part III is the one you will follow.
 
 ---
 
@@ -28,7 +28,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 
 | Term | Plain-English Definition | Example You'll See Today |
 |------|--------------------------|--------------------------|
-| **Skill** | A named instruction set the agent loads on demand, scoped to one purpose.  Stored as a directory with a `SKILL.md` inside | The `commit-message` skill the class writes in Part II |
+| **Skill** | A named instruction set the agent loads on demand, scoped to one purpose.  Stored as a directory with a `SKILL.md` inside | The `system-prompt-author` skill the class writes in Part II |
 | **`SKILL.md`** | The file that is the skill.  YAML front matter carries `name` and `description`; the body is the instruction text | Model 1, the safety-guardrail skill below |
 | **Description-as-trigger** | There is no separate trigger field.  The agent reads each skill's `description` against your request and decides whether to load it | "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" fires; "Safety utilities" does not |
 | **System prompt** | Standing instructions sent ahead of every turn.  Always on, never invoked by name | The `BASELINE` string in the Part III harness |
@@ -56,7 +56,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | Minutes | What we do |
 |---|---|
 | 0-20 | Part I, what a skill is, when it fires, and what a hook can enforce about it |
-| 20-42 | Part II, design the `commit-message` skill together |
+| 20-42 | Part II, design the `system-prompt-author` skill together |
 | 42-70 | Part III, run it with and without, on two models, and score it |
 | 70-75 | Report out: each team's results table and the one number that surprised them |
 
@@ -117,9 +117,9 @@ Remember two things from this section.  The directory name is the skill name, an
 
 ## 2b.  The Same Instructions, Three Ways In
 
-A skill body is just text that reaches the model.  There are three routes it can take to get there, and you have already used two of them this term without calling them that.  Take the `commit-message` body from Part II and picture it arriving each way.
+A skill body is just text that reaches the model.  There are three routes it can take to get there, and you have already used two of them this term without calling them that.  Take the `system-prompt-author` body from Part II and picture it arriving each way.
 
-**Route 1, opencode: the filesystem.**  Save the file at `.agents/skills/commit-message/SKILL.md`.  There is no install step; being in a discovery path *is* the installation.
+**Route 1, opencode: the filesystem.**  Save the file at `.agents/skills/system-prompt-author/SKILL.md`.  There is no install step; being in a discovery path *is* the installation.
 
 **Route 2, OpenWebUI: a custom Model.**  In the interface you stood up in *Running Your Own AI*, go to **Workspace &rarr; Models &rarr; + Create a model**, name it, pick `llama3.2:latest` as the base model, and paste the skill body, everything below the front matter, into the **System Prompt** field.  Under **Advanced Params** set temperature and seed if you want it repeatable.  Save, and it appears in the chat model selector beside the raw model.  This is the same move the *Local Agent* lab's Direction 0 uses to build a persona agent.
 
@@ -145,7 +145,7 @@ Only Route 1 has a **trigger**.  In opencode the `description` decides whether t
 
 Hold onto that, because it is what Part III does on purpose.  The harness pastes the body into the system prompt, so it measures the *instructions* with the trigger taken out of the picture.  You test the trigger separately, by watching the skill load and not load at the end of Part II.  Two tests, two different things.
 
-> **Watch out:** a skill body written for Route 1 often says "when the user asks you to commit."  Pasted into a Route 2 system prompt, that sentence becomes standing instruction on a model that will also be asked about unrelated things, and a small model may try to write a commit message in reply to a question about the weather.  An instruction that assumed a trigger is not automatically safe without one.
+> **Watch out:** a skill body written for Route 1 often says "when the user asks you to write a system prompt."  Pasted into a Route 2 system prompt, that sentence becomes standing instruction on a model that will also be asked about unrelated things, and a small model may start drafting an agent persona in reply to a question about the weather.  An instruction that assumed a trigger is not automatically safe without one.
 
 ## Model 1: The Safety-Guardrail Skill
 
@@ -304,14 +304,14 @@ A skill that is vague will be applied differently on every run, and you will not
 3. **Instructions.**  Numbered rules, each concrete enough to check.  Not "write a good subject line" but "keep the subject to 50 characters or fewer."  Concrete constraints can be tested; abstract ones cannot.
 4. **Test.**  One pass-or-fail check per rule, plus the negative-trigger request from step 2.
 
-Steps 1 and 2 are where most of the ambiguity lives, and the fastest way to clear it is to let the agent ask.  A skill in the grill-me / interview-me style does exactly that: before it builds anything, it asks you numbered multiple-choice questions, each with a recommended default, and it records your answers as part of the spec.  Three menued questions ("Which files may this skill touch?  (a) only `src/`, recommended; (b) `src/` and `tests/`; (c) anywhere") cost less than one wrong guess, and the answers become the constraints that step 3's rules enforce and step 4's tests check.  The OpenCode Studio lab's kickoff skill is this pattern, so the `commit-message` skill below is a good place to practice it: decide now which two questions it should ask before it writes a subject line.
+Steps 1 and 2 are where most of the ambiguity lives, and the fastest way to clear it is to let the agent ask.  A skill in the grill-me / interview-me style does exactly that: before it builds anything, it asks you numbered multiple-choice questions, each with a recommended default, and it records your answers as part of the spec.  Three menued questions ("Which files may this skill touch?  (a) only `src/`, recommended; (b) `src/` and `tests/`; (c) anywhere") cost less than one wrong guess, and the answers become the constraints that step 3's rules enforce and step 4's tests check.  The OpenCode Studio lab's kickoff skill is this pattern, so the `system-prompt-author` skill below is a good place to practice it: decide now which two questions it should ask before it writes a single line of the prompt.
 
 The body of a skill has a recognizable shape, and this security-review skill from the design-first session shows it: a role sentence, a numbered list of checks, and an exact output format.
 
 ```markdown
 # Security Review Skill
 
-You are performing a security review of the diff provided. Check for each of the following
+You are performing a security review of the change provided. Check for each of the following
 OWASP top-10 risks for LLM-integrated applications:
 
 1. **Prompt Injection**: does any user-supplied string reach a model prompt without sanitization?
@@ -323,56 +323,62 @@ OWASP top-10 risks for LLM-integrated applications:
 For each risk, state: FOUND / NOT FOUND / CANNOT DETERMINE, with a one-line explanation.
 If any risk is FOUND, suggest the minimal fix.
 
-Review the most recent diff provided by the user.
+Review the most recent change provided by the user.
 ```
 
-## Model 2: The `commit-message` Skill
+## Model 2: The `system-prompt-author` Skill
 
-The job today is one every coding agent does many times a day: write the commit message for a diff.  Work through the four steps with the class, then compare to the version below.
+The job today is one you will do many times this term: write the system prompt that configures an agent.  Work through the four steps with the class, then compare to the version below.
 
-**Job:** write a git commit message from a diff.
+**Job:** write a system prompt for an agent.
 
-**Trigger:** fires on "commit this", "write a commit message", "summarize the staged changes".  Must not fire on "what does `git rebase` do?", which is a question about git, not a request for a message.
+**Trigger:** fires on "write a system prompt", "give this agent a persona", "harden this prompt", "red-team this agent's instructions".  Must not fire on "what is a system prompt?", which is a question about the idea, not a request for one.
 
-**Instructions and test** are in the file and the rubric that follow.  Create it at `.agents/skills/commit-message/SKILL.md`; the directory name must match `name:`.
+**Instructions and test** are in the file and the rubric that follow.  Create it at `.agents/skills/system-prompt-author/SKILL.md`; the directory name must match `name:`.
 
 ```markdown
 ---
-name: commit-message
-description: Use when the user asks to commit, write a commit message, describe the staged changes, or summarize a diff for git.
+name: system-prompt-author
+description: Use when the user asks to write, revise, harden, or red-team a system prompt, an agent persona, or an agent's job description.
 ---
 
-You are writing the commit message for the diff the user provides.
+You are writing a system prompt for an agent.
 
 ## Rules
-1. The first line is the subject.  Start it with one of: Add, Fix, Remove, Update, Rename, Refactor, Guard.
-2. Keep the subject to 50 characters or fewer, with no period at the end.
-3. Leave one blank line after the subject.
-4. In the body, name every file the diff changes and say why the change was made, not what the code does.
-5. Reply with the commit message only: no code fence, no greeting, no commentary.
+1. Open with the role.  The first sentence names the agent, says what it does, and says who it works for, because models anchor on early text.
+2. State behavior positively.  Say what the agent should do, not only what it should not.
+3. Constrain the format.  Name a length ceiling in words or sentences, and say how a reply is structured.
+4. Handle uncertainty explicitly.  Say what the agent does when it does not know, and where it sends the user instead.
+5. Name one escalation path.  Say which situation is handed to a human, and that the agent stops there.
+6. End with a version stamp on its own line, in the form `v<major>.<minor> <YYYY-MM-DD>`.
+
+Reply with the system prompt only: no code fence, no greeting, no commentary.
 ```
 
-The test is a five-item rubric.  Each item is one check a program can make on the reply, and each maps back to a rule.
+Those six rules are not invented for this session.  They are the six principles for effective system prompts from *Prompt Engineering as Agent Design*, written in the shape a skill file takes, which is the point worth noticing: a skill is usually a thing you already knew, written down where an agent can read it.
+
+The test is a six-item rubric, one item per rule.  Each item is one check a program can make on the reply.
 
 | # | Rubric item | Checks rule | How the check works |
 |---|---|---|---|
-| 1 | Subject is 50 characters or fewer | 2 | `len(subject) <= 50` |
-| 2 | Subject starts with a listed verb | 1 | first word is in the verb list |
-| 3 | Subject has no trailing period | 2 | `not subject.endswith(".")` |
-| 4 | A blank line follows the subject | 3 | second line is empty |
-| 5 | Body names every changed file | 4 | each filename from the diff appears in the body |
+| 1 | The first line names a role | 1 | the line matches `you are` and contains a capitalized name |
+| 2 | The prompt states a refusal | 2 | it contains one of: do not, never, refuse, decline |
+| 3 | The prompt constrains the format | 3 | a number followed by words, sentences, or bullets |
+| 4 | The prompt handles uncertainty | 4 | it contains one of: unsure, uncertain, do not know |
+| 5 | The prompt names an escalation path | 5 | it contains one of: escalate, professor, instructor, a human |
+| 6 | The prompt carries a version stamp | 6 | it matches `v<digits>.<digits>` and a `YYYY-MM-DD` date |
 
-Install it and confirm the trigger before you measure anything: create `.agents/skills/commit-message/`, save the file above inside it as `SKILL.md`, and start opencode.  Then type "Write a commit message for my staged changes" and watch the skill load.  Then type "What does git rebase do?" and confirm it does not.
+Install it and confirm the trigger before you measure anything: create `.agents/skills/system-prompt-author/`, save the file above inside it as `SKILL.md`, and start opencode.  Then type "Write a system prompt for a course assistant" and watch the skill load.  Then type "What is a system prompt?" and confirm it does not.
 
 ### Critical Thinking Questions
 
-4.  Rule 4 has two halves: name every file, and say why rather than what.  Only the first half has a rubric item.  Why was the second half left out of the rubric, and what would you need to score it?
+4.  Rule 2 has two halves: say what the agent should do, and do not rely only on prohibitions.  Only the prohibition half has a rubric item.  Why was the positive half left out of the rubric, and what would you need to score it?
 
-   > *Hint: "Names `search_memory.py`" is a string check.  "Explains why" is a judgment.  The *Critique, Consensus, and the LLM Judge* session later in the term is about scoring judgments; today's rubric sticks to what a string check can decide.*
+   > *Hint: "Contains the word never" is a string check.  "Is framed positively" is a judgment about the whole prompt.  The *Critique, Consensus, and the LLM Judge* session later in the term is about scoring judgments; today's rubric sticks to what a string check can decide.*
 
 5.  Predict, before Part III runs anything: which rubric item will `llama3.2` fail most often *without* the skill?  Which will it still fail *with* the skill?  Write both predictions down; you will check them against the table.
 
-   > *Hint: Without instructions, models tend to open with a greeting or a code fence and to write long subjects.  With instructions, the check most often missed is the one that requires counting.*
+   > *Hint: Without instructions, a model writes something that reads well and asks for nothing it was not asked for, so the items most often missed are the two nobody would think to include.  With instructions, the check most often missed is the one that requires an exact format.*
 
 ---
 # Part III: Measure It
@@ -388,11 +394,11 @@ A measurement is only as good as what it holds still.  Here is everything the ha
 | Models | `llama3.2` and `llama3.2:1b` | Two sizes, so a result that holds on one and not the other is visible |
 | Temperature | `0.0` | Pins the wording, so runs are repeatable (*Running Your Own AI*, Section 3c) |
 | Seed | `42` | Pins the random draw itself |
-| Task prompt | `TASK`, the same diff every run | The diff is the input; it does not change between conditions |
+| Task prompt | `TASK`, the same design brief every run | The brief is the input; it does not change between conditions |
 | Condition "without" | `BASELINE` as the system prompt | The control |
 | Condition "with" | `BASELINE` plus the skill body as the system prompt | The one change |
 | Runs per cell | `RUNS = 3` | Shows whether a score is a property of the skill or of one run |
-| Score | Five-item rubric, 0 to 5 per run | The same items for every cell |
+| Score | Six-item rubric, 0 to 6 per run | The same items for every cell |
 
 One honest note about the "with" condition.  When a skill fires inside opencode, the agent reads the `SKILL.md` body into its context.  The harness hands that body over directly as part of the system prompt, so it measures the instructions on their own, separately from the trigger.  You tested the trigger at the end of Part II by watching it load and not load; the harness tests the rest.
 
@@ -401,6 +407,7 @@ One honest note about the "with" condition.  When a skill fires inside opencode,
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.  Before you run it, write down the score you expect in each of the four cells.
 
 ```python
+import re
 import requests
 
 # temperature=0.0 pins the wording (Running Your Own AI, Section 3c).
@@ -416,59 +423,58 @@ def chat(system, user, temperature=0.0, seed=42, model="llama3.2"):
                          {"role": "user", "content": user}]}, timeout=120)
         return r.json()["message"]["content"]
     except Exception as e:
-        print(f"[promptengineering:eval] {e}")
+        print(f"[skills:chat] {e}")
         import traceback; traceback.print_exc()
         return ""
 
-# The task: one small diff, identical in every run.  Two files change.
-DIFF = """diff --git a/search_memory.py b/search_memory.py
---- a/search_memory.py
-+++ b/search_memory.py
-@@ -12,7 +12,9 @@ def search_memory(query, k=3):
--    results = col.query(query_texts=[query], n_results=k)
-+    if not query.strip():
-+        return []
-+    results = col.query(query_texts=[query], n_results=min(k, col.count()))
-     return results["documents"][0]
-diff --git a/tests/test_search_memory.py b/tests/test_search_memory.py
---- a/tests/test_search_memory.py
-+++ b/tests/test_search_memory.py
-@@ -20,3 +20,6 @@ def test_returns_k_results():
-     assert len(search_memory("lab 3 due date")) == 3
-+
-+def test_empty_query_returns_nothing():
-+    assert search_memory("   ") == []
-"""
-FILES = ["search_memory.py", "tests/test_search_memory.py"]
-TASK = "Write the commit message for this diff.\n\n" + DIFF
+# The task: one design brief, identical in every run.
+BRIEF = """Write the system prompt for Aria, the CS357 course assistant at Ursinus College.
+
+Aria answers student questions about CS357: the activities, the labs, the project,
+and the tools the course uses, which are Ollama, opencode, and Docker.  Students
+reach her from the course website at any hour, including the night before a
+deadline.  She is not a grader, and she has no access to Canvas or to any
+student's record.  Today is 2026-09-22."""
+TASK = BRIEF
 
 # The control: a system prompt with no skill in it.
-BASELINE = "You are a helpful coding assistant."
+BASELINE = "You are a helpful assistant."
 
 # The skill body, exactly as it appears below the front matter in SKILL.md.
-SKILL = """You are writing the commit message for the diff the user provides.
+SKILL = """You are writing a system prompt for an agent.
 
 ## Rules
-1. The first line is the subject.  Start it with one of: Add, Fix, Remove, Update, Rename, Refactor, Guard.
-2. Keep the subject to 50 characters or fewer, with no period at the end.
-3. Leave one blank line after the subject.
-4. In the body, name every file the diff changes and say why the change was made, not what the code does.
-5. Reply with the commit message only: no code fence, no greeting, no commentary.
+1. Open with the role.  The first sentence names the agent, says what it does, and says who it works for, because models anchor on early text.
+2. State behavior positively.  Say what the agent should do, not only what it should not.
+3. Constrain the format.  Name a length ceiling in words or sentences, and say how a reply is structured.
+4. Handle uncertainty explicitly.  Say what the agent does when it does not know, and where it sends the user instead.
+5. Name one escalation path.  Say which situation is handed to a human, and that the agent stops there.
+6. End with a version stamp on its own line, in the form `v<major>.<minor> <YYYY-MM-DD>`.
+
+Reply with the system prompt only: no code fence, no greeting, no commentary.
 """
 
-# The five-item rubric.  One string check per item, pass or fail.
-VERBS = ("Add", "Fix", "Remove", "Update", "Rename", "Refactor", "Guard")
+# The six-item rubric, one item per rule.  One string check per item, pass or fail.
+HEDGES = ("unsure", "uncertain", "not certain", "do not know", "don't know")
+REFUSALS = ("do not", "don't", "never", "refuse", "decline", "will not")
+ESCALATIONS = ("escalate", "professor", "instructor", "a human")
 
-def score(msg):
-    lines = msg.strip().splitlines() or [""]
-    subject = lines[0].strip()
-    body = "\n".join(lines[1:])
+def score(prompt):
+    text = prompt.strip()
+    low = text.lower()
+    first = (text.splitlines() or [""])[0]
     return [
-        ("1 subject <= 50 chars",        len(subject) <= 50),
-        ("2 subject starts with verb",   subject.split(" ")[0] in VERBS),
-        ("3 no trailing period",         not subject.endswith(".")),
-        ("4 blank line after subject",   len(lines) > 1 and lines[1].strip() == ""),
-        ("5 body names every file",      all(f in body for f in FILES)),
+        ("1 role named in line 1",
+         bool(re.search(r"\byou are\b", first, re.I))
+         and bool(re.search(r"\b[A-Z][a-z]{2,}\b", first))),
+        ("2 states a refusal",        any(w in low for w in REFUSALS)),
+        ("3 constrains the format",
+         bool(re.search(r"\b\d+\s*(words|sentences|bullets?)\b", low))),
+        ("4 handles uncertainty",     any(w in low for w in HEDGES)),
+        ("5 names an escalation path", any(w in low for w in ESCALATIONS)),
+        ("6 carries a version stamp",
+         bool(re.search(r"\bv\d+\.\d+\b", low))
+         and bool(re.search(r"\b20\d{2}-\d{2}-\d{2}\b", text))),
     ]
 
 MODELS = ["llama3.2", "llama3.2:1b"]
@@ -479,12 +485,12 @@ for model in MODELS:
     for label, system in CONDITIONS.items():
         totals = []
         for run in range(RUNS):
-            msg = chat(system, TASK, model=model)
-            checks = score(msg)
+            reply = chat(system, TASK, model=model)
+            checks = score(reply)
             passed = sum(ok for _, ok in checks)
             totals.append(passed)
             failed = [name for name, ok in checks if not ok]
-            print(f"{model:12} {label:8} run {run + 1}: {passed}/5  failed: {failed}")
+            print(f"{model:12} {label:8} run {run + 1}: {passed}/6  failed: {failed}")
         print(f"{model:12} {label:8} mean = {sum(totals) / RUNS:.2f}\n")
 ```
 
@@ -492,7 +498,7 @@ for model in MODELS:
 
 The Recorder fills this in from the printed output.  This is also the table the *Skill Design Study* assignment asks for, with your own skill, your own rubric, and the number of runs it specifies.
 
-| Model | Condition | Run 1 | Run 2 | Run 3 | Mean (of 5) | Items that failed |
+| Model | Condition | Run 1 | Run 2 | Run 3 | Mean (of 6) | Items that failed |
 |---|---|---|---|---|---|---|
 | `llama3.2` | without | | | | | |
 | `llama3.2` | with | | | | | |
@@ -509,41 +515,43 @@ Two derived numbers matter more than any single cell.  The **skill effect** for 
 
 7.  Suppose `llama3.2` scores a mean of 3.00 without the skill and 4.00 with it.  That is a difference of one rubric item.  Under what condition is that difference evidence that the skill worked, and under what condition is it noise?
 
-   > *Hint: Compare the difference between cells to the spread within a cell.  A one-item gap between conditions means little when one condition's own three runs already differ by one.  Which rubric item moved also matters: a skill that says "no trailing period" and fixes only that item did exactly one thing.*
+   > *Hint: Compare the difference between cells to the spread within a cell.  A one-item gap between conditions means little when one condition's own three runs already differ by one.  Which rubric item moved also matters: a skill that says "end with a version stamp" and fixes only that item did exactly one thing.*
 
 8.  Why two models?  Write one sentence that would be true if the skill effect were large on `llama3.2` and zero on `llama3.2:1b`, and a different sentence for the reverse.  Then say what you can conclude about the *skill* from either.
 
    > *Hint: A skill is guidance the model chooses to follow, and a smaller model follows a numbered list less reliably.  A result on one model is a fact about that pair.  Two models let you say whether the effect belongs to the skill or to the model.*
 
-9.  Your rubric has five items and your diff changes two files.  If you edited the skill until every cell scored 5.00 on this diff, what could happen on a different diff?  Name the risk and the guard.
+9.  Your rubric has six items and your brief describes one agent.  If you edited the skill until every cell scored 6.00 on Aria, what could happen on a different agent?  Name the risk and the guard.
 
-   > *Hint: This is the same risk as tuning a prompt to five countries in the capitals harness.  A second diff you never tuned on is a held-out case.*
+   > *Hint: This is the same risk as tuning a prompt to five countries in the capitals harness.  A second brief you never tuned on is a held-out case.  Write one for an agent with a different audience and a different refusal.*
 
 ---
 # Part IV: Synthesis and Practice
 
 ## 5.  Exercises
 
-1.  **A held-out diff.**
+1.  **A held-out brief.**
 
-   *What to do:* Write a second diff that changes three files, and rerun the Part III cell with it as `DIFF` and the three filenames as `FILES`.  Fill in a second results table.
+   *What to do:* Write a second design brief for an agent with a different audience and a different refusal, such as a lab assistant that must never run a command for a student.  Rerun the Part III cell with it as `BRIEF`.  Fill in a second results table.
 
-   *Starter hint:* Do not edit the skill between the two diffs.  The question is whether the ranking of the four cells holds on input the skill was not tuned on.
+   *Starter hint:* Do not edit the skill between the two briefs.  The question is whether the ranking of the four cells holds on input the skill was not tuned on.
 
-   *You've succeeded when:* You can state in one sentence whether the skill effect on each model survived the new diff, with the two tables as evidence.
+   *You've succeeded when:* You can state in one sentence whether the skill effect on each model survived the new brief, with the two tables as evidence.
 
 2.  **Move one rule into code.**
 
-   *What to do:* Put rubric item 1 into a git `commit-msg` hook so that a subject line longer than 50 characters is rejected no matter who wrote it.  Save this as `.git/hooks/commit-msg` and make it executable with `chmod +x`.  Then ask opencode to commit with a deliberately long subject and capture what happens.
+   *What to do:* Rubric item 6 asks for a version stamp.  The skill asks for one, and a model may still forget.  Write a check that reads a prompt file and refuses it when the stamp is missing, then run it against a prompt the model produced without the skill.
 
    *Starter hint:*
    ```bash
    #!/bin/sh
-   subject=$(head -n 1 "$1")
-   [ ${#subject} -le 50 ] || { echo "commit-msg: subject is over 50 characters" >&2; exit 1; }
+   # require-stamp.sh <prompt-file>
+   grep -Eq 'v[0-9]+\.[0-9]+ [0-9]{4}-[0-9]{2}-[0-9]{2}' "$1" && exit 0
+   echo "require-stamp: no version stamp in $1" >&2
+   exit 1
    ```
 
-   *You've succeeded when:* Your transcript shows the commit refused by the hook, and you can say in one sentence what the skill could not guarantee that the hook does.
+   *You've succeeded when:* Your transcript shows one prompt accepted and one refused, and you can say in one sentence what the skill could not guarantee that the check does.
 
 3.  **Measure your own lab skill.**
 
@@ -576,9 +584,9 @@ Respond to all three levels in your notebook:
 - OpenCode documentation. https://opencode.ai/docs/skills/, which covers where skills are discovered, the three values `permission.skill` takes (`allow`, `ask`, `deny`), and a short checklist to work through when a skill you wrote never appears.
 - Superpowers, a community skill bundle for agent CLIs: https://github.com/obra/superpowers.  Read a few of its `SKILL.md` files as further models of description-as-trigger.
 - Anthropic.  "Building Effective Agents." https://www.anthropic.com/research/building-effective-agents, the evaluator-optimizer pattern is today's measurement loop in general form.
-- On evaluation: this course's *Evaluating Agent Outputs*, *Benchmarking*, and *Testing Agents* activities extend today's five-item rubric into larger golden-test, benchmark, and property-based harnesses.
+- On evaluation: this course's *Evaluating Agent Outputs*, *Benchmarking*, and *Testing Agents* activities extend today's six-item rubric into larger golden-test, benchmark, and property-based harnesses.
 - Claude Code hooks: https://code.claude.com/docs/en/hooks, the reference for the events in Section 2c, the exit-code contract, and the JSON form a hook uses when it needs to say more than yes or no.
-- The eight-recipe hook cookbook from Week 1, including the `Stop` gate that Model 1b adapts: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part E.
+- The eight-recipe hook cookbook from Week 1, including the `Stop` gate that Model 1b adapts: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part E.
 - planning-with-files, a planning skill distributed with its enforcement attached: https://github.com/OthmanAdi/planning-with-files (MIT).  It registers six lifecycle hooks so that its plan files are re-injected every turn, and its `Stop` gate holds the stop while any phase is still marked `in_progress`.  Read it as a worked answer to the question Section 2c raises: what does it take to ship a skill that does not depend on the model remembering to use it?
 
 ---
@@ -667,7 +675,7 @@ There is a sixth rule that is less a habit than a reflex, and it is short enough
 
 ## Why the file is so big
 
-Your `commit-message` skill is one page because it does one thing.  This one has sixteen reference documents and ten templates, and that creates a problem it then has to solve: guidance the model cannot afford to read is guidance the model will not follow.
+Your `system-prompt-author` skill is one page because it does one thing.  This one has sixteen reference documents and ten templates, and that creates a problem it then has to solve: guidance the model cannot afford to read is guidance the model will not follow.
 
 Its answer is worth stealing for your own skill work.  The main file stays short and acts as a switchboard, pulling in exactly one reference for the phase it is currently in, and it says outright that the agent must not load everything at the start.  A skill that respects its own reader's limited attention is a better skill.  That is true of the model, and it is true of your teammates.
 
@@ -724,5 +732,5 @@ The gate proves that `.ai/CURRENT_TASK.md` exists and is not empty.  It does not
 
 ## Where to go next
 
-- The full treatment of hooks as gates, with eight recipes and the table of what each one can and cannot see: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part IIb and Part E.
+- The full treatment of hooks as gates, with eight recipes and the table of what each one can and cannot see: [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part IIb and Part E.
 - The authoring consequence, which is that you should write the clauses you intend to enforce so a check outside the model can see them: [Agent Skills and Plugins](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentSkills#enforcing-what-a-skill-asks-for).

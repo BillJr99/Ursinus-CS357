@@ -611,7 +611,7 @@ A rubric that only rejects the hack is not a fix if it also rejects good work.  
 > **Do this.**
 > 1. Copy `rubric.json` to `rubric_patched.json` and change only the exploited criterion's descriptor.
 > 2. Append the two tests below to `hack.py`, with `good_draft` set to your defect-free draft from Step A.5, and run it again.
-> 3. Show the diff in your readme; `diff rubric.json rubric_patched.json` prints it.
+> 3. Show the change in your readme; show the patched rubric beside the original, naming every criterion you changed.
 
 ```python
 # load_rubric_from_file(path) is a two-line helper you write: open the path and return json.load(f)
@@ -1549,7 +1549,7 @@ Submit one ZIP containing both halves.  Fix random seeds where determinism is in
 |------------------|---------------|------------|
 | `critique_refine.py`, `rubric.json`, and a terminal log or screenshot with at least two complete generate, critique, refine cycles | The loop, its stopping rule, fail-closed parsing, and a draft changing in response to a critique | Part A (20) |
 | `calibration_drafts.json` and the per-criterion rates table | Planted defects, detection and false positive rates, the weakest criterion before and after, and the case where the critic was wrong with how you could tell | Part A (20) |
-| Hack transcript, `rubric_patched.json`, diff, second transcript | The critic's "accept" beside your judgment that the draft is poor; the patch; reject-hack and accept-good | Part A (20) |
+| Hack transcript, `rubric_patched.json`, change, second transcript | The critic's "accept" beside your judgment that the draft is poor; the patch; reject-hack and accept-good | Part A (20) |
 | `comparison_results.csv` and the cost-for-quality paragraph | Score and call count per condition on at least eight tasks; what the loop cost in extra calls for the quality it bought | Part A (20) |
 | `lab4.py`, `shootout.py`, `threshold.py` | Debate loop, consensus pipeline, and comparison script, with docstrings and located exception handlers | Debate (25); Consensus (20); Code Quality (10) |
 | `config.json` | Temperatures, round budget, agents, rounds, temperature schedule, and distance threshold for both halves, not hardcoded | Code Quality (10) |
@@ -1572,7 +1572,7 @@ Held against the rubric's `proficient` column.  On the no-code or low-code route
 - [ ] A transcript shows at least two complete cycles, with a draft changing in response to a critique.
 - [ ] **Calibration:** drafts with planted defects spanning **every** rubric criterion, plus at least two defect-free drafts, with detection rate and **false positive** rate per criterion in a table and the weakest criterion shown before and after its rewrite.
 - [ ] The writeup shows a case where the critic was **wrong**, plus how I could tell.
-- [ ] **Reward hack:** a working one, shown verbatim, with the critic's "accept" next to my own judgment that the draft is poor; the patch shown as a **diff**; a second transcript showing the patched rubric rejects the hack **and still accepts a defect-free draft**.
+- [ ] **Reward hack:** a working one, shown verbatim, with the critic's "accept" next to my own judgment that the draft is poor; the patch shown as a **change**; a second transcript showing the patched rubric rejects the hack **and still accepts a defect-free draft**.
 - [ ] **Comparison:** fixed tasks, the same scoring instrument on both sides, and a paragraph that says what the loop cost in extra calls for the quality it bought.
 - [ ] **Debate:** agents, rounds, and temperature schedule are configurable.
 - [ ] Answer extraction anchors on a required `ANSWER:` line, and a missing one produces a located error rather than a silent wrong answer.
@@ -1634,4 +1634,4 @@ These are optional and carry no extra credit.
 
 ## The Coding-Agent Direction Moved to OpenCode Studio
 
-Earlier versions of the critique-and-refine half of this lab carried a "Coding Agents in Practice" direction, in which a coding agent stood in as the generator and you critiqued its diff.  That material is now its own lab, [OpenCode Studio]({{ site.baseurl }}/Assignments/OpenCodeStudio), handed out in Week 2, so that it can be taught before you need it rather than after.  The discipline is the same one you build in Part A: read the output against a written specification, sort the findings into categories, and drive one precise refine turn from those categories.
+Earlier versions of the critique-and-refine half of this lab carried a "Coding Agents in Practice" direction, in which a coding agent stood in as the generator and you critiqued its change.  That material is now its own lab, [OpenCode Studio]({{ site.baseurl }}/Assignments/OpenCodeStudio), handed out in Week 2, so that it can be taught before you need it rather than after.  The discipline is the same one you build in Part A: read the output against a written specification, sort the findings into categories, and drive one precise refine turn from those categories.

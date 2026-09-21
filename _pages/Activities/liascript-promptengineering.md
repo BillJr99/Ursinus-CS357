@@ -606,7 +606,7 @@ Below are three agents defined against one project.  Each is a persona from earl
 {
   "agent": {
     "reviewer": {
-      "description": "Reviews a diff for correctness and clarity. Never edits.",
+      "description": "Reviews a change for correctness and clarity. Never edits.",
       "mode": "subagent",
       "model": "ollama/llama3.2",
       "temperature": 0.1,
@@ -615,7 +615,7 @@ Below are three agents defined against one project.  Each is a persona from earl
         "edit": "deny",
         "bash": "deny"
       },
-      "prompt": "You review diffs. Report what you find. Change nothing."
+      "prompt": "You review changes. Report what you find. Change nothing."
     },
     "builder": {
       "description": "Implements a written spec inside artifact/. Use after a plan is approved.",
@@ -647,7 +647,7 @@ Below are three agents defined against one project.  Each is a persona from earl
 
 Three choices in that block are worth defending out loud, because each one applies an argument from this deck to a file.
 
-**`reviewer` sits at temperature 0.1 and denies `edit`.**  A review gets checked against the diff, so you want the same reading twice from the same input, and that is what a low temperature buys.  A reviewer that *can* edit will quietly fix what it finds instead of reporting it, which destroys the only thing you wanted from it.
+**`reviewer` sits at temperature 0.1 and denies `edit`.**  A review gets checked against the change, so you want the same reading twice from the same input, and that is what a low temperature buys.  A reviewer that *can* edit will quietly fix what it finds instead of reporting it, which destroys the only thing you wanted from it.
 
 **`builder` sits at 0.4 with `bash` set to `ask`.**  Implementation has more than one acceptable shape, so pinning it to zero buys nothing and costs variety.  `ask` rather than `allow` on the shell is the permission gate from *Agentic CLI Tools*, kept in place because this is the one agent here that can change your files.
 
@@ -683,6 +683,95 @@ Two properties fall out of that design, and both are the point rather than side 
 What you have here is the declarative half of orchestration.  The `agent` block lets you name workers and fix their boundaries.  It does not decide who runs when.  That question, covering pipelines, routers, and the supervisor loop that chooses the next worker each turn, belongs to *Orchestration and Multi-Agent Patterns*, and one observation is worth carrying into that session.  Every pattern you meet there is some arrangement of the three things you just declared: a role, a boundary, and a stop condition.  The file is where they live; the pattern is how they are sequenced.
 
 If you want to see the arrangement outside a classroom, the hermes agent from the *Local Agent Stack* module delegates coding work to opencode through a bundled skill rather than a plugin.  hermes decides what needs doing, opencode decides how to change the code, and each of them keeps its own model and its own boundary.  That is the supervisor pattern arriving as two commands and a skill file.
+
+# Part IIe: One Model, Four Personas, and a Rule About Who Sees What
+
+Part IId declared three agents in a file and stopped short of saying who runs when.  This part answers that question in the smallest way that still teaches something: four calls to one model, in order, each carrying its own persona, its own temperature, and its own answer to a question no single prompt ever has to face, which is what this step is allowed to read.  There is no framework here, and that is the argument.  The orchestration is a for-loop, and everything that makes the result a system rather than four unrelated prompts lives in three decisions made before the loop runs.
+
+The chain writes a system prompt, attacks it, and repairs it.  The full program, `persona_pipeline.py`, along with the five files it reads and four experiments to run against it, is in the [Persona Pipeline tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PersonaPipeline).  Read this part for the design argument and that tutorial for the code.
+
+## 5f.  The Four Steps
+
+Each row below is one call to one model.  Read the `sees` column first, because it is the column doing the work.
+
+| Step | Persona | T | Skill | Sees |
+|---|---|---|---|---|
+| `interviewer` | A requirements analyst who asks before proposing | 0.7 | none | the task |
+| `author` | A prompt engineer who writes the artifact | 0.4 | `system-prompt-author` | the task, the interview, the human decisions |
+| `redteam` | An adversarial user hunting for failure | 0.9 | none | the candidate prompt, and nothing else |
+| `reviser` | An editor who fixes only what was demonstrated | 0.4 | `system-prompt-author` | the candidate, the attacks, the decisions |
+
+The personas are the Part IIb material applied four times.  The temperatures are the Part IIc dial set per role rather than per run.  The interviewer sits high, at 0.7, because a question you did not expect is the whole product of that step.  The author and the reviser sit at 0.4, loose enough that the artifact is not one fixed phrasing and tight enough that two runs are comparable.  The red team sits highest of all, at 0.9, because three attacks that resemble one another have tested one thing three times.  The skill is Route 3 from the skills activity, a body pasted into a system prompt on the two steps that name it and absent everywhere else.
+
+The `sees` column is the new idea.  A step's user message is assembled from the keys in its own list and from nothing else, so the red team receives the candidate prompt and no brief, no design rationale, and no interview.  That is not a request made of the model.  It is a property of the function that builds the message, and the model has no opportunity to decline it.
+
+## Model 6: Two Ways to Isolate a Critic
+
+Two teams want a red-team step that does not know what the designer intended.
+
+**Team A** writes it into the persona: "You are an adversarial user.  Ignore any design rationale you are shown, and do not let the designer's intent influence your attacks."
+
+**Team B** writes a four-line function that builds each step's message from an explicit list of keys, and leaves the rationale out of the red team's list.
+
+Both teams run the pipeline.  Both red teams produce attacks that look plausible.
+
+### Critical Thinking Questions
+
+**Q10.**  Team A's instruction and Team B's function aim at the same outcome.  State the difference between them in one sentence that uses neither *better* nor *safer*.
+
+*Hint:* One of the two decides what the model is likely to do with text it has received.  The other decides what text the model receives at all.  Say which is which, and notice that only one of them is still true when the model is replaced.
+
+**Q11.**  Team A's red team produces an attack that quotes the designer's rationale back at it.  Whose failure is this?
+
+[( )] The persona's, which was not specific enough about ignoring the rationale
+[( )] The temperature's, which was too high for an instruction to hold
+[(X)] Nobody's.  The text was in the context, and an instruction to ignore text that is present is a preference rather than a constraint
+[( )] The model's, which was not capable enough to follow a clear instruction
+
+An instruction competes with everything else in the context for the model's attention.  A key that was never added competes with nothing.
+
+**Q12.**  Name one thing Team A's approach can express that Team B's cannot.  Answer in terms of what each mechanism can say, not which one you would ship.
+
+*Hint:* Visibility is binary: a key is in the list or it is not.  An instruction is not binary, so it can ask for something graded, such as weighting the stated goals lightly rather than ignoring them outright.  What does that buy, and when would you actually want it?
+
+**Q13.**  A teammate proposes adding the design rationale to the red team's `sees` list so that the attacks are more relevant.  Give the strongest argument for the proposal, then say what it costs.
+
+*Hint:* The argument is real: an attacker who knows the intended boundaries can probe exactly those boundaries instead of spending attempts elsewhere.  Now ask what a genuine user knows on their first day with the agent, and what happens to the value of the step when the attacker knows more than that.
+
+## 5g.  What the Loop Does Not Decide
+
+Three properties of this pipeline are fixed outside the loop, and each one corresponds to a key from the agent block in Part IId.
+
+The **order** is the list of steps in `config.json`, which is the pipeline pattern in its simplest form: step *n* runs, writes its output under a name, and step *n+1* may or may not be permitted to read it.  There is no router, no supervisor, and no agent choosing the next agent.  *Orchestration and Multi-Agent Patterns* replaces this list with a loop that decides each turn, and the only thing that changes is who owns the ordering.
+
+The **seed** is read from the top of the config rather than from each step, so a rerun that changes one persona changes one thing.  A pipeline in which every dial moves at once cannot tell you which dial mattered.
+
+The **failure behavior** is that a missing `SKILL.md` halts the run instead of being skipped.  This is the failure that cost the most time in the skills activity, where a skill that silently never loads produces output that looks fine and is not.  A pipeline that quietly drops its rules is worse than one that stops, because the one that stops tells you.
+
+## Model 7: The Same Chain With One Thing Moved
+
+A team runs the pipeline twice.  On the second run they change the red team's temperature from 0.9 to 0.2 and change nothing else.  The three attacks in the second run are close paraphrases of one another, and all three name the same weakness the first run found on its opening attempt.
+
+### Critical Thinking Questions
+
+**Q14.**  The second run found a real weakness.  Explain why it is nonetheless the weaker run, in terms of what a red team is for.
+
+*Hint:* Ask what the three calls bought.  Coverage is the product a red team sells, and three attacks that agree have spent three calls establishing what one call already established.  The spread in the first run is what the higher temperature was purchased for.
+
+**Q15.**  The team proposes fixing this by asking for "three different attacks" in the instruction while leaving the temperature at 0.2.  Predict what happens, and name the section of this deck that predicts it.
+
+*Hint:* An instruction changes what the model is asked to produce; the temperature changes how far from the most likely continuation it is willing to travel.  Predict what varies and what stays put, then check your answer against Section 5b.
+
+**Q16.**  The final artifact is checked by six string assertions in code and, separately, by the red team's prose.  On one run they disagree: the checker passes the prompt while the red team reports a real hole.  Which of them is wrong?
+
+[( )] The checker, which is too crude to be trusted on a real artifact
+[( )] The red team, which is sampling at a high temperature and inventing problems
+[(X)] Neither.  The checker decides six specific facts and the red team reports a judgment, so a disagreement means the hole sits outside those six
+[( )] Both, because two tools that disagree cannot both be working
+
+This is the distinction the deck has been building toward since Part I.  An instruction shapes a distribution and a check decides a fact.  A design that carries both knows which of its claims are which, and a design that carries only one of them does not know what it is missing.
+
+---
 
 # Part III: Synthesis and Practice
 

@@ -136,10 +136,10 @@ Think of it like editing a recipe: you adjusted the salt because last week's sou
 | Phase | Action | Tool / Method | What You Detect |
 |---|---|---|---|
 | **Baseline capture** | Run all test cases against the current prompt and save the outputs and scores. | An eval harness script; store results in a timestamped JSON file. | Establishes the quality floor before any change is made, your "before" snapshot. |
-| **Make prompt change** | Edit the system prompt, the retrieval chunk size, or the model version. | Version control: use `git diff` on the prompt file to see exactly what changed. | The change is auditable; anyone can review the diff and understand what was altered. |
+| **Make prompt change** | Edit the system prompt, the retrieval chunk size, or the model version. | Version control: keep each prompt in its own file and open the two versions to see exactly what changed. | The change is auditable; anyone can review the change and understand what was altered. |
 | **Re-run test cases** | Run the identical test suite against the new prompt, with the same inputs. | The same eval harness script; same test inputs as before. | New outputs are collected under identical conditions for fair comparison. |
-| **Semantic diff** | Compare new outputs to the baseline using property checks and LLM-as-judge scores. | Cosine similarity calculations, rubric scoring, property assertions. | Test cases where the score dropped by more than the threshold are flagged as regressions. |
-| **Regression review** | Inspect each flagged case and decide whether to accept the change or revert the prompt. | Human judgment on the flagged diffs; this step cannot be fully automated. | Intentional improvements are accepted; unintended regressions are reverted. |
+| **Semantic comparison** | Compare new outputs to the baseline using property checks and LLM-as-judge scores. | Cosine similarity calculations, rubric scoring, property assertions. | Test cases where the score dropped by more than the threshold are flagged as regressions. |
+| **Regression review** | Inspect each flagged case and decide whether to accept the change or revert the prompt. | Human judgment on the flagged cases; this step cannot be fully automated. | Intentional improvements are accepted; unintended regressions are reverted. |
 | **CI gate** | Run a fast, property-only subset of tests on every pull request; block the merge if tests fail. | GitHub Actions or an equivalent CI system. | Catches regressions automatically before they reach production users. |
 {: .tb-full}
 
@@ -230,7 +230,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
    *What to do:* Take a working prompt and make one deliberate change: add a constraint, change the persona, reduce the instruction length, or add a new output format rule.  Run both the original and the modified prompt against your test suite.  Report which test cases changed, in which direction (improved or regressed), and whether the overall change was a net improvement, a net regression, or mixed.  Reflect on what the results reveal about gaps in your test suite's coverage.
 
-   *Starter hint:* Version your prompts in separate files (`system_prompt_v1.txt`, `system_prompt_v2.txt`) and pass the filename as a parameter to your eval harness.  Use `git diff system_prompt_v1.txt system_prompt_v2.txt` to produce a clean, reviewable diff of what changed.
+   *Starter hint:* Version your prompts in separate files (`system_prompt_v1.txt`, `system_prompt_v2.txt`) and pass the filename as a parameter to your eval harness.  Open `system_prompt_v1.txt` beside `system_prompt_v2.txt` to produce a clean, reviewable change of what changed.
 
    *You've succeeded when:* You can produce a side-by-side table showing which test cases passed under v1 but failed under v2 (or vice versa), and you can explain in one paragraph what the regression reveals: either about the prompt change or about a blind spot in your test suite.
 

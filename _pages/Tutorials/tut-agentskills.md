@@ -27,7 +27,7 @@ Start with the vocabulary.  Every term in this table appears in the lab.  Return
 
 | Term | Plain-English Definition | Example You'll See |
 |------|--------------------------|--------------------|
-| **Skill** | A named instruction set that an agent can invoke on demand, scoped to a specific purpose | A "code-review" skill that instructs the agent to always check for hardcoded secrets before approving a diff |
+| **Skill** | A named instruction set that an agent can invoke on demand, scoped to a specific purpose | A "code-review" skill that instructs the agent to always check for hardcoded secrets before approving a change |
 | **Plugin / extension** | Harness-specific executable code that adds new capability to the agent itself (a pi TypeScript extension, an opencode plugin). Distinct from a skill, which is instructions any harness can read | `pi install npm:@billjr99/pi-openai-compat` adds provider support; no skill could do that |
 | **System prompt** | An always-on, always-active instruction injected before every conversation turn | "You are a helpful coding assistant. Always explain your reasoning." Loaded automatically, not invokable by name |
 | **`opencode.json`** | OpenCode's configuration file, at `~/.config/opencode/opencode.json` (global) or `opencode.json` in a project root. It holds model routing and **permissions**; skills are directories on disk, not entries in it | The `permission.skill` block that decides which skills an agent may load |
@@ -56,7 +56,7 @@ There are four ways to give an agent standing guidance, and they differ in scope
 
 ### Skill Versus Tool
 
-The distinction that matters most is skill versus tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a diff, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
+The distinction that matters most is skill versus tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a change, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
 
 > Many students assume that adding a skill to `opencode.json` makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
 {: .tb-warning data-title="Watch out"}
@@ -244,7 +244,7 @@ The events, and what each can see and do about a skill:
 | `Stop` | The agent wants to end its turn | Whatever a program can check | Refuse the stop while the skill's contract is unmet |
 {: .tb-full}
 
-The full treatment of these events, with eight worked recipes in both Claude Code and opencode and a table of what each recipe cannot do, is in [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part IIb and Part E.  A worked pair for a skill specifically, built on the `kickoff-interview` contract, is Model 1b in [Skills: Design One, Then Measure It](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-skills.md).
+The full treatment of these events, with eight worked recipes in both Claude Code and opencode and a table of what each recipe cannot do, is in [Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md), Part IIb and Part E.  A worked pair for a skill specifically, built on the `kickoff-interview` contract, is Model 1b in [Skills: Design One, Then Measure It](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-skills.md).
 
 ### The Authoring Consequence
 

@@ -596,7 +596,7 @@ Then use the two views the pattern is designed around.  **Backlinks** (in the ri
 **Step 5: let GitHub be the undo button.**  The reason an ingest can touch fifteen pages without alarming anybody is that all fifteen edits are in one commit you can inspect and revert.
 
 - Keep the vault repository **private**, and give the agent a **fine-grained PAT scoped to that one repository's Contents**, exactly as in Part I.  An LLM wiki accumulates a detailed record of what you are thinking about; treat the token accordingly.
-- Review the ingest as a diff, not as a claim.  On github.com, open the commit the agent pushed and read the changed pages before you sync them into Obsidian.  `git revert <sha>` undoes a bad synthesis pass completely, which is what makes it safe to let the agent write at all.
+- Review the ingest as a change, not as a claim.  On github.com, open the commit the agent pushed and read the changed pages before you sync them into Obsidian.  `git revert <sha>` undoes a bad synthesis pass completely, which is what makes it safe to let the agent write at all.
 - If the Obsidian Git plugin's auto-push interval and an agent commit collide, the append-only rule from Part III is what saves you: `log.md` conflicts resolve by keeping both sides.
 
 **Step 6: run the three operations as standing prompts.**  There is no software to install for this part.  Ingest, query, and lint are prompts you keep in `agent-context/` and paste.

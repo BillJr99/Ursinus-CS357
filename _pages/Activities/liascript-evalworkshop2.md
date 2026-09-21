@@ -235,7 +235,7 @@ So far your confidence in the judge lives in a table the Scribe typed and a re-r
 1.  **Define the golden set.**  Your three artifacts, with the human-consensus level for each criterion (after today's repair).  Add two adversarial cases from the lab's bias probe, for example the padded and unpadded versions of one artifact, which must receive the same level.
 2.  **Encode assertions.**  For each case, at least one assertion: the judge's returned level equals the human-consensus level (exact match on the parsed JSON field), or, for the adversarial pair, that the two levels are equal to each other.  In promptfoo these are `assert:` blocks; in Inspect they are scorers.  Assert on the *parsed* field, not the raw text; if parsing itself fails, that is a legitimate eval failure worth counting.
 3.  **Run the harness against your local model** and capture the results (promptfoo's `output.json` or web viewer screenshot, or Inspect's `.eval` log).  Record the pass rate.  It will likely not be 100%: that is a finding, not a failure.
-4.  **Demonstrate a regression.**  Make a deliberate, plausible-seeming degradation to your judge prompt in a copy of the config (delete the instruction that evidence must be quoted verbatim, or weaken one criterion's rubric text).  Re-run and diff:
+4.  **Demonstrate a regression.**  Make a deliberate, plausible-seeming degradation to your judge prompt in a copy of the config (delete the instruction that evidence must be quoted verbatim, or weaken one criterion's rubric text).  Re-run and change:
 
     ```bash
     npx promptfoo@latest eval -c promptfooconfig-regressed.yaml --output run_regressed.json

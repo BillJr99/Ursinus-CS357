@@ -145,14 +145,14 @@ A production agent is silently failing on approximately 8% of queries: users rec
 
 Observability answers *what happened*.  Traceability answers *why*, weeks later, when nobody remembers.  For an agent's work, "why" has four links, each stored in a different file:
 
-1.  **The change.**  A commit, with its diff.  Answers: what exactly is different?
+1.  **The change.**  A commit, with its change.  Answers: what exactly is different?
 2.  **The session entry.**  The dated `.ai/SESSION.md` entry that describes that commit.  Answers: what was the agent trying to do, and what did it deliberately not do?
 3.  **The task.**  The `.ai/CURRENT_TASK.md` milestone the entry served, or the GitHub issue.  Answers: which piece of work was this part of?
 4.  **The rule or goal.**  The `CHARTER.md` value, gate, or `AGENTS.md` rule that permitted or required the action.  Answers: what standing decision made this the right move?
 
 You walked this chain in the traceability drill in *How I AI*, and you found the link that broke.  The trace closes the smallest gap: every logged action carries a `rule` field naming the rule that allowed it.  Then "why did the agent call `search` here?" is answered by the trace line, and "why is that the rule?" is answered by the charter.  A trace without a `rule` field tells you what happened.  A trace with one tells you what to change.
 
-> **Common Misconception:** "Traceability is `git blame`."  `git blame` gives you link 1 and the name of whoever committed, which for an agent is nearly useless.  The other three links are documents somebody chose to write.  If nobody wrote them, the chain ends at the diff, and the only way to find out why is to ask the agent, whose context is gone.
+> **Common Misconception:** "Traceability is `git blame`."  `git blame` gives you link 1 and the name of whoever committed, which for an agent is nearly useless.  The other three links are documents somebody chose to write.  If nobody wrote them, the chain ends at the change, and the only way to find out why is to ask the agent, whose context is gone.
 
 ---
 
@@ -255,7 +255,7 @@ The paragraph the agent wrote cites page 47 of a source that has 31 pages.
 
    > *Hint: The metrics row of Section 3 names one.  What rate, and over what window?*
 
-**Recap.**  A log is one event; a trace is the chain for one task; a metric is a number over many.  Traceability is the four links from a diff back to a rule, and the `rule` field in the trace is the cheapest link to keep.
+**Recap.**  A log is one event; a trace is the chain for one task; a metric is a number over many.  Traceability is the four links from a change back to a rule, and the `rule` field in the trace is the cheapest link to keep.
 
 ---
 # Part III: Handoff Protocols

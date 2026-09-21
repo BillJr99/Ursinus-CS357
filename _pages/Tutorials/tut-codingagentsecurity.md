@@ -62,7 +62,7 @@ The pattern is always the same: text that a human treats as inert **data** is in
 
 1.  A human reviewer reads a pull request and sees a normal-looking `.cursorrules` file.  Explain how the "Rules File Backdoor" defeats human review specifically: what property of the payload makes code review, our usual quality gate, blind to it?
 
-   > *Hint: The malicious instructions are encoded in characters that render as nothing (zero-width / bidirectional Unicode).  If a reviewer cannot see the text, what happens to "just review the diff carefully" as a defense?*
+   > *Hint: The malicious instructions are encoded in characters that render as nothing (zero-width / bidirectional Unicode).  If a reviewer cannot see the text, what happens to "just read the action log carefully" as a defense?*
 
 2.  Map EchoLeak onto Willison's **lethal trifecta**.  Identify, for a coding agent connected to your private repo, which capability plays each of the three roles (private data / untrusted content / external communication), and which single one you could most plausibly remove.
 

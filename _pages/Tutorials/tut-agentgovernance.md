@@ -76,7 +76,7 @@ A new agent with no conversation history is pointed at the funnel.  After each r
 
 2.  Why is the Git log placed *last* in the read order rather than first, given that it is called "the ground truth"?
 
-    > *Hint: A diff is only meaningful if you know what the project is trying to do.  What frame do the earlier documents provide that makes the commits interpretable?*
+    > *Hint: A change is only meaningful if you know what the project is trying to do.  What frame do the earlier documents provide that makes the commits interpretable?*
 
 3.  The case-study project also enforced: *"Do not claim that a file, artifact, log, or generated output is missing or present without checking the current repository/runtime state first.  Treat prior logs and memory as hints only."*  Relate this rule to what you learned about hallucination earlier in the course.  Why are agents *especially* prone to this failure on long-running projects?
 
@@ -125,7 +125,7 @@ A community template known as the "Karpathy `CLAUDE.md`," distilled from Andrej 
 | Karpathy-style rule | What it demands of the agent | Where the charter encodes the same idea |
 |---|---|---|
 | **Think before coding** | State assumptions, surface multiple interpretations, push back when the request seems wrong, stop when confused | Task-loop steps 1-5 (investigate, read, document findings, plan) come *before* any code |
-| **Simplicity first** | The minimum code that solves the problem; nothing speculative | "Implement the smallest useful change"; the `FUTURE_WORK.md` parking lot keeps speculation out of the diff |
+| **Simplicity first** | The minimum code that solves the problem; nothing speculative | "Implement the smallest useful change"; the `FUTURE_WORK.md` parking lot keeps speculation out of the change |
 | **Surgical changes** | Touch only what needs to change | "One logical engineering change" per commit; the git policy against duplicate/backup files |
 | **Goal-driven execution** | Verifiable success criteria, tests-first | Completion criteria in `CURRENT_TASK.md`; the regression rule; milestone success criteria |
 {: .tb-full}
@@ -265,7 +265,7 @@ Alongside the prompts, the project kept three kinds of **decision record**:
 
 2.  The forensics table assigns each finding a *confidence*, and the prior sessions' own claims are filed under "Non-Authoritative Prior Claims."  Connect this to the LLM-as-judge and evaluation material from this course: why is an AI agent's self-report about its own past work treated as the *least* trustworthy evidence class?
 
-    > *Hint: What incentive gradient does an agent's training create around reporting success?  And what independent artifacts (logs, diffs, test outputs) exist that do not share that gradient?*
+    > *Hint: What incentive gradient does an agent's training create around reporting success?  And what independent artifacts (logs, changes, test outputs) exist that do not share that gradient?*
 
 3.  Propose a rule for *when* a decision deserves an RFC versus a decision-log entry versus nothing.  Your rule must be executable by an agent without asking a human.
 
@@ -311,7 +311,7 @@ The safety boundary is the sandbox, not the approval prompt.  The *decision* bou
 
 2.  Approval fatigue and sandboxing are both responses to the same tension.  State the tension in one sentence, and explain why "sandbox + auto-approve + charter" resolves it better than "host access + per-command approval."
 
-    > *Hint: Where does each design place the human's finite attention, on individual commands, or on reviewing outcomes (diffs, logs, session entries)?*
+    > *Hint: Where does each design place the human's finite attention, on individual commands, or on reviewing outcomes (changes, logs, session entries)?*
 
 In the devbox pattern, agents run with permission prompts disabled.  This is acceptable because:
 
@@ -350,7 +350,7 @@ Copy-paste starting points for every document in this tutorial are in the course
 
 3.  *Audit an agent's claim.*
 
-    - *What to do:* From any past agent session you have (this course's labs count), find one claim of completion ("all tests pass," "the file was created," "the bug is fixed").  Build a three-row forensics table for it: `Finding | Evidence | Confidence | Action`, where Evidence must be an artifact (test output, commit diff, file listing) that you re-ran or re-checked yourself, not the agent's statement.
+    - *What to do:* From any past agent session you have (this course's labs count), find one claim of completion ("all tests pass," "the file was created," "the bug is fixed").  Build a three-row forensics table for it: `Finding | Evidence | Confidence | Action`, where Evidence must be an artifact (test output, commit change, file listing) that you re-ran or re-checked yourself, not the agent's statement.
     - *Starter hint:* If you cannot find independent evidence for the claim, that *is* the finding: record confidence "low" and action "re-verify before use."
     - *You've succeeded when:* At least one row's confidence surprised you, in either direction, and you can say what artifact was missing that would have made verification trivial.
 

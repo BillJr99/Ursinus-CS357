@@ -382,7 +382,7 @@ In this Part, you will bring everything together in the tool you will use every 
 
 VS Code's integrated terminal puts your agent's command output and its file edits side by side in one window, so you never need to switch between the terminal and the editor to see what an agent proposal actually changes.
 
-Open VS Code's integrated terminal with **Ctrl+`** (backtick). It is a full shell, opened in your project's folder automatically, which is exactly where a coding agent wants to be launched: `opencode` starts in the current directory and treats it as its workspace. The split is natural: the agent runs in the terminal pane while you read its edits in the editor pane above, with VS Code's diff coloring showing every change the agent makes the moment it makes it. The agent CLI module builds on this layout; today, just confirm you can open the panel, run `pwd`, and see your project path.
+Open VS Code's integrated terminal with **Ctrl+`** (backtick). It is a full shell, opened in your project's folder automatically, which is exactly where a coding agent wants to be launched: `opencode` starts in the current directory and treats it as its workspace. The split is natural: the agent runs in the terminal pane while you read its edits in the editor pane above, with VS Code's change coloring showing every change the agent makes the moment it makes it. The agent CLI module builds on this layout; today, just confirm you can open the panel, run `pwd`, and see your project path.
 
 ### Questions to Work Through
 

@@ -99,7 +99,7 @@ Both directions include an Observability, Traceability, and Handoff Protocol: th
 
 - the *Design First* session, whose agent table and pre-mortem are the backbone of Direction A;
 - *How I AI*, whose charter, contract, and handoff documents are the backbone of Direction B;
-- the overnight brief from *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff* and the loops that run themselves from *The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent*, which Direction B's loop draws on;
+- the overnight brief from *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log* and the loops that run themselves from *The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent*, which Direction B's loop draws on;
 - *Observability, Traceability, and Handoff Protocols*, where the protocol section in both directions comes from.
 
 All are taught before this is due.
@@ -306,7 +306,7 @@ So you run your document set as a **governed loop**: repeated unattended iterati
 Any agent CLI or chat agent from this course works, and any harness works: a shell `while` loop that re-invokes your agent, or hand-restarts with the history cleared between them.  The requirement is a **fresh context per iteration**, not a particular tool.  If your domain has no digital surface an agent can touch, a rigorous simulated transcript is acceptable; mark it as simulated.
 
 > **Do this.**
-> 1. **Write the run brief, and commit it before you start.**  Four things, in the testable-versus-vague discipline you practiced in *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff*:
+> 1. **Write the run brief, and commit it before you start.**  Four things, in the testable-versus-vague discipline you practiced in *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log*:
 >    - a **goal** small and concrete enough to be verifiable;
 >    - an **acceptance checklist** the loop can check on its own, every item binary rather than a judgment call;
 >    - a **stop condition**: an iteration budget **and** the check that means "done";
