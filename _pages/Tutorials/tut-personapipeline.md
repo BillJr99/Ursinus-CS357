@@ -41,15 +41,17 @@ Read it after *Prompt Engineering as Agent Design*, because the four personas an
 The task is to write the system prompt for Aria, a course assistant for CS357.  Four steps produce it.
 
 ```
-brief ──► interviewer ──► questions ──┐
-                                      ├──► author ──► candidate ──► redteam ──► attacks ──► reviser ──► final
-decisions ────────────────────────────┘
-          T=0.7                         T=0.4                       T=0.9                    T=0.4
-          no skill                      +SKILL.md                   no skill                 +SKILL.md
-          sees: brief                   sees: brief,                sees: candidate          sees: candidate,
-                                              questions,                  ONLY                     attacks
-                                              decisions
+task ──► interviewer ──► questions ──┐
+                                     ├──► author ──► candidate ──► redteam ──► attacks ──► reviser ──► final
+decisions ───────────────────────────┘
+         T=0.7                         T=0.4                       T=0.9                    T=0.4
+         no skill                      +SKILL.md                   no skill                 +SKILL.md
+         sees: task                    sees: task,                 sees: candidate          sees: candidate,
+                                             questions,                  ONLY                     attacks
+                                             decisions
 ```
+
+The lower-case names on the arrows are context keys from `config.json`.  `task` is the key holding the brief.  Each `sees` row names the keys that step may read.  The experiments below ask you to edit them.
 
 The interviewer asks what it needs to know and stops.  The author writes the prompt from the brief, the questions, and your answers.  The red team attacks the result.  The reviser repairs what the attacks found.
 
