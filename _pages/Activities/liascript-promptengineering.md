@@ -688,7 +688,7 @@ If you want to see the arrangement outside a classroom, the hermes agent from th
 
 Part IId declared three agents in a file and stopped short of saying who runs when.  This part answers that question in the smallest way that still teaches something: four calls to one model, in order, each carrying its own persona, its own temperature, and its own answer to a question no single prompt ever has to face, which is what this step is allowed to read.  There is no framework here, and that is the argument.  The orchestration is a for-loop, and everything that makes the result a system rather than four unrelated prompts lives in three decisions made before the loop runs.
 
-The chain writes a system prompt, attacks it, and repairs it.  The full program, `persona_pipeline.py`, along with the five files it reads and four experiments to run against it, is in the [Persona Pipeline tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PersonaPipeline), and the runnable copy is [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip).  Read this part for the design argument and that tutorial for the code.
+The chain writes a system prompt, attacks it, and repairs it.  The [Persona Pipeline tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PersonaPipeline) carries the full program, `persona_pipeline.py`, and the five files it reads.  It also sets out four experiments to run against it.  Download the runnable copy as [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip).  Read this part for the design argument, and that tutorial for the code.
 
 ## 5f.  The Four Steps
 

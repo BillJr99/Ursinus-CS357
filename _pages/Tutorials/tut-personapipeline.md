@@ -81,7 +81,7 @@ opencode behaves differently.  A directory name that does not match the `name:` 
 
 ## The Files
 
-Five files, plus the client.  Download [persona-pipeline-starter.zip]({{ site.baseurl }}/files/persona-pipeline-starter.zip) and unzip it into your working folder if you would rather not retype them; every file below is in it, along with `ollama_client.py`, which supplies the `load_config()` and `chat()` this program calls.
+Five files, plus the client.  Download [persona-pipeline-starter.zip]({{ site.baseurl }}/files/persona-pipeline-starter.zip) and unzip it into your working folder.  Every file below is in it.  So is `ollama_client.py`, which supplies the `load_config()` and `chat()` that this program calls.
 
 ### `task_brief.md`
 
