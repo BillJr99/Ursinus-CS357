@@ -81,7 +81,17 @@ opencode behaves differently.  A directory name that does not match the `name:` 
 
 ## The Files
 
-Five files, plus the client.  Download [persona-pipeline-starter.zip]({{ site.baseurl }}/files/persona-pipeline-starter.zip) and unzip it into your working folder.  Every file below is in it.  So is `ollama_client.py`, which supplies the `load_config()` and `chat()` that this program calls.
+Download [persona-pipeline-starter.zip]({{ site.baseurl }}/files/persona-pipeline-starter.zip) and unzip it into your working folder.  It contains seven things:
+
+- `task_brief.md`, the design brief the interviewer step reads.
+- `decisions.md`, your answers to the interviewer's questions, filled in so the chain runs the first time.
+- `.agents/skills/system-prompt-author/SKILL.md`, the skill the author and reviser steps load.
+- `config.json`, every dial: endpoint, model, seed, logging level, and the four steps.
+- `persona_pipeline.py`, the program itself.
+- `ollama_client.py`, the `load_config()` and `chat()` that the program imports.
+- `README.md`, a short version of this page for when the zip is all you have open.
+
+The first six appear in full below, in that order.
 
 ### `task_brief.md`
 
@@ -492,6 +502,124 @@ if __name__ == "__main__":
         print(f"[persona_pipeline:__main__] {e}")
         traceback.print_exc()
         sys.exit(1)
+```
+
+### `ollama_client.py`
+
+The two functions every script in this course calls.  `load_config()` reads the JSON and applies its logging level, so one line in the file changes how talkative every program is.  `chat()` sends one request and returns the reply text with the raw response.  The trace table reports the token counts that come back in that response.
+
+This is not the `chat()` from the sampling session, and the difference is worth a look.  That one took a prompt and a temperature and returned a string.  This one takes a config, a system prompt, and a seed, and returns the reply with the raw response beside it.  It also sends the system prompt as its own message rather than gluing it to the front of the user text, because that is the channel the model was trained to treat as standing policy.
+
+```python
+"""ollama_client.py: the two functions every script in this course calls.
+
+`load_config()` reads the JSON that holds every dial, so a change to the model,
+the endpoint, the seed, or the logging level is a file edit rather than a code
+edit.  `chat()` sends one request to Ollama's native chat endpoint and hands back
+the reply text together with the raw response, because the token counts in that
+response are what the trace table reports.
+
+Config keys this module reads:
+
+    ollama_url        the base URL of the Ollama server
+    model             the model tag to call, for example "llama3.2"
+    timeout_seconds   how long one request may take before it is abandoned
+    log_level         DEBUG, INFO, WARNING, or ERROR
+
+Everything else in config.json belongs to the caller.
+"""
+
+import json
+import logging
+import traceback
+
+import requests
+
+log = logging.getLogger("cs357.ollama")
+
+
+def load_config(path="config.json"):
+    """Read the JSON config, apply its logging level, and return it as a dict.
+
+    The logging level is applied here rather than in every script, so one line
+    in the file changes how talkative every program in the course is.
+    """
+    try:
+        with open(path, encoding="utf-8") as f:
+            cfg = json.load(f)
+        logging.basicConfig(
+            level=getattr(logging, str(cfg.get("log_level", "INFO")).upper(), logging.INFO),
+            format="%(asctime)s %(levelname)s %(name)s %(message)s")
+        log.debug("config loaded from %s: model=%s url=%s",
+                  path, cfg.get("model"), cfg.get("ollama_url"))
+        return cfg
+    except FileNotFoundError as e:
+        print(f"[ollama_client:load_config] no config file at {path}")
+        print(f"[ollama_client:load_config] copy config.json from the starter "
+              f"into this folder, or pass the path as the first argument")
+        print(f"[ollama_client:load_config] {e}")
+        traceback.print_exc()
+        raise
+    except json.JSONDecodeError as e:
+        print(f"[ollama_client:load_config] {path} is not valid JSON: {e}")
+        print(f"[ollama_client:load_config] a trailing comma after the last item "
+              f"in a list or object is the usual cause")
+        traceback.print_exc()
+        raise
+    except Exception as e:
+        print(f"[ollama_client:load_config] {e}")
+        traceback.print_exc()
+        raise
+
+
+def chat(cfg, user, system=None, temperature=0.0, seed=42, **extra):
+    """Send one chat request to Ollama. Returns (text, raw_response_dict).
+
+    The system prompt is sent as its own message rather than glued to the front
+    of the user message, because that is the channel the model was trained to
+    treat as standing policy.  Sampling options travel in the `options` object,
+    which is where Ollama's native API expects them.
+    """
+    url = str(cfg.get("ollama_url", "http://localhost:11434")).rstrip("/") + "/api/chat"
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": user})
+    options = {"temperature": temperature, "seed": seed}
+    options.update(extra)
+    payload = {"model": cfg.get("model", "llama3.2"),
+               "messages": messages,
+               "stream": False,
+               "options": options}
+    try:
+        log.debug("POST %s model=%s options=%s", url, payload["model"], options)
+        r = requests.post(url, json=payload,
+                          timeout=cfg.get("timeout_seconds", 120))
+        r.raise_for_status()
+        data = r.json()
+        text = (data.get("message") or {}).get("content", "")
+        log.debug("reply %d chars, %s eval tokens", len(text), data.get("eval_count", 0))
+        return text, data
+    except requests.exceptions.ConnectionError as e:
+        print(f"[ollama_client:chat] cannot reach Ollama at {url}")
+        print(f"[ollama_client:chat] from a container, the host is "
+              f"host.docker.internal, not localhost, and Ollama must have been "
+              f"started with OLLAMA_HOST=0.0.0.0")
+        print(f"[ollama_client:chat] {e}")
+        traceback.print_exc()
+        raise
+    except requests.exceptions.Timeout as e:
+        print(f"[ollama_client:chat] no reply within "
+              f"{cfg.get('timeout_seconds', 120)}s from {url}")
+        print(f"[ollama_client:chat] raise timeout_seconds in config.json, or "
+              f"use a smaller model")
+        print(f"[ollama_client:chat] {e}")
+        traceback.print_exc()
+        raise
+    except Exception as e:
+        print(f"[ollama_client:chat] {e}")
+        traceback.print_exc()
+        raise
 ```
 
 ---
