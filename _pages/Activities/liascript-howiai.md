@@ -309,14 +309,14 @@ CHARTER.md          why this project exists, and what always wins   (rarely chan
 the plan            what the agent intends to do about it, before   (per task)
    |                it touches anything: reject it here
    v
-the diff / the PR   what it actually did                            (per change)
+the change / the PR   what it actually did                            (per change)
    |
    v
 .ai/SESSION.md      what happened, what did not, what is next       (per session)
 docs/DECISION_LOG   what we decided and what we rejected, and why   (when it matters)
 ```
 
-Read that column top to bottom and you have **traceability**: six weeks from now, a line of code traces back to a diff, which traces to a session entry, which traces to a task, which traces to the charter.  Nobody has to remember anything, and "why is it like this?" has a written answer instead of an argument.
+Read that column top to bottom and you have **traceability**: six weeks from now, a line of code traces back to a change, which traces to a session entry, which traces to a task, which traces to the charter.  Nobody has to remember anything, and "why is it like this?" has a written answer instead of an argument.
 
 The [decision log](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/DECISION_LOG.md) is the one people skip, and it is the one that pays.  It records not only what you chose but **what you rejected and why**.  That is the only thing that stops a project from re-proposing the same bad idea every three weeks, whether the proposer is a teammate or an agent starting from a fresh context.
 
@@ -337,7 +337,7 @@ You met these three in *Your AI Workbench*, Step 8.5, as properties of a contain
 
 | Property | In the vault (Part I) | In the repository (Part II) | The failure it prevents |
 |---|---|---|---|
-| **Observability** | `git log` on the vault shows every agent write, with a diff. The wiki cites `raw/`, so a claim traces to a source | `SESSION.md` says what was done and *not* done; the PR shows the change; the decision log says why | "Something in my notes is wrong and I have no idea when it got there or what it was based on" |
+| **Observability** | `git log` on the vault shows every agent write, with a change. The wiki cites `raw/`, so a claim traces to a source | `SESSION.md` says what was done and *not* done; the PR shows the change; the decision log says why | "Something in my notes is wrong and I have no idea when it got there or what it was based on" |
 | **Isolation** | Zones, plus `:ro` on the `raw/` mount. An agent authoring the wiki cannot corrupt the sources it is summarizing | A scoped token for one repository; a branch per attempt; an agent that can open a PR and cannot merge it | "The agent asked to tidy my notes and rewrote a source I can no longer recover" |
 | **Reversibility** | Every vault write is a commit. `git revert` puts a bad synthesis back | Every change arrives as a reviewable, revertible commit on a branch, not as an edit to `main` | "The agent's cleanup pass was wrong and there is no earlier version" |
 
@@ -381,7 +381,7 @@ When is the folder the right channel, and when is the repository?
 | Reach for the folder when | Reach for the repository when |
 |---|---|
 | The second agent has no GitHub account or token, or you do not want to issue one | You want a review gate: nothing lands until a person approves the pull request |
-| The artifacts are binary (audio, images, PDFs, model weights) and a diff would show you nothing | You want an audit log: every change has an author, a time, and a diff you can read |
+| The artifacts are binary (audio, images, PDFs, model weights) and a change would show you nothing | You want an audit log: every change has an author, a time, and a change you can read |
 | A teammate who is not a developer needs to hand work in or read results, and a folder is the tool they already have | You want to reason about changes rather than files: what moved, why, and what it was rejected in favor of |
 
 Recap: the folder and the repository carry the same four-part handoff (claim, notes, stale rule, done), and the folder shows you that only the rename is enforced by the medium; everything else holds because both agents chose to follow it.  If your vault from Part I syncs, `raw/` is already a folder channel: a person drops a file in, and an agent picks it up.
@@ -432,7 +432,7 @@ The second agent reads the claim, sees it is older than the timeout, and takes t
 
 5.  The entry above explicitly records what the agent did *not* do, and why items 4 and 9 depend on it.  Why is the not-done list often more valuable to the next agent than the done list?
 
-   > *Hint: The done work is visible in `git diff`.  Where is the not-done work visible?*
+   > *Hint: The done work is visible in the action log.  Where is the not-done work visible?*
 
 6.  "Next Safe Action" carries two constraints: it is *next*, and it is *safe*.  Write a Next Safe Action for your own project thread as it stands right now, then check it against both words.  Which of the two was harder to satisfy honestly?
 

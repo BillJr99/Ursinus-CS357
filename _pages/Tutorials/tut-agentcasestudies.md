@@ -29,7 +29,7 @@ Read each case and fill in the five autopsy questions yourself before you look a
 | **Perception** | Everything the agent can observe about its environment at a given moment, which is always incomplete; the agent cannot see what is not in its context window or returned by its tools. | The browsing agent can read a rendered web page's visible text but cannot see the JavaScript state or the reservation database behind it. |
 | **Irreversible action** | An action whose consequences cannot be undone after the fact, requiring a human confirmation gate before execution. | Clicking "Confirm Reservation" on a campsite booking site: once clicked, a credit card is charged and a site is held. |
 | **Global invariant** | A constraint that must remain true across the entire document or system, not just locally, meaning fixing one place can break another place. | In a conference proceedings, every table-of-contents page number must match where that paper actually starts; changing any paper's length breaks all subsequent entries. |
-| **Human-in-the-loop** | A system design where a human must approve certain actions before the agent proceeds, trading autonomy for safety on high-stakes or irreversible steps. | The instructor reviewing every file diff before the agent commits it to the repository during the website migration. |
+| **Human-in-the-loop** | A system design where a human must approve certain actions before the agent proceeds, trading autonomy for safety on high-stakes or irreversible steps. | The instructor reviewing every file change before the agent commits it to the repository during the website migration. |
 | **MCP (Model Context Protocol)** | A standard interface that allows AI agents to interact with tools and services through structured, typed function calls rather than by scraping visual interfaces designed for humans. | An agent using an MCP-style "check availability" function call instead of visually navigating a reservation website's calendar widget. |
 {: .tb-full}
 
@@ -64,14 +64,14 @@ Remember two things from this section.  The five questions are fixed, and the fi
 
 A specification gap looks like an agent failure but is not one.  Picture hiring movers and telling them "move everything from room 101 to room 205."  They move every box, but your filing system relied on a drawer-numbering convention you never wrote down, the movers used a different one, and now you cannot find anything.  The movers are not at fault; the specification is.  Case A is this scenario scaled to dozens of markdown files and a naming convention nobody thought to document.
 
-**The engagement.**  I delegated to an agentic desktop coworker the migration of an introductory course's site (dozens of markdown activity files, a syllabus with structured frontmatter, image assets) from one repository format to a new one, preserving meaning while transforming structure.  The agent could read files, write files, and run commands.  I reviewed every diff before anything was committed.
+**The engagement.**  I delegated to an agentic desktop coworker the migration of an introductory course's site (dozens of markdown activity files, a syllabus with structured frontmatter, image assets) from one repository format to a new one, preserving meaning while transforming structure.  The agent could read files, write files, and run commands.  I reviewed every change before anything was committed.
 
 **What happened at the seams.**  The bulk transformations went fast.  Three frictions were instructive.  First, implicit conventions were nowhere written down: an unstated frontmatter field order (the metadata block at the top of each markdown file) and naming idioms like `liascript-` prefixes.  The agent inferred them from examples, sometimes wrongly.  Second, long-running work hit context limits (the maximum amount of text a model can hold in memory at once), so the agent had to summarize its own progress and re-derive state, and it occasionally redid or skipped a file.  Third, verification was the bottleneck.  Every file looked plausible, and only systematic checks (does every page render, does every internal link resolve) separated done from done-looking.
 
 | Autopsy question | Answer for Case A |
 |---|---|
 | **Goal** | Move files AND preserve all meaning, rendering, internal links, and naming conventions, not just copy bytes from one place to another. |
-| **Architecture** | Single agent with file-read, file-write, and shell-command tools; human-in-the-loop gate on every commit via diff review. |
+| **Architecture** | Single agent with file-read, file-write, and shell-command tools; human-in-the-loop gate on every commit via log review. |
 | **Perception** | The agent could read file contents and directory listings, but could NOT see the implicit naming convention, the rendering output in a browser, or whether internal links resolved to real pages. |
 | **Failure or friction** | (1) Inferred conventions incorrectly from examples; (2) context limit forced re-derivation of progress state; (3) output looked plausible but systematic verification was missing. |
 | **Repair** | (1) Write a specification document before starting; (2) maintain an external progress log as a structured file the agent updates; (3) build a verification harness that programmatically checks rendering and link resolution. |
@@ -447,7 +447,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 **Technical level:** The autopsy protocol asks five questions in a fixed order.  Design a sixth question that you believe is missing: one that would have surfaced an additional important lesson from at least one of the three cases.  Justify your addition.
 
-**Societal level:** In each case, the human retained meaningful control: reviewing diffs, confirming reservations, restructuring the pagination workflow.  As agentic systems become faster and more capable, the economic incentive will be to remove those human gates.  For each case, state the minimum level of human oversight you would require if the stakes were higher (the migration is for a medical records system, the booking is for a charter flight, the document is a legal brief).  Does your answer change based on the stakes, and if so, what principle underlies that change?
+**Societal level:** In each case, the human retained meaningful control: reviewing changes, confirming reservations, restructuring the pagination workflow.  As agentic systems become faster and more capable, the economic incentive will be to remove those human gates.  For each case, state the minimum level of human oversight you would require if the stakes were higher (the migration is for a medical records system, the booking is for a charter flight, the document is a legal brief).  Does your answer change based on the stakes, and if so, what principle underlies that change?
 
 ---
 

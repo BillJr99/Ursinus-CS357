@@ -58,7 +58,7 @@ info:
       preemerging: No declarative eval configuration is attempted
       beginning: A harness (promptfoo or Inspect AI) is installed and runs, but the eval cases do not correspond to the pipeline's golden set, or results are not captured
       progressing: The judge's expected behavior is expressed as a versioned eval configuration over the golden calibration set, and one full harness run against the local model is captured
-      proficient: A versioned eval configuration (promptfoo YAML or an Inspect AI task) encodes the calibration set with at least one assertion per case; the configuration is committed alongside the submission; a before-and-after regression run demonstrates that a deliberate change to the judge prompt or rubric is caught by the harness, with both result sets included and a short interpretation in the readme (on the no-code path (promptfoo) the whole path is such a configuration, and the Part 5 regression diff satisfies this row)
+      proficient: A versioned eval configuration (promptfoo YAML or an Inspect AI task) encodes the calibration set with at least one assertion per case; the configuration is committed alongside the submission; a before-and-after regression run demonstrates that a deliberate change to the judge prompt or rubric is caught by the harness, with both result sets included and a short interpretation in the readme (on the no-code path (promptfoo) the whole path is such a configuration, and the Part 5 regression change satisfies this row)
     - weight: 10
       description: Writeup, Reflection, and Submission
       preemerging: An incomplete submission is provided
@@ -81,7 +81,7 @@ info:
       rlink: "../Tutorials/Observability"
     - rtitle: "Publishing: GHCR, Docker Hub, and npm"
       rlink: "../Tutorials/Publishing"
-    - rtitle: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff"
+    - rtitle: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log"
       rlink: "Activities/liascript-codingagents.md"
       liapage: true
     - rtitle: "Rubric Pipeline starter pack (rubric, twelve synthetic submissions, promptfoo dataset)"
@@ -140,7 +140,7 @@ There are two paths through this lab.  Both use the same starter rubric and corp
 | Path | What you build | What you need | Pick this if |
 |------|----------------|---------------|--------------|
 | **Code** | A Python script that walks the `submissions/` folder, prompts the judge for strict JSON, fails closed on bad output, writes `grades.csv`, verifies every evidence quote, and runs a matched-pair bias probe; then a promptfoo or Inspect AI harness over your golden set | Python 3, `pip install requests`, local Ollama with `llama3.2` | You want to own the parsing, the CSV, and the evidence check, and you are comfortable reading a 150-line script |
-| **No-code** | promptfoo YAML files that score every row of `dataset.csv` with `llm-rubric` assertions, plus two dataset variants for the bias probe and a deliberately regressed config for the regression diff; the evidence check is a written faithfulness analysis | Node.js and `npx` (promptfoo installs itself), local Ollama with `llama3.2`, a spreadsheet | You want your attention on the rubric wording and the judge's reasoning rather than on Python, or you have not written much code yet |
+| **No-code** | promptfoo YAML files that score every row of `dataset.csv` with `llm-rubric` assertions, plus two dataset variants for the bias probe and a deliberately regressed config for the regression change; the evidence check is a written faithfulness analysis | Node.js and `npx` (promptfoo installs itself), local Ollama with `llama3.2`, a spreadsheet | You want your attention on the rubric wording and the judge's reasoning rather than on Python, or you have not written much code yet |
 
 The rubric at the top of this page is the same on both paths; each rubric row names what it means on each path in parentheses.
 
@@ -522,7 +522,7 @@ The declarative counterpart of Steps 1.2 through 1.6 is one YAML file.  For each
 > **Do this.**
 > 1. Copy `dataset.csv` from the starter pack into your `cs357-rubric-nocode` folder and add your rows `s13` through `s15`.
 > 2. Create `promptfooconfig-baseline.yaml` with the contents below.  The four `value:` blocks carry the starter rubric's descriptors; if you sharpen one later, edit it here.
-> 3. Run the batch and save the output file; Part 5 diffs against it.
+> 3. Run the batch and save the output file; Part 5 changes against it.
 >
 > ```bash
 > npx promptfoo@latest eval -c promptfooconfig-baseline.yaml --output run_baseline.json
@@ -1104,7 +1104,7 @@ This path satisfies the harness discipline by construction, because every measur
 >    npx promptfoo@latest eval -c promptfooconfig-regressed.yaml --output run_regressed.json
 >    ```
 >
-> 4. Compare `run_baseline.json` and `run_regressed.json`.  The viewer's side-by-side, a text diff, or a hand-built table of the 60 verdicts all work.  Identify which items' verdicts changed and in which direction.
+> 4. Compare `run_baseline.json` and `run_regressed.json`.  The viewer's side-by-side, a text change, or a hand-built table of the 60 verdicts all work.  Identify which items' verdicts changed and in which direction.
 > 5. Write two or three sentences in your readme interpreting the result, then revert the change and confirm the baseline verdicts recover.
 
 > **You should see.** A set of verdicts that moved on the weakened criterion and stayed put on the other three.  If everything changed, the two runs used different datasets or provider settings; change exactly one thing between runs.

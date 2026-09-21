@@ -403,9 +403,9 @@ name: commit-message
 description: Write a git commit message from staged changes. Use when the user asks for a commit message or runs git commit without one.
 ---
 
-Read the staged diff with `git diff --cached`.  Write a subject line under
+Read the staged files with `git status --short`, then open them.  Write a subject line under
 seventy characters saying what changed and why, then a blank line, then the
-reasoning if it is not obvious.  Do not describe the diff line by line.
+reasoning if it is not obvious.  Do not describe the change line by line.
 MD
 ```
 
@@ -419,9 +419,9 @@ name: commit-message
 description: Write a git commit message from staged changes. Use when the user asks for a commit message or runs git commit without one.
 ---
 
-Read the staged diff with `git diff --cached`.  Write a subject line under
+Read the staged files with `git status --short`, then open them.  Write a subject line under
 seventy characters saying what changed and why, then a blank line, then the
-reasoning if it is not obvious.  Do not describe the diff line by line.
+reasoning if it is not obvious.  Do not describe the change line by line.
 '@
 ```
 
@@ -563,7 +563,7 @@ Part II's argument was that a gate beats a rule because the harness enforces it.
 
 A container is that something else. Instead of deciding per action whether it is safe, you decide **once**, in advance, what the agent can reach at all, and then stop deciding. That is a better trade than it sounds, because the per-action decision is the one you get wrong at hour three when every prompt looks like the last one.
 
-The boundary is the mount. A container with one bind mount can read and write exactly that directory and nothing else: not your SSH keys, not your other repositories, not your documents, not the rest of your disk. Everything the agent could damage is therefore everything you deliberately handed it, and that directory is a git repository with a GitHub remote, which means every change is a diff you can read and revert.
+The boundary is the mount. A container with one bind mount can read and write exactly that directory and nothing else: not your SSH keys, not your other repositories, not your documents, not the rest of your disk. Everything the agent could damage is therefore everything you deliberately handed it, and that directory is a git repository with a GitHub remote, which means every change is a change you can read and revert.
 {: .tb-key data-title="Why this matters"}
 
 Three properties make the arrangement work, and it is worth naming them because they are the same three the Workbench session introduces. **Isolation**: the mount bounds what it can reach. **Observability**: the work lands as commits you read. **Reversibility**: `git checkout` and a push you can revert. Remove any one and the arrangement stops being reasonable. Yolo mode inside a container with no git history is not isolation, it is just a faster way to lose work.
@@ -674,7 +674,7 @@ Or in the project's `opencode.json`, which is the route the desktop application 
 
 The first protects the mount's contents from the one command that empties it faster than you can react. The second protects the history on GitHub, which is the copy the container cannot reach and therefore the one thing here that is genuinely irreversible.
 
-**Commit before you start, and read the diff after.** The whole arrangement rests on git: a clean tree before the run makes `git diff` afterwards a complete account of what the agent did, and `git checkout -- .` an instant undo. Start from a dirty tree and you have given up the observability half of the trade while keeping all of the risk.
+**Commit before you start, and read the action log after.** The whole arrangement rests on git: a clean tree before the run makes `git status` afterwards a complete list of what the agent did, and `git checkout -- .` an instant undo. Start from a dirty tree and you have given up the observability half of the trade while keeping all of the risk.
 {: .tb-warning data-title="Watch out"}
 
 The workflow, end to end, is four commands:
@@ -682,9 +682,9 @@ The workflow, end to end, is four commands:
 ```bash
 git status                      # start clean
 docker run ... course-agent     # the run above
-opencode --auto                 # inside the container
+opencode run "<the job>" --auto 2>&1 | tee agent-run.log   # inside the container
 # ...agent works, you go and do something else...
-git diff                        # what actually changed
+less agent-run.log              # the action log that run wrote
 ```
 
 Then review, commit, and push from the container or the host, whichever you prefer. The push is how the work leaves the blast radius.

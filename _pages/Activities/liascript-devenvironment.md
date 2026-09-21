@@ -70,7 +70,7 @@ Step 0 defines the shell vocabulary.  These are the terms the rest of the page a
 | **Repository (repo)** | A folder whose entire history git tracks, so any past state can be restored and any change can be undone | `cs357-work`, created in Step 3 and pushed to GitHub in Step 7 |
 | **Commit** | A saved point in that history, with a message saying what changed and why | Step 7.4. Commit at every working stopping point, not at the end of the day |
 | **Coding agent** | A program that takes a goal in plain English, reads your files, proposes edits and commands, and loops until it is done or you stop it. The agent loop from *The Agent Loop*, pointed at your file system | `opencode`, already in the course image and given one small job in Step 8 |
-| **Diff** | The exact lines added and removed by a change, shown side by side. What you review instead of re-reading the whole file | `git diff` after the agent edits `hello_agent.py`. Reading this is the skill, not a formality |
+| **Action log** | The running account an agent prints as it works, naming each file it opens or writes and each command it runs. What you read instead of trusting the summary | The log the agent prints as it edits `hello_agent.py`. Reading it, then opening the file, is the skill, not a formality |
 | **`AGENTS.md`** | A file of standing instructions an agent reads automatically, so you stop retyping context. A system prompt you keep in version control | Written in Step 8.4, and grown for the rest of the semester |
 
 ---
@@ -661,14 +661,16 @@ Add a docstring to hello_agent.py explaining what it does, and print the
 model's reply with a "Model says: " prefix. Do not change anything else.
 ```
 
-Watch what happens, and *watch it deliberately*.  The agent will show you what it intends to change before it changes it.  Read the proposed diff.  Approve it.  Then, back at the shell:
+Watch what happens, and *watch it deliberately*.  The agent will show you what it intends to change before it changes it.  Read the action log.  Approve it.  Then, back at the shell:
 
 ```bash
-git diff
+git status --short     # which files it touched
 python3 hello_agent.py
 ```
 
-> **You've succeeded when** `git diff` shows you a change you can explain line by line, and the script still runs.  If the agent broke it, that is a perfectly good outcome for today: `git checkout hello_agent.py` and try a smaller instruction.
+Scroll back through the action log in the session before you leave it.  That record, every file opened and every command run, is the only account of what the agent did, and it is gone when you quit.  The *Coding Agents* session runs the same job non-interactively so the record lands in a file instead.
+
+> **You've succeeded when** the action log names a file you can then open and explain line by line, and the script still runs.  If the agent broke it, that is a perfectly good outcome for today: `git checkout hello_agent.py` and try a smaller instruction.
 
 ### 8.4: Leave it standing instructions
 
@@ -691,7 +693,7 @@ My CS357 lab workspace.
    repositories, issues, pull requests, reviews. Confirm once per session
    with `gh auth status`.
 2. Fall back to `git` for what it does on its own: pull, add, commit, push,
-   log, diff. Say in your next message that you fell back, and why.
+   log, status. Say in your next message that you fell back, and why.
 3. If both fail, stop and ask me. A push that prompts for a password, or a
    401 or 403 from either tool, means there is no working credential here.
    Tell me which command failed and what it said. Do not switch the remote
@@ -717,7 +719,7 @@ Look back at what just happened.  You gave a program permission to change files 
 
 | Property | The question it answers | What gave it to you today | What its absence looks like |
 |---|---|---|---|
-| **Observability** | *What did it actually do?* | The proposed diff before the change, then `git diff` after it | An agent that reports "done, I fixed the bug" and you have no independent way to check |
+| **Observability** | *What did it actually do?* | The plan before the change, then the action log after it, then the file itself | An agent that reports "done, I fixed the bug" and you have no independent way to check |
 | **Isolation** | *What could it have reached?* | The container: one mount, `/workspace`, and nothing else of yours | An agent running on your host with your credentials, one bad path away from your documents |
 | **Reversibility** | *Can I undo it?* | `git checkout .`, because you started from a clean tree | An afternoon's work quietly overwritten with no version history to restore from |
 
@@ -731,14 +733,14 @@ They are what "trust" actually decomposes into.  When someone asks whether you w
 
 You will meet all three again, made much more serious: **observability** as tracing and structured logs in the evaluation labs, **isolation** as non-root containers, read-only mounts, and OAuth scopes in the Responsible AI Capstone's containerization direction and the Tools and MCP lab's OAuth option, and **reversibility** as branch discipline, rollback, and the governance question of who is accountable when an autonomous system errs.
 
-A student runs a coding agent directly in their home directory, outside any container, on a folder that is not a git repository, and carefully reads every diff before approving it.  Which of the three properties do they have?
+A student runs a coding agent directly in their home directory, outside any container, on a folder that is not a git repository, and carefully reads every change before approving it.  Which of the three properties do they have?
 
-[( )] All three; reading the diffs covers it
+[( )] All three; reading the changes covers it
 [(X)] Observability only.  Nothing bounds what the agent can reach, and nothing can restore a file it overwrote
 [( )] Observability and reversibility, since they could retype anything lost
-[( )] None; reading a diff is not real observability
+[( )] None; reading a change is not real observability
 
-> **Why this answer?**  Reading the diff is genuine observability and it is worth something.  The trap is believing it is worth everything.  Careful review catches a bad change you are shown; it does nothing about a file the agent touched outside the change it described, and it gives you no way back once the write has landed.
+> **Why this answer?**  Reading the action log is genuine observability and it is worth something.  The trap is believing it is worth everything.  Careful review catches a bad change you are shown; it does nothing about a file the agent touched outside the change it described, and it gives you no way back once the write has landed.
 
 ### 8.6: herdr, for When One Agent Becomes Several
 
@@ -778,9 +780,9 @@ Look back at the session you just ran, with your team.
 
 1.  Name the four parts of the agent loop in what you just watched: where did opencode **perceive**, **plan**, **act**, and **remember**?  Point at specific things on your screen, not at the diagram.
 
-   > *Hint: Reading your files is one of them.  The proposed diff is another.  Your approval sits between two of them, which is the whole point.*
+   > *Hint: Reading your files is one of them.  The action log is another.  Your approval sits between two of them, which is the whole point.*
 
-2.  You approved a diff before it was applied.  What, precisely, would have been different if you had approved without reading?  Name a specific bad outcome that the reading step was your only defense against.
+2.  You approved a change before it was applied.  What, precisely, would have been different if you had approved without reading?  Name a specific bad outcome that the reading step was your only defense against.
 
 3.  The same install command (`curl ... | bash`) would have been a much worse idea on your host machine than it was inside the container.  Explain the difference in one sentence, using the word *mount*.
 
@@ -788,7 +790,7 @@ Look back at the session you just ran, with your team.
 
    > *Hint: What happens when the instructions turn out to be wrong?  What can you do with a file that has a history?*
 
-> **Common Misconception:** "The agent ran my code, so the agent understands my project."  It does not.  It read the text of some of your files and produced text that looked like a plausible edit.  Everything that made that edit *correct* was your reading of the diff and the test you ran afterward.  The review step is not a formality you will outgrow with a better model; it is the part of the loop where a human is still doing the work.
+> **Common Misconception:** "The agent ran my code, so the agent understands my project."  It does not.  It read the text of some of your files and produced text that looked like a plausible edit.  Everything that made that edit *correct* was your reading of the change and the test you ran afterward.  The review step is not a formality you will outgrow with a better model; it is the part of the loop where a human is still doing the work.
 
 ---
 

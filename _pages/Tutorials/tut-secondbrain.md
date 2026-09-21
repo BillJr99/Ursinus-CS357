@@ -84,7 +84,7 @@ And three operations, each of which is a standing prompt rather than a piece of 
 
 **Why this is not RAG.**  We build a retrieval-augmented generation pipeline later in the course, and the contrast is the sharpest way to understand what the wiki buys you.  RAG searches your raw documents on every query and throws the result away; ask the same question twice and the model does the same work twice, and nothing about your corpus is any better than it was yesterday.  The LLM wiki pays the synthesis cost **once**, when a source arrives, and keeps the result as a durable artifact.  Karpathy's argument for why this is newly practical is a labor argument rather than a technical one: good wikis have always been valuable and have always died of maintenance, and maintenance is precisely the work that has just become free.  Neither replaces the other; RAG is what you reach for over a corpus too large or too fast-moving to curate, and the wiki is what you build over the corpus you actually care about.
 
-**Your job changes shape.**  You stop being the author and become the curator: you choose what enters `raw/`, you ask the questions, and you review what the agent wrote before you trust it.  That last clause is not optional.  Nothing in the wiki is durable knowledge until you have read it, which is the same review gate you apply to a coding agent's diff.
+**Your job changes shape.**  You stop being the author and become the curator: you choose what enters `raw/`, you ask the questions, and you review what the agent wrote before you trust it.  That last clause is not optional.  Nothing in the wiki is durable knowledge until you have read it, which is the same review gate you apply to a coding agent's change.
 
 ### Questions to Work Through
 

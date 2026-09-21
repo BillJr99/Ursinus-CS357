@@ -4,7 +4,7 @@ permalink: /Tutorials/AgentCLIs
 title: 'CS357: Foundations of Artificial Intelligence - Agentic CLI Tools'
 info:
   coursenum: CS357
-  purpose: "To install and compare the major terminal coding agents (Claude Code, Codex, Gemini CLI, opencode, and pi) and to teach the review discipline their generated diffs demand."
+  purpose: "To install and compare the major terminal coding agents (Claude Code, Codex, Gemini CLI, opencode, and pi) and to teach the review discipline their the changes they generate demand."
   eyebrow: "Tutorial"
   numbering: false
 tags:
@@ -138,7 +138,7 @@ If `node` is missing and you would rather not install it on your host, skip to Â
    Never paste the value into the agent's own chat: what you send to a hosted model rests in that provider's logs, and revoking the credential is the only repair.
 3.  **Check the model and the mode** before you type a real task: `/model` to see what you are talking to, and the tool's status line for the current permission mode.
 4.  **Give it a small, checkable job first** ("add a docstring to every function in `parser.py`") so you see the review loop before you rely on it.
-5.  **`git status` when you are done.**  If you cannot see the agent's work as a diff, stop and fix that before continuing.
+5.  **`git status` when you are done.**  If you cannot see the agent's work as a change, stop and fix that before continuing.
 
 ### Configure: the three files that matter
 
@@ -268,7 +268,7 @@ The labels differ by tool, but it is the same dial.  In **Claude Code** you cycl
 
 The connection to the human-in-the-loop principle is direct: a mode is how you *spend your oversight budget*.  Plan mode spends it all up front: you review one plan instead of twenty gates.  Full-auto spends none, and inherits all the risk.  Auto-accept edits is the deliberate middle: it aims your attention at the actions that can actually leave your machine or destroy data, which is precisely where the governance module argues a human's judgment is worth the interruption.  The mistake is never simply "picking a permissive mode"; it is picking one *without matching it to the task's blast radius*.  Auto-accept edits inside a git repo you can roll back is prudent; the same mode on files with no version control is how an afternoon's work quietly disappears.
 
-A student sets their agent to **auto-accept edits** mode to refactor a Python package, reasoning that they will review the final diff in git anyway.  Midway, the agent decides it needs a library and proposes `pip install requests`.  What happens?
+A student sets their agent to **auto-accept edits** mode to refactor a Python package, reasoning that they will review the final change in git anyway.  Midway, the agent decides it needs a library and proposes `pip install requests`.  What happens?
 
 - It runs without a prompt; auto-accept edits approves every action, shell commands included, so the install proceeds silently
 - It stops at a gate: auto-accept edits waives the prompt for *file edits only*; a shell command like `pip install` still pauses, which is the whole point of a mode that sits between "ask" and "full-auto"
@@ -417,7 +417,7 @@ In this part, you will integrate your chosen agent CLI into VS Code and understa
 
 ## 7.  Driving Agents from VS Code
 
-Three levels of integration, in increasing depth.  **Level one, the integrated terminal** (Ctrl+`): launch any CLI tool there and you get the workflow most professionals actually use, agent in the bottom pane, live diffs in the editor above; this works today for every tool in the table with zero configuration.  **Level two, official extensions**: Claude Code and Codex ship VS Code extensions (search the marketplace by name) that surface the session in a panel, render proposed diffs in VS Code's native diff view, and let you approve from the editor; install, sign in, and the workflow is the terminal workflow with better optics.  **Level three, editor-native agents**: KiloCode lives entirely inside VS Code with direct access to the language server (diagnostics, symbols, refactoring), and connects to our gateway with a one-field base URL change in its settings.  Recommendation for this course: level one for fluency first, then level two; you will debug problems best in the layer you understand.
+Three levels of integration, in increasing depth.  **Level one, the integrated terminal** (Ctrl+`): launch any CLI tool there and you get the workflow most professionals actually use, agent in the bottom pane, live output in the editor above; this works today for every tool in the table with zero configuration.  **Level two, official extensions**: Claude Code and Codex ship VS Code extensions (search the marketplace by name) that surface the session in a panel, render proposed changes in VS Code's native change view, and let you approve from the editor; install, sign in, and the workflow is the terminal workflow with better optics.  **Level three, editor-native agents**: KiloCode lives entirely inside VS Code with direct access to the language server (diagnostics, symbols, refactoring), and connects to our gateway with a one-field base URL change in its settings.  Recommendation for this course: level one for fluency first, then level two; you will debug problems best in the layer you understand.
 
 ## 8.  Containerized Invocation (the Course Pattern)
 
@@ -597,7 +597,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    # now add the context file:
    # create CLAUDE.md in ~/cs357-exercise2 with the starter from Section 3
    claude   # run the identical task again; save as transcript-with-context.txt
-   diff transcript-no-context.txt transcript-with-context.txt   # look for differences
+   # open both transcripts side by side and note where they diverge
    ```
 
    *You've succeeded when:* You can quote two specific lines (one from each transcript) that show a concrete difference in agent behavior attributable to the context file, such as a different test command, a different boundary the agent respected, or a different convention in the generated code.
@@ -636,7 +636,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 5.  *VS Code session.*
 
-   *What to do:* Complete one full task entirely inside VS Code: either in the integrated terminal (Ctrl+`) or via the official Claude Code or Codex extension if you have it installed.  Use the editor's diff view to review every proposed file change before you approve it.  Reflect in three sentences: did seeing the diff visually (rather than reading it in the terminal) change any decision you made?
+   *What to do:* Complete one full task entirely inside VS Code: either in the integrated terminal (Ctrl+`) or via the official Claude Code or Codex extension if you have it installed.  Use the editor's change view to review every proposed file change before you approve it.  Reflect in three sentences: did seeing the change visually (rather than reading it in the terminal) change any decision you made?
 
    *Starter hint:*
    ```bash
@@ -645,10 +645,10 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    # Press Ctrl+` to open the integrated terminal
    cd ~/cs357-exercise5
    claude   # launch the agent in the VS Code terminal
-   # When the agent proposes a file edit, look at the diff view that appears in the editor pane above
+   # When the agent proposes a file edit, look at the change view that appears in the editor pane above
    ```
 
-   *You've succeeded when:* You have approved at least one change and refused or revised at least one proposed change based on what you saw in the diff view, and your three-sentence reflection names the specific change you caught or reconsidered.
+   *You've succeeded when:* You have approved at least one change and refused or revised at least one proposed change based on what you saw in the change view, and your three-sentence reflection names the specific change you caught or reconsidered.
 
 6.  *Detach and reattach.*
 

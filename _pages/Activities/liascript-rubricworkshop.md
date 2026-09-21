@@ -296,7 +296,7 @@ Expected: 3 rows times 3 assertions, nine verdicts.
 
    *Hint:* The same model read the same text under two different prompts.  Disagreement between the routes is not a bug in either one; it measures how much the *wording* of the rubric line moves the judge.
 
-Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass line, and both routes grade the same `samples/` with the same model.  A configuration file is not more accurate than a script; what it buys you is one file holding rubric, judge, and tests that you can diff, which is the Part 5 harness discipline in the lab.
+Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass line, and both routes grade the same `samples/` with the same model.  A configuration file is not more accurate than a script; what it buys you is one file holding rubric, judge, and tests that you can change, which is the Part 5 harness discipline in the lab.
 
 ---
 # Part III: Make It Trustworthy

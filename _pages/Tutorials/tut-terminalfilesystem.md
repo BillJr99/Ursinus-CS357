@@ -325,7 +325,7 @@ Both installs are ordinary npm-shaped commands, so both belong in the image:
 FROM node:20-slim
 
 # git is not optional: every coding agent assumes it, and pi uses it to show
-# you diffs before it writes anything
+# you changes before it writes anything
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
@@ -433,7 +433,7 @@ Leave `apiKey` as `null` in the image and let each student supply their own Open
 | Can pi read your SSH keys? | No.  `~/.ssh` was never mounted, so the path does not exist inside the container |
 | Can pi read your notes? | Yes, at `/reference`, because you chose to mount them |
 | Can pi *change* your notes? | No.  `:ro` makes the write fail at the kernel, not at the agent's discretion |
-| Can pi edit your project? | Yes, at `/workspace`.  This is the one thing you granted, and `git diff` is how you audit it |
+| Can pi edit your project? | Yes, at `/workspace`.  This is the one thing you granted, and the action log plus `git status` is how you audit it |
 | Can pi reach the internet? | Yes, unless you add `--network none`, which also cuts off the models.  Reaching only your host is a middle ground you have to build with a custom network |
 | If pi runs a destructive command, what is lost? | Uncommitted work in the current project.  Nothing else on the host is reachable |
 
@@ -809,7 +809,7 @@ The whole protocol compresses to three sentences, and each one closes a link in 
 | Invariant | What it means | Which failure it prevents |
 |---|---|---|
 | **Handoff-ready at all times** | `RESUME.md` must let a fresh agent with no transcript continue correctly if this session ended right now | The checkpoint going stale |
-| **Every verified step is a Git checkpoint** | Work can be inspected with `git log` and `git diff`, and rolled back to the last good state | The unversioned delete |
+| **Every verified step is a Git checkpoint** | Work can be inspected with `git log` and `git status`, and rolled back to the last good state | The unversioned delete |
 | **Disk beats memory** | After any compaction, summary, restart, or surprise, trust `RESUME.md`, Git, and fresh reads over recalled file contents | The drifting summary, and editing from memory |
 {: .tb-full}
 
@@ -833,7 +833,7 @@ One rule in version 0.4.0 is short enough to adopt today, whatever you are worki
 
 > Re-read the exact lines immediately before editing.  Never build a replacement's old text from memory, a summary, or an earlier read taken before other edits.
 
-The failure it prevents is specific.  An agent reads a file, makes three edits, then constructs a fourth edit using text it remembers from the first read, which the earlier edits have already changed.  The match fails, or worse, matches in a place it should not.  The skill's escalation is worth copying too: retry once with a smaller, unique anchor, and after a second failure on the same file, stop guessing.  Re-read the whole file and rewrite it, or re-anchor from `RESUME.md` and `git diff`.
+The failure it prevents is specific.  An agent reads a file, makes three edits, then constructs a fourth edit using text it remembers from the first read, which the earlier edits have already changed.  The match fails, or worse, matches in a place it should not.  The skill's escalation is worth copying too: retry once with a smaller, unique anchor, and after a second failure on the same file, stop guessing.  Re-read the whole file and rewrite it, or re-anchor from `RESUME.md` and `git status`.
 
 There is a matching rule for *after* an edit, which is the same verification discipline in miniature: re-read the changed region, then run the syntax check, import, or test that covers it.  A successful edit tool call is a claim, not evidence.
 
@@ -920,7 +920,7 @@ The one table to keep open while you work:
 
 Two prohibitions run through all of it.  Never concatenate partial JSON, commands, or code into something you then treat as complete.  And never retry an unchanged failing payload: change the hypothesis, the inputs, the tactic, or the decomposition first, or you are just paying for the same failure twice.
 
-Version 0.4.0 treats compaction as something to schedule rather than something to survive.  Compact at a natural boundary, just after a commit and a checkpoint update, when a subtask ends: **compacting then costs almost nothing, because the state is already on disk.**  Compact early, at roughly half to two-thirds of the window, rather than at overflow.  And afterward, re-anchor before doing anything else: read `RESUME.md`, run `git status` and `git log --oneline -5`, inspect `git diff` for in-flight changes, and re-read any file before editing it.  Where the summary and the disk disagree, **the disk wins, and the discrepancy gets recorded.**
+Version 0.4.0 treats compaction as something to schedule rather than something to survive.  Compact at a natural boundary, just after a commit and a checkpoint update, when a subtask ends: **compacting then costs almost nothing, because the state is already on disk.**  Compact early, at roughly half to two-thirds of the window, rather than at overflow.  And afterward, re-anchor before doing anything else: read `RESUME.md`, run `git status` and `git log --oneline -5`, inspect `git status` for in-flight changes, and re-read any file before editing it.  Where the summary and the disk disagree, **the disk wins, and the discrepancy gets recorded.**
 
 > compaction is not a substitute for the checkpoint.  A compaction summary is generated by the same model whose context is already in trouble, and it optimizes for continuing the conversation.  The checkpoint was written deliberately, while things were going well, and validated against a schema.  The skill's rule is not to wait for overflow before saving state, and not to ask an already-overflowing context to produce a comprehensive rescue summary.
 {: .tb-pitfall data-title="Common Misconception"}

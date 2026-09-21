@@ -327,7 +327,7 @@ These exercises give you practice writing the artifacts yourself (agent table, p
 
 1.  **Write a one-page design document.**
 
-   *What to do:* Choose one of these 2-agent systems: (a) a ticket triage system that classifies support requests and drafts responses, (b) a code review system that reads a pull request diff and flags potential bugs, (c) a meeting summarizer that transcribes audio and extracts action items.  Write a complete agent table with all columns filled in, plus a 5-row pre-mortem using the four-column format from Model 2.
+   *What to do:* Choose one of these 2-agent systems: (a) a ticket triage system that classifies support requests and drafts responses, (b) a code review system that reads a pull request change and flags potential bugs, (c) a meeting summarizer that transcribes audio and extracts action items.  Write a complete agent table with all columns filled in, plus a 5-row pre-mortem using the four-column format from Model 2.
 
    *Starter hint:* Start by writing down the output of the *last* agent in the pipeline: what does the final user receive?  Work backward from there: what does the second-to-last agent need to produce to enable that output?  Then ask the same question of the first agent.  Working backward from the output often reveals design gaps faster than working forward.
 

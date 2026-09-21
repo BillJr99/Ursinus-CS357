@@ -435,7 +435,7 @@ docker run -it --rm \
   course-agent
 ```
 
-- `/work`: the project.  Read-write, because the agent's job is to change it.  This folder is a **git repository**, so every change the agent makes is reviewable with `git diff` and revertible with `git checkout`.
+- `/work`: the project.  Read-write, because the agent's job is to change it.  This folder is a **git repository**, so every change the agent makes is listed by `git status` and revertible with `git checkout`.
 - `/reference:ro`: your notes, style guides, or corpus.  The agent reads them and physically cannot modify them.
 - `-e AGENT_API_KEY` with no value passes the variable through from your shell without baking it into the image or its history.  The course's own stack needs no such key, since the model is local; the flag is worth knowing for the day you wrap something that does.  On the course's default opencode-against-local-Ollama setup there is no key at all to pass, which is one fewer secret to leak; the paragraph below still matters the moment you point an agent at a paid provider.  That is the right move for a throwaway `--rm` session, and it is not the end of the story: an environment variable is still readable by anyone who can run `docker inspect` on the container.  For anything longer-lived than an experiment, the [Containerizing an AI System Safely direction]({{ site.baseurl }}/Assignments/ResponsibleAI#direction-4-containerizing-an-ai-system-safely) of the Responsible AI Capstone shows the leak and moves the secret into Docker secrets instead.
 
@@ -524,18 +524,18 @@ docker run --rm --network none course-agent \
 docker run --rm -v "$HOME/agents/project:/work" course-agent mount | grep /work
 ```
 
-Then `git status` and `git diff` in the project after a session.  The agent's work should be entirely visible as tracked changes; if something appeared that git does not show, your mount layout is wider than you thought.
+Then `git status` in the project after a session, and open what it lists.  The agent's work should be entirely visible as tracked changes; if something appeared that git does not show, your mount layout is wider than you thought.
 
 Which change makes it reasonable to run a coding agent with its permission prompts disabled?
 
 - Using a more capable model, since stronger models make fewer destructive mistakes
-- Running it in a container whose only writable mount is one git-tracked project folder, so the worst case is a reviewable diff
+- Running it in a container whose only writable mount is one git-tracked project folder, so the worst case is a reviewable change
 - Adding an instruction to the system prompt telling the agent not to delete files
 - Running the agent as root inside the container so it can repair anything it breaks
 
 <details markdown="1"><summary>Answer</summary>
 
-Running it in a container whose only writable mount is one git-tracked project folder, so the worst case is a reviewable diff
+Running it in a container whose only writable mount is one git-tracked project folder, so the worst case is a reviewable change
 
 </details>
 

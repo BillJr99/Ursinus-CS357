@@ -26,7 +26,7 @@ info:
     <li>When should an agent run locally and privately, and when is it appropriate to rely on hosted services?</li>
     <li>How can multi-agent designs (debate, critique and refine, consensus) improve reliability, and what new failure modes do they introduce?</li>
     <li>How can system design align agent outcomes with ethical principles, and who is accountable when an autonomous system errs?</li>
-    <li>How do coding agents like OpenCode, Plandex, and Hermes reshape software development, and what review discipline do their generated diffs demand?</li>
+    <li>How do coding agents like OpenCode, Plandex, and Hermes reshape software development, and what review discipline do the changes they generate demand?</li>
     <li>What is the carbon and water cost of AI computation, and how should environmental impact influence our design choices for agents?</li>
     <li>Does it matter whether an AI system genuinely understands, or only whether it behaves as if it does, and what are the ethical implications of our answer?</li>
     <li>How do containers, filesystems, network policies, and OAuth scopes create the safety boundaries that allow us to deploy autonomous agents responsibly?</li>
@@ -215,7 +215,7 @@ goals:
 - goal: "Apply containerization and filesystem isolation principles to deploy AI agents with defined trust boundaries, non-root execution, read-only mounts, and minimal blast radius."
 - goal: "Design, implement, and secure a working MCP server with OAuth 2.0 client credentials flow, and connect it to a local agent to demonstrate tool discovery, invocation, and token lifecycle management."
 - goal: "Analyze the carbon and water footprint of an AI deployment and propose concrete efficiency improvements grounded in right-sizing, caching, and local-first inference choices."
-- goal: "Use a coding agent (OpenCode, Plandex, or Claude Code) to implement a feature from a written spec, then critique the generated diff for correctness, security, and test coverage."
+- goal: "Use a coding agent (OpenCode, Plandex, or Claude Code) to implement a feature from a written spec, then critique the generated change for correctness, security, and test coverage."
 - goal: "Identify and research an issue, question, or practical problem"
 - goal: "Develop a multi-disciplinary understanding of the problem to explore how it could be addressed"
 - goal: "Collaborate to develop a strategic intervention that constructively addresses the issue"
@@ -327,12 +327,12 @@ schedule:
     rlink: "Tutorials/Docker"
 - week: "1"
   date: "1"
-  title: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff"
+  title: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log"
   link: "Activities/liascript-codingagents.md"
   liapage: true
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class.  Describe one time you accepted AI-generated code or text without really reading it.  What would you check now, and what would have caught the thing you missed?"
-  - rtitle: "Bring your cs357-work repository and the working opencode install from Week 1 (Step 8).  Today you drive the agent against a written specification and read its diff."
+  - rtitle: "Bring your cs357-work repository and the working opencode install from Week 1 (Step 8).  Today you drive the agent against a written specification, read its action log, and inspect the files it names."
     rlink: false
   - rtitle: "Agentic CLI Tools: Claude Code, Codex, Gemini CLI, and pi, and how each one differs from the opencode you drive today"
     rlink: "Tutorials/AgentCLIs"
@@ -405,6 +405,8 @@ schedule:
     rlink: "Tutorials/AIByHand"
   - rtitle: "Bring your working Ollama setup from Week 1 and the charter, contract, and skills you have written so far for the OpenCode Studio lab.  Today is that lab's mid-flight checkpoint, and the workshop edits system prompts against a live model."
     rlink: false
+  - rtitle: "The Persona Pipeline: One Model, Four Personas, and a Rule About Who Sees What.  The full program behind Part IIe, with the five files it reads and four experiments to run against it"
+    rlink: "Tutorials/PersonaPipeline"
 - week: "3"
   date: "1"
   title: "The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent"

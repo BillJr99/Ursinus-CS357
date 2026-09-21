@@ -233,7 +233,7 @@ Context: {context}
     - The `chunk_size` value you set
     - How edges (connections) are represented in the JSON
 
-**Critical Thinking**: The JSON export is the "source code" for your visual pipeline.  Compare it to your RAG Knowledge Base Lab Python code.  Which is easier to read?  Which is easier to version-control and diff in a tool like `git`?
+**Critical Thinking**: The JSON export is the "source code" for your visual pipeline.  Compare it to your RAG Knowledge Base Lab Python code.  Which is easier to read?  Which is easier to version-control and change in a tool like `git`?
 
 ---
 

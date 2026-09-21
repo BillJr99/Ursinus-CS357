@@ -112,7 +112,7 @@ Merged #17.  Closing.
   -> label removed: in-progress    state: closed
 ```
 
-Three things to notice.  The worker's first comment does two jobs at once: it is a message to whoever reviews ("I only tested LF") and it is a blackboard write ("Claiming this", plus the `in-progress` label) that any third agent would see before starting the same task.  The reviewer's comment is anchored to a line in a diff, which is more precise than any chat message could be.  And the worker that answered the review is a *fresh session* that reconstructed everything it needed from the thread; nothing came from memory.
+Three things to notice.  The worker's first comment does two jobs at once: it is a message to whoever reviews ("I only tested LF") and it is a blackboard write ("Claiming this", plus the `in-progress` label) that any third agent would see before starting the same task.  The reviewer's comment is anchored to a line in a change, which is more precise than any chat message could be.  And the worker that answered the review is a *fresh session* that reconstructed everything it needed from the thread; nothing came from memory.
 
 ### Critical Thinking Questions
 
@@ -156,7 +156,7 @@ Here is the working pattern I use daily, and it scales from one agent to a team 
 | Artifact | What it carries | Who writes it |
 |---|---|---|
 | **Issue** | The task, its acceptance criteria, and the discussion of approach | You, or an agent that found the problem |
-| **Branch + PR** | One agent's attempt at that task, as a reviewable diff | The coding agent |
+| **Branch + PR** | One agent's attempt at that task, as a reviewable change | The coding agent |
 | **PR review comment** | A specific, line-anchored instruction: "this misses the empty-input case" | You, or a *reviewing* agent |
 | **PR checks (CI)** | The objective verdict: tests pass or they do not | The machine |
 | **Merge** | Consensus: this attempt is accepted | You |
@@ -167,8 +167,8 @@ The loop is five steps, and you ran the commands for them in [Where the Work Com
 
 1. **The task becomes an issue.**  `gh issue create`, with the repro and the acceptance criteria in the body, so any agent can pick the task up by number.
 2. **A worker agent is pointed at the issue.**  It reads the issue, writes a failing test, then fixes it.
-3. **The agent opens a pull request.**  `gh pr create`, and the attempt is now a reviewable diff.
-4. **Review happens in the PR, not in the chat.**  `gh pr diff`, then `gh pr review --comment` carrying the specific objection.
+3. **The agent opens a pull request.**  `gh pr create`, and the attempt is now a reviewable change.
+4. **Review happens in the PR, not in the chat.**  `gh pr view --json files`, then `gh pr review --comment` carrying the specific objection.
 5. **A second agent picks up that comment.**  A fresh session, reading the review with `gh pr view --comments`.
 
 The runnable form, with the exact command lines, is in [Where the Work Comes From: GitHub and the Agent](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md#2.-where-the-work-comes-from:-github-and-the-agent); the question of how the agent reaches GitHub at all is the one after it, [Two Ways an Agent Reaches GitHub](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md#2a.-two-ways-an-agent-reaches-github).

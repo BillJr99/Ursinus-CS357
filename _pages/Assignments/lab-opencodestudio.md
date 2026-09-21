@@ -56,7 +56,7 @@ info:
       progressing: The submission follows the directions with a minor omission, with at least superficial responses to the reflection prompts
       proficient: "The submission contains every deliverable in the stated layout; the readme names the artifact route taken and lists every template section deleted with its reason; the model name and the opencode version are recorded; and every reflection answer cites a specific line from your own transcript, session log, or scored rubric rather than restating the prompt"
   readings:
-    - rtitle: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff; Section 2c is the plan mode Part 4 starts in, and Part IIb is the gate Part 3 builds"
+    - rtitle: "Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log; Section 2c is the plan mode Part 4 starts in, and Part IIb is the gate Part 3 builds"
       rlink: "Activities/liascript-codingagents.md"
       liapage: true
     - rtitle: "Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models, where the five-element system prompt Part 2 builds on comes from"
@@ -98,7 +98,7 @@ Nothing here needs installing. You built all of it in *Your AI Workbench*, and t
 
 - opencode, working against whichever model you configured in the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md)
 - Your `cs357-work` repository, cloned and pushing successfully
-- The *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Diff* session, whose Section 2c is the plan mode Part 4 uses and whose Part IIb is the gate Part 3 builds
+- The *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log* session, whose Section 2c is the plan mode Part 4 uses and whose Part IIb is the gate Part 3 builds
 
 ### Desktop or terminal, your choice
 
@@ -402,7 +402,7 @@ Append only. Never rewrite or delete an existing entry.
    repositories, issues, pull requests, reviews. Confirm once per session
    with `gh auth status`.
 2. Fall back to `git` for what it does on its own: pull, add, commit, push,
-   log, diff. Say in your next message that you fell back, and why.
+   log, change. Say in your next message that you fell back, and why.
 3. If both fail, stop and ask me. A push that prompts for a password, or a
    401 or 403 from either tool, means there is no working credential here.
    Tell me which command failed and quote what it said. Do not switch the

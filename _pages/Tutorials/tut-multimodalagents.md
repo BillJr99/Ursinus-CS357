@@ -184,7 +184,7 @@ Grounding means the model outputs a bounding box or click coordinate alongside i
 
 **How to Verify the Agent Pointed to the Right Element:**
 
-- **Ground truth comparison**: If you have a reference screenshot of the correct UI, diff the flagged region between the broken and correct screenshots and confirm they differ.
+- **Ground truth comparison**: If you have a reference screenshot of the correct UI, change the flagged region between the broken and correct screenshots and confirm they differ.
 - **DOM cross-reference**: Map the bounding box back to a DOM element using browser automation tooling (Playwright's `page.locator` at those coordinates) and confirm the element's identity.
 - **Human review**: For high-stakes testing, route flagged regions to a human reviewer who confirms the diagnosis before filing a bug report.
 - **Re-query with crop**: Crop the flagged region and re-query the model asking it to describe only that region.  If the description is consistent with the original diagnosis, confidence increases.
