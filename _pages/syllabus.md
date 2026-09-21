@@ -415,7 +415,7 @@ schedule:
     rlink: "Tutorials/VibeCoding"
   - rtitle: "Governing Coding Agents: the charter, Karpathy's rules, and the handoff directory"
     rlink: "Tutorials/AgentGovernance"
-  - rtitle: "Tokens, Embeddings, and Attention: How Models Represent Meaning.  Optional background for the persona and comparison work; read Part I at minimum"
+  - rtitle: "Tokens, Embeddings, and Attention: How Models Represent Meaning, Part I"
     rlink: "Tutorials/TokensEmbeddingsAttention"
   - rtitle: "Bring the OpenCode Studio artifact you have so far.  Today's second half runs it through one gauntlet round."
     rlink: false
