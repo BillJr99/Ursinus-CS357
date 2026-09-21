@@ -407,6 +407,8 @@ schedule:
     rlink: false
   - rtitle: "The Persona Pipeline: One Model, Four Personas, and a Rule About Who Sees What.  The full program behind Part IIe, with the five files it reads and four experiments to run against it"
     rlink: "Tutorials/PersonaPipeline"
+  - rtitle: "Persona Pipeline starter pack: the program, its config, the design brief, the decisions file, the skill it loads, and the Ollama client, ready to unzip and run"
+    rlink: "files/persona-pipeline-starter.zip"
 - week: "3"
   date: "1"
   title: "The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent"
