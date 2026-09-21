@@ -81,7 +81,7 @@ opencode behaves differently.  A directory name that does not match the `name:` 
 
 ## The Files
 
-Five files.  The client is `ollama_client.py` from the sampling session, which you already have.
+Five files, plus the client.  Download [persona-pipeline-starter.zip]({{ site.baseurl }}/files/persona-pipeline-starter.zip) and unzip it into your working folder if you would rather not retype them; every file below is in it, along with `ollama_client.py`, which supplies the `load_config()` and `chat()` this program calls.
 
 ### `task_brief.md`
 
@@ -208,7 +208,7 @@ Design decisions this file implements, each argued in class before it was coded:
     each other test one thing three times.
 
 Config (endpoint, model, seed, and every step) lives in config.json.
-The client is ollama_client.py from the sampling session.
+The client is ollama_client.py, which ships in the starter beside this file.
 """
 
 import json
