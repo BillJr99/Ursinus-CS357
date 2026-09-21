@@ -439,7 +439,7 @@ schedule:
     rubricpath: "_pages/Assignments/asmt-stakeholderbrief.md"
   readings:
   - rtitle: "Mitchell, Chapter 3, part 4 of 4: finish the chapter, hallucination, evaluation, and what the model cannot check for itself"
-  - rtitle: "AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass.  Optional worked arithmetic for anyone who wants to see the numbers behind temperature and similarity"
+  - rtitle: "AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass"
     rlink: "Tutorials/AIByHand"
   - rtitle: "Please bring three prompts where a model gave you a confidently wrong answer.  We triage real examples here, not invented ones."
     rlink: false
