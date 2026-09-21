@@ -399,10 +399,6 @@ schedule:
     rlink: "https://philarchive.org/rec/CHAWWT-8"
   - rtitle: "Why Different Answers Every Time?  Sampling, Temperature, and Generation.  Read Parts I and II before class; Part IIc of today's deck uses the temperature and seed settings it explains"
     rlink: "Tutorials/SamplingAndTemperature"
-  - rtitle: "Tokens, Embeddings, and Attention: How Models Represent Meaning.  Optional background for the persona and comparison work; read Part I at minimum"
-    rlink: "Tutorials/TokensEmbeddingsAttention"
-  - rtitle: "AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass.  Optional worked arithmetic for anyone who wants to see the numbers behind temperature and similarity"
-    rlink: "Tutorials/AIByHand"
   - rtitle: "Bring your working Ollama setup from Week 1 and the charter, contract, and skills you have written so far for the OpenCode Studio lab.  Today is that lab's mid-flight checkpoint, and the workshop edits system prompts against a live model."
     rlink: false
   - rtitle: "The Persona Pipeline: One Model, Four Personas, and a Rule About Who Sees What.  The full program behind Part IIe, with the five files it reads and four experiments to run against it"
@@ -419,6 +415,8 @@ schedule:
     rlink: "Tutorials/VibeCoding"
   - rtitle: "Governing Coding Agents: the charter, Karpathy's rules, and the handoff directory"
     rlink: "Tutorials/AgentGovernance"
+  - rtitle: "Tokens, Embeddings, and Attention: How Models Represent Meaning.  Optional background for the persona and comparison work; read Part I at minimum"
+    rlink: "Tutorials/TokensEmbeddingsAttention"
   - rtitle: "Bring the OpenCode Studio artifact you have so far.  Today's second half runs it through one gauntlet round."
     rlink: false
 - week: "4"
@@ -441,6 +439,8 @@ schedule:
     rubricpath: "_pages/Assignments/asmt-stakeholderbrief.md"
   readings:
   - rtitle: "Mitchell, Chapter 3, part 4 of 4: finish the chapter, hallucination, evaluation, and what the model cannot check for itself"
+  - rtitle: "AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass.  Optional worked arithmetic for anyone who wants to see the numbers behind temperature and similarity"
+    rlink: "Tutorials/AIByHand"
   - rtitle: "Please bring three prompts where a model gave you a confidently wrong answer.  We triage real examples here, not invented ones."
     rlink: false
 - week: "4"
