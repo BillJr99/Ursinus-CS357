@@ -37,7 +37,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 
 ## Today's 75 Minutes
 
-We have seventy-five minutes together.  Here is how they are meant to go, so you can tell when a section is running long and say so.  Anything marked self-paced sits outside this budget and nothing graded assumes it.  Because you already built and ran a fixed pipeline by hand in *Prompt Engineering as Agent Design*, Part I is a short review rather than a first introduction, which buys the room below for the supervisor loop.
+We have seventy-five minutes together.  Here is how they are meant to go, so you can tell when a section is running long and say so.  Anything marked self-paced sits outside this budget and nothing graded assumes it.  Part I is a review rather than a first introduction.  You already built and ran a fixed pipeline by hand in *Prompt Engineering as Agent Design*.  That review buys the room for the supervisor loop below.
 
 | Minutes | What we do |
 |---|---|
@@ -52,7 +52,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 ## 1.  Three Foundational Patterns
 
-**Why this matters, briefly, since you have already felt it once:** narrow roles and clear handoffs are why the persona pipeline's four stages each stayed small and inspectable.  Today we name that pattern formally, add two siblings (the router and the planner), and then hand the control-flow decision itself to a model.
+**Why this matters, briefly, because you have felt it once already:** narrow roles and clear handoffs kept the persona pipeline's four stages small and inspectable.  Today we name that pattern formally, add the router and the planner beside it, and then hand the control-flow decision itself to a model.
 
 **Pipeline (fixed sequence).**  Stage outputs feed stage inputs: extract → draft → polish.  Each stage has its own small system prompt and sees *only* what it needs.  Pipelines are predictable, debuggable (you can inspect any intermediate output), and cheap.  They are the right default when the workflow is known in advance.
 
@@ -400,7 +400,7 @@ A ReAct agent is on step 18 of a task.  Its context window shows 28,000 of 32,00
 
 # Part IIc: The Supervisor Loop
 
-Everything so far, the pipeline, the router, and even the recovery-and-reflection loop in Part IIb, is *fixed* orchestration: **you** authored the control flow before the run started, and no run can take a path you did not write.  This section asks what changes when that is no longer true, and gives you a working supervisor loop in ten lines to read, run, and interrogate.
+Everything so far is *fixed* orchestration: the pipeline, the router, and even the recovery-and-reflection loop in Part IIb.  **You** authored the control flow before the run started, and no run can take a path you did not write.  This section asks what changes when that is no longer true.  It gives you a working supervisor loop in ten lines to read, run, and interrogate.
 
 ## Model 4: Two Families of Orchestration
 
@@ -694,9 +694,9 @@ Respond to all three levels in your notebook:
 
 > **The full advanced-loops activity:** Model 3 above compresses two models from [Advanced Agent Loops: Control Flow, Reflection, and Recovery](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestration.md), read that activity for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
 
-> **The supervisor loop moved in-class.**  If you are looking for the dynamic-orchestration material, Two Families, the Code Cell, and the who-decides-control-flow recap, it now lives in **Part IIc** above, not here.  What remains below is at-home material: two fan-out and consensus shapes that class did not have time for, plus a full reference sheet for all five fixed patterns.
+> **The supervisor loop moved in-class.**  The dynamic-orchestration material now lives in **Part IIc** above rather than here: Two Families, the Code Cell, and the who-decides-control-flow recap.  What remains below is at-home material.  It covers the two fan-out and consensus shapes class had no time for, plus a reference sheet for all six patterns.
 
-Everything below is at-home material.  Nothing in this section is needed for today's in-class session, but all of it deepens what you built in class.  Parts I-III gave you the vocabulary (pipeline, router, planner) and two working orchestrators in code; Part IIc gave you the supervisor.  This section rounds out the fixed family with two shapes you have not yet built by hand.
+Everything below is at-home material.  Nothing in this section is needed for today's in-class session, but all of it deepens what you built in class.  Parts I-III gave you the vocabulary (pipeline, router, planner) and two working orchestrators in code.  Part IIc gave you the supervisor.  This section rounds out the fixed family with two shapes you have not yet built by hand.
 
 ---
 
@@ -761,7 +761,7 @@ input --> +--> [ Agent B ] --+--> [ Vote / Cluster ] --> consensus
 
 The agents argue or answer independently, and a fixed aggregation rule (majority vote, clustering of answers) produces the final result.  Two activities develop this shape: [Critique, Consensus, and the LLM Judge](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-critiqueconsensusjudge.md) and [Stochastic Consensus](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate).
 
-Every shape above is *fixed*: even the critique loop and the debate vote follow a control flow you authored and can draw on a whiteboard before running.  Part IIc in class covered who draws the diagram when it is not you.
+Every shape above is *fixed*.  Even the critique loop and the debate vote follow a control flow you authored and can whiteboard before running.  Part IIc in class covered who draws the diagram when it is not you.
 
 ### Recap: All Six Patterns, One Table
 
@@ -774,4 +774,4 @@ Every shape above is *fixed*: even the critique loop and the debate vote follow 
 | Debate / consensus | You (a fixed voting or clustering rule) | Uncertain or subjective answers needing robustness | Correlated agents "agree" on the same wrong answer | Going Deeper, 4e |
 | Supervisor (dynamic) | An orchestrator LLM, each turn | The workflow cannot be enumerated in advance | Runaway spawning and unpredictable, hard-to-audit paths | Part IIc |
 
-For frameworks that build the supervisor pattern for you, including sub-agents in isolated context windows and a built-in planning tool, see [Agent Frameworks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks), which picks up exactly where Part IIc's Code Cell left off.
+For frameworks that build the supervisor pattern for you, see [Agent Frameworks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks).  It supplies sub-agents in isolated context windows and a built-in planning tool, and it picks up exactly where Part IIc's Code Cell left off.
