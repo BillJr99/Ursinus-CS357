@@ -87,7 +87,7 @@ You need opencode, configured against your local model as in Week 1, Step 8.2.  
 opencode --version
 ```
 
-Then start `opencode`, type `/model`, and confirm your provider appears.
+Then start `opencode`, type `/model`, and confirm your provider appears.  The OpenCode desktop app is equally fine for this assignment: select your model from its model picker instead of typing `/model`, and everything after this point reads the same.
 
 Pace yourself, because the work splits cleanly across the three parts.  Part 1 takes the longest, since every pattern needs real runs behind it rather than one lucky output.  Part 2 is a fifteen-minute tutorial, two skills, and six short runs.  Part 3 goes quickly if Part 1 went well.
 
