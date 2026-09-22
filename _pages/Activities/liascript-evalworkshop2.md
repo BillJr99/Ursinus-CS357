@@ -12,15 +12,15 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Evaluation Workshop II: Run Your Rubric Against Your Project
 
-Two weeks ago the Rubric Pipeline lab handed you a synthetic corpus and asked you to build a judge you could trust.  Today you point that judge at your own final project and find out whether the trust survives contact with real outputs.  You leave with a disagreement table for three real artifacts, one disagreement traced to its evidence and repaired, and the run frozen into your project repository as a regression check that fails the next time the judge quietly changes.
+Two weeks ago, in the Judge Pipeline Workshop, you built a judge that reads a rubric, scores sample submissions with your local model, and checks its own quotes, and you measured how often it agreed with your hand scores.  Today you point that judge at your own final project and find out whether the trust survives contact with real outputs.  You leave with a disagreement table for three real artifacts, one disagreement traced to its evidence and repaired, and the run frozen into your project repository as a regression check that fails the next time the judge quietly changes.
 
-The Literature Review Team Synthesis is due today.  The Rubric Pipeline lab is due shortly, so everything you produce this session can go straight into it.
+The Literature Review Team Synthesis is due today.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) went out on Tuesday, and its rubric judge-and-refine loop (Part A, Extended) reuses this judge, so every repair you make this session carries straight into that lab.
 
 ---
 
 ## Directions and Group Roles
 
-Project roles are in effect today: **Coordinator**, **Builder(s)**, **Evaluator**, **Scribe**.  The Coordinator keeps the run on the clock.  The Builder runs the judge and, later, writes the harness configuration.  The Evaluator is one of the two blind human scorers and owns the audit in Model 2.  The Scribe keeps the disagreement table, the repair record, and the triage you leave with.  If your team built more than one judge in the lab (the lab is a pair assignment), the Evaluator picks the one with the better human-agreement number and the team uses that one.
+Project roles are in effect today: **Coordinator**, **Builder(s)**, **Evaluator**, **Scribe**.  The Coordinator keeps the run on the clock.  The Builder runs the judge and, later, writes the harness configuration.  The Evaluator is one of the two blind human scorers and owns the audit in Model 2.  The Scribe keeps the disagreement table, the repair record, and the triage you leave with.  If your team has more than one judge (from the workshop, or from the Multi-Agent Patterns lab, which is a pair assignment), the Evaluator picks the one with the better human-agreement number and the team uses that one.
 
 ---
 
@@ -42,7 +42,7 @@ Project roles are in effect today: **Coordinator**, **Builder(s)**, **Evaluator*
 
 ### Before You Start
 
-**You need:** the judge from the Rubric Pipeline lab (code route: the batch scorer, its rubric JSON, and a `grades.csv` from a working run; no-code path: your `promptfooconfig.yaml` and `run_baseline.json`), Ollama running with the model the judge was validated against, the rubric your judge reads adapted to your project's outputs, and three artifacts your project produced this week (answers, summaries, plans, report sections: whatever the rubric is written to score).  Put the three artifacts in one folder before class.  If you wrote the evaluation and monitoring section of your governance one-pager on Tuesday, bring it; today tests whether its measurements are ones you can actually take.
+**You need:** the judge from the Judge Pipeline Workshop (code route: `judge.py`, its `RUBRIC`, and a `grades.csv` from a working run; no-code path: your `promptfooconfig-rubric.yaml` and `grades_promptfoo.csv`), Ollama running with the model the judge was validated against, the rubric your judge reads adapted to your project's outputs, and three artifacts your project produced this week (answers, summaries, plans, report sections: whatever the rubric is written to score).  Put the three artifacts in one folder before class.  If you wrote the evaluation and monitoring section of your governance one-pager on Tuesday, bring it; today tests whether its measurements are ones you can actually take.
 
 **What you will have at the end:** a filled disagreement table, one documented repair, and a harness configuration committed to your project repository.
 
@@ -67,17 +67,17 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 ## 1.  Stand-Up (10 minutes)
 
-Each team answers, in two minutes at the board, exactly four questions: What does the judge do end-to-end today (which model, which route, what it emits)?  What did the lab's human-to-judge agreement come out to, per criterion (a number, not an adjective)?  What are the three artifacts you brought, and why those three?  What do you need from the instructor or another team?  Stand-ups are status synchronization, not performance; the discipline is *saying the number*.  "It agreed with us most of the time" is not a number.  "C3 was 62% and the others were above 80%" is, and it tells the room where to look.
+Each team answers, in two minutes at the board, exactly four questions: What does the judge do end-to-end today (which model, which route, what it emits)?  What did the workshop's human-to-judge agreement come out to, per criterion (a number, not an adjective)?  What are the three artifacts you brought, and why those three?  What do you need from the instructor or another team?  Stand-ups are status synchronization, not performance; the discipline is *saying the number*.  "It agreed with us most of the time" is not a number.  "C3 was 62% and the others were above 80%" is, and it tells the room where to look.
 
 ---
 
-*Your judge has a track record on synthetic essays.  It has none on your project's outputs.  Model 1 builds that record the same way the lab did: humans first, judge second, then the two side by side.*
+*Your judge has a track record on the workshop's sample essays.  It has none on your project's outputs.  Model 1 builds that record the same way the workshop did: humans first, judge second, then the two side by side.*
 
 ## Model 1: Run the Judge and Fill the Disagreement Table
 
 The order matters.  If you see the judge's scores first, your human scores will be anchored to them and the comparison will be biased.  So the two scorers work first, on separate sheets, and do not talk until both sheets are complete.
 
-1.  **Score blind.**  The Evaluator and one other teammate each score all three artifacts, one sheet per artifact, using the lab's template.  Record the level (1-4) and a one-sentence justification for each criterion.
+1.  **Score blind.**  The Evaluator and one other teammate each score all three artifacts, one sheet per artifact, using the template below.  Record the level (1-4) and a one-sentence justification for each criterion.
 
     ```
     Scorer: [your name]   Date: [today]
@@ -91,7 +91,7 @@ The order matters.  If you see the judge's scores first, your human scores will 
 
     Substitute your own criterion names and file names; keep the shape.
 
-2.  **Run the judge** on the folder of three artifacts, exactly as you ran it in the lab.  The Builder does this while the scorers work, and does not announce the results until both sheets are done.
+2.  **Run the judge** on the folder of three artifacts, exactly as you ran it in the workshop.  The Builder does this while the scorers work, and does not announce the results until both sheets are done.
 
 3.  **Fill the table.**  The Scribe enters one row per artifact and criterion.  The gap is the largest absolute difference between the judge's level and either human's level.  If the two humans disagree with each other by 2 or more on a row, mark that row with an asterisk: it is a rubric problem before it is a judge problem.
 
@@ -106,7 +106,7 @@ The order matters.  If you see the judge's scores first, your human scores will 
 
 ## Code Cell
 
-Run this after both sheets are complete, with your three files in place of the eight.  It is the lab's agreement function unchanged; a printed number per criterion is what you report at the stand-up on Tuesday.
+Run this after both sheets are complete, with your three files in place of the examples.  It is the workshop's agreement check written as a function; a printed number per criterion is what you report at the stand-up on Tuesday.
 
 ```python
 # After both partners have scored independently:
@@ -125,7 +125,7 @@ def percent_agreement(scores_a, scores_b, criterion_id, files):
 partner_a = {
     "s01_excellent.txt": {"C1": 4, "C2": 4, "C3": 4, "C4": 4},
     "s12_borderline.txt": {"C1": 3, "C2": 3, "C3": 2, "C4": 3},
-    # ... add all 8 files
+    # ... add all three files
 }
 partner_b = {
     "s01_excellent.txt": {"C1": 4, "C2": 4, "C3": 4, "C4": 4},
@@ -142,7 +142,7 @@ for cid in criteria:
     print(f"  {cid}: {agr:.0%}")
 ```
 
-With three files, each disagreement moves a criterion's number by 33 points, so treat the percentage as a check and the table as the deliverable.  The lab's eight-file calibration set is still the number that goes in your report.
+With three files, each disagreement moves a criterion's number by 33 points, so treat the percentage as a check and the table as the deliverable.  The workshop's agreement on its sample submissions stays your baseline; today's number tells you whether that agreement survived real outputs.
 
 ### Critical Thinking Questions
 
@@ -150,7 +150,7 @@ With three files, each disagreement moves a criterion's number by 33 points, so 
 
 [[___ Your prediction here ___]]
 
-*Hint:* The lab's weakest criterion is the first suspect.  The second is any criterion whose descriptor uses a word like "clear," "adequate," or "thoughtful," because two people can read the same artifact and reach different levels without either being wrong.
+*Hint:* The criterion that agreed least in the workshop is the first suspect.  The second is any criterion whose descriptor uses a word like "clear," "adequate," or "thoughtful," because two people can read the same artifact and reach different levels without either being wrong.
 
 **Question 2.**  On a row marked with an asterisk (the humans disagree with each other by 2), what does the judge's gap on that row tell you?  Can the judge be "right" on a row where the humans cannot agree what right is?
 
@@ -184,7 +184,7 @@ Take the row with the largest gap (break ties toward the row the humans agreed o
 |---|---|---|---|
 | Rubric | The quote is real, but the descriptor uses a word the judge and the humans read differently; often the humans disagreed with each other too | Rewrite that level's descriptor so it names something observable (a count, a presence, a named section) | Both humans and the judge re-score the artifact; the gap closes to 0 or 1 |
 | Artifact | The quote is real, the descriptor is observable, and the judge is right: the artifact really does lack what the descriptor asks for | Fix the artifact, or the prompt or pipeline step that produced it | Re-run the judge on the fixed artifact; its level rises and both humans agree |
-| Judge | The quote does not appear in the artifact, or the level tracks length or position rather than content | Not a rubric or artifact change: flag the row, record it for the lab's hallucinated-evidence rate or bias section, and add the mechanical validator below | Re-run; the row now carries the flag instead of a confident wrong level |
+| Judge | The quote does not appear in the artifact, or the level tracks length or position rather than content | Not a rubric or artifact change: flag the row, record it with your hallucinated-evidence rate or your padding-probe result, and add the mechanical validator below | Re-run; the row now carries the flag instead of a confident wrong level |
 
 Make exactly one repair today, write it down, and re-run.  A repair without a re-run is a hypothesis.
 
@@ -230,9 +230,9 @@ There is a second-order effect to watch for.  A long, fluent, confident trace is
 
 ## Model 3: Freeze the Run as a Regression Check
 
-So far your confidence in the judge lives in a table the Scribe typed and a re-run someone watched.  Industry teams encode that confidence as a versioned eval configuration: a declarative file that says "given these inputs, the judge must produce these outputs," checked into the repository next to the code so that every future change to the prompt, model, or rubric can be re-verified with one command.  You built one in the lab's Part 5 (promptfoo by default, Inspect AI if you chose it).  Today it moves into the project repository and grows a golden set drawn from your own outputs.
+So far your confidence in the judge lives in a table the Scribe typed and a re-run someone watched.  Industry teams encode that confidence as a versioned eval configuration: a declarative file that says "given these inputs, the judge must produce these outputs," checked into the repository next to the code so that every future change to the prompt, model, or rubric can be re-verified with one command.  You built the first one in the workshop's Part II (promptfoo; an Inspect AI task works too if you prefer it).  Today it moves into the project repository and grows a golden set drawn from your own outputs.
 
-1.  **Define the golden set.**  Your three artifacts, with the human-consensus level for each criterion (after today's repair).  Add two adversarial cases from the lab's bias probe, for example the padded and unpadded versions of one artifact, which must receive the same level.
+1.  **Define the golden set.**  Your three artifacts, with the human-consensus level for each criterion (after today's repair).  Add two adversarial cases from the workshop's padding probe, for example the padded and unpadded versions of one artifact, which must receive the same level.
 2.  **Encode assertions.**  For each case, at least one assertion: the judge's returned level equals the human-consensus level (exact match on the parsed JSON field), or, for the adversarial pair, that the two levels are equal to each other.  In promptfoo these are `assert:` blocks; in Inspect they are scorers.  Assert on the *parsed* field, not the raw text; if parsing itself fails, that is a legitimate eval failure worth counting.
 3.  **Run the harness against your local model** and capture the results (promptfoo's `output.json` or web viewer screenshot, or Inspect's `.eval` log).  Record the pass rate.  It will likely not be 100%: that is a finding, not a failure.
 4.  **Demonstrate a regression.**  Make a deliberate, plausible-seeming degradation to your judge prompt in a copy of the config (delete the instruction that evidence must be quoted verbatim, or weaken one criterion's rubric text).  Re-run and change:
@@ -300,7 +300,7 @@ Two of these rows come from the release-readiness checklist you will sign at the
 
 *What to do:* For every quoted span the judge returns, assert that it appears verbatim in the artifact (exact substring on the code route; a `javascript` assertion that parses the JSON first on the no-code promptfoo path).  Count the quotes that fail.
 
-*Starter hint:* The lab's `HALLUCINATED_EVIDENCE` marker is the code-route shape: flag the row in the CSV and report the rate as a fraction ("1 of 12 quotes").  The point is that the check runs without anyone reading a trace.
+*Starter hint:* The workshop's `_quote_found` column is the code-route shape: flag the row in the CSV and report the rate as a fraction ("1 of 12 quotes").  The point is that the check runs without anyone reading a trace.
 
 *You've succeeded when:* The validator runs as part of the harness, and your report states a hallucinated-evidence rate for the three artifacts, even if it is zero.
 
@@ -334,7 +334,7 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 
 ---
 
--> Coming Up Next: *Project Studio: Sprint and Threat Model* opens with the cross-team proposal review round, gives your team a thirty-minute sprint block, and then turns the incident simulation from the case-studies material on your own system: what an outsider could write that your agent will read, and what you would do in the first hour after it went wrong.  Bring today's committed harness; it is item 7 on the readiness check, and the sprint block is where the "Fix before the gallery walk" bucket gets worked.  The Rubric Pipeline lab is due that day.
+-> Coming Up Next: *Project Studio: Sprint and Threat Model* opens with the cross-team proposal review round, gives your team a thirty-minute sprint block, and then turns the incident simulation from the case-studies material on your own system: what an outsider could write that your agent will read, and what you would do in the first hour after it went wrong.  Bring today's committed harness; it is item 7 on the readiness check, and the sprint block is where the "Fix before the gallery walk" bucket gets worked.
 
 ---
 
@@ -342,5 +342,6 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 
 - Zheng et al. "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena."  *NeurIPS* (2023).  Pathologies and agreement rates.
 - Hashemi et al. "LLM-Rubric: A Multidimensional, Calibrated Approach to Automated Evaluation."  *ACL* (2024).
-- The [Rubric Pipeline lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RubricPipeline), Parts 2 and 5, and its no-code promptfoo path, Part 5, which today's Models 1 and 3 reuse.
-- [promptfoo](https://www.promptfoo.dev/) and [Inspect AI](https://inspect.aisi.org.uk/), the two harnesses the lab accepts.
+- [Evaluating Agents With a Rubric: The Judge Pipeline Workshop](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-rubricworkshop.md), Parts I and II (the code route and the no-code promptfoo route) and Part III (agreement and the padding probe), which today's Models 1 and 3 reuse.
+- The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), Part A, Extended, where the same judge drives a judge-and-refine loop.
+- [promptfoo](https://www.promptfoo.dev/) and [Inspect AI](https://inspect.aisi.org.uk/), the two harnesses today's Model 3 accepts.

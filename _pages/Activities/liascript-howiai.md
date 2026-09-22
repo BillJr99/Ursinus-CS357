@@ -216,7 +216,7 @@ The `:ro` is the whole difference between a rule the agent is asked to follow an
 
    > *Hint: Credentials are the easy one.  What about information that is not yours to store, such as someone else's messages?  What about categories that carry breach-notification duties regardless of who saw them?*
 
-4.  The vault is a retrieval problem, and you are building the machinery for it right now in the *RAG Knowledge Base* lab.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
+4.  The vault is a retrieval problem, and you built the machinery for it in the *RAG Knowledge Base* session, and the RAG Knowledge Base lab builds it out later this term.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
 
    > *Hint: You do not need a number to answer this; you need the reason.  A model can only read a fixed amount of text at once.  What happens to the oldest part of what you handed it when the folder outgrows that limit, and how would you notice?  Next session, *Memory and the Small Context Window Principle*, gives that limit its name and its arithmetic.*
 

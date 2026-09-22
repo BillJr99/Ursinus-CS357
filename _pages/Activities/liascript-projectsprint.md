@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Today is a studio session with one review, one build block, and one hard question.  The review is the cross-team proposal critique that closes Sprint 1: another team reads your proposal with the SQR card and you read theirs.  The build block is thirty minutes on the one thing your team most needs done before the gallery walk.  The hard question is the incident simulation from the case-studies material, run against your own system instead of a fictional one: what could an outsider write that your agent will read, and what would you do in the first hour after it went wrong?  We take today in this order: **stand-up, proposal review, sprint, threat model, report out**.
 
-The Rubric Pipeline lab is due today.  Bring the harness you committed in the previous session; the sprint block is where its "Fix before the gallery walk" bucket gets worked.
+Bring the harness you committed in Evaluation Workshop II; the sprint block is where its "Fix before the gallery walk" bucket gets worked.
 
 ---
 

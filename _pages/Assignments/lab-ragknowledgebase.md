@@ -78,7 +78,7 @@ info:
       preemerging: No harness exists, or it cannot be rerun
       beginning: A harness exists but the golden set is not pinned (questions or scoring change between runs), or it was run only once
       progressing: The harness reruns with a pinned golden set and protocol, but the two runs' outputs were not compared, prediction misses are listed rather than explained, or the harness is not committed alongside the rest of the lab
-      proficient: The harness (a scripted run sheet in a spreadsheet, declarative promptfoo YAML, or plain Python built on the class evaluation harness, your choice) pins the Part 5 golden set, extended with corpus-specific items, and a fixed protocol (temperature 0.0, a fixed seed, the model named); two runs are shown to agree; every item whose outcome differs from its Part 5 prediction gets a sentence separating knowledge failure from metric failure; and the harness lives in the lab repository where the Rubric Pipeline Lab can pick it up
+      proficient: The harness (a scripted run sheet in a spreadsheet, declarative promptfoo YAML, or plain Python built on the class evaluation harness, your choice) pins the Part 5 golden set, extended with corpus-specific items, and a fixed protocol (temperature 0.0, a fixed seed, the model named); two runs are shown to agree; every item whose outcome differs from its Part 5 prediction gets a sentence separating knowledge failure from metric failure; and the harness lives in the lab repository where the Judge Pipeline Workshop and Evaluation Workshop II can pick it up
   readings:
     - rtitle: "RAG Activity"
       rlink: "Activities/liascript-rag.md"
@@ -106,7 +106,7 @@ info:
       liapage: true
     - rtitle: "Multimodal Agents"
       rlink: "../Tutorials/MultimodalAgents"
-    - rtitle: "Testing Agents: Evaluation, Regression, and the Non-Determinism Problem (required prep for the Rubric Pipeline Lab, which picks up the Part 5 harness)"
+    - rtitle: "Testing Agents: Evaluation, Regression, and the Non-Determinism Problem (required prep for the Judge Pipeline Workshop and Evaluation Workshop II, which build on the Part 5 harness)"
       rlink: "../Tutorials/TestingAgents"
     - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One of the Part 5 harness options, and it runs against Ollama"
       rlink: "https://www.promptfoo.dev/"
@@ -125,7 +125,7 @@ tags:
 
 ---
 
-In this lab, you and your partner build a question-answering system over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you will rerun in the Rubric Pipeline lab.  This is a **pair lab**: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.
+In this lab, you and your partner build a question-answering system over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  This is a **pair lab**: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.
 
 ---
 
@@ -135,7 +135,7 @@ Decide before you install anything.  Core Part 1 (corpus and datasheet), core Pa
 
 | Path | What you build | What you need | Pick this if |
 |------|----------------|---------------|--------------|
-| **Code** | Parts 2-3 in Python: a Chroma index with two chunkers, a grounded query function with bracketed citations and abstention, every parameter in `config.json` | `chromadb`, `sentence-transformers`, `requests`, Ollama with `llama3.2` | You want the Python harness you will extend in the Rubric Pipeline lab, and you then choose Direction 1 or 2 |
+| **Code** | Parts 2-3 in Python: a Chroma index with two chunkers, a grounded query function with bracketed citations and abstention, every parameter in `config.json` | `chromadb`, `sentence-transformers`, `requests`, Ollama with `llama3.2` | You want the Python harness the Judge Pipeline Workshop and Evaluation Workshop II build on, and you then choose Direction 1 or 2 |
 | **No-code** | The same pipeline on a Langflow canvas (Direction 0, the low-code route): two flows that differ only in splitter settings, exported flow JSON as your configuration | Langflow, Ollama with `llama3.2` and `nomic-embed-text` | You would rather put your attention on the audit than on plumbing; Direction 0 replaces the coding of Parts 2-3 and is your direction |
 
 The rubric is the same on both paths: a pipeline earns each row whether it is hand-coded or built as a flow.
@@ -176,7 +176,7 @@ If you see `ollama NOT running`, start the server with `ollama serve` in a separ
 > **Time budget.**  This lab runs across a multi-week window (see the course schedule).  Get the core pipeline working early, and front-load if a break falls inside your window, so the direction, the audit, and Part 5 are not compressed into the final days.
 > - Core Parts 1-4 (corpus and datasheet; indexing; grounded generation; citation audit): 4-5 hours
 > - Your chosen direction: 3-5 hours
-> - Part 5, the RAG Quality Checkup pathway: 3-4 hours, most of it in class
+> - Part 5, the RAG Quality Checkup pathway: 3-4 hours, mid-window
 > - Writeup, learning log, and packaging: included above
 > - **Total: about 11-14 hours.**  Direction 0 is 7-9 hours on its own, but it replaces the coding of Parts 2-3 rather than adding to it, so core plus direction stays about 8-10 hours.
 
@@ -579,22 +579,22 @@ Part 5 is a structured checkup on the pipeline from Parts 2 through 4.  You do t
 
 It sits mid-window on purpose.  Your pipeline is running by then and not yet due, which is the only point in the term when a diagnostic can still change what you build.
 
-The metrics come from *RAG Quality: Chunking and Measuring Retrieval*.  Do most of the worksheet in the open studio in *How I AI* (Part III), with your pipeline-in-progress in front of you.
+The metrics come from *RAG Quality: Chunking and Measuring Retrieval*.  The *RAG Quality* session walks through Part 5 before the lab is handed out; do the worksheet itself mid-window, with your pipeline-in-progress in front of you, and bring stuck points to office hours.
 
-The harness follows you forward: the Rubric Pipeline lab starts from it, and Evaluation Workshop II runs your judge against your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
+The harness follows you forward: the rubric judge you build in the Judge Pipeline Workshop grows from the same pattern, and Evaluation Workshop II turns that judge on your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
 
 ### Before You Start Part 5
 
-This builds on the *Hallucinations and Evaluating Agent Outputs* session (where you mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from), the *RAG Quality* session, and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  If it is not running, come anyway and say so at the start: debugging it *is* the studio, and the checkup works on a pipeline you got running at 12:20.
+This builds on the *Hallucinations and Evaluating Agent Outputs* session (where you mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from), the *RAG Quality* session, and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  If it is not running, start there, and bring it to office hours if it stays stuck: debugging it is the first step of the checkup, and the checkup works on a pipeline you got running at 12:20.
 
-> **Bring to class.**
+> **Have ready.**
 > - Your lab repository, cloned and runnable, with your corpus indexed and at least one chunking configuration working end to end.
 > - Any benchmark questions you sketched in the *Hallucinations and Evaluating Agent Outputs* session (Part IIb and its Exercise 1).  Step 5a turns them into a finished ten-item set; if you have none, start there.
 > - Five questions you care about the answers to, drawn from your own corpus.
 
-Sanity check before you arrive: `python3 ask.py "a question your corpus should be able to answer"` returns an answer, however bad.  On Direction 0, the equivalent is one question answered in the Langflow playground.
+Sanity check before you start: `python3 ask.py "a question your corpus should be able to answer"` returns an answer, however bad.  On Direction 0, the equivalent is one question answered in the Langflow playground.
 
-> **Time budget.** Step 5a is about one hour, most of it judgment rather than typing, and it is meant to be done before the studio: it needs no running pipeline, and doing it early is the single best way to make the studio productive.  Steps 5b and 5c are the studio session plus an hour or two of finishing on your own; 5c goes quickly because your golden set already exists.  If 5a runs past an hour you are polishing: ten adequate items beat six perfect ones.
+> **Time budget.** Step 5a is about one hour, most of it judgment rather than typing, and it is meant to be done before Steps 5b and 5c: it needs no running pipeline, and doing it early is the single best way to make those steps go quickly.  Steps 5b and 5c are one sitting with your pipeline plus an hour or two of finishing; 5c goes quickly because your golden set already exists.  If 5a runs past an hour you are polishing: ten adequate items beat six perfect ones.
 
 ### Choose Your Part 5 Route
 
@@ -603,8 +603,8 @@ Same rubric, same credit.  Step 5a is identical on every route (designing ten go
 | Route | Golden set and harness | How you measure | Pick this if |
 |-------|------------------------|-----------------|--------------|
 | **No-code** | A spreadsheet, one row per item (`question`, `expected`, `rule`, `rationale`); the harness is a **run sheet** with the pinned questions, pinned settings, and a dated results column per run (rerunning means working the sheet again and comparing columns) | Query both configurations by hand in **Open WebUI's** knowledge-base interface or in your two Langflow flows, and record hits and misses | You built Parts 2-3 in Langflow (Direction 0), or you want your attention on the citation audit rather than on plumbing |
-| **Low-code** | A `promptfoo` YAML case list, with the golden set as cases and `temperature: 0` pinned | By hand as above, or a small promptfoo run against your retriever | You expect to take the Rubric Pipeline lab's promptfoo direction |
-| **Code** | `goldenset.json`; the harness is a Python script grown from the class evaluation harness | A loop over your five queries that prints retrieved chunk IDs, scored against your own relevance judgments (Part 2's `recall_at_k` is a natural start) | You coded Parts 2-3 and want the harness you will extend in the Rubric Pipeline lab |
+| **Low-code** | A `promptfoo` YAML case list, with the golden set as cases and `temperature: 0` pinned | By hand as above, or a small promptfoo run against your retriever | You expect to use the promptfoo route in the Judge Pipeline Workshop and Evaluation Workshop II |
+| **Code** | `goldenset.json`; the harness is a Python script grown from the class evaluation harness | A loop over your five queries that prints retrieved chunk IDs, scored against your own relevance judgments (Part 2's `recall_at_k` is a natural start) | You coded Parts 2-3 and want a Python harness to carry into the Judge Pipeline Workshop |
 
 > **Watch out.** The no-code route is not the shortcut.  Measuring recall@k by hand means you look at every retrieved chunk, which is exactly how people discover that their retriever returned the right document and the wrong *part* of it; a script that prints `recall@5 = 0.6` hides that.  Running ten items by hand likewise catches a *metric failure*, where your rule mis-graded a correct answer.  Students on the code route often miss those because the harness printed FAIL and they believed it.
 
@@ -682,7 +682,7 @@ Freeze your evaluation so it can be rerun forever.  The point is not the code; i
 >    - **Knowledge failure**: the model does not have the fact.
 >    - **Metric failure**: the model answered correctly (or incorrectly) and *your rule graded it wrong*, for example "seventeen seventy-six" against a substring rule looking for "1776".
 >    - You may also find a third kind in a RAG pipeline, a **retrieval failure**: the model would have known the answer from the right chunk and did not get it.  Name it; it points straight back at 5b's recall numbers.
-> 7. **Commit** the harness and the golden set inside your lab repository (and include them in the submission ZIP), where the Rubric Pipeline lab can pick them up.
+> 7. **Commit** the harness and the golden set inside your lab repository (and include them in the submission ZIP), where Evaluation Workshop II can pick them up.
 
 Step 6 is why you wrote the predictions down first: a benchmark whose failures are mostly metric failures is measuring your rules, not your system.  A worked miss, for calibration:
 
@@ -1548,7 +1548,7 @@ Fold these into the submission ZIP and readme:
 
 ## Deliverables
 
-> **Bring to class.** Carry your pipeline-in-progress and your stuck points into the open studio in *How I AI* (Part III); it is open build time, and it is only as useful as the problems you bring to it.  Step 5a should be done before you arrive.
+> **Getting help.** Bring your pipeline-in-progress and your stuck points to office hours; that time is only as useful as the problems you bring to it.  Step 5a should be done before you start Steps 5b and 5c.
 
 Submit one ZIP.  Fix random seeds and list software version information so the work is reproducible, and commit the four Part 5 files in your lab repository with their paths noted in the readme.  Your direction's deliverables (listed in its section) go in the same ZIP and readme.
 
@@ -1565,7 +1565,7 @@ Submit one ZIP.  Fix random seeds and list software version information so the w
 | Readme writeup (about two pages) with the route named at the top, the learning log, and reflection answers | Each answer cites a specific experimental result | Writeup, Reflection, and Submission |
 | Golden set (`goldenset.json`, the promptfoo YAML case list, or the spreadsheet CSV) | Ten items with question, expected, rule, and rationale | Quality Checkup: Benchmark Design |
 | `checkup.md`, with the Part 5 route named at the top | Real measurements from your own pipeline plus the prediction-versus-outcome miss analysis | Quality Checkup: The Checkup Worksheet |
-| The harness (run sheet, YAML, or script) with its extended golden set, and the two-run agreement log | The evaluation reruns identically and is committed where the Rubric Pipeline lab can pick it up | Quality Checkup: The Regression Harness |
+| The harness (run sheet, YAML, or script) with its extended golden set, and the two-run agreement log | The evaluation reruns identically and is committed where Evaluation Workshop II can pick it up | Quality Checkup: The Regression Harness |
 
 ---
 

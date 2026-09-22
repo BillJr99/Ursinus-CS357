@@ -34,6 +34,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Log** | One timestamped event with structured fields | `{"step": 1, "phase": "act", "tool_name": "search"}` |
 | **Trace** | The causally linked chain of events for one request or task, tied together by a shared `trace_id` | Model 2, six lines that share `trace_id` `t-77b0` |
 | **Traceability** | Being able to answer, weeks later, *why* something is the way it is: which rule allowed it, which task it served, which goal that task served | The `rule` field in the trace, and the four-link chain in Section 4 |
+| **Token count** | The number of tokens a model read (input) and wrote (output) on one call, reported by the model server, so you record it rather than estimate it | `prompt_eval_count` and `eval_count` in the Counting Tokens cell, and the token panel in OpenCode |
 | **Handoff** | A deliberate stop in which an agent writes down enough state that a different agent can continue safely | The Next Safe Action at the end of a `SESSION.md` entry |
 | **Durable medium** | Something outside both agents that survives either of them crashing, through which one agent hands work to another | A GitHub issue and pull request, or `handoff/inbox/` and `handoff/done/` in a shared folder |
 | **Claim** | A mark, visible through the medium alone, that says one agent has taken an item and others should leave it | `claimed_by` and `claimed_at` in the item, or an assignee on the issue |
@@ -45,7 +46,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 
 **You need:** your `cs357-work` repository from *How I AI*, with its `.ai/` directory, and the two course templates linked in Part III.  There is nothing to install today; the Code Cell runs in this page.
 
-**Due today:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP).  Nothing in today's session depends on it, so finish it before you leave rather than during Part I.
+**Coming due:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due Thursday, October 29.  Nothing in today's session depends on it, so keep it out of Part I.
 
 ---
 
@@ -56,7 +57,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | Minutes | What we do |
 |---|---|
 | 0-12 | Part I, why the small context principle forces external memory |
-| 12-35 | Part II, observability and traceability: logs, traces, and reading one |
+| 12-35 | Part II, observability and traceability: logs, traces, reading one, and counting its tokens |
 | 35-65 | Part III, handoff protocols, and the `SKILL.md` written together |
 | 65-70 | Part IV, one exercise chosen by the team |
 | 70-75 | Report-out |
@@ -258,6 +259,55 @@ The paragraph the agent wrote cites page 47 of a source that has 31 pages.
 **Recap.**  A log is one event; a trace is the chain for one task; a metric is a number over many.  Traceability is the four links from a change back to a rule, and the `rule` field in the trace is the cheapest link to keep.
 
 ---
+
+## Counting Tokens: The Number Under Every Cost
+
+Every `prompt_tokens` and `completion_tokens` in Model 2 is a number the model server handed back, not a guess.  That makes the token count the cheapest metric you will ever collect: you do not compute it, you only have to keep it.  It is also the number every cost is built from, which is why the final project's Responsible AI Report asks for input and output tokens measured on every evaluation run.  You can read it in two places this semester.
+
+| Where | Input tokens | Output tokens | Also there |
+|---|---|---|---|
+| **OpenCode**, the sidebar (`ctrl+x b` if hidden) | The session's running token count, and the share of the context window used | (same panel) | Cost, which reads `$0.00` for a local model |
+| **OpenCode**, `opencode stats --days 1 --project ""` | Input, totaled | Output, totaled | Cache reads, cost, tokens per session; add `--models` for a per-model split |
+| **Ollama**, every `/api/chat` or `/api/generate` response | `prompt_eval_count` | `eval_count` | `prompt_eval_duration`, `eval_duration`, `total_duration`, all in nanoseconds |
+
+The cell below is the Ollama response behind Model 2's step 1 `plan` line.  Run it and read what the durations say about where the 2,773 milliseconds went.
+
+```python
+# The Ollama response behind Model 2, step 1 (durations are in nanoseconds)
+resp = {"model": "hermes-3", "done": True, "done_reason": "stop",
+        "total_duration": 2_773_000_000, "load_duration": 12_000_000,
+        "prompt_eval_count": 412, "prompt_eval_duration": 610_000_000,
+        "eval_count": 41, "eval_duration": 2_100_000_000}
+
+NS = 1e9
+in_tok, out_tok = resp["prompt_eval_count"], resp["eval_count"]
+read_s = resp["prompt_eval_duration"] / NS
+write_s = resp["eval_duration"] / NS
+total_s = resp["total_duration"] / NS
+
+print(f"read  {in_tok:>4} input tokens  in {read_s:.2f} s  ({in_tok / read_s:.0f} tokens/s)")
+print(f"wrote {out_tok:>4} output tokens in {write_s:.2f} s  ({out_tok / write_s:.1f} tokens/s)")
+print(f"total {total_s:.2f} s, and writing was {write_s / total_s:.0%} of it")
+
+# The trace line, built from measured numbers rather than estimates
+print({"trace_id": "t-77b0", "step": 1, "phase": "plan",
+       "prompt_tokens": in_tok, "completion_tokens": out_tok,
+       "latency_ms": int(total_s * 1000), "finish_reason": resp["done_reason"]})
+```
+@Pyodide.eval
+
+Ten times as many input tokens took well under a second; forty-one output tokens took two.  Reading is one parallel pass over the prompt, and writing is one pass per token.  Now use the cell's two speeds to predict how long step 2, with 3,690 input and 512 output tokens, should have taken.  Compare your prediction with the 8,422 milliseconds Model 2 logged, and say what the gap suggests: a faster machine, a prompt served partly from cache, or a trace line you should not trust.
+
+You switch your helper to `"stream": true`, and the token column of your trace fills with zeros.  Where did the counts go?
+
+[( )] Ollama does not count tokens when it streams
+[(X)] They arrive only in the last chunk, the one with `"done": true`, and the helper kept the text and dropped that chunk
+[( )] They are spread across every chunk, and the helper has to add them up
+[( )] They move to the HTTP response headers
+
+**Try it on your machine (five minutes, or as exercise 6).**  In opencode, open the sidebar and note the session's token count, then run `opencode stats --days 1 --project ""` and find the same session's tokens in the totals.  Then run the `token_usage.py` example from the [token accounting section of the tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Observability#token-accounting-counting-what-every-call-spends) against Ollama; it prints the input tokens, output tokens, and tokens per second for every call and appends a row to `token_usage.csv`.  The tutorial also shows how to wrap an existing `chat` helper so every call in your agent loop is counted without changing the loop, and how to read per-message counts out of `opencode export`.
+
+---
 # Part III: Handoff Protocols
 
 ## 5.  Start, Stop, Restart
@@ -454,6 +504,12 @@ The *Design Your Agent System* assignment asks for this protocol, and this is th
    - *Starter hint*: If your `.ai/` files are larger than the history they replace, the session log has stopped being a log and become a transcript.  Annotate and condense; do not delete.
    - *You've succeeded when*: You can state the per-start cost of your protocol in tokens and the condition under which it would exceed carrying the history.
 
+6.  *Meter your own tokens.*
+
+   - *What to do*: On your own machine, with Ollama running, do one small task in opencode and record the sidebar's token count and what `opencode stats --days 1 --project ""` reports.  Then wrap the `chat` helper in your Local Agent lab with the tutorial's `metered` decorator, run three steps, and read `token_usage.csv`.
+   - *Starter hint*: Put the same `run_id` in the CSV and in `.ai/trace.jsonl`, so a row of tokens can be matched to the steps that spent them.  If a streamed call shows zero tokens, your helper dropped the final chunk.
+   - *You've succeeded when*: You can say how many input and output tokens one step of your agent costs, which phase spent the most, and how many tokens per second your machine writes.
+
 ---
 
 ## Reflection Prompt
@@ -475,6 +531,6 @@ The *Design Your Agent System* assignment asks for this protocol, and this is th
 - Honeycomb.  *Observability Engineering.*  O'Reilly Media, 2022.
 - Charity Majors.  "Observability: the Big Picture." https://charity.wtf/2020/03/03/observability-is-a-many-splendored-thing/
 - Jaeger Distributed Tracing: https://www.jaegertracing.io/
-- This course: [Agent Observability and Tracing](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Observability), the full three-pillars tutorial with the OpenTelemetry example; [Governing Coding Agents](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentGovernance), the case study the `.ai/` directory comes from; and the [agent templates](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md), including [`AGENT_HANDOFF_KICKOFF.md`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/ai/AGENT_HANDOFF_KICKOFF.md) and [`SESSION.md`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/ai/SESSION.md).
+- This course: [Agent Observability and Tracing](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Observability), the full three-pillars tutorial with the OpenTelemetry example and the token accounting code for OpenCode and Ollama; [Governing Coding Agents](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentGovernance), the case study the `.ai/` directory comes from; and the [agent templates](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md), including [`AGENT_HANDOFF_KICKOFF.md`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/ai/AGENT_HANDOFF_KICKOFF.md) and [`SESSION.md`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/ai/SESSION.md).
 - This course: [Agent Skills and Plugins](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentSkills), whose claim-protocol section is the handoff skill that exercise 4 borrows from.
 - This course: [How I AI](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-howiai.md), where the handoff entry in Model 2 was first read, and [Memory and the Small Context Window Principle](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MemoryAndContext), where the arithmetic in Model 1 comes from.

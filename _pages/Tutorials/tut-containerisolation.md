@@ -15,7 +15,7 @@ tags:
 
 ## About This Tutorial
 
-This tutorial is the background reading for putting an AI agent in a box.  It covers the two Linux kernel features that Docker builds on, the threat model for an agent that can write and run code, the safety gates that belong inside the agent loop itself, and the four mechanisms that set an agent's blast radius.  You use all of it in the [Local Agent Lab]({{ site.baseurl }}/Assignments/LocalAgent), where you start from a deliberately insecure container, harden it step by step, and write a threat model that I grade against this material.  "It runs in Docker" is not by itself a security claim, and this page is where you learn why.
+This tutorial is the background reading for putting an AI agent in a box.  It covers the two Linux kernel features that Docker builds on, the threat model for an agent that can write and run code, the safety gates that belong inside the agent loop itself, and the four mechanisms that set an agent's blast radius.  You use it in [Part 5 of the Tools and MCP Lab]({{ site.baseurl }}/Assignments/ToolsMCP#part-5-contain-the-server-and-size-its-blast-radius-10-points), where you put your MCP server in a container, restrict it one boundary at a time, try to cross each boundary, and write a blast-radius statement that I grade against this material.  "It runs in Docker" is not by itself a security claim, and this page is where you learn why.
 {: .tb-lede}
 
 If you have never used Docker, read [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker) first.  This page assumes you know what an image, a container, a volume, and a port mapping are.
@@ -175,7 +175,7 @@ for iteration in range(MAX_ITERATIONS):
 
 ## Isolation and Trust Boundaries
 
-This model is conceptual and takes about ten minutes.  It is for every student in the course, whether or not you ever run Docker yourself.  It is the reason the local AI stack is built from containers at all, and it is the syllabus goal behind the Responsible AI Capstone's containerization direction: *deploy agents with defined trust boundaries and minimal blast radius*.
+This model is conceptual and takes about ten minutes.  It is for every student in the course, whether or not you ever run Docker yourself.  It is the reason the local AI stack is built from containers at all, and it is the syllabus goal behind every containerized agent in the course: *deploy agents with defined trust boundaries and minimal blast radius*.
 
 A **trust boundary** is a line in your system where the level of trust changes.  Everything inside the line can be damaged by a mistake inside the line, and nothing outside it can.  Four mechanisms draw that line for an agent:
 
@@ -208,7 +208,7 @@ Together these set the agent's **blast radius**: the set of things that can poss
 
 ## The Runbook: Procedures You Should Be Able to Write
 
-Hardening a container is a one-time act.  Operating it is ongoing, and the operating knowledge belongs in a **security runbook**: a short document that tells whoever is on duty exactly what to do when a routine or an incident comes up.  The Responsible AI Capstone's container-hardening direction asks you to write one for your hardened agent.  The three procedures below are the minimum a runbook for a containerized agent should carry, and each one exercises a mechanism from earlier on this page.
+Hardening a container is a one-time act.  Operating it is ongoing, and the operating knowledge belongs in a **security runbook**: a short document that tells whoever is on duty exactly what to do when a routine or an incident comes up.  If you harden an agent of your own, for your final project or on your own time, write one for it.  The three procedures below are the minimum a runbook for a containerized agent should carry, and each one exercises a mechanism from earlier on this page.
 
 ### Procedure 1: Updating a Secret Without Restarting the Full Stack
 
@@ -269,7 +269,7 @@ The template below is the one the lab asks you to fill in.  Every `[TODO]` is a 
 
 ## Reference: How the Stack Grows, and the `localhost` Rule
 
-The minimal build in [The Local Agent Stack]({{ site.baseurl }}/Tutorials/AgentStack) (Ollama, `llmproxy`, and Open WebUI) plus the Isolation and Trust Boundaries model above is the target for the Responsible AI Capstone's containerization direction; that tutorial's Wiring Matrix section verifies it end to end.  The notes below describe how the same stack grows beyond the minimal build.  They are reference material, not required work.  The `localhost` rule at the end is the one that direction's network-hardening step depends on.
+The minimal build in [The Local Agent Stack]({{ site.baseurl }}/Tutorials/AgentStack) (Ollama, `llmproxy`, and Open WebUI) plus the Isolation and Trust Boundaries model above is the target for a hardened agent deployment; that tutorial's Wiring Matrix section verifies it end to end.  The notes below describe how the same stack grows beyond the minimal build.  They are reference material, not required work.  The `localhost` rule at the end is the one a network-hardening step depends on.
 
 The same attach-by-URL move adds the rest of the frontend tier as you need each one (`open-notebook` for research notebooks, `voicebox` for speech, `presenton` for slide generation, `open-terminal` for a browser shell, `open-design` for the agent-embedded canvas, `calibre-web` for your reading library).  Each gets a port row, an identity directory, the `--add-host` flag, and its connection settings pointed at the gateway.  Tool-tier services follow the same pattern: `searxng` gives your agents private web search, `mcpproxy` hosts MCP tools from YAML definitions, and `surrealdb` provides persistence.  Agents reach them at `http://host.docker.internal:<port>` exactly as they reach the gateway.
 

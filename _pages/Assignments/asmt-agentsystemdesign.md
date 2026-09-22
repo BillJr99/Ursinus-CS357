@@ -1,7 +1,7 @@
 ---
 layout: assignment
 permalink: /Assignments/AgentSystemDesign
-title: "CS357: Foundations of Artificial Intelligence - Written Assignment 2: Design Your Agent System"
+title: "CS357: Foundations of Artificial Intelligence - Written Assignment: Design Your Agent System"
 
 info:
   coursenum: CS357

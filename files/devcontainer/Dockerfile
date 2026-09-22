@@ -50,28 +50,28 @@ RUN pip install --no-cache-dir \
         chromadb \
         # sentence-transformers -- RAG Knowledge Base Lab: embedding text for retrieval
         sentence-transformers \
-        # scikit-learn -- Multi-Agent Patterns, Rubric Pipeline, Responsible AI: classical ML models and metrics
+        # scikit-learn -- Multi-Agent Patterns, rubric judge workshops: classical ML models and metrics
         scikit-learn \
-        # numpy -- Multi-Agent Patterns, Rubric Pipeline, Responsible AI: the arrays underneath everything
+        # numpy -- Multi-Agent Patterns, rubric judge workshops: the arrays underneath everything
         numpy \
-        # spacy -- Responsible AI Capstone Direction 2: NLP pipelines
+        # spacy -- NLP pipelines (final projects and self-paced extensions)
         spacy \
-        # shap -- Responsible AI Capstone Direction 3: model explanations
+        # shap -- model explanations (final projects and self-paced extensions)
         shap \
-        # lime -- Responsible AI Capstone Direction 3: model explanations
+        # lime -- model explanations (final projects and self-paced extensions)
         lime \
-        # matplotlib -- Responsible AI Capstone Direction 3: plots
+        # matplotlib -- plots
         matplotlib \
-        # pandas -- Responsible AI Capstone Direction 3: tabular data
+        # pandas -- tabular data
         pandas \
         # flask -- Local Agent Lab Direction 4: a small web endpoint for your agent
         flask
 
-# The small English model spacy needs (Responsible AI Capstone Direction 2), baked into the
-# image so the lab works offline.
+# The small English model spacy needs, baked into the
+# image so it works offline.
 RUN python -m spacy download en_core_web_sm
 
-# Node.js -- runs promptfoo (Rubric Pipeline Lab) and opencode (the coding
+# Node.js -- runs promptfoo (Judge Pipeline Workshop, Evaluation Workshop II) and opencode (the coding
 # agent). Debian's own `nodejs` package will not do: bookworm ships Node 18.x
 # and trixie ships 20.x, while promptfoo requires Node 22.22.0 or newer and
 # refuses to start below it. So we install an official Node.js release
@@ -106,7 +106,7 @@ RUN set -eux; \
         node --version; \
         npm --version
 
-# promptfoo -- Rubric Pipeline Lab: prompt/agent evaluation harness.
+# promptfoo -- Judge Pipeline Workshop and Evaluation Workshop II: prompt/agent evaluation harness.
 RUN npm install -g promptfoo
 
 # opencode -- the course coding agent: OpenCode Studio Lab, the Coding Agents

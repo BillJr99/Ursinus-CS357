@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Evaluating Agents With a Rubric: The Judge Pipeline Workshop
 
-Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet, and then with the same judge expressed a second time as a promptfoo configuration with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries; today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list rather than re-reading them here.  Two deliverables meet today: the *Design Your Agent System* written assignment is due, and the [Rubric Pipeline Lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RubricPipeline) is handed out; everything you build in the next seventy-five minutes is the first hour of that lab.
+Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet, and then with the same judge expressed a second time as a promptfoo configuration with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries; today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list rather than re-reading them here.  The *Design Your Agent System* written assignment is due today.  Keep everything you build in the next seventy-five minutes: the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out on Tuesday, November 17, reuses this judge in its rubric judge-and-refine loop, and Evaluation Workshop II points it at your own final project.
 
 ---
 
@@ -193,15 +193,15 @@ Recap: the rubric is one JSON object that drives the prompt, the arithmetic, and
 ---
 # Part II: The Same Pipeline Without Code
 
-promptfoo lets you say the same thing in a configuration file: here are the outputs, here is the judge, here are the assertions, run them all.  The Rubric Pipeline Lab's Direction 0 takes this route end to end; today you take it far enough to see that the two routes measure the same thing.
+promptfoo lets you say the same thing in a configuration file: here are the outputs, here is the judge, here are the assertions, run them all.  Evaluation Workshop II grows this configuration into a regression check for your own project; today you take it far enough to see that the two routes measure the same thing.
 
 ## 3.  Wire promptfoo to Ollama
 
-In the same folder, run the smoke test from the lab, which asks the model one question and asserts on the answer.  Save this as `promptfooconfig.yaml`:
+In the same folder, run a smoke test that asks the model one question and asserts on the answer.  Save this as `promptfooconfig.yaml`:
 
 ```yaml
 # smoke-test promptfooconfig.yaml - verify Ollama connectivity
-description: "Rubric Pipeline Lab Direction 0 smoke test"
+description: "Judge Pipeline Workshop smoke test"
 
 prompts:
   - "Reply with exactly one word: the capital of France."
@@ -240,7 +240,7 @@ with open("dataset.csv", "w", newline="") as f:
                     open(os.path.join("samples", name)).read().strip()])
 ```
 
-The second is the config.  Its prompt is a template that echoes each stored answer straight through, so the judge grades your dataset rather than a freshly generated reply.  promptfoo's template syntax is the variable name inside two pairs of curly braces (the form you saw on the lab's Direction 0 page); create that one-line file with the command below rather than typing it, then save the YAML as `promptfooconfig-rubric.yaml`:
+The second is the config.  Its prompt is a template that echoes each stored answer straight through, so the judge grades your dataset rather than a freshly generated reply.  promptfoo's template syntax is the variable name inside two pairs of curly braces (the form promptfoo's documentation uses); create that one-line file with the command below rather than typing it, then save the YAML as `promptfooconfig-rubric.yaml`:
 
 ```bash
 python3 -c "print('{' * 2 + 'answer' + '}' * 2)" > prompt.txt
@@ -301,7 +301,7 @@ Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass 
 ---
 # Part III: Make It Trustworthy
 
-A judge that runs is not yet a judge you can use.  Two checks make it trustworthy enough to hand in: agreement with a human score, and a controlled probe for one known bias.  The lab asks for both at larger scale (a calibration set, Cohen's kappa, and a bias study); today you run each once so the shape is familiar.
+A judge that runs is not yet a judge you can use.  Two checks make it trustworthy enough to hand in: agreement with a human score, and a controlled probe for one known bias.  A judge you rely on needs both at larger scale (a calibration set, Cohen's kappa, and a bias study); today you run each once so the shape is familiar, and Evaluation Workshop II runs them again on your own project's outputs.
 
 ## 4.  Agreement With Your Hand Scores
 
@@ -367,7 +367,7 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 
 2.  *Four criteria.*
 
-   - *What to do*: Add a fourth criterion to `RUBRIC` (a conclusion sentence is a good candidate; the lab's example rubric has one) with weights that still sum to 100, and add the matching `llm-rubric` block to the YAML.
+   - *What to do*: Add a fourth criterion to `RUBRIC` (a conclusion sentence is a good candidate) with weights that still sum to 100, and add the matching `llm-rubric` block to the YAML.
    - *Starter hint*: Nothing else in `judge.py` changes; that is the payoff of the rubric as data.  Count how many lines the YAML change took.
    - *You've succeeded when*: Both CSVs grow by one criterion and the weighted totals still fall between 0 and 100.
 

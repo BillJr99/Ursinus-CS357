@@ -155,7 +155,7 @@ The containerized case is worked end to end in *Terminal and Filesystem Isolatio
 
 ## 3b.  Mint Your API Key Now
 
-Do this today, while OpenWebUI is in front of you, because three later labs assume you already have it and none of them stops to explain where it comes from.
+Do this today, while OpenWebUI is in front of you, because the later labs assume you already have it and none of them stops to explain where it comes from.
 
 In OpenWebUI: **Settings -> Account -> API Keys -> Create new key.**  Copy it somewhere you will find again, and store it as an environment variable rather than pasting it into a notebook you might share:
 

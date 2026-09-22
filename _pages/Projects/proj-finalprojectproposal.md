@@ -107,7 +107,7 @@ Write these sections in this order.  Sections 1 through 5, 7, and 8 appear in ev
 > 1. Direction declaration and problem statement
 > 2. Direction defense
 > 3. Stakeholder grounding
-> 4. Implementation-and-assessment sketch, with the GANTT-style timeline
+> 4. Implementation-and-assessment sketch, with the GANTT-style timeline and the Responsible AI measurement plan
 > 5. Design decisions
 > 6. Direction-specific elements (A, B, or C)
 > 7. AI-use disclosure
@@ -147,6 +147,7 @@ Size the work honestly against three sprints (Goal 13).  Each sprint should end 
 > - Who holds which role in which sprint: a role-rotation plan that assigns Coordinator, Builder, Evaluator, and Scribe across sprint boundaries so every member holds every role.
 > - How progress will be assessed at each sprint boundary.
 > - A shared **GANTT-style timeline** mapping tasks to the three sprints, with a named owner and an honest duration on every task.
+> - A **Responsible AI measurement plan**, one or two sentences per area, for the Responsible AI Report your final submission must include: how you will count tokens (OpenCode's session token display or Ollama's `prompt_eval_count` and `eval_count`) and turn them into an energy, carbon, and cost estimate; what you will log so each run can be traced; what golden set or rubric judge you will audit correctness against; and which attribute your counterfactual bias probe will vary.  Name an owner for each area, and start measuring in Sprint 1.  See [The Responsible AI Report]({{ site.baseurl }}/Projects/FinalProject#the-responsible-ai-report-required-in-every-direction) on the Final Project page; Direction B teams apply it to their own AI use and probing, not to the audited system.
 
 ### Section 5: Design Decisions
 
@@ -237,7 +238,7 @@ Only four of AAC&U's six problem-solving criteria appear here, on purpose.  *Imp
 - **Proposals whose scope is too generic, inaccessible, or infeasible in three sprints are redirected**, with specific guidance on what to cut or change.  A redirect is not a penalty.  It is much cheaper here than in week 14.
 - **Sprint 1 begins from the approved proposal** and runs to the cross-team proposal critique at the *Project Studio: Sprint and Threat Model* session.  Your Sprint 1 milestone depends on your direction; see the sprint table on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page.
 - **The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out the day this is due**, and it reads against the plan you have just committed to.  Its team synthesis must state what the evidence confirms, complicates, or changes about this proposal.  A synthesis that changes nothing is a warning sign, not a clean bill of health.
-- Some proposal artifacts are **living documents**.  The pre-mortem, the decision log, and the timeline are maintained through the sprints and resubmitted with the final artifacts folder.  They are not frozen here.
+- Some proposal artifacts are **living documents**.  The pre-mortem, the decision log, the timeline, and the Responsible AI measurement plan are maintained through the sprints and resubmitted with the final artifacts folder.  They are not frozen here.
 
 ---
 
@@ -247,6 +248,7 @@ Only four of AAC&U's six problem-solving criteria appear here, on purpose.  *Imp
 |---|---|---|
 | The proposal (2-3 pages, Sections 1 through 8) | A defended direction, a problem in the partner's terms, a named gap, argued design decisions | Approach; Plan Quality; Define Problem; Identify Strategies; Propose Solutions/Hypotheses |
 | GANTT-style timeline and role-rotation plan | Tasks mapped to three sprints with named owners; every member holds every role | Process and Professionalism; Plan Quality |
+| Responsible AI measurement plan (in Section 4) | You know, before you build, how you will measure token use, trace runs, audit correctness, and probe for bias | Plan Quality |
 | Direction-specific block (pre-mortem, risk hypothesis, or gap verification, and the rest of Section 6) | You anticipated failure and weighed alternatives before committing | Approach; Evaluate Potential Solutions |
 | AI-use disclosure | What was AI-assisted, with what tool, why, and how it was verified | Process and Professionalism |
 | Signatures, per-section primary authors, version or commit history | Every member owns a section; the draft grew over time | Process and Professionalism |
@@ -267,4 +269,5 @@ Answer these honestly as a team.  Every "no" is cheaper to fix now than at any l
 - [ ] Is every team member primary author of at least one section, and can every member explain every section?
 - [ ] Does the AI-use disclosure name the tool, the section, the reason, and the verification, rather than gesturing at "AI was used for editing"?
 - [ ] Is your gap claim specific enough that the Literature Review could prove it wrong?
+- [ ] Does the plan say how you will count tokens, trace runs, audit correctness, and probe for bias, and who owns each?
 - [ ] If your most likely predicted failure happened in Sprint 2, does the plan survive it?

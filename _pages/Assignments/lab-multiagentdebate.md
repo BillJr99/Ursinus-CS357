@@ -22,7 +22,13 @@ info:
       beginning: "A loop exists but runs a fixed number of rounds with no stopping rule, so it cannot tell improvement from churn."
       progressing: "The loop runs generator, critic, and refiner with a stated stopping rule, and a transcript shows an output changing in response to a critique."
       proficient: "As progressing, and the writeup shows a case where the critic was wrong and says how you could tell, plus what the loop cost in extra calls for the quality it bought."
-    - weight: 25
+    - weight: 5
+      description: "Part A, Extended: Rubric Judge-and-Refine Loop"
+      preemerging: "No judge-and-refine loop, or the judge returns only an overall verdict with no per-criterion scores."
+      beginning: "A judge scores each criterion, but the producer's revision does not use the judge's instructions, or the loop has no round cap or no early stop."
+      progressing: "The judge scores every criterion against a stated meets bar with quoted evidence and a revision instruction, the producer revises from those instructions, the loop stops at a cap of at most three rounds or as soon as every criterion meets its bar, and per-round scores are logged."
+      proficient: "As progressing, and the writeup reads the per-round log to say whether refinement converged, drifted, or was sycophantic (scores rose without the draft improving), reports how many quoted evidence strings actually appear in the draft, compares a blind human spot-check of the final round with the judge's levels, and names one judge failure mode (leniency drift, the producer gaming the rubric's wording, or a blind spot the judge shares with the producer) observed or ruled out, with the evidence."
+    - weight: 20
       description: Debate Implementation
       preemerging: The debate fails to run due to major issues, or the program fails to run
       beginning: The debate runs but fails on test questions due to one or more minor issues
@@ -56,6 +62,9 @@ info:
     - rtitle: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
       rlink: "Activities/liascript-critiqueconsensusjudge.md"
       liapage: true
+    - rtitle: "Evaluating Agents With a Rubric: The Judge Pipeline Workshop (the judge you extend in Part A, Extended)"
+      rlink: "Activities/liascript-rubricworkshop.md"
+      liapage: true
     - rtitle: "Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling (the claim protocol behind the optional handoff route in Part B.3)"
       rlink: "Activities/liascript-agentcommunication.md"
       liapage: true
@@ -74,7 +83,7 @@ tags:
 
 You and your partner will build the patterns that make an agent system more reliable than a single model call, then measure whether the extra calls bought anything.  The lab has two halves and one grade.
 
-In **Part A** you build a generator/critic/refine loop.  A **generator** writes a draft, a **critic** checks it against a written rubric and returns "accept" or "revise" with a list of issues, and the **refine loop** feeds those issues back until the critic accepts or the round budget runs out.  You then calibrate that critic on defects you planted, break your own rubric on purpose, and measure what the loop cost against single-shot generation.
+In **Part A** you build a generator/critic/refine loop.  A **generator** writes a draft, a **critic** checks it against a written rubric and returns "accept" or "revise" with a list of issues, and the **refine loop** feeds those issues back until the critic accepts or the round budget runs out.  You then calibrate that critic on defects you planted, break your own rubric on purpose, and measure what the loop cost against single-shot generation.  A short extension, **Part A, Extended**, swaps the accept-or-revise critic for a **judge** that scores each criterion of an explicit rubric with quoted evidence and a revision instruction, runs a bounded judge-and-refine loop, and logs the scores round by round so you can see whether refinement converged or only looked like it did.
 
 In **Part B** you build the two aggregation architectures from class: **debate**, where agents see and rebut each other, and **stochastic consensus**, where independent samples are clustered by meaning and merged by a synthesizer.
 
@@ -92,8 +101,8 @@ Every pattern in this lab is a *protocol*, and you can run each protocol by hand
 
 | Route | What you build | What you need | Pick this if |
 |-------|----------------|---------------|--------------|
-| **Code** | `critique_refine.py` with `rubric.json` and the calibration, hack, and comparison scripts (Part A); then `lab4.py`, `shootout.py`, and `threshold.py` for the debate loop, the embedding-clustered consensus pipeline, and the matched-budget shootout (Part B), all driven by one `config.json` | Python 3, Ollama running `llama3.2`, and the packages installed below | You want the stopping rule, the fail-closed parser, the threshold, and the call budget in code you can re-run and hand in as a log, and you can read a stack trace |
-| **No-code** | Part A as three saved Open WebUI presets (generator, critic, reviser) with text moved by hand, or a Langflow (low-code) canvas chaining them as three prompt nodes.  Part B as two Open WebUI chats that rebut each other, a spreadsheet of answers you cluster yourself, and the same comparison table; in Langflow the debate is two Agent nodes and a loop | Open WebUI or Langflow pointed at your local Ollama, and a spreadsheet | You would rather see the seams (where the critic's words become the reviser's instructions, and where your own clustering judgment replaces a distance threshold) than write the orchestration |
+| **Code** | `critique_refine.py` with `rubric.json` and the calibration, hack, and comparison scripts (Part A); `judge_refine.py` with `judge_rubric.json` (Part A, Extended); then `lab4.py`, `shootout.py`, and `threshold.py` for the debate loop, the embedding-clustered consensus pipeline, and the matched-budget shootout (Part B), all driven by one `config.json` | Python 3, Ollama running `llama3.2`, and the packages installed below | You want the stopping rule, the fail-closed parser, the threshold, and the call budget in code you can re-run and hand in as a log, and you can read a stack trace |
+| **No-code** | Part A as three saved Open WebUI presets (generator, critic, reviser) with text moved by hand, or a Langflow (low-code) canvas chaining them as three prompt nodes.  Part A, Extended as a Producer chat and a Judge chat with a spreadsheet of per-round scores.  Part B as two Open WebUI chats that rebut each other, a spreadsheet of answers you cluster yourself, and the same comparison table; in Langflow the debate is two Agent nodes and a loop | Open WebUI or Langflow pointed at your local Ollama, and a spreadsheet | You would rather see the seams (where the critic's words become the reviser's instructions, and where your own clustering judgment replaces a distance threshold) than write the orchestration |
 
 The rubric is the same on both paths.  The judgment this lab grades (when the critic was wrong, whether the extra rounds bought anything, and why a correlated failure could not be repaired by aggregation) is identical on every route.  On the no-code path, read "code" in the rubric as "flow or preset configuration" and "log" as "transcript".  Part B.3 also has an optional handoff route, open to both paths, in which two agents exchange positions through a GitHub issue thread or a shared folder.
 
@@ -103,6 +112,7 @@ The rubric is the same on both paths.  The judgment this lab grades (when the cr
 
 > **Checkpoint.** This lab has two halves and one grade.  Critique-and-refine and debate-and-consensus used to be two separate 100-point labs due eight days apart.  They are one family of idea (use more than one model call to get a better answer), so they are now one lab, one page, and one rubric.
 > - **Part A: Critique and Refine.**  Build the generator/critic/refine loop, calibrate the critic, break and patch the rubric, and measure the loop against single-shot generation.
+> - **Part A, Extended: Rubric Judge-and-Refine Loop.**  Replace the critic with a per-criterion judge, run at most three judge-and-refine rounds, log the scores, and spot-check the final round yourselves.
 > - **Part B: Debate and Consensus.**  Build the debate, the consensus pipeline, the shootout, and the threshold sweep.
 >
 > You submit both halves together, once, against the single rubric above.  There is no separate Critique-and-Refine deadline.
@@ -111,6 +121,7 @@ Complete these activities before you write any code:
 
 - [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md): the generator/critic/refine loop and stopping rules; independent rounds, peer-informed revision, and majority vote (Sections 5 and 6); then sampling, embedding clustering, and synthesis (Section 7)
 - [Orchestration Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestration.md): chaining agents with structured outputs
+- [Evaluating Agents With a Rubric: The Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md): the leveled JSON rubric, quoted evidence, and the `_quote_found` check that Part A, Extended reuses; keep your workshop `judge.py` and disagreement table nearby
 - [Agents That Talk]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-agentcommunication.md): the claim protocol, needed only if you take the optional handoff route in Part B.3
 
 Install the Python packages.  `pip install` downloads a package and makes it importable: `requests` is how your code talks to Ollama over HTTP, and the other three do the embedding and clustering in Part B.2.  `curl` sends a web request and prints the reply, so the last line asks your local Ollama server to list its models; a JSON list means Ollama is up.
@@ -161,6 +172,7 @@ Cosine similarity (should be ~0.7 for similar sentences):
 
 > **Time budget.** About 7 to 10 hours in total.  This is not a single-sitting lab, so plan more than one pair session.
 > - Part A: build the loop (A.1 to A.4) 60-90 min; calibrate the critic (A.5 to A.6) 45-60 min; reward hack the rubric (A.7 to A.8) 30-45 min; compare with single-shot (A.9 to A.10) 45-60 min
+> - Part A, Extended: judge-and-refine loop, log reading, and spot-check (A.11 to A.13) 30-45 min
 > - Part B: B.1 Debate 60-90 min; B.2 Consensus 60-75 min; B.3 The Shootout 60-75 min; B.4 Threshold Sensitivity 30-45 min
 > - Readme and reflection for both halves: 45-60 min
 
@@ -753,7 +765,217 @@ Report the cost next to the quality every time, because a loop that always wins 
 
 ---
 
-## Part B.1: Build a Configurable Debate (25 points)
+## Part A, Extended: Rubric Judge-and-Refine Loop (5 points)
+
+Your Part A critic says one of two words, "accept" or "revise", and a list of issues.  A **judge** says more: for every criterion of an explicit rubric it picks a level, quotes the sentence of the draft that justifies the level, and writes one concrete revision instruction.  The producing agent (your Part A generator) revises from those instructions, the judge scores again, and the pair iterates until every criterion meets its bar or the round cap of three is reached.  This is the judge you built in the W10D1 *Judge Pipeline Workshop*, with two additions: a one-line "meets" bar per criterion and a revision instruction per score.
+
+The point of this part is not a better docstring.  It is the per-round log.  A loop whose scores climb from round 1 to round 3 can mean three different things, and only the log plus your own reading can tell them apart:
+
+- **Converged**: the levels rose because the draft changed in the way the instructions asked.
+- **Drifted**: the levels wandered (a criterion that met the bar in round 2 fails in round 3, or the total oscillates) while the draft changed in unrelated ways.
+- **Sycophantic**: the levels rose while the draft barely improved; the judge rewarded the producer for appearing to comply, or rewarded wording that echoes the rubric.
+
+> **No-code path.** Open two chats in Open WebUI.  The **Producer** chat is your generator preset from Part A.  The **Judge** chat gets a system prompt containing the three criteria below, their levels, their meets bars, and the reply format (a level, an exact quote, and one revision instruction per criterion).  Paste the Producer's draft into the Judge, paste the Judge's instructions for the unmet criteria back into the Producer, and repeat, stopping at three rounds or as soon as every criterion meets its bar.  Keep a spreadsheet with one row per criterion per round and the columns `round`, `criterion`, `level`, `meets`, `evidence`, `quote_found`, and `fix`; fill `quote_found` by searching the draft (Ctrl+F) for the judge's quote.  Start a **fresh** Judge chat each round, so the judge sees only the current draft and not its own earlier scores; that history is exactly what lets leniency drift in.
+
+### Step A.11: Write the judge rubric and the judge
+
+The judge rubric is deliberately different from `rubric.json`.  Part A's rubric checks that the parts of a docstring are present; this one asks whether they are any good, which is where a judge has room to be lenient.  Each criterion has three levels and a `meets` line: the one-line bar a draft must clear, stated so a reader can check it.  The code, not the model, decides whether a criterion meets the bar, by comparing the awarded level with `meets_level`.
+
+> **Do this.**
+> 1. Add two keys to `config.json`: `"judge_rubric_file": "judge_rubric.json"` and `"judge_max_rounds": 3`.  The judge reuses `critic_temp` and `critic_seed`, so it is as repeatable as your critic.
+> 2. Create `judge_rubric.json` with the criteria below, adapted to your Part A task if it is not the docstring task.
+> 3. Create `judge_refine.py` and paste `judge_score` below.  It imports your Part A helpers, so it needs no new request code.
+
+```json
+{
+  "task": "function_docstring",
+  "criteria": [
+    {
+      "id": "J1",
+      "name": "Accuracy",
+      "levels": {"1": "States behavior the function does not have", "2": "Correct but vague about at least one behavior", "3": "Every stated behavior is correct and specific"},
+      "meets_level": 3,
+      "meets": "A reader could predict the output for a new input from the docstring alone."
+    },
+    {
+      "id": "J2",
+      "name": "Edge cases",
+      "levels": {"1": "No edge cases mentioned", "2": "Names edge cases without saying what happens", "3": "Names at least two edge cases and states the result of each"},
+      "meets_level": 3,
+      "meets": "At least two edge cases (for example, an empty list) appear with their results stated."
+    },
+    {
+      "id": "J3",
+      "name": "Example",
+      "levels": {"1": "No example", "2": "An example with trivial input or no stated output", "3": "A doctest whose input exercises a nontrivial case and whose stated output is correct"},
+      "meets_level": 3,
+      "meets": "The doctest would pass, and would fail on a plausible bug such as dropping duplicates."
+    }
+  ]
+}
+```
+
+```python
+import json
+import csv
+import traceback
+import requests
+from critique_refine import load_config, generate_draft
+
+def judge_score(draft, judge_rubric, config):
+    """
+    Score a draft on every criterion of judge_rubric.
+    Returns {"scores": {criterion_id: {"level", "meets", "evidence", "fix"}}}.
+    Fails closed: an unparseable reply scores every criterion as not meeting its bar.
+    """
+    system_prompt = (
+        "You are a strict judge. For EACH criterion, choose the level whose description matches the draft. "
+        "Quote the exact sentence from the draft that justifies the level. "
+        "If the draft does not clear the criterion's MEETS line, write one concrete revision instruction; "
+        "otherwise write an empty string. "
+        "Return ONLY valid JSON in this exact format, with no additional text:\n"
+        '{"scores": {"<criterion id>": {"level": <int>, "evidence": "<exact quote>", "fix": "<instruction>"}}}\n\n'
+        f"RUBRIC:\n{json.dumps(judge_rubric['criteria'], indent=1)}"
+    )
+    payload = {
+        "model": config["model"],
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"DRAFT TO SCORE:\n\n{draft}"}
+        ],
+        "stream": False,
+        "options": {"temperature": config["critic_temp"], "seed": config["critic_seed"]}
+    }
+
+    try:
+        response = requests.post(config["ollama_url"], json=payload, timeout=60)
+        response.raise_for_status()
+        raw = response.json()["message"]["content"]
+    except Exception as e:
+        print(f"[lab3:judge_score:network] {e}")
+        traceback.print_exc()
+        raise
+
+    try:
+        clean = raw.strip().replace("```json", "").replace("```", "").strip()
+        judgment = json.loads(clean)
+        for c in judge_rubric["criteria"]:
+            s = judgment["scores"][c["id"]]
+            s["level"] = int(s["level"])
+            s.setdefault("evidence", "")
+            s.setdefault("fix", "")
+            # The code decides "meets", not the model
+            s["meets"] = s["level"] >= c["meets_level"]
+        return judgment
+    except Exception as e:
+        print(f"[lab3:judge_score:json_parse] Malformed judge output - failing closed. Raw: {raw!r}")
+        return {"scores": {
+            c["id"]: {"level": 0, "meets": False, "evidence": "", "fix": "[JSON parse failure] no instruction this round"}
+            for c in judge_rubric["criteria"]
+        }}
+```
+
+### Step A.12: Run the bounded loop and log every round
+
+The loop hands the producer only the instructions for criteria that missed their bar, reusing `generate_draft` from Step A.2 exactly as the Part A loop does.  It stops early when every criterion meets its bar and otherwise stops at `judge_max_rounds`.  Every round writes one row per criterion to `judge_rounds.csv`, including `quote_found`, the same check as the workshop's `_quote_found` column: a quote that does not appear in the draft means the judge is unreliable on that row, whatever level it awarded.
+
+> **Do this.**
+> 1. Append `judge_refine_loop` and the `__main__` block below to `judge_refine.py`.
+> 2. Run `python3 judge_refine.py` on the `paginate` task from Step A.9 (or the hardest task you wrote there; an easy task meets every bar in round 1 and shows you nothing).  Keep `judge_rounds.csv` and the terminal output.
+> 3. If the loop stopped in round 1, run it on a harder task until you have at least one run with two or more rounds.
+
+```python
+def judge_refine_loop(task_description, config, judge_rubric, log_path="judge_rounds.csv"):
+    """
+    Producer drafts, judge scores every criterion, producer revises from the judge's instructions.
+    Stops when every criterion meets its bar or after judge_max_rounds rounds.
+    Writes one row per criterion per round to log_path.
+    Returns (final_draft, final_judgment, rounds_used, termination_reason).
+    """
+    draft, judgment, rows = None, None, []
+    reason = "round_cap"
+
+    for round_num in range(1, config["judge_max_rounds"] + 1):
+        # Only the unmet criteria's instructions go back to the producer
+        feedback = None
+        if judgment is not None:
+            feedback = {cid: s["fix"] for cid, s in judgment["scores"].items() if not s["meets"]}
+
+        draft = generate_draft(task_description, previous_draft=draft, critique=feedback, config=config)
+        judgment = judge_score(draft, judge_rubric, config)
+
+        for c in judge_rubric["criteria"]:
+            s = judgment["scores"][c["id"]]
+            rows.append({
+                "round": round_num, "criterion": c["id"], "level": s["level"], "meets": s["meets"],
+                "quote_found": bool(s["evidence"]) and s["evidence"] in draft,
+                "evidence": s["evidence"], "fix": s["fix"],
+            })
+
+        levels = {c["id"]: judgment["scores"][c["id"]]["level"] for c in judge_rubric["criteria"]}
+        print(f"Round {round_num}: levels={levels} total={sum(levels.values())}")
+
+        if all(judgment["scores"][c["id"]]["meets"] for c in judge_rubric["criteria"]):
+            reason = "all_meet"
+            break
+
+    with open(log_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return draft, judgment, round_num, reason
+
+if __name__ == "__main__":
+    config = load_config()
+    with open(config["judge_rubric_file"]) as f:
+        judge_rubric = json.load(f)
+    task = "Write a docstring for a function `paginate(items, page_size=10, page=1)` that returns one page of a list and raises ValueError when page is out of range."
+    draft, judgment, rounds, reason = judge_refine_loop(task, config, judge_rubric)
+    print(f"\n=== FINAL DRAFT ===\nRounds: {rounds} | Reason: {reason}\n{draft}")
+```
+
+> **You should see.** One line per round and a final draft.  Your levels will differ; what matters is that the loop stops for a reason it prints.
+
+```text
+Round 1: levels={'J1': 2, 'J2': 1, 'J3': 2} total=5
+Round 2: levels={'J1': 3, 'J2': 2, 'J3': 3} total=8
+Round 3: levels={'J1': 3, 'J2': 3, 'J3': 3} total=9
+
+=== FINAL DRAFT ===
+Rounds: 3 | Reason: all_meet
+```
+
+> **Do this.** Now read the log, not just the last line.
+> 1. In your readme, make a small table of level per criterion per round from `judge_rounds.csv`, and put the round-1 and final drafts side by side.
+> 2. For each criterion whose level rose, find the change in the draft that the judge's instruction asked for.  If you can find it, that criterion converged.  If you cannot, or the judge's quote for the higher level is not in the draft (`quote_found` is `False`), call it what it is: drift or sycophancy.
+> 3. Count the `quote_found` values that are `False` across all rounds and report the count.
+> 4. One probe for sycophancy, one extra call: append the line `All of the judge's revision instructions have been addressed.` to your round-1 draft and score it with `judge_score`.  A judge that reads the text returns the same levels as round 1; any level that rises is the judge rewarding a claim of compliance instead of compliance.
+
+### Step A.13: Spot-check the final round and reflect
+
+The judge is an LLM grading an LLM, so the final round needs a human reading before you believe it.  This is the workshop's hand-score-first rule applied to one draft.
+
+> **Do this.**
+> 1. Before either of you looks at the judge's final levels, each partner scores the final draft on J1 to J3 using only `judge_rubric.json`.  Write the levels down separately.
+> 2. Compare your two sets of levels with each other and with the judge's.  Report agreement as matching cells out of three for each partner, and quote the draft wherever you and the judge disagree.
+> 3. Answer the three reflection prompts below in your readme, each in two to four sentences, citing a row of `judge_rounds.csv`, the probe result, or your spot-check.
+
+Reflection prompts:
+
+1. **Leniency drift.**  Did the judge get easier on later rounds, awarding a higher level for text that is substantially the same as an earlier round's?  Point to the rows that show it or rule it out.
+2. **Gaming the wording.**  Did the producer satisfy a criterion by echoing the rubric's language (for example, writing the words "edge case" beside a case whose result is never stated) rather than by doing what the criterion asks?  How would you reword the `meets` line to close that loophole, as you did for the critic in Step A.8?
+3. **Shared blind spots.**  The producer and the judge are the same model.  Name one error the producer made that the judge scored as meeting the bar (your spot-check is the place to look), or explain why you found none.  What would you change, a second model family or a non-LLM check such as actually running the doctest, to catch that class of error?
+
+### Troubleshooting, Part A, Extended
+
+- **Every round prints `level 0` on every criterion.**  The judge's reply is not parsing, so the loop is failing closed.  Print `raw` and look for the usual culprits: markdown fences, a trailing comment, or criterion names used as keys instead of `J1` to `J3`.  Naming the ids in the format line of the system prompt usually fixes the last one.
+- **`quote_found` is `False` even when the quote looks right.**  The judge may have normalized whitespace or dropped the `>>>` prefix.  Compare the two strings character by character before you call it a hallucinated quote, and say in your readme which it was.
+- **The loop meets every bar in round 1.**  The task is too easy for the rubric.  Use a task with more parameters and an exception case, or tighten one criterion's level-3 description and `meets` line so they demand something a first draft rarely has.
+
+---
+
+## Part B.1: Build a Configurable Debate (20 points)
 
 Build a debate in which the number of agents, the number of rounds, and the temperature schedule all live in the JSON configuration file.  Round one is independent: each agent answers alone.  Later rounds are peer-informed: each agent sees the other agents' previous answers and may revise or hold its position.  Aggregate the final round two ways, by majority vote and by an optional judge agent.  Answer extraction must tolerate formatting drift: anchor on a required `ANSWER:` line, and when that line is missing, print a located error message instead of failing silently.
 
@@ -1551,16 +1773,18 @@ Submit one ZIP containing both halves.  Fix random seeds where determinism is in
 | `calibration_drafts.json` and the per-criterion rates table | Planted defects, detection and false positive rates, the weakest criterion before and after, and the case where the critic was wrong with how you could tell | Part A (20) |
 | Hack transcript, `rubric_patched.json`, change, second transcript | The critic's "accept" beside your judgment that the draft is poor; the patch; reject-hack and accept-good | Part A (20) |
 | `comparison_results.csv` and the cost-for-quality paragraph | Score and call count per condition on at least eight tasks; what the loop cost in extra calls for the quality it bought | Part A (20) |
-| `lab4.py`, `shootout.py`, `threshold.py` | Debate loop, consensus pipeline, and comparison script, with docstrings and located exception handlers | Debate (25); Consensus (20); Code Quality (10) |
+| `judge_refine.py`, `judge_rubric.json`, and `judge_rounds.csv` | The per-criterion judge with quoted evidence and revision instructions, the bounded loop, and one row per criterion per round | Part A, Extended (5) |
+| Judge-and-refine readme section | Per-round level table, the converged, drifted, or sycophantic verdict with draft evidence, the `quote_found` count, the sycophancy probe, the blind spot-check agreement, and the three reflection answers | Part A, Extended (5) |
+| `lab4.py`, `shootout.py`, `threshold.py` | Debate loop, consensus pipeline, and comparison script, with docstrings and located exception handlers | Debate (20); Consensus (20); Code Quality (10) |
 | `config.json` | Temperatures, round budget, agents, rounds, temperature schedule, and distance threshold for both halves, not hardcoded | Code Quality (10) |
 | Task set with labels | At least ten checkable questions | Comparative Evaluation (20) |
 | Comparison results (CSV or table) | Accuracy and call count per condition at matched budgets | Comparative Evaluation (20) |
-| Debate and consensus transcripts, at least two questions each | One complete 3-agent, 2-round debate (or the handoff thread or folder listing with timestamps) and the long-form consensus demonstration | Debate (25); Consensus (20) |
+| Debate and consensus transcripts, at least two questions each | One complete 3-agent, 2-round debate (or the handoff thread or folder listing with timestamps) and the long-form consensus demonstration | Debate (20); Consensus (20) |
 | Correlated failure analysis | Verbatim agreement on the wrong answer, why no aggregation could repair it, one non-LLM fix | Comparative Evaluation (20) |
 | Pair log | At least two timestamped role swaps | Writeup, Reflection, and Submission (5) |
 | Readme writeup, about two pages | Route named at the top, versions and seeds, Step B.2.2 interpretation answers, Part B.4 table and ownership paragraph, Learning Log | Writeup, Reflection, and Submission (5) |
 
-> **No-code path.** What you submit instead of code: the exported flow or preset prompts and chat transcripts (including at least three refine rounds in place of the Part A log, your calibration table, and your successful reward hack and patch), the spreadsheet of runs and clusters, and the identical written analysis, including the honest verdict on whether the extra rounds bought you anything.
+> **No-code path.** What you submit instead of code: the exported flow or preset prompts and chat transcripts (including at least three refine rounds in place of the Part A log, your calibration table, and your successful reward hack and patch), the Producer and Judge transcripts with the per-round score spreadsheet in place of `judge_rounds.csv`, the spreadsheet of runs and clusters, and the identical written analysis, including the honest verdict on whether the extra rounds bought you anything.
 
 ---
 
@@ -1574,6 +1798,9 @@ Held against the rubric's `proficient` column.  On the no-code or low-code route
 - [ ] The writeup shows a case where the critic was **wrong**, plus how I could tell.
 - [ ] **Reward hack:** a working one, shown verbatim, with the critic's "accept" next to my own judgment that the draft is poor; the patch shown as a **change**; a second transcript showing the patched rubric rejects the hack **and still accepts a defect-free draft**.
 - [ ] **Comparison:** fixed tasks, the same scoring instrument on both sides, and a paragraph that says what the loop cost in extra calls for the quality it bought.
+- [ ] **Judge-and-refine:** the judge scores **every** criterion against a stated `meets` bar with a quoted sentence and a revision instruction, the producer revises from those instructions, and the loop stops at **three rounds at most** or as soon as every criterion meets its bar.
+- [ ] Per-round scores are logged (`judge_rounds.csv` or the spreadsheet), and the writeup says whether refinement **converged, drifted, or was sycophantic**, with the draft change (or its absence) as evidence and the count of quotes not found in the draft.
+- [ ] Both partners **blind spot-checked** the final round before reading the judge's levels, and the three judge failure-mode reflections are answered.
 - [ ] **Debate:** agents, rounds, and temperature schedule are configurable.
 - [ ] Answer extraction anchors on a required `ANSWER:` line, and a missing one produces a located error rather than a silent wrong answer.
 - [ ] Both **majority-vote** and **judge-agent** aggregation are available.

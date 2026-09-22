@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Project Studio and Gallery Walk
 
-This deck serves two sessions: Tuesday's studio and gallery walk, and Thursday's final integration and demo rehearsal (see the Thursday section below).  Today the classroom becomes a studio.  The *Project Studio: Sprint and Threat Model* session gave you a sprint plan and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  The Responsible AI Capstone is also due today.  We take today in this order: stand-up, gallery walk, triage, release checklist.
+This deck serves two sessions: Tuesday's studio and gallery walk, and Thursday's final integration and demo rehearsal (see the Thursday section below).  Today the classroom becomes a studio.  The *Project Studio: Sprint and Threat Model* session gave you a sprint plan and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.
 
 ---
 

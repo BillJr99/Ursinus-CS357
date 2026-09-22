@@ -8,7 +8,7 @@ info:
   purpose: "To synthesize the entire course, and the semester-long Project Thread, into one substantial community-grounded final project.  That may be a system you build, an audit you evidence, or an artifact you publish, carried from proposal through sprints to a multi-audience Demo Day, with the process graded alongside the product."
   tilt:
     task: "With your standing team, choose one of three directions: build a custom agent team, perform a responsible AI audit, or build and publish an open-source agent.  Then propose it, build it in sprints with a community partner in the loop, and present it at Demo Day with a partner-facing artifact."
-    criteria: "I grade this on three course families worth 60 points between them: Approach (sound methods and justified design decisions), Process and Professionalism (meeting discipline, communication, project management, check-ins, charter adherence), and Product (the working system, audit, or publication, the Demo Day presentation, and the partner-facing artifact).  The other 40 points come from the six problem-solving criteria of the AAC&U VALUE Problem Solving Rubric.  The rubric below spells out each row."
+    criteria: "I grade this on four course families worth 60 points between them: Approach (sound methods and justified design decisions), Process and Professionalism (meeting discipline, communication, project management, check-ins, charter adherence), Product (the working system, audit, or publication, the Demo Day presentation, and the partner-facing artifact), and the Responsible AI Report (token use and its environmental cost, observability, a correctness audit, and a bias audit, all measured on your own work).  The other 40 points come from the six problem-solving criteria of the AAC&U VALUE Problem Solving Rubric.  The rubric below spells out each row."
   points: 100
   goals:
     - To carry one substantial project from proposal through sprints to Demo Day, choosing the direction (build, audit, or publish) that best serves the team's stakeholder problem
@@ -16,27 +16,34 @@ info:
     - To produce direction-appropriate evidence of rigor, whether that is a baseline-compared evaluation with documented failure modes (Direction A), a systematic framework application with mechanistic failure modes and adoptable governance (Direction B), or a verified ecosystem gap with property tests, publication, and community engagement, or a verified issue in an existing project carried to a submitted, reviewed contribution (Direction C)
     - To practice visible, professional team process (meeting agendas and notes, a decision log, role rotation, all-member signatures, intra-team check-ins, and charter adherence) throughout the project
     - "To engage a community partner: grounding the proposal in stakeholder needs, incorporating a partner feedback pass during the sprint window, and delivering a partner-facing artifact at Demo Day"
+    - "To take and report concrete responsible AI actions on your own work: tracking token use and estimating its energy, carbon, and cost; tracing agent actions and handoffs; auditing outcomes for correctness; and probing for bias (Goals 5, 6, 9)"
     - To communicate the result to a multi-audience of technical peers and community stakeholders, and to disclose honestly how and why AI tools were used at the proposal and at the final submission
     - To ground the project in the team's Stakeholder Brief and Literature Review and use the Open Questions to assess growth (Goals 11, 12, 13, 14, 15)
   rubric:
-    - weight: 18
+    - weight: 15
       description: Approach, sound methods and justified design decisions
       preemerging: The work shows no evidence of a deliberate approach, decisions are unexplained defaults, the direction's required rigor (baseline evaluation, framework application, or gap verification) is absent, and the project does not build on the Stakeholder Brief or Literature Review
       beginning: An approach is described but is generic or unjustified, design decisions are asserted rather than argued, the direction's evidence of rigor is attempted but incomplete (an evaluation without a baseline, a framework applied superficially, a gap asserted without evidence), or the connection to the stakeholder problem is nominal
       progressing: The approach is deliberate and mostly sound, major design decisions are justified with reference to course patterns or evidence, the direction's rigor requirement is substantially met (baseline comparison with metrics, systematic framework application with citations, or verified gap with linked evidence), and the project builds on the Stakeholder Brief and Literature Review, with minor gaps in how alternatives were considered or in the failure analysis
       proficient: The approach is deliberate, documented, and defensible, every major decision names the alternative that was rejected and the course pattern, principle, or evidence that motivated the choice; the direction's rigor requirement is fully met (Direction A - a fixed evaluation set compared against a monolith baseline with at least three failure modes documented from transcripts and at least one mitigation re-measured; Direction B - every major framework step yields a specific, cited finding with at least three mechanistic failure modes distinguishing materialized from foreseeable risks; Direction C - an independently verifiable ecosystem gap with named alternatives, a one-sentence minimum viable scope, and at least three non-trivially specified property tests); and the work is explicitly grounded in the Stakeholder Brief, Literature Review, and the partner's stated needs (Goals 11, 12)
-    - weight: 18
+    - weight: 16
       description: Process and Professionalism, meetings, communication, project management, check-ins, charter adherence
       preemerging: There is no evidence of team process, no meeting agendas or notes, no decision log, no role rotation, and missing check-ins and signatures
       beginning: Some process artifacts exist but are spotty, meeting notes or the decision log have gaps, one or more intra-team check-ins are missing, the GANTT-style timeline is absent or stale, or signatures are missing from a milestone
       progressing: The Team Playbook is followed with minor lapses, meeting agendas and notes, the decision log, role rotation, the project timeline, all three intra-team check-ins, and all-member signatures are present, but one element is thin, late, or inconsistently maintained (Goal 13)
       proficient: Team process is visible and current throughout, every meeting has a posted agenda and notes with owners and dates; the decision log records alternatives and rationale; project management is real (a maintained GANTT-style timeline with named owners, sprint boundaries honored, runnable increments at each sprint); all three intra-team check-ins are submitted on time; the team demonstrably operates under its signed charter, including its conflict protocol; roles rotate per sprint and every student is primary author of at least one section or component of every team deliverable (editable by teammates); each team document's version or commit history shows a real drafting trajectory rather than a single late paste; every milestone carries all members' signatures (Goal 13)
-    - weight: 24
+    - weight: 19
       description: Product, the working system, audit, or publication; the Demo Day presentation; and the partner-facing artifact
       preemerging: The direction's core artifact is missing or does not function, the system does not run, the audit lacks findings and governance, or nothing was published; the Demo Day presentation is missing or covers only a happy path with no disclosed limitation; no partner-facing artifact exists
       beginning: The core artifact partially meets its direction's requirements but would not be usable by its intended audience without significant rework, the system runs but is unreproducible or unevaluated, the audit's governance recommendations lack owners, thresholds, or timelines, or the published artifact lacks working documentation, tests, or a registry presence; the presentation serves only a technical audience or omits the failure disclosure; the partner-facing artifact is missing or unusable by the partner
       progressing: The core artifact meets its direction's requirements, a running, documented, evaluated system with committed governance (A); a complete risk analysis and adoptable governance document (B); or a published, installable, tested, documented artifact with a community exchange (C), and Demo Day includes both a technical segment and a stakeholder-facing segment with a partner-facing artifact, with minor gaps in polish, accessibility, or the honesty of the limitations discussion, and a public repository or write-up exists but has gaps in recruiter-legibility (a README a stranger could not follow, or no contribution attribution) (Goal 14)
       proficient: "The core artifact fully meets its direction's requirements and is honest about its limits. Direction A: the system runs from a fresh start following the README; configuration and seeds are externalized and pinned; CI passes on the submission SHA; evidence is surfaced to the user with a confirmation gate on consequential actions; and the committed GOVERNANCE.md matches deployed behavior. Direction B: the artifact package (risk analysis with at least 8 citations; governance document with monitoring plan, incident response, communication plan, and appeal process) could be handed to a regulator without modification. Direction C: the artifact is live and installable from a public registry with green CI, a stranger-tested quickstart, CONTRIBUTING.md and GOVERNANCE.md, and a documented substantive community exchange. All directions: the Demo Day presentation serves the multi-audience: a live technical segment with a rehearsed failure or limitation disclosure and a plain-language stakeholder segment, with every teammate speaking substantively and every teammate able to present any part; the partner-facing artifact (one-page brief, demo video, or deployed tool) is something the community partner can actually use, presented at Demo Day and included in the submission; and the project leaves a public, recruiter-legible trace, a public repository (Directions A and C) or a public write-up or portfolio page (Direction B) whose README or summary answers what it is, why it matters, and how to run or read it in thirty seconds, names each member's contribution, and is suitable for linking from a resume (Goal 14)"
+    - weight: 10
+      description: Responsible AI Report, token use and its environmental cost, observability and traceability, a correctness audit, and a bias audit, measured on your own work
+      preemerging: The Responsible AI Report is missing, or it states intentions without evidence; there are no measured token counts, no traces or logs, no correctness audit, and no bias probe
+      beginning: The report addresses some of the four areas but relies on assertion rather than measurement; token counts are guessed or come from a single run, traces are missing or cannot be matched to a run, the correctness audit has no golden set or rubric, or the bias probe is missing or too small to support any claim
+      progressing: All four areas are addressed with evidence (token counts measured per run and converted to an energy, carbon, and cost estimate; traces or logs of agent actions and handoffs for the evaluation runs; a correctness audit against a golden set or rubric judge with a pass rate; and a counterfactual or perturbation bias probe with a results table), but one area is thin, the estimate's assumptions are not stated, or the findings are not tied to any change in the work or the governance document (Goals 5, 6, 9)
+      proficient: "Every area is measured, evidenced, and acted on.  Token use: prompt and completion tokens are recorded for every evaluation run (from OpenCode's session token display or Ollama's prompt_eval_count and eval_count), totaled and averaged per task, and converted to an energy, carbon, and dollar estimate whose assumptions are stated and sourced.  Observability: every evaluation run has a trace or structured log with a run identifier and each agent action, tool call, and handoff, and the report walks one run end to end.  Correctness: outputs are scored against a committed golden set or a rubric judge whose agreement with human scores is reported, with the pass rate and every failure explained.  Bias: a counterfactual or perturbation probe changes one attribute at a time, uses enough samples to support its claim, reports disaggregated results, and explains or mitigates any gap.  Each area names at least one change the team made, or deliberately declined, because of what it measured, and the Demo Day presentation shows the numbers (Goals 5, 6, 9)"
     - weight: 8
       description: "Define Problem (AAC&U VALUE Problem Solving); here, the stakeholder problem carried from your Brief"
       preemerging: Demonstrates a limited ability in identifying a problem statement or related contextual factors.
@@ -130,7 +137,7 @@ The milestones run in the sequence below.  See the [course schedule]({{ site.bas
 | Sprints 1, 2, and 3 | Rotating roles, a runnable increment (or evidenced stage checkpoint) at every sprint boundary, and a **partner feedback pass** during the final sprint | - |
 | Cross-team proposal critique | At the *Project Studio: Sprint and Threat Model* session, the boundary between Sprint 1 and Sprint 2 | - |
 | Gallery walk, peer review (SQR cards), and intra-team check-in 3 | The gallery walk at *Project Studio and Gallery Walk*; check-in 3 at the *Final Integration and Demo Rehearsal* studio that follows | - |
-| Demo Day and final submission | The presentation, the partner-facing artifact, your direction's deliverables, contribution statements, reflections, and the final AI-use disclosure, all on the last class meeting | **75 / 100** |
+| Demo Day and final submission | The presentation, the partner-facing artifact, your direction's deliverables, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all on the last class meeting | **75 / 100** |
 
 The registrar's final-exam slot is reserved for Demo Day overflow only.  If all teams present at the last class meeting, it is not used.  Either way, the last class meeting is the submission deadline.
 
@@ -154,7 +161,7 @@ The project is how the learning happens; it is not the point in itself.  I grade
 
 Your final-project grade combines **team output**, **individual contribution**, and **individual understanding**:
 
-- **Team output** is the team's score on the rubric below, applied to the proposal (25 points) and the final submission and Demo Day (75 points).  The rubric has two halves: three **course families** (Approach, Process and Professionalism, Product) worth 60 points between them, and six **problem-solving criteria** worth 40, described next.
+- **Team output** is the team's score on the rubric below, applied to the proposal (25 points) and the final submission and Demo Day (75 points).  The rubric has two halves: four **course families** (Approach, Process and Professionalism, Product, and the [Responsible AI Report](#the-responsible-ai-report-required-in-every-direction)) worth 60 points between them, and six **problem-solving criteria** worth 40, described next.
 - **Individual contribution**: every student must be **primary author of at least one section or component** of every team deliverable, named in the document, and editable by teammates.  Your primary-author sections, check-in record, and role-rotation history are your contribution evidence.  Riding along is not a strategy, and neither is doing everything yourself.
 - **Individual understanding** is assessed through the **Demo Day question-and-answer** and your **individual reflection**: can you explain and defend any part of the work, including parts you did not primarily author?
 
@@ -162,7 +169,7 @@ Your final-project grade combines **team output**, **individual contribution**, 
 
 Six of the rubric's criteria (Define Problem, Identify Strategies, Propose Solutions/Hypotheses, Evaluate Potential Solutions, Implement Solution, Evaluate Outcomes) are quoted verbatim from the **Problem Solving VALUE Rubric**, published by the Association of American Colleges and Universities (AAC&U) and reproduced here under its permission for classroom use.  AAC&U's four performance levels map onto this course's four: *Benchmark 1* is read as pre-emerging, *Milestone 2* as beginning, *Milestone 3* as progressing, and *Capstone 4* as proficient.  AAC&U states that its rubrics "can and should be translated into the language of individual campuses, disciplines, and even courses," and that they were designed for program-level assessment rather than for grading.  The translation into a graded course rubric, and the weights, are mine.
 
-These criteria earn their place because of what they measure.  In AAC&U's words, the rubric "is designed to measure the quality of a process, rather than the quality of an end-product," which is the half of this project the three course families are least able to see.  That is also why AAC&U warns that "the final product of an assignment that required problem resolution is insufficient without insight into the student's problem-solving process."  Your decision log, your check-ins, your pre-mortem, and your reflections are that insight, and they are where these six criteria will mostly be scored.  A polished artifact with no visible record of how you got there cannot earn proficient on them.
+These criteria earn their place because of what they measure.  In AAC&U's words, the rubric "is designed to measure the quality of a process, rather than the quality of an end-product," which is the half of this project the four course families are least able to see.  That is also why AAC&U warns that "the final product of an assignment that required problem resolution is insufficient without insight into the student's problem-solving process."  Your decision log, your check-ins, your pre-mortem, and your reflections are that insight, and they are where these six criteria will mostly be scored.  A polished artifact with no visible record of how you got there cannot earn proficient on them.
 
 Read the six criteria as the arc you have walked.  The Stakeholder Brief is *Define Problem*.  The direction and architecture you weighed is *Identify Strategies*.  The proposal is *Propose Solutions*.  The pre-mortem and rejected alternatives are *Evaluate Potential Solutions*.  The sprints are *Implement Solution*.  Your limitations and next steps are *Evaluate Outcomes*.
 
@@ -181,6 +188,65 @@ This project is community-grounded on purpose: **every team connects its project
 1.  **Proposal:** the partner's stated needs inform the proposal, building directly on your Project Thread [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief).  Name the problem in the partner's terms and state how the direction you chose serves it.
 2.  **Partner feedback pass:** during the sprint/gallery-walk window, share your in-progress work with your partner (a demo, a findings summary, or a draft artifact).  Document their feedback and how you triaged it: incorporate, disclose, or defer.
 3.  **Partner-facing artifact (Demo Day):** deliver an artifact an external stakeholder can actually use (a one-page brief, a demo video, or a deployed tool), and present it at Demo Day to a **multi-audience** of technical peers and community stakeholders.
+
+---
+
+## The Responsible AI Report (Required in Every Direction)
+
+Every team takes concrete responsible AI actions on its own work and reports them.  This is not an essay about responsible AI in general.  It is a measured account of four things: what your work cost to run, what your agents did, whether their outputs were right, and whether they treated inputs about different people differently.  You learned each measurement in a class session this semester.  Here you apply them to your own project.
+
+The report is a required section of your final submission: a section of the report in Directions A and C, and a section of the artifact package in Direction B.  Keep it to 2-3 pages plus tables, and put the raw evidence in the artifacts folder.  It is graded on the **Responsible AI Report** row of the rubric (10 points).
+
+> **Watch out.** Start measuring in Sprint 1.  Token counts, traces, and probe results cannot be rebuilt from memory in week 14.  A report assembled at the end from a single run cannot score above beginning.
+
+### Area 1: Environmental Tracking and Token Use
+
+Record the input (prompt) and output (completion) token counts for every evaluation run, then estimate what those tokens cost in energy, carbon, and money.
+
+- **Count the tokens.**  In OpenCode, read the session's token display at the end of each run and record it.  Through Ollama's API, read `prompt_eval_count` (input tokens) and `eval_count` (output tokens) from each response, along with `eval_duration` and `total_duration` (in nanoseconds) for time.  The [Observability, Traceability, and Handoff Protocols]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-observability.md) session and the [Agent Observability and Tracing]({{ site.baseurl }}/Tutorials/Observability) tutorial show both methods.
+- **Total and average them.**  Report tokens per run, per task, and per agent, so a reader can see which agent or step dominates the cost.
+- **Estimate energy, carbon, and cost.**  Use the method from the [Governance, Policy, and the Cost of Inference]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-governancecost.md) session.  Energy is measured generation time multiplied by your machine's power draw under load (or tokens multiplied by a published energy-per-token figure).  Carbon is that energy multiplied by your region's grid carbon intensity.  Cost is the token count priced at a comparable hosted model's published rate; for local runs, that is the bill you avoided, plus the electricity.  State and cite every assumption.  An order-of-magnitude estimate is acceptable.  A hidden assumption is not.
+- **Compare one alternative.**  Put the numbers beside one cheaper option (a smaller model, fewer agents, a shorter context, or the monolith baseline) and say whether the difference in quality justifies the difference in cost.
+
+**Evidence to submit:** a token table (run, task, agent, model, input tokens, output tokens, time), the energy, carbon, and cost estimate with its assumptions and sources, and the comparison.
+
+### Area 2: Observability and Traceability
+
+Log every agent action, tool call, and handoff with a run identifier, so that a reader can reconstruct any evaluation run from the logs alone.  Follow the practice from the Observability session: store identifiers and measurements (a query hash, token counts, `finish_reason`, latency), not private content.
+
+**Evidence to submit:** the trace or structured log files for the evaluation runs, and a walk-through of one run from start to finish in the report, naming each agent, what it received, what it did, and what it handed off.
+
+### Area 3: Auditing Outcomes for Correctness
+
+Score your outputs against a committed **golden set** (inputs with agreed correct answers or agreed human rubric levels) or with a **rubric judge**.  Check the judge against human scores before you trust it.  The [Evaluating Agents With a Rubric: The Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md) and [Evaluation Workshop II: Run Your Rubric Against Your Project]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-evalworkshop2.md) sessions build this harness; bring it into your project repository (or your evidence folder) and run it on your final outputs.
+
+**Evidence to submit:** the golden set or rubric, the one command that runs the harness and the pass rate it printed, the judge's agreement with human scores, and an explanation of every failure.
+
+### Area 4: Auditing for Potential Bias
+
+Run a **counterfactual or perturbation probe**: send inputs that are identical except for one attribute (a name, a dialect, a neighborhood, a stated group membership) and compare the outputs.  The byline-swap probe from the [Training Data, Bias, and Explainability]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) session is the model: change one attribute, hold everything else fixed, sample enough times to support a claim, and disaggregate the results.  Choose attributes that matter to your partner's community.
+
+**Evidence to submit:** the probe design (which attribute, which values, how many samples), the disaggregated results table, and either an explanation of any gap or the mitigation you applied and its re-measured result.
+
+### How the Report Relates to Your Direction
+
+- **Direction A.**  Run all four areas on the frozen 10-task evaluation set, for both the monolith baseline and the multi-agent system, so the token and cost comparison sits beside the accuracy comparison.  Your evaluation already covers much of Area 3.  Reuse it, and add the judge-to-human agreement.  Anything the report finds that changes how the system should be run belongs in GOVERNANCE.md as well.
+- **Direction B.**  The audit and the report look at different systems, so they do not conflict.  The audit examines someone else's deployed system from public evidence.  The report examines your team's own AI use: the model you probed during adversarial probing, and any AI tools you used in the research (for example, an agent that summarized sources or extracted claims).  Count the tokens those sessions used.  Log every probe (prompt, model and version, response, and timestamp) so someone else could reproduce your findings, as the Red-Teaming tutorial's reporting standard already asks.  Check every AI-assisted summary or extracted claim against its cited source before it reaches the risk analysis; that set of verified claims is your golden set.  Your counterfactual probes on the reachable model may serve as evidence for both the audit and Area 4.  Present them once, and say which claims they support about the audited system and which about your own tooling.
+- **Direction C.**  Run all four areas on the published artifact, using its worked examples and property-test inputs.  Publish the token-use figures and the bias probe result in the README or in GOVERNANCE.md's known limitations, so that users see them before they install.  In the contribution variant, measure the feature you contributed.
+
+### On Demo Day
+
+- In the **technical segment**, show the token and cost table next to your evaluation results, and show one trace.
+- In the **stakeholder-facing segment**, give one plain-language sentence for each area: what the system costs to run, how you can see what it did, how you know it is right, and what you checked about fairness.
+- Be ready for a question on any of the four areas.  "We did not measure that" is an honest answer.  It is also a limitation to disclose.
+
+**Deliverables for the Responsible AI Report:**
+
+- [ ] The token table and the energy, carbon, and cost estimate, with assumptions, sources, and one cheaper alternative compared
+- [ ] Trace or log files for the evaluation runs, with one run walked end to end
+- [ ] The correctness audit: golden set or rubric, harness command, pass rate, judge-to-human agreement, and failures explained
+- [ ] The bias probe: design, disaggregated results, and your explanation or mitigation
+- [ ] For each area, at least one change the team made, or deliberately declined to make, because of what it measured
 
 ---
 
@@ -215,7 +281,8 @@ The proposal is graded on its own rubric, not on this one: three course families
 > 3. Argue each major design decision against the alternative you rejected.
 > 4. Sketch the implementation and assessment plan as a GANTT-style timeline with named owners and sprint boundaries.
 > 5. Add your direction's proposal elements (listed under Direction A, B, or C below).
-> 6. Add the AI-use disclosure and every member's signature, with each member named as primary author of at least one section.
+> 6. Add a Responsible AI measurement plan: how you will count tokens, what you will log, what golden set or rubric you will audit against, and which attribute your bias probe will vary (see [The Responsible AI Report](#the-responsible-ai-report-required-in-every-direction)).
+> 7. Add the AI-use disclosure and every member's signature, with each member named as primary author of at least one section.
 
 > **Watch out.** Incomplete proposals are returned ungraded.  Proposals whose scope is too generic, inaccessible, or infeasible in three sprints are redirected.
 
@@ -226,6 +293,7 @@ The proposal is graded on its own rubric, not on this one: three course families
 - [ ] Design decisions argued against rejected alternatives
 - [ ] GANTT-style timeline with named owners
 - [ ] Your direction's proposal elements
+- [ ] A Responsible AI measurement plan
 - [ ] AI-use disclosure and all-member signatures
 
 ---
@@ -250,13 +318,15 @@ The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) runs across Sp
 > 3. Ship the runnable increment or evidenced stage checkpoint your direction's row names above.
 > 4. Update the evaluation or evidence table with a number or a citation.
 > 5. Update the GANTT-style timeline, and log any scope change the Literature Review synthesis forced.
-> 6. Hold the sprint retrospective and file the Scribe notes.
-> 7. During the final sprint, run the **partner feedback pass**: put your work in front of your community partner and document the exchange (see Community Partner Engagement above).
+> 6. Add the sprint's token counts, traces, audit results, and probe results to the Responsible AI evidence folder.
+> 7. Hold the sprint retrospective and file the Scribe notes.
+> 8. During the final sprint, run the **partner feedback pass**: put your work in front of your community partner and document the exchange (see Community Partner Engagement above).
 
 **Deliverables for this phase:**
 
 - [ ] A runnable increment or evidenced stage checkpoint at each of the three sprint boundaries
 - [ ] An updated evaluation or evidence table at each boundary
+- [ ] Responsible AI evidence (token counts, traces, audit and probe results) added at each boundary
 - [ ] Scribe notes from each retrospective, role rotation recorded, and the GANTT-style timeline kept current
 - [ ] The Literature Review synthesis, with any resulting scope change in the decision log
 - [ ] The partner feedback pass, documented with your triage (incorporate, disclose, or defer)
@@ -291,13 +361,14 @@ Every team, regardless of direction, delivers at Demo Day:
 - A **live technical segment** for CS peers: a real demonstration (Direction A: the running system; Direction B: a walkthrough of the framework application and evidence for one failure mode's mechanism; Direction C: the installed, published artifact) including a **rehearsed failure or limitation disclosure**.
 - A **non-technical, stakeholder-facing segment** in plain language: who this is for, the problem in their terms, what the work does for them, what it must not be used for, and a brief multidisciplinary reflection on how disciplines beyond CS shaped the work (Goal 14).
 - The **partner-facing artifact**, presented to the multi-audience and included in the submission.
+- The **Responsible AI Report** numbers: the token and cost table and one trace in the technical segment, and one plain-language sentence per area in the stakeholder-facing segment (see [The Responsible AI Report](#the-responsible-ai-report-required-in-every-direction)).
 - A **public portfolio artifact**: the public repository (Directions A and C) or public write-up/portfolio page (Direction B) described in the Product rubric; run the [ShipIt](#shipping-your-artifact-the-shipit-checklist) self-check against it before your publish gate.
 - **Every teammate speaks substantively**, and every teammate must be prepared to present any part (see the absence policy above).
 - Q&A with the instructor, peers, and partners: this is where individual understanding is assessed.  Prepare with the [Demo Day Guide](#demo-day-external-guests-and-technical-interview-practice); the final Project Studio includes a cross-team mock-interview rehearsal, credited as class participation.
 
 > **Do this.**
 > 1. Rehearse the whole demo on the clock, on the machine you will use, on the network you will have, with every teammate able to cover any part.
-> 2. Assemble the final submission: your direction's deliverables below, individual contribution statements documenting the role rotation, individual reflections (see Reflection Prompts), and the **final AI-use disclosure**.
+> 2. Assemble the final submission: your direction's deliverables below, the Responsible AI Report, individual contribution statements documenting the role rotation, individual reflections (see Reflection Prompts), and the **final AI-use disclosure**.
 > 3. Submit everything on the last class meeting.  Nothing is accepted after it.
 
 **Deliverables for this phase:**
@@ -306,6 +377,7 @@ Every team, regardless of direction, delivers at Demo Day:
 - [ ] The partner-facing artifact, presented and included in the submission
 - [ ] The public portfolio artifact (repository or write-up), checked against the ShipIt self-check
 - [ ] Your direction's final deliverables (below)
+- [ ] The Responsible AI Report, with its evidence in the artifacts folder
 - [ ] Individual contribution statements documenting the role rotation, and individual reflections
 - [ ] The final AI-use disclosure and all-member signatures
 
@@ -338,7 +410,7 @@ In addition to the shared elements:
 ### Direction A final deliverables
 
 - [ ] **The system:** a repository that runs from a fresh start following the README in under 3 minutes on a machine the team has not configured; configuration externalized to `config.json`, model versions and seeds pinned, exceptions handled with located messages, a test suite with at least one end-to-end test, CI on every push, and a publish step (triggered by the `submission` tag) pushing the artifact to GHCR, Docker Hub, or npm
-- [ ] **The report** (6-8 pages): design rationale tied to named course patterns; evaluation results with the baseline comparison table, failure analysis with transcripts, and re-measurement after mitigation; explainability design; limitations (your "disclose" bucket from the gallery walk, verbatim); a governance summary referencing the committed GOVERNANCE.md; and individual contribution statements documenting the role rotation
+- [ ] **The report** (6-8 pages): design rationale tied to named course patterns; evaluation results with the baseline comparison table, failure analysis with transcripts, and re-measurement after mitigation; explainability design; limitations (your "disclose" bucket from the gallery walk, verbatim); a governance summary referencing the committed GOVERNANCE.md; the Responsible AI Report; and individual contribution statements documenting the role rotation
 - [ ] **The presentation** (12 minutes plus questions), meeting the shared Demo Day requirements, plus: the evaluation table (baseline vs. multi-agent, side by side) and the 90-second explainability story (what does a user see when the system makes a decision?)
 - [ ] **The artifacts folder:** final agent design table, final pre-mortem with binding governance clauses noted, all sprint notes, gallery-walk cards received with your triage, and a release-readiness checklist signed by the Evaluator confirming CI passes on the submission SHA, the artifact is live at its published URL, and the README was tested by a stranger
 
@@ -369,7 +441,7 @@ In addition to the shared elements:
 
 ### Direction B final deliverables
 
-- [ ] **The artifact package**, organized so it could be handed to a regulator without modification: the approved proposal, the risk analysis report, the governance document, and the presentation materials
+- [ ] **The artifact package**, organized so it could be handed to a regulator without modification: the approved proposal, the risk analysis report, the governance document, the presentation materials, and the Responsible AI Report on your team's own AI use and probing
 - [ ] **The board presentation** (15 minutes, timing graded): the class role-plays the operator's board: intelligent, busy, skeptical, and mixed technical/non-technical.  Required arc: what the system does and who uses it (2 min, plain English); who is at risk and how (3 min, including at least one concrete individual harm example); what you found, by severity (5 min, most serious first, sources on request); what you recommend, in priority order (3 min, each with estimated effort and timeline); questions (remaining).  Prepare evidence-based responses to the three standard board objections: "these risks are theoretical," "the vendor tested it for fairness," and "we lack the resources"
 - [ ] **Demo Day additions:** the shared requirements above; the technically grounded evidence walkthrough serves as this direction's technical segment, and the partner-facing artifact presents the stakeholder context, the top findings by severity, and the priority recommendations
 - [ ] Individual contribution statements and reflections
@@ -417,7 +489,7 @@ In addition to the shared elements:
 ### Direction C final deliverables
 
 - [ ] **The repository and the published package**: public GitHub repo running from a fresh start, CI green on the submission SHA, and a live registry URL where the artifact is installable
-- [ ] **The report** (3-5 pages): the gap and how it was verified; key design decisions and tradeoffs; property-test results; documentation strategy and the classmate quickstart-test result; license justification; governance rationale; the community engagement summary with evidence; and individual contribution statements
+- [ ] **The report** (3-5 pages): the gap and how it was verified; key design decisions and tradeoffs; property-test results; documentation strategy and the classmate quickstart-test result; license justification; governance rationale; the community engagement summary with evidence; the Responsible AI Report; and individual contribution statements
 - [ ] **The presentation** (8 minutes plus questions), meeting the shared Demo Day requirements, plus: property-test results and a 60-second governance statement addressed to the audience as potential users; the partner-facing artifact may be a well-crafted public project page presenting the stakeholder context, what the artifact does, its limits, and how to get it
 
 ---
@@ -684,6 +756,7 @@ Answer individually after the mock-interview rehearsal, connecting to the course
 
 - [ ] Claims about how well it works are backed by an evaluation we ran, with numbers, not by the demo going well once.
 - [ ] At least one honest failure or limitation is documented, and we can talk about it without defensiveness.
+- [ ] The Responsible AI Report is backed by measurements: token counts for every evaluation run, traces we can walk, a correctness audit with a pass rate, and a bias probe with disaggregated results.
 
 **The audience**
 
@@ -697,6 +770,7 @@ Answer individually after the mock-interview rehearsal, connecting to the course
 - [ ] Contribution statements naming who did what.
 - [ ] AI-use disclosure for the team's work.
 - [ ] The ShipIt checklist completed.
+- [ ] The Responsible AI Report, with its evidence in the artifacts folder.
 
 **The rehearsal**
 

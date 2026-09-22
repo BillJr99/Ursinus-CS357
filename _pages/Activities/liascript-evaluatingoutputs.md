@@ -369,7 +369,7 @@ In this part you build your own benchmark: a task set for a domain your team kno
 
 ---
 
--> Coming Up Next: You just predicted which techniques fix which hallucinations.  We build the first one next.  In *Tool Use and Function Calling*, the agent stops recalling facts it should be looking up and calls a real function instead, which is the mitigation your Exercise 3 matched to fabricated specifics.  The evaluation harness pattern you built today returns in the RAG Knowledge Base lab's retrieval evaluation and in the Rubric Pipeline lab's rubric pipeline.
+-> Coming Up Next: You just predicted which techniques fix which hallucinations.  We build the first one next.  In *Tool Use and Function Calling*, the agent stops recalling facts it should be looking up and calls a real function instead, which is the mitigation your Exercise 3 matched to fabricated specifics.  The evaluation harness pattern you built today returns in the RAG Knowledge Base lab's retrieval evaluation and in the rubric judge you build in the Judge Pipeline Workshop.
 
 ## 5.  Further Reading
 

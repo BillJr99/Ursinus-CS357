@@ -14,7 +14,7 @@
       "operational": {
         "gco2e_per_input_token": 5.3e-6,
         "gco2e_per_output_token": 1.6e-5,
-        "_comment": "Derived from the 0.001-0.01 g CO2eq per cloud query band in Written Assignment 3's reference table, taking the 0.005 g midpoint over a representative 337-input / 200-output-token query, and splitting it so an output token costs 3x an input token. That 3x is the pricing asymmetry from the Environmental Cost of Inference activity, and it is a compute fact before it is a billing fact: reading a token is one forward pass, generating one is a sequential sample that holds KV-cache memory for the whole context."
+        "_comment": "Derived from the commonly cited 0.001-0.01 g CO2eq per cloud query band, taking the 0.005 g midpoint over a representative 337-input / 200-output-token query, and splitting it so an output token costs 3x an input token. That 3x is the pricing asymmetry from the Environmental Cost of Inference activity, and it is a compute fact before it is a billing fact: reading a token is one forward pass, generating one is a sequential sample that holds KV-cache memory for the whole context."
       },
       "training": {
         "total_gco2e": 5.0e8,
@@ -41,7 +41,7 @@
   },
 
   "equivalents": {
-    "_comment": "Operational anchors only. The car mile, hamburger, and streaming hour are taken verbatim from the reference table in Written Assignment 3, Direction E. The smartphone charge is the equivalence the Environmental Cost of Inference activity gives for one diffusion-model image (0.003 kg) in its Model 1 table. All four are daily-frequency activities on purpose: comparing a week of AI use to a flight is technically accurate and deeply misleading, which is the common pitfall Direction E warns about.",
+    "_comment": "Operational anchors only. The car mile, hamburger, and streaming hour are commonly cited reference values. The smartphone charge is the equivalence the Environmental Cost of Inference activity gives for one diffusion-model image (0.003 kg) in its Model 1 table. All four are daily-frequency activities on purpose: comparing a week of AI use to a flight is technically accurate and deeply misleading, which is the common pitfall Direction E warns about.",
     "gco2e_per_car_mile": 400,
     "gco2e_per_hamburger": 2500,
     "gco2e_per_streaming_hour": 36,

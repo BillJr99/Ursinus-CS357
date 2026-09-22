@@ -731,7 +731,7 @@ None of them come from the model.  They are properties of the *environment* you 
 
 They are what "trust" actually decomposes into.  When someone asks whether you would let an agent do X, the useful reply is not yes or no. It is: can I see what it did, can I bound what it touches, and can I put it back?
 
-You will meet all three again, made much more serious: **observability** as tracing and structured logs in the evaluation labs, **isolation** as non-root containers, read-only mounts, and OAuth scopes in the Responsible AI Capstone's containerization direction and the Tools and MCP lab's OAuth option, and **reversibility** as branch discipline, rollback, and the governance question of who is accountable when an autonomous system errs.
+You will meet all three again, made much more serious: **observability** as tracing and structured logs in the evaluation labs, **isolation** as non-root containers, read-only mounts, and OAuth scopes in the What a Container Isolates tutorial and the Tools and MCP lab's OAuth option, and **reversibility** as branch discipline, rollback, and the governance question of who is accountable when an autonomous system errs.
 
 A student runs a coding agent directly in their home directory, outside any container, on a folder that is not a git repository, and carefully reads every change before approving it.  Which of the three properties do they have?
 

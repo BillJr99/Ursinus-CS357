@@ -224,15 +224,13 @@ goals:
 
 grade_breakdown:
 - category: "Labs"
-  weight: "35%"
+  weight: "37.5%"
 - category: "Written Assignments"
-  weight: "10%"
-- category: "Responsible AI Capstone"
-  weight: "10%"
+  weight: "12.5%"
 - category: "Final Project and Project Thread Milestones"
-  weight: "35%"
+  weight: "37.5%"
 - category: "Class Activities and Participation"
-  weight: "10%"
+  weight: "12.5%"
 
 letter_grades:
 - letter: "A+"
@@ -338,7 +336,7 @@ schedule:
     rlink: "Tutorials/AgentCLIs"
   - rtitle: "AI Coding Agent Security: poisoned repositories and the software supply chain, the risk that arrives with the convenience"
     rlink: "Tutorials/CodingAgentSecurity"
-  - rtitle: "What a container isolates, and how to size an agent's blast radius before you hand it your machine.  This is the background for the Responsible AI Capstone's containerization direction"
+  - rtitle: "What a container isolates, and how to size an agent's blast radius before you hand it your machine.  Self-paced background for running any agent in a container, your final project's included"
     rlink: "Tutorials/ContainerIsolation"
 - week: "2"
   date: "0"
@@ -448,11 +446,6 @@ schedule:
   title: "Tool Use and Function Calling"
   link: "Activities/liascript-tooluse.md"
   liapage: true
-  deliverables:
-  - dtitle: "Lab: Tools and MCP Handed Out"
-    dlink: "Assignments/ToolsMCP"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-toolsmcp.md"
   readings:
   - rtitle: "Ollama Structured Outputs, on schema-constrained JSON.  The Local Agent Lab's required structured-output segment uses this, so read it before the lab"
     rlink: "https://docs.ollama.com/capabilities/structured-outputs"
@@ -508,10 +501,10 @@ schedule:
     dlink: "Assignments/LocalAgent"
     points: "100"
     rubricpath: "_pages/Assignments/lab-localagent.md"
-  - dtitle: "Lab: RAG Knowledge Base Handed Out"
-    dlink: "Assignments/RAGKnowledgeBase"
-    points: "200"
-    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
+  - dtitle: "Lab: Tools and MCP Handed Out"
+    dlink: "Assignments/ToolsMCP"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-toolsmcp.md"
   readings:
   - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Please bring your team's Stakeholder Brief draft, because the peer review round works on real drafts."
@@ -549,11 +542,6 @@ schedule:
   title: "Observability, Traceability, and Handoff Protocols"
   link: "Activities/liascript-observability.md"
   liapage: true
-  deliverables:
-  - dtitle: "Lab: Tools and MCP Due"
-    dlink: "Assignments/ToolsMCP"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-toolsmcp.md"
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class.  What is the longest-running piece of work you have done with an AI tool, and where did it start losing the thread?"
   - rtitle: "Memory and the Small Context Window Principle: why an agent that remembers everything gets worse, and the four kinds of memory today's protocols write down"
@@ -592,10 +580,14 @@ schedule:
   link: "Activities/liascript-critiqueconsensusjudge.md"
   liapage: true
   deliverables:
-  - dtitle: "Lab: Multi-Agent Patterns Handed Out"
-    dlink: "Assignments/MultiAgentDebate"
+  - dtitle: "Lab: Tools and MCP Due"
+    dlink: "Assignments/ToolsMCP"
     points: "100"
-    rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
+    rubricpath: "_pages/Assignments/lab-toolsmcp.md"
+  - dtitle: "Lab: RAG Knowledge Base Handed Out"
+    dlink: "Assignments/RAGKnowledgeBase"
+    points: "200"
+    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
   - dtitle: "Project: Literature Review Handed Out"
     dlink: "Assignments/LitReview"
     points: "100"
@@ -604,10 +596,6 @@ schedule:
     dlink: "Projects/FinalProjectProposal"
     points: "25"
     rubricpath: "_pages/Projects/proj-finalprojectproposal.md"
-  - dtitle: "Lab: RAG Knowledge Base Due"
-    dlink: "Assignments/RAGKnowledgeBase"
-    points: "200"
-    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
   readings:
   - rtitle: "From Second Brain to Chief of Staff: one personal agent followed into production"
     rlink: "Tutorials/ProductionAssistant"
@@ -631,16 +619,12 @@ schedule:
     dlink: "Assignments/AgentSystemDesign"
     points: "100"
     rubricpath: "_pages/Assignments/asmt-agentsystemdesign.md"
-  - dtitle: "Lab: Rubric Pipeline Handed Out"
-    dlink: "Assignments/RubricPipeline"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-rubricpipeline.md"
   readings:
-  - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One of the two supported harnesses for the Rubric Pipeline Lab, and it runs against Ollama"
+  - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One way to run the judge you build in today's workshop, and it runs against Ollama"
     rlink: "https://www.promptfoo.dev/docs/intro/"
   - rtitle: "Hamel Husain, \"Your AI Product Needs Evals\": the error-analysis-first approach to evaluation"
     rlink: "https://hamel.dev/blog/posts/evals/"
-  - rtitle: "Inspect AI (UK AI Security Institute): the Dataset, Solver, and Scorer framework, the other supported Rubric Pipeline harness"
+  - rtitle: "Inspect AI (UK AI Security Institute): the Dataset, Solver, and Scorer framework, another harness for today's judge and for the Multi-Agent Patterns lab's judge-and-refine loop"
     rlink: "https://inspect.aisi.org.uk/"
 - week: "11"
   date: "0"
@@ -652,19 +636,15 @@ schedule:
     dlink: "Assignments/LitReview"
     points: "3"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
-  - dtitle: "Responsible AI Capstone Handed Out"
-    dlink: "Assignments/ResponsibleAI"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-responsibleai.md"
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
   - rtitle: "Coded Bias (film), watch before class"
     rlink: "https://www.codedbias.com/"
   - rtitle: "O'Neil, Weapons of Math Destruction: the chapter on predictive models in education"
   - rtitle: "Carr, The Glass Cage, Chapters 2-3: automation, deskilling, and automation bias"
-  - rtitle: "Gandalf (Lakera), a prompt-injection game you play in the browser, and the shared warm-up for the Responsible AI Capstone handed out today"
+  - rtitle: "Gandalf (Lakera), a prompt-injection game you play in the browser.  Optional, a self-paced warm-up on how guardrails fail"
     rlink: "https://gandalf.lakera.ai/"
-  - rtitle: "Tensor Trust, where you attack and defend against prompt injection, and the other capstone warm-up"
+  - rtitle: "Tensor Trust, where you attack and defend against prompt injection.  Optional, the other self-paced warm-up"
     rlink: "https://tensortrust.ai/"
 - week: "11"
   date: "1"
@@ -679,7 +659,11 @@ schedule:
   link: "Activities/liascript-governancecost.md"
   liapage: true
   deliverables:
-  - dtitle: "Lab: Multi-Agent Patterns Due"
+  - dtitle: "Lab: RAG Knowledge Base Due"
+    dlink: "Assignments/RAGKnowledgeBase"
+    points: "200"
+    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
+  - dtitle: "Lab: Multi-Agent Patterns Handed Out"
     dlink: "Assignments/MultiAgentDebate"
     points: "100"
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
@@ -702,18 +686,13 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
   readings:
-  - rtitle: "Bring your Rubric Pipeline judge as it stands and three artifacts from your final project for it to grade.  Today's workshop runs the judge against your own work and audits the disagreements."
+  - rtitle: "Bring the judge you built in the Judge Pipeline Workshop (the one the Multi-Agent Patterns lab's judge-and-refine loop reuses) and three artifacts from your final project for it to grade.  Today's workshop runs the judge against your own work and audits the disagreements."
     rlink: false
 - week: "13"
   date: "0"
   title: "Project Studio: Sprint and Threat Model"
   link: "Activities/liascript-projectsprint.md"
   liapage: true
-  deliverables:
-  - dtitle: "Lab: Rubric Pipeline Due"
-    dlink: "Assignments/RubricPipeline"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-rubricpipeline.md"
   readings:
   - rtitle: "Bring your integrated project and your proposal.  The peer review of proposals and the threat-model checklist both run on what you bring."
     rlink: false
@@ -722,11 +701,6 @@ schedule:
   title: "Project Studio and Gallery Walk"
   link: "Activities/liascript-projectstudio.md"
   liapage: true
-  deliverables:
-  - dtitle: "Responsible AI Capstone Due"
-    dlink: "Assignments/ResponsibleAI"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-responsibleai.md"
   readings:
   - rtitle: "Bring your gallery-walk artifact ready to display, and your SQR cards."
     rlink: false
@@ -746,6 +720,10 @@ schedule:
   date: "0"
   title: "Demo Day: Final Project Presentations (Class Switch Day: follows a Thursday schedule)"
   deliverables:
+  - dtitle: "Lab: Multi-Agent Patterns Due"
+    dlink: "Assignments/MultiAgentDebate"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
   - dtitle: "Project: Demo Day Presentations Due"
     dlink: "Projects/FinalProject"
     points: "75"
@@ -768,11 +746,11 @@ This course is about building agents you understand and can run yourself.  The s
 
 I have designed this course around deliberate choices, in the spirit of Universal Design for Learning.  There are many routes through it and several ways to demonstrate what you have learned, and none of them is the "remedial" path.  You have real authorship over your semester.
 
-- **Choose your direction.**  Everyone completes the same **6 labs**, **3 written assignments**, and **1 team final project** (nothing on the schedule is optional), and every one of them offers **directions** you choose inside the assignment, so you build the same core skill as your classmates, then extend it toward what interests you.  Written Assignment 2 offers a design-document or agent-operating-system direction; Written Assignment 3 offers philosophy, model-cards, governance, regulation, or carbon-cost directions; the final project offers three (a Custom Agent Team, a Responsible AI Audit, or an Open-Source Agent).  The hands-on routes and the analytical routes are equally valid ways to earn your grade, so please build the balance that fits how you learn.
-- **Every lab is within reach, on more than one road.**  Every lab has a programming pathway that asks for only intro-level Python, with starter code provided: you extend a working scaffold, never start from a blank page.  **Every lab also has a supported no-code or low-code pathway**, graded on the same rubric, for the same credit: OpenWebUI configuration for the Local Agent and Tools and MCP labs, a Langflow canvas for the RAG Knowledge Base, declarative promptfoo YAML for the Rubric Pipeline, chat windows and a spreadsheet for the Multi-Agent Patterns lab and its Critique and Refine part, a spreadsheet-and-Open-WebUI run sheet for the RAG Quality Checkup pathway inside the RAG Knowledge Base lab, and an attack-and-policy track for the Responsible AI Capstone.  Each lab opens with a **Choose Your Path** table so the decision is in front of you before you start rather than after, and each rubric row states how it is earned on each route, so "equal credit" is something you can check rather than something I assert.
-- **Analytical routes are real routes.**  Written Assignments 2 and 3 and Final Project Direction B (the Responsible AI Audit) are fully non-programming paths.  Taking one of them is a real choice about how you want to work, and I do not read it as avoidance.
+- **Choose your direction.**  Everyone completes the same **labs**, the **written assignments**, and **one team final project** (nothing on the schedule is optional), and every one of them offers **directions** you choose inside the assignment, so you build the same core skill as your classmates, then extend it toward what interests you.  The Design Your Agent System assignment offers a design-document or agent-operating-system direction; the final project offers three (a Custom Agent Team, a Responsible AI Audit, or an Open-Source Agent).  The hands-on routes and the analytical routes are equally valid ways to earn your grade, so please build the balance that fits how you learn.
+- **Every lab is within reach, on more than one road.**  Every lab has a programming pathway that asks for only intro-level Python, with starter code provided: you extend a working scaffold, never start from a blank page.  **Every lab also has a supported no-code or low-code pathway**, graded on the same rubric, for the same credit: OpenWebUI configuration for the Local Agent and Tools and MCP labs, a Langflow canvas for the RAG Knowledge Base, chat windows and a spreadsheet for the Multi-Agent Patterns lab, its Critique and Refine part, and its rubric judge-and-refine loop, a spreadsheet-and-Open-WebUI run sheet for the RAG Quality Checkup pathway inside the RAG Knowledge Base lab.  Each lab opens with a **Choose Your Path** table so the decision is in front of you before you start rather than after, and each rubric row states how it is earned on each route, so "equal credit" is something you can check rather than something I assert.
+- **Analytical routes are real routes.**  The written assignments and Final Project Direction B (the Responsible AI Audit) are fully non-programming paths.  Taking one of them is a real choice about how you want to work, and I do not read it as avoidance.
 - **A shared spine.**  The semester-long **Project Thread** is the one path everyone walks together, so that individual choice never means working alone.  It carries the team milestones (charter, stakeholder brief, literature review, proposal, and demo) and the peer review that ties the section together.
-- **Depth inside every lab.**  Each of the 6 labs opens with a shared core that everyone builds, then a menu of **directions**: instruction design and agent governance, handoffs between sessions, local model internals, containerization, MCP and OAuth, coding agents, fine-tuning, observability, prompt-injection defense, privacy, explainability, and more.  Pick the direction that pulls you; if the one you want is not on the menu, propose it.
+- **Depth inside every lab.**  Every lab opens with a shared core that everyone builds, then a menu of **directions**: instruction design and agent governance, handoffs between sessions, local model internals, containerization, MCP and OAuth, coding agents, fine-tuning, observability, prompt-injection defense, and more.  Pick the direction that pulls you; if the one you want is not on the menu, propose it.
 - **Scaffolding you can hold your own work against.**  Every lab and written assignment opens with **Before You Start**, which tells you what it builds on, what to install, and what order to do things in, and closes with a **Self-Check** drawn from its own rubric's *proficient* column, so you can grade your draft before I do.  The labs also carry worked examples and a **Troubleshooting** table, because the most common reason a lab takes twice as long as it should is a setup problem with a known fix.
 - **The depth is in the activity, not in a list of links.**  Each session's activity carries the theory, the worked example, and the code, and where a topic runs past the seventy-five minutes we have together, it continues in an extension section at the end of that same activity, clearly marked as self-paced.  Nothing graded assumes those sections.  The readings on the schedule are books, papers, tutorials, and the occasional thing you play with in a browser, and each one says plainly what it is.
 
@@ -818,7 +796,7 @@ I write every assignment to be transparent about three things, so you are never 
 
 Please read the Purpose first.  It tells you what the assignment is really for, and that is the fastest way to make good decisions when the task gets open-ended.  Much of this course is open-ended on purpose, because operating real systems is.  Every assignment also asks you to reflect and to disclose your use of AI tools honestly, and I count both as part of the work, for the reasons set out in *A Note on the Use of Generative AI* above.
 
-## Class Activities and Participation (10%)
+## Class Activities and Participation (12.5%)
 
 Our meetings are hands-on POGIL sessions.  You work in your team through activities that build the concepts and run the systems, rather than sitting through lectures.  Class works best when you arrive ready, having worked through the activity, attempted the reading response, and brought a question or something you got stuck on, often something you tried to run on your own machine that did not behave.  Bringing that is how I know the preparation happened, and it is usually where the best discussion starts.
 

@@ -26,6 +26,7 @@ A deployed agent that silently fails is worse than one that visibly crashes.  A 
 | **Metric** | A number that is measured repeatedly over time and aggregated, such as a count, average, or histogram | "Error rate rose from 1% to 8% between Tuesday and Wednesday" |
 | **Log** | A timestamped record of a specific event, written in text (structured or plain), that describes something that happened at a moment in time | "2025-09-15T14:03:22Z ERROR finish_reason=content_filter query_hash=a3f9" |
 | **OpenTelemetry (OTel)** | An open standard that defines a single API for collecting traces, metrics, and logs so you can swap backends without rewriting your instrumentation code | Instrument once with OTel; export to Jaeger, Honeycomb, or Grafana by changing one config line |
+| **Token count** | The number of tokens a model read (input) and wrote (output) on one call, reported by the model server itself, so you record it rather than estimate it | `prompt_eval_count` and `eval_count` on every Ollama response, and the token panel in OpenCode |
 {: .tb-full}
 
 ---
@@ -186,6 +187,313 @@ Logs; structured per-request logging of the input, model response, and finish re
 
 ---
 
+## Token Accounting: Counting What Every Call Spends
+
+> Tokens are the one measurement that every cost you care about is built from.  A hosted API bills by the token, a local model spends seconds and watts per token, and the carbon estimate in *Governance, Policy, and the Cost of Inference* starts from a token count.  If you do not record tokens per call, you cannot say which agent in your system is expensive, you cannot catch a loop that is quietly spending ten times its budget, and you cannot write the token section of your final project's Responsible AI Report, which asks for counts measured on every evaluation run.
+{: .tb-key data-title="Why this matters"}
+
+A token count is both kinds of telemetry at once.  On a single call it is a **span attribute**: the `llm_generate` span above carries `prompt_tokens` and `completion_tokens`.  Added up over calls, agents, and days it is a **metric**: tokens per run, per agent, per hour.  You do not have to measure it yourself.  Both tools this course uses count every token the model reads and writes and hand you the number; your job is to read it, keep it, and add it up.
+
+| Where you are | Input (prompt) tokens | Output (completion) tokens | Also reported |
+|:--|:--|:--|:--|
+| **OpenCode**, sidebar during a session | The session's running token total and, when the model's context limit is known, the share of the context window used | (same panel) | The session's cost; `$0.00` for a local Ollama model |
+| **OpenCode**, `opencode stats` | Input, totaled over sessions | Output, totaled over sessions | Cache read and write, total cost, average and median tokens per session, and a per-model breakdown with `--models` |
+| **OpenCode**, `opencode export <sessionID>` | `tokens.input` on each assistant message | `tokens.output` | `tokens.reasoning`, `tokens.cache.read`, `tokens.cache.write`, `cost`, `modelID`, `agent` |
+| **Ollama** native API (`/api/chat`, `/api/generate`) | `prompt_eval_count` | `eval_count` | `prompt_eval_cached_count`, and `total_duration`, `load_duration`, `prompt_eval_duration`, `eval_duration`, all in **nanoseconds** |
+| **Ollama** OpenAI-compatible API (`/v1/chat/completions`) | `usage.prompt_tokens` | `usage.completion_tokens` | `usage.total_tokens`; no durations, so time the call yourself |
+{: .tb-full}
+
+### Reading Tokens in OpenCode
+
+These commands were checked against opencode 1.18, the version the course container and the [opencode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) install.  Field names in the exported JSON can change between releases, so if a key below is missing, open the file and look before you conclude the count is zero.
+
+**During a session.**  The TUI sidebar has a Context panel with the session's token count and cost.  If the sidebar is hidden, `ctrl+x b` toggles it (the leader key is `ctrl+x`; see the [keybinds reference](https://opencode.ai/docs/keybinds/)).  The percentage of the context window it shows depends on opencode knowing the model's window, which for an Ollama model is the `limit.context` value in that model's entry in `opencode.json` ([providers reference](https://opencode.ai/docs/providers/)).  The cost reads `$0.00` for a local model.  That is the bill you avoided, not the energy you spent.
+
+**Across sessions.**  `opencode stats` prints token and cost totals for every session on your machine ([CLI reference](https://opencode.ai/docs/cli/)):
+
+```bash
+opencode stats                        # everything, all time, all projects
+opencode stats --days 1 --project ""  # today, in the current project only
+opencode stats --days 7 --models      # the last week, broken down by model
+```
+
+**Per message.**  `opencode session list` finds the session, and `opencode export` writes it as JSON.  Each assistant message in the export carries its own `tokens` block, and opencode reports cache reads separately from input, so the prompt the model actually saw on a call is `input` plus `cache.read`.  The script below totals one export.
+
+```bash
+opencode session list -n 5                           # newest five sessions, with their IDs
+opencode export ses_XXXXXXXX > session.json          # the full session as JSON
+python opencode_tokens.py session.json
+```
+
+```python
+"""Total the token counts in one `opencode export` file.  Usage: python opencode_tokens.py session.json"""
+import json
+import sys
+
+raw = open(sys.argv[1], encoding="utf-8").read()
+session = json.loads(raw[raw.index("{"):])      # skip anything a plugin printed before the JSON
+
+rows = []
+for msg in session["messages"]:
+    info = msg["info"]
+    if info.get("role") != "assistant":
+        continue
+    t = info.get("tokens") or {}
+    cache = t.get("cache") or {}
+    rows.append((info.get("agent", ""), info.get("modelID", ""), t.get("input", 0),
+                 t.get("output", 0), t.get("reasoning", 0), cache.get("read", 0),
+                 info.get("cost", 0)))
+
+print(f"{'agent':<8} {'model':<22} {'input':>8} {'output':>7} {'reason':>7} {'cache_rd':>9}")
+for agent, model, inp, out, rsn, crd, _ in rows:
+    print(f"{agent:<8} {model:<22} {inp:>8} {out:>7} {rsn:>7} {crd:>9}")
+print(f"{len(rows)} assistant messages: {sum(r[2] for r in rows)} input, {sum(r[3] for r in rows)} output, "
+      f"{sum(r[4] for r in rows)} reasoning tokens; cost ${sum(r[6] for r in rows):.4f}")
+```
+
+> An export is the whole transcript: every prompt, every file the agent read, every command it ran.  Take the numbers out of it and do not commit the file itself.  `opencode export --sanitize` redacts transcript and file data if you need to share one.  The `/export` command inside the TUI is a different thing: it writes the conversation as Markdown, without the token fields.
+{: .tb-warning data-title="Watch out"}
+
+### Counting Tokens Programmatically with Ollama
+
+Every non-streaming response from Ollama's `/api/chat` and `/api/generate` carries its own usage counters ([Ollama usage reference](https://docs.ollama.com/api/usage)).  A response looks like this, trimmed:
+
+```json
+{"model": "llama3.2", "done": true, "done_reason": "stop",
+ "total_duration": 2773000000, "load_duration": 12000000,
+ "prompt_eval_count": 412, "prompt_eval_duration": 610000000,
+ "eval_count": 41, "eval_duration": 2100000000}
+```
+
+`prompt_eval_count` is input tokens and `eval_count` is output tokens.  Every duration is in nanoseconds, so generation speed is `eval_count / eval_duration * 10**9`: here 41 tokens in 2.1 seconds, about 19.5 tokens per second.  `prompt_eval_duration` is the time to read the prompt, which grows with the history you resend, and `load_duration` is the cost of loading the model, paid once when it is cold.
+
+The module below is the `chat` helper from *The Agent Loop: Perceive, Plan, Act* with one change: the inner call returns the whole response instead of only the text, so the counts are not thrown away.  A decorator, `metered`, records every call the wrapped function makes as one CSV row, and `summarize` totals a run per agent.
+
+> This needs Ollama running on your machine and `pip install requests`.  Copy it to `token_usage.py` beside your agent.  Inside the course container, change `localhost` to `host.docker.internal`, the same address rule the opencode setup tutorial gives.
+{: .tb-warning data-title="Runs on your machine, not here"}
+
+```python
+"""Count every token an agent spends: one CSV row per model call."""
+import csv
+import functools
+import os
+import traceback
+import uuid
+from datetime import datetime, timezone
+
+import requests
+
+OLLAMA_URL = "http://localhost:11434/api/chat"
+MODEL = "llama3.2"
+USAGE_CSV = "token_usage.csv"
+RUN_ID = "run-" + uuid.uuid4().hex[:6]   # one id per run; put the same id in your trace
+NS = 1e9                                 # Ollama reports every duration in nanoseconds
+FIELDS = ["ts", "run_id", "agent", "model", "input_tokens", "output_tokens",
+          "cached_input_tokens", "prompt_eval_s", "eval_s", "total_s",
+          "tokens_per_s", "done_reason"]
+
+
+def record_usage(data, agent):
+    """Append one row to USAGE_CSV from a response, or from the final streamed chunk."""
+    try:
+        out_tok = data.get("eval_count", 0)
+        eval_s = data.get("eval_duration", 0) / NS
+        row = {
+            "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "run_id": RUN_ID,
+            "agent": agent,
+            "model": data.get("model", MODEL),
+            "input_tokens": data.get("prompt_eval_count", 0),
+            "output_tokens": out_tok,
+            "cached_input_tokens": data.get("prompt_eval_cached_count", 0),
+            "prompt_eval_s": round(data.get("prompt_eval_duration", 0) / NS, 3),
+            "eval_s": round(eval_s, 3),
+            "total_s": round(data.get("total_duration", 0) / NS, 3),
+            "tokens_per_s": round(out_tok / eval_s, 1) if eval_s else 0.0,
+            "done_reason": data.get("done_reason", ""),
+        }
+        new_file = not os.path.exists(USAGE_CSV)
+        with open(USAGE_CSV, "a", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=FIELDS)
+            if new_file:
+                writer.writeheader()
+            writer.writerow(row)
+        print(f"[{agent}] in={row['input_tokens']} out={out_tok} "
+              f"{row['tokens_per_s']} tok/s, {row['total_s']} s")
+        return row
+    except Exception as e:
+        print(f"[token_usage:record_usage] {e}")
+        traceback.print_exc()
+        return None
+
+
+def metered(agent):
+    """Decorator: record the tokens of every call the wrapped function makes."""
+    def decorate(call):
+        @functools.wraps(call)
+        def wrapper(*args, **kwargs):
+            data = call(*args, **kwargs)
+            if data:
+                record_usage(data, agent)
+            return data
+        return wrapper
+    return decorate
+
+
+def ollama_chat(messages, temperature=0.7):
+    """The course helper with one change: it returns the whole response, not only the text."""
+    try:
+        r = requests.post(OLLAMA_URL, json={
+            "model": MODEL,
+            "messages": messages,
+            "stream": False,
+            "options": {"temperature": temperature}
+        }, timeout=120)
+        r.raise_for_status()
+        return r.json()
+    except Exception as e:
+        print(f"[token_usage:ollama_chat] {e}")
+        traceback.print_exc()
+        return {}
+
+
+def summarize(path=USAGE_CSV, run_id=RUN_ID):
+    """Total the CSV for one run, per agent and overall."""
+    totals = {}
+    try:
+        with open(path, newline="") as f:
+            for row in csv.DictReader(f):
+                if row["run_id"] != run_id:
+                    continue
+                t = totals.setdefault(row["agent"], {"calls": 0, "in": 0, "out": 0, "s": 0.0})
+                t["calls"] += 1
+                t["in"] += int(row["input_tokens"])
+                t["out"] += int(row["output_tokens"])
+                t["s"] += float(row["total_s"])
+    except Exception as e:
+        print(f"[token_usage:summarize] {e}")
+        traceback.print_exc()
+    print(f"\nRun {run_id}")
+    print(f"{'agent':<10} {'calls':>5} {'input':>7} {'output':>7} {'seconds':>8}")
+    for agent, t in totals.items():
+        print(f"{agent:<10} {t['calls']:>5} {t['in']:>7} {t['out']:>7} {t['s']:>8.1f}")
+    grand_in = sum(t["in"] for t in totals.values())
+    grand_out = sum(t["out"] for t in totals.values())
+    print(f"Run total: {grand_in} input + {grand_out} output = {grand_in + grand_out} tokens")
+    return totals
+```
+
+**Wrapping an existing agent loop.**  Your loop already calls `chat(messages)` and expects text back.  Keep that contract and change only what `chat` calls underneath, so no line of the loop changes and every call is counted.  Wrap the inner call once per agent, and each agent's tokens land in the CSV under its own name:
+
+```python
+from token_usage import metered, ollama_chat, summarize
+
+planner_call = metered("planner")(ollama_chat)
+critic_call = metered("critic")(ollama_chat)
+
+def chat(messages, temperature=0.7, call=planner_call):
+    """Drop-in replacement for the course helper: same arguments, same return value."""
+    data = call(messages, temperature)
+    return (data.get("message") or {}).get("content", "")
+
+plan = chat([{"role": "user", "content": "In two sentences, plan how to find when Ursinus College was founded."}])
+review = chat([{"role": "user", "content": "Critique this plan in one sentence: " + plan}], call=critic_call)
+summarize()
+```
+
+Each call prints a line such as `[planner] in=412 out=41 19.5 tok/s, 2.773 s`, appends a row to `token_usage.csv`, and `summarize()` ends the run with a per-agent table and a total.  Run the script three times and the CSV holds three runs, separated by `run_id`, which is exactly the token table the Responsible AI Report asks for.  Put the same `run_id` in your JSON-lines trace and a row in the CSV can be matched to the steps that spent it.
+
+**Streaming.**  With `"stream": true`, Ollama sends many small chunks, and only the **last one**, the chunk with `"done": true`, carries `prompt_eval_count`, `eval_count`, and the durations.  A streaming helper therefore has to keep that final chunk and hand it back; because it does, the same `metered` decorator works on it unchanged:
+
+```python
+import json
+import traceback
+
+import requests
+from token_usage import OLLAMA_URL, MODEL
+
+def ollama_chat_stream(messages, temperature=0.7):
+    """Streaming version.  The counts arrive only in the last chunk, the one with done=true."""
+    text, final = [], {}
+    try:
+        with requests.post(OLLAMA_URL, json={
+            "model": MODEL,
+            "messages": messages,
+            "stream": True,
+            "options": {"temperature": temperature}
+        }, stream=True, timeout=120) as r:
+            r.raise_for_status()
+            for line in r.iter_lines():
+                if not line:
+                    continue
+                chunk = json.loads(line)
+                piece = (chunk.get("message") or {}).get("content", "")
+                print(piece, end="", flush=True)
+                text.append(piece)
+                if chunk.get("done"):
+                    final = chunk            # prompt_eval_count and eval_count live here
+        print()
+        if final:
+            final["message"] = {"role": "assistant", "content": "".join(text)}
+        return final
+    except Exception as e:
+        print(f"[token_usage:ollama_chat_stream] {e}")
+        traceback.print_exc()
+        return {}
+```
+
+A helper that stops reading when the text looks finished, or keeps only the text, loses the counts for that call.  That is the most common reason a token table has zeros in it.
+
+**The OpenAI-compatible endpoint.**  If your agent talks to `http://localhost:11434/v1/chat/completions`, as opencode and most frameworks do, the counts are in `usage` instead: `resp.json()["usage"]["prompt_tokens"]` and `["completion_tokens"]`.  Ollama fills them from the same two counters ([Ollama source, `openai/openai.go`](https://github.com/ollama/ollama/blob/main/openai/openai.go)), but this response carries no durations, so time the call yourself.  When streaming through this endpoint, ask for the usage chunk with `"stream_options": {"include_usage": true}`.
+
+### Tokens as a Trace Attribute
+
+The OpenTelemetry example above named its attributes `prompt_tokens` and `completion_tokens`, which works but is private to your code.  The OpenTelemetry GenAI semantic conventions define shared names, so any backend that understands them can chart tokens without being told what your fields mean ([GenAI spans](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-spans.md)):
+
+| Convention attribute | From Ollama | Meaning |
+|:--|:--|:--|
+| `gen_ai.operation.name` | `"chat"` | What kind of call this was |
+| `gen_ai.request.model` | `MODEL` | The model you asked for |
+| `gen_ai.usage.input_tokens` | `prompt_eval_count` | Tokens in the prompt |
+| `gen_ai.usage.output_tokens` | `eval_count` | Tokens in the response |
+| `gen_ai.usage.cache_read.input_tokens` | `prompt_eval_cached_count` | Input tokens served from cache |
+| `gen_ai.response.finish_reasons` | `[done_reason]` | Why generation stopped, as a list |
+{: .tb-full}
+
+The conventions recommend naming the span `{gen_ai.operation.name} {gen_ai.request.model}`, so the span becomes `chat llama3.2`:
+
+```python
+with tracer.start_as_current_span(f"chat {MODEL}") as span:
+    data = ollama_chat(messages)
+    span.set_attribute("gen_ai.operation.name", "chat")
+    span.set_attribute("gen_ai.request.model", MODEL)
+    span.set_attribute("gen_ai.usage.input_tokens", data.get("prompt_eval_count", 0))
+    span.set_attribute("gen_ai.usage.output_tokens", data.get("eval_count", 0))
+    span.set_attribute("gen_ai.response.finish_reasons", [data.get("done_reason", "")])
+```
+
+These attributes are still marked *Development* in the specification, and the GenAI conventions have moved from the main semantic-conventions site to their [own repository](https://github.com/open-telemetry/semantic-conventions-genai), where the token *metrics* are also being reorganized.  Record the span attributes above, keep your CSV as the metric, and check the repository before you build a dashboard on a metric name.
+
+> "The dashboard said $0.00, so the run was free."  A local model has no invoice, but it still reads and writes every token, and each one costs seconds of your GPU and watts from the wall.  The count is the same whether or not anyone bills for it, which is why the Responsible AI Report asks for tokens rather than dollars, and converts them to energy, carbon, and cost using the method in *Governance, Policy, and the Cost of Inference*.
+{: .tb-pitfall data-title="Common Misconception"}
+
+### Questions to Work Through
+
+10.  Run the same question through your agent twice, once with a fresh history and once after ten turns.  `eval_count` barely changes but `prompt_eval_count` and `prompt_eval_duration` grow.  Explain why, and say which of the two numbers an agent that resends its whole history is really paying for.
+
+     *Hint:* Every turn resends every earlier turn as input.  What does the small context principle from the Observability session say to do about it, and which column of your CSV would show that it worked?
+
+11.  Your multi-agent system's CSV shows the critic agent using 70% of all input tokens but only 10% of output tokens.  What does that pattern suggest the critic is being sent, and what one change would you test first?
+
+     *Hint:* High input and low output means a long prompt and a short answer.  Does the critic need the whole transcript, or only the draft it is judging?
+
+12.  `opencode stats` reports $0.00 for a week of local work and 2.1 million input tokens.  A teammate writes "our agent use had no cost" in the Responsible AI Report.  Rewrite that sentence so that someone outside the team could check it against your logs.
+
+     *Hint:* Name the token count, the time it took, and what converts either one into energy, carbon, or a comparable hosted price, with the assumption stated.
+{: start="10"}
+
+---
+
 ## Exercises
 
 Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can design the spans, attributes, and alerts for a real agent rather than only read about them.  Each one ends with a check you apply yourself, so you can tell whether it worked.
@@ -214,6 +522,14 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
     *You've succeeded when:* Each rule has a concrete, measurable threshold (not "if it gets too slow") and a runbook step that a new team member could follow without guessing what to do.
 
+4.  **Meter a real run.**
+
+    *What to do:* Put `token_usage.py` beside an agent you have already built (the Local Agent lab, or a two-agent pipeline), wrap its model calls with `metered`, and run it on three tasks.  Then do one task by hand in opencode with the same model and record what `opencode stats --days 1 --project ""` reports before and after.
+
+    *Starter hint:* If one agent's row is missing from the CSV, that agent calls the model through a path you did not wrap.  Search the code for every `requests.post` and every client call; each one needs the decorator, or the total is an undercount.
+
+    *You've succeeded when:* Your CSV has one row per model call for all three tasks, `summarize()` names the agent that spent the most input tokens, and you can state in one sentence why that agent is the expensive one.
+
 ---
 
 ## Reflection Prompt
@@ -237,3 +553,6 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 - Honeycomb.  "Observability Engineering."  O'Reilly Media, 2022.
 - Charity Majors.  "Observability: the Big Picture." https://charity.wtf/2020/03/03/observability-is-a-many-splendored-thing/
 - Jaeger Distributed Tracing: https://www.jaegertracing.io/
+- OpenTelemetry GenAI Semantic Conventions, now in their own repository: https://github.com/open-telemetry/semantic-conventions-genai
+- Ollama API, usage fields: https://docs.ollama.com/api/usage
+- opencode CLI reference, including `stats`, `export`, and `session list`: https://opencode.ai/docs/cli/

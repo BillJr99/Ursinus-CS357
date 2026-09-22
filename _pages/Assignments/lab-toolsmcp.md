@@ -11,8 +11,9 @@ info:
     - To make an agent reason explicitly, and to measure whether the reasoning paid for itself
     - To both author and consume an MCP server, and to articulate what the protocol standardizes
     - To constrain model output so that downstream code can parse it reliably rather than hopefully
+    - To run a tool server inside a container whose blast radius you sized on purpose, and to show the boundary holding when a call reaches past it
   rubric:
-    - weight: 30
+    - weight: 25
       description: "Tool Use"
       preemerging: "No working tool call, or the model is asked for a tool but nothing executes."
       beginning: "A tool is called, but the schema is untyped or the result is not fed back to the model as a tool-role message."
@@ -24,7 +25,7 @@ info:
       beginning: "A structured-output technique is used but no failure case is shown, so the reliability claim is untested."
       progressing: "One technique is demonstrated with a before-and-after: naive parsing breaks on a real response, the constrained version does not."
       proficient: "As progressing, and the writeup distinguishes which techniques guarantee validity by construction from those that merely encourage it, with the evidence to back the distinction."
-    - weight: 25
+    - weight: 20
       description: "Reasoning, Measured"
       preemerging: "No reasoning variant, or no comparison."
       beginning: "A reasoning variant exists but is compared informally, without a fixed task set or a fixed seed."
@@ -42,11 +43,19 @@ info:
       beginning: "A writeup exists but a reader could not reproduce the runs from it."
       progressing: "Model, parameters, and commands are recorded well enough to reproduce."
       proficient: "Fully reproducible."
+    - weight: 10
+      description: "Containment and Blast Radius"
+      preemerging: "No containerized run, or the server runs in a container with default settings and no restriction is shown."
+      beginning: "The server runs in a container and some restrictions are applied, but no probe shows an out-of-scope action refused, or the blast-radius table is missing."
+      progressing: "The server runs as a non-root user with a read-only root filesystem, narrowly scoped mounts, no secret in the image, network limited to what the tools need, and memory, CPU, and process limits; `docker inspect` output confirms each setting; a tool call succeeds inside the box and at least one out-of-scope action is refused."
+      proficient: "As progressing, and the blast-radius statement says what the server can touch, what it cannot, and which setting enforces each, distinguishes a refusal the kernel enforced from one the tool's own code enforced, and names one residual risk that was accepted and why.  The low-code route (the given flags around the course image, `docker inspect`, and the filled table) earns this row on the same terms as a custom image."
   readings:
     - rtitle: "MCP, REST, and OAuth 2.0 Together (Option 4D)"
       rlink: "../Tutorials/MCPOAuth"
     - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients"
       rlink: "https://huggingface.co/learn/mcp-course/"
+    - rtitle: "What a Container Isolates: Sizing an Agent's Blast Radius (Part 5)"
+      rlink: "../Tutorials/ContainerIsolation"
 
 tags:
   - lab
@@ -55,22 +64,22 @@ tags:
 
 # Lab: Tools and MCP
 
-The Local Agent Lab built an agent that perceives, plans, and acts in a loop, but the only action it could take was producing text.  In this lab you give that agent hands.  You register a typed tool the model can call, you constrain the model's output so your code can parse it reliably, you measure whether making the agent reason paid for itself, and you connect the agent to tools over MCP (the Model Context Protocol, the standard the rest of the ecosystem is settling on).  You leave with an agent that can act on the world and with evidence, in transcripts and tables, of when it chose to act and what that cost.
+The Local Agent Lab built an agent that perceives, plans, and acts in a loop, but the only action it could take was producing text.  In this lab you give that agent hands.  You register a typed tool the model can call, you constrain the model's output so your code can parse it reliably, you measure whether making the agent reason paid for itself, and you connect the agent to tools over MCP (the Model Context Protocol, the standard the rest of the ecosystem is settling on).  Then you put the tool server in a container and decide, before anything goes wrong, how far a mistake could reach.  You leave with an agent that can act on the world and with evidence, in transcripts and tables, of when it chose to act and what that cost.
 
-The three capabilities here used to be part of the Local Agent Lab, where they were due before the sessions that teach them.  They now stand on their own, so every part of this lab is something you have already seen in class: the *Tool Use and Function Calling* session, the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, and the structured-output reading attached to both.
+The three capabilities here used to be part of the Local Agent Lab, where they were due before the sessions that teach them.  They now stand on their own, so every part of this lab is something you have already seen in class: the *Tool Use and Function Calling* session, the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, and the structured-output reading attached to both.  The containment part draws on the container material from the *Your AI Workbench* session.
 
 ---
 
 ## Choose Your Path
 
-The three capabilities and the writeup are the same on every route.  What differs is whether you build the wiring or configure it.
+The three capabilities, the containment part, and the writeup are the same on every route.  What differs is whether you build the wiring or configure it.
 
 | Route | What you build | What you need | Pick this if |
 |-------|----------------|---------------|--------------|
-| **Code** | A typed tool registered with the model, with an executor loop you own; two runners over a fixed task set at a fixed seed; a small MCP server you author, or an existing server you consume from code | Ollama with a model that supports tool calling, Python 3 with `requests` | You are heading for Option 4D, the OAuth-gated server, or you want the clearest view of the boundary between what your code owns and what the model owns |
-| **No-code** | In **Open WebUI**: enable a built-in or community tool on a model and observe the invocation inline; compare a plain model against a reasoning-prompted one across your eight fixed tasks, both in the chat interface; add an MCP server to Open WebUI's tool settings and show discovery, then invocation.  Low-code variant in **Langflow**: a **Tool** node wired to an **Agent** node; the same reasoning comparison as two flows; an MCP server configured in a client's config file, with discovery and invocation shown | Open WebUI alone for the no-code variant; Open WebUI or Langflow for the low-code variant | You want your attention on *when the model chooses to call a tool*, which is the hard part, rather than on the plumbing; or you think better in a diagram and want the visual trace of which path executed |
+| **Code** | A typed tool registered with the model, with an executor loop you own; two runners over a fixed task set at a fixed seed; a small MCP server you author, or an existing server you consume from code; a five-line image for that server, run with the restricting flags | Ollama with a model that supports tool calling, Python 3 with `requests`, Docker on your host with the course image built | You are heading for Option 4D, the OAuth-gated server, or you want the clearest view of the boundary between what your code owns and what the model owns |
+| **No-code** | In **Open WebUI**: enable a built-in or community tool on a model and observe the invocation inline; compare a plain model against a reasoning-prompted one across your eight fixed tasks, both in the chat interface; add an MCP server to Open WebUI's tool settings and show discovery, then invocation.  Low-code variant in **Langflow**: a **Tool** node wired to an **Agent** node; the same reasoning comparison as two flows; an MCP server configured in a client's config file, with discovery and invocation shown.  For containment on either variant: the course image run with the flags given in Part 5, checked with `docker inspect`, and a filled blast-radius table | Open WebUI alone for the no-code variant; Open WebUI or Langflow for the low-code variant; Docker on your host with the course image built | You want your attention on *when the model chooses to call a tool*, which is the hard part, rather than on the plumbing; or you think better in a diagram and want the visual trace of which path executed |
 
-The rubric is the same on every path.  Every route must show structured output (Part 2), and every route needs a transcript.  On the no-code route, export the chat rather than pasting a screenshot of the answer: the tool invocation record is the evidence, not the reply.
+The rubric is the same on every path.  Every route must show structured output (Part 2) and containment (Part 5), and every route needs a transcript.  On the no-code route, export the chat rather than pasting a screenshot of the answer: the tool invocation record is the evidence, not the reply.
 
 > **Watch out.** Do not read the No-code row as "the version without the hard part."  The hard part of this lab is explaining why the model called the tool when it did and not when it did not, and that question is identical on every route.  The code route buys you a clearer view of the boundary between what your code owns and what the model owns.  The no-code route buys you more time looking at the decision itself.
 
@@ -84,12 +93,14 @@ This lab builds on:
 - the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session
 - the structured-output reading attached to both
 - the agent loop you built in the Local Agent Lab (this lab gives that agent hands)
+- for Part 5, [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker) (Section 9 above all) and [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation), the container readings from the *Your AI Workbench* session
 
 You also need, by route:
 
 - **Code route:** Ollama running with a model that supports tool calling, and Python 3 with the `requests` library.
 - **No-code route:** Open WebUI running.  For the Langflow low-code variant, Langflow running as well.
 - **Obsidian vault option (any route):** a vault folder (a folder of Markdown notes) that your server or tool can reach.
+- **Part 5 (every route):** Docker on your host, and the course image built from the [course development container]({{ site.baseurl }}/files/devcontainer/Dockerfile) as in the Overview assignment.  Run the Part 5 commands on your host, not inside the course container, which has no `docker` command in it.
 
 On the code route, install what the walkthrough uses and pull a tool-calling model.  `pip` installs a Python package; `ollama pull` downloads a model so Ollama can serve it locally.
 
@@ -115,9 +126,9 @@ curl -s http://localhost:11434/api/tags | head -c 120
 
 > **Watch out.** Check this now rather than at hour four: not every local model does native function calling well.  A model that does not will produce prose describing a tool call instead of emitting one.  Test with a trivial tool before you build anything real.  If your model will not emit tool calls, say so in your writeup, switch models, and note what you observed.  That observation is worth more than a clean run on a model you did not choose deliberately.
 
-> **Time budget.** Roughly 6 to 8 hours: about 2 hours for tool use plus structured output, 2 to 3 for the reasoning comparison (most of it waiting on runs), and 2 to 3 for MCP.  The reasoning comparison is the one to start early, because eight tasks times two conditions is a lot of wall-clock time if you leave it to the last night.
+> **Time budget.** Roughly 7 to 9 hours: about 2 hours for tool use plus structured output, 2 to 3 for the reasoning comparison (most of it waiting on runs), 2 to 3 for MCP, and about 1 for containment, which reuses the server you already have.  The reasoning comparison is the one to start early, because eight tasks times two conditions is a lot of wall-clock time if you leave it to the last night.
 
-**What you will have at the end:** an agent that can act on the world, a demonstrated technique for making its output parseable, a measured answer to "did making it reason pay for itself," and working experience with the protocol the rest of the field is standardizing on.
+**What you will have at the end:** an agent that can act on the world, a demonstrated technique for making its output parseable, a measured answer to "did making it reason pay for itself," working experience with the protocol the rest of the field is standardizing on, and a tool server whose worst case you can state in one sentence because you drew its boundary yourself.
 
 ---
 
@@ -130,17 +141,19 @@ Every submission must show that you can make an agent use a tool, make an agent 
 > 2. **At least one** Reasoning option (Part 3: Option 3A or 3B).
 > 3. **At least one** MCP option (Part 4: Option 4A, 4B, 4C, or 4D).
 > 4. **The structured-output demonstration, required for everyone** (Part 2).  It is part of your Tool Use work, and it carries its own rubric row.
+> 5. **The containment part, required for everyone** (Part 5).  It puts your Part 4 server in a container, and it carries its own rubric row.
 
 | Capability | Options | Rubric row |
 |------------|---------|------------|
-| Tool Use | 1A From Scratch, 1B From a Framework | Tool Use (30) |
+| Tool Use | 1A From Scratch, 1B From a Framework | Tool Use (25) |
 | Structured Output | One technique, before and after (required) | Structured Output (20) |
-| Reasoning | 3A From Scratch, 3B Use a Reasoning Model | Reasoning, Measured (25) |
+| Reasoning | 3A From Scratch, 3B Use a Reasoning Model | Reasoning, Measured (20) |
 | MCP | 4A Create, 4B Use, 4C Obsidian Vault, 4D OAuth-gated server | MCP (20) |
+| Containment | Your Part 4 server in a restricted container, or the course image around the vault server (required) | Containment and Blast Radius (10) |
 
 ---
 
-## Part 1: Tool Use (30 points)
+## Part 1: Tool Use (25 points)
 
 Give your agent a real, typed tool using **native function calling** (not the week-1 regex parse).  A tool call is a structured request the model emits, naming a function and its arguments, that your code executes and feeds back to the model.  Pick at least one of the two options below, then follow the walkthrough steps, which build Option 1A end to end on the code route.  If you choose Option 1B, do Steps 1.1 through 1.3 and then hand the same tools to the framework instead of writing the loop in Step 1.4.  Part 2 explains why a tool call is only as reliable as the schema behind it; read Steps 2.1 and 2.2 first if you want that context before you build.
 
@@ -780,7 +793,7 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
 ---
 
-## Part 3: Reasoning, Measured (25 points)
+## Part 3: Reasoning, Measured (20 points)
 
 Make the agent reason explicitly, and then find out whether the reasoning was worth what it cost.  Both options below run a plain condition and a reasoning condition over the same fixed set of at least eight tasks at a fixed seed, so that any difference you see comes from the reasoning and not from the dice.  Pick at least one.
 
@@ -1106,6 +1119,181 @@ curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN"
 
 ---
 
+## Part 5: Contain the Server and Size Its Blast Radius (10 points)
+
+Part 4 gave an agent tools that someone else, or a model you do not fully control, decides when to call.  Part 1's Question 13 asked what a `read_file` tool could reach; this part answers that question with infrastructure instead of a path check.  You run your MCP server inside a container, restrict it to what its tools actually need, and then show two things: a tool call still works, and a call that reaches past the boundary is refused.  You finish with a blast-radius statement, the list of what the server can touch and what it cannot, written before anything goes wrong rather than after.
+
+This part does not re-teach Docker.  [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker), Section 9, has every flag used below, with the ladder of configurations and the fence tests.  [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) has the four mechanisms that set a blast radius and the threat model behind them.  The image is the [course development container]({{ site.baseurl }}/files/devcontainer/Dockerfile) you built in the Overview, which already runs as the non-root user `student` and carries no credentials.
+
+> **Do this.** **Required for everyone: containment.**  Put one tool server in a container with all five boundaries below, confirm them with `docker inspect`, show one tool call succeeding and at least one out-of-scope action refused, and write the blast-radius table and statement from Step 5.4.  If you also run the agent itself in the course container, as the OpenCode Studio Lab does, add a second column to the table for it; the server alone is the floor.
+
+| Boundary | The flag or setting | What it answers |
+|---|---|---|
+| Non-root user | `--user student` (the course image's default, stated explicitly so `docker inspect` shows it) | Can a bad call rewrite the system the server runs on? |
+| Read-only root, narrow mounts | `--read-only`, a small `--tmpfs /tmp`, and one bind mount per folder the tools use, `:ro` unless a tool writes there | If a tool runs `rm -rf`, what actually gets deleted? |
+| No secrets in the image | Credentials passed at run time with `-e NAME` (the name only, never `NAME=value`), and none in the Dockerfile or the image's history | If someone copies the image, what do they walk away with? |
+| Network limited to the tools' needs | `--network none` for a stdio server; for an HTTP server, a port published on `127.0.0.1` only | What can the server reach, and who can reach it? |
+| Resource and privilege limits | `--memory`, `--cpus`, `--pids-limit`, plus `--cap-drop ALL` and `--security-opt no-new-privileges` | Can a runaway call take the rest of your machine down with it? |
+
+### Step 5.1: Choose What Goes in the Box
+
+Pick the route that matches what you built in Part 4.
+
+- **Code route, your own server (Options 4A, 4C code path, and 4D).**  Build a small image that is the course image plus your server and nothing else.  Save the file below as `Dockerfile.mcp` next to `mcp_server.py`, adjust the `COPY` lines to your files, and build it with `docker build -f Dockerfile.mcp -t cs357-mcp .`.  The server's code is owned by root and the root filesystem will be read-only, so the server cannot rewrite itself.
+- **Code route, someone else's server (Option 4B).**  Run that server's own image, or install it into an image built the same way, and put the same flags around it.  GitHub's local server already ships as an image; the flags are what you add.  Check its user with {% raw %}`docker image inspect <image> --format '{{.Config.User}}'`{% endraw %}: an empty answer means root, so add `--user 1000:1000` and confirm it still starts.
+- **Low-code route (any Part 4 option).**  Run the **Model 3 vault server** from the [MCP deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md), copied into `vault_server.py` without edits, inside the unmodified course image, with the command in Step 5.2.  You write no Dockerfile and no code; your work is reading the flags, checking them, and filling the table.  The deck's server speaks the list-then-call pattern over plain HTTP rather than the MCP protocol itself, and that is fine here: this part grades the box, not the protocol, and Part 4 already graded the protocol.
+
+```dockerfile
+# Dockerfile.mcp: the course image plus your Part 4 server, nothing else
+FROM cs357-dev
+USER root
+RUN pip install --no-cache-dir "mcp[cli]"
+COPY mcp_server.py /app/
+COPY tools/ /app/tools/
+USER student
+WORKDIR /app
+CMD ["python", "mcp_server.py"]
+```
+
+> **Watch out.** Nothing secret goes in this file: no `ENV TOKEN=...`, no `COPY .env`, no `ARG` holding a key.  Every layer of an image, including a layer that later "deletes" a file, is readable by anyone who has the image.  A credential your server needs arrives at run time and lives only in the running container.
+
+### Step 5.2: Run It With the Boundaries On
+
+> **Do this.**
+> 1. Run the server with the command for your route, from the folder that holds your server file.  These are Bash commands; on Windows, run them in Git Bash or WSL, or in PowerShell replace each trailing `\` with a backtick and `$PWD` with `${PWD}`.
+> 2. **Code route, stdio server.**  Your MCP client starts the container itself, so the flags go in the client's configuration.  The block below is the Claude Code form of the 4D.4 registration; opencode takes the same `command` and `args` in `opencode.json`.  Replace the mount with the folder your tools read, and add one `-e NAME` pair per credential your server needs.  Do not add `-t`: a terminal would corrupt the stdio stream.
+> 3. **Low-code route, or any HTTP server.**  Set `VAULT_DIR` to your vault folder (a folder of two or three `.md` files is enough) and start the server with the `docker run` command below.  The vault is mounted read-only, and only its `daily/` folder, the one place `append_daily_note` writes, is mounted writable on top of it.
+> 4. Make one tool call through the box and save the transcript.  On the stdio route, that is the same discover-then-invoke round trip Part 4 asked for, now with the server in the container.  On the HTTP route, use the two `curl` commands below, or connect your client to `http://127.0.0.1:8766`.
+
+```json
+{
+  "mcpServers": {
+    "cs357-boxed": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "--name", "mcp-box",
+               "--user", "student",
+               "--read-only", "--tmpfs", "/tmp:rw,size=64m",
+               "-v", "/absolute/path/to/data:/data:ro",
+               "--cap-drop", "ALL", "--security-opt", "no-new-privileges",
+               "--memory", "256m", "--cpus", "1", "--pids-limit", "64",
+               "--network", "none",
+               "cs357-mcp"]
+    }
+  }
+}
+```
+
+```bash
+VAULT_DIR="$HOME/Documents/Obsidian/MyVault"   # your vault folder on the host
+mkdir -p "$VAULT_DIR/daily"                     # the one folder the server may write
+docker run -d --rm --name mcp-box \
+  --user student \
+  --read-only --tmpfs /tmp:rw,size=64m \
+  -v "$PWD/vault_server.py:/app/vault_server.py:ro" \
+  -v "$VAULT_DIR:/home/student/Documents/Obsidian/MyVault:ro" \
+  -v "$VAULT_DIR/daily:/home/student/Documents/Obsidian/MyVault/daily" \
+  -w /app \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --memory 256m --cpus 1 --pids-limit 64 \
+  -p 127.0.0.1:8766:8766 \
+  cs357-dev \
+  flask --app vault_server run --host 0.0.0.0 --port 8766
+```
+
+```bash
+curl -s http://127.0.0.1:8766/tools/list
+curl -s -X POST http://127.0.0.1:8766/tools/call -H "Content-Type: application/json" \
+  -d '{"name": "append_daily_note", "arguments": {"text": "written from inside the box", "confirm": true}}'
+```
+
+> **You should see.** The three tool schemas from the first `curl`, then a result like the one below from the second, and a new line in today's note under `daily/` in your vault on the host.  The date will differ:
+
+```text
+{"result":"appended to daily/2026-10-20.md"}
+```
+
+> **Why this matters.** Two of those flags look odd until you read them as boundaries.  The server listens on `0.0.0.0` *inside* the container because the container's own `localhost` is unreachable from your machine, and `-p 127.0.0.1:8766:8766` then publishes it to your machine's loopback only, so nothing else on the campus network can call your tools.  The vault is mounted where the deck's `VAULT` line already points, `~/Documents/Obsidian/MyVault` for the user `student`, which is why the server file needs no edits.
+
+> **Watch out.** Option 4D's HTTP server has to fetch the signing keys from the OAuth server on your host, so it cannot run with `--network none`.  Run it the HTTP way, add `--add-host host.docker.internal:host-gateway`, set `JWKS_URI` to `http://host.docker.internal:8090/default/jwks`, and leave `ISSUER` exactly as it appears in the token.  Pass the client secret with `-e MCP_CLIENT_SECRET`, and record the extra network reach in your table as a residual risk rather than leaving it out.
+
+### Step 5.3: Confirm the Boundaries, Then Try to Cross Them
+
+A flag you typed is a claim.  `docker inspect` reads back what Docker actually applied, and a probe that fails is the evidence that the boundary holds.  Keep the container running (on the stdio route, keep your client session open) while you run these.
+
+> **Do this.**
+> 1. Read the settings back from the running container, and check the image for baked-in credentials, with the first block below.  {% raw %}The `{{...}}`{% endraw %} templates select single fields from `docker inspect`'s JSON so you do not have to read all of it.
+> 2. Try to cross the boundary with the second block.  Probe 1 goes through the tool, so the tool's own code refuses it.  The rest run as the server's own user through `docker exec`, standing in for a tool whose code has a bug or a prompt-injected agent that found a way around it, so any refusal comes from the container, not from the tool.  On the stdio route, replace probe 1 with a client request that asks your tool for a path outside its mount.
+> 3. Save all of the output for your submission.  Stop the HTTP container with `docker stop mcp-box` when you are done; `--rm` then deletes it.
+
+{% raw %}
+```bash
+docker inspect mcp-box --format 'user={{.Config.User}} readonly={{.HostConfig.ReadonlyRootfs}} capdrop={{.HostConfig.CapDrop}} secopt={{.HostConfig.SecurityOpt}} net={{.HostConfig.NetworkMode}} ports={{json .HostConfig.PortBindings}} mem={{.HostConfig.Memory}} nanocpus={{.HostConfig.NanoCpus}} pids={{.HostConfig.PidsLimit}}'
+docker inspect mcp-box --format '{{range .Mounts}}{{.Destination}} rw={{.RW}}{{println}}{{end}}'
+docker image inspect cs357-dev --format '{{json .Config.Env}}'
+docker history --no-trunc cs357-dev | grep -i -E "token|secret|password" || echo "no credentials in the image history"
+```
+{% endraw %}
+
+```bash
+# 1. The tool's own check: a path that escapes the vault
+curl -s -X POST http://127.0.0.1:8766/tools/call -H "Content-Type: application/json" \
+  -d '{"name": "read_note", "arguments": {"path": "../../../../etc/hostname"}}'
+# 2. Write a note outside daily/, as the server's own user
+docker exec mcp-box sh -c 'echo x > /home/student/Documents/Obsidian/MyVault/escape.md || echo REFUSED'
+# 3. Rewrite the server's own code
+docker exec mcp-box sh -c 'echo x >> /app/vault_server.py || echo REFUSED'
+# 4. Reach for host paths that hold your credentials
+docker exec mcp-box sh -c 'ls -d ~/.ssh ~/.config/gh /Users /mnt/c 2>&1'
+# 5. Who the server runs as
+docker exec mcp-box id
+# 6. Reach the internet
+docker exec mcp-box sh -c 'curl -sS -m 5 -o /dev/null https://example.com && echo REACHABLE || echo BLOCKED'
+```
+
+> **You should see.** From `docker inspect`, one line with every boundary on.  Your network mode is `none` on the stdio route, and the port binding is empty there:
+
+```text
+user=student readonly=true capdrop=[ALL] secopt=[no-new-privileges] net=bridge ports={"8766/tcp":[{"HostIp":"127.0.0.1","HostPort":"8766"}]} mem=268435456 nanocpus=1000000000 pids=64
+/app/vault_server.py rw=false
+/home/student/Documents/Obsidian/MyVault rw=false
+/home/student/Documents/Obsidian/MyVault/daily rw=true
+```
+
+> The image's environment lists `PATH`, the Python version, and `OLLAMA_HOST`, and no token.  A `GPG_KEY` entry, if present, is the public fingerprint of the key that signs Python releases, not a secret.  From the probes: probe 1 returns `refused: path is outside the vault`; probes 2 and 3 print `Read-only file system` and then `REFUSED`; probe 4 reports `No such file or directory` for every path; probe 5 prints a `uid` other than `0`.  Probe 6 prints `BLOCKED` on the stdio route and `REACHABLE` on the HTTP route.  That last one is not a failure of your setup: it is a residual risk, and it goes in your table.
+
+> **If it fails.**
+> - `Error: No such container: mcp-box`: on the stdio route the client has not started the server yet, or has already stopped it.  Make one tool call from the client, then run the probes while the session is still open.  On the HTTP route, `docker ps` will show whether it exited; `docker logs mcp-box` says why, if you drop `--rm` for one run.
+> - The server exits at once with `Read-only file system`: something in it writes at startup.  Point that write at `/tmp`, or give it one more `--tmpfs` for the directory it wants, and record the change.  Do not drop `--read-only` to make the error go away.
+> - Probe 2 succeeds: the vault was mounted without `:ro`, or you ran the probe with `docker exec -u root`.  The boundary is the mount and the user together.
+> - `curl` reports `Connection refused` on the HTTP route: the server listens on the container's `127.0.0.1` rather than `0.0.0.0`, or the `-p` flag is missing.
+
+### Step 5.4: Fill the Blast-Radius Table and Write the Statement
+
+> **Do this.**
+> 1. Copy the table below into your writeup and fill one row per boundary, with the evidence taken from Step 5.3, not from what you intended to type.  Give each mount its own row.
+> 2. Write a blast-radius statement of three to five sentences: what the server can touch, what it cannot, and which setting enforces each.  Say which of your refusals the kernel enforced and which the tool's own code enforced, and name one residual risk you accepted and why.  The model is the *Docker from Zero* sentence for trusted mode: "the agent may act without asking, and the worst it can do is damage one git-tracked folder."  If you cannot write the worst case in one sentence, your boundary is wider than you think.
+> 3. Answer the checkpoint questions below in your writeup.
+
+| Boundary | Setting you chose | Evidence (`docker inspect` field or probe number) | What it stops | What it does not stop |
+|---|---|---|---|---|
+| User | | | | |
+| Root filesystem | | | | |
+| Mount: (path) | | | | |
+| Secrets | | | | |
+| Network | | | | |
+| Resources and capabilities | | | | |
+
+> **Checkpoint.**
+> - If the path check in `read_note` (or your own tool's equivalent) had a bug, what would probe 1 have returned, and why does it matter that the answer comes from the container's `/etc` and not your machine's?
+> - A variable passed with `-e NAME` is kept out of the image, but `docker inspect` on the running container still shows its value.  Who on your machine can run `docker inspect`, and when would you move the credential into a Docker secret instead, as *What a Container Isolates* describes?
+> - Probe 6 on the HTTP route: what would you change to close it, and what would stop working if you did?
+
+> **No-code path.** The low-code route in Step 5.1 is the no-code route for this part as well: the command, the `curl` calls, and the probes are given, and your work is the reading, the table, and the statement, which is where this part's grade lives.  If Docker will not run on your machine at all, say so in your writeup and ask me before the due date about running the same commands on a lab machine; a filled table without the inspect output and the probes earns the beginning level at most.
+
+> **Paste into your submission.** The run command or the client configuration with any secrets redacted, the tool-call transcript through the box, the `docker inspect` output and the image-environment check, the output of every probe, the blast-radius table, the statement, and your answers to the checkpoint questions.
+
+---
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
@@ -1118,6 +1306,10 @@ curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN"
 | MCP client reports zero tools | The server process is not running, the command path in the client config is wrong, or the transport does not match | Run the server by hand first and confirm it responds. Most MCP misconfiguration is a wrong path in a config file |
 | The reasoning comparison shows no difference | Your eight tasks are too easy; both conditions get them all right | Pick tasks that need at least two steps. A ceiling at 8/8 measures your task set, not the model |
 | Runs take forever | Eight tasks times two conditions times retries | Start it early, run it in the background, and use the waiting time for the MCP part |
+| `docker: command not found` during Part 5 | You are inside the course container, which has no Docker in it | Run the Part 5 commands in a terminal on your host |
+| `Unable to find image 'cs357-dev:latest'` | The course image was never built on this machine, or was built under another name | Build it from your `.devcontainer/` folder with `docker compose build`, as in the Overview, then confirm with `docker image ls cs357-dev` |
+| The boxed server exits at once with `Read-only file system` or `Permission denied` | Something in the server writes outside `/tmp` at startup, or a mounted folder is not readable by the container user | Point the write at `/tmp` or add one `--tmpfs` for that directory; fix the folder's permissions on the host.  Do not remove `--read-only` or switch to root to make it start |
+| The MCP client lists zero tools once the server is in a container | `-i` is missing from the `docker run` arguments, or `-t` was added | A stdio server in a container needs `-i` and must not have `-t`; run the same `docker run` by hand to see the server's own error |
 
 ---
 
@@ -1125,12 +1317,13 @@ curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN"
 
 | File or artifact | What it shows | Rubric row |
 |------------------|---------------|------------|
-| Tool schema, round-trip transcript (or exported chat / Langflow run), and the boundary sentence; for Option 1B, the registration, run transcript, and the two things the framework hid | A typed tool invoked end to end and a precise statement of what your code owns | Tool Use (30) |
-| No-code tool-use evidence: screenshots of the flow or tool configuration and the three-question table with *tool fired: yes/no* | When the model chose the tool, and what it did when the tool was gone | Tool Use (30) |
+| Tool schema, round-trip transcript (or exported chat / Langflow run), and the boundary sentence; for Option 1B, the registration, run transcript, and the two things the framework hid | A typed tool invoked end to end and a precise statement of what your code owns | Tool Use (25) |
+| No-code tool-use evidence: screenshots of the flow or tool configuration and the three-question table with *tool fired: yes/no* | When the model chose the tool, and what it did when the tool was gone | Tool Use (25) |
 | Structured-output note: the before (broken parse on a real response), the after (constrained output parses), and the guarantee-versus-encourage sentence | One technique demonstrated on a real failure | Structured Output (20) |
-| Both runners (or both flows / model configurations) and the paired results table over at least eight fixed tasks at a fixed seed, with accuracy, tokens, and latency (or stated stand-ins), plus the sentence on when the cost was earned | Whether reasoning paid for itself | Reasoning, Measured (25) |
+| Both runners (or both flows / model configurations) and the paired results table over at least eight fixed tasks at a fixed seed, with accuracy, tokens, and latency (or stated stand-ins), plus the sentence on when the cost was earned | Whether reasoning paid for itself | Reasoning, Measured (20) |
 | Server code or client configuration, and the discovery-then-invocation transcript (for the vault: discovery, one read, one gated write refused then confirmed), with the standardization sentence and, where applicable, the trust question | A working MCP round trip and an understanding of what the protocol buys | MCP (20) |
 | Option 4D only: the OAuth middleware and HTTP wrapper, the invocation trace, the two saved error responses, the data-flow diagram, and the port table | A token-gated MCP server driven end to end from an agent | MCP (20) |
+| The run command or client configuration (secrets redacted), the tool-call transcript through the box, the `docker inspect` output and image-environment check, the probe output, the blast-radius table and statement, and the checkpoint answers | The server contained on purpose, with the boundary shown holding | Containment and Blast Radius (10) |
 | Writeup with the route named at the top, model, parameters, and commands recorded, answers to the Questions to Work Through and Critical Thinking Questions, and an AI-use disclosure | A reader can reproduce your runs | Writeup and Reproducibility (5) |
 
 ---
@@ -1146,5 +1339,8 @@ curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN"
 - [ ] **MCP:** a transcript showing discovery followed by invocation (for the Obsidian vault option: discovery, one read, and one gated write refused and then confirmed).
 - [ ] The writeup says what MCP standardizes that a hand-rolled tools list does not; if you consumed someone else's server, including a community vault server, it names the trust question that raises.
 - [ ] Option 4D: the trace shows discovery, the token, the call, and the response; the expired-token 401 and the in-tool failure are saved; the README says what the scopes bound.
+- [ ] **Containment:** `docker inspect` output showing a non-root user, a read-only root filesystem, narrow mounts, dropped capabilities, the network setting, and memory, CPU, and process limits, plus the image-environment check showing no credential baked in.
+- [ ] A tool call that succeeded through the container, and at least one out-of-scope action refused, with the probe output saved.
+- [ ] The blast-radius table filled from evidence, and a statement that separates what the kernel refused from what the tool's own code refused and names one residual risk.
 - [ ] Model name and parameters recorded so a reader can reproduce your runs.
 - [ ] Route named at the top of the writeup.

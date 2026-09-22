@@ -113,7 +113,7 @@ An instructor wants AI-assisted feedback on essays containing student names and 
 
 ## Model 2: Data Flow Audit
 
-Consider three pipelines you have built this term: the RAG Knowledge Base Lab (RAG over your own documents), the Rubric Pipeline Lab (a rubric pipeline over submissions), and your final project.
+Consider three pipelines you have built this term: the RAG Knowledge Base Lab (RAG over your own documents), the rubric judge from the Judge Pipeline Workshop (a judge that scores submissions), and your final project.
 
 ### Critical Thinking Questions
 
@@ -121,13 +121,13 @@ Consider three pipelines you have built this term: the RAG Knowledge Base Lab (R
 
    *Hint: Start from the raw input (a file, a prompt, a submission) and trace every step forward: file reader, embedding model, vector store, LLM call, output display.  Each arrow between steps is where a privacy question lives.*
 
-5.  Your Rubric Pipeline Lab pipeline processes synthetic essays.  Point the same code at real student work, and its compliance category changes entirely while zero lines of code change.  What does that imply about where responsibility lives: in code, or in deployment decisions?
+5.  Your Judge Pipeline Workshop judge scores sample essays.  Point the same code at real student work, and its compliance category changes entirely while zero lines of code change.  What does that imply about where responsibility lives: in code, or in deployment decisions?
 
    *Hint: Consider a fire extinguisher used as a doorstop.  The object did not change, but the use did.  Now apply that framing to your pipeline.  Is the code "responsible" for how it is deployed?*
 
    > *Hint:* A law like FERPA does not care what language your pipeline is written in or whether you meant to violate it.  It cares whether protected data was processed in an unauthorized context.  Who in your pipeline decides the context: the code, or the person who runs it?
 
-6.  Write the three-sentence data-handling disclosure you would owe users of your final project.  (This text goes directly into the Data Handling section of the Governance direction of the Responsible AI in Practice assignment, if you choose that direction.)
+6.  Write the three-sentence data-handling disclosure you would owe users of your final project.  (Keep it: it is the starting point for the data-handling part of your team's governance one-pager in the next session.)
 
    *Hint: Include (a) what data the system collects or processes, (b) where that data goes and how long it is kept, and (c) what the user can do if they want their data deleted or have a concern.*
 
@@ -401,7 +401,7 @@ You now know both IP and privacy as legal frameworks.  This part puts them to wo
 
 ## -> Coming Up Next
 
-In the *Governance, Policy, and the Cost of Inference* activity, you move from knowing what data your systems handle to writing the governance documents that commit you to handling it responsibly.  Bring your data-flow diagrams and the three-sentence disclosure you drafted in Question 6.  They become direct inputs to your policy, and the privacy analysis feeds the Responsible AI Capstone.
+In the *Governance, Policy, and the Cost of Inference* activity, you move from knowing what data your systems handle to writing the governance documents that commit you to handling it responsibly.  Bring your data-flow diagrams and the three-sentence disclosure you drafted in Question 6.  They become direct inputs to your policy, and the privacy analysis feeds your final project's governance one-pager.
 
 ## Further Reading
 

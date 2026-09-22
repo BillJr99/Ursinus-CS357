@@ -12,9 +12,9 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # RAG Quality: Chunking and Measuring Retrieval
 
-**How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out today, and Part III walks through the lab's Part 5, the RAG Quality Checkup pathway, which turns today's metrics into a golden set, a worksheet, and a regression harness.
+**How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out on Thursday, October 29, and Part III previews the lab's Part 5, the RAG Quality Checkup pathway, which turns today's metrics into a golden set, a worksheet, and a regression harness.
 
-The *Local Agent* lab is [due today](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent).
+The *Local Agent* lab is [due today](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent), and the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP), which gives that agent hands, is handed out today.
 
 ---
 
@@ -193,11 +193,11 @@ Two cautions before you trust the map.  The clusters are an artifact of $k$ as m
 
 ## Walkthrough: Part 5 of the RAG Knowledge Base Lab
 
-The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out today.  Its Part 5, the RAG Quality Checkup pathway, is where today's metrics get used on your own pipeline, and this walkthrough sets it up so the studio time in *How I AI* goes to measuring rather than to reading the handout.  Part 5 has three steps, and each one is something you practiced today:
+The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out on Thursday, October 29.  Its Part 5, the RAG Quality Checkup pathway, is where today's metrics get used on your own pipeline, and this walkthrough sets it up now so that your time on Part 5 goes to measuring rather than to reading the handout.  Part 5 has three steps, and each one is something you practiced today:
 
 1.  **The golden set (step 5a).**  Ten questions with expected answers and a stated scoring rule: five your model should get right and five it should not.  For each item you write a prediction and a one-sentence rationale.  This is the labeled question set that recall@k needs, and it is paper-and-thinking work you can start tonight without a running pipeline.
 2.  **The checkup worksheet (step 5b).**  Three measurements from your own pipeline, in order: recall@k under your current chunking configuration and one alternative (change chunk size or overlap, not both), a five-row citation audit that marks each claim supported or unsupported with a chunk reference, and one observed failure with a hypothesis and a planned fix.  The winning configuration goes back into your lab config.
-3.  **The regression harness (step 5c).**  Pin the golden set and a fixed protocol (temperature 0.0, a fixed seed, the model named), run it twice, and show the two runs agree.  A spreadsheet run sheet, promptfoo YAML, or plain Python all count; the Rubric Pipeline lab picks this harness up later in the term.
+3.  **The regression harness (step 5c).**  Pin the golden set and a fixed protocol (temperature 0.0, a fixed seed, the model named), run it twice, and show the two runs agree.  A spreadsheet run sheet, promptfoo YAML, or plain Python all count; the Judge Pipeline Workshop and Evaluation Workshop II build on this harness later in the term.
 
 The same three steps work on the Langflow route: query both flows by hand in the playground, record hits and misses in a spreadsheet, and the run sheet is your harness.  The judgment (which configuration wins, which citations are real, what the failure means) is identical on every route.
 

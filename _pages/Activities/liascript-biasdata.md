@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Every model begins with data, and so does Unit 4.  The *Evaluating Agents With a Rubric: The Judge Pipeline Workshop* session closed our study of how agents behave.  Today we turn to what they learn from.  You watched *Coded Bias* before class.  In it, Joy Buolamwini found that facial analysis systems failed on the darkest-skinned women at rates orders of magnitude above their rates on the lightest-skinned men.  Today we connect that discovery to mechanics you already know: training distributions, sampling, consensus, and agents that act.  We take today in this order: where bias enters, how to measure it, what agents add to the stakes, and which mitigations help and where each one stops.
 
-Two course items land today.  Your individual Annotated Bibliographies for the Literature Review are due, and I am handing out the [Responsible AI Capstone](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ResponsibleAI).  We cover the capstone in the last ten minutes of class.
+Your individual Annotated Bibliographies for the Literature Review are due today.
 
 ---
 
@@ -46,7 +46,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | 0-10 | Part I, mechanism: how a training distribution becomes a behavior |
 | 10-40 | Part II, hands on the distribution |
 | 40-65 | Part III, mitigation without illusion, tested against the design choice you named in your reading response |
-| 65-75 | Reflection prompt, and the capstone handout |
+| 65-75 | Reflection prompt |
 
 ---
 # Part I: Mechanism
@@ -204,7 +204,7 @@ Mitigations exist at every stage, and none of them is complete.  The right stanc
 
 1.  *Disaggregation drill.*
 
-   *What to do:* Take your Rubric Pipeline Lab rubric pipeline and a set of 10 short essays.  Create 10 slightly varied versions of the same essay by changing only the author byline at the top.  Use names that statistically connote different genders and national origins (for example, "by Alex Johnson," "by Priya Sharma," "by Wei Zhang," "by Mohammed Al-Rashid").  Submit all 10 to your judge.  Report the score distribution for each byline.  Any score gap is a judging bias you measured directly, and you must now explain it or propose a fix.
+   *What to do:* Take the rubric judge you built in the Judge Pipeline Workshop and a set of 10 short essays.  Create 10 slightly varied versions of the same essay by changing only the author byline at the top.  Use names that statistically connote different genders and national origins (for example, "by Alex Johnson," "by Priya Sharma," "by Wei Zhang," "by Mohammed Al-Rashid").  Submit all 10 to your judge.  Report the score distribution for each byline.  Any score gap is a judging bias you measured directly, and you must now explain it or propose a fix.
 
    *Starter hint:* Keep the essay body *identical* across all 10 versions; only the byline changes.  If the scores vary, the variation can come only from the byline.  Record the actual scores in a table and compute the range (highest minus lowest) across bylines.
 
@@ -238,7 +238,7 @@ Mitigations exist at every stage, and none of them is complete.  The right stanc
 
 ---
 
--> Coming Up Next: The *Intellectual Property, Privacy, and the Case for Local AI* activity is next.  We move from what models learn to who owns that material and who gets watched.  The disaggregation drill you practiced today feeds directly into the Responsible AI Capstone.
+-> Coming Up Next: The *Intellectual Property, Privacy, and the Case for Local AI* activity is next.  We move from what models learn to who owns that material and who gets watched.  The disaggregation drill you practiced today returns in Evaluation Workshop II, where you audit your judge against your own project's outputs.
 
 ## Further Reading
 

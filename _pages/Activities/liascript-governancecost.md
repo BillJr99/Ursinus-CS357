@@ -16,7 +16,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 A policy section is only as good as the mechanism that enforces it.  You have built agents that retrieve, decide, judge, and act; governance is deciding in advance, in writing, what they may do, who answers when they err, and how anyone would know.  Today you learn to write policy that a stranger could check from the logs, and you put numbers behind the section most policies leave out: what the system costs to run, in energy, water, dollars, and tokens.  You leave with two enforceable sections of your final project's governance one-pager, one about data and one about cost and routing.
 
-Due today: the Multi-Agent Patterns lab ([Multi-Agent Debate](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate)).
+Due today: the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase).  Handed out today: the Multi-Agent Patterns lab ([Multi-Agent Debate](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate)), due on Demo Day, Tuesday, December 8.
 
 ---
 
@@ -58,7 +58,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 |---|---|
 | 0-10 | Part I, from values to mechanisms: the third-party test and Model 1 |
 | 10-25 | Part I, the eight sections, frameworks meet your project, and safety controls in one page |
-| 25-50 | Part II, the cost of inference: orders of magnitude, estimate then check, Jevons, and what you can do about it |
+| 25-50 | Part II, the cost of inference: orders of magnitude, estimate then check, Jevons, what you can do about it, and pricing your own measured tokens |
 | 50-70 | Part III, the drafting workshop: write two sections, then trade them |
 | 70-75 | Report out one mechanism you could not make concrete |
 
@@ -136,7 +136,7 @@ Your pre-mortem and data-flow audit are the artifact to read here.  Lay them nex
 
 4.  Map your project onto NIST's four functions: for each of Govern, Map, Measure, and Manage, name the artifact you have already produced this semester that does that work, and the one artifact still missing.
 
-   > *Hint:* Govern = who owns this and what are they accountable for?  Map = what does the system do and who is affected?  Measure = how do you know if it's working or failing?  Manage = what do you do when something goes wrong?  Match each function to something you have actually built, written, or run this semester: your rubric pipeline, your pre-mortem, your data flow diagram, your test harness all count.
+   > *Hint:* Govern = who owns this and what are they accountable for?  Map = what does the system do and who is affected?  Measure = how do you know if it's working or failing?  Manage = what do you do when something goes wrong?  Match each function to something you have actually built, written, or run this semester: your rubric judge, your pre-mortem, your data flow diagram, your test harness all count.
 
 5.  Would your project be "high-risk" under the EU AI Act's education provisions if deployed for real students rather than a class demo?  What single design change most reduces its tier?
 
@@ -387,6 +387,56 @@ monthly_gpu_cost = gpu_cost_per_hour * 24 * 30
 print(f"Monthly local GPU cost: ${monthly_gpu_cost:.2f}")
 ```
 @Pyodide.eval
+
+## From Measured Tokens to Energy, Carbon, and Cost
+
+The cell above priced tokens someone imagined.  Your final project prices tokens you measured: Area 1 of the [Responsible AI Report](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject#the-responsible-ai-report-required-in-every-direction) requires input and output token counts for every evaluation run, converted to an energy, carbon, and dollar estimate whose assumptions are stated and sourced.  The counts come from OpenCode's token display or `opencode stats`, or from Ollama's `prompt_eval_count` and `eval_count`, as the *Observability, Traceability, and Handoff Protocols* session and its [tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Observability#token-accounting-counting-what-every-call-spends) showed; the tutorial's `token_usage.csv` already holds tokens and seconds per call.  This step turns those columns into the three numbers.
+
+Each conversion is one multiplication, and each multiplies by an assumption.  That is fine.  A hidden assumption is not.
+
+- **Energy** is measured time times power: the seconds your machine spent generating (the sum of Ollama's `total_duration`, or `total_s` in the CSV) times its power draw under load.
+- **Carbon** can be reached two ways, and you should do both.  Energy times your grid's carbon intensity is one.  Tokens times a per-token rate is the other, and the course already has rates: the deliberation harness's [`energy-profiles.json`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/deliberation-harness/config/energy-profiles.json) derives them from commonly cited per-query carbon bands, with its sources named in the file, and adds a share of the model's one-time training emissions whose denominator the file itself calls an assumption.  Its [`token_meter.py`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/deliberation-harness/tools/token_meter.py) does this arithmetic from an Ollama response.
+- **Cost** is the same tokens priced at a comparable hosted model's published rate, the bill you avoided by running locally, plus the kilowatt-hours times the rate on your electricity bill.
+
+Here is a two-agent run over ten tasks, as `summarize()` would report it.  Before you run the cell, predict whether the two carbon methods agree to within a factor of two.
+
+```python
+# One evaluation run, from token_usage.csv
+calls = 40
+input_tokens = 48_200
+output_tokens = 6_900
+generation_seconds = 410
+
+# ---- Assumptions: every one is labeled, and every one is yours to replace ----
+machine_watts = 30          # ASSUMPTION, no published source: measure yours (plug-in meter, nvidia-smi, or powermetrics on a Mac)
+grid_g_per_kwh = 350        # SOURCE: EPA eGRID2023 U.S. total output rate, 770.9 lb CO2e/MWh; look up your region at epa.gov/egrid/power-profiler
+g_per_input_token = 5.3e-7  # SOURCE: energy-profiles.json, offline profile (0.0005 g per local query midpoint)
+g_per_output_token = 1.6e-6 # SOURCE: energy-profiles.json, offline profile (output costs 3x input)
+training_g_per_request = 3.9e8 / 1.0e11   # energy-profiles.json: Llama 3 8B training total / ASSUMED lifetime requests
+price_in_per_million = 15.00   # this session's GPT-4-class price, as in the cost model above
+price_out_per_million = 60.00
+
+# ---- Conversions ----
+kwh = machine_watts * generation_seconds / 3600 / 1000
+carbon_from_time = kwh * grid_g_per_kwh
+carbon_from_tokens = input_tokens * g_per_input_token + output_tokens * g_per_output_token
+training_share = calls * training_g_per_request
+hosted_cost = (input_tokens / 1e6) * price_in_per_million + (output_tokens / 1e6) * price_out_per_million
+
+print(f"Energy:  {kwh * 1000:.2f} Wh")
+print(f"Carbon from measured time:  {carbon_from_time:.3f} g CO2e")
+print(f"Carbon from per-token rates: {carbon_from_tokens:.3f} g CO2e, plus {training_share:.3f} g training share")
+print(f"Hosted price avoided: ${hosted_cost:.2f}, plus {kwh:.4f} kWh at your electricity rate")
+```
+@Pyodide.eval
+
+The two carbon figures disagree by more than an order of magnitude.  That is a finding, not a bug: one is your laptop's measured time at an assumed wattage, and the other is a published band's midpoint for a typical local query.  Report both, say which assumption drives the gap, and say which number you would defend to an auditor.  Then multiply by your evaluation set and your expected users, because a gram per run is not the number a policy governs.
+
+### Critical Thinking Questions
+
+16.  Change `machine_watts` until the two carbon methods agree.  Is that wattage plausible for your machine?  If it is not, which of the two methods do you trust for your project, and what one measurement would settle it?
+
+   *Hint:* The per-token rate was derived from a per-query band, not from a machine.  Your wattage can be read off a meter.  Which number has fewer assumptions between it and the thing it describes?
 
 ---
 
