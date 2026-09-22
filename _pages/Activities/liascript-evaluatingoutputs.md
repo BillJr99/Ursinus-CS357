@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 A model that writes fluently can be fluently wrong.  In *The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent*, you scored each round of an agent's work against a rubric you wrote first.  Today you take up the case that defeats a rubric: an output whose criteria all pass and whose content is still false.  You build the first tool that catches it.  A **hallucination** is a model output that is confident and fluent but false.  This module explains why next-token prediction produces hallucinations, sorts them into three types that need three different fixes, and builds your first evaluation harness: a program that scores a model on questions with known answers.  An agent you cannot measure is an agent you cannot trust or improve.  For background, the *Why Different Answers Every Time?  Sampling, Temperature, and Generation* tutorial (https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SamplingAndTemperature) showed that a model samples plausible continuations, and plausible is not the same as true.
 
-Today the OpenCode Studio lab is due, and I hand out the Local Agent lab and the Stakeholder Brief.
+Today I hand out the Stakeholder Brief.  The OpenCode Studio lab is due next session, Thursday, September 24, when the Local Agent lab goes out.
 
 ---
 

@@ -423,14 +423,6 @@ schedule:
   link: "Activities/liascript-evaluatingoutputs.md"
   liapage: true
   deliverables:
-  - dtitle: "Lab: OpenCode Studio Due"
-    dlink: "Assignments/OpenCodeStudio"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-opencodestudio.md"
-  - dtitle: "Lab: Local Agent Handed Out"
-    dlink: "Assignments/LocalAgent"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-localagent.md"
   - dtitle: "Project: Stakeholder Brief Handed Out"
     dlink: "Assignments/StakeholderBrief"
     points: "100"
@@ -446,6 +438,15 @@ schedule:
   title: "Tool Use and Function Calling"
   link: "Activities/liascript-tooluse.md"
   liapage: true
+  deliverables:
+  - dtitle: "Lab: OpenCode Studio Due"
+    dlink: "Assignments/OpenCodeStudio"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-opencodestudio.md"
+  - dtitle: "Lab: Local Agent Handed Out"
+    dlink: "Assignments/LocalAgent"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-localagent.md"
   readings:
   - rtitle: "Ollama Structured Outputs, on schema-constrained JSON.  The Local Agent Lab's required structured-output segment uses this, so read it before the lab"
     rlink: "https://docs.ollama.com/capabilities/structured-outputs"

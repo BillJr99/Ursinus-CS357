@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 In *Hallucinations and Evaluating Agent Outputs*, you matched tool use to the hallucinations it fixes: facts the model should look up rather than recall.  Today you build that tool use.  Our agent from *The Agent Loop: Perceive, Plan, Act* activity pulled `calc(...)` out of free text with a regular expression, and that worked until it did not.  Today we upgrade to **structured function calling**, also called tool use.  The model emits a machine-readable request to run a function, and your program runs it.  We cover why structure beats parsing, how to write a tool schema, native function calling with Ollama, and safety boundaries for tools that change the world.
 
-The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is handed out on Tuesday, October 6, and builds on today.  Today's session covers the protocol and what it costs; the lab is where you write the full build.
+The OpenCode Studio lab is due today, and the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) goes out today as well.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is handed out on Tuesday, October 6, and builds on today.  Today's session covers the protocol and what it costs; the lab is where you write the full build.
 
 ---
 
