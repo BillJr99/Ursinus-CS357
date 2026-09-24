@@ -1107,19 +1107,19 @@ Save the exchange as `transcripts/01-interview.md`, by copying it out of either 
 
 Notice the cost. You typed that request, and you will type it again next session, and the session after that. Hold that thought; the *Skill Design Study* is where you package it so you stop retyping it, and where you measure whether packaging it changed anything.
 
-**Step 3: Start in plan mode.**  Switch to the opencode `plan` agent.  In the desktop application that is the agent selector in the message bar, the one Step 8.2b of the Workbench activity had you turn on under **File -> Settings -> Show Agent**.  On the command line, **Tab** cycles the primary agents and the current one is shown on the input line.  Either way, `plan` may read the repository and propose steps, but the tool refuses edits until you approve them.  The last line of your system prompt asks the model for the same stop.  The mode makes the stop something the tool enforces, so you have both.  Run your builder agent from Part 2 and record the trace:
+**Step 3: Start in plan mode.**  Switch to the opencode `plan` agent.  In the desktop application that is the agent selector in the message bar, the one Step 8.2b of the Workbench activity had you turn on under **File -> Settings -> Show Agent**.  On the command line, **Tab** cycles the primary agents and the current one is shown on the input line.  Either way, `plan` may read the repository and propose steps, but the tool refuses edits until you approve them.  The work therefore splits across two agents: `plan` proposes, and your `builder` agent from Part 2 edits only after you approve.  The last line of the builder's system prompt asks the model for the same stop, so the stop holds twice: the mode enforces it in the tool while you read the plan, and the prompt asks for it again once `builder` takes over.  Run the plan agent and record the trace:
 
 ```bash
-opencode run --agent builder \
-  "Read CHARTER.md, AGENTS.md, and .ai/CURRENT_TASK.md.  Then implement spec.md.  Show me your plan first and stop." \
+opencode run --agent plan \
+  "Read CHARTER.md, AGENTS.md, and .ai/CURRENT_TASK.md.  Then plan how to implement spec.md.  Show me your plan and stop." \
   2>&1 | tee transcripts/agent_trace_1.txt
 ```
 
 In the desktop application, start a new session, pick the `plan` agent from the selector, and paste the same instruction into the message bar:
 
 ```text
-Read CHARTER.md, AGENTS.md, and .ai/CURRENT_TASK.md.  Then implement spec.md.
-Show me your plan first and stop.
+Read CHARTER.md, AGENTS.md, and .ai/CURRENT_TASK.md.  Then plan how to implement
+spec.md.  Show me your plan and stop.
 ```
 
 When the plan is on screen, copy the session into `transcripts/agent_trace_1.txt`, or use the transcript prompt from *Before You Start* with that file name.  Either way the trace is your observability, and you cannot reconstruct it afterward.
@@ -1131,7 +1131,13 @@ When the plan is on screen, copy the session into `transcripts/agent_trace_1.txt
 3. No step adds a library, a network call, or a file the spec did not ask for.
 4. The steps are in an order you could stop halfway through and still have a working tree.
 
-Approve in writing, step by step, the way the class exchange did: "Approve steps 1 to 3.  Skip step 4."  Only then leave plan mode and let the agent edit: in the desktop application, switch the agent selector from `plan` to `builder` and type your approval there; in the terminal interface, press **Tab** until the input line shows `builder`.  A plan you approved without reading is the same as having no mode at all.
+Approve in writing, step by step, the way the class exchange did: "Approve steps 1 to 3.  Skip step 4."  Only then leave plan mode and hand the approved plan to `builder`: in the desktop application, switch the agent selector from `plan` to `builder` in the same session and type your approval there; in the terminal interface, press **Tab** until the input line shows `builder`.  On the command line, continue the plan session on the builder agent, so the plan is still in context:
+
+```bash
+opencode run --continue --agent builder "Approve steps 1 to 3.  Skip step 4." \
+  2>&1 | tee -a transcripts/agent_trace_1.txt
+```
+  A plan you approved without reading is the same as having no mode at all.
 
 **Step 5: Reject one.**  Somewhere in this lab, at least one proposed plan must conflict with your charter.  You must reject it and record **which ranked value did the rejecting**.  Save that exchange as `transcripts/02-plan-rejected.md`.
 
