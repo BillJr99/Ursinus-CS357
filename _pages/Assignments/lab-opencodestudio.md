@@ -127,7 +127,7 @@ I sent, every reply you gave, and every tool call with its arguments and result,
 verbatim, in order.  Do not summarize or omit anything.
 ```
 
-Two cautions come with that prompt. Your `AGENTS.md` names `transcripts/` as never-edit, so a well-behaved agent will stop and ask before writing there, and you approve that one write explicitly. And a transcript the agent writes is its own reconstruction rather than a recording, so read it against what you saw on screen before you trust it, since an agent's account of its own session is exactly the kind of evidence this lab teaches you to check.
+Two cautions come with that prompt. Your `AGENTS.md` makes `transcripts/` an append-only evidence zone, so the agent may create or append to a transcript there when you ask it to, and because `opencode.json` still asks before every edit, you see and approve the write; reject it if it tries to rewrite or delete a transcript that already exists. And a transcript the agent writes is its own reconstruction rather than a recording, so read it against what you saw on screen before you trust it, since an agent's account of its own session is exactly the kind of evidence this lab teaches you to check.
 
 ### Estimated time
 
@@ -411,7 +411,9 @@ When this file and the charter disagree, the charter wins.
 ## Zones
 - Workspace, you may edit: `artifact/`
 - Read-only, ask before editing: `CHARTER.md`, `AGENTS.md`, `spec.md`, `.ai/`, `docs/`
-- Never edit: `transcripts/`
+- Append-only evidence: `transcripts/`. Create a new file or append to one
+  only when I ask you to save a transcript. Never rewrite or delete an
+  existing transcript.
 
 ## Durable memory
 When you learn something about this project that would be useful to a session
@@ -676,6 +678,8 @@ artifact/search.py, artifact/test_search.py
 ## Files the agent must NOT touch
 spec.md, AGENTS.md, CHARTER.md, .ai/, docs/, transcripts/
 ```
+
+`transcripts/` stays on that list because implementing the spec never needs it.  Saving a transcript when you ask for one is a separate request, and the append-only zone in `AGENTS.md` is what governs it.
 
 Whatever your route, the last two sections above are required: the agent must know which files are its workspace and which are off-limits.  Part 1's route table says what the rest of this specification becomes on the document and automation routes.
 
