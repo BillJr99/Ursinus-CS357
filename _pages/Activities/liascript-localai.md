@@ -43,6 +43,8 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | Temperature | A setting you control, not something baked into the model, that decides how much the model varies its wording. Near 0 it gives you nearly the same answer every time; near 1 it wanders. It is one of several *sampling parameters* (`top-p` is another) that sit between the model and the text you read | The **Advanced Params** panel in OpenWebUI, and the `options` block of your Python call. Section 3c has you turn it yourself; *Why Different Answers Every Time?* explains what it does to the math |
 | `host.docker.internal` | A hostname Docker resolves, from inside a container, to the machine the container is running on. Inside a container, `localhost` means the container itself | An agent in a container reaching your laptop's Ollama at `http://host.docker.internal:11434` instead of `localhost` |
 | API key (OpenWebUI) | A token you generate on your own OpenWebUI server that identifies you to it. It authenticates you to software on your machine; it is not a payment credential, and Ollama needs none at all | The `OPENWEBUI_API_KEY` you mint in Section 3b and use for the rest of the semester |
+| Conversation history file | A file, here `history.json`, where your program saves the message list after every turn and reads it back at startup.  It is the only memory a local chatbot has | Deleting `history.json` in Step 2 and watching the model forget your name |
+| Permission gate | A check in your code, on the only path that runs a command, that a model's reply cannot skip | The `Type YES to allow it` prompt in Step 5 |
 
 ---
 
@@ -52,11 +54,13 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 | Minutes | What we do |
 |---|---|
-| 0-10 | Part I, why local at all: the four reasons, and which one is yours |
-| 10-20 | Pull a model and get one response back on your own machine |
-| 20-55 | Part II, the build: OpenWebUI, the connection troubleshooting in 3a, your API key, the API call, and the temperature dial |
-| 55-70 | Compare answers across two models on the same prompt |
+| 0-8 | Part I, why local at all: the four reasons, and which one is yours |
+| 8-15 | Section 3 and 3a: the install checklist and the `curl` probe, so every team has a model answering |
+| 15-60 | Part IIb, the five steps: prompt, remember, iterate, skill, command (about nine minutes each) |
+| 60-70 | Section 3c, the temperature dial |
 | 70-75 | Reflection prompt, and what to post before next session |
+
+Sections 3b (the OpenWebUI API key), 3d (pointing opencode at Ollama), and the two-model comparison are self-paced.  Do them before the Local Agent lab needs them.  Section 4 is the idea behind Steps 2 and 3, so read it if Step 2 surprises you.
 
 ---
 # Part I: Why Run Models Locally?
@@ -393,9 +397,447 @@ Everything else (append the user turn, resend the whole list, append the reply) 
 
 7.  The server is stateless, but your Python process holds the `messages` list in memory.  If the program crashes mid-conversation, the history is gone.  What would you add to make a conversation survive a restart?
 
-   > *Hint: Think about writing the messages list to disk (as JSON) after each turn and reloading it on startup.*
+   > *Hint: Think about writing the messages list to disk (as JSON) after each turn and reloading it on startup.*  *Step 2 in Part IIb builds exactly this.*
 
 > **Common Misconception:** It is tempting to think the model "remembers" your conversation the way a person does.  It does not.  Between calls the server keeps *nothing*; the illusion of memory comes entirely from your client resending the full `messages` list each time.  When the list grows too long for the context window, that memory silently starts to fall off the front, exactly the problem the *Memory and the Small Context Window* activity later solves with summarization.
+
+---
+
+# Part IIb: Build It in Five Small Steps
+
+In this part, you will write the program that runs a model, one small piece at a time.  Each step is its own file.  Each file runs by itself, adds exactly one idea to the file before it, and marks the new lines with `# NEW`.  Run each file and see it work before you open the next one.
+
+| Step | File | The one new idea | What it looks like in opencode |
+|---|---|---|---|
+| 1 | `step1_prompt.py` | Send a prompt from code and read the reply | Typing a message in the TUI |
+| 2 | `step2_remember.py` | Save the conversation to a file, so it survives a restart | `.ai/MEMORY.md` in the `instructions` list |
+| 3 | `step3_iterate.py` | Loop: read, send, save, repeat | The chat session itself |
+| 4 | `step4_skill.py` | Read a `SKILL.md` and put its rules in the system prompt | `.agents/skills/` |
+| 5 | `step5_command.py` | Let the model ask for a command, and ask the person before it runs | `"bash": {"*": "ask"}` in `opencode.json` |
+
+By the end, you will have written the core of every coding agent you have used this term.  opencode does each of these five things; now you will know how, because you did it yourself.
+
+> **Setup, once.**  Make a folder for today, `cd` into it, and check that Ollama answers: `curl http://localhost:11434/api/tags`.  If that prints JSON, you are ready.  If it prints "connection refused," go back to Section 3a before you write any code.
+
+---
+
+## 4a.  Step 1: Prompt
+
+Every agent starts with one function: send messages, get a message back.  We write `chat()` once, here, and it never changes again.  Every later step reuses it exactly.
+
+Notice that `chat()` takes a *list* of messages, not a single string.  That choice costs nothing now and pays off in Step 2.  The server address comes from the `OLLAMA_URL` environment variable, so the same file works on your laptop and inside a container.
+
+## Code Cell
+
+> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into a file in your course folder and run it there.  If you run it inside a container, first run `export OLLAMA_URL=http://host.docker.internal:11434` (Section 3a explains why).
+
+```python
+import os, requests
+
+# In a container, set OLLAMA_URL=http://host.docker.internal:11434 (Section 3a explains why)
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
+
+def chat(messages, temperature=0.7):
+    try:
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json={
+            "model": MODEL, "stream": False,
+            "options": {"temperature": temperature},
+            "messages": messages}, timeout=120)
+        r.raise_for_status()
+        return r.json()["message"]        # {"role": "assistant", "content": "..."}
+    except Exception as e:
+        print(f"[step1:chat] {e}")
+        import traceback; traceback.print_exc()
+        return {"role": "assistant", "content": ""}
+
+reply = chat([{"role": "user", "content": "In one sentence, what is a local model?"}])
+print(reply["content"])
+```
+
+Run it with `python step1_prompt.py`.
+
+- *You've succeeded when*: one sentence prints.  If you see `[step1:chat]` and a connection error, the server is not where the code looked; the probe in Section 3a tells you which of the three causes it is.
+
+---
+
+## 4b.  Step 2: Remember, by Saving a File
+
+Section 4 showed that the server remembers nothing.  Your `messages` list is the memory.  But that list lives in your program, and when the program exits, the memory is gone.  The fix is ordinary file I/O: write the list to `history.json` after each turn, and read it back when the program starts.
+
+This file takes its message from the command line, so you can run it twice and watch the second run remember the first.
+
+## Code Cell
+
+> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into a file in your course folder and run it there.  If you run it inside a container, first run `export OLLAMA_URL=http://host.docker.internal:11434` (Section 3a explains why).
+
+```python
+import os, sys, json, requests
+
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
+HISTORY = "history.json"                                   # NEW: the memory lives here
+
+def chat(messages, temperature=0.7):
+    try:
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json={
+            "model": MODEL, "stream": False,
+            "options": {"temperature": temperature},
+            "messages": messages}, timeout=120)
+        r.raise_for_status()
+        return r.json()["message"]
+    except Exception as e:
+        print(f"[step2:chat] {e}")
+        import traceback; traceback.print_exc()
+        return {"role": "assistant", "content": ""}
+
+def load_history():                                        # NEW
+    try:
+        with open(HISTORY, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return [{"role": "system", "content": "You are a concise assistant."}]
+
+def save_history(messages):                                # NEW
+    with open(HISTORY, "w", encoding="utf-8") as f:
+        json.dump(messages, f, indent=2)
+
+messages = load_history()
+messages.append({"role": "user", "content": " ".join(sys.argv[1:]) or "Hello!"})
+reply = chat(messages)
+messages.append(reply)
+save_history(messages)                                     # NEW: write it down before we exit
+print(reply["content"])
+print(f"[{HISTORY} now holds {len(messages)} messages]")
+```
+
+Run it three times:
+
+```bash
+python step2_remember.py "My name is Sam.  Please remember it."
+python step2_remember.py "What is my name?  One word."
+rm history.json          # Windows PowerShell: Remove-Item history.json
+python step2_remember.py "What is my name?  One word."
+```
+
+Open `history.json` in your editor between runs.  That file is the model's entire memory of you, and you can read it, edit it, or delete it.
+
+- *You've succeeded when*: the second run answers "Sam," and the run after the `rm` does not know your name.
+
+> **Common Misconception:** "The model remembered me."  It did not.  Your program read a file and sent its contents back.  Delete the file and the "memory" is gone, because it was never in the model.  This is the same mechanism as the `.ai/MEMORY.md` file you listed in `opencode.json` for the OpenCode Studio lab: the harness reads a file and sends it along.
+
+---
+
+## 4c.  Step 3: Iterate with a Loop
+
+Running the program once per message is clumsy.  A loop does the same four moves over and over: read a line, append it, send the whole list, append and save the reply.  That loop is the chat window of every chatbot you have used.
+
+We also add two commands of our own.  `/forget` deletes the memory file, and `/quit` exits.
+
+## Code Cell
+
+> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into a file in your course folder and run it there.  If you run it inside a container, first run `export OLLAMA_URL=http://host.docker.internal:11434` (Section 3a explains why).
+
+```python
+import os, json, requests
+
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
+HISTORY = "history.json"
+
+def chat(messages, temperature=0.7):
+    try:
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json={
+            "model": MODEL, "stream": False,
+            "options": {"temperature": temperature},
+            "messages": messages}, timeout=120)
+        r.raise_for_status()
+        return r.json()["message"]
+    except Exception as e:
+        print(f"[step3:chat] {e}")
+        import traceback; traceback.print_exc()
+        return {"role": "assistant", "content": ""}
+
+def load_history():
+    try:
+        with open(HISTORY, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return [{"role": "system", "content": "You are a concise assistant."}]
+
+def save_history(messages):
+    with open(HISTORY, "w", encoding="utf-8") as f:
+        json.dump(messages, f, indent=2)
+
+messages = load_history()
+print("Type a message.  /forget erases the memory file, /quit exits.")
+while True:                                                # NEW: the loop
+    user_text = input("you> ").strip()
+    if user_text == "/quit":
+        break
+    if user_text == "/forget":
+        if os.path.exists(HISTORY):
+            os.remove(HISTORY)
+        messages = load_history()
+        print("[memory erased]")
+        continue
+    messages.append({"role": "user", "content": user_text})
+    reply = chat(messages)
+    messages.append(reply)                                 # delete this line to see amnesia
+    save_history(messages)
+    print("model>", reply["content"])
+```
+
+Try this conversation: tell it your favorite color, ask it back, type `/forget`, and ask again.  Then comment out the line marked `delete this line to see amnesia`, restart, and hold a three-turn conversation.
+
+- *You've succeeded when*: the model recalls your color before `/forget` and cannot after it.  With the marked line removed, the model loses track even inside one session, because its own replies never reach the next request.
+
+> **Watch out.**  A small model can miss a fact that is plainly in its history.  In our testing, a 0.5-billion-parameter model answered "What is my favorite color?" with a lecture about colors, one line after being told the answer.  That is a capability limit, not a bug in your loop.  Check `history.json`: if the fact is in the file, your code did its job.
+
+---
+
+## 4d.  Step 4: Use a Skill
+
+A skill is a Markdown file of instructions.  In Step 4 we write one, read it from disk, strip its front matter, and put its body into the system prompt.  This is Route 3 from the *Skills* session: a skill turned into a string.
+
+First, create the skill.  This one has rules you can see in every reply, so you can tell at a glance whether it loaded.
+
+```bash
+mkdir -p .agents/skills/terse-helper
+cat > .agents/skills/terse-helper/SKILL.md <<'EOF'
+---
+name: terse-helper
+description: Answer in at most two sentences, and end every answer with a "Next step:" line.
+---
+# Terse Helper
+
+1.  Answer in at most two sentences.
+2.  End every answer with one line that starts with "Next step:".
+3.  If you do not know, say "I don't know" rather than guessing.
+EOF
+ls .agents/skills/terse-helper/SKILL.md
+```
+
+## Code Cell
+
+> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into a file in your course folder and run it there.  If you run it inside a container, first run `export OLLAMA_URL=http://host.docker.internal:11434` (Section 3a explains why).
+
+```python
+import os, json, requests
+
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
+HISTORY = "history.json"
+SKILL = os.path.join(".agents", "skills", "terse-helper", "SKILL.md")   # NEW
+
+def chat(messages, temperature=0.7):
+    try:
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json={
+            "model": MODEL, "stream": False,
+            "options": {"temperature": temperature},
+            "messages": messages}, timeout=120)
+        r.raise_for_status()
+        return r.json()["message"]
+    except Exception as e:
+        print(f"[step4:chat] {e}")
+        import traceback; traceback.print_exc()
+        return {"role": "assistant", "content": ""}
+
+def strip_front_matter(text):                              # NEW: same helper as the Persona Pipeline
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return text.strip()
+    for i in range(1, len(lines)):
+        if lines[i].strip() == "---":
+            return "\n".join(lines[i + 1:]).strip()
+    return text.strip()
+
+def load_skill(path):                                      # NEW: a skill is a file we read
+    try:
+        with open(path, encoding="utf-8") as f:
+            return strip_front_matter(f.read())
+    except FileNotFoundError as e:
+        print(f"[step4:load_skill] no skill at {path}: {e}")
+        return ""
+
+def load_history():
+    try:
+        with open(HISTORY, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return [{"role": "system", "content": ""}]
+
+def save_history(messages):
+    with open(HISTORY, "w", encoding="utf-8") as f:
+        json.dump(messages, f, indent=2)
+
+messages = load_history()
+system = "You are a concise assistant."
+skill = load_skill(SKILL)
+if skill:
+    system += "\n\nFollow these rules exactly:\n\n" + skill  # NEW: the skill joins the system prompt
+messages[0] = {"role": "system", "content": system}        # re-read on every start
+print(f"[skill loaded: {bool(skill)}]  /quit exits.")
+while True:
+    user_text = input("you> ").strip()
+    if user_text == "/quit":
+        break
+    messages.append({"role": "user", "content": user_text})
+    reply = chat(messages)
+    messages.append(reply)
+    save_history(messages)
+    print("model>", reply["content"])
+```
+
+The `strip_front_matter` helper is the same one the Persona Pipeline uses.  Note that the program rebuilds the system prompt on every start, so an edit to `SKILL.md` takes effect the next time you run it, even with an old `history.json`.
+
+- *You've succeeded when*: the program prints `[skill loaded: True]`, and every answer is short and ends with a `Next step:` line.  Rename the skill folder, restart, and watch the `Next step:` line disappear.
+
+> **Common Misconception:** "The skill decides when it applies."  Not here.  In opencode, the `description` is the trigger, and the body loads only when a request matches it.  Our program pastes the body into the system prompt, so it applies to every turn.  We turned a skill into a system prompt.  That is the trade the *Skills* session named: the instructions are always present, and they are never selective.
+
+---
+
+## 4e.  Step 5: Execute a Command, With Permission
+
+Until now, the model could only talk.  In Step 5 it can act.  We give it a protocol, "reply `RUN: <command>` to run a command," and our code watches for that line.  When it appears, the code shows the command to the person and runs it only if they type `YES`.  The command's output goes back to the model as an Observation, and the model answers with what it saw.
+
+Two lines in `run_command` carry the safety.  `shlex.split` turns the string into a list of arguments, and `subprocess.run` gets that list with no shell.  There is no shell to interpret `|`, `;`, `&&`, or `>`, so a model cannot chain a second command onto the first.
+
+## Code Cell
+
+> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into a file in your course folder and run it there.  If you run it inside a container, first run `export OLLAMA_URL=http://host.docker.internal:11434` (Section 3a explains why).
+
+```python
+import os, re, json, shlex, subprocess, requests
+
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
+HISTORY = "history.json"
+SKILL = os.path.join(".agents", "skills", "terse-helper", "SKILL.md")
+TOOL_RULE = ("You can ask to run one shell command.  To do that, reply with exactly one line: "
+             "RUN: <command>.  You will then receive its output as an Observation.  "
+             "Otherwise, answer normally.")                # NEW: tell the model the protocol
+
+def chat(messages, temperature=0.7):
+    try:
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json={
+            "model": MODEL, "stream": False,
+            "options": {"temperature": temperature},
+            "messages": messages}, timeout=120)
+        r.raise_for_status()
+        return r.json()["message"]
+    except Exception as e:
+        print(f"[step5:chat] {e}")
+        import traceback; traceback.print_exc()
+        return {"role": "assistant", "content": ""}
+
+def strip_front_matter(text):
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return text.strip()
+    for i in range(1, len(lines)):
+        if lines[i].strip() == "---":
+            return "\n".join(lines[i + 1:]).strip()
+    return text.strip()
+
+def load_skill(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return strip_front_matter(f.read())
+    except FileNotFoundError as e:
+        print(f"[step5:load_skill] no skill at {path}: {e}")
+        return ""
+
+def load_history():
+    try:
+        with open(HISTORY, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return [{"role": "system", "content": ""}]
+
+def save_history(messages):
+    with open(HISTORY, "w", encoding="utf-8") as f:
+        json.dump(messages, f, indent=2)
+
+def run_command(cmd):                                      # NEW: the one place a command runs
+    try:
+        done = subprocess.run(shlex.split(cmd), capture_output=True, text=True, timeout=20)
+        return f"exit code {done.returncode}\n{done.stdout}{done.stderr}"[:2000]
+    except Exception as e:
+        print(f"[step5:run_command] {e}")
+        import traceback; traceback.print_exc()
+        return f"the command failed to start: {e}"
+
+messages = load_history()
+system = "You are a concise assistant.\n\n" + TOOL_RULE
+skill = load_skill(SKILL)
+if skill:
+    system += "\n\nFollow these rules exactly:\n\n" + skill
+messages[0] = {"role": "system", "content": system}
+print(f"[skill loaded: {bool(skill)}]  /quit exits.")
+while True:
+    user_text = input("you> ").strip()
+    if user_text == "/quit":
+        break
+    messages.append({"role": "user", "content": user_text})
+    reply = chat(messages)
+    messages.append(reply)
+    match = re.search(r"^\s*RUN:\s*(.+)$", reply["content"], re.MULTILINE)
+    if match:                                              # NEW: the permission gate
+        cmd = match.group(1).strip().strip("`")
+        print(f"[the model wants to run]  {cmd}")
+        if input("Type YES to allow it: ").strip() == "YES":
+            observation = run_command(cmd)
+        else:
+            observation = "The user declined to run that command."
+        print(f"[observation]  {observation}")
+        messages.append({"role": "user", "content": f"Observation: {observation}"})
+        reply = chat(messages)                             # let the model use what it saw
+        messages.append(reply)
+    save_history(messages)
+    print("model>", reply["content"])
+```
+
+Run it twice:
+
+1.  Ask "How many Python files are in this folder?  Use a command."  Read the proposed command before you type `YES`.
+2.  Ask "What is in this folder?  Use a command."  This time, type `no`.
+
+When we tested this with `llama3.2`, the model's first proposal was `ls | grep python`.  With no shell, `ls` received `|`, `grep`, and `python` as file names and failed.  The model read the error and explained it.  That failure is the design working: the pipe was never interpreted.
+
+- *You've succeeded when*: an approved command runs and its output appears as `[observation]`, and a declined command never runs, and the model is told so.
+
+> **Common Misconception:** "I told the model to ask before running anything, so it will."  An instruction in the prompt is a request.  The `input("Type YES...")` line is a gate: it sits in the only code path that can run a command, so the model cannot talk its way past it.  This is the same distinction as the permission block in `opencode.json`.  The rule lives in the prompt, and the gate lives in the tool path.
+
+> **Windows note.**  `dir` and `type` are built into the Windows shell and are not programs, so with no shell they fail to start.  Run this step in your course container or WSL, or ask for commands that are real programs, such as `python --version`.
+
+---
+
+## Model: Five Steps, One Agent
+
+### Critical Thinking Questions
+
+8.  Step 1's `chat()` never changed in Steps 2 through 5.  What did change in each step?  Name the one data structure every step reads or writes.
+
+   > *Hint: Look at what flows into `chat()` each time.*
+
+9.  In Step 2, you deleted `history.json` and the model forgot your name.  Where, exactly, did the model's "memory" live, and who controls it?  What does that tell you about a hosted chatbot that "remembers" you?
+
+   > *Hint: Somebody's program is saving a file like yours.  Whose disk is it on?*
+
+10. The Step 4 skill loads on every turn.  Describe a request where that hurts, and say what opencode does differently.
+
+   > *Hint: Ask the terse helper to write a 500-word essay.*
+
+11. In Step 5, find the one line that makes the permission gate a gate rather than a request.  What would change if you deleted it and added "Always ask the user before running a command" to `TOOL_RULE` instead?
+
+   > *Hint: Who reads `TOOL_RULE`, and who runs the `if`?*
+
+12. `run_command` uses `shlex.split` with no shell.  Give one command a model could propose that is dangerous even without a pipe or a semicolon.  What second gate would stop it without asking the person every time?
+
+   > *Hint: `rm -rf ~` needs no shell.  Compare an allowlist of programs with a prompt that says "be careful."  The tutorial below builds the allowlist.*
+
+> **Put it together.**  The tutorial *Building a Local Agent From Scratch* composes all five steps into one program, `tiny_agent.py`, with its settings in `config.json`, an allowlist in front of the `YES` prompt, and a limit on commands per turn: https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/LocalAgentFromScratch.  Part 0 of the Local Agent lab asks you to hand in your five step files.
 
 ---
 
@@ -442,6 +884,8 @@ In this part, you will probe your local model across five different task types t
 - Ollama documentation: https://ollama.com and https://github.com/ollama/ollama/blob/main/docs/api.md (see the `/api/chat` `messages` array for multi-turn conversations)
 - OpenWebUI documentation: https://docs.openwebui.com
 - Melanie Mitchell.  *AI: A Guide for Thinking Humans*, Chapter 3.
+- Building a Local Agent From Scratch: Prompt, Remember, Iterate, Skill, Command, the five steps of Part IIb composed into one program: https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/LocalAgentFromScratch
+- Python `subprocess` documentation, on why a list of arguments with no shell is the safe default: https://docs.python.org/3/library/subprocess.html#security-considerations
 
 ---
 
