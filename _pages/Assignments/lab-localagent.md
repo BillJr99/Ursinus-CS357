@@ -154,11 +154,42 @@ llama3.2:latest    a80c4f17acd5    2.0 GB  2 minutes ago
 >
 > | Component | Estimated total time |
 > |-----------|----------------------|
+> | Part 0, the five small steps (code path) | 45-60 minutes |
 > | Parts 1-3 on either path | 3-4 hours |
 > | Writeup, learning log, and packaging | 1 hour |
 > | **Total** | **about 4-5 hours** |
 >
-> Finish Part 1 in the first week.  The evaluation runs in Part 3 take wall-clock time, so start them early.
+> Do Part 0 first, in one sitting, before you start Part 1.  Finish Part 1 in the first week.  The evaluation runs in Part 3 take wall-clock time, so start them early.
+
+---
+
+## Part 0: Five Small Steps (code path)
+
+Before you build the full loop, build its pieces one at a time.  Section *Part IIb: Build It in Five Small Steps* of the *Running Your Own AI* activity gives you five short programs.  Each one runs by itself and adds exactly one idea to the one before it.  Type each one in, run it, and check it before you open the next.
+
+> **Do this.**  Create `cs357-work/localagent/part0/` and work there.  Complete each step, run its check, and commit before you move on.  Five steps, five commits.
+
+| Step | File | Run this | You've succeeded when |
+|---|---|---|---|
+| 1. Prompt | `step1_prompt.py` | `python step1_prompt.py` | One sentence prints, with no `[step1:chat]` error |
+| 2. Remember | `step2_remember.py` | Run it with `"My name is Sam."`, then with `"What is my name?"`, then delete `history.json` and ask again | The second run answers "Sam"; the run after the delete does not know |
+| 3. Iterate | `step3_iterate.py` | Tell it a fact, ask for it back, type `/forget`, ask again | It recalls the fact before `/forget` and not after |
+| 4. Skill | `step4_skill.py` plus `.agents/skills/terse-helper/SKILL.md` | Ask any question; then rename the skill folder and ask again | `[skill loaded: True]` and a `Next step:` line appear, then both disappear |
+| 5. Command | `step5_command.py` | Ask it to use a command; approve one with `YES`, decline another | The approved command's output appears as `[observation]`; the declined one never runs |
+
+Or have opencode do each step, one at a time:
+
+```text
+In localagent/part0/, create stepN_<name>.py exactly as shown in Section 4<letter>
+of the Running Your Own AI activity.  Do not add features.  Then tell me the one
+command to run it and what output means it worked.  Create nothing else.
+```
+
+Read what opencode wrote before you run it, especially in Step 5, where the program runs commands.
+
+> **Why this part exists.**  Part 1 asks for a configuration file, a message history, a structured protocol, and an action runner all at once.  Part 0 gives you each of those alone first: Step 1 is `call_model`, Steps 2 and 3 are the message history, and Step 5 is a protocol with an action runner.  When Part 1 goes wrong, you will know which piece to suspect.  The tutorial [Building a Local Agent From Scratch]({{ site.baseurl }}/Tutorials/LocalAgentFromScratch) shows the five pieces composed into one program.
+
+Part 0 is not scored separately.  Include the `part0/` folder in your ZIP; it is the evidence that your Part 1 loop was built from pieces you tested.
 
 ---
 
@@ -197,7 +228,7 @@ Or have opencode do it:
 
 ```text
 Create localagent/config.json in this repository with keys for model, temperature,
-seed, and max_steps, matching the values in the lab handout.  Create nothing else.
+seed, step_budget, and ollama_url, matching the values in the lab handout.  Create nothing else.
 ```
 
 Open the file afterward and make sure the seed and the step budget are really there.  Both exist so that Part 3's evaluation is reproducible, and a run you cannot reproduce is a number you cannot report.
@@ -359,10 +390,10 @@ def run_agent(goal, config, tools):
 Or have opencode do it:
 
 ```text
-In localagent/agent.py, write run_agent(goal, tools, config) as a perceive, plan,
+In localagent/agent.py, write run_agent(goal, config, tools) as a perceive, plan,
 act loop: call the model, parse the reply, run the requested tool, append the
 observation to the message history, and repeat until a final answer arrives or
-max_steps is reached.  Assume build_system_prompt exists; do not write it.  Print
+config["step_budget"] is reached.  Assume build_system_prompt exists; do not write it.  Print
 each step so the run is readable.
 ```
 
@@ -873,6 +904,7 @@ Submit one ZIP containing your work and a readme writeup (about two pages) descr
 
 | File or artifact | What it shows | Rubric row |
 |------------------|---------------|------------|
+| `part0/step1_prompt.py` through `part0/step5_command.py` and the `terse-helper` skill (code path) | The five pieces, each run and checked on its own before Part 1 | Not scored separately |
 | `agent.py`, `task_set.py`, `evaluate.py` (code path) | The loop, the tools, the system prompt, and the evaluation script | Agent Loop; Code Quality |
 | `config.json` (code path) | Model, temperature, seed, and step budget outside the source | Code Quality |
 | Exported model JSON for both custom Models (no-code path) | The persona model and the JSON-format model, with every parameter you set | Agent Loop; Code Quality |
