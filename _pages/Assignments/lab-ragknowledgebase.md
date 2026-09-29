@@ -415,7 +415,7 @@ The query path embeds the question, retrieves the top-k chunks, and assembles a 
 ```python
 import requests
 
-def query_rag(question, collection, embed_model, config, ollama_url="http://localhost:11434/api/chat"):
+def query_rag(question, collection, embed_model, config, provider_url="http://localhost:11434/api/chat"):
     """Retrieve top-k chunks, build a grounded prompt, and generate. Returns (answer_text, retrieved_chunks_with_metadata)."""
     q_embedding = embed_model.encode([question]).tolist()
     k = config["top_k"]
@@ -448,7 +448,8 @@ CONTEXT:
         "options": {"temperature": config["temperature"], "seed": config["seed"]}
     }
     try:
-        response = requests.post(ollama_url, json=payload, timeout=60)
+        url = config.get("provider_url", provider_url)
+        response = requests.post(url, json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
         response.raise_for_status()
         answer = response.json()["message"]["content"]
     except Exception as e:
@@ -484,11 +485,11 @@ for q_item in [q for q in QUESTIONS if q.get("unanswerable")][:2]:   # two abste
     print(f"A: {answer}")
     print(f"Abstained correctly: {config['abstention_phrase'] in answer}")
 
-def query_bare_model(question, config, ollama_url="http://localhost:11434/api/chat"):
+def query_bare_model(question, config, provider_url="http://localhost:11434/api/chat"):
     """Ask the model with no retrieved context, for the before/after contrast."""
     payload = {"model": config["model"], "messages": [{"role": "user", "content": question}], "stream": False,
                "options": {"temperature": config["temperature"], "seed": config["seed"]}}
-    r = requests.post(ollama_url, json=payload, timeout=60)
+    r = requests.post(config.get("provider_url", provider_url), json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
     return r.json()["message"]["content"]
 
 example_q = answerable_questions[0]["question"]        # the bare-model hallucination contrast
@@ -1289,7 +1290,7 @@ ollama list
 ```json
 {"starting_age": 25, "retirement_age": 65, "life_expectancy": 90, "starting_savings": 10000, "monthly_contribution": 500,
  "annual_return_mean": 0.07, "annual_return_std": 0.12, "inflation_rate": 0.025, "num_simulations": 1000,
- "model": "llava", "ollama_url": "http://localhost:11434"}
+ "model": "llava", "provider_url": "http://localhost:11434", "api_key": null}
 ```
 
 ```python
@@ -1380,7 +1381,7 @@ def ask_multimodal_model(image_b64, question, cfg):
     """Send a base64 PNG and a question to a local multimodal model via Ollama /api/generate; return its text."""
     payload = {"model": cfg["model"], "prompt": question, "images": [image_b64], "stream": False}
     try:
-        response = requests.post(cfg["ollama_url"] + "/api/generate", json=payload, timeout=120)
+        response = requests.post(cfg["provider_url"] + "/api/generate", json=payload, headers=({"Authorization": f"Bearer {cfg['api_key']}"} if cfg.get("api_key") else {}), timeout=120)
         response.raise_for_status()
         return response.json()["response"]
     except Exception as e:

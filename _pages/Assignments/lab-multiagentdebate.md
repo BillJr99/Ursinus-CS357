@@ -202,7 +202,8 @@ The Part A rubric row rewards four things: a loop whose critic changes the next 
 ```json
 {
   "model": "llama3.2",
-  "ollama_url": "http://localhost:11434/api/chat",
+  "provider_url": "http://localhost:11434/api/chat",
+  "api_key": null,
   "generator_temp_first": 0.8,
   "generator_temp_revise": 0.3,
   "critic_temp": 0.0,
@@ -224,6 +225,8 @@ The Part A rubric row rewards four things: a loop whose critic changes the next 
   }
 }
 ```
+
+`provider_url` and `api_key` work as they do in the Local Agent lab: leave `api_key` as `null` for local Ollama, or, if your computer cannot run the model, point `provider_url` at a hosted Ollama server and set `api_key` to its key (see the Local Agent lab's Step 1.1, and ask me if you need help choosing a provider).
 
 ```json
 {
@@ -303,7 +306,7 @@ def generate_draft(task_description, previous_draft=None, critique=None, config=
     }
 
     try:
-        response = requests.post(config["ollama_url"], json=payload, timeout=60)
+        response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
         response.raise_for_status()
         return response.json()["message"]["content"]
     except Exception as e:
@@ -354,7 +357,7 @@ def critique_draft(draft, rubric, config):
     }
 
     try:
-        response = requests.post(config["ollama_url"], json=payload, timeout=60)
+        response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
         response.raise_for_status()
         raw = response.json()["message"]["content"]
     except Exception as e:
@@ -848,7 +851,7 @@ def judge_score(draft, judge_rubric, config):
     }
 
     try:
-        response = requests.post(config["ollama_url"], json=payload, timeout=60)
+        response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
         response.raise_for_status()
         raw = response.json()["message"]["content"]
     except Exception as e:
@@ -1044,7 +1047,7 @@ def agent_respond(question, agent_id, round_num, peer_answers, config):
     }
 
     try:
-        response = requests.post(config["ollama_url"], json=payload, timeout=60)
+        response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
         response.raise_for_status()
         return response.json()["message"]["content"]
     except Exception as e:
@@ -1294,7 +1297,7 @@ def sample_drafts(question, config):
             "options": {"temperature": temp, "seed": seed}
         }
         try:
-            response = requests.post(config["ollama_url"], json=payload, timeout=60)
+            response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
             response.raise_for_status()
             draft = response.json()["message"]["content"]
             drafts.append(draft)
@@ -1424,7 +1427,7 @@ def synthesize(question, representatives, config):
         }
     }
     try:
-        response = requests.post(config["ollama_url"], json=payload, timeout=60)
+        response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
         response.raise_for_status()
         return response.json()["message"]["content"]
     except Exception as e:
@@ -1575,7 +1578,7 @@ def single_shot(question, config, seed_offset=0):
         "stream": False,
         "options": {"temperature": 0.2, "seed": config["debate"]["seed_base"] + seed_offset}
     }
-    r = requests.post(config["ollama_url"], json=payload, timeout=60)
+    r = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
     text = r.json()["message"]["content"]
     return extract_answer(text, "single", 1)
 
