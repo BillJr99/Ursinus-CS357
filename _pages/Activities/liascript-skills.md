@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 In *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log*, you drove opencode against a specification and read the action log it produced.  Today we work on the instructions the agent reads before it produces anything.  A **skill** is a small file of instructions that the agent loads when your request matches the skill's description, and the OpenCode Studio lab asks you to write two of them.  The question this session answers is the one that lab leaves open: after you write a skill, how do you know it changed anything?
 
-We do three things.  First we read a skill and decide when it fires.  Then we design one together, spec-first: job, trigger, instructions, test.  Then we measure it, by running the same task with and without the skill on two local models and scoring every run against a six-item rubric.  The written assignment *Skill Design Study* repeats that experiment at home, so the protocol in Part III is the one you will follow.
+We do three things.  First we read a skill and decide when it fires.  Then we design one together, spec-first: job, trigger, instructions, test.  Then we measure it, by running the same task with and without the skill on two local models and scoring every run against a six-item rubric.  The written assignment *Skill Design Study* then has you write, run, and refine a skill of your own at home, one change at a time.
 
 ---
 
@@ -387,7 +387,7 @@ In this part you find out whether the skill did anything.  The method is the gol
 
 ## 4.  The Protocol
 
-A measurement is only as good as what it holds still.  Here is everything the harness pins, and the *Skill Design Study* assignment asks you to record every row of this table for your own skill.
+A measurement is only as good as what it holds still.  Here is everything the harness pins.  Keep it in mind for the *Skill Design Study*, where you change one thing at a time as you refine your own skill.
 
 | What | Fixed value | Why it is fixed |
 |---|---|---|
@@ -496,7 +496,7 @@ for model in MODELS:
 
 ## Model 3: The Results Table
 
-The Recorder fills this in from the printed output.  This is also the table the *Skill Design Study* assignment asks for, with your own skill, your own rubric, and the number of runs it specifies.
+The Recorder fills this in from the printed output.  The *Skill Design Study* asks for a lighter version of the same habit: a log of each run of your own skill and the one change you made in response.
 
 | Model | Condition | Run 1 | Run 2 | Run 3 | Mean (of 6) | Items that failed |
 |---|---|---|---|---|---|---|
@@ -627,7 +627,7 @@ metadata:
 
 Compare it with your own `description`.  Yours probably names what the skill does.  This one names **when it should fire**: the task types, then a condition (*when correctness matters more than latency or token cost*), then the behaviors it imposes.  A model decides whether to load a skill from this block alone, so a description that reads like a title gets loaded at the wrong times, or never.
 
-A `.skill` file is a zip archive, exactly like the one you will package your own skill into for the Skill Design Study.  Installing it by hand is the whole procedure: extract it into one of the discovery paths from Section 2, at the top of the project you want the agent to work in.  Use `.agents/skills/`, the same path this deck has used throughout.
+A `.skill` file is a zip archive of one skill directory, which is also how you would share your own skill from the Skill Design Study if you chose to.  Installing it by hand is the whole procedure: extract it into one of the discovery paths from Section 2, at the top of the project you want the agent to work in.  Use `.agents/skills/`, the same path this deck has used throughout.
 
 ```bash
 mkdir -p .agents/skills

@@ -16,7 +16,7 @@ tags:
 
 ## About This Tutorial
 
-A skill is a named, reusable instruction set that an agent loads and follows.  This tutorial is the reference for writing one.  It covers the spectrum from a prompt to a packaged skill, where opencode and pi look for skills on disk, the authoring principles your skills are graded against, how to publish a skill repository, and the claim protocol two agents need when they hand work to each other through a shared medium.  You use all of it in the [Skill Design Study]({{ site.baseurl }}/Assignments/SkillDesignStudy), where you author, install, and invoke two skills of your own, and in the Local Agent Lab's optional extension, where an AI tool generates one for you and you find where it is wrong.  The claim-protocol section at the end is also the reading behind the handoff design document the syllabus assigns.
+A skill is a named, reusable instruction set that an agent loads and follows.  This tutorial is the reference for writing one.  It covers the spectrum from a prompt to a packaged skill, where opencode and pi look for skills on disk, the authoring principles your skills are graded against, how to publish a skill repository, and the claim protocol two agents need when they hand work to each other through a shared medium.  You use all of it in the [Skill Design Study]({{ site.baseurl }}/Assignments/SkillDesignStudy), where you author, install, run, and refine a skill of your own, and in the Local Agent Lab's optional extension, where an AI tool generates one for you and you find where it is wrong.  The claim-protocol section at the end is also the reading behind the handoff design document the syllabus assigns.
 {: .tb-lede}
 
 ---
@@ -296,7 +296,7 @@ Two details decide whether this works for someone else:
 - The directory name is the skill name, and it has to match `name:` in the front matter.  Rename the directory during install and the skill stops loading, with no error message saying so.
 - `README.md` at the repository root is for humans; `SKILL.md` inside each directory is for the agent.  Do not merge them.  A `README.md` that explains your design decisions is what a reviewer reads.  A `SKILL.md` that opens with a paragraph of rationale is a skill whose instructions the agent has to dig for.
 
-The Skill Design Study asks you to package one skill as a `.skill` archive and post it to the course discussion.  That archive is a zip of one skill directory with `SKILL.md` at its top level, which is exactly the layout above, one folder deep.
+If you want to share a skill, such as the one you write in the Skill Design Study, package it as a `.skill` archive.  That archive is a zip of one skill directory with `SKILL.md` at its top level, which is exactly the layout above, one folder deep.
 
 ### If a Skill Does Not Load
 
