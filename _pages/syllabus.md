@@ -459,11 +459,6 @@ schedule:
   title: "MCP: Connecting Agents to Tools and Your Obsidian Vault"
   link: "Activities/liascript-mcp.md"
   liapage: true
-  deliverables:
-  - dtitle: "Project: Stakeholder Brief, Individual Unassisted Problem Statement Due"
-    dlink: "Assignments/StakeholderBrief"
-    points: "3"
-    rubricpath: "_pages/Assignments/asmt-stakeholderbrief.md"
   readings:
   - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients.  Supports the Tools and MCP Lab"
     rlink: "https://huggingface.co/learn/mcp-course/"
@@ -504,10 +499,6 @@ schedule:
     dlink: "Assignments/LocalAgent"
     points: "100"
     rubricpath: "_pages/Assignments/lab-localagent.md"
-  - dtitle: "Lab: Tools and MCP Handed Out"
-    dlink: "Assignments/ToolsMCP"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-toolsmcp.md"
   readings:
   - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Please bring your team's Stakeholder Brief draft, because the peer review round works on real drafts."
@@ -518,10 +509,6 @@ schedule:
   link: "Activities/liascript-howiai.md"
   liapage: true
   deliverables:
-  - dtitle: "Project: Final Project Handed Out"
-    dlink: "Projects/FinalProject"
-    points: "100"
-    rubricpath: "_pages/Projects/proj-finalproject.md"
   - dtitle: "Project: Final Project Proposal Handed Out"
     dlink: "Projects/FinalProjectProposal"
     points: "25"
@@ -534,6 +521,10 @@ schedule:
     dlink: "Assignments/StakeholderBrief"
     points: "100"
     rubricpath: "_pages/Assignments/asmt-stakeholderbrief.md"
+  - dtitle: "Lab: Tools and MCP Handed Out"
+    dlink: "Assignments/ToolsMCP"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-toolsmcp.md"
   readings:
   - rtitle: "Bring your stuck points and your pipeline-in-progress.  Part III is an open studio and it is only as useful as the problems you bring to it."
   - rtitle: "The Second Brain in depth: Obsidian, gitless GitHub sync, and the metadata protocol that makes agent writes safe"
@@ -545,6 +536,11 @@ schedule:
   title: "Observability, Traceability, and Handoff Protocols"
   link: "Activities/liascript-observability.md"
   liapage: true
+  deliverables:
+  - dtitle: "Project: Final Project Handed Out"
+    dlink: "Projects/FinalProject"
+    points: "100"
+    rubricpath: "_pages/Projects/proj-finalproject.md"
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class.  What is the longest-running piece of work you have done with an AI tool, and where did it start losing the thread?"
   - rtitle: "Memory and the Small Context Window Principle: why an agent that remembers everything gets worse, and the four kinds of memory today's protocols write down"
