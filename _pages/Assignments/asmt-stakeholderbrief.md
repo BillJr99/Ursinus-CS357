@@ -5,23 +5,23 @@ title: "CS357: Foundations of Artificial Intelligence - Stakeholder Brief"
 
 info:
   coursenum: CS357
-  purpose: "To ground your semester project in a real problem owned by a real person outside CS, and to understand that problem through the disciplines it actually lives in, not only through ours."
+  purpose: "To ground your semester project in a problem owned by a person outside CS, whether a real stakeholder you interview or a stakeholder persona that stands for your target audience, and to understand that problem through the disciplines it actually lives in, not only through ours."
   tilt:
-    task: "Anchor your team in a real community partner (from the course partner roster shared in class, or an approved stakeholder group), conduct a prepared listen-and-learn interview, and write a 2-3 page brief with six required sections that frames the problem in the stakeholder's own terms."
-    criteria: "I grade this on the issue in the stakeholder's own terms, at least two disciplinary perspectives that actually interact, a documented professional interview, and an account of what you do not yet know.  See the rubric below for the full breakdown."
+    task: "Anchor your team in a stakeholder outside CS: interview a real one if you can, or invent a stakeholder persona for your target audience and brainstorm the questions they would ask and your answers.  Then write a 2-3 page brief with six required sections that frames the problem in the stakeholder's own terms."
+    criteria: "I grade this on the issue in the stakeholder's own terms, at least two disciplinary perspectives that actually interact, a documented interview or persona brainstorm, and an account of what you do not yet know.  See the rubric below for the full breakdown."
   points: 100
   goals:
-    - To identify and research an issue, question, or practical problem by finding a real stakeholder outside computer science and learning their problem in their own terms (Goal 11)
+    - To identify and research an issue, question, or practical problem by finding a stakeholder outside computer science, real or a persona for the target audience, and learning their problem in their own terms (Goal 11)
     - To develop a multi-disciplinary understanding of the problem, naming the disciplinary perspectives involved and how each frames what a solution would mean (Goal 12)
-    - To conduct a professional, well-prepared, listen-and-learn stakeholder interview with appropriate consent and follow-up etiquette
+    - To conduct a professional, well-prepared, listen-and-learn stakeholder interview with appropriate consent and follow-up etiquette, or, without one, to anticipate a stakeholder persona's questions and answer them honestly
     - To translate a stakeholder's account into a problem statement that an agent system could address, honestly scoped by what the team does not yet know
   rubric:
     - weight: 30
       description: Problem Identification and Research Grounding (Goal 11)
-      preemerging: No real stakeholder is identified, or the "problem" is invented by the team rather than drawn from the stakeholder
-      beginning: A stakeholder is named but the issue is described in the team's words rather than the stakeholder's, or the brief shows no preparation research about the stakeholder's context
-      progressing: A real community partner outside CS was interviewed and the issue is presented in their terms with supporting context, but the problem statement stops at the partner's first framing rather than the problem behind it, drifts from what the stakeholder actually said, or is too broad to act on
-      proficient: The brief presents a real, named-with-consent community partner outside CS (from the course partner roster shared in class, or an instructor-approved stakeholder group); the issue appears in the stakeholder's own terms (with at least two direct quotes captured with permission, or attributed close paraphrases); the problem statement reaches the problem behind the stated problem, is specific, traceable to the interview, and framed as something an agent system could plausibly address; the "what we don't yet know" section names concrete open questions rather than generic uncertainty (Goal 11)
+      preemerging: No stakeholder is identified, real or persona, or the "problem" is the team's own idea with no stakeholder behind it
+      beginning: A stakeholder or persona is named but the issue is described in the team's words rather than the stakeholder's, or the brief shows no preparation research about the stakeholder's context
+      progressing: A stakeholder outside CS was interviewed, or a persona was built and brainstormed, and the issue is presented in their terms with supporting context, but the problem statement stops at the first framing rather than the problem behind it, drifts from the interview or brainstorm, or is too broad to act on
+      proficient: The brief presents either a real, named-with-consent stakeholder outside CS or a clearly labeled stakeholder persona that stands for the target audience, grounded in research about that audience; the issue appears in the stakeholder's own terms (at least two direct quotes or close paraphrases from the interview, or two persona statements labeled as such); the problem statement reaches the problem behind the stated problem, is specific, traceable to the interview or brainstorm, and framed as something an agent system could plausibly address; the "what we don't yet know" section names concrete open questions, including which persona answers are assumptions still to verify (Goal 11)
     - weight: 30
       description: Multi-Disciplinary Understanding (Goal 12)
       preemerging: The brief treats the problem as purely technical, with no disciplinary perspective beyond CS
@@ -29,11 +29,11 @@ info:
       progressing: At least two disciplinary perspectives are identified with a plausible account of each, but the brief does not connect them, the perspectives sit in separate paragraphs without interaction
       proficient: The brief names at least two disciplinary perspectives beyond CS involved in the problem, explains what each discipline notices that the others miss (including what would count as evidence or success in that discipline), and identifies at least one point where the perspectives are in tension, a place where the eventual project will have to choose (Goal 12)
     - weight: 20
-      description: Interview Quality and Professionalism
-      preemerging: No interview took place, or the interaction is undocumented
-      beginning: An interview took place but was unprepared, no prep questions, no record of what was asked, or missing consent to be named
-      progressing: The interview followed the protocol with prep questions and a documented listen-and-learn stance, with a minor gap such as a missing follow-up thank-you or an unclear consent record
-      proficient: The interview packet shows the full protocol, researched prep questions written in advance, a documented listen-and-learn stance (the record shows the stakeholder talking more than the interviewers), explicit consent to be named (or the brief anonymizes accordingly), and a follow-up message thanking the stakeholder and confirming the team's understanding, with the stakeholder's confirmation or corrections noted
+      description: Interview or Persona Brainstorm Quality
+      preemerging: Neither an interview nor a persona brainstorm is documented
+      beginning: An interview took place but was unprepared or is missing its consent record, or a persona was written but its questions were not anticipated and answered
+      progressing: The interview followed the protocol with a minor gap such as a missing follow-up thank-you, or the persona brainstorm answers at least six anticipated questions but the answers stay generic or do not separate assumptions from what is known
+      proficient: "Route A (interview): the packet shows researched prep questions written in advance, a listen-and-learn record in which the stakeholder talks more than the interviewers, explicit consent to be named (or anonymization), and a follow-up message with the stakeholder's confirmation or corrections.  Route B (persona): the packet shows a persona grounded in research about the target audience (role, context, pressures, vocabulary, what a good day looks like), at least six questions that persona would ask, answered specifically in the persona's terms, with each answer marked as supported by a source or as an assumption to verify"
     - weight: 20
       description: Writeup, Process, and Submission
       preemerging: An incomplete submission is provided
@@ -55,15 +55,15 @@ tags:
 
 ---
 
-In this Project Thread milestone, your team finds a real stakeholder outside computer science, interviews them, and writes a 2-3 page Stakeholder Brief that states their problem in their own words.
+In this Project Thread milestone, your team finds a stakeholder outside computer science, learns their problem, and writes a 2-3 page Stakeholder Brief that states it in their own words.  If you can interview a real stakeholder, do.  If you cannot, invent a **stakeholder persona** who stands for your target audience, anticipate the questions that person would ask, and answer them as part of your brainstorm.
 
-A **stakeholder** is a real person or office who owns the problem: they experience it, they would benefit from progress on it, and they can tell you when you have misunderstood it.
+A **stakeholder** is a person or office who owns the problem: they experience it, they would benefit from progress on it, and they can tell you when you have misunderstood it.  A **stakeholder persona** is a realistic, researched description of such a person, written by your team when no real one is available.
 
 The brief ends in a problem statement: one paragraph, traceable to the interview, that names a problem an agent system could address without committing to a design. Along the way you describe the disciplines the problem lives in. A **discipline** is a field of study or practice, such as education, accounting, ecology, or public health, with its own way of deciding what counts as evidence and what "solved" means.
 
-I identify the community partners: campus offices and local organizations who have agreed to talk with student teams. I share the roster in class before the kickoff rather than publishing it on the website. Your team anchors its brief in one real partner from that roster, or, while the roster is pending, in a concrete named stakeholder group your team identifies and I approve.
+I identify the community partners: campus offices and local organizations who have agreed to talk with student teams. I share the roster in class before the kickoff rather than publishing it on the website. Your team anchors its brief in one partner from that roster, in a concrete stakeholder group your team identifies and I approve, or, if no interview is possible, in a stakeholder persona for your target audience.
 
-This brief does more work later in the semester than any other early deliverable. It anchors your Literature Review. It becomes the stakeholder-needs section of your Final Project proposal on any of the three tracks. And it seeds the partner-facing artifact your team presents at Demo Day, so the understanding you build here is understanding you hand back to a real person.
+This brief does more work later in the semester than any other early deliverable. It anchors your Literature Review. It becomes the stakeholder-needs section of your Final Project proposal on any of the three tracks. And it seeds the audience-facing artifact your team presents at Demo Day.
 
 The point of this milestone is a professional skill CS courses rarely practice: problem finding before problem solving. Real problems do not arrive as specs. They arrive as a person describing a frustration, in the vocabulary of their own field, with the important constraints unstated. Sitting in that uncertainty without rushing to a solution is what Shulman (2005) calls a pedagogy of uncertainty. It is also the difference between building something and building something useful.
 
@@ -76,13 +76,13 @@ This is a team assignment with one individual gate in the middle, and the order 
 | Phase | What happens | When |
 |-------|--------------|------|
 | 1. Kickoff | I hand out the assignment in class and you run the speed-dating round that generates candidate problems. | See the course schedule. |
-| 2. Stakeholder contact | Your team claims a roster partner (or I approve a self-identified one) and sends a first message. | The day of the kickoff; see the course schedule. |
-| 3. Interview | A prepared, listen-and-learn conversation with consent recorded and a follow-up message sent. | In the first week of the milestone; see the course schedule. |
+| 2. Stakeholder contact or persona | Your team claims a roster partner (or I approve a self-identified one) and sends a first message, or decides to build a stakeholder persona instead. | The day of the kickoff; see the course schedule. |
+| 3. Interview or persona brainstorm | A prepared, listen-and-learn conversation with consent recorded and a follow-up message sent, or a persona brainstorm that anticipates and answers the persona's questions. | In the first week of the milestone; see the course schedule. |
 | 4. Individual problem statement | Each member writes half a page alone, without AI, and submits it individually. | After the interview and before team drafting; bring it to the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session. See the course schedule. |
 | 5. Team brief draft | The team writes the 2-3 page brief and the interview packet, with any tools and with disclosure. | Before the peer exchange; see the course schedule. |
 | 6. Peer exchange and revision | Teams swap drafts in class using SQR cards, then revise and submit. | At the *RAG Quality: Chunking and Measuring Retrieval* session; the revised brief is due by the date in the course schedule. |
 
-> **Time budget.** The milestone spans a little over three weeks on purpose, but the interview has to happen in the first week, because your individual statement is written after it. Scheduling the interview is the long pole: a person has to answer you, and you do not control that lead time. Start on it the day the assignment is handed out.
+> **Time budget.** The milestone spans a little over three weeks on purpose, but the interview or persona brainstorm has to happen in the first week, because your individual statement is written after it. If you are interviewing, scheduling is the long pole: a person has to answer you, and you do not control that lead time. Start on it the day the assignment is handed out, and switch to a persona if no one answers in time.
 
 ---
 
@@ -90,11 +90,12 @@ This is a team assignment with one individual gate in the middle, and the order 
 
 | Term | Plain-English Definition | Where It Appears |
 |------|--------------------------|------------------|
-| **Stakeholder** | A real person or office, outside computer science, who owns the problem: they experience it, they would benefit from progress on it, and they can tell you when you have misunderstood it. Usually a community partner from the course roster shared in class. | Phase 2 |
-| **Listen-and-learn stance** | An interview posture in which your goal is to understand, not to pitch. You ask probing questions, you follow up, you listen for the problem behind the stated problem, and you do not propose solutions in the first meeting. | Phase 3 |
+| **Stakeholder** | A person or office, outside computer science, who owns the problem: they experience it, they would benefit from progress on it, and they can tell you when you have misunderstood it. Often a community partner from the course roster shared in class. | Phase 2 |
+| **Stakeholder persona** | A realistic, researched description of a person in your target audience, written by your team when no real stakeholder can be interviewed: their role, context, pressures, vocabulary, and what a good day looks like. | Phase 3, Route B |
+| **Listen-and-learn stance** | An interview posture in which your goal is to understand, not to pitch. You ask probing questions, you follow up, you listen for the problem behind the stated problem, and you do not propose solutions in the first meeting. | Phase 3, Route A |
 | **The problem in the stakeholder's own terms** | The issue as the stakeholder describes it, in their vocabulary, before any translation into CS language. Captured with quotes. | Brief section 2 (Phase 5) |
 | **Disciplinary perspective** | A field's characteristic way of framing the problem: what it notices, what it measures, what counts as evidence, what "solved" means. | Brief section 3 (Phase 5) |
-| **Problem statement** | One paragraph, traceable to the interview, stating the problem an agent system could address, without committing to a design yet. | Brief section 4 (Phase 5) |
+| **Problem statement** | One paragraph, traceable to the interview or persona brainstorm, stating the problem an agent system could address, without committing to a design yet. | Brief section 4 (Phase 5) |
 | **Track fit** | A short argument that the problem could support any of the three final-project tracks (build, audit, or open-source), keeping your options open until the final-project tracks are handed out. | Brief section 5 (Phase 5) |
 | **Known unknowns** | The concrete things you would need to find out before proposing anything, the edge of your understanding. | Brief section 6 (Phase 5) |
 
@@ -149,7 +150,9 @@ Whether from the roster or self-identified, the stakeholder must be real and out
 - **Local organizations:** nonprofits, community centers, historical societies, food banks, small businesses, municipal offices
 - **Another discipline on campus:** faculty or students in biology, education, environmental studies, economics, art, health sciences, anyone with a research or operational problem outside CS
 
-Not acceptable: another CS student or CS faculty member's tooling problem, a hypothetical persona, or "students in general." If your team is unsure whether a candidate qualifies, ask me before the interview.
+Not acceptable: another CS student or CS faculty member's tooling problem, or "students in general." If your team is unsure whether a candidate qualifies, ask me before the interview.
+
+**If you cannot get an interview.** A real conversation is the stronger route, but it is not required. If no stakeholder is available in time, build a stakeholder persona for your target audience instead (Phase 3, Route B). The persona still has to be specific and outside CS: "the evening-shift coordinator at a food bank" works, "users" does not. Log the decision in your decision log.
 
 > **Do this.**
 > 1. Pick your stakeholder from the roster, the standing list, or your own approved candidate, and log the choice in your decision log.
@@ -162,11 +165,13 @@ Not acceptable: another CS student or CS faculty member's tooling problem, a hyp
 
 ---
 
-## Phase 3: Interview the Stakeholder
+## Phase 3: Interview the Stakeholder, or Brainstorm with a Persona
 
 Understand before you invent. This milestone teaches you to see the issue from the stakeholder's perspective (their pressures, their constraints, their definition of a good day) before your team generates a single solution idea. You are not visiting a partner to validate a project concept. You are there to learn what the problem feels like from inside their work. Ideation comes later, and it will be better for the wait.
 
-The interview protocol has four steps. Your interview packet, which you attach to the brief as an appendix, documents each one.
+There are two routes. **Route A** is a real interview, in four steps, documented in an interview packet. **Route B**, for teams that cannot get an interview in time, is a stakeholder persona and a brainstorm of the questions that persona would ask, documented in a persona packet. Either packet is attached to the brief as an appendix.
+
+### Route A: Interview a Real Stakeholder
 
 ### Step 3.1: Prepare
 
@@ -223,13 +228,31 @@ The follow-up message is your first accuracy check, and it keeps the door open f
 > - the consent record: whether the stakeholder agreed to be named, and which quotes you may use
 > - the follow-up exchange: your thank-you and summary, and the stakeholder's confirmation or corrections
 
+### Route B: Build a Stakeholder Persona and Brainstorm Its Questions
+
+Use this route when no real stakeholder can be interviewed in time. The persona stands in for the person your project would serve, so it has to be specific and grounded in research, not invented from thin air.
+
+> **Do this.**
+> 1. Research your target audience the way Step 3.1 describes: the public materials of the kind of office or organization they work in, and the basics of their field.
+> 2. Write the persona in half a page: a role and setting ("the volunteer coordinator at a mid-sized food bank"), their daily context, the pressures they are under, the vocabulary they use, what a good day looks like for them, and what has already been tried.
+> 3. Brainstorm at least six questions this persona would ask your team, in their voice. Think about what they would worry about: "Will this take more of my volunteers' time, not less?", "Who fixes it when it breaks?", "Can I trust the numbers it gives me?"
+> 4. Answer each question as part of your brainstorm, specifically and in the persona's terms, not in CS terms.
+> 5. Mark every answer as either **supported** (cite the source that backs it) or an **assumption to verify**. The assumptions become open questions in brief section 6.
+
+Persona statements can stand in for quotes in brief section 2, as long as they are clearly labeled as the persona's words and not a real person's.
+
+> **Paste into your submission.** The persona packet, attached to the brief as an appendix:
+> - the persona (half a page) and the sources you researched it from
+> - the six or more anticipated questions, each with its answer
+> - each answer marked supported (with source) or assumption to verify
+
 ---
 
 ## Phase 4: Write Your Own First Draft, Without AI
 
 > **Bring to class.** Your half-page unassisted problem statement comes with you to the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, written individually and without AI before your team drafts the brief. It is a calibration baseline, not a test, completion credit only. Your team's brief draft then travels to the *RAG Quality: Chunking and Measuring Retrieval* session for the cross-team [peer review round]({{ site.baseurl }}/Projects/PBLThread#intra-team-check-ins-1-3).
 
-This statement is due individually after your interview and before your team begins drafting the brief in Phase 5; see the [course schedule]({{ site.baseurl }}/) for the date. It is worth **3 points, assessed within Class Activities and Participation, on completion only.**
+This statement is due individually after your interview or persona brainstorm and before your team begins drafting the brief in Phase 5; see the [course schedule]({{ site.baseurl }}/) for the date. It is worth **3 points, assessed within Class Activities and Participation, on completion only.**
 
 This is a calibration exercise, not a test. It is not compared against your teammates' drafts, it is not marked for quality, and nothing in it can lower your grade. It exists for two reasons, both of them yours:
 
@@ -237,7 +260,7 @@ This is a calibration exercise, not a test. It is not compared against your team
 - **It is a baseline you can point at.** Later in the semester you will want to know what you can do unaided, because that is the only way to tell whether a tool is extending your judgment or substituting for it. Keep this draft. Re-read it at Demo Day.
 
 > **Do this.**
-> 1. After your interview and before your team writes anything together, sit down by yourself with no AI assistance of any kind.
+> 1. After your interview or persona brainstorm and before your team writes anything together, sit down by yourself with no AI assistance of any kind.
 > 2. Write half a page: what you now believe the stakeholder's real problem is, in your own words, and the one thing you are least sure about.
 > 3. Stop there. No sources, no polish, no rewriting it later. A first honest attempt.
 > 4. Bring it to class in whatever form you wrote it (typed, handwritten, or a photo of the page).
@@ -251,24 +274,24 @@ This is a calibration exercise, not a test. It is not compared against your team
 Write 2-3 pages with the six sections below. Every section names its primary author, and every member is primary author of at least one section (the standing [Project Thread]({{ site.baseurl }}/Projects/PBLThread) rule). This phase is open to whatever tools you want, with disclosure.
 
 1. **Stakeholder context.** Who they are (as consented), what their office or field does, and how this problem fits into their work.
-2. **The issue in the stakeholder's own terms.** Their framing, their vocabulary, at least two direct quotes or attributed close paraphrases. Resist translation; that comes later.
+2. **The issue in the stakeholder's own terms.** Their framing, their vocabulary, at least two direct quotes or attributed close paraphrases, or, on Route B, two persona statements labeled as the persona's. Resist translation; that comes later.
 3. **Disciplinary perspectives involved.** At least two perspectives beyond CS. For each: what does this discipline notice about the problem, what would count as evidence, and what would "solved" mean? Name at least one point where the perspectives pull in different directions.
-4. **A problem statement an agent system could address.** One paragraph, traceable to the interview. State the problem, not a design.
+4. **A problem statement an agent system could address.** One paragraph, traceable to the interview or persona brainstorm. State the problem, not a design.
 5. **Candidate track fit.** Two or three sentences per direction showing the problem could support all three directions of the [Final Project]({{ site.baseurl }}/Projects/FinalProject): a built Custom Agent Team, a Responsible AI Audit of an existing or proposed system in this domain, or an Open-Source Agent artifact the stakeholder's community could adopt. You are not choosing a track yet; you are proving the problem is rich enough to keep the choice open.
 6. **What you don't yet know.** Concrete open questions: missing facts, unverified assumptions, and things only the literature (or a second conversation) can answer. This section seeds your Literature Review.
 
 > **Do this.**
 > 1. Start from the individual statements, not from a blank page or a prompt. Reconcile where they disagree; the disagreements usually point at section 6.
 > 2. Assign a primary author to each section, and check that every member is primary author of at least one.
-> 3. Write sections 1 and 2 from your interview notes and permitted quotes. If the stakeholder declined to be named, describe the role, not the person.
+> 3. Write sections 1 and 2 from your interview notes and permitted quotes, or from your persona packet. If the stakeholder declined to be named, describe the role, not the person. Label a persona as a persona.
 > 4. Write section 3 so that the two disciplines interact, not sit in separate paragraphs: say what each notices that the other misses, and where they pull against each other.
-> 5. Write section 4 as one paragraph, and check that every claim in it traces back to something in the interview packet.
-> 6. Write sections 5 and 6, then attach the interview packet as an appendix.
+> 5. Write section 4 as one paragraph, and check that every claim in it traces back to something in the interview or persona packet.
+> 6. Write sections 5 and 6, then attach the interview or persona packet as an appendix.
 > 7. Record what, if anything, was AI-assisted, with what tool, and how the team verified it.
 
 > **Paste into your submission.** One PDF containing:
 > - the 2-3 page brief with all six sections, primary author named per section
-> - the interview packet appendix (prep questions, notes, consent record, follow-up exchange)
+> - the interview packet appendix (prep questions, notes, consent record, follow-up exchange), or the persona packet appendix (persona, sources, anticipated questions and answers)
 > - all team members' typed signatures, re-affirming your charter
 > - an AI-use disclosure: what, if anything, was AI-assisted, with what tool, and how the team verified it
 
@@ -294,7 +317,7 @@ At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange d
 |------------------|---------------|------------|
 | Half-page unassisted problem statement, submitted individually via the LMS by the date in the [course schedule]({{ site.baseurl }}/) | What you believed the stakeholder's real problem was, unaided, after the interview | 3 points, Class Activities and Participation, completion only |
 | The 2-3 page brief (six sections, primary author named per section), in the team PDF via the LMS by the brief's due date | The issue in the stakeholder's own terms, the disciplinary perspectives and where they conflict, the problem statement, the track fit, and what you do not yet know | Problem Identification and Research Grounding (30); Multi-Disciplinary Understanding (30); Writeup, Process, and Submission (20) |
-| Interview packet appendix (prep questions, notes, consent record, follow-up exchange) | That the interview followed the full protocol and the stakeholder confirmed your understanding | Interview Quality and Professionalism (20) |
+| Interview packet appendix (prep questions, notes, consent record, follow-up exchange), or persona packet appendix (persona, sources, anticipated questions and answers) | That the interview followed the full protocol, or that the persona is grounded and its questions were answered honestly | Interview or Persona Brainstorm Quality (20) |
 | All team members' typed signatures, re-affirming your charter | That every member stands behind the submission | Writeup, Process, and Submission (20) |
 | AI-use disclosure (what, if anything, was AI-assisted, with what tool, and how the team verified it) | How the team used tools and checked their output | Writeup, Process, and Submission (20) |
 | Reflection prompt answers, written individually | What changed in your understanding | Writeup, Process, and Submission (completeness) |
@@ -303,8 +326,8 @@ At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange d
 
 ## Self-Check Before You Submit
 
-- [ ] The stakeholder is a **real person or organization** we could contact, not a persona.
-- [ ] The brief reports what they said, with quotes or specific paraphrase, not what we assumed they would say.
+- [ ] The stakeholder is a **real person or organization** we interviewed, or a **clearly labeled persona** grounded in research about our target audience.
+- [ ] The brief reports what they said (or, for a persona, what we anticipated and answered), and every persona answer is marked supported or an assumption to verify.
 - [ ] Every team member's individual unassisted draft was written before team drafting began, and is included.
 - [ ] The problem is framed as **their** problem, in their terms, and would be recognizable to them.
 - [ ] Constraints they named are recorded even where they are inconvenient for the system we want to build.
@@ -319,5 +342,5 @@ At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange d
 
 Answer individually in your submission, keyed to the Open Questions (Goal 15):
 
-- *What should matter to me?* Before the interview you had assumptions about what this stakeholder's real problem was. Which assumption died first, and what does the gap between what you expected to matter and what actually mattered to them tell you about how you choose problems?
+- *What should matter to me?* Before the interview or persona brainstorm you had assumptions about what this stakeholder's real problem was. Which assumption died first, and what does the gap between what you expected to matter and what actually mattered to them tell you about how you choose problems?
 - *How can we understand the world?* Name one thing the stakeholder's discipline treats as obvious evidence that CS would not, or vice versa. What would your team lose by using only one of the two lenses?
