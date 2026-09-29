@@ -150,7 +150,8 @@ Every variable lives here: the endpoint, the model, the seed, and the four steps
 
 ```json
 {
-  "ollama_url": "http://host.docker.internal:11434",
+  "provider_url": "http://host.docker.internal:11434",
+  "api_key": null,
   "model": "llama3.2",
   "timeout_seconds": 120,
   "log_level": "INFO",
@@ -523,7 +524,8 @@ response are what the trace table reports.
 
 Config keys this module reads:
 
-    ollama_url        the base URL of the Ollama server
+    provider_url      the base URL of the Ollama server (local or hosted)
+    api_key           sent as a Bearer token when set; null for local Ollama
     model             the model tag to call, for example "llama3.2"
     timeout_seconds   how long one request may take before it is abandoned
     log_level         DEBUG, INFO, WARNING, or ERROR
@@ -553,7 +555,7 @@ def load_config(path="config.json"):
             level=getattr(logging, str(cfg.get("log_level", "INFO")).upper(), logging.INFO),
             format="%(asctime)s %(levelname)s %(name)s %(message)s")
         log.debug("config loaded from %s: model=%s url=%s",
-                  path, cfg.get("model"), cfg.get("ollama_url"))
+                  path, cfg.get("model"), cfg.get("provider_url"))
         return cfg
     except FileNotFoundError as e:
         print(f"[ollama_client:load_config] no config file at {path}")
@@ -582,7 +584,7 @@ def chat(cfg, user, system=None, temperature=0.0, seed=42, **extra):
     treat as standing policy.  Sampling options travel in the `options` object,
     which is where Ollama's native API expects them.
     """
-    url = str(cfg.get("ollama_url", "http://localhost:11434")).rstrip("/") + "/api/chat"
+    url = str(cfg.get("provider_url", "http://localhost:11434")).rstrip("/") + "/api/chat"
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
@@ -595,7 +597,8 @@ def chat(cfg, user, system=None, temperature=0.0, seed=42, **extra):
                "options": options}
     try:
         log.debug("POST %s model=%s options=%s", url, payload["model"], options)
-        r = requests.post(url, json=payload,
+        headers = {"Authorization": f"Bearer {cfg['api_key']}"} if cfg.get("api_key") else {}
+        r = requests.post(url, json=payload, headers=headers,
                           timeout=cfg.get("timeout_seconds", 120))
         r.raise_for_status()
         data = r.json()

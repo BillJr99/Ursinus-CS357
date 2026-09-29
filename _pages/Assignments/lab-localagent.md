@@ -114,7 +114,7 @@ On the no-code path, read "log" as "exported chat transcript" and "code" as "con
 
 **Tools to install.**
 
-*Both paths.*  Ollama is a local server that runs open language models on your machine; `llama3.2` is a 2 GB model that fits on most laptops.  If you finished the Overview assignment, you already have both.
+*Both paths.*  Ollama is a local server that runs open language models on your machine; `llama3.2` is a 2 GB model that fits on most laptops.  If you finished the Overview assignment, you already have both.  If your computer cannot run a local model well, you can use a hosted provider instead; Step 1.1 shows the two lines to change, and I can help you pick one.
 
 ```bash
 # Install Ollama (macOS/Linux).  On Windows, download the installer from https://ollama.com/download
@@ -219,23 +219,46 @@ Model name, temperature, seed, and step budget live in a config file, not in the
   "temperature": 0.2,
   "seed": 42,
   "step_budget": 8,
-  "ollama_url": "http://localhost:11434/api/chat"
+  "provider_url": "http://localhost:11434/api/chat",
+  "api_key": null
 }
 ```
+
+`provider_url` is where the model lives, and `api_key` is the key that provider needs.  For local Ollama the key is `null`, because a server on your own machine asks for none.
+
+> **If your computer cannot run a local model.**  If `llama3.2` is too slow, or too big for your machine's memory, you do not have to change your code: point `config.json` at a hosted provider instead.  Talk with me and we will find one that fits your machine and budget; OpenAI-compatible services and Ollama's own hosted service both work with the code below.  Only three lines change:
+>
+> ```json
+> {
+>   "model": "the-provider's-model-name",
+>   "temperature": 0.2,
+>   "seed": 42,
+>   "step_budget": 8,
+>   "provider_url": "https://your-provider.example/v1/chat/completions",
+>   "api_key": "sk-your-key-here"
+> }
+> ```
+>
+> - `model` is the name the provider uses for the model, which is not always the same as Ollama's.
+> - `provider_url` is the provider's chat endpoint.  Most hosted providers speak the OpenAI format, whose URLs end in `/chat/completions`; `call_model` below recognizes that ending and sends the matching request.  A hosted Ollama server ends in `/api/chat`, like the local one.
+> - `api_key` is your key.  It is sent as a Bearer token.  Treat it like a password: keep `config.json` out of any public repository (add it to `.gitignore`), and never paste the key into a writeup.
+>
+> Some hosted providers ignore `seed`, so your runs may vary a little more than they would locally; say so in your writeup if you switch.
 
 
 Or have opencode do it:
 
 ```text
 Create localagent/config.json in this repository with keys for model, temperature,
-seed, step_budget, and ollama_url, matching the values in the lab handout.  Create nothing else.
+seed, step_budget, provider_url, and api_key, matching the values in the lab handout.
+Create nothing else.
 ```
 
 Open the file afterward and make sure the seed and the step budget are really there.  Both exist so that Part 3's evaluation is reproducible, and a run you cannot reproduce is a number you cannot report.
 
 ### Step 1.2: Write the model call function
 
-This function sends the whole message history to Ollama and returns the model's reply as a string.  It is the only place in the loop that touches the network.
+This function sends the whole message history to the model provider (local Ollama unless you changed `provider_url`) and returns the model's reply as a string.  It is the only place in the loop that touches the network.
 
 > **Do this.**
 > 1. Create `agent.py` in the same folder.
@@ -251,20 +274,40 @@ def load_config(path="config.json"):
         return json.load(f)
 
 def call_model(messages, config):
-    """Send message history to Ollama and return the assistant reply string."""
-    payload = {
-        "model": config["model"],
-        "messages": messages,
-        "stream": False,
-        "options": {
+    """Send message history to the model provider and return the assistant reply string."""
+    url = config["provider_url"]
+    headers = {}
+    if config.get("api_key"):
+        # Hosted providers need a key; local Ollama does not, so api_key is null there.
+        headers["Authorization"] = f"Bearer {config['api_key']}"
+
+    if url.rstrip("/").endswith("/chat/completions"):
+        # OpenAI-style providers: sampling settings sit at the top level.
+        payload = {
+            "model": config["model"],
+            "messages": messages,
+            "stream": False,
             "temperature": config["temperature"],
             "seed": config["seed"]
         }
-    }
+    else:
+        # Ollama (local or hosted): sampling settings sit under "options".
+        payload = {
+            "model": config["model"],
+            "messages": messages,
+            "stream": False,
+            "options": {
+                "temperature": config["temperature"],
+                "seed": config["seed"]
+            }
+        }
     try:
-        response = requests.post(config["ollama_url"], json=payload, timeout=60)
+        response = requests.post(url, json=payload, headers=headers, timeout=60)
         response.raise_for_status()
-        return response.json()["message"]["content"]
+        data = response.json()
+        if "choices" in data:
+            return data["choices"][0]["message"]["content"]   # OpenAI-style reply
+        return data["message"]["content"]                     # Ollama reply
     except Exception as e:
         print(f"[lab1:call_model] {e}")
         traceback.print_exc()
@@ -278,9 +321,11 @@ Or have opencode do it:
 
 ```text
 In localagent/agent.py, write load_config() to read config.json, and call_model()
-to POST the full message history to the Ollama chat endpoint at
-http://localhost:11434 and return the model's reply as a string.  Pass temperature
-and seed from the config.  Use requests.  Write no other functions.
+to POST the full message history to config["provider_url"] and return the model's
+reply as a string.  Pass temperature and seed from the config.  If config["api_key"]
+is set, send it as a Bearer token.  If the URL ends in /chat/completions, use the
+OpenAI request and reply shape; otherwise use Ollama's.  Use requests.  Write no
+other functions.
 ```
 
 Read the result for one thing in particular: where the network call can fail, and what happens when it does.  This is the only function in the loop that touches the network, so it is the only one that can hang.
@@ -433,7 +478,8 @@ Steps used: 1 | Reason: final_answer
 
 > **If it fails.**
 > - `ConnectionRefusedError: [Errno 111] Connection refused`: Ollama is not running.  Open a second terminal, run `ollama serve`, then retry.
-> - `KeyError: 'message'` in `call_model`: the response format differs between Ollama versions.  Print `response.json()` to inspect it, and make sure `"stream": False` is in your payload.
+> - `KeyError: 'message'` in `call_model`: the response format differs between Ollama versions, or your `provider_url` points at a provider whose URL does not end in `/chat/completions` but replies in another shape.  Print `response.json()` to inspect it, and make sure `"stream": False` is in your payload.
+> - `401 Unauthorized` or `403 Forbidden`: a hosted provider did not accept your key.  Check `api_key` in `config.json`, and that the key has not expired.
 > - The model never emits `Action:` or `Final Answer:`: your system prompt does not yet describe the format.  Write `build_system_prompt` in Part 2, then re-run.
 
 > **Checkpoint.**  Before moving to Part 2, make sure you can answer:
@@ -945,7 +991,7 @@ These are optional and carry no extra credit.  Do one if you want to push furthe
 
 **Challenge 1 (moderate): Add a memory tool.**  Give the agent `remember(key=value)` and `recall(key)` tools backed by a Python dict.  Run a two-step goal: "Remember that my exam is on 2025-12-15, then tell me how many days away it is."  Show that `recall` retrieves the stored value without the user repeating it.
 
-**Challenge 2 (harder): Retry with exponential backoff.**  Wrap `call_model` so that on `requests.Timeout` or HTTP 5xx it retries up to three times with waits of 1 s, 2 s, 4 s, logging each attempt with a located message.  Demonstrate it by temporarily pointing `ollama_url` at a non-existent port.
+**Challenge 2 (harder): Retry with exponential backoff.**  Wrap `call_model` so that on `requests.Timeout` or HTTP 5xx it retries up to three times with waits of 1 s, 2 s, 4 s, logging each attempt with a located message.  Demonstrate it by temporarily pointing `provider_url` at a non-existent port.
 
 **Challenge 3 (hardest): Benchmark two models.**  Run your full evaluation against both `llama3.2` and a second model from `ollama pull` (for example `mistral`), holding temperature and seed fixed.  Report the accuracy delta, the average step count, and any qualitative differences in how each model formats its Thought lines.  Hypothesize why they differ.
 

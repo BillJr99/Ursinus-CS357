@@ -62,7 +62,8 @@ Every value you might want to change without editing code is in `config.json`.  
 
 ```json
 {
-  "ollama_url": "http://localhost:11434",
+  "provider_url": "http://localhost:11434",
+  "api_key": null,
   "model": "llama3.2",
   "temperature": 0.2,
   "history_path": "history.json",
@@ -74,7 +75,7 @@ Every value you might want to change without editing code is in `config.json`.  
 }
 ```
 
-Three settings deserve a sentence each.  `ollama_url` can be overridden by the `OLLAMA_URL` environment variable, so the same file works inside a container.  `allowed_commands` is the first gate, described in Part IV.  `log_level` accepts `DEBUG`, `INFO`, `WARNING`, or `ERROR`; at `INFO`, every command the agent runs or refuses is logged.
+Three settings deserve a sentence each.  `provider_url` can be overridden by the `OLLAMA_URL` environment variable, so the same file works inside a container, and `api_key` stays `null` for local Ollama; set it only when `provider_url` points at a hosted Ollama server that needs a key.  `allowed_commands` is the first gate, described in Part IV.  `log_level` accepts `DEBUG`, `INFO`, `WARNING`, or `ERROR`; at `INFO`, every command the agent runs or refuses is logged.
 
 ### Questions
 
@@ -104,7 +105,7 @@ def load_config(path="config.json"):
     try:
         with open(path, encoding="utf-8") as f:
             cfg = json.load(f)
-        cfg["ollama_url"] = os.environ.get("OLLAMA_URL", cfg["ollama_url"])   # the container override
+        cfg["provider_url"] = os.environ.get("OLLAMA_URL", cfg["provider_url"])   # the container override
         return cfg
     except Exception as e:
         print(f"[tiny_agent:load_config] {e}")
@@ -114,7 +115,7 @@ def load_config(path="config.json"):
 # Step 1: prompt
 def chat(cfg, messages):
     try:
-        r = requests.post(f"{cfg['ollama_url']}/api/chat", json={
+        r = requests.post(f"{cfg['provider_url']}/api/chat", headers=({"Authorization": f"Bearer {cfg['api_key']}"} if cfg.get("api_key") else {}), json={
             "model": cfg["model"], "stream": False,
             "options": {"temperature": cfg["temperature"]},
             "messages": messages}, timeout=120)
@@ -218,7 +219,7 @@ def main():
                         format="[%(levelname)s] %(message)s")
     messages = load_history(cfg)
     messages[0] = {"role": "system", "content": build_system(cfg)}   # skill re-read on every start
-    log.info("model %s at %s, %d messages remembered", cfg["model"], cfg["ollama_url"], len(messages) - 1)
+    log.info("model %s at %s, %d messages remembered", cfg["model"], cfg["provider_url"], len(messages) - 1)
     print("Type a message.  /forget erases the memory file, /quit exits.")
     while True:
         try:
