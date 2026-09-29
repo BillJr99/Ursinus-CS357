@@ -462,7 +462,6 @@ schedule:
   readings:
   - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients.  Supports the Tools and MCP Lab"
     rlink: "https://huggingface.co/learn/mcp-course/"
-  - rtitle: "Bring your half-page unassisted problem statement, written individually and without AI, before your team drafts the brief."
     rlink: false
   - rtitle: "Optional: install Obsidian before class.  Model 3 puts an MCP server in front of a vault, and it is more useful on your own notes"
     rlink: "https://obsidian.md"
