@@ -71,18 +71,17 @@ The point of this milestone is a professional skill CS courses rarely practice: 
 
 ## Timeline
 
-This is a team assignment with one individual gate in the middle, and the order matters more here than in anything else this term. The [course schedule]({{ site.baseurl }}/) is the authority on every date; this table names the phases and the order they happen in.
+This is a team assignment, and the order matters more here than in anything else this term. The [course schedule]({{ site.baseurl }}/) is the authority on every date; this table names the phases and the order they happen in.
 
 | Phase | What happens | When |
 |-------|--------------|------|
 | 1. Kickoff | I hand out the assignment in class and you run the speed-dating round that generates candidate problems. | See the course schedule. |
 | 2. Stakeholder contact or persona | Your team claims a roster partner (or I approve a self-identified one) and sends a first message, or decides to build a stakeholder persona instead. | The day of the kickoff; see the course schedule. |
 | 3. Interview or persona brainstorm | A prepared, listen-and-learn conversation with consent recorded and a follow-up message sent, or a persona brainstorm that anticipates and answers the persona's questions. | In the first week of the milestone; see the course schedule. |
-| 4. Individual problem statement | Each member writes half a page alone, without AI, and submits it individually. | After the interview and before team drafting; bring it to the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session. See the course schedule. |
-| 5. Team brief draft | The team writes the 2-3 page brief and the interview packet, with any tools and with disclosure. | Before the peer exchange; see the course schedule. |
-| 6. Peer exchange and revision | Teams swap drafts in class using SQR cards, then revise and submit. | At the *RAG Quality: Chunking and Measuring Retrieval* session; the revised brief is due by the date in the course schedule. |
+| 4. Team brief draft | The team writes the 2-3 page brief and the interview packet, with any tools and with disclosure. | Before the peer exchange; see the course schedule. |
+| 5. Peer exchange and revision | Teams swap drafts in class using SQR cards, then revise and submit. | At the *RAG Quality: Chunking and Measuring Retrieval* session; the revised brief is due by the date in the course schedule. |
 
-> **Time budget.** The milestone spans a little over three weeks on purpose, but the interview or persona brainstorm has to happen in the first week, because your individual statement is written after it. If you are interviewing, scheduling is the long pole: a person has to answer you, and you do not control that lead time. Start on it the day the assignment is handed out, and switch to a persona if no one answers in time.
+> **Time budget.** The milestone spans a little over three weeks on purpose, but the interview or persona brainstorm has to happen in the first week, because the team drafts the brief from it. If you are interviewing, scheduling is the long pole: a person has to answer you, and you do not control that lead time. Start on it the day the assignment is handed out, and switch to a persona if no one answers in time.
 
 ---
 
@@ -93,11 +92,11 @@ This is a team assignment with one individual gate in the middle, and the order 
 | **Stakeholder** | A person or office, outside computer science, who owns the problem: they experience it, they would benefit from progress on it, and they can tell you when you have misunderstood it. Often a community partner from the course roster shared in class. | Phase 2 |
 | **Stakeholder persona** | A realistic, researched description of a person in your target audience, written by your team when no real stakeholder can be interviewed: their role, context, pressures, vocabulary, and what a good day looks like. | Phase 3, Route B |
 | **Listen-and-learn stance** | An interview posture in which your goal is to understand, not to pitch. You ask probing questions, you follow up, you listen for the problem behind the stated problem, and you do not propose solutions in the first meeting. | Phase 3, Route A |
-| **The problem in the stakeholder's own terms** | The issue as the stakeholder describes it, in their vocabulary, before any translation into CS language. Captured with quotes. | Brief section 2 (Phase 5) |
-| **Disciplinary perspective** | A field's characteristic way of framing the problem: what it notices, what it measures, what counts as evidence, what "solved" means. | Brief section 3 (Phase 5) |
-| **Problem statement** | One paragraph, traceable to the interview or persona brainstorm, stating the problem an agent system could address, without committing to a design yet. | Brief section 4 (Phase 5) |
-| **Track fit** | A short argument that the problem could support any of the three final-project tracks (build, audit, or open-source), keeping your options open until the final-project tracks are handed out. | Brief section 5 (Phase 5) |
-| **Known unknowns** | The concrete things you would need to find out before proposing anything, the edge of your understanding. | Brief section 6 (Phase 5) |
+| **The problem in the stakeholder's own terms** | The issue as the stakeholder describes it, in their vocabulary, before any translation into CS language. Captured with quotes. | Brief section 2 (Phase 4) |
+| **Disciplinary perspective** | A field's characteristic way of framing the problem: what it notices, what it measures, what counts as evidence, what "solved" means. | Brief section 3 (Phase 4) |
+| **Problem statement** | One paragraph, traceable to the interview or persona brainstorm, stating the problem an agent system could address, without committing to a design yet. | Brief section 4 (Phase 4) |
+| **Track fit** | A short argument that the problem could support any of the three final-project tracks (build, audit, or open-source), keeping your options open until the final-project tracks are handed out. | Brief section 5 (Phase 4) |
+| **Known unknowns** | The concrete things you would need to find out before proposing anything, the edge of your understanding. | Brief section 6 (Phase 4) |
 
 ---
 
@@ -112,7 +111,7 @@ You need these in place before the kickoff:
 
 Start the stakeholder contact this week. If nobody on your team knows a fitting partner, ask me. I will broker an introduction within one week of the request, and no team's brief is blocked by the roster. What blocks teams is waiting until week two to discover they have nobody.
 
-> **Why this matters.** AI is not forbidden in this milestone; the team brief and the peer exchange are open, with disclosure. The individual draft in Phase 4 is the one unassisted step, and it is a gate I do enforce. It exists so that your team's brief is a synthesis of several people's actual understanding rather than several people editing one machine's framing. You will notice the difference in the peer exchange, in both directions.
+> **Why this matters.** AI is not forbidden in this milestone; the team brief and the peer exchange are open, with disclosure. What matters is that the brief reflects what your stakeholder, or your persona brainstorm, actually told you, so keep your notes and your packet as the source for every claim.
 
 ---
 
@@ -124,7 +123,7 @@ Before any team commits to a stakeholder, we generate candidates together. Topic
 > 1. Rotate through the speed-dating pairings. Answer the question yourself in each one and listen for the problems your partner names.
 > 2. Have your team's Recorder collect every candidate mentioned across all of your pairings.
 > 3. Before class ends, short-list three candidates as a team and rank them on three questions:
->    - Access: can you realistically get an interview before the individual statement is due?
+>    - Access: can you realistically get an interview in the first week of the milestone?
 >    - Shape: could an agent system plausibly help?
 >    - Interest: does the domain match your team's survey rankings?
 > 4. Claim a roster partner if one fits (first come, logged in the decision log).
@@ -159,7 +158,7 @@ Not acceptable: another CS student or CS faculty member's tooling problem, or "s
 > 2. If the stakeholder is not from the roster, send me one sentence on Teams naming them, and wait for my confirmation before first contact.
 > 3. Send one short, professional message to the stakeholder. Say who you are, what the course is, what you are asking for (a 30-minute conversation about a problem in their work, not a commitment of any kind), and when you can meet.
 > 4. Copy me on the message if you want a credibility boost.
-> 5. Propose meeting times inside the first week of the milestone, so the interview lands before the individual statement is due.
+> 5. Propose meeting times inside the first week of the milestone, so the interview lands in time for the team to draft the brief.
 
 > **Watch out.** A person has to answer you, and that is the one step in this milestone whose timing you do not control. Send the first message the day of the kickoff. If you have not heard back in a few days, send one polite follow-up and tell me, so I can help before the schedule slips.
 
@@ -248,28 +247,7 @@ Persona statements can stand in for quotes in brief section 2, as long as they a
 
 ---
 
-## Phase 4: Write Your Own First Draft, Without AI
-
-> **Bring to class.** Your half-page unassisted problem statement comes with you to the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, written individually and without AI before your team drafts the brief. It is a calibration baseline, not a test, completion credit only. Your team's brief draft then travels to the *RAG Quality: Chunking and Measuring Retrieval* session for the cross-team [peer review round]({{ site.baseurl }}/Projects/PBLThread#intra-team-check-ins-1-3).
-
-This statement is due individually after your interview or persona brainstorm and before your team begins drafting the brief in Phase 5; see the [course schedule]({{ site.baseurl }}/) for the date. It is worth **3 points, assessed within Class Activities and Participation, on completion only.**
-
-This is a calibration exercise, not a test. It is not compared against your teammates' drafts, it is not marked for quality, and nothing in it can lower your grade. It exists for two reasons, both of them yours:
-
-- **It gives you something to bring.** The standing thread principle is independent work before group work, the same reason the Literature Review's annotated bibliographies are individual. A team synthesis is only a synthesis if there were several real contributions to reconcile. Teammates who each thought about the problem alone first will write a better brief than teammates who watched one person type.
-- **It is a baseline you can point at.** Later in the semester you will want to know what you can do unaided, because that is the only way to tell whether a tool is extending your judgment or substituting for it. Keep this draft. Re-read it at Demo Day.
-
-> **Do this.**
-> 1. After your interview or persona brainstorm and before your team writes anything together, sit down by yourself with no AI assistance of any kind.
-> 2. Write half a page: what you now believe the stakeholder's real problem is, in your own words, and the one thing you are least sure about.
-> 3. Stop there. No sources, no polish, no rewriting it later. A first honest attempt.
-> 4. Bring it to class in whatever form you wrote it (typed, handwritten, or a photo of the page).
-
-> **Paste into your submission.** Submit the half-page statement individually via the LMS, in whatever form you wrote it. Because this one is unassisted by design, it carries no AI-use disclosure: there is nothing to disclose, and that is the point.
-
----
-
-## Phase 5: Write the Brief
+## Phase 4: Write the Brief
 
 Write 2-3 pages with the six sections below. Every section names its primary author, and every member is primary author of at least one section (the standing [Project Thread]({{ site.baseurl }}/Projects/PBLThread) rule). This phase is open to whatever tools you want, with disclosure.
 
@@ -281,7 +259,7 @@ Write 2-3 pages with the six sections below. Every section names its primary aut
 6. **What you don't yet know.** Concrete open questions: missing facts, unverified assumptions, and things only the literature (or a second conversation) can answer. This section seeds your Literature Review.
 
 > **Do this.**
-> 1. Start from the individual statements, not from a blank page or a prompt. Reconcile where they disagree; the disagreements usually point at section 6.
+> 1. Start from your interview or persona notes, not from a blank page or a prompt. Where teammates read the problem differently, write the disagreement down; it usually points at section 6.
 > 2. Assign a primary author to each section, and check that every member is primary author of at least one.
 > 3. Write sections 1 and 2 from your interview notes and permitted quotes, or from your persona packet. If the stakeholder declined to be named, describe the role, not the person. Label a persona as a persona.
 > 4. Write section 3 so that the two disciplines interact, not sit in separate paragraphs: say what each notices that the other misses, and where they pull against each other.
@@ -297,7 +275,7 @@ Write 2-3 pages with the six sections below. Every section names its primary aut
 
 ---
 
-## Phase 6: Exchange Drafts and Revise
+## Phase 5: Exchange Drafts and Revise
 
 At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange draft briefs in class for structured peer review using SQR cards (Strength / Question / Risk). The protocol, and how to give and receive this feedback well, is in the [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview). The cycle is artifact -> peer review -> revise, and it repeats at the proposal and the gallery walk.
 
@@ -315,7 +293,6 @@ At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange d
 
 | File or artifact | What it shows | Rubric row |
 |------------------|---------------|------------|
-| Half-page unassisted problem statement, submitted individually via the LMS by the date in the [course schedule]({{ site.baseurl }}/) | What you believed the stakeholder's real problem was, unaided, after the interview | 3 points, Class Activities and Participation, completion only |
 | The 2-3 page brief (six sections, primary author named per section), in the team PDF via the LMS by the brief's due date | The issue in the stakeholder's own terms, the disciplinary perspectives and where they conflict, the problem statement, the track fit, and what you do not yet know | Problem Identification and Research Grounding (30); Multi-Disciplinary Understanding (30); Writeup, Process, and Submission (20) |
 | Interview packet appendix (prep questions, notes, consent record, follow-up exchange), or persona packet appendix (persona, sources, anticipated questions and answers) | That the interview followed the full protocol, or that the persona is grounded and its questions were answered honestly | Interview or Persona Brainstorm Quality (20) |
 | All team members' typed signatures, re-affirming your charter | That every member stands behind the submission | Writeup, Process, and Submission (20) |
@@ -328,7 +305,6 @@ At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange d
 
 - [ ] The stakeholder is a **real person or organization** we interviewed, or a **clearly labeled persona** grounded in research about our target audience.
 - [ ] The brief reports what they said (or, for a persona, what we anticipated and answered), and every persona answer is marked supported or an assumption to verify.
-- [ ] Every team member's individual unassisted draft was written before team drafting began, and is included.
 - [ ] The problem is framed as **their** problem, in their terms, and would be recognizable to them.
 - [ ] Constraints they named are recorded even where they are inconvenient for the system we want to build.
 - [ ] We separated what they told us from what we inferred.
