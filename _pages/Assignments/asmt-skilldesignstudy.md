@@ -159,7 +159,32 @@ mkdir -p .agents/skills/study-planner
 # then create .agents/skills/study-planner/SKILL.md in your editor
 ```
 
-Build `SKILL.md` in the five pieces below, in this order.
+### The file format
+
+Every skill is one file, `SKILL.md`, in exactly this shape: a front matter block between two `---` lines holding `name:` and `description:`, then the body, which is everything the model reads as instructions.  This is the actual format of the skill, not a template to adapt.  The tool reads the front matter to decide when to load the skill, and hands the body to the model.  Assembled, your finished file looks like this:
+
+```markdown
+---
+name: study-planner
+description: Use when the user asks to plan, schedule, or organize their studying for an exam, a course, or a week.
+---
+
+You are an academic success coach ...            (the persona, piece b)
+
+## Interview
+...                                              (the interview, piece c)
+
+## Example of an interview round
+...                                              (the worked example, piece d)
+
+## Example of the final output
+...
+
+## Rules
+1. ...                                           (the rules, piece e)
+```
+
+The first `---` must be the very first line of the file, `name:` must match the directory name exactly, and the body starts after the second `---`.  The five pieces below fill in this skeleton, in this order.
 
 ### (a) The trigger: the `description`
 
@@ -226,7 +251,7 @@ End the skill with numbered rules, each one something you could check by reading
 
 ## Stage 3: Install It, Run It, and Refine It
 
-**Step 1: install and load.**  Your skill lives at `.agents/skills/<name>/SKILL.md` in the project, with the directory name matching the `name:` field.  Restart opencode and confirm the skill is listed.
+**Step 1: install and load.**  Your skill lives at `.agents/skills/<name>/SKILL.md` in the project, with the directory name matching the `name:` field.  Check that the file opens with the `---` front matter block shown in Stage 2, with nothing above it.  Restart opencode and confirm the skill is listed.
 
 **Step 2: test the trigger.**  Type the request you wrote down that should fire the skill, and confirm it loads.  Then type the request that should not, and confirm it stays quiet.  Record both outcomes and quote your `description` verbatim.
 
