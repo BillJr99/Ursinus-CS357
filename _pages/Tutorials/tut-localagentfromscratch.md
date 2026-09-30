@@ -75,7 +75,7 @@ Every value you might want to change without editing code is in `config.json`.  
 }
 ```
 
-Three settings deserve a sentence each.  `provider_url` can be overridden by the `OLLAMA_URL` environment variable, so the same file works inside a container, and `api_key` stays `null` for local Ollama; set it only when `provider_url` points at a hosted Ollama server that needs a key.  `allowed_commands` is the first gate, described in Part IV.  `log_level` accepts `DEBUG`, `INFO`, `WARNING`, or `ERROR`; at `INFO`, every command the agent runs or refuses is logged.
+Three settings deserve a sentence each.  `provider_url` can be overridden by the `OLLAMA_URL` environment variable, so the same file works inside a container, and `api_key` stays `null` for local Ollama.  To use a hosted provider instead, set `provider_url` to its full chat endpoint and `api_key` to your key: for ursinus.ai, `"provider_url": "https://ursinus.ai/api/chat/completions"`, with `model` set to a name the service lists.  A URL ending in `/chat/completions` gets the OpenAI request and reply shape; any other URL is treated as an Ollama server's base address.  Keep a `config.json` that holds a key out of any repository you push.  `allowed_commands` is the first gate, described in Part IV.  `log_level` accepts `DEBUG`, `INFO`, `WARNING`, or `ERROR`; at `INFO`, every command the agent runs or refuses is logged.
 
 ### Questions
 
@@ -115,7 +115,19 @@ def load_config(path="config.json"):
 # Step 1: prompt
 def chat(cfg, messages):
     try:
-        r = requests.post(f"{cfg['provider_url']}/api/chat", headers=({"Authorization": f"Bearer {cfg['api_key']}"} if cfg.get("api_key") else {}), json={
+        url = cfg["provider_url"].rstrip("/")
+        headers = {"Authorization": f"Bearer {cfg['api_key']}"} if cfg.get("api_key") else {}
+        if url.endswith("/chat/completions"):
+            # OpenAI-style providers (ursinus.ai, other hosted services): the full endpoint URL,
+            # temperature at the top level, and the reply nested under choices[0].
+            r = requests.post(url, headers=headers, json={
+                "model": cfg["model"], "stream": False,
+                "temperature": cfg["temperature"],
+                "messages": messages}, timeout=120)
+            r.raise_for_status()
+            return r.json()["choices"][0]["message"]
+        # Ollama (local or hosted): the server's base URL, temperature under "options".
+        r = requests.post(f"{url}/api/chat", headers=headers, json={
             "model": cfg["model"], "stream": False,
             "options": {"temperature": cfg["temperature"]},
             "messages": messages}, timeout=120)
