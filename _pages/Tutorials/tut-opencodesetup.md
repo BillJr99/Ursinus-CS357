@@ -180,6 +180,8 @@ Append this to `opencode.json`, as a sibling of `$schema`:
 
 A provider key and a model key join with a slash to make the identifier the rest of opencode uses, so the block above defines **`ollama/llama3.2`**.  That is what `--model` takes and what an agent definition's `model` field expects.
 
+Every model you pull later needs another entry in this map, added by hand.  If that becomes tedious, §7 names an optional plugin that fills the map from the provider itself.
+
 **Confirm it.**  Start `opencode`, type `/model`, and look for your provider.  In the desktop application, the model dropdown in the message bar does the same job.
 
 An empty model list is almost always one of three things, in this order: the file is named `config.json`, the file is in neither of the two locations from the table at the top, or the JSON does not parse.  Check the name first; it is the most common and the least obvious.
@@ -446,7 +448,9 @@ Skills are read at startup, so restart opencode and ask it to list the skills it
 
 **What it is.**  Where a skill adds instructions, a plugin adds **behavior**: JavaScript or TypeScript that runs at defined moments, such as before a tool call, and can refuse it outright.  A plugin is how you enforce something a permission pattern cannot express.
 
-The simplest way to add one is the `plugin` array, which takes a package name or a Git URL.  This one pulls models automatically so you are not hand-editing the `models` map every time you `ollama pull` something new:
+The simplest way to add one is the `plugin` array, which takes a package name or a Git URL.  The example below is **optional**, and it earns its place only once you have a provider whose model list keeps changing: it saves you the hand-editing that §3 would otherwise require every time you `ollama pull` something new.  If you registered one local model and intend to leave it that way, skip to the paragraph after the block and write your own plugin instead.
+
+**What `opencode-auto-models` does.**  On startup it runs opencode's `config` hook, calls `GET {baseURL}/models` on each eligible provider, and merges whatever that provider reports into your `models` map, leaving any entry you wrote by hand alone.  It works for any `@ai-sdk/openai-compatible` provider, so your Ollama block and your OpenWebUI block both qualify, and it caches the result on disk so later starts are fast.  It needs opencode **1.18.29 or newer on the v1 line**; the v2 line is unsupported, and on v2 it simply will not load.
 
 ```json
 {
@@ -455,6 +459,8 @@ The simplest way to add one is the `plugin` array, which takes a package name or
   ]
 }
 ```
+
+That URL is a fork of [`vitkuz573/opencode-auto-models`](https://github.com/vitkuz573/opencode-auto-models), which is MIT licensed.
 
 Plugins you write yourself are files instead, discovered from disk the way skills are:
 
