@@ -536,7 +536,7 @@ def calculator(expression):
 def days_until(date_string):
     """
     Return the number of days from today until date_string (YYYY-MM-DD).
-    Example: days_until("2025-12-31") -> "193 days"
+    Example: days_until(<the date 30 days from today>) -> "30 days"
     """
     # TODO: Add error handling for malformed date strings
     target = date.fromisoformat(date_string.strip())
@@ -617,35 +617,37 @@ Fill in the placeholders yourself.  The persona and the guardrails are what Part
 
 ```python
 if __name__ == "__main__":
+    from datetime import date, timedelta
     config = load_config()
-    goal = "How many days until my final exam on 2025-12-15? Also, if I study 3 hours per day starting today, how many total hours will I have studied by then?"
+    exam = (date.today() + timedelta(days=70)).isoformat()   # always 70 days out, so the counts never go stale
+    goal = f"How many days until my final exam on {exam}? Also, if I study 3 hours per day starting today, how many total hours will I have studied by then?"
     answer, steps, reason = run_agent(goal, config, TOOLS)
     print(f"\n=== FINAL ANSWER ===\n{answer}")
     print(f"Steps: {steps} | Termination: {reason}")
 ```
 
-> **You should see.**  Three steps, two tool calls, and a final answer.  Your numbers will differ by date.
+> **You should see.**  Three steps, two tool calls, and a final answer.  The exam date is computed from today, so the counts are always 70 days and 210 hours; only the date in the transcript changes.
 
 ```text
 --- Step 1 ---
 Model:
-Thought: I need to find how many days until 2025-12-15 first.
-Action: days_until(2025-12-15)
-Observation: 177 days
+Thought: I need to find how many days until the exam date first.
+Action: days_until(<exam date>)
+Observation: 70 days
 
 --- Step 2 ---
 Model:
-Thought: Now I calculate total study hours: 177 days * 3 hours/day.
-Action: calculator(177 * 3)
-Observation: 531
+Thought: Now I calculate total study hours: 70 days * 3 hours/day.
+Action: calculator(70 * 3)
+Observation: 210
 
 --- Step 3 ---
 Model:
 Thought: I have both answers now.
-Final Answer: Your final exam is in 177 days. Studying 3 hours per day, you will accumulate 531 total study hours by then.
+Final Answer: Your final exam is in 70 days. Studying 3 hours per day, you will accumulate 210 total study hours by then.
 
 === FINAL ANSWER ===
-Your final exam is in 177 days. Studying 3 hours per day, you will accumulate 531 total study hours by then.
+Your final exam is in 70 days. Studying 3 hours per day, you will accumulate 210 total study hours by then.
 Steps: 3 | Termination: final_answer
 ```
 
@@ -684,11 +686,15 @@ Each task has an ID, a goal, a check function that decides whether an answer is 
 
 ```python
 # task_set.py
+import re
+from datetime import date, timedelta
+
 TASKS = [
     {
         "id": "T01",
-        "goal": "How many days until 2025-06-01?",
-        "correct_answer_check": lambda ans: "days" in ans.lower(),
+        "goal": f"How many days until {(date.today() + timedelta(days=30)).isoformat()}?",
+        # parse the integers; a bare "days" in ans would pass a negative count
+        "correct_answer_check": lambda ans: "30" in re.findall(r"-?\d+", ans),
         "notes": "Should use days_until tool"
     },
     {
@@ -989,7 +995,7 @@ Keep a metacognitive learning log for this lab in your readme.  In the spirit of
 
 These are optional and carry no extra credit.  Do one if you want to push further on something in this lab.
 
-**Challenge 1 (moderate): Add a memory tool.**  Give the agent `remember(key=value)` and `recall(key)` tools backed by a Python dict.  Run a two-step goal: "Remember that my exam is on 2025-12-15, then tell me how many days away it is."  Show that `recall` retrieves the stored value without the user repeating it.
+**Challenge 1 (moderate): Add a memory tool.**  Give the agent `remember(key=value)` and `recall(key)` tools backed by a Python dict.  Run a two-step goal: "Remember that my exam is on (a date a few weeks from today), then tell me how many days away it is."  Show that `recall` retrieves the stored value without the user repeating it.
 
 **Challenge 2 (harder): Retry with exponential backoff.**  Wrap `call_model` so that on `requests.Timeout` or HTTP 5xx it retries up to three times with waits of 1 s, 2 s, 4 s, logging each attempt with a located message.  Demonstrate it by temporarily pointing `provider_url` at a non-existent port.
 
@@ -1014,4 +1020,4 @@ Capture two transcripts: one where the skill fires and changes what the agent di
 
 ## Looking Ahead
 
-This lab stops at a working agent loop with reliable structured output.  Making that agent **use tools** at scale, **reason**, and speak **MCP** (with an optional OAuth-gated server) is the subject of the [Tools and MCP Lab]({{ site.baseurl }}/Assignments/ToolsMCP), handed out on Tuesday, October 6, after the tool use and MCP sessions.  Putting the MCP server in a hardened container and sizing its blast radius is [Part 5 of that lab]({{ site.baseurl }}/Assignments/ToolsMCP#part-5-contain-the-server-and-size-its-blast-radius-10-points), with the [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) tutorial as its background.  Nothing in this lab requires either.
+This lab stops at a working agent loop with reliable structured output.  Making that agent **use tools** at scale, **reason**, and speak **MCP** (with an optional OAuth-gated server) is the subject of the [Tools and MCP Lab]({{ site.baseurl }}/Assignments/ToolsMCP), handed out after the tool use and MCP sessions.  Putting the MCP server in a hardened container and sizing its blast radius is [Part 5 of that lab]({{ site.baseurl }}/Assignments/ToolsMCP#part-5-contain-the-server-and-size-its-blast-radius-10-points), with the [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) tutorial as its background.  Nothing in this lab requires either.

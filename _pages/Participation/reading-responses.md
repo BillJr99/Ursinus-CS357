@@ -53,7 +53,7 @@ Reading responses do two things.  They make you an active reader (turning a pass
 
 **Keep it short**, and please keep it that way.  A reading response is not an essay.  It is evidence that you arrived with something to say.  If yours regularly takes an hour, you are writing the wrong thing.
 
-**When they are due:** before the class session they attach to.  The sessions with a reading response are marked on the schedule, and "before" is load-bearing: several sessions start from the positions people staked out beforehand, so a response posted afterwards cannot do its job.
+**When they are due:** the syllabus schedule marks each session with a reading response and its due date, and the timing is load-bearing: several sessions start from the positions people staked out beforehand, so a response posted afterwards cannot do its job.
 
 **What earns credit:** engagement rather than agreement, and specificity rather than length.  A response that says "I did not follow the argument on page 40, and here is where I lost it" is worth more than one that summarizes the whole chapter competently.
 

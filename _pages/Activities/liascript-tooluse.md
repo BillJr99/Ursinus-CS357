@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 In *Hallucinations and Evaluating Agent Outputs*, you matched tool use to the hallucinations it fixes: facts the model should look up rather than recall.  Today you build that tool use.  Our agent from *The Agent Loop: Perceive, Plan, Act* activity pulled `calc(...)` out of free text with a regular expression, and that worked until it did not.  Today we upgrade to **structured function calling**, also called tool use.  The model emits a machine-readable request to run a function, and your program runs it.  We cover why structure beats parsing, how to write a tool schema, native function calling with Ollama, and safety boundaries for tools that change the world.
 
-The OpenCode Studio lab is due today, and the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) goes out today as well.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is handed out on Tuesday, October 6, and builds on today.  Today's session covers the protocol and what it costs; the lab is where you write the full build.
+The OpenCode Studio lab is due today, and the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) goes out today as well.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is handed out after the MCP session and builds on today.  Today's session covers the protocol and what it costs; the lab is where you write the full build.
 
 ---
 
@@ -442,3 +442,355 @@ Your agents can now call tools reliably.  The wobble described in the *Why Diffe
 - Mialon et al. "Augmented Language Models: A Survey."  *TMLR* (2023).
 - [Multimodal AI and Monte Carlo Simulation lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), a complete tool-calling case study: the simulation is wrapped as a schema-described tool, and an agent chooses its parameters, invokes it, and interprets the resulting chart.
 - [Monte Carlo Retirement companion notebook](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/MonteCarloRetirement.ipynb), a runnable version of that lab, including the full function-calling agent loop with offline sample responses.
+
+---
+
+# Extension: Checking Tool Calls With Pydantic (self-paced)
+
+A model hands your program text.  Your program needs data: a date it can subtract, a tool name it can look up, a boolean it can trust.  Pydantic is a small library that turns one into the other or refuses, and this extension uses it to put a check at the two places this activity's tools meet the model: the arguments of a tool call, and the shape of a structured reply.  Each cell adds one idea, and every cell runs without a model, because each one replaces the model with a few written-out replies; the cells marked "Runs on your machine" make the same calls against Ollama.  Run `pip install pydantic` once in your course container first.
+
+## Key Concepts: Pydantic
+
+| Term | Plain-English Definition | Where You'll Meet It |
+|:-----|:------------------------|:------------------------|
+| **Model (Pydantic)** | A Python class, written with type annotations, that describes the shape a piece of data must have.  It is unrelated to a language model; the word is shared by accident | Every cell: `class DaysUntilArgs(BaseModel)` |
+| **Validation** | Checking data against a model.  Valid data comes back as a typed Python object; invalid data raises `ValidationError`, which says which field failed and why | `model_validate` in Part I |
+| **JSON Schema** | A standard JSON description of a data shape.  Tool schemas and Ollama's `format` field both use it, and Pydantic generates it from a model | `model_json_schema()` in Parts I and II |
+| **Structured output** | Asking the model for a reply in a fixed shape, either by describing the shape in the prompt or by sending the schema so the server constrains what the model can produce | Part II |
+| **Semantic validity** | Whether valid data is also *correct*.  A schema can require a date; it cannot require the right date | Parts IV and VI |
+
+
+## 1.  From a Hand-Written Schema to a Model
+
+Earlier in this activity you wrote each tool's schema by hand: a name, a description, and a JSON description of its parameters.  A Pydantic model is the same information written once, as a class, so that the schema and the check come from one place.
+
+## Code Cell: The Schema
+
+```python
+# P1: one tool's arguments, written as a Pydantic model
+from datetime import date
+from pydantic import BaseModel, Field
+
+class DaysUntilArgs(BaseModel):
+    """Arguments for days_until: the number of days from today until the given ISO date."""
+    target_iso: date = Field(description="The target date in YYYY-MM-DD format")
+
+print(DaysUntilArgs.model_json_schema())
+```
+
+You should see one dictionary, the JSON Schema for the class:
+
+```text
+{'description': 'Arguments for days_until: the number of days from today until the given ISO date.', 'properties': {'target_iso': {'description': 'The target date in YYYY-MM-DD format', 'format': 'date', 'title': 'Target Iso', 'type': 'string'}}, 'required': ['target_iso'], 'title': 'DaysUntilArgs', 'type': 'object'}
+```
+
+Read the cell one line at a time.  `class DaysUntilArgs(BaseModel)` declares a shape.  `target_iso: date` says the one field must be a date, not merely a string.  `Field(description=...)` is the sentence the model will read when it decides how to fill the field, so it is part of the prompt.  `model_json_schema()` turns the class into the schema you used to type by hand.  Find `'required': ['target_iso']` and `'format': 'date'` in the output: both came from the one annotation line.
+
+## Code Cell: The Check
+
+The same class now checks a call.  The first argument is what a well-behaved model sends; the second is a string that is not a date, the kind of thing a model passes when it copies the user's words instead of converting them.
+
+```python
+# P2: validate what the model asked for, before anything runs
+import traceback
+from datetime import date, timedelta
+from pydantic import BaseModel, Field, ValidationError
+
+class DaysUntilArgs(BaseModel):
+    """Arguments for days_until: the number of days from today until the given ISO date."""
+    target_iso: date = Field(description="The target date in YYYY-MM-DD format")
+
+good = {"target_iso": (date.today() + timedelta(days=62)).isoformat()}   # what a well-behaved model sends
+bad = {"target_iso": "the last day of classes"}                          # a string, but not a date
+
+for args in (good, bad):
+    try:
+        parsed = DaysUntilArgs.model_validate(args)
+        print("OK  ", type(parsed.target_iso).__name__, (parsed.target_iso - date.today()).days, "days away")
+    except ValidationError as e:
+        print(f"[pydantic_tut:p2] {e}")
+        traceback.print_exc()
+```
+
+You should see one success and one refusal (the traceback that follows on stderr names files on your own machine):
+
+```text
+OK   date 62 days away
+[pydantic_tut:p2] 1 validation error for DaysUntilArgs
+target_iso
+  Input should be a valid date or datetime, invalid character in year [type=date_from_datetime_parsing, input_value='the last day of classes', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.13/v/date_from_datetime_parsing
+```
+
+`model_validate` does two jobs at once.  The good call comes back as a real `date`, which is why the next line can subtract today from it.  The bad call never reaches any function; the error names the field, the rule, and the value that broke it.
+
+### Questions to Work Through
+
+1.  The model passed `"the last day of classes"` for `target_iso`.  Whose bug is that: the model's, the description's, or the validator's?
+
+    *Hint:* The model was trying to help by passing what the user said.  The description is the only thing that tells it the format, and the validator is the backstop when the description fails.  Which of the three can you change without retraining anything?
+
+2.  Remove `: date` from `target_iso` (leave `str`) and run the check again.  What passes now that did not before, and where would the failure show up instead?
+
+---
+
+## 2.  The Registry Runs Only Checked Calls
+
+The tool registry from Part II maps a tool name to a function, and it is a security boundary: a name that is not in it cannot run.  Here each entry also carries the argument model, the tool list the model sees is generated from those models, and every call is validated before its function runs.  The three calls are written out by hand in the shape Ollama returns them, so the cell needs no model.
+
+## Code Cell: A Validated Registry
+
+```python
+# P3: a two-tool registry in which every call is validated before it runs
+import json
+import traceback
+from datetime import date, timedelta
+from pydantic import BaseModel, Field, ValidationError
+
+class GetTodayArgs(BaseModel):
+    """Returns today's date in ISO format (YYYY-MM-DD). Call this whenever you need to know the current date before computing a duration or deadline."""
+
+class DaysUntilArgs(BaseModel):
+    """Returns the number of days from today until the given ISO date. The result is positive if the date is in the future and negative if it has passed."""
+    target_iso: date = Field(description="The target date in YYYY-MM-DD format")
+
+def get_today(args: GetTodayArgs) -> str:
+    return date.today().isoformat()
+
+def days_until(args: DaysUntilArgs) -> str:
+    return str((args.target_iso - date.today()).days)
+
+# name -> (argument model, function).  The registry is still the security boundary.
+REGISTRY = {"get_today": (GetTodayArgs, get_today),
+            "days_until": (DaysUntilArgs, days_until)}
+
+# The TOOLS list the model sees is GENERATED from the models, not typed by hand.
+TOOLS = [{"type": "function",
+          "function": {"name": name,
+                       "description": model.__doc__,
+                       "parameters": model.model_json_schema()}}
+         for name, (model, _) in REGISTRY.items()]
+
+def run_tool_call(call):
+    """Validate one tool call, run it, and return the text for the tool-role message."""
+    name = call["function"]["name"]
+    if name not in REGISTRY:
+        return f"error: unknown tool {name!r}"
+    model, fn = REGISTRY[name]
+    try:
+        args = model.model_validate(call["function"]["arguments"] or {})
+    except ValidationError as e:
+        print(f"[pydantic_tut:p3] {e}")
+        traceback.print_exc()
+        # The error goes BACK to the model as the observation, so the loop can recover.
+        return f"error: invalid arguments for {name}: {e.errors()[0]['msg']}. Send target_iso as YYYY-MM-DD."
+    return fn(args)
+
+print(json.dumps(TOOLS[1], indent=2))
+
+# Three tool calls in the shape Ollama returns them (written by hand here: no model needed).
+in_62_days = (date.today() + timedelta(days=62)).isoformat()
+calls = [
+    {"function": {"name": "days_until", "arguments": {"target_iso": in_62_days}}},
+    {"function": {"name": "days_until", "arguments": {"days": "seven"}}},
+    {"function": {"name": "send_email", "arguments": {"to": "everyone"}}},
+]
+for c in calls:
+    print("->", run_tool_call(c))
+```
+
+You should see the generated schema for `days_until`, then one result per call:
+
+```text
+{
+  "type": "function",
+  "function": {
+    "name": "days_until",
+    "description": "Returns the number of days from today until the given ISO date. The result is positive if the date is in the future and negative if it has passed.",
+    "parameters": {
+      "description": "Returns the number of days from today until the given ISO date. The result is positive if the date is in the future and negative if it has passed.",
+      "properties": {
+        "target_iso": {
+          "description": "The target date in YYYY-MM-DD format",
+          "format": "date",
+          "title": "Target Iso",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_iso"
+      ],
+      "title": "DaysUntilArgs",
+      "type": "object"
+    }
+  }
+}
+-> 62
+[pydantic_tut:p3] 1 validation error for DaysUntilArgs
+target_iso
+  Field required [type=missing, input_value={'days': 'seven'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+-> error: invalid arguments for days_until: Field required. Send target_iso as YYYY-MM-DD.
+-> error: unknown tool 'send_email'
+```
+
+Three calls, three outcomes.  The first runs and returns 62.  The second sends `days` instead of `target_iso` and is refused, and the line `return f"error: invalid arguments ..."` sends that refusal *back to the model* as the tool's result, which is what lets an agent loop recover on its next turn.  The third names a tool that was never registered, so it cannot run at all.  Rejecting a call and telling the model why are different things; only the second lets the loop continue.
+
+> **Runs on your machine, not here.**  This version is this activity's `agent()` with one line changed: `REGISTRY[name](**args)` becomes `run_tool_call(c)`.  It sends real requests to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to, so it is not run here and no output is shown.  Run it in your course container and read the `[tool]` lines it prints.
+
+```python
+# P3 on your machine: the tool use deck's agent() with validated dispatch (needs Ollama on localhost:11434)
+import traceback
+import requests
+from datetime import date
+from pydantic import BaseModel, Field, ValidationError
+
+class GetTodayArgs(BaseModel):
+    """Returns today's date in ISO format (YYYY-MM-DD). Call this whenever you need to know the current date before computing a duration or deadline."""
+
+class DaysUntilArgs(BaseModel):
+    """Returns the number of days from today until the given ISO date. The result is positive if the date is in the future and negative if it has passed."""
+    target_iso: date = Field(description="The target date in YYYY-MM-DD format")
+
+def get_today(args: GetTodayArgs) -> str:
+    return date.today().isoformat()
+
+def days_until(args: DaysUntilArgs) -> str:
+    return str((args.target_iso - date.today()).days)
+
+REGISTRY = {"get_today": (GetTodayArgs, get_today),
+            "days_until": (DaysUntilArgs, days_until)}
+TOOLS = [{"type": "function",
+          "function": {"name": name, "description": model.__doc__,
+                       "parameters": model.model_json_schema()}}
+         for name, (model, _) in REGISTRY.items()]
+
+def run_tool_call(call):
+    """Validate one tool call, run it, and return the text for the tool-role message."""
+    name = call["function"]["name"]
+    if name not in REGISTRY:
+        return f"error: unknown tool {name!r}"
+    model, fn = REGISTRY[name]
+    try:
+        args = model.model_validate(call["function"]["arguments"] or {})
+    except ValidationError as e:
+        print(f"[pydantic_tut:p3real] {e}")
+        traceback.print_exc()
+        return f"error: invalid arguments for {name}: {e.errors()[0]['msg']}. Send target_iso as YYYY-MM-DD."
+    return fn(args)
+
+def agent(question, max_steps=4):
+    msgs = [{"role": "user", "content": question}]
+    for _ in range(max_steps):
+        try:
+            r = requests.post("http://localhost:11434/api/chat", json={
+                "model": "llama3.2", "stream": False, "tools": TOOLS,
+                "options": {"temperature": 0.0, "seed": 42},
+                "messages": msgs}, timeout=120).json()["message"]
+        except Exception as e:
+            print(f"[pydantic_tut:p3real] {e}")
+            traceback.print_exc()
+            return ""
+        msgs.append(r)
+        calls = r.get("tool_calls") or []
+        if not calls:
+            return r["content"]
+        for c in calls:
+            result = run_tool_call(c)                 # was: REGISTRY[name](**args)
+            print(f"[tool] {c['function']['name']}({c['function']['arguments']}) -> {result}")
+            msgs.append({"role": "tool", "content": result})
+    return "step budget exceeded"
+
+if __name__ == "__main__":
+    print(agent("How many days until December 7?"))
+```
+
+## 3.  Structured Output: The Schema Goes Out, the Check Comes Back
+
+A tool call is one kind of structured reply.  Any reply can be structured: you can ask the model to answer in a fixed shape.  Asking in the prompt ("answer in JSON") only encourages the shape.  Sending the schema in Ollama's `format` field lets the server constrain which tokens the model may produce, so the reply fits the schema.  Either way, the same model checks the reply on the way back.
+
+## Code Cell: Prompt Only, Then `format`
+
+The stand-in server below returns the two replies you would typically get: a friendly sentence before the JSON when you only asked, and bare JSON when you sent the schema.
+
+```python
+# P4: structured output.  The schema goes TO the model; the reply comes BACK through the same model.
+import traceback
+from typing import Literal
+from pydantic import BaseModel, Field, ValidationError
+
+class Sentiment(BaseModel):
+    sentiment: Literal["positive", "neutral", "negative"]
+    confidence: float = Field(ge=0.0, le=1.0)
+
+schema = Sentiment.model_json_schema()      # this dict is what goes in the "format" field
+
+def fake_ollama_chat(body):
+    """A stand-in for POST /api/chat that returns two canned replies in Ollama's shape."""
+    if "format" in body:   # constrained: the server only lets schema-valid JSON out
+        content = '{"sentiment": "negative", "confidence": 0.93}'
+    else:                  # unconstrained: "please answer in JSON"
+        content = 'Sure! Here is the JSON:\n{"sentiment": "negative", "confidence": 0.93}'
+    return {"message": {"role": "assistant", "content": content}}
+
+prompt = "Classify the sentiment of: 'The product broke after one day.'"
+requests_to_try = [
+    ("prompt only  ", {"model": "llama3.2", "messages": [{"role": "user", "content": prompt + " Answer in JSON."}]}),
+    ("format=schema", {"model": "llama3.2", "messages": [{"role": "user", "content": prompt}], "format": schema}),
+]
+for label, body in requests_to_try:
+    raw = fake_ollama_chat(body)["message"]["content"]
+    try:
+        result = Sentiment.model_validate_json(raw)
+        print(label, "->", result)
+    except ValidationError as e:
+        print(f"[pydantic_tut:p4] {label.strip()}: {e.errors()[0]['type']}: {e.errors()[0]['msg']}")
+        traceback.print_exc()
+```
+
+You should see the prompt-only reply refused at its first character, and the `format` reply accepted:
+
+```text
+[pydantic_tut:p4] prompt only: json_invalid: Invalid JSON: expected value at line 1 column 1
+format=schema -> sentiment='negative' confidence=0.93
+```
+
+`Literal[...]` restricts a field to a fixed set of strings, and `Field(ge=0.0, le=1.0)` restricts a number to a range.  Neither one makes the label *right*.  A reply can fit the schema and still call a broken product positive; that is semantic validity, and no schema checks it.
+
+> **Runs on your machine, not here.**  The same request against a live Ollama, using the `ollama` package.  If your code uses `requests` instead, the only change to your payload is one key, `"format": Sentiment.model_json_schema()`, beside `"options"`.
+
+```python
+# P4 on your machine: the same request against a live Ollama (pip install ollama)
+import traceback
+from typing import Literal
+from ollama import chat
+from pydantic import BaseModel, Field, ValidationError
+
+class Sentiment(BaseModel):
+    sentiment: Literal["positive", "neutral", "negative"]
+    confidence: float = Field(ge=0.0, le=1.0)
+
+try:
+    response = chat(
+        model="llama3.2",
+        messages=[{"role": "user", "content": "Classify the sentiment of: 'The product broke after one day.'"}],
+        format=Sentiment.model_json_schema(),          # the schema travels in the request
+        options={"temperature": 0, "seed": 42},
+    )
+    result = Sentiment.model_validate_json(response.message.content)   # and is checked on return
+    print(result)
+except ValidationError as e:
+    print(f"[pydantic_tut:p4real] {e}")
+    traceback.print_exc()
+except Exception as e:
+    print(f"[pydantic_tut:p4real] {e}")
+    traceback.print_exc()
+```
+
+### Questions to Work Through
+
+3.  In the validated registry, the refused call returns a string instead of raising.  Trace what the agent loop does with that string on its next turn, and what would happen to the loop if `run_tool_call` raised instead.
+
+4.  The `format` reply passed validation.  Name one way it could still be wrong, and say what kind of check would catch it.
+
+    *Hint:* Compare the label with the sentence being classified.  Is that a question about the shape of the reply or about its meaning?

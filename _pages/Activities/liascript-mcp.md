@@ -273,7 +273,7 @@ The primary value MCP adds over each team writing custom tool integrations is:
 
 The two campus lookups in Part II were stand-ins.  The same server pattern works over something you care about: an Obsidian vault, which is a folder of Markdown files.  In this Part you give the server three vault tools and watch a client discover them, exactly as it discovered `hours`.  The three tools cover the read path and the write path from the [Obsidian Sync tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync).  `search_notes` finds notes whose text contains a phrase.  `read_note` returns one note by its path.  `append_daily_note` adds a line to today's daily note, and it refuses to write unless the call includes `confirm` set to true.  Reading is cheap to allow; writing changes your files, so the write tool carries a gate.  One thing to say plainly: a real MCP server speaks JSON-RPC over stdio (standard input and output, for a server launched as a local process) or over HTTP.  This deck's Flask server uses two plain HTTP routes instead.  It is the *pattern*, list then call, not the *protocol*.  When you are ready for the real thing, the Hugging Face MCP Course in Further Reading builds a compliant server step by step, and the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) offers your Obsidian vault as one MCP option.
 
-Set `VAULT` to your own vault path before you run the cell.  If you do not have a vault yet, make a folder with two or three `.md` files in it; the server does not care which editor made them.  Start it with `python vault_server.py`, then confirm the three tools are advertised with `curl http://localhost:8766/tools/list` in a second terminal.
+Set `VAULT` to your own vault path before you run the cell.  If you do not have a vault yet, make a folder with two or three `.md` files in it; the server does not care which editor made them.  Install Pydantic once with `pip install pydantic`, start the server with `python vault_server.py`, then confirm the three tools are advertised with `curl http://localhost:8766/tools/list` in a second terminal.
 
 ---
 
@@ -287,6 +287,7 @@ Set `VAULT` to your own vault path before you run the cell.  If you do not have 
 import datetime
 import pathlib
 from flask import Flask, request, jsonify
+from pydantic import BaseModel, StrictBool, ValidationError
 
 app = Flask(__name__)
 
@@ -312,9 +313,20 @@ def read_note(path: str):
         return "no such note"
     return target.read_text(encoding="utf-8")
 
+class AppendDailyNoteArgs(BaseModel):
+    # The write tool's arguments, checked strictly before anything is written
+    text: str
+    confirm: StrictBool = False          # only a real JSON true counts; the string "false" is refused
+
 def append_daily_note(text: str, confirm: bool = False):
-    # Append to today's daily note. Nothing is written unless confirm is True.
-    if not confirm:
+    # Append to today's daily note. Nothing is written unless confirm is a real boolean True.
+    try:
+        args = AppendDailyNoteArgs(text=text, confirm=confirm)
+    except ValidationError as e:
+        print(f"[vaultserver:append_daily_note] {e}")
+        import traceback; traceback.print_exc()
+        return "not written: confirm must be the boolean true"
+    if not args.confirm:
         return "not written: call again with confirm=true to append"
     today = datetime.date.today().isoformat()
     note = VAULT / "daily" / f"{today}.md"
@@ -358,6 +370,8 @@ def tools_call():
 if __name__ == "__main__":
     app.run(port=8766, threaded=True)
 ```
+
+`confirm` is checked as a strict boolean.  Without that check, a model that sends the string `"false"` would get past `if not confirm:`, because any non-empty string counts as true in Python, and the note would be written.  `StrictBool` accepts only a real JSON `true` or `false`.
 
 The client is the Part II client with `SERVER` set to `http://localhost:8766`.  Keep Steps 1 and 2 as they are and replace Step 3 with these four calls, then run it on your machine and keep the transcript:
 
@@ -747,3 +761,49 @@ In your notebook, respond to all three levels:
 - Hugging Face MCP Course (built with Anthropic), whose early units build and connect a compliant MCP server over JSON-RPC: https://huggingface.co/learn/mcp-course/
 - Roy Fielding's REST dissertation, Chapter 5 (online), for the architectural style behind web APIs.
 - Anthropic.  "Introducing the Model Context Protocol" (2024, online).
+
+---
+
+# Extension: Strict Tool Arguments With Pydantic (self-paced)
+
+## 7.  A Write Tool That Checks Its Own Arguments
+
+In Model 3, the vault server's `append_daily_note` writes only when `confirm` is true.  That gate is only as strict as the type it checks: in Python, the *string* `"false"` is true, because it is not empty.  A strict Pydantic model (run `pip install pydantic` once) closes that gap, refuses keys the tool never declared, and generates the schema the server advertises.
+
+## Code Cell: Strict Arguments
+
+```python
+# P8: an MCP write tool's arguments as a strict Pydantic model
+import traceback
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, ValidationError
+
+class AppendDailyNoteArgs(BaseModel):
+    """Append a line to today's daily note. Writes only when confirm is true."""
+    model_config = ConfigDict(extra="forbid")          # unknown keys are an error, not ignored
+    text: str = Field(min_length=1, max_length=500)
+    confirm: StrictBool = False                        # only a real JSON true counts
+
+for args in ({"text": "Tried the vault server in class.", "confirm": True},
+             {"text": "Tried the vault server in class.", "confirm": "false"},
+             {"text": "x", "confirm": True, "path": "../../.bashrc"}):
+    try:
+        a = AppendDailyNoteArgs.model_validate(args)
+        print("OK      ", a)
+    except ValidationError as e:
+        print("REFUSED ", "; ".join(f"{x['loc'][0]}: {x['msg']}" for x in e.errors()))
+        traceback.print_exc()
+
+# What a server's tool list would advertise for this tool, generated rather than typed by hand:
+print(AppendDailyNoteArgs.model_json_schema())
+```
+
+You should see one call accepted and two refused, then the generated schema:
+
+```text
+OK       text='Tried the vault server in class.' confirm=True
+REFUSED  confirm: Input should be a valid boolean
+REFUSED  path: Extra inputs are not permitted
+{'additionalProperties': False, 'description': "Append a line to today's daily note. Writes only when confirm is true.", 'properties': {'text': {'maxLength': 500, 'minLength': 1, 'title': 'Text', 'type': 'string'}, 'confirm': {'default': False, 'title': 'Confirm', 'type': 'boolean'}}, 'required': ['text'], 'title': 'AppendDailyNoteArgs', 'type': 'object'}
+```
+
+`StrictBool` accepts only a real `true` or `false`.  `extra="forbid"` turns an undeclared key such as `path` into an error instead of silently ignoring it, and it shows up in the schema as `'additionalProperties': False`, so a client reading the tool list learns the rule too.

@@ -324,6 +324,360 @@ Both gates share one property, and it is the point of this tutorial: they are `i
 
 ---
 
+## Part V: Checking What the Agent Reads, Remembers, and Decides
+
+The program above trusts three things it should check: the skill file it reads, the history file it reloads, and the reply the model sends back on every turn.  This part puts a check on each one with Pydantic, a small library that turns text into typed data or refuses.  Each cell adds one idea and runs without a model, because it replaces the model with a few written-out replies.  Run `pip install pydantic pyyaml` once in your course container first.
+
+### A Skill's Front Matter
+
+In *Running Your Own AI* you wrote the `terse-helper` skill: a `SKILL.md` file whose front matter carries a `name` and a `description`.  Two mistakes make a skill fail silently.  The first `---` is not the first line of the file, or the `name` does not match the folder the skill lives in.  A model of the front matter turns both into errors you can see.
+
+#### Code Cell: Checking `SKILL.md`
+
+The cell writes the skill file first, so it runs anywhere.
+
+```python
+# P5: a skill's front matter as a Pydantic model
+import traceback
+from pathlib import Path
+import yaml
+from pydantic import BaseModel, Field, ValidationError
+
+# Write the terse-helper skill from Running Your Own AI, Step 4, so this cell is self-contained.
+skill = Path(".agents/skills/terse-helper/SKILL.md")
+skill.parent.mkdir(parents=True, exist_ok=True)
+skill.write_text("""---
+name: terse-helper
+description: Answer in at most two sentences, and end every answer with a "Next step:" line.
+---
+# Terse Helper
+
+1.  Answer in at most two sentences.
+2.  End every answer with one line that starts with "Next step:".
+3.  If you do not know, say "I don't know" rather than guessing.
+""", encoding="utf-8")
+
+class SkillFrontMatter(BaseModel):
+    name: str = Field(pattern=r"^[a-z0-9]+(-[a-z0-9]+)*$")    # lowercase words joined by hyphens
+    description: str = Field(min_length=20, max_length=1024)   # the trigger the agent reads
+
+def load_skill(path):
+    """Split SKILL.md into validated front matter and the body the model reads."""
+    text = Path(path).read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        raise ValueError("the first line of SKILL.md must be ---")
+    _, front, body = text.split("---", 2)
+    meta = SkillFrontMatter.model_validate(yaml.safe_load(front))
+    folder = Path(path).parent.name
+    if meta.name != folder:                          # the silent failure: name and folder disagree
+        raise ValueError(f"name {meta.name!r} does not match folder {folder!r}")
+    return meta, body.strip()
+
+try:
+    meta, body = load_skill(skill)
+    print(meta)
+    print(body.splitlines()[0])
+except (ValidationError, ValueError) as e:
+    print(f"[pydantic_tut:p5] {e}")
+    traceback.print_exc()
+
+# The same check on front matter a student might write by hand:
+try:
+    SkillFrontMatter.model_validate({"name": "Terse Helper", "description": "helps"})
+except ValidationError as e:
+    print(f"[pydantic_tut:p5] {len(e.errors())} errors: " + "; ".join(f"{x['loc'][0]}: {x['msg']}" for x in e.errors()))
+    traceback.print_exc()
+```
+
+You should see the skill load, then a hand-written front matter refused for two reasons at once:
+
+```text
+name='terse-helper' description='Answer in at most two sentences, and end every answer with a "Next step:" line.'
+# Terse Helper
+[pydantic_tut:p5] 2 errors: name: String should match pattern '^[a-z0-9]+(-[a-z0-9]+)*$'; description: String should have at least 20 characters
+```
+
+The `pattern` on `name` encodes the naming rule, lowercase words joined by hyphens, and the `min_length` on `description` is a choice of this tutorial: twenty characters is roughly the shortest description that could tell an agent when to use the skill.  The folder check is ordinary Python after validation, because it compares the data with something outside it.
+
+### Memory as Typed Records
+
+In *Running Your Own AI*, `history.json` was the model's entire memory of you, and the program believed whatever the file said.  Here each remembered fact is a record with a source, so the agent knows who told it, and a damaged file is refused instead of believed.
+
+#### Code Cell: Save, Reload, Refuse
+
+```python
+# P6: agent memory as typed records, saved to JSON and loaded back
+import traceback
+from pathlib import Path
+from typing import Literal
+from pydantic import BaseModel, TypeAdapter, ValidationError
+
+class MemoryRecord(BaseModel):
+    key: str                                        # what the fact is about
+    value: str                                      # the fact itself
+    source: Literal["user", "tool", "agent"]        # who told us: provenance matters
+
+MEMORY = Path("memory.json")
+Records = TypeAdapter(list[MemoryRecord])           # validates a whole list at once
+
+def save(records):
+    MEMORY.write_bytes(Records.dump_json(records, indent=2))
+
+def load():
+    try:
+        return Records.validate_json(MEMORY.read_bytes())
+    except FileNotFoundError as e:
+        print(f"[pydantic_tut:p6] no memory yet, starting empty: {e}")   # the first run
+        traceback.print_exc()
+        return []
+    except ValidationError as e:
+        print(f"[pydantic_tut:p6] memory.json is corrupt, refusing to use it: {e.errors()[0]['msg']}")
+        traceback.print_exc()
+        return []
+
+MEMORY.unlink(missing_ok=True)                      # start from a clean slate for this demo
+
+records = load()
+records.append(MemoryRecord(key="name", value="Sam", source="user"))
+records.append(MemoryRecord(key="study_hours_per_day", value="3", source="user"))
+save(records)
+print(MEMORY.read_text())
+
+again = load()                                      # a fresh run of the program
+print("Prompt line:", "; ".join(f"{r.key} = {r.value} (from {r.source})" for r in again))
+
+# Now damage the file the way a bad write or a hand edit would, and load again.
+MEMORY.write_text('[{"key": "name", "value": "Sam", "source": "a rumor"}]')
+print("After the damage:", load())
+```
+
+You should see the first run start empty, the saved file, the prompt line built from it, and then the damaged file refused:
+
+```text
+[pydantic_tut:p6] no memory yet, starting empty: [Errno 2] No such file or directory: 'memory.json'
+[
+  {
+    "key": "name",
+    "value": "Sam",
+    "source": "user"
+  },
+  {
+    "key": "study_hours_per_day",
+    "value": "3",
+    "source": "user"
+  }
+]
+Prompt line: name = Sam (from user); study_hours_per_day = 3 (from user)
+[pydantic_tut:p6] memory.json is corrupt, refusing to use it: Input should be 'user', 'tool' or 'agent'
+After the damage: []
+```
+
+`TypeAdapter(list[MemoryRecord])` validates a whole list of records at once, in both directions: `dump_json` writes it and `validate_json` reads it back as objects.  The prompt line is the point to notice: memory reaches the model the same way everything else does, as text placed in the context window.  The record's job is to make sure that text came from somewhere you trust.
+
+---
+
+### The Check Gate, on Every Turn
+
+The Local Agent lab's loop parses the model's reply as `Thought:` and `Action:` text, and the parser is where it breaks: a missing parenthesis, a tool name in the wrong case, an action and a final answer in the same reply.  Replace the text protocol with one validated object per step, and the check runs on every turn before anything acts on it.
+
+```text
+model reply (text) --> AgentStep.model_validate_json --> invalid? --> tell the model why, spend a step
+                                   |
+                                 valid
+                                   |
+                       done? --yes--> final_answer
+                                   |
+                                  no --> run TOOLS[action](argument) --> Observation --> next step
+```
+
+#### Code Cell: The `AgentStep` Loop
+
+The stand-in model replays four replies.  The second one claims to be done without an answer.
+
+{% raw %}
+```python
+# P7: a step-budgeted agent loop in which every model turn is a validated AgentStep
+import traceback
+from datetime import date, timedelta
+from typing import Literal, Optional
+from pydantic import BaseModel, ValidationError, model_validator
+
+class AgentStep(BaseModel):
+    thought: str                                           # the plan, in one sentence
+    action: Literal["days_until", "calculator", "none"]    # only tools that exist
+    argument: str = ""
+    done: bool
+    final_answer: Optional[str] = None
+
+    @model_validator(mode="after")
+    def finished_means_answered(self):
+        # A rule JSON Schema cannot express, so the code says it: done needs an answer and no action.
+        if self.done and (not self.final_answer or self.action != "none"):
+            raise ValueError("done=true requires action='none' and a final_answer")
+        return self
+
+def days_until(s):
+    return f"{(date.fromisoformat(s.strip()) - date.today()).days} days"
+
+def calculator(expression):
+    allowed = set("0123456789+-*/().% ")
+    if not all(c in allowed for c in expression):
+        return "Error: unsafe characters in expression"
+    return str(eval(expression, {"__builtins__": {}}, {}))
+
+TOOLS = {"days_until": days_until, "calculator": calculator}
+
+# A stand-in model: the replies a real model might give, in order.  Reply 2 breaks the done rule.
+exam = (date.today() + timedelta(days=70)).isoformat()
+SCRIPT = iter([
+    f'{{"thought": "First find how many days until the exam.", "action": "days_until", "argument": "{exam}", "done": false}}',
+    '{"thought": "Now multiply.", "action": "calculator", "argument": "70 * 3", "done": true}',
+    '{"thought": "Multiply 70 days by 3 hours.", "action": "calculator", "argument": "70 * 3", "done": false}',
+    '{"thought": "I have both numbers.", "action": "none", "done": true, "final_answer": "Your exam is in 70 days; at 3 hours a day that is 210 hours."}',
+])
+
+def fake_model(messages, schema):
+    return next(SCRIPT)
+
+def run_agent(goal, step_budget=6):
+    messages = [{"role": "user", "content": f"Goal: {goal}"}]
+    schema = AgentStep.model_json_schema()
+    for step in range(1, step_budget + 1):
+        raw = fake_model(messages, schema)
+        messages.append({"role": "assistant", "content": raw})
+        try:
+            s = AgentStep.model_validate_json(raw)
+        except ValidationError as e:
+            msg = e.errors()[0]["msg"]
+            print(f"[pydantic_tut:p7] step {step} REJECTED: {msg}")
+            traceback.print_exc()
+            messages.append({"role": "user", "content": f"Your reply was invalid: {msg}. Reply again."})
+            continue                                   # a rejected turn still spends budget
+        if s.done:
+            print(f"step {step}  DONE: {s.final_answer}")
+            return s.final_answer, step, "final_answer"
+        try:
+            observation = TOOLS[s.action](s.argument)
+        except Exception as e:
+            print(f"[pydantic_tut:p7] {e}")
+            traceback.print_exc()
+            observation = f"Error: {e}"
+        print(f"step {step}  {s.action} -> {observation}")
+        messages.append({"role": "user", "content": f"Observation: {observation}"})
+    return None, step_budget, "budget_exhausted"
+
+answer, steps, reason = run_agent(f"How many days until my final on {exam}, and how many hours if I study 3 a day?")
+print(f"Steps: {steps} | Termination: {reason}")
+```
+{% endraw %}
+
+You should see one step rejected, and the loop recover:
+
+```text
+step 1  days_until -> 70 days
+[pydantic_tut:p7] step 2 REJECTED: Value error, done=true requires action='none' and a final_answer
+step 3  calculator -> 210
+step 4  DONE: Your exam is in 70 days; at 3 hours a day that is 210 hours.
+Steps: 4 | Termination: final_answer
+```
+
+JSON Schema can say that `done` is a boolean.  It cannot say "if `done` is true, there must be an answer and no action."  The `@model_validator` says it in code.  Even with the schema sent in `format`, a live model can still produce step 2's mistake, because that rule is not in the schema; this is why the Python check stays.
+
+> The same loop with `call_model` replacing the stand-in, and the schema sent in `format`.  It talks to Ollama on your own machine, so it is not run here.
+{: .tb-warning data-title="Runs on your machine, not here"}
+
+```python
+# P7 on your machine: the AgentStep loop against a live Ollama (needs Ollama on localhost:11434)
+import traceback
+import requests
+from datetime import date, timedelta
+from typing import Literal, Optional
+from pydantic import BaseModel, ValidationError, model_validator
+
+class AgentStep(BaseModel):
+    thought: str
+    action: Literal["days_until", "calculator", "none"]
+    argument: str = ""
+    done: bool
+    final_answer: Optional[str] = None
+
+    @model_validator(mode="after")
+    def finished_means_answered(self):
+        if self.done and (not self.final_answer or self.action != "none"):
+            raise ValueError("done=true requires action='none' and a final_answer")
+        return self
+
+def days_until(s):
+    return f"{(date.fromisoformat(s.strip()) - date.today()).days} days"
+
+def calculator(expression):
+    allowed = set("0123456789+-*/().% ")
+    if not all(c in allowed for c in expression):
+        return "Error: unsafe characters in expression"
+    return str(eval(expression, {"__builtins__": {}}, {}))
+
+TOOLS = {"days_until": days_until, "calculator": calculator}
+
+SYSTEM = ("You are a campus study-skills coach. Each reply is ONE step as JSON: a thought, "
+          "an action (days_until, calculator, or none), its argument, and done. "
+          "Set done to true only with action none and a final_answer.")
+
+def call_model(messages, schema, model="llama3.2"):
+    try:
+        r = requests.post("http://localhost:11434/api/chat", json={
+            "model": model, "stream": False, "messages": messages,
+            "format": schema,                                   # the schema constrains decoding
+            "options": {"temperature": 0, "seed": 42}}, timeout=120)
+        r.raise_for_status()
+        return r.json()["message"]["content"]
+    except Exception as e:
+        print(f"[pydantic_tut:p7real] {e}")
+        traceback.print_exc()
+        raise
+
+def run_agent(goal, step_budget=6):
+    messages = [{"role": "system", "content": SYSTEM},
+                {"role": "user", "content": f"Goal: {goal}"}]
+    schema = AgentStep.model_json_schema()
+    for step in range(1, step_budget + 1):
+        raw = call_model(messages, schema)
+        messages.append({"role": "assistant", "content": raw})
+        try:
+            s = AgentStep.model_validate_json(raw)
+        except ValidationError as e:
+            msg = e.errors()[0]["msg"]
+            print(f"[pydantic_tut:p7real] step {step} REJECTED: {msg}")
+            traceback.print_exc()
+            messages.append({"role": "user", "content": f"Your reply was invalid: {msg}. Reply again."})
+            continue
+        if s.done:
+            print(f"step {step}  DONE: {s.final_answer}")
+            return s.final_answer, step, "final_answer"
+        try:
+            observation = TOOLS[s.action](s.argument)
+        except Exception as e:
+            print(f"[pydantic_tut:p7real] {e}")
+            traceback.print_exc()
+            observation = f"Error: {e}"
+        print(f"step {step}  {s.action}({s.argument}) -> {observation}")
+        messages.append({"role": "user", "content": f"Observation: {observation}"})
+    return None, step_budget, "budget_exhausted"
+
+if __name__ == "__main__":
+    exam = (date.today() + timedelta(days=70)).isoformat()
+    print(run_agent(f"How many days until my final on {exam}, and how many hours if I study 3 a day?"))
+```
+
+#### Questions to Work Through
+
+5.  Map this loop onto the Karpathy loop from *The Karpathy Loop and the Gauntlet Loop*.  What plays the role of the check that existed before the turn, and what plays the role of restoring a failed increment?
+
+6.  Does a valid `AgentStep` mean a correct answer?
+
+    *Hint:* Step 3 multiplied 70 by 3.  Would validation have noticed if it had multiplied by 4?
+
+---
+
 ## Exercises
 
 1.  *Log every command.*
