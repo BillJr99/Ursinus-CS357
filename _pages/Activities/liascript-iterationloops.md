@@ -402,9 +402,14 @@ Accept when: every material criterion is at Meets.
 | ID | Criterion | Meets | Approaching | Does not meet | Material | How to verify |
 |----|-----------|-------|-------------|---------------|----------|---------------|
 | K1 | Results sorted by score | Scores non-increasing | Sorted except ties | Unsorted | Yes | Query with three known matches |
+| K2 | max_results limits the count | `--max-results 2` returns at most 2 | n/a | More than 2 | Yes | Run with the flag |
+| K3 | Empty query exits 2 | Exit 2, message on stderr, no traceback | Exit 2, message on stdout | Traceback or another exit code | Yes | `python artifact/search.py " "; echo $?` |
 | K4 | Missing knowledge base | Exit 3, message names the path | Exit 3, vague message | Traceback | Yes | Rename the file, run once |
+| K5 | No matches | stdout is `[]`, exit 0 | n/a | Anything else | Yes | A nonsense query |
 | K6 | Default max_results | Returns 5 with no flag | n/a | Any other count | Yes | Run without the flag |
+| K7 | Only the allowed files changed | Only `artifact/search.py` and `artifact/test_search.py` | n/a | Any other file | Yes | `git status --porcelain --untracked-files=all` |
 | K8 | No eval, exec, or network | grep finds nothing | n/a | Any hit | Yes | grep the source |
+| K9 | A test per testing criterion | Five tests map one-to-one onto criteria 1-5 | Five tests, one criterion doubled | Fewer than five | Yes | Read `artifact/test_search.py` |
 | N1 | Docstring style | "Returns" | "Return" | Absent | No | Read the file |
 ```
 
@@ -415,9 +420,14 @@ Accept when: every material criterion is at Meets.
   "threshold": 0.85,
   "criteria": [
     {"id": "K1", "requirement": "results sorted by score descending", "weight": 3, "material": true},
+    {"id": "K2", "requirement": "max_results limits the count", "weight": 2, "material": true},
+    {"id": "K3", "requirement": "empty query exits 2", "weight": 2, "material": true},
     {"id": "K4", "requirement": "missing knowledge base exits 3", "weight": 3, "material": true},
+    {"id": "K5", "requirement": "no matches returns [] and exits 0", "weight": 2, "material": true},
     {"id": "K6", "requirement": "default max_results is 5", "weight": 2, "material": true},
+    {"id": "K7", "requirement": "only the allowed files changed", "weight": 3, "material": true},
     {"id": "K8", "requirement": "no eval, exec, or network", "weight": 4, "material": true},
+    {"id": "K9", "requirement": "a test per testing criterion", "weight": 2, "material": true},
     {"id": "N1", "requirement": "docstrings say Returns", "weight": 1, "material": false}
   ]
 }
@@ -478,26 +488,35 @@ What comes back, one row per criterion, each with the evidence that produced it:
 
 ```text
 K1  Meets          Queried "agent memory": scores [1.0, 0.5, 0.5, 0.5, 0.5, 0.5], non-increasing.
+K2  Meets          --max-results 2 on "agent": two objects.
+K3  Meets          Query " ": "[search:main] query must not be empty" on stderr, exit 2.
 K4  Does not meet  Renamed kb/knowledge_base.json, ran once: FileNotFoundError traceback,
                    exit 1.  The spec says exit 3 with a message naming the path.  MATERIAL.
+K5  Meets          Nonsense query: stdout [], exit 0.
 K6  Does not meet  Ran with no flag on a query matching six documents: six came back, so the
                    default is not 5.  argparse says default=10.  MATERIAL.
+K7  Meets          Only artifact/search.py and artifact/test_search.py changed.
 K8  Meets          grep -nE "eval\(|exec\(|socket|urllib|requests" artifact/search.py: no hits.
+                   But line 15 prints {"error": str(e)} to stdout and returns [], so a bad
+                   knowledge base puts two JSON documents on stdout.  MATERIAL (K8 area).
+K9  Does not meet  Four tests; none for testing criterion 2 (max_results).  The suite also
+                   reports FAILED (errors=1) from test_missing_kb_exit_3.  MATERIAL.
 N1  Does not meet  Three docstrings begin "Return", none begin "Returns".  Not material.
 ```
 
-Two material failures, and neither was visible in the agent's own report.  K4 is the one the suite caught and the agent described as a next step; K6 is the one **nothing** caught, because no test covered it and the code looked reasonable.  That is the case the rubric exists for.
+Three material failures and one material risk, and none of them was visible in the agent's own report.  K4 is the one the suite caught and the agent described as a next step.  K9 is the suite itself falling short of the spec: criterion 2 has no test.  K6 is the one **nothing** caught, because no test covered it and the code looked reasonable.  That is the case the rubric exists for.  The line-15 finding passes K8's grep and still breaks the output contract, which is why a critique reads the code around a row and not only the row's command.
 
 **Step 6, revise.**  One message naming every material failure and nothing else:
 
 ```bash
-opencode run "Address only these material failures: K4, K6.  Do not change spec.md, rubric.md, rubric.json, system_prompt.txt, or any test."
+opencode run "Address only these material failures: K4, K6, K9, and the str(e) print on line 15.  Do not change spec.md, rubric.md, rubric.json, system_prompt.txt, or any existing test."
 ```
 
 ```text
 Caught FileNotFoundError in main and returned 3 with a message naming the path.
 Changed the --max-results default from 10 to 5.  Added test_max_results_limit, which
-covers spec.md testing criterion 2.
+covers spec.md testing criterion 2.  A knowledge base that is not valid JSON now prints a
+located message to stderr with a traceback instead of writing str(e) to stdout.
 
 Check: python3 artifact/test_search.py, ran 5 tests, OK.
 
@@ -512,14 +531,19 @@ opencode run "Re-score artifact/search.py against every criterion in rubric.md a
 
 ```text
 K1  Meets          Still non-increasing.
+K2  Meets          --max-results 2: two objects.
+K3  Meets          Empty query: message on stderr, exit 2.
 K4  Meets          Renamed the file, ran once: exit 3, stderr
                    "[search:main] knowledge base not found at kb/knowledge_base.json".
+K5  Meets          Nonsense query: [], exit 0.
 K6  Meets          No flag, six-document query: five results.
-K8  Meets          grep: no hits.
+K7  Meets          Still only artifact/search.py and artifact/test_search.py.
+K8  Meets          grep: no hits, and line 15 no longer writes to stdout.
+K9  Meets          Five tests, one per testing criterion; ran 5 tests, OK.
 N1  Does not meet  Still "Return".  Not material.
 ```
 
-Now the stopping decision, which is the step people skip.  The weighted score moved from **7 of 13, or 0.54**, to **12 of 13, or 0.92**, against a threshold of 0.85.  Both conditions are satisfied: the score is above the threshold, and no material criterion is failing.  This is a converged result in round one, with two rounds of budget unspent.
+Now the stopping decision, which is the step people skip.  The weighted score moved from **16 of 24, or 0.67**, to **23 of 24, or 0.96**, against a threshold of 0.85.  Both conditions are satisfied: the score is above the threshold, and no material criterion is failing.  This is a converged result in round one, with two rounds of budget unspent.
 
 N1 still fails, and it stays failing.  It is non-material, so it does not block convergence, and the correct move is to write it into `.ai/FUTURE_WORK.md`, not to fix it now and not to quietly delete the row so the table looks clean.
 
@@ -553,12 +577,12 @@ Suppose the Step 7 re-score had come back differently: Candidate 1 clears the we
 
 [( )] Converged, because the weighted score cleared the threshold
 [(X)] Not converged, because K4 is material, and clearing the threshold does not override a failed material criterion
-[( )] Converged, because one failing criterion out of five is within tolerance
+[( )] Converged, because one failing criterion out of ten is within tolerance
 [( )] Not converged, but only until you lower K4's weight so the score reflects reality
 
 ## Code Cell
 
-A rubric a program can score is a rubric you can re-run on every candidate without re-reading the spec.  The cell below loads the quantitative rubric from Section 7, scores a candidate's observed behavior, and applies both stopping rules.  The values shown are Candidate 0 from Model 3, so it prints 0.54 and names K4 and K6; set `K4` and `K6` to `True` and it prints 0.92 and `converged`.  Change them to what your own Candidate 1 does and run it again.
+A rubric a program can score is a rubric you can re-run on every candidate without re-reading the spec.  The cell below loads the quantitative rubric from Section 7, scores a candidate's observed behavior, and applies both stopping rules.  The values shown are Candidate 0 from Model 3, so it prints 0.67 and names K4, K6, and K9; set `K4`, `K6`, and `K9` to `True` and it prints 0.96 and `converged`.  Change them to what your own Candidate 1 does and run it again.
 
 ```python
 # The candidate is what you observed by running the verification methods.
@@ -567,18 +591,28 @@ RUBRIC = {
     "threshold": 0.85,
     "criteria": [
         {"id": "K1", "requirement": "results sorted by score descending", "weight": 3, "material": True},
+        {"id": "K2", "requirement": "max_results limits the count",       "weight": 2, "material": True},
+        {"id": "K3", "requirement": "empty query exits 2",                "weight": 2, "material": True},
         {"id": "K4", "requirement": "missing knowledge base exits 3",     "weight": 3, "material": True},
+        {"id": "K5", "requirement": "no matches returns [] and exits 0",  "weight": 2, "material": True},
         {"id": "K6", "requirement": "default max_results is 5",           "weight": 2, "material": True},
+        {"id": "K7", "requirement": "only the allowed files changed",     "weight": 3, "material": True},
         {"id": "K8", "requirement": "no eval, exec, or network",          "weight": 4, "material": True},
+        {"id": "K9", "requirement": "a test per testing criterion",       "weight": 2, "material": True},
         {"id": "N1", "requirement": "docstrings say Returns",             "weight": 1, "material": False},
     ],
 }
 
 candidate = {
     "K1": True,
+    "K2": True,
+    "K3": True,
     "K4": False,      # traceback, exit 1
+    "K5": True,
     "K6": False,      # default is 10
+    "K7": True,
     "K8": True,
+    "K9": False,      # four tests, none for criterion 2
     "N1": False,      # says "Return"
 }
 
@@ -735,7 +769,7 @@ Download it from [setup_autoresearch_eval.sh](https://www.billmongan.com/Ursinus
 
 Two hazards are worth stating plainly before you run one of these.  The first is that the metric has to be held out and unwritable.  If the agent can edit `eval/queries.json`, the fastest path to 0.80 is to delete the queries it gets wrong, and it will find that path.  This is Model 2 line [5] again, where the agent rewrote a failing test to match its code, except that a metric fails more quietly: a rewritten test still has to sit in the suite where somebody may read it, while a deleted query leaves nothing behind but a better number.
 
-And a rising metric is not a rising artifact.  Twelve queries are a sample of the behaviors somebody thought to check, and a loop that keeps seeing them will eventually fit them rather than the thing they stand for.  Two habits keep that honest: fix the target in advance so the loop stops when it is met instead of grinding, and re-score the winner against `rubric.md` before merging, because a change that improves ranking can quietly break a criterion the rubric cares about.  Attempt 3 was re-scored: still 12 of 13, still converged.
+And a rising metric is not a rising artifact.  Twelve queries are a sample of the behaviors somebody thought to check, and a loop that keeps seeing them will eventually fit them rather than the thing they stand for.  Two habits keep that honest: fix the target in advance so the loop stops when it is met instead of grinding, and re-score the winner against `rubric.md` before merging, because a change that improves ranking can quietly break a criterion the rubric cares about.  Attempt 3 was re-scored: still 23 of 24, still converged.
 
 ### Critical Thinking Questions
 
