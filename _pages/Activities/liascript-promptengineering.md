@@ -78,6 +78,8 @@ $$
 
 For an agent, the system prompt is the constitution.  It declares the agent's goal, its allowed actions, its output format, and its boundaries.  When we built the calculator agent, two-thirds of the design lived in that one string.
 
+None of the three channels is a separate input.  The system prompt is text the program places first in the same context window that holds the history and the new message; the chat template labels it with a role, and the model was trained to treat text with that label as policy.  Memory, skills, and tool descriptions arrive the same way later in the course, as more text in that one window.
+
 ---
 
 ## Model 1: Two Prompts, Two Agents
