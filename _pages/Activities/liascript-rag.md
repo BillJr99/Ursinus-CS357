@@ -276,6 +276,7 @@ Our RAG system worked because our "documents" were clean, single-sentence facts.
 - Patrick Lewis et al. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks."  *NeurIPS* (2020).  The original RAG paper.
 - Chroma documentation: https://docs.trychroma.com
 - Melanie Mitchell.  *AI: A Guide for Thinking Humans*, Chapter 4.
+- [Structured Data With Pydantic](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Pydantic), Part VI: records for what was retrieved and what was answered, and a citation check that catches a valid but unfaithful answer.
 
 ---
 

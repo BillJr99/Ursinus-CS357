@@ -761,3 +761,4 @@ In your notebook, respond to all three levels:
 - Hugging Face MCP Course (built with Anthropic), whose early units build and connect a compliant MCP server over JSON-RPC: https://huggingface.co/learn/mcp-course/
 - Roy Fielding's REST dissertation, Chapter 5 (online), for the architectural style behind web APIs.
 - Anthropic.  "Introducing the Model Context Protocol" (2024, online).
+- [Structured Data With Pydantic](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Pydantic), Part V: a write tool's arguments as a strict model, with the schema the server advertises generated from it.
