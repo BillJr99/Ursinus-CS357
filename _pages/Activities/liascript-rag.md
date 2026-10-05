@@ -276,7 +276,6 @@ Our RAG system worked because our "documents" were clean, single-sentence facts.
 - Patrick Lewis et al. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks."  *NeurIPS* (2020).  The original RAG paper.
 - Chroma documentation: https://docs.trychroma.com
 - Melanie Mitchell.  *AI: A Guide for Thinking Humans*, Chapter 4.
-- [Structured Data With Pydantic](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Pydantic), Part VI: records for what was retrieved and what was answered, and a citation check that catches a valid but unfaithful answer.
 
 ---
 
@@ -401,3 +400,124 @@ You are choosing between cosine similarity and L2 distance for a text retrieval 
 [(X)] Cosine similarity and L2 distance produce identical rankings when vectors are unit-normalized, so either works; cosine is typically the default for text
 [( )] L2 distance is always faster to compute than cosine similarity because it avoids the normalization step in the cosine formula
 [( )] Cosine similarity cannot be used with approximate nearest-neighbor indexes because ANN algorithms like HNSW require a Euclidean distance metric
+
+---
+
+# Extension: RAG Records With Pydantic: Valid Is Not Faithful (self-paced)
+
+## 8.  What Was Retrieved, and What Was Answered
+
+This activity's pipeline retrieves chunks and asks the model to answer only from them, citing what it used.  Two Pydantic records (run `pip install pydantic` once) make that contract checkable: one for each retrieved chunk, and one for the answer, which must either cite something or say it abstained.  A bag-of-words count stands in for the embedding so the cell runs anywhere.
+
+## Code Cell: Retrieval, Answer, Citation Check
+
+```python
+# P9: the RAG deck's pipeline with a toy embedding, and Pydantic records for what was
+# retrieved and what the model answered.
+import math
+import re
+import traceback
+from pydantic import BaseModel, Field, ValidationError, model_validator
+
+DOCS = [   # the RAG deck's five campus documents
+    "Parking: First-year resident students may not bring vehicles to campus without a hardship waiver.",
+    "Library: The Myrin Library is open 8am to midnight Monday through Thursday during the semester.",
+    "Dining: Wismer Center serves continuous dining from 7am to 8pm on weekdays.",
+    "Advising: Each student is assigned a faculty advisor; registration requires advisor approval.",
+    "Athletics: The Floy Lewis Bakes Center is open to all students with a valid ID.",
+]
+STOP = {"a", "an", "the", "to", "on", "of", "is", "can", "may", "with", "and", "from", "all", "keep", "bring", "what", "does", "time"}
+SYN = {"car": "vehicles", "cars": "vehicles"}   # the kind of thing a real embedding learns
+
+def toy_embed(text):
+    """Bag of words: a stand-in for a real embedding.  Same text in, same vector out."""
+    words = [SYN.get(w, w) for w in re.findall(r"[a-z0-9-]+", text.lower()) if w not in STOP]
+    v = {}
+    for w in words:
+        v[w] = v.get(w, 0) + 1
+    return v
+
+def cosine(u, v):
+    dot = sum(u[w] * v.get(w, 0) for w in u)
+    nu = math.sqrt(sum(x * x for x in u.values()))
+    nv = math.sqrt(sum(x * x for x in v.values()))
+    return dot / (nu * nv) if nu and nv else 0.0
+
+class RetrievedChunk(BaseModel):
+    id: str
+    score: float = Field(ge=0.0, le=1.0)
+    text: str
+
+class RAGAnswer(BaseModel):
+    answer: str
+    citations: list[str]        # chunk ids, such as ["doc0"]
+    abstained: bool
+
+    @model_validator(mode="after")
+    def abstain_or_cite(self):
+        if not self.abstained and not self.citations:
+            raise ValueError("an answer that does not abstain must cite at least one chunk")
+        return self
+
+# --- Indexing phase (once) ---
+INDEX = [(f"doc{i}", toy_embed(d), d) for i, d in enumerate(DOCS)]
+
+# --- Query phase (per question) ---
+def retrieve(question, k=2):
+    q = toy_embed(question)
+    ranked = sorted(INDEX, key=lambda row: -cosine(q, row[1]))[:k]
+    return [RetrievedChunk(id=i, score=round(cosine(q, v), 3), text=t) for i, v, t in ranked]
+
+def check_citations(ans, hits):
+    """The model may cite only chunks it was actually given."""
+    given = {h.id for h in hits}
+    bad = [c for c in ans.citations if c not in given]
+    return "citations OK" if not bad else f"UNFAITHFUL: cited {bad}, was given {sorted(given)}"
+
+# Three replies a model might give, written by hand so the checks are visible.
+for question, model_reply in [
+    ("Can a first-year student keep a car on campus?",
+     '{"answer": "No, not without a hardship waiver [doc0].", "citations": ["doc0"], "abstained": false}'),
+    ("What time does the bookstore close?",
+     '{"answer": "not in my documents", "citations": [], "abstained": true}'),
+    ("What time does the bookstore close?",
+     '{"answer": "The bookstore closes at 5pm.", "citations": ["doc3"], "abstained": false}'),
+]:
+    hits = retrieve(question)
+    print("Q:", question)
+    for h in hits:
+        print(f"   {h.id}  {h.score:.3f}  {h.text[:60]}")
+    try:
+        ans = RAGAnswer.model_validate_json(model_reply)
+        print("   ->", ans.answer, "|", check_citations(ans, hits))
+    except ValidationError as e:
+        print(f"[pydantic_tut:p9] {e.errors()[0]['msg']}")
+        traceback.print_exc()
+```
+
+You should see three questions, each with its two retrieved chunks and a verdict:
+
+```text
+Q: Can a first-year student keep a car on campus?
+   doc0  0.474  Parking: First-year resident students may not bring vehicles
+   doc3  0.144  Advising: Each student is assigned a faculty advisor; regist
+   -> No, not without a hardship waiver [doc0]. | citations OK
+Q: What time does the bookstore close?
+   doc0  0.000  Parking: First-year resident students may not bring vehicles
+   doc1  0.000  Library: The Myrin Library is open 8am to midnight Monday th
+   -> not in my documents | citations OK
+Q: What time does the bookstore close?
+   doc0  0.000  Parking: First-year resident students may not bring vehicles
+   doc1  0.000  Library: The Myrin Library is open 8am to midnight Monday th
+   -> The bookstore closes at 5pm. | UNFAITHFUL: cited ['doc3'], was given ['doc0', 'doc1']
+```
+
+The third reply passes validation: it is well-formed and it cites a chunk.  It is still unfaithful, because it cites `doc3`, which the retriever never gave it.  The citation check catches it because it compares the answer with the retrieval, which is something a schema alone cannot do.  Notice also the bookstore scores of 0.000: retrieval returns `k` chunks even when none of them is relevant.
+
+### Questions to Work Through
+
+7.  The car question matches `doc0` only because of the one synonym entry, `car` to `vehicles`.  Remove it and predict the scores.  What does a real embedding do that this stand-in cannot?
+
+8.  Add a rule to `RAGAnswer` or to `retrieve` that would have made the bookstore question abstain on its own.  Which one is the right place for it, and why?
+
+    *Hint:* One of the two knows the scores.

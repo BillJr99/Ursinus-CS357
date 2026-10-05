@@ -761,4 +761,49 @@ In your notebook, respond to all three levels:
 - Hugging Face MCP Course (built with Anthropic), whose early units build and connect a compliant MCP server over JSON-RPC: https://huggingface.co/learn/mcp-course/
 - Roy Fielding's REST dissertation, Chapter 5 (online), for the architectural style behind web APIs.
 - Anthropic.  "Introducing the Model Context Protocol" (2024, online).
-- [Structured Data With Pydantic](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Pydantic), Part V: a write tool's arguments as a strict model, with the schema the server advertises generated from it.
+
+---
+
+# Extension: Strict Tool Arguments With Pydantic (self-paced)
+
+## 7.  A Write Tool That Checks Its Own Arguments
+
+In Model 3, the vault server's `append_daily_note` writes only when `confirm` is true.  That gate is only as strict as the type it checks: in Python, the *string* `"false"` is true, because it is not empty.  A strict Pydantic model (run `pip install pydantic` once) closes that gap, refuses keys the tool never declared, and generates the schema the server advertises.
+
+## Code Cell: Strict Arguments
+
+```python
+# P8: an MCP write tool's arguments as a strict Pydantic model
+import traceback
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, ValidationError
+
+class AppendDailyNoteArgs(BaseModel):
+    """Append a line to today's daily note. Writes only when confirm is true."""
+    model_config = ConfigDict(extra="forbid")          # unknown keys are an error, not ignored
+    text: str = Field(min_length=1, max_length=500)
+    confirm: StrictBool = False                        # only a real JSON true counts
+
+for args in ({"text": "Tried the vault server in class.", "confirm": True},
+             {"text": "Tried the vault server in class.", "confirm": "false"},
+             {"text": "x", "confirm": True, "path": "../../.bashrc"}):
+    try:
+        a = AppendDailyNoteArgs.model_validate(args)
+        print("OK      ", a)
+    except ValidationError as e:
+        print("REFUSED ", "; ".join(f"{x['loc'][0]}: {x['msg']}" for x in e.errors()))
+        traceback.print_exc()
+
+# What a server's tool list would advertise for this tool, generated rather than typed by hand:
+print(AppendDailyNoteArgs.model_json_schema())
+```
+
+You should see one call accepted and two refused, then the generated schema:
+
+```text
+OK       text='Tried the vault server in class.' confirm=True
+REFUSED  confirm: Input should be a valid boolean
+REFUSED  path: Extra inputs are not permitted
+{'additionalProperties': False, 'description': "Append a line to today's daily note. Writes only when confirm is true.", 'properties': {'text': {'maxLength': 500, 'minLength': 1, 'title': 'Text', 'type': 'string'}, 'confirm': {'default': False, 'title': 'Confirm', 'type': 'boolean'}}, 'required': ['text'], 'title': 'AppendDailyNoteArgs', 'type': 'object'}
+```
+
+`StrictBool` accepts only a real `true` or `false`.  `extra="forbid"` turns an undeclared key such as `path` into an error instead of silently ignoring it, and it shows up in the schema as `'additionalProperties': False`, so a client reading the tool list learns the rule too.
