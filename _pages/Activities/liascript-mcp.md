@@ -273,7 +273,7 @@ The primary value MCP adds over each team writing custom tool integrations is:
 
 The two campus lookups in Part II were stand-ins.  The same server pattern works over something you care about: an Obsidian vault, which is a folder of Markdown files.  In this Part you give the server three vault tools and watch a client discover them, exactly as it discovered `hours`.  The three tools cover the read path and the write path from the [Obsidian Sync tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync).  `search_notes` finds notes whose text contains a phrase.  `read_note` returns one note by its path.  `append_daily_note` adds a line to today's daily note, and it refuses to write unless the call includes `confirm` set to true.  Reading is cheap to allow; writing changes your files, so the write tool carries a gate.  One thing to say plainly: a real MCP server speaks JSON-RPC over stdio (standard input and output, for a server launched as a local process) or over HTTP.  This deck's Flask server uses two plain HTTP routes instead.  It is the *pattern*, list then call, not the *protocol*.  When you are ready for the real thing, the Hugging Face MCP Course in Further Reading builds a compliant server step by step, and the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) offers your Obsidian vault as one MCP option.
 
-Set `VAULT` to your own vault path before you run the cell.  If you do not have a vault yet, make a folder with two or three `.md` files in it; the server does not care which editor made them.  Start it with `python vault_server.py`, then confirm the three tools are advertised with `curl http://localhost:8766/tools/list` in a second terminal.
+Set `VAULT` to your own vault path before you run the cell.  If you do not have a vault yet, make a folder with two or three `.md` files in it; the server does not care which editor made them.  Install Pydantic once with `pip install pydantic`, start the server with `python vault_server.py`, then confirm the three tools are advertised with `curl http://localhost:8766/tools/list` in a second terminal.
 
 ---
 
@@ -287,6 +287,7 @@ Set `VAULT` to your own vault path before you run the cell.  If you do not have 
 import datetime
 import pathlib
 from flask import Flask, request, jsonify
+from pydantic import BaseModel, StrictBool, ValidationError
 
 app = Flask(__name__)
 
@@ -312,9 +313,20 @@ def read_note(path: str):
         return "no such note"
     return target.read_text(encoding="utf-8")
 
+class AppendDailyNoteArgs(BaseModel):
+    # The write tool's arguments, checked strictly before anything is written
+    text: str
+    confirm: StrictBool = False          # only a real JSON true counts; the string "false" is refused
+
 def append_daily_note(text: str, confirm: bool = False):
-    # Append to today's daily note. Nothing is written unless confirm is True.
-    if not confirm:
+    # Append to today's daily note. Nothing is written unless confirm is a real boolean True.
+    try:
+        args = AppendDailyNoteArgs(text=text, confirm=confirm)
+    except ValidationError as e:
+        print(f"[vaultserver:append_daily_note] {e}")
+        import traceback; traceback.print_exc()
+        return "not written: confirm must be the boolean true"
+    if not args.confirm:
         return "not written: call again with confirm=true to append"
     today = datetime.date.today().isoformat()
     note = VAULT / "daily" / f"{today}.md"
@@ -358,6 +370,8 @@ def tools_call():
 if __name__ == "__main__":
     app.run(port=8766, threaded=True)
 ```
+
+`confirm` is checked as a strict boolean.  Without that check, a model that sends the string `"false"` would get past `if not confirm:`, because any non-empty string counts as true in Python, and the note would be written.  `StrictBool` accepts only a real JSON `true` or `false`.
 
 The client is the Part II client with `SERVER` set to `http://localhost:8766`.  Keep Steps 1 and 2 as they are and replace Step 3 with these four calls, then run it on your machine and keep the transcript:
 
