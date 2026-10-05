@@ -54,6 +54,8 @@ There are four ways to give an agent standing guidance, and they differ in scope
 | Tool (function call) | Named, executes real code | No | By name, returns data | Code function registered with the agent runtime |
 {: .tb-full}
 
+The last column hides what the four have in common when the agent runs.  The first three become text in the model's context window, and so does the fourth: a tool reaches the model as a description going in and a result coming back.  They differ in *when* their text is added, which is what the Scope and Always Active columns describe.
+
 ### Skill Versus Tool
 
 The distinction that matters most is skill versus tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a change, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
@@ -186,9 +188,11 @@ The agent:
 2.  Matches your request against those descriptions and finds `code-review`.
 3.  Reads that skill's `SKILL.md` in full, plus any supporting files it references, and treats the contents as scoped guidance for this task.
 4.  Follows the instructions: reads the changed files, classifies findings by severity, ends with a verdict.
-5.  Drops the skill's instructions afterwards.  They are not persistent, which is exactly the difference between a skill and a system prompt.
+5.  Leaves the skill's text behind as one earlier message in this conversation.  A new conversation starts without it until the skill fires again, which is exactly the difference between a skill and a system prompt.
 
 Step 2 is the one to remember.  Nothing pattern-matched a trigger phrase you configured.  The model read your request, read the descriptions, and decided.  That has a consequence you test in the lab's safety-guardrail skill: a skill is guidance the model chooses to follow, not a gate the model cannot pass.  If you need a rule that holds even when the model decides otherwise, the rule belongs in code.
+
+Every step in that list moves text into the model's context window.  At startup only each skill's `name` and `description` go in, a line or two per skill, and they ride along on every call.  At step 3 the full `SKILL.md` is pasted in, usually as the result of a tool call that loads it, and the model reads it exactly as it reads any other message.  A skill is a prompt that the agent brings into context when it needs one.  That is why an installed skill costs almost nothing until it fires, and its full length on every call after.  Part V of the [Agent Frameworks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks) tutorial builds this loader in about fifteen lines of Pydantic AI and prints the window before and after the skill arrives.
 
 ### Question to Work Through
 

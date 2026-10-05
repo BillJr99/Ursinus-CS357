@@ -261,6 +261,8 @@ The primary value MCP adds over each team writing custom tool integrations is:
 [( )] It eliminates the need for authentication
 [( )] It runs tools inside the model for speed
 
+> **Where discovered tools end up.**  Discovery happens in the client, but the model only ever sees its result as text.  The client copies each discovered schema into the tool list it sends with every request, so connecting a server with 30 tools adds 30 descriptions to the context window of every call, whether or not the agent uses them.  That is the token ledger from the Tool Use activity again, with a number you did not choose.  Connect the servers a task needs, not every server you have.
+
 ---
 
 > **A no-code route to the same problem.**  Microsoft Power Automate wires services together without a line of code, and it is worth seeing next to MCP.  The optional activity [Agentic OpenWebUI and No-Code Integration](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgenticOpenWebUI) covers it.

@@ -78,6 +78,8 @@ The big idea in one sentence: a skill is guidance the agent chooses to follow, l
 
 Three of the four rows share the last column.  A system prompt, a project file, and a skill are all text the model reads, and the model can weigh any of them against your latest request and lose.  Only the hook row is code.  That is why the Local Agent lab says: if you need a rule that holds even when the model decides otherwise, the rule belongs in code.  Today's skill states rules; Section 2c moves one of them into a hook so you can feel the difference, and Exercise 2 has you do it yourself on the commit rule.
 
+Those three rows share a delivery route as well.  A system prompt, a project file, and a skill all reach the model as text placed in its context window, and so does memory, which is a file the program reads and pastes in.  What differs is timing: the first two go in at the start of every call, while a skill goes in only after the agent decides to load it.  Until then, the window holds just its one-line description.
+
 ## 2.  A Skill Is a Directory
 
 A skill is a directory containing a `SKILL.md` file, discovered from the filesystem.  There is no registry and no install command: opencode walks up from your working directory looking for skills directories, reads each `SKILL.md`, and offers the skill to the model.

@@ -99,6 +99,8 @@ Answer:"""
 
 `{history}` is where prior turns get pasted; `{question}` is the current message.  The model sees only whatever ends up inside that filled-in string.  If `{history}` is blank, the model is a stranger meeting you for the first time, no matter how many times you have talked before.  Fill `{history}` and the "memory" appears.  Nothing changed on the server; the only thing that changed is the string you built.  The same mechanism makes RAG work (you paste *retrieved* facts into a blank), and the same mechanism is what the `SummarizingMemory` class in Part III improves (you paste a *compressed* history into the blank instead of the raw one).
 
+Long-term memory works the same way.  An agent that remembers your name next week keeps it in a file or a database, and the program reads that file and pastes it into the prompt before the call.  The system prompt, a skill, and a tool description travel the same road: each is text the program places in the context window, and the model has no other input.  Part V of the [Agent Frameworks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks) tutorial shows this in Pydantic AI by printing exactly what each request contains.
+
 $$
 \text{reply}_t = \text{model}(\underbrace{\text{TEMPLATE.format}(\text{history}=H_t,\ \text{question}=q_t)}_{\text{one string you assemble every turn}})
 $$
@@ -267,6 +269,22 @@ When does the context fill up?
   Reserved for response: 6,992 - 1,100 = 5,892 tokens for history + new message
   At ~200 tokens/turn: 5,892 / 200 ≈ 29 turns before history must be truncated
 ```
+
+Each line of that budget is filled from a different source, and all of it arrives as text in the same window:
+
+| Part of the window | Where it comes from | When it is sent |
+|---|---|---|
+| System prompt | The agent's configuration | Every call, first |
+| Long-term memory | A file or database the program reads | Every call on which the program loads it |
+| Skill menu | The one-line `description` of each installed skill | Every call |
+| A loaded skill | The full `SKILL.md` body | From the call after the model asks for it |
+| Tool descriptions | Each tool's name, purpose, and argument schema, including every tool an MCP server advertises | Every call |
+| Conversation history | Earlier turns, sent again | Every call, until truncated or summarized |
+| Tool results | Your program's output from each tool call | From the call after the tool ran |
+| New message | The user | This call |
+{: .tb-full}
+
+Read memory, skills, and tools as rows of this table and the 8K budget above stops being abstract: a 40-line skill, a memory file, or a server with 30 tools takes its share of every call that carries it.
 
 The "Lost in the Middle" phenomenon adds a second constraint.  Research (Liu et al., 2023) shows that facts placed in the middle of a long context are retrieved less reliably than facts at the very beginning or very end.  This is not a quirk of one model; it has been replicated across multiple LLM families.  It means that context *layout* (the order in which you place the system prompt, retrieved documents, conversation history, and new messages) is a design decision with measurable impact on model accuracy.
 

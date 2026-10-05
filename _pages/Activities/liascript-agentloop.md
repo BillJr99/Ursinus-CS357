@@ -155,6 +155,31 @@ In the ReAct pattern, the *Observation* lines are produced by:
 [( )] The human user at each step
 [( )] A second language model acting as a judge
 
+## 2b.  What the Model Actually Sees
+
+That Observation line is the first example of a rule that covers everything else this semester: the model receives text in its context window and nothing else.  It does not remember earlier calls, it cannot open your files, and it never runs a tool itself.  Before every call, the surrounding program assembles one request:
+
+```
++----------------------------- one model request -----------------------------+
+| system prompt      standing instructions, placed first                       |
+| memory             a file the program read and pasted in                     |
+| skills             one-line descriptions; a full skill only once loaded      |
+| tool descriptions  name, purpose, and arguments of every tool on offer       |
+| conversation       every earlier turn, sent again in full                    |
+| tool results       the Observation lines from the steps so far               |
+| new message        what the user just asked                                  |
++------------------------------------------------------------------------------+
+```
+
+When later sessions introduce memory, skills, tools, and MCP, ask the same question each time: what text does this add to the window, and when?  That question explains most of what an agent can and cannot do, and most of what it costs, because every token in the window is processed again on every call.
+
+An agent "remembers" across sessions that you prefer short answers.  Where is that preference when the model reads it?
+
+[( )] In the model's weights, updated after your last session
+[(X)] In text the program placed into the context window for this request
+[( )] On the model server, attached to your account
+[( )] In the tool results from the previous session
+
 ---
 
 # Part II: Building the Loop

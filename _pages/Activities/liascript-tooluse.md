@@ -311,7 +311,7 @@ The point is the *portability of the protocol*.  You describe a function once as
 
 # Part III: What a Tool Call Costs in the Context Window
 
-Part II traced the *messages* in a tool call: who writes each one and in what order.  This part traces the *tokens*.  Everything the model can see on a turn shares one fixed-size buffer, the context window (see the *Memory and the Small Context Window Principle* activity): the system prompt, the whole conversation history, every tool schema you offer, and every tool result.  Tools are not free riders in that buffer.  Knowing their token cost separates an agent that stays fast and accurate from one that slows down, costs more, and starts picking the wrong tool.
+Part II traced the *messages* in a tool call: who writes each one and in what order.  This part traces the *tokens*.  Everything the model can see on a turn shares one fixed-size buffer, the context window (see the *Memory and the Small Context Window Principle* activity): the system prompt, the whole conversation history, every tool schema you offer, and every tool result.  Tools are not free riders in that buffer.  Knowing their token cost separates an agent that stays fast and accurate from one that slows down, costs more, and starts picking the wrong tool.  MCP, next session, changes where tool schemas come from but not where they land: every tool a connected server advertises is one more schema in this buffer.
 
 ## Model 3: The Token Ledger of a Tool Call
 
