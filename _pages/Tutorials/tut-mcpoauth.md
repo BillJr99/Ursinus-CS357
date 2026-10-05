@@ -38,22 +38,23 @@ If MCP is new to you, the free [Hugging Face MCP Course](https://huggingface.co/
 
 ## MCP Architecture in Depth
 
-MCP is a JSON-RPC 2.0 protocol carried over one of two transports.  The first is stdio: the agent starts the server as a subprocess and the two talk through stdin and stdout.  The second is Server-Sent Events (SSE) over HTTP: the server pushes events to the agent over a persistent HTTP connection.  Every interaction is a request/response pair with a numeric `id`, which lets the client match each response to the request that caused it.
+MCP is a JSON-RPC 2.0 protocol carried over one of two standard transports.  The first is stdio: the agent starts the server as a subprocess and the two talk through stdin and stdout.  The second is Streamable HTTP: each message is an HTTP POST to a single MCP endpoint, and the reply comes back as a JSON object or as a short stream of server-sent events for that one request.  Every interaction is a request/response pair with an `id`, which lets the client match each response to the request that caused it.
 
-### The Handshake
+### Every Request Stands Alone
 
-When an MCP client connects, it follows a three-step handshake before it can do any useful work:
+MCP is stateless: the server learns everything it needs from each request, and nothing from the requests before it.  So there is no session to set up first.  Every request carries the protocol version it speaks and the client's capabilities in a `_meta` field, and a client does useful work in two calls:
 
-1.  Call `initialize`: exchange protocol version and capability information
-2.  Call `tools/list`: discover what tools the server offers
-3.  Call `tools/call`: invoke a specific tool with arguments
+1.  Call `tools/list`: discover what tools the server offers
+2.  Call `tools/call`: invoke a specific tool with arguments
+
+If the server does not support the requested protocol version, it replies with an error that lists the versions it does support, and the client retries with one of them.  Earlier revisions of the protocol (through 2025-11-25) opened every session with an `initialize` call instead, and servers you meet may still expect it; the MCP SDKs handle both, so code written against an SDK does not change.
 
 ```text
 User Prompt
     |
     v
 Agent Process (MCP Client)
-    |  JSON-RPC over stdio or SSE
+    |  JSON-RPC over stdio or Streamable HTTP
     |  Example request: {"jsonrpc":"2.0","id":1,"method":"tools/call",
     |                    "params":{"name":"search_kb","arguments":{"query":"RAG"}}}
     v
@@ -85,7 +86,7 @@ MCP defines three primitives.  They differ in who starts the request and what co
 
     *Hint: With REST, you need to know the URL of each endpoint before you can call it (e.g., `/api/search`, `/api/create`).  With JSON-RPC and `tools/list`, what can the client learn dynamically that it could not learn from REST endpoints alone?*
 
-3.  When an MCP server is started as a **subprocess** (stdio transport), the parent agent process controls the server's lifetime: when the agent exits, the server exits too.  When it runs as an **SSE server** (network transport), it is a persistent process that multiple agents can share at the same time.  List one security advantage and one security risk introduced by the shared SSE model.
+3.  When an MCP server is started as a **subprocess** (stdio transport), the parent agent process controls the server's lifetime: when the agent exits, the server exits too.  When it runs as a **Streamable HTTP server** (network transport), it is a persistent process that multiple agents can share at the same time.  List one security advantage and one security risk introduced by the shared HTTP model.
 
     *Hint: For the advantage, think about what happens when 10 agents all need the same tool: do they each need their own server process?  For the risk, think about what happens if one agent's requests contain malicious input that affects the server's shared state.*
 

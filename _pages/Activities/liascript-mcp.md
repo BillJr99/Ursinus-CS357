@@ -124,7 +124,7 @@ A campus has 4 agent applications (advising bot, library bot, IT helpdesk bot, r
 
 In this Part you write a small Flask web server (Flask is a Python library for creating web endpoints, URLs your code can respond to over HTTP) that exposes two routes: `/tools/list` returns the server's tool descriptions, and `/tools/call` runs a named tool.  You then run a client that discovers and calls those tools without any hard-coded knowledge of what tools exist.
 
-Full MCP runs over JSON-RPC with sessions and capability negotiation.  The essence, a discoverable registry plus a call dispatcher, fits in a screen of Flask.  We build the essence.
+Full MCP runs over JSON-RPC, and every request carries its protocol version and the client's capabilities.  The essence, a discoverable registry plus a call dispatcher, fits in a screen of Flask.  We build the essence.
 
 You can run the server with:
 
