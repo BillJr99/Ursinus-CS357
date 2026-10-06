@@ -493,11 +493,6 @@ schedule:
   title: "RAG Quality: Chunking and Measuring Retrieval"
   link: "Activities/liascript-ragquality.md"
   liapage: true
-  deliverables:
-  - dtitle: "Lab: Local Agent Due"
-    dlink: "Assignments/LocalAgent"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-localagent.md"
   readings:
   - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Please bring your team's Stakeholder Brief draft, because the peer review round works on real drafts."
@@ -536,6 +531,10 @@ schedule:
   link: "Activities/liascript-observability.md"
   liapage: true
   deliverables:
+  - dtitle: "Lab: Local Agent Due"
+    dlink: "Assignments/LocalAgent"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-localagent.md"
   - dtitle: "Project: Final Project Handed Out"
     dlink: "Projects/FinalProject"
     points: "100"
