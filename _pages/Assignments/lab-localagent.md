@@ -134,6 +134,43 @@ pip install requests
 
 The installation commands above are the one part of this lab that stays in a terminal.  An agent cannot install a server or pull a model onto your machine for you, and the Windows installer is a download either way.
 
+**Adding a provider to opencode.**  If you drive the code path with opencode on a model other than your local Ollama, such as a hosted or campus server, opencode needs that provider in its own configuration file, `opencode.json`.  The [Overview assignment]({{ site.baseurl }}/Assignments/Overview) (step 5b) says where that file lives; the name matters, because opencode ignores a file called `config.json`.  A hosted provider needs three things: its URL, your key, and the model's name.
+
+**Never type or paste a key into an opencode prompt.**  Everything you type into a prompt goes to the model provider and stays in the session history, so a key typed there is a key you have shared.  Have opencode write the file with placeholders instead, and fill in the real values yourself:
+
+```text
+Add an OpenAI-compatible provider named "campus" to opencode.json, with the
+placeholder values PASTE-PROVIDER-URL for baseURL, PASTE-YOUR-KEY for apiKey,
+and PASTE-MODEL-NAME for one model.  Do not ask me for the key.  When you are
+done, tell me the full path of the file you edited.
+```
+
+The template it writes should look like this:
+
+```json
+{
+  "provider": {
+    "campus": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "PASTE-PROVIDER-URL",
+        "apiKey": "PASTE-YOUR-KEY"
+      },
+      "models": { "PASTE-MODEL-NAME": { "name": "campus model" } }
+    }
+  }
+}
+```
+
+Then open that file in your own editor, at the path opencode reported, and replace the three placeholders.  Add the file to `.gitignore` *before* the key goes in, so the key never reaches a commit.  Restart `opencode`, type `/model`, and confirm the new provider is listed.
+
+**Finding the model name.**  If your provider runs OpenWebUI, copy the name from there rather than typing it.  Open the model dropdown at the top of a chat, click the three dots next to the model, and copy its link.  The link looks like `https://provider.example/?model=openai%2Fgpt-4o-mini`.  Two changes turn it into the model name:
+
+1. Remove everything up to and including `?model=` (here, `https://provider.example/?model=`).
+2. Change each `%2F` to a `/`.
+
+The name in this example is `openai/gpt-4o-mini`.  The `%2F` is how a web address spells a slash, and the provider expects the slash.
+
 **Health check.**  Run this before you do anything else.  It asks the Ollama server which models it has on disk:
 
 ```bash
@@ -239,7 +276,7 @@ Model name, temperature, seed, and step budget live in a config file, not in the
 > }
 > ```
 >
-> - `model` is the name the provider uses for the model, which is not always the same as Ollama's.
+> - `model` is the name the provider uses for the model, which is not always the same as Ollama's.  On an OpenWebUI server, copy it from the model dropdown as described under [Adding a provider to opencode](#before-you-start): remove the `https://provider.example/?model=` part of the link and change each `%2F` to a `/`.
 > - `provider_url` is the provider's chat endpoint.  Most hosted providers speak the OpenAI format, whose URLs end in `/chat/completions`; `call_model` below recognizes that ending and sends the matching request.  A hosted Ollama server ends in `/api/chat`, like the local one.
 > - `api_key` is your key.  It is sent as a Bearer token.  Treat it like a password: keep `config.json` out of any public repository (add it to `.gitignore`), and never paste the key into a writeup.
 >
@@ -251,8 +288,12 @@ Or have opencode do it:
 ```text
 Create localagent/config.json in this repository with keys for model, temperature,
 seed, step_budget, provider_url, and api_key, matching the values in the lab handout.
-Create nothing else.
+If I am using a hosted provider, use the placeholders PASTE-PROVIDER-URL and
+PASTE-YOUR-KEY instead of real values, and do not ask me for the key.  Create
+nothing else, and tell me the full path of the file.
 ```
+
+If you are on a hosted provider, open the file yourself at that path and replace the two placeholders with the real URL and key.  Never type the key into the prompt: it would go to the model provider and stay in the session history.
 
 Open the file afterward and make sure the seed and the step budget are really there.  Both exist so that Part 3's evaluation is reproducible, and a run you cannot reproduce is a number you cannot report.
 
