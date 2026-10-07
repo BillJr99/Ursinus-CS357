@@ -78,7 +78,7 @@ snapshot_download("HuggingFaceTB/SmolLM2-360M-Instruct",           # Apache-2.0
 EOF
 ```
 
-The `revision` is a commit hash, so a later update to the model on the Hub cannot change what you trained on.  Read each model's license on its model page before you use it outside class: Apache-2.0 for SmolLM2 and `nomic-embed-text`, and the Llama 3.2 Community License for `llama3.2`.
+The `revision` is a commit hash, so a later update to the model on the Hub cannot change what you trained on.  Read each model's license on its model page before you use it outside class: Apache-2.0 for SmolLM2 and `nomic-embed-text`, the Llama 3.2 Community License for `llama3.2`, and the Qwen Research License for `qwen2.5:3b`.
 
 ### Stage 2, offline, every time after
 
@@ -153,7 +153,7 @@ print("preflight ok: packages pinned, Ollama local, both models present")
 
 ### How we verified "offline"
 
-We ran the whole offline stage inside a Linux network namespace with no external interface (`unshare -rn`), so `localhost` worked and nothing else did.  Inside it, `curl https://huggingface.co` failed to resolve, and preflight, indexing, retrieval, generation, the Pydantic AI agent, the LoRA reload, and an MCP tool call all succeeded.  On your own machine, the honest equivalent is to turn off Wi-Fi and unplug the cable, then run the steps again.  Google Colab is not an offline fallback: it is someone else's computer on the internet.
+We ran the whole offline stage inside a Linux network namespace with no external interface (`unshare -rn`), so `localhost` worked and nothing else did.  Inside it, `curl https://huggingface.co` failed to resolve, and preflight, indexing, retrieval, generation, the Pydantic AI agent, the LoRA reload, and an MCP (Model Context Protocol) tool call all succeeded.  On your own machine, the honest equivalent is to turn off Wi-Fi and unplug the cable, then run the steps again.  Google Colab is not an offline fallback: it is someone else's computer on the internet.
 
 ---
 
@@ -394,7 +394,7 @@ One chunk re-embedded, the answer changed, and no model was retrained.  That is 
 
 ## Section C: The Same RAG System Through Pydantic AI
 
-This section reuses `common.py` from the [Pydantic AI tutorial]({{ site.baseurl }}/Tutorials/PydanticAI) (put it beside these files, or keep the `sys.path` line below pointing at it).  Its default model is `qwen2.5:3b`, because Path 2 depends on tool calling and `qwen2.5:3b` calls tools far more reliably than `llama3.2`; Sections B and F keep `llama3.2` and SmolLM2, which never need to call a tool.  It shows two designs.  **Path 1** keeps retrieval in your code, before the model is called, so it works with any model.  **Path 2** offers retrieval as a typed tool and lets the model decide when to search, which only works with a model that calls tools reliably.
+This section reuses `common.py` from the [Pydantic AI tutorial]({{ site.baseurl }}/Tutorials/PydanticAI) (put it beside these files, or keep the `sys.path` line below pointing at it).  Its default model is `qwen2.5:3b`, because Path 2 depends on tool calling and `qwen2.5:3b` calls tools far more reliably than `llama3.2`; Sections B and F keep `llama3.2` and SmolLM2, which never need to call a tool.  This section shows two designs.  **Path 1** keeps retrieval in your code, before the model is called, so it works with any model.  **Path 2** offers retrieval as a typed tool and lets the model decide when to search, which only works with a model that calls tools reliably.
 
 ```python
 # rag_agent.py: the same RAG system through Pydantic AI, first explicit, then as a typed tool.
@@ -590,7 +590,7 @@ $ python lora_data.py
 train=21 validation=3 test=8
 ```
 
-The split is **by fact**, not by row.  Our first version split by row, and a paraphrase of a training question landed in validation; validation loss then fell to 0.04, which looked like success and was really memorization showing up on both sides of the split.  After grouping, validation loss tells a very different story, below.  The eight test questions are never trained on (the assertion enforces it), with one deliberate exception: the changed-fact question, whose *old* answer is in training on purpose.
+The split is **by fact**, not by row.  Our first version split by row, and a paraphrase of a training question landed in validation; validation loss then fell to 0.04, which looked like success and was really memorization showing up on both sides of the split.  After grouping, validation loss tells a different story, as the training run below shows.  The eight test questions are never trained on (the assertion enforces it), with one deliberate exception: the changed-fact question, whose *old* answer is in training on purpose.
 
 ### Training
 
@@ -706,7 +706,7 @@ if __name__ == "__main__":
 What each piece does:
 
 - `local_files_only=True` and `HF_HUB_OFFLINE=1`: training cannot download anything.
-- `apply_chat_template`: the tokenizer wraps each conversation in exactly the special tokens the model was instruction-tuned with.  Skipping it trains on text shaped unlike anything the model will see at inference.
+- `apply_chat_template`: the tokenizer wraps each conversation in exactly the special tokens the model was instruction-tuned with.  If you skip it, the model trains on text shaped unlike anything it will see at inference.
 - `labels = [-100] * len(prompt)`: the loss counts only the assistant's reply, so the model learns to answer rather than to repeat questions.
 - `get_peft_model` freezes all 362 million base weights and adds rank-8 matrices to the four attention projections (`q_proj`, `k_proj`, `v_proj`, `o_proj`) in every layer.  `lora_alpha=16` scales the update by $$\alpha/r = 2$$, and `lora_dropout=0.05` drops a few adapter inputs during training to reduce overfitting.
 
@@ -723,7 +723,7 @@ saved adapter to ./adapters/makerspace-format
 
 Fewer than half a percent of the weights trained.  Training loss fell to almost nothing while validation loss, on facts the adapter never saw, only fell from 2.99 to 2.06.  When we let it run to eight epochs, validation loss rose again (2.43, 2.48, 2.47, 2.57) while training loss kept falling: textbook overfitting, which is why the config stops at four.  Twenty-one examples can teach a format.  They cannot teach a handbook.
 
-The saved folder holds `adapter_config.json` and `adapter_model.safetensors`, 6.4 MB in all.  It does not contain the base model.  PEFT prints a warning when saving offline ("Could not find a config file ... will assume that the vocabulary was not modified"); it is harmless here, because we did not add tokens.
+The saved folder holds `adapter_config.json` and `adapter_model.safetensors`, 6.4 MB in all.  It does not contain the base model.  PEFT (Hugging Face's Parameter-Efficient Fine-Tuning library) prints a warning when saving offline ("Could not find a config file ... will assume that the vocabulary was not modified"); it is harmless here, because we did not add tokens.
 
 ### Reloading in a fresh process
 
@@ -931,7 +931,7 @@ if __name__ == "__main__":
 
 ### Our results
 
-Measured on the CPU track with the four-epoch adapter, `llama3.2` playing no part (every answer here comes from SmolLM2-360M):
+We measured these on the CPU track with the four-epoch adapter, and every answer here comes from SmolLM2-360M (`llama3.2` plays no part):
 
 | Condition | Answerable correct (of 5) | Unanswerable, abstained (of 2) | Changed fact (Thursdays) | `ANSWER:` format (of 8) | Cites the chunk that holds the fact (of 6) | Retrieval recall@3 (of 6) | Time for 8 questions |
 |---|---|---|---|---|---|---|---|

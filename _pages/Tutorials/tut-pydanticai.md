@@ -39,7 +39,7 @@ Read this after the hand-written versions, not instead of them.  A framework is 
 | **Approval** | A tool call that pauses the run until a person says yes or no | Part 3, `ApprovalRequired` |
 | **Usage limits** | Hard caps on a run: `request_limit` counts model calls, `tool_calls_limit` counts tool executions | Part 5 |
 | **Message history** | The list of everything said so far.  Passing it back in is short-term memory; saving it to disk makes it long-term. | Part 6 |
-| **Toolset** | A group of tools from somewhere other than your file, such as an MCP server | Part 8, `MCPToolset` |
+| **Toolset** | A group of tools from somewhere other than your file, such as an MCP (Model Context Protocol) server | Part 8, `MCPToolset` |
 {: .tb-full}
 
 ---
@@ -307,7 +307,7 @@ def save_deadline(ctx: RunContext[Deps], course: str, due: date, title: str) -> 
 Three different checks happen in `save_deadline`, in this order:
 
 1. **Validation, done by the framework.**  `course` must be a string and `due` must be a date.  A model that sends `"due": "next week"` gets a retry message and never reaches your code.
-2. **Permission, done by you.**  `HIST101` is a perfectly valid string.  It is refused because it is not this student's course, and no schema could have known that.
+2. **Permission, done by you.**  `HIST101` is a valid string.  It is refused because it is not this student's course, and no schema could have known that.
 3. **Approval, done by a person.**  Even a permitted write pauses with `ApprovalRequired`.  The run ends early and returns `DeferredToolRequests` listing the calls waiting for a decision; nothing has been written yet.
 
 The script that runs the agent asks the person and resumes the run with their decisions:
@@ -355,7 +355,7 @@ $ cat notes/CS357.md
 - 2026-11-17: RAG lab
 ```
 
-Answer `n` instead and the tool returns the denial message to the model, and the file is never created.  `qwen2.5:3b` then simply repeated the denial message as its answer.  Two things we saw while testing with `llama3.2` are worth knowing too.  First, after a plain denial it sometimes asked for the same call again, which is why the loop above asks at most twice and why the denial message tells the model not to retry.  Second, after a successful save, its final sentence was muddled ("User question: Add a deadline...") even though the file was correct.  **The file is the truth, not the model's description of it.**  Check the side effect, not the sentence.
+Answer `n` instead and the tool returns the denial message to the model, and the file is never created.  `qwen2.5:3b` then repeated the denial message as its answer.  We also saw two things while testing with `llama3.2`.  First, after a plain denial it sometimes asked for the same call again, which is why the loop above asks at most twice and why the denial message tells the model not to retry.  Second, after a successful save, its final sentence was muddled ("User question: Add a deadline...") even though the file was correct.  **The file is the truth, not the model's description of it.**  Check the side effect, not the sentence.
 
 > **Two different budgets:** `request_limit` caps how many times the model is called.  `tool_calls_limit` caps how many tools actually run.  A model that asks for three tools in one reply uses one request and three tool calls, so a loop can stay under one limit and still blow through the other.  Part 5 trips each one on purpose.
 {: .tb-tip data-title="Request limits and tool-call limits"}
@@ -839,7 +839,7 @@ These are the tests to keep green as you change the agent: a bad date becomes a 
 
 ## Part 10: Putting It Together
 
-You now have every piece of a small, honest agent: typed tools with dependencies (Part 3), a permission check and a human gate on the one tool that writes (Part 3), extraction instead of model arithmetic (Part 4), limits on both requests and tool calls (Part 5), a history file with a trimming policy (Part 6), a skill menu (Part 7), and an MCP server for the tools that live elsewhere (Part 8), all covered by tests that need no model (Part 9).  Combining them is a matter of passing more than one thing to the same `Agent`:
+You now have every piece of a small, honest agent: typed tools with dependencies (Part 3), a permission check and a human gate on the one tool that writes (Part 3), extraction instead of model arithmetic (Part 4), limits on both requests and tool calls (Part 5), a history file with a trimming policy (Part 6), a skill menu (Part 7), and an MCP server for the tools that live elsewhere (Part 8), all covered by tests that need no model (Part 9).  To combine them, pass more than one thing to the same `Agent`:
 
 ```python
 agent = Agent(
