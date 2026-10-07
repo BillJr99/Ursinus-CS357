@@ -18,7 +18,7 @@ info:
     - To force parseable output with a structured-output technique, and to distinguish techniques that enforce validity from those that only encourage it
     - To evaluate the agent on five fixed tasks at fixed temperature and seed, report accuracy as a fraction, and mitigate one observed failure mode
     - To keep the model name, temperature, seed, and step budget in a configuration file, with located exception handlers around every network and parsing call
-    - To practice pair programming with logged driver and navigator swaps
+    - To practice pair programming with logged driver and navigator swaps, if you work with a partner
   rubric:
     - weight: 35
       description: Agent Loop Implementation
@@ -49,7 +49,7 @@ info:
       preemerging: An incomplete submission is provided
       beginning: The program is submitted, but not according to the directions in one or more ways
       progressing: The program is submitted according to the directions with a minor omission, with at least superficial responses to the reflection prompts
-      proficient: The program is submitted according to the directions, including a readme writeup describing the solution, a pair programming log with at least two timestamped role swaps and names recorded, and reflection answers that each cite a specific observation from the lab transcript rather than restating the prompt
+      proficient: The program is submitted according to the directions, including a readme writeup describing the solution, a pair programming log with at least two timestamped role swaps and names recorded (if you worked in a pair), and reflection answers that each cite a specific observation from the lab transcript rather than restating the prompt
   readings:
     - rtitle: "Running Your Own AI: Ollama, OpenWebUI, and Private Local Models (the class session that stands up your stack)"
       rlink: "Activities/liascript-localai.md"
@@ -81,7 +81,9 @@ tags:
 
 ---
 
-In this lab, you and a partner build a working agent yourselves: a loop, a prompt, two tools, and a small evaluation.  You leave with a private agent that runs on your own machine, a system prompt you can defend line by line, and an honest measurement of where it fails.  Work in **pairs using driver and navigator roles**.  The driver types; the navigator reviews, asks questions, and consults documentation.  Swap roles at least every 30 minutes, and log each swap time and who held each role.
+In this lab, you build a working agent yourself, individually or with a partner: a loop, a prompt, two tools, and a small evaluation.  You leave with a private agent that runs on your own machine, a system prompt you can defend line by line, and an honest measurement of where it fails.  If you work in a pair, use **driver and navigator roles**.  The driver types; the navigator reviews, asks questions, and consults documentation.  Swap roles at least every 30 minutes, and log each swap time and who held each role.
+
+**Pair policy.**  You may do this lab in pairs.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the pair log and say so in your readme.
 
 ---
 
@@ -987,7 +989,7 @@ Check each item against the rubric's `proficient` column.  On the no-code path, 
 - [ ] Network and parsing operations have located exception handlers, e.g. `[lab1:run_agent]`, printing a traceback (code path).
 - [ ] No-code path: `tool-config-notes.md` records each tool's name, description, parameter schema, valve settings, and search-engine choice; `structured-output-runs.json` holds five annotated runs; `transcripts/` holds all five evaluation chats.
 - [ ] No-code path: setup notes name the install route, every non-default setting, and the OpenWebUI (Settings, About), Ollama, and model versions, in enough detail for a classmate to reproduce the agent exactly.
-- [ ] Pair log with at least two timestamped role swaps and names.
+- [ ] If I worked in a pair: pair log with at least two timestamped role swaps and names.
 - [ ] Every reflection answer cites a specific observation from my own transcript.
 
 ---
@@ -1007,7 +1009,7 @@ Submit one ZIP containing your work and a readme writeup (about two pages) descr
 | Task set and results (`results.csv` or a markdown table; `transcripts/` on the no-code path) | Five goals at fixed settings, accuracy as a fraction | Evaluation |
 | Failure transcript and the before/after mitigation table | One failure mode with its excerpt; one mitigation and its delta | Evaluation |
 | `structured-output-runs.json` and the five-row annotation table (no-code path) | Whether prompt-only JSON held, and why not when it did not | Evaluation |
-| Pair programming log | At least two timestamped role swaps with names | Writeup |
+| Pair programming log (if you worked in a pair) | At least two timestamped role swaps with names | Writeup |
 | Readme writeup with the Learning Log | Design, evaluation, findings, and reflection answers that cite transcript lines | Writeup; Instruction Design |
 
 ---
@@ -1027,7 +1029,7 @@ Keep a metacognitive learning log for this lab in your readme.  In the spirit of
 
 - Where in your code does the agent perceive, plan, act, and remember?  Point to line numbers.
 - Your agent's "thoughts" shaped its actions.  Describe one transcript where the stated reasoning and the chosen action did not match, if you observed one, and what that implies about trusting narrated reasoning.
-- How did the driver/navigator structure change the code you wrote compared with working alone?
+- How did the driver/navigator structure change the code you wrote compared with working alone?  If you worked alone, what did you do in place of a navigator to catch your own mistakes?
 
 > **No-code path.**  Answer the first prompt in terms of the OpenWebUI architecture: which tier holds the system prompt, which executes the tool, where chat memory lives, and what your exported JSON shows about each.  Then answer one extra question: **what did the UI hide from you** that a code-path student had to build by hand, and name one concrete debugging situation where that hiding would hurt.
 

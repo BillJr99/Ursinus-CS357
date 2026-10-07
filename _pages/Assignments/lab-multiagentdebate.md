@@ -57,7 +57,7 @@ info:
       preemerging: An incomplete submission is provided
       beginning: The program is submitted, but not according to the directions in one or more ways
       progressing: The program is submitted according to the directions with a minor omission, with at least superficial responses to the reflection prompts
-      proficient: The program is submitted according to the directions, including a readme writeup, a pair log with at least two timestamped role swaps, and reflection answers that each cite a specific accuracy figure, transcript excerpt, or named failure mode from the lab rather than restating the prompt
+      proficient: The program is submitted according to the directions, including a readme writeup, a pair log with at least two timestamped role swaps (if you worked in a pair), and reflection answers that each cite a specific accuracy figure, transcript excerpt, or named failure mode from the lab rather than restating the prompt
   readings:
     - rtitle: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
       rlink: "Activities/liascript-critiqueconsensusjudge.md"
@@ -81,7 +81,7 @@ tags:
 
 ---
 
-You and your partner will build the patterns that make an agent system more reliable than a single model call, then measure whether the extra calls bought anything.  The lab has two halves and one grade.
+You, individually or with a partner, will build the patterns that make an agent system more reliable than a single model call, then measure whether the extra calls bought anything.  The lab has two halves and one grade.
 
 In **Part A** you build a generator/critic/refine loop.  A **generator** writes a draft, a **critic** checks it against a written rubric and returns "accept" or "revise" with a list of issues, and the **refine loop** feeds those issues back until the critic accepts or the round budget runs out.  You then calibrate that critic on defects you planted, break your own rubric on purpose, and measure what the loop cost against single-shot generation.  A short extension, **Part A, Extended**, swaps the accept-or-revise critic for a **judge** that scores each criterion of an explicit rubric with quoted evidence and a revision instruction, runs a bounded judge-and-refine loop, and logs the scores round by round so you can see whether refinement converged or only looked like it did.
 
@@ -91,7 +91,7 @@ Do Part A first.  The debate work reuses its scaffolding, and a critic you alrea
 
 You leave with a loop you can read, a working debate, a working sample-cluster-synthesize pipeline, and a measurement of your own that says when aggregation helps and when correlated errors defeat it.
 
-Work in pairs with driver/navigator roles, swap at least every 30 minutes, and keep a swap log.  This lab is handed out alongside the deck *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*.  See the course schedule for the assigned and due dates.
+**Pair policy.**  You may do this lab in pairs: driver/navigator roles, a swap at least every 30 minutes, and a swap log.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.  This lab is handed out alongside the deck *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*.  See the course schedule for the assigned and due dates.
 
 ---
 
@@ -170,7 +170,7 @@ Cosine similarity (should be ~0.7 for similar sentences):
 0.6843...
 ```
 
-> **Time budget.** About 7 to 10 hours in total.  This is not a single-sitting lab, so plan more than one pair session.
+> **Time budget.** About 7 to 10 hours in total.  This is not a single-sitting lab, so plan more than one work session.
 > - Part A: build the loop (A.1 to A.4) 60-90 min; calibrate the critic (A.5 to A.6) 45-60 min; reward hack the rubric (A.7 to A.8) 30-45 min; compare with single-shot (A.9 to A.10) 45-60 min
 > - Part A, Extended: judge-and-refine loop, log reading, and spot-check (A.11 to A.13) 30-45 min
 > - Part B: B.1 Debate 60-90 min; B.2 Consensus 60-75 min; B.3 The Shootout 60-75 min; B.4 Threshold Sensitivity 30-45 min
@@ -960,8 +960,8 @@ Rounds: 3 | Reason: all_meet
 The judge is an LLM grading an LLM, so the final round needs a human reading before you believe it.  This is the workshop's hand-score-first rule applied to one draft.
 
 > **Do this.**
-> 1. Before either of you looks at the judge's final levels, each partner scores the final draft on J1 to J3 using only `judge_rubric.json`.  Write the levels down separately.
-> 2. Compare your two sets of levels with each other and with the judge's.  Report agreement as matching cells out of three for each partner, and quote the draft wherever you and the judge disagree.
+> 1. Before you look at the judge's final levels, score the final draft on J1 to J3 using only `judge_rubric.json` (if you are in a pair, each partner scores separately).  Write the levels down.
+> 2. Compare your levels with the judge's (and, in a pair, with each other's).  Report agreement as matching cells out of three for each scorer, and quote the draft wherever you and the judge disagree.
 > 3. Answer the three reflection prompts below in your readme, each in two to four sentences, citing a row of `judge_rounds.csv`, the probe result, or your spot-check.
 
 Reflection prompts:
@@ -1784,7 +1784,7 @@ Submit one ZIP containing both halves.  Fix random seeds where determinism is in
 | Comparison results (CSV or table) | Accuracy and call count per condition at matched budgets | Comparative Evaluation (20) |
 | Debate and consensus transcripts, at least two questions each | One complete 3-agent, 2-round debate (or the handoff thread or folder listing with timestamps) and the long-form consensus demonstration | Debate (20); Consensus (20) |
 | Correlated failure analysis | Verbatim agreement on the wrong answer, why no aggregation could repair it, one non-LLM fix | Comparative Evaluation (20) |
-| Pair log | At least two timestamped role swaps | Writeup, Reflection, and Submission (5) |
+| Pair log (if you worked in a pair) | At least two timestamped role swaps | Writeup, Reflection, and Submission (5) |
 | Readme writeup, about two pages | Route named at the top, versions and seeds, Step B.2.2 interpretation answers, Part B.4 table and ownership paragraph, Learning Log | Writeup, Reflection, and Submission (5) |
 
 > **No-code path.** What you submit instead of code: the exported flow or preset prompts and chat transcripts (including at least three refine rounds in place of the Part A log, your calibration table, and your successful reward hack and patch), the Producer and Judge transcripts with the per-round score spreadsheet in place of `judge_rounds.csv`, the spreadsheet of runs and clusters, and the identical written analysis, including the honest verdict on whether the extra rounds bought you anything.
@@ -1803,7 +1803,7 @@ Held against the rubric's `proficient` column.  On the no-code or low-code route
 - [ ] **Comparison:** fixed tasks, the same scoring instrument on both sides, and a paragraph that says what the loop cost in extra calls for the quality it bought.
 - [ ] **Judge-and-refine:** the judge scores **every** criterion against a stated `meets` bar with a quoted sentence and a revision instruction, the producer revises from those instructions, and the loop stops at **three rounds at most** or as soon as every criterion meets its bar.
 - [ ] Per-round scores are logged (`judge_rounds.csv` or the spreadsheet), and the writeup says whether refinement **converged, drifted, or was sycophantic**, with the draft change (or its absence) as evidence and the count of quotes not found in the draft.
-- [ ] Both partners **blind spot-checked** the final round before reading the judge's levels, and the three judge failure-mode reflections are answered.
+- [ ] I (or, in a pair, both partners) **blind spot-checked** the final round before reading the judge's levels, and the three judge failure-mode reflections are answered.
 - [ ] **Debate:** agents, rounds, and temperature schedule are configurable.
 - [ ] Answer extraction anchors on a required `ANSWER:` line, and a missing one produces a located error rather than a silent wrong answer.
 - [ ] Both **majority-vote** and **judge-agent** aggregation are available.
@@ -1818,7 +1818,7 @@ Held against the rubric's `proficient` column.  On the no-code or low-code route
 - [ ] The writeup explains why no aggregation could have repaired it, and names one **non-LLM** addition that would.
 - [ ] Temperatures, round budget, agent count, rounds, temperature schedule, and distance threshold live in a config file.
 - [ ] Located exception handlers with tracebacks on model and embedding calls.
-- [ ] Pair log with at least two timestamped role swaps.
+- [ ] If I worked in a pair: pair log with at least two timestamped role swaps.
 - [ ] Every reflection answer cites a specific accuracy figure, transcript excerpt, or named failure mode.
 - [ ] The route I took is named at the top of the writeup.
 
