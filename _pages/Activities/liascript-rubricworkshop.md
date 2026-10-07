@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Evaluating Agents With a Rubric: The Judge Pipeline Workshop
 
-Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet, and then with the same judge expressed a second time as a promptfoo configuration with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries; today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list rather than re-reading them here.  The *Design Your Agent System* written assignment is due today.  Keep everything you build in the next seventy-five minutes: the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out on Tuesday, November 17, reuses this judge in its rubric judge-and-refine loop, and Evaluation Workshop II points it at your own final project.
+Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet, and then with the same judge expressed a second time as a promptfoo configuration with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries; today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list rather than re-reading them here.  The *Design Your Agent System* written assignment is due around this session; see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date.  Keep everything you build in the next seventy-five minutes: the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out with *Critique, Consensus, and the LLM Judge*, reuses this judge in its Part A, Extended judge-and-refine loop, and Evaluation Workshop II points it at your own final project.
 
 ---
 
@@ -323,7 +323,7 @@ for c in RUBRIC["criteria"]:
           "->", detail_after["scores"][c["name"]]["level"])
 ```
 
-Record the delta per criterion.  Any criterion that moves up is verbosity bias, measured; the padded sentences even praise the author, so a move is also the judge reading tone instead of the text.  A delta of zero on three cells does not clear the judge; it is one sample, one padding string, one model, and the lab asks for the larger study.
+Record the delta per criterion.  Any criterion that moves up is verbosity bias, measured; the padded sentences even praise the author, so a move is also the judge reading tone instead of the text.  A delta of zero on three cells does not clear the judge; it is one sample, one padding string, one model, and Evaluation Workshop II runs the probe again with padded and unpadded versions of your own project's artifacts.
 
 ## Model 3: The Disagreement Table
 
@@ -351,9 +351,9 @@ Only `s02` has a padded value today.  The row with the largest gap is the row yo
 
 5.  Take the worst row and rewrite that criterion's level descriptors so the disagreement could not happen: name the countable feature (a source in parentheses, an opposing view in a full sentence, a rebuttal that gives a reason).  Re-run `judge.py` with the revised `RUBRIC` and report agreement on that criterion before and after.
 
-   *Hint:* Revise the descriptor, not the sample.  The lab grades the revise-and-remeasure step, not the first number.
+   *Hint:* Revise the descriptor, not the sample.  The revise-and-remeasure step is the finding, not the first number, and Evaluation Workshop II asks you for one documented repair of exactly this kind.
 
-Recap: agreement tells you whether the rubric wording means the same thing to you and the model; the padding probe tells you whether the model is reading the text or its length.  Both numbers, with the revision they prompted, are the core of the lab writeup.
+Recap: agreement tells you whether the rubric wording means the same thing to you and the model; the padding probe tells you whether the model is reading the text or its length.  Both numbers, with the revision they prompted, are what you report at the stand-up in Evaluation Workshop II.
 
 ---
 
@@ -361,7 +361,7 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 
 1.  *Twelve samples.*
 
-   - *What to do*: The lab needs at least twelve synthetic submissions including an empty file and an off-topic one.  Write nine more into `samples/`, re-run `judge.py`, and confirm the empty file produces a flagged row rather than a score.
+   - *What to do*: Three samples are too few to trust a judge; grow the set to at least twelve synthetic submissions, including an empty file and an off-topic one.  Write nine more into `samples/`, re-run `judge.py`, and confirm the empty file produces a flagged row rather than a score.
    - *Starter hint*: An empty artifact gives the judge nothing to quote; watch whether it invents evidence or fails to parse.  Either is a finding.
    - *You've succeeded when*: `grades.csv` has twelve rows, every `_quote_found` on a non-empty file is `True`, and the empty file's row is flagged or scored all ones with a reason you can state.
 

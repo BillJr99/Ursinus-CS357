@@ -281,5 +281,5 @@ These four activities are the deep dives this hub connects.  Open any of them wh
 
 - [How LLMs Are Built: Tokenization, Pre-Training, and Scaling]({{ site.baseurl }}/Tutorials/LLMPretraining), the *pretraining -> base model* stage in full.
 - [From Rewards to Preferences: Reinforcement Learning and RLHF]({{ site.baseurl }}/Tutorials/RLHF), RL, RLHF, and DPO, the machinery behind *alignment* and *reasoning* training.
-- [Fine-Tuning, RAG, and Prompting: Choosing the Right Approach](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-ragquality.md), how to specialize any model type, including the LoRA shortcut.
+- [RAG and Fine-Tuning: Retrieval Quality and LoRA](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-ragquality.md), whose *Fine-Tuning, RAG, and Prompting* extension covers how to specialize any model type, including the LoRA shortcut.
 - [Multimodal Agents: Vision, Documents, and Code as First-Class Inputs]({{ site.baseurl }}/Tutorials/MultimodalAgents), the longer treatment of *vision/multimodal* models, the modality bottleneck, and grounding.

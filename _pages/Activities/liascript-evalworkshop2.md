@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Two weeks ago, in the Judge Pipeline Workshop, you built a judge that reads a rubric, scores sample submissions with your local model, and checks its own quotes, and you measured how often it agreed with your hand scores.  Today you point that judge at your own final project and find out whether the trust survives contact with real outputs.  You leave with a disagreement table for three real artifacts, one disagreement traced to its evidence and repaired, and the run frozen into your project repository as a regression check that fails the next time the judge quietly changes.
 
-The Literature Review Team Synthesis is due today.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) went out on Tuesday, and its rubric judge-and-refine loop (Part A, Extended) reuses this judge, so every repair you make this session carries straight into that lab.
+The Literature Review Team Synthesis is due today.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) went out last session, in *Governance, Policy, and the Cost of Inference*, and its rubric judge-and-refine loop (Part A, Extended) reuses this judge, so every repair you make this session carries straight into that lab.
 
 ---
 
@@ -42,7 +42,7 @@ Project roles are in effect today: **Coordinator**, **Builder(s)**, **Evaluator*
 
 ### Before You Start
 
-**You need:** the judge from the Judge Pipeline Workshop (code route: `judge.py`, its `RUBRIC`, and a `grades.csv` from a working run; no-code path: your `promptfooconfig-rubric.yaml` and `grades_promptfoo.csv`), Ollama running with the model the judge was validated against, the rubric your judge reads adapted to your project's outputs, and three artifacts your project produced this week (answers, summaries, plans, report sections: whatever the rubric is written to score).  Put the three artifacts in one folder before class.  If you wrote the evaluation and monitoring section of your governance one-pager on Tuesday, bring it; today tests whether its measurements are ones you can actually take.
+**You need:** the judge from the Judge Pipeline Workshop (code route: `judge.py`, its `RUBRIC`, and a `grades.csv` from a working run; no-code path: your `promptfooconfig-rubric.yaml` and `grades_promptfoo.csv`), Ollama running with the model the judge was validated against, the rubric your judge reads adapted to your project's outputs, and three artifacts your project produced this week (answers, summaries, plans, report sections: whatever the rubric is written to score).  Put the three artifacts in one folder before class.  If you wrote the evaluation and monitoring section of your governance one-pager last session, bring it; today tests whether its measurements are ones you can actually take.
 
 **What you will have at the end:** a filled disagreement table, one documented repair, and a harness configuration committed to your project repository.
 
@@ -106,7 +106,7 @@ The order matters.  If you see the judge's scores first, your human scores will 
 
 ## Code Cell
 
-Run this after both sheets are complete, with your three files in place of the examples.  As written, it measures human-to-human agreement between your two blind scorers, which is the ceiling on what the judge can reach (see Question 2).  To get human-to-judge agreement, call the same `percent_agreement` function with the judge's levels, in the same shape, as one of the two arguments.  The printed numbers per criterion are what you report at the next stand-up, in Tuesday's *Project Studio: Sprint and Threat Model* session; today's stand-up used the workshop's numbers.
+Run this after both sheets are complete, with your three files in place of the examples.  As written, it measures human-to-human agreement between your two blind scorers, which is the ceiling on what the judge can reach (see Question 2).  To get human-to-judge agreement, call the same `percent_agreement` function with the judge's levels, in the same shape, as one of the two arguments.  The printed numbers per criterion are what you report at the next stand-up, in the *Project Studio: Sprint and Threat Model* session; today's stand-up used the workshop's numbers.
 
 ```python
 # After both partners have scored independently:
@@ -210,7 +210,7 @@ There is a second-order effect to watch for.  A long, fluent, confident trace is
 
 *Hint:* The judge fabricated a quotation, which the trace's fluency disguises rather than reveals.  The evidence requirement catches it, but only if somebody actually verifies the quote against the source, which is a check no amount of reading the trace performs.  Human agreement scoring would not catch it either, since a human reading a persuasive trace may simply agree.  The cheap fix is mechanical: assert every quoted span appears verbatim in the input, which is a validator rather than a judgment.
 
-**Question 5.**  Your largest-gap row turned out to be an artifact fault: the judge was right and both humans were generous.  What does that tell you about the humans' one-sentence justifications, and what should change on the score sheet before Tuesday's calibration run?
+**Question 5.**  Your largest-gap row turned out to be an artifact fault: the judge was right and both humans were generous.  What does that tell you about the humans' one-sentence justifications, and what should change on the score sheet before the next calibration run?
 
 [[___ Your answer here ___]]
 

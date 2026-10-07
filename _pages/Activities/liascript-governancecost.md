@@ -16,7 +16,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 A policy section is only as good as the mechanism that enforces it.  You have built agents that retrieve, decide, judge, and act; governance is deciding in advance, in writing, what they may do, who answers when they err, and how anyone would know.  Today you learn to write policy that a stranger could check from the logs, and you put numbers behind the section most policies leave out: what the system costs to run, in energy, water, dollars, and tokens.  You leave with two enforceable sections of your final project's governance one-pager, one about data and one about cost and routing.
 
-Due today: the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase).  Handed out today: the Multi-Agent Patterns lab ([Multi-Agent Debate](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate)), due on Demo Day, Tuesday, December 8.
+Due today: the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase).  Handed out today: the Multi-Agent Patterns lab ([Multi-Agent Debate](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate)), due on Demo Day (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date).
 
 ---
 

@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Design First: Plan Your Agent System Before You Build It
 
-Today you plan a whole agent system on paper before any of it runs.  In *How I AI* you wrote a charter and reviewed a plan before letting one agent act on one task.  On Tuesday, in *Observability, Traceability, and Handoff Protocols*, you wrote the start, stop, restart, and handoff protocol as a `SKILL.md`.  Today we scale both of those to a system of several agents, and we do it in a design document.
+Today you plan a whole agent system on paper before any of it runs.  In *How I AI* you wrote a charter and reviewed a plan before letting one agent act on one task.  Last session, in *Observability, Traceability, and Handoff Protocols*, you wrote the start, stop, restart, and handoff protocol as a `SKILL.md`.  Today we scale both of those to a system of several agents, and we do it in a design document.
 
 The reason is cost.  In traditional software engineering, the cost of a mistake rises with how late you find it: a bug caught in code review is cheaper than one caught in production.  Agentic systems make that curve steeper.  An agent that sends email, writes to a database, or calls an external API can produce an **irreversible side effect** seconds after it starts, and if the design was wrong you may not be able to undo what it did.
 
@@ -20,7 +20,7 @@ The design-first practice says: before you write code or deploy an agent, produc
 
 The same discipline is older than software.  Electricians draw the wiring diagram before they pull wire through conduit, because once the walls are closed, changing the circuit is expensive.  Plan your ports, your identity directories, and your data flows on paper before any agent sends its first request.
 
-The written assignment [Design Your Agent System](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/AgentSystemDesign) is handed out today.  It asks for the agent table and pre-mortem you practice here, and it now requires an observability, traceability, and handoff protocol section: the `SKILL.md` you drafted on Tuesday, checked against Tuesday's checklist.  Bring both to every model below.
+The written assignment [Design Your Agent System](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/AgentSystemDesign) is handed out today.  It asks for the agent table and pre-mortem you practice here, and it now requires an observability, traceability, and handoff protocol section: the `SKILL.md` you drafted last session, checked against that session's checklist.  Bring both to every model below.
 
 ---
 
@@ -92,7 +92,7 @@ Your team designs an agent that files issues in your project's GitHub repository
 
 The notification is what settles this question.  The artifact is editable, so the state is recoverable; the side effect on other people's attention is not.  Many agent actions look free when you consider only the data and turn out to be costly when you consider who got pinged.  Ask about both.
 
-Two things to remember from this section.  Every row in your design must answer how the agent is observed, what it reaches, and how its work is undone.  The observability answer is not new work: it is the protocol from Tuesday, applied to one agent at a time.
+Two things to remember from this section.  Every row in your design must answer how the agent is observed, what it reaches, and how its work is undone.  The observability answer is not new work: it is the protocol from *Observability, Traceability, and Handoff Protocols*, applied to one agent at a time.
 
 ---
 
@@ -196,7 +196,7 @@ The agent table is the core design artifact for a multi-agent system.  One row p
 >
 > Read the gap too.  `config.json` has no failure-mode column.  It handles exactly one failure, a missing skill file, and it handles that in code by raising.  Nobody filled in a cell for it.  Download [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip) and open `config.json` beside the table.
 
-The table below carries the original columns plus one that Tuesday's protocol makes possible: for each agent, what is logged, which rule each action traces back to, and what the handoff file contains when the agent stops.  When you build your own table for *Design Your Agent System*, also add the three from the section above: **observed how**, **reaches what**, and **undone how**.
+The table below carries the original columns plus one that last session's protocol makes possible: for each agent, what is logged, which rule each action traces back to, and what the handoff file contains when the agent stops.  When you build your own table for *Design Your Agent System*, also add the three from the section above: **observed how**, **reaches what**, and **undone how**.
 
 | Agent Name | Role and Goal | System Prompt Skeleton | Inputs | Outputs | Temperature | Tools Available | Failure Mode | Logged, Traced, Handed Off |
 |---|---|---|---|---|---|---|---|---|

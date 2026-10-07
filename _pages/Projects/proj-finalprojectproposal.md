@@ -86,7 +86,7 @@ The sprint window is short.  A team that arrives at Sprint 1 with a declared dir
 
 - **Read the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page in full**, including all three directions.  That page is the complete reference for the project.  This page describes the proposal deliverable and its rubric.
 - **Know where this sits in the Project Thread.**  The proposal comes before the [Literature Review]({{ site.baseurl }}/Assignments/LitReview), on purpose.  You commit to a plan first, then you read against it.  The review will confirm parts of this document, complicate others, and occasionally kill one, and your team synthesis has to say which.  So propose the plan you believe in, not the plan that will be easiest to defend later.
-- **Submit the second intra-team check-in.**  It is due two days before this proposal.  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
+- **Submit the second intra-team check-in.**  It is due at the *Orchestration and Multi-Agent Patterns* session, before this proposal (see the [course schedule]({{ site.baseurl }}/) for the date).  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
 - **Length:** 2-3 pages, excluding the timeline, tables, and appendices.
 
 **Choose your direction slowly.**  All three directions are real, and they suit different teams:
@@ -183,7 +183,7 @@ This is Section 6 of your proposal; include only the block for your direction.  
 
 ### Direction A: Custom Agent Team
 
-The [Design Your Agent System]({{ site.baseurl }}/Assignments/AgentSystemDesign) written assignment is due the week after this proposal, and it develops these same artifacts in full depth.  Sketch them here at proposal fidelity: enough to defend the architecture and show the work is feasible.  The design assignment is where they become a specification someone else could build from.
+The [Design Your Agent System]({{ site.baseurl }}/Assignments/AgentSystemDesign) written assignment is due after this proposal, at the *Evaluating Agents With a Rubric: The Judge Pipeline Workshop* session (see the [course schedule]({{ site.baseurl }}/)), and it develops these same artifacts in full depth.  Sketch them here at proposal fidelity: enough to defend the architecture and show the work is feasible.  The design assignment is where they become a specification someone else could build from.
 
 > **Paste into your submission.**
 > - An **agent design table**, one row per agent: role, system-prompt summary, inputs, outputs, temperature with justification, tools, and the isolated evaluation you will run on it.
@@ -252,7 +252,7 @@ Only four of AAC&U's six problem-solving criteria appear here, on purpose.  *Imp
 | Direction-specific block (pre-mortem, risk hypothesis, or gap verification, and the rest of Section 6) | You anticipated failure and weighed alternatives before committing | Approach; Evaluate Potential Solutions |
 | AI-use disclosure | What was AI-assisted, with what tool, why, and how it was verified | Process and Professionalism |
 | Signatures, per-section primary authors, version or commit history | Every member owns a section; the draft grew over time | Process and Professionalism |
-| Second intra-team check-in, two days before the proposal | Scope disagreements surfaced early and show in the proposal's scope | Process and Professionalism |
+| Second intra-team check-in, due before the proposal | Scope disagreements surfaced early and show in the proposal's scope | Process and Professionalism |
 
 ---
 

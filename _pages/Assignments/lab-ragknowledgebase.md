@@ -83,12 +83,12 @@ info:
     - rtitle: "RAG Activity"
       rlink: "Activities/liascript-rag.md"
       liapage: true
-    - rtitle: "RAG Quality: Chunking and Measuring Retrieval"
+    - rtitle: "RAG and Fine-Tuning: Retrieval Quality and LoRA"
       rlink: "Activities/liascript-ragquality.md"
       liapage: true
     - rtitle: "Chroma Documentation"
       rlink: "https://docs.trychroma.com"
-    - rtitle: "RAG Quality: Chunking and Measuring Retrieval (its extension weighs fine-tuning against RAG and prompting)"
+    - rtitle: "RAG and Fine-Tuning: Retrieval Quality and LoRA (its extension weighs fine-tuning against RAG and prompting)"
       rlink: "Activities/liascript-ragquality.md"
       liapage: true
     - rtitle: "Unsloth: Fine-Tuning Notebooks and Ollama/GGUF Export (Direction 1)"

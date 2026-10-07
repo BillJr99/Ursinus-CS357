@@ -208,16 +208,18 @@ Answer individually in your submission, keyed to the Open Questions (Goal 15):
 
 - [ ] Every source is one I actually opened, and every link or DOI resolves.
 - [ ] Each annotation says what the source claims, how it knows, and what it means for **our** problem, rather than summarizing an abstract.
-- [ ] The sources span more than one viewpoint or discipline.
-- [ ] At least one source complicates our assumed answer rather than supporting it.
+- [ ] Each annotation includes a specific credibility assessment (venue, method, funding or incentive, recency, and what the source can and cannot support) and ties the source to a named element of our problem statement.
+- [ ] At least one of my sources is scholarly, and each annotation notes how I found the source (database, search terms, or citation chain) and gives a complete citation.
+- [ ] Across the team's combined set, the sources span at least two disciplinary perspectives, and at least one comes from the stakeholder's discipline.
 
 **Team synthesis**
 
 - [ ] The synthesis is organized by **theme or argument**, not source by source.
-- [ ] Where sources disagree, the disagreement is stated and not smoothed over.
+- [ ] Where sources disagree, the disagreement is stated and not smoothed over, and at least one observation says where the disciplines converge, conflict, or define success differently, and what that means for the project.
 - [ ] The gap our project addresses is named, and it follows from the sources rather than being asserted before them.
 - [ ] We have said what the evidence confirms, complicates, or changes about our proposal, naming the element affected and the source responsible.
 - [ ] If nothing about the plan changed, we have said why the sources leave it standing rather than leaving the question unanswered.
 - [ ] Every claim traces to a citation, and every citation traces to a source someone on the team read.
+- [ ] We noted honestly where our sources are weakest.
 - [ ] AI disclosure names what was AI-assisted and how citations were verified.
-- [ ] Contribution statement says who read what.
+- [ ] The synthesis names its primary author, the combined bibliography is consistently formatted, and the PDF carries all members' typed signatures.

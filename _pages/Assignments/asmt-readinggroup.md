@@ -107,7 +107,7 @@ This is a graded assignment for the presenter (a 10-point base grade plus an ear
 
 **If you lead a session,** budget your time across three things: reading your source properly, preparing the questions, and putting together slides and logistics.  People underestimate the reading every time.  You cannot facilitate a discussion about a text you skimmed, because the whole job is fielding a question the text only half-answers.
 
-**Pick your source at least two weeks out**, and tell me what you picked.  If it is not on the seed list, that is welcome; just check with me so we do not double up and so I can make sure the class has access to it.
+**Pick your source early, well before your slot**, and tell me what you picked by the deadline I post in the [syllabus]({{ site.baseurl }}/).  If it is not on the seed list, that is welcome; just check with me so we do not double up and so I can make sure the class has access to it.
 
 **Plan backwards from the room rather than forwards from the text.**  The usual failure is a well-summarized paper and a silent room.  Decide first what you want the class arguing about, then work out how much of the source they need to get there.  Three minutes of setup and six of discussion beats the reverse, every time.
 
@@ -119,7 +119,7 @@ You may choose any of the following:
 
 **Option A: Current Event:** A news story, blog post, preprint, or policy announcement from the past 60 days that relates to AI. Examples: a new model release with notable capabilities or risks, a regulatory action, a high-profile AI failure or success, a research result.
 
-**Option B: Course-Adjacent Reading:** A book chapter, article, or essay from the seed list below, or another source you propose (check with the instructor at least one week before your slot).
+**Option B: Course-Adjacent Reading:** A book chapter, article, or essay from the seed list below, or another source you propose (check it with the instructor by that same deadline; see *Before You Start* below).
 
 **Option C: Determinism / Automation Bias Focus:** A reading or event specifically about how humans interact with, over-trust, or mis-calibrate their trust in automated systems.  This option connects directly to the *Deterministic and Probabilistic Computing* activity and is particularly welcome in the early weeks.
 
@@ -225,7 +225,7 @@ This assignment is scored on the rubric above.  Leading a session earns a **10-p
 ## Self-Check, for the Session Leader
 
 - [ ] I read the source in full, not a summary of it, and I could answer a question about a part I am not presenting.
-- [ ] I cleared my source with the instructor at least two weeks out.
+- [ ] I cleared my source with the instructor by the deadline posted in the syllabus.
 - [ ] The class can get to the source: it is free, linked, or I arranged access.
 - [ ] Setup is about three minutes or less.  The discussion is the session.
 - [ ] I prepared the required discussion questions, and at least one has no comfortable answer.

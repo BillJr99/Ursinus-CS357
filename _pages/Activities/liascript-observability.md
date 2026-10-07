@@ -46,7 +46,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 **You need:** your `cs357-work` repository from *How I AI*, with its `.ai/` directory, and the two course templates linked in Part III.  There is nothing to install today; the Code Cell runs in this page.
 
-**Coming due:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due Thursday, October 29.  Nothing in today's session depends on it, so keep it out of Part I.
+**Coming due:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due at the *Critique, Consensus, and the LLM Judge* session (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date).  Nothing in today's session depends on it, so keep it out of Part I.
 
 ---
 

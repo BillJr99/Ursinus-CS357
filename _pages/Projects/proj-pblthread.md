@@ -223,7 +223,7 @@ Edmondson (1999) defines **psychological safety** as a team's shared belief that
 
 ## The Team Charter
 
-> **Handed out** once teams are announced, and **signed and due** the following week.  See the [course schedule]({{ site.baseurl }}/) for exact dates.
+> **Handed out** once teams are announced, and **signed and due** at the *Prompt Engineering as Agent Design* session.  See the [course schedule]({{ site.baseurl }}/) for exact dates.
 
 Use this template as a starting point.  The format is flexible, but every row has to be answered concretely.  A paragraph that says "we will use Discord, meet Sundays at 2pm, and rotate roles every two weeks" covers more ground than a table full of vague entries.
 
@@ -241,7 +241,7 @@ Submit one charter per team; each member includes it with their own submission. 
 Work through the **[Team Charter and Norms activity]({{ site.baseurl }}/Tutorials/GroupCharter)** together when teams are announced.  It walks the seven required elements and gives you the language for the harder ones.  Revisit it at the midpoint charter check.
 
 
-Your team's first deliverable is not technical.  It is a **contract**, in the style of the team contracts used in WPI's project-based curriculum: a short document, drafted together at the in-class charter activity and signed by every member within the following week, that turns "we'll figure it out" into commitments you can point to later.  The charter must cover seven things:
+Your team's first deliverable is not technical.  It is a **contract**, in the style of the team contracts used in WPI's project-based curriculum: a short document, drafted together at the in-class charter activity and signed by every member by the charter's due date in the course schedule, that turns "we'll figure it out" into commitments you can point to later.  The charter must cover seven things:
 
 1.  **Norms and values.**  Three to five concrete, behavioral norms: not "communicate well" but "if you will miss a deadline, say so in the channel at least 24 hours out."  Start from your survey answers.  The pet peeves and "what matters most" answers your members choose to share are the raw material.
 2.  **Meeting cadence with a rotating agenda-owner.**  When and where the team meets (built from your overlapping survey windows), and who owns the agenda.  The agenda-owner role **rotates** each week, so no one person becomes the team's default manager.  The agenda-owner posts the agenda before the meeting and confirms notes exist after it.
@@ -299,7 +299,7 @@ Rotation is not optional and not tradeable.  The point is that everyone practice
 
 ## Intra-Team Check-Ins 1-3
 
-> **Bring to class.**  Each review round runs on real artifacts: the Stakeholder Brief draft at the *RAG Quality* session, the proposal at *Project Studio: Sprint and Threat Model*, and your gallery-walk artifact plus SQR cards at *Project Studio and Gallery Walk*.  A round with nothing to review is a round wasted.
+> **Bring to class.**  Each review round runs on real artifacts: the Stakeholder Brief draft at the *RAG and Fine-Tuning: Retrieval Quality and LoRA* session, the proposal at *Project Studio: Sprint and Threat Model*, and your gallery-walk artifact plus SQR cards at *Project Studio and Gallery Walk*.  A round with nothing to review is a round wasted.
 
 The structured peer reviews at the brief, proposal, and gallery-walk stages all use the **SQR protocol**: one Strength with evidence, one genuine Question, one Risk with a mitigation.  The **[Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview)** carries the protocol card; bring it to each review round.
 
