@@ -165,7 +165,9 @@ Define a Python function, describe it as a JSON schema in a `tools` list, and le
 
 ### Option 1B: From a Framework, Give an Agent Tools You Did Not Wire
 
-Hand the same tool to an agent through a framework so the framework owns the tool-calling loop.  Register a Python function as a tool with **smolagents** (Hugging Face's lightweight agent library, the gentlest starting point), LangChain/DeepAgents, or Agno, and let it drive invocation (see the [Agent Frameworks activity]({{ site.baseurl }}/Tutorials/AgentFrameworks), including how to point the framework at your local Ollama/Open WebUI model).  If you are new to frameworks, prefer smolagents: it is a much thinner wrapper than LangChain, so less of the loop is hidden and the code you write stays close to the from-scratch version.
+Hand the same tool to an agent through a framework so the framework owns the tool-calling loop.  Register a Python function as a tool with **Pydantic AI**, **smolagents** (Hugging Face's lightweight agent library), LangChain/DeepAgents, or Agno, and let it drive invocation (see the [Agent Frameworks activity]({{ site.baseurl }}/Tutorials/AgentFrameworks), including how to point the framework at your local Ollama/Open WebUI model).  If you are new to frameworks, choose a thin one, so less of the loop is hidden and the code you write stays close to the from-scratch version.  Pydantic AI is the recommended guided route: [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) walks the Tool Use activity's own `get_today` and `days_until` tools from the raw loop into the framework, step by step.  smolagents is an equally thin choice if you prefer it, and every framework listed here earns the same credit.
+
+> **Validation is not authorization.** A framework checks that the model's arguments have the right types.  It does not check that the call is allowed.  If your tool writes, deletes, or sends anything, the permission check still belongs in your code, inside the tool.  The Pydantic AI tutorial's Part 3 shows one way to write it.
 
 > **Paste into your submission.** The tool registration, a run transcript, and two things the framework hid from you that you had to do by hand in the from-scratch version.
 
@@ -821,7 +823,7 @@ MCP standardizes how a client discovers what tools a server offers and how it ca
 
 ### Option 4A: Create, Stand Up Your Own MCP Server
 
-Expose your tools over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server, for example with the Python MCP SDK or FastMCP, that advertises one or two tools.  Then connect a client and show the discover to invoke round trip.
+Expose your tools over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server, for example with the Python MCP SDK or FastMCP, that advertises one or two tools.  Then connect a client and show the discover to invoke round trip.  The MCP deck's Flask server follows the same list-then-call pattern over plain HTTP, but it does not speak the MCP protocol itself (JSON-RPC over stdio or HTTP).  For a complete, real FastMCP server with a client and a Pydantic AI agent connected over stdio, see Part 8 of [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI).
 
 If you take [Option 4D](#option-4d-secure-your-own-server-with-oauth-20), the same server with an OAuth 2.0 gate, that fully satisfies this option.
 

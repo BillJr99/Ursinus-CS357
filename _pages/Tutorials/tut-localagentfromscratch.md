@@ -710,3 +710,11 @@ if __name__ == "__main__":
 ## Where This Goes Next
 
 The Local Agent lab takes this loop further.  Its Part 1 replaces the single `RUN:` protocol with a Thought, Action, Observation loop over several tools.  Its Part 3 measures how often the loop succeeds.  *Tool Use and Function Calling* then replaces our hand-written `RUN:` protocol with the model's native tool calls, and *MCP* moves the tools out of the program entirely.  Each of those is a better version of a step you have now written by hand, and that is why you wrote it by hand first.
+
+When those feel familiar, hand the plumbing to a framework, one piece at a time.  Read in this order:
+
+1. The [Tool Use deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-tooluse.md), Part II: the same loop with native tool calls and the two tools `get_today` and `days_until`.
+2. [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI): those two tools again, first in the raw loop and then in Pydantic AI, with a table of which responsibilities moved into the framework (history, schemas, dispatch, retries, limits) and which stayed with you (permission, approval, memory policy, and checking the answer).  It goes on to dependencies, structured output, memory, skills, a real MCP server, and tests that need no model.
+3. [Agent Frameworks]({{ site.baseurl }}/Tutorials/AgentFrameworks), Part V, which prints the context window as each feature is added, and then that tutorial's optional comparison of other frameworks.
+
+The gates in this tutorial do not go away in a framework.  Pydantic AI validates a tool's arguments for you, but a well-formed argument is not a permitted one: `gate()` becomes a check inside the tool, and the person typing `YES` becomes an approval step.

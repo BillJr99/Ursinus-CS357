@@ -454,6 +454,8 @@ schedule:
     rlink: "https://docs.ollama.com/capabilities/structured-outputs"
   - rtitle: "Instructor with Pydantic and Ollama, for typed and grammar-constrained generation: validity by construction rather than by retry"
     rlink: "https://python.useinstructor.com/integrations/ollama/"
+  - rtitle: "Pydantic AI From the Loop Up: today's get_today and days_until agent moved into a framework one responsibility at a time, then permissions, the agentic loop, memory, skills, and a real MCP server"
+    rlink: "Tutorials/PydanticAI"
 - week: "5"
   date: "0"
   title: "MCP: Connecting Agents to Tools and Your Obsidian Vault"
@@ -488,13 +490,17 @@ schedule:
     rlink: "https://www.youtube.com/watch?v=rz40ukZ3krQ&t=10s"
   - rtitle: "Tokens, Embeddings, and Attention: Part II, semantic search in twenty lines, is the retrieval step of today's pipeline"
     rlink: "Tutorials/TokensEmbeddingsAttention"
+  - rtitle: "Offline RAG and LoRA, End to End: Sections A to C rebuild today's pipeline with a persistent index that runs with the network unplugged"
+    rlink: "Tutorials/OfflineRAGFineTuning"
 - week: "6"
   date: "0"
-  title: "RAG Quality: Chunking and Measuring Retrieval"
+  title: "RAG and Fine-Tuning: Retrieval Quality and LoRA"
   link: "Activities/liascript-ragquality.md"
   liapage: true
   readings:
   - rtitle: "Mitchell, Chapter 4"
+  - rtitle: "Offline RAG and LoRA, End to End: Sections D to F train a LoRA adapter on a CPU and compare a base model, RAG, LoRA, and both on held-out questions"
+    rlink: "Tutorials/OfflineRAGFineTuning"
   - rtitle: "Please bring your team's Stakeholder Brief draft, because the peer review round works on real drafts."
     rlink: false
 - week: "7"
@@ -569,6 +575,8 @@ schedule:
     points: "3"
     rubricpath: "_pages/Projects/proj-pblthread.md"
   readings:
+  - rtitle: "Pydantic AI From the Loop Up: read it before Agent Frameworks if you have not yet seen a framework take over the hand-written loop"
+    rlink: "Tutorials/PydanticAI"
   - rtitle: "Agent Frameworks: LangChain, CrewAI, AutoGen, and Agno, and when a framework earns its weight"
     rlink: "Tutorials/AgentFrameworks"
 - week: "9"

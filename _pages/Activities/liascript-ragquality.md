@@ -10,7 +10,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 -->
 
-# RAG Quality: Chunking and Measuring Retrieval
+# RAG and Fine-Tuning: Retrieval Quality and LoRA
 
 **How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out on Thursday, October 29, and Part III previews the lab's Part 5, the RAG Quality Checkup pathway, which turns today's metrics into a golden set, a worksheet, and a regression harness.
 
@@ -46,7 +46,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | 0-10 | Part I, chunking: where the boundaries go and what they cost you |
 | 10-40 | Part II, measure retrieval, then map the corpus with clustering |
 | 40-60 | The peer-review round on your team's Stakeholder Brief draft |
-| 60-75 | Part III, the walkthrough of the lab's Part 5 checkup pathway, then the reflection prompt.  Both Extensions are self-paced |
+| 60-75 | Part III, the walkthrough of the lab's Part 5 checkup pathway, then the reflection prompt.  If five minutes remain, the instructor runs the prepared LoRA demonstration from the first Extension (an adapter switched on and off, trained before class, nothing trained live).  Both Extensions are self-paced |
 
 ---
 # Part I: Chunking
@@ -248,6 +248,7 @@ We now have a RAG system that can find and deliver relevant information, and a w
 - Chroma documentation on collections and querying: https://docs.trychroma.com
 - Nils Reimers.  "Retrieve and Re-Rank" (Sentence-Transformers documentation, online).
 - Liu et al. "Lost in the Middle."  *TACL* (2024), on why chunk *placement* in the prompt also matters.
+- *Offline RAG and LoRA, End to End*, a persistent Chroma index with citations and abstention, a LoRA adapter trained and reloaded on a CPU, and a held-out comparison of the two: https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OfflineRAGFineTuning
 
 ---
 
@@ -261,9 +262,9 @@ Optional, and not assumed by anything above.  You now know how to make retrieval
 |---|---|---|
 | Prompting | Giving the AI model written instructions, examples, or context within a single request; no code changes, no training, just better text. | Writing a system prompt that says "You are a helpful HR assistant. Always cite the policy section number." |
 | RAG (Retrieval-Augmented Generation) | Connecting the AI to an external knowledge source (like a document database) so it can look up relevant information before answering; the model's weights never change. | Before answering "What is our PTO policy?", the system fetches the relevant section of the employee handbook and includes it in the prompt. |
-| Fine-Tuning | Continuing the model's training on your own data so the model's internal weights permanently change; it behaves differently on every future call, even without special prompts. | Training `llama3.1:8b` on 800 examples of correctly formatted legal contract summaries so it always produces that format. |
+| Fine-Tuning | Continuing the model's training on your own data so the model's weights change; it behaves differently on every future call, even without special prompts.  With LoRA, the change lives in a separate adapter file and takes effect only while that adapter is loaded or merged into the weights. | Training `llama3.1:8b` on 800 examples of correctly formatted legal contract summaries so it always produces that format. |
 | LoRA (Low-Rank Adaptation) | A parameter-efficient fine-tuning method that trains only tiny "adapter" matrices (about 0.1% of the total parameters) instead of updating the entire model, cutting GPU cost by orders of magnitude. | Fine-tuning a 7B model with LoRA requires a single A100 GPU for a few hours instead of a multi-GPU cluster for days. |
-| QLoRA | LoRA combined with 4-bit quantization of the frozen base model weights; enables fine-tuning 7B models on a single consumer GPU with 24 GB of VRAM. | Students at Ursinus can run QLoRA fine-tuning on a rented Lambda Labs A100 instance for roughly $3-5. |
+| QLoRA | LoRA combined with 4-bit quantization of the frozen base model weights, while the small adapter still trains in 16-bit precision; enables fine-tuning 7B models on a single consumer GPU with 24 GB of VRAM. | Students at Ursinus can run QLoRA fine-tuning on a rented Lambda Labs A100 instance for roughly $3-5. |
 | Context Window | The maximum amount of text (measured in tokens, where 1 token ≈ 0.75 words) that a model can read in a single request; determines whether "just paste the whole document in" is even possible. | GPT-4o has a 128K token context window, about 96,000 words. A 500-page policy manual (~200,000 words) still exceeds it. |
 
 ---
@@ -370,7 +371,7 @@ Consider a concrete deployment: **an HR policy assistant that answers questions 
 
 Full fine-tuning updates every parameter in the model: for a 7B-parameter model, that is 7 billion floating-point numbers to store gradients for and update.  LoRA (Low-Rank Adaptation) sidesteps this by observing that the *update* to each weight matrix during fine-tuning tends to be low-rank: it lives in a small subspace of the full parameter space.
 
-LoRA freezes all original weights and adds two small matrices per layer.  For a weight matrix $W \in \mathbb{R}^{d \times k}$, LoRA trains $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times k}$ where $r \ll d, k$ (typically $r = 4$, $8$, or $16$).  During inference, the layer computes $Wx + ABx$, the original output plus a learned correction.  Installation: `pip install peft transformers` (the PEFT library from Hugging Face implements LoRA).
+LoRA freezes all original weights and adds two small matrices per layer.  For a weight matrix $W \in \mathbb{R}^{d \times k}$, LoRA trains $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times k}$ where $r \ll d, k$ (typically $r = 4$, $8$, or $16$).  During inference, the layer computes $Wx + \frac{\alpha}{r}ABx$, the original output plus a learned correction scaled by a constant $\alpha$ that you choose (often $2r$).  Installation: `pip install peft transformers` (the PEFT library from Hugging Face implements LoRA).
 
 ### LoRA Illustrated
 
@@ -387,7 +388,7 @@ Original Layer (frozen):          LoRA Correction (trained):
   Storage: unchanged                 Storage: ~0.1% of original
 ```
 
-At rank $r = 8$ for a 7B model, LoRA trains roughly 4-8 million parameters instead of 7 billion, a 99.9% reduction in trainable parameters.  **QLoRA** combines LoRA with 4-bit quantization of the frozen base weights, enabling fine-tuning of 7B models on a single consumer GPU with 24 GB of VRAM.
+At rank $r = 8$ for a 7B model, LoRA trains roughly 4-8 million parameters instead of 7 billion, a 99.9% reduction in trainable parameters.  The exact share depends on the model and on which matrices get adapters: on a 360M-parameter model with adapters on all four attention projections, rank 8 trains 1.6 million parameters, about 0.45%.  **QLoRA** combines LoRA with 4-bit quantization of the frozen base weights, enabling fine-tuning of 7B models on a single consumer GPU with 24 GB of VRAM.  Only the frozen base is stored in 4 bits.  The adapter matrices and their gradients stay in 16-bit precision, so QLoRA saves memory on the part that does not train.  QLoRA's 4-bit loading (the `bitsandbytes` library) needs an NVIDIA GPU; plain LoRA on a small model runs on a CPU.
 
 **Real cost example:** Fine-tuning `llama3.1:8b` with QLoRA on 800 JSON-formatting examples using a rented Lambda Labs A100 instance costs approximately $1.60 (0.8 hours × $2/hour).  The resulting adapter file (the A and B matrices) is roughly 40 MB, compared to the 16 GB base model.
 
@@ -397,6 +398,28 @@ A team wants to fine-tune a 7B model to always respond in a structured JSON form
 [(X)] LoRA or QLoRA (freeze the base weights, train small adapter matrices), sufficient for format adaptation at a fraction of the compute cost
 [( )] RAG; retrieve the JSON schema from a vector database at each call so the model always sees the expected format
 [( )] Pre-training from scratch on JSON-formatted text corpora, since the base model has no concept of structured output
+
+### An Adapter Only Matters When It Is Loaded
+
+Training produces an **adapter**: a folder holding the A and B matrices and a small config file, a few megabytes, with no copy of the base model inside it.  It only works with the exact base model it was trained on.  At inference you do one of two things:
+
+- **Load it** on top of the base model (`PeftModel.from_pretrained(base, adapter_dir)`).  The base weights in memory stay unchanged, and you can switch the adapter off to compare (`with model.disable_adapter():`).
+- **Merge it** (`model.merge_and_unload()`), which adds $\frac{\alpha}{r}AB$ into $W$ once and produces an ordinary full-size model with no adapter at all.
+
+Neither result runs in Ollama directly.  Ollama runs GGUF files, so a fine-tuned model has to be converted, or imported as an adapter for a base architecture Ollama supports.  The RAG Knowledge Base lab's Direction 1 covers that export.  Until you have done it, treat a PEFT adapter as something only Transformers can load.
+
+**Neither RAG nor LoRA makes a model truthful.**  RAG changes what the model reads, and the model can still misread a correct passage.  LoRA changes how the model writes, and it can learn a confident format faster than it learns facts.  A fine-tuned citation format attached to a wrong answer looks more trustworthy, not less.
+
+### Prepared Demonstration: Adapter Off, Adapter On (about 5 minutes)
+
+This is an instructor demonstration, and the adapter is trained before class.  Training live does not fit in the period, and it would not teach anything the before-and-after comparison does not.
+
+1. Show the adapter folder: `adapter_config.json` and `adapter_model.safetensors`, about 6 MB, beside a base model of about 700 MB.
+2. Run `python infer_lora.py` from *Offline RAG and LoRA, End to End*.  The same base model in memory answers one question twice, with the adapter bypassed and with it active.
+3. Ask the room: the weights in memory did not change between the two answers, so what did?  Then: the adapter was trained on the Saturday hours, so is the right answer evidence that it *knows* the handbook, or that it memorized one line?
+4. Show the four-way comparison table from that tutorial's Section F.  It shows that LoRA learned the format, while only retrieval knew the changed fact.
+
+The full reproduction is in *Offline RAG and LoRA, End to End* (https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OfflineRAGFineTuning), Sections D to F: training on a CPU in under two minutes, reloading in a fresh process, merging, and a held-out comparison of a base model, RAG, LoRA, and both.  Nothing in it is graded.
 
 ---
 

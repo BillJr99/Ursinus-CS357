@@ -253,6 +253,8 @@ In native function calling, the component that actually executes the function is
 [(X)] Your program, after reading the model's structured request
 [( )] The vector database
 
+> **From this loop to a framework.**  Every line of `agent()` above is something an agent framework would otherwise do for you: keep `msgs`, send `TOOLS`, look up `REGISTRY[name]`, append the `tool` message, and stop after `max_steps`.  Write it by hand first, so that you know what you are handing over.  Then read *Pydantic AI From the Loop Up* (https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI).  It runs this same `get_today` and `days_until` task in Pydantic AI and maps each line here onto what the framework took over.  It also lists what stays your job: the permission check from question 6, approval before a write, and checking that the answer is right.
+
 ---
 
 ## 2b.  The Same Tools, Served Through OpenWebUI
@@ -432,6 +434,13 @@ If your team finishes the Models early, open the lab and start the walkthrough.
 ## -> Coming Up Next
 
 Your agents can now call tools reliably.  The wobble described in the *Why Different Answers Every Time?  Sampling, Temperature, and Generation* tutorial (https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SamplingAndTemperature) is exactly what makes a tool call risky: a schema the model fills in a little differently on each run is a schema your parser has to survive, which is why we pinned the temperature.  Next session, in *MCP: Connecting Agents to Tools and Your Obsidian Vault*, we stop hand-wiring each tool and adopt the protocol that lets an agent discover tools on its own.  The tool schemas you wrote today feed directly into the Tools and MCP lab and the Local Agent lab.
+
+When you are ready to stop writing the loop yourself, follow this reading path:
+
+1. *Pydantic AI From the Loop Up* (https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI): the same two tools in a framework.  It goes on to permissions and approval, the agentic loop and its limits, memory, skills, and a real MCP server.
+2. Part V of *Agent Frameworks* (https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks), which prints the context window that each framework feature produces.
+
+The Pydantic extension below is core Pydantic: it validates data and knows nothing about agents.  Pydantic AI, the framework, uses the same validation for every tool argument.
 
 ---
 
