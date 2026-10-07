@@ -26,7 +26,7 @@ The written assignment [Design Your Agent System](https://www.billmongan.com/Urs
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Read each model as a team before you start its questions.  The Manager keeps discussion moving.  The Reflector watches for assumptions the team makes without evidence.  The Recorder documents the team's answers.  The Presenter prepares to explain the team's pre-mortem (Model 2) to the class.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Read each model as a team before you start its questions.  The Manager keeps discussion moving.  The Reflector watches for assumptions the team makes without evidence.  The Recorder documents the team's answers.  The Presenter prepares to explain the team's pre-mortem (Model 2) to the class.
 
 ---
 
@@ -44,7 +44,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Reversibility Class** | A label on each agent action saying how hard it is to undo: **free** (a file in git), **costly** (a database write with a backup), or **irreversible** (an email, a payment, a public post). Assigned at design time, because you cannot assign it afterwards | The Reversibility column you add to the agent table in Model 1 |
 | **Observability, isolation, reversibility** | The three properties that make delegating safe: can I see what it did, can I bound what it reaches, can I undo it. Named in *Your AI Workbench*, applied to notes and projects in *How I AI*, and designed in on purpose today | Every row of the agent table should let you answer all three for that agent |
 | **Handoff Protocol** | The start, stop, restart, and handoff rules an agent follows, written as a `SKILL.md` in *Observability, Traceability, and Handoff Protocols*: what it reads on start, what it logs while working, and what it writes before any stop | The "Logged, Traced, Handed Off" column in Model 1 and the handoff row in Model 2 |
-| **Right-sizing** | Choosing the cheapest tool that would still be correct for a step: stated-rule code, classical ML, a model you trained, or a general LLM. Asked once per step, before that step gets a row in the agent table | Computing a monthly total in code and asking a model only to describe what is unusual about it |
+| **Right-sizing** | Choosing the cheapest tool that would still be correct for a step: stated-rule code, classical machine learning (ML), a model you trained, or a general LLM. Asked once per step, before that step gets a row in the agent table | Computing a monthly total in code and asking a model only to describe what is unusual about it |
 | **Classical ML** | Models trained on your own labeled examples for a narrow, fixed output (logistic regression, gradient-boosted trees). Deterministic once trained, milliseconds per call, free per call, and frequently more accurate than an LLM on the exact task it was trained for | Routing 8,000 already-labeled support tickets into three categories |
 
 ---
@@ -79,7 +79,7 @@ For every agent in your system, before it exists, answer:
 
 The last column is the one that changes designs.  Work through your system and label each action **free** to undo (a commit in a repository you control), **costly** (a database write you have a backup for, restorable in an hour), or **irreversible** (an email sent, a payment made, a message posted, a record deleted from a system you do not own).
 
-Then apply the rule the labels imply: every irreversible action gets a human gate, and the gate goes in the design, not in a later hardening pass.  Agents are not unusually careless.  "Confidently wrong at scale, quickly" is simply the failure mode of this technology, and the only defense that survives a real deployment is that the irreversible step could not happen without someone approving it.
+Then apply the rule the labels imply: every irreversible action gets a human gate, and the gate goes in the design, not in a later hardening pass.  Agents are not unusually careless.  "Confidently wrong at scale, quickly" is the failure mode of this technology, and the only defense that survives a real deployment is that the irreversible step could not happen without someone approving it.
 
 One design move is worth knowing here: convert irreversible into reversible before you gate it.  An agent that sends email is irreversible.  An agent that *drafts* email into a folder, with a human pressing send, is free to undo, and it keeps almost all of the value.  Most irreversible agent actions have a draft-shaped version, and finding it is usually a better answer than adding a confirmation dialog.
 
@@ -301,7 +301,7 @@ The pre-mortem identified what could go wrong.  The next model shows, week by we
 
 ## Model 3 (At Home): A Six-Week Timeline, Design-First vs. Code-First
 
-In this model you compare two student teams building the same pipeline on parallel tracks and trace exactly when, and why, the code-first team's early-saved time is spent back, with interest.
+In this model you compare two student teams building the same pipeline on parallel tracks and trace exactly when, and why, the time the code-first team saved early is spent back, with interest.
 
 **Why this matters:** The design-first approach is sometimes dismissed as "slowing down" development.  This timeline shows that the total time spent is similar, but *where* the work happens differs.  Design-first front-loads effort into cheap, reversible planning.  Code-first back-loads the same effort into expensive, disruptive rework.  The question is not whether to do the hard thinking; it is whether to do it on paper or in production.
 
@@ -338,7 +338,7 @@ These exercises give you practice writing the artifacts yourself (agent table, p
 
 1.  **Write a one-page design document.**
 
-   *What to do:* Choose one of these 2-agent systems: (a) a ticket triage system that classifies support requests and drafts responses, (b) a code review system that reads a pull request change and flags potential bugs, (c) a meeting summarizer that transcribes audio and extracts action items.  Write a complete agent table with all columns filled in, plus a 5-row pre-mortem using the four-column format from Model 2.
+   *What to do:* Choose one of these 2-agent systems: (a) a ticket triage system that classifies support requests and drafts responses, (b) a code review system that reads the changes in a pull request and flags potential bugs, (c) a meeting summarizer that transcribes audio and extracts action items.  Write a complete agent table with all columns filled in, plus a 5-row pre-mortem using the four-column format from Model 2.
 
    *Starter hint:* Start by writing down the output of the *last* agent in the pipeline: what does the final user receive?  Work backward from there: what does the second-to-last agent need to produce to enable that output?  Then ask the same question of the first agent.  Working backward from the output often reveals design gaps faster than working forward.
 

@@ -110,6 +110,8 @@ python3 -c "import requests; print('requests ok')"   # confirm Python can import
 ollama pull llama3.2                                  # a model that supports tool calling
 ```
 
+> **Recommended for tool calling.**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  Any tool-capable model is accepted for this lab; if your tools do not fire reliably with `llama3.2`, switch the `model` setting to `qwen2.5:3b` and say so in your writeup.
+
 Then confirm Ollama is answering.  `curl -s` fetches a URL quietly, and `head -c 120` keeps only the first 120 characters so the model list does not flood your terminal.
 
 ```bash
@@ -165,7 +167,9 @@ Define a Python function, describe it as a JSON schema in a `tools` list, and le
 
 ### Option 1B: From a Framework, Give an Agent Tools You Did Not Wire
 
-Hand the same tool to an agent through a framework so the framework owns the tool-calling loop.  Register a Python function as a tool with **smolagents** (Hugging Face's lightweight agent library, the gentlest starting point), LangChain/DeepAgents, or Agno, and let it drive invocation (see the [Agent Frameworks activity]({{ site.baseurl }}/Tutorials/AgentFrameworks), including how to point the framework at your local Ollama/Open WebUI model).  If you are new to frameworks, prefer smolagents: it is a much thinner wrapper than LangChain, so less of the loop is hidden and the code you write stays close to the from-scratch version.
+Hand the same tool to an agent through a framework so the framework owns the tool-calling loop.  Register a Python function as a tool with **Pydantic AI**, **smolagents** (Hugging Face's lightweight agent library), LangChain/DeepAgents, or Agno, and let it drive invocation (see the [Agent Frameworks activity]({{ site.baseurl }}/Tutorials/AgentFrameworks), including how to point the framework at your local Ollama/Open WebUI model).  If you are new to frameworks, choose a thin one, so less of the loop is hidden and the code you write stays close to the from-scratch version.  Pydantic AI is the recommended guided route: [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) walks the Tool Use activity's own `get_today` and `days_until` tools from the raw loop into the framework, step by step.  smolagents is an equally thin choice if you prefer it, and every framework listed here earns the same credit.
+
+> **Validation is not authorization.** A framework checks that the model's arguments have the right types.  It does not check that the call is allowed.  If your tool writes, deletes, or sends anything, the permission check still belongs in your code, inside the tool.  The Pydantic AI tutorial's Part 3 shows one way to write it.
 
 > **Paste into your submission.** The tool registration, a run transcript, and two things the framework hid from you that you had to do by hand in the from-scratch version.
 
@@ -448,7 +452,7 @@ Answer these in your writeup.  Question 11 needs a second run of `agent.py`; the
     *Hint: Think about what happens when the model (prompted by a malicious user) supplies the path `/etc/passwd`, `~/.ssh/id_rsa`, or `../../config/secrets.json`.  The mitigation involves restricting which directories the tool is allowed to read from: for example, only allowing paths that begin with an approved prefix such as `/home/user/documents/`.  You might also check that the resolved absolute path (after following symlinks with `os.path.realpath`) still begins with that prefix, to prevent path traversal attacks.*
 {: start="13"}
 
-> **Watch out.** Students often assume `tool_choice="auto"` means the model will always call a tool.  It means the model *may* call a tool if it decides one is needed; it can also answer from memory without calling any tool at all.  If you need a specific tool invoked for every request (for safety, auditing, or consistency), set `tool_choice={"type": "function", "function": {"name": "tool_name"}}` to force it.  The difference matters for tools like `log_query` that you want called every time regardless of the model's judgment.
+> **Watch out.** Students often assume that passing `tools` means the model will always call a tool.  It means the model *may* call a tool if it decides one is needed; it can also answer from memory without calling any tool at all.  OpenAI's API lets you force a call with `tool_choice={"type": "function", "function": {"name": "tool_name"}}`, but Ollama's `/api/chat`, the endpoint our loop posts to, has no `tool_choice` field, and its OpenAI-compatible endpoint lists `tool_choice` as unsupported.  With Ollama, if you need a specific tool invoked for every request (for safety, auditing, or consistency), have your code call it directly rather than asking the model to, or check the reply for a `tool_calls` entry and re-prompt when it is missing.  The difference matters for tools like `log_query` that you want called every time regardless of the model's judgment.
 
 ---
 
@@ -501,7 +505,7 @@ Tool/function call:  tool_calls=[{"name":"classify","args":{"sentiment":"negativ
                       -> Structural format guaranteed; values still up to the model
 
 Grammar-constrained: {"sentiment": "negative"}
-                      -> Mathematically guaranteed to match the schema; no other output possible
+                      -> Guaranteed to match the schema's structure; the value is still the model's choice
 ```
 
 | Mode | How It Works | Guarantee Provided | Typical Failure Mode |
@@ -509,7 +513,7 @@ Grammar-constrained: {"sentiment": "negative"}
 | **Plain text** | The model generates tokens with no format constraint at all; it produces whatever prose seems most natural | None: output may be anything; format varies based on phrasing of the question | Cannot be parsed programmatically; format changes unpredictably when the prompt is reworded or the model version changes |
 | **JSON mode** (instruction-based) | The system prompt instructs the model to output JSON; the model is free to comply or not; it is just a strong suggestion | Soft: the model usually produces valid JSON but may produce prose, truncated JSON, or JSON with extra unexpected fields on a bad day | Model ignores the instruction when the context is long, when it is uncertain, or when the question triggers a refusal; no enforcement mechanism catches this |
 | **Function calling / tool use** | The API wraps the model's output in a structured function-call schema; the model generates a `tool_calls` field rather than prose | The format of the function call is guaranteed to be structurally valid; argument types match the declared schema | Model may call the wrong tool when multiple tools are available, omit required arguments, or pass arguments with the right type but wrong semantic content (a valid-format but wrong value) |
-| **Grammar-constrained decoding** (Outlines, LMQL, llama.cpp grammars) | At each decoding step, the token sampler masks out any token that would violate the grammar; only valid-next-token candidates can be sampled | Syntactic validity is mathematically guaranteed at the token level; the output will always parse as valid JSON matching the schema | Model may produce syntactically valid but semantically wrong output (correct format, wrong meaning); very complex required outputs can degrade overall response quality |
+| **Grammar-constrained decoding** (Outlines, LMQL, llama.cpp grammars) | At each decoding step, the token sampler masks out any token that would violate the grammar; only valid-next-token candidates can be sampled | Syntactic validity is guaranteed at the token level, and when the grammar is compiled from a JSON Schema (as Ollama's `format` does), so is the schema's structure: required fields, types, and enum values.  Values are not checked for correctness | Model may produce syntactically valid but semantically wrong output (correct format, wrong meaning); very complex required outputs can degrade overall response quality |
 
 Keep three properties separate.  They are the levels of correctness:
 
@@ -517,7 +521,7 @@ Keep three properties separate.  They are the levels of correctness:
 - **Schema validity**: Does the output conform to the specific schema: required fields present, types correct, enum values within the allowed set?
 - **Semantic validity**: Does the output mean what was intended: is the confidence score actually calibrated, does the citation actually exist, is the sentiment label actually accurate?
 
-Grammar-constrained decoding guarantees syntactic validity only.  Function calling with a schema guarantees syntactic and schema validity.  Nothing guarantees semantic validity; that takes evaluation, human oversight, or both.
+Grammar-constrained decoding guarantees syntactic validity, and when the grammar comes from a JSON Schema (Ollama's `format` with a schema, Outlines with a Pydantic model), it also constrains the reply to the schema's structure.  Function calling guarantees a structurally valid call, but whether the arguments are schema-valid depends on whether the provider constrains decoding, so validate them anyway.  Nothing guarantees semantic validity; that takes evaluation, human oversight, or both.
 
 #### Questions to Work Through
 
@@ -749,7 +753,7 @@ Key properties of this pipeline:
 - **Bounded retries**: The loop has a hard limit.  Without it, an unfixable validation error (like a model that consistently outputs the wrong type) becomes an infinite loop and unbounded API cost.
 - **Fail loudly**: When repair is exhausted, the exception propagates to the caller.  Silent failures (returning `None` or default values) hide the problem and let bad data flow downstream.
 
-> **Watch out.** Many students assume that using "JSON mode" or telling the model to "output JSON" in the system prompt provides the same guarantees as grammar-constrained decoding or function calling with a schema.  It does not.  JSON mode is a *suggestion*; the model can and sometimes will ignore it, especially under pressure (long context, unusual inputs, refusals).  The only way to get a mathematical guarantee that the output parses as valid JSON is grammar-constrained decoding at the token level.  The only way to get schema validity without grammar constraints is to validate with a library like Pydantic *after* the model responds, and repair or reject on failure.
+> **Watch out.** Many students assume that using "JSON mode" or telling the model to "output JSON" in the system prompt provides the same guarantees as grammar-constrained decoding or function calling with a schema.  It does not.  JSON mode is a *suggestion*; the model can and sometimes will ignore it, especially under pressure (long context, unusual inputs, refusals).  The only way to get a guarantee that the output parses as valid JSON is grammar-constrained decoding at the token level, and when that grammar is compiled from a JSON Schema (as with Ollama's `format`), the reply also matches the schema's structure, though its values can still be wrong.  The only way to get schema validity without grammar constraints is to validate with a library like Pydantic *after* the model responds, and repair or reject on failure.
 
 #### Questions to Work Through
 
@@ -821,7 +825,7 @@ MCP standardizes how a client discovers what tools a server offers and how it ca
 
 ### Option 4A: Create, Stand Up Your Own MCP Server
 
-Expose your tools over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server, for example with the Python MCP SDK or FastMCP, that advertises one or two tools.  Then connect a client and show the discover to invoke round trip.
+Expose your tools over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server, for example with the Python MCP SDK or FastMCP, that advertises one or two tools.  Then connect a client and show the discover to invoke round trip.  The MCP deck's Flask server follows the same list-then-call pattern over plain HTTP, but it does not speak the MCP protocol itself (JSON-RPC over stdio or HTTP).  For a complete, real FastMCP server with a client and a Pydantic AI agent connected over stdio, see Part 8 of [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI).
 
 If you take [Option 4D](#option-4d-secure-your-own-server-with-oauth-20), the same server with an OAuth 2.0 gate, that fully satisfies this option.
 
@@ -847,7 +851,7 @@ Consume MCP instead of authoring it.  Point your agent (or a framework client) a
 
 Expose an Obsidian vault (a folder of Markdown notes) to an agent over MCP, with the write path gated so nothing lands in a note without your confirmation.  This option earns the same credit on the MCP rubric row as Create or Use, on whichever route you take.
 
-> **Code path.** Write a small FastMCP or plain-HTTP server over a vault folder that exposes three operations: search (find notes matching a query), read (return one note), and a gated append (add text to a note only after a confirmation step).  The Model 3 vault server in the [MCP: Connecting Agents to Tools and Your Obsidian Vault deck](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-mcp.md) is the starting point; point it at your own vault folder and connect a client.
+> **Code path.** Write a small FastMCP or plain-HTTP server over a vault folder that exposes three operations: search (find notes matching a query), read (return one note), and a gated append (add text to a note only after a confirmation step).  The `vault_server.py` from Part IIb, *A Vault Behind a Tool Server*, of the [MCP: Connecting Agents to Tools and Your Obsidian Vault deck](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-mcp.md) is the starting point; point it at your own vault folder and connect a client.
 
 > **No-code path.** Configure rather than write.  Either add a community Obsidian MCP server of your choice, cited in your readme, to your client's tool settings over your vault folder, or set up an Open WebUI tool over the vault folder.  The gate still has to exist: the write must not go through until you confirm it.
 
@@ -857,14 +861,14 @@ Expose an Obsidian vault (a folder of Markdown notes) to an agent over MCP, with
 
 Option 4A with a lock on the door.  You build the MCP server, wrap it so every request must carry a valid OAuth 2.0 access token with the right scope, drive it from an agent, and document the full data flow from agent request, through token, to tool response.  This option satisfies the MCP row on the same terms as 4A; the token gate is the extra.  Read [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth) first; it covers the flows and the token security this recipe assumes.  If MCP itself is new to you, the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/) walks through building a server and connecting clients.
 
-**You need.**  Python packages (`mcp[cli]`, `fastapi`, `uvicorn`, `python-jose[cryptography]`, `requests`) and Docker **on your host** to run a local mock OAuth server (a few hundred MB).  Host, not the course container: that container has no Docker command in it, because it is a container rather than a machine that runs them.  No accounts and no API costs: the authorization server, the tokens, and the tools are all local.  Three services run at once, so plan your ports.  Budget 3-4 hours.
+**You need.**  Python packages (`mcp[cli]`, `fastapi`, `uvicorn`, `python-jose[cryptography]`, `requests`) and Docker **on your host** to run a local mock OAuth server (a few hundred MB).  Host, not the course container: that container has no Docker command in it, because it is itself a container rather than a machine that runs containers.  No accounts and no API costs: the authorization server, the tokens, and the tools are all local.  Three services run at once, so plan your ports.  Budget 3-4 hours.
 
 > **Do this.**  Install and verify.  The last line should print a version such as `1.x.x`.  Keycloak (`docker pull quay.io/keycloak/keycloak:latest`) is an acceptable substitute for the mock server; its token endpoint and realm differ, so adapt the `curl` commands from its quickstart.
 >
 > ```bash
-> pip install "mcp[cli]" fastapi uvicorn "python-jose[cryptography]" requests
+> pip install "mcp[cli]<2" fastapi uvicorn "python-jose[cryptography]" requests
 > docker pull ghcr.io/navikt/mock-oauth2-server:latest
-> python -c "import mcp; print(mcp.__version__)"
+> python -c "from importlib.metadata import version; print(version('mcp'))"
 > ```
 
 #### 4D.1: Design the tools, the flow, and the ports
@@ -914,7 +918,7 @@ Option 4A with a lock on the door.  You build the MCP server, wrap it so every r
 > **Do this.**
 > 1. Create the layout: `mkdir -p cs357-mcp-lab/tools cs357-mcp-lab/tests cs357-mcp-lab/data cs357-mcp-lab/logs && cd cs357-mcp-lab && touch tools/__init__.py && pip freeze > requirements.txt`.  Put each tool's implementation in `tools/tool_one.py` and `tools/tool_two.py`.
 > 2. Create `mcp_server.py` from the skeleton below and complete every `TODO`.  Keep the logging lines.
-> 3. Start it with `python mcp_server.py`, and in a second terminal send the `curl` request below.  Test your second tool the same way, then test the error case: omit a required argument and confirm the response contains an error.
+> 3. `mcp_server.py` speaks MCP over stdio, not HTTP, so nothing listens on port 8000 yet.  Test it with the MCP Inspector: `npx @modelcontextprotocol/inspector python mcp_server.py` opens a browser page where you can list the tools and call `search_files` with `{"query": "README"}`.  Test your second tool the same way, then test the error case: omit a required argument and confirm the response contains an error.  Keep the `curl` request below; it is the test you run once `server_http.py` from 4D.3 is listening on port 8000.
 
 ```python
 # mcp_server.py
@@ -957,7 +961,10 @@ async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
 
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(stdio_server(app))
+    async def main():
+        async with stdio_server() as (read_stream, write_stream):
+            await app.run(read_stream, write_stream, app.create_initialization_options())
+    asyncio.run(main())
 ```
 
 ```bash
@@ -978,10 +985,10 @@ curl -s -X POST http://localhost:8000/mcp -H "Content-Type: application/json" \
 > **Do this.**
 > 1. Start the mock OAuth server: `docker run -d --name oauth-server -p 8090:8080 ghcr.io/navikt/mock-oauth2-server:latest`.  `docker ps` should show `oauth-server` with `0.0.0.0:8090->8080/tcp`, and `curl http://localhost:8090/default/.well-known/openid-configuration` should return the discovery document.
 > 2. Obtain a token with the client credentials flow (the grant type for a machine, not a human) using the first command below.  Paste the `access_token` into [jwt.io](https://jwt.io) to see the `sub`, `scope`, `iat`, and `exp` claims.
-> 3. Create `oauth_middleware.py` from the skeleton below and complete the `TODO`s.  Validation has four steps: fetch the JWKS (the server's public keys) once and cache them; extract the `Authorization: Bearer <token>` header on every request; decode the JWT, verify its signature, and check `exp`; reject failures with HTTP 401.
+> 3. Create `oauth_middleware.py` from the skeleton below and complete the `TODO`s.  Validation has four steps: fetch the JWKS (the server's public keys) once and cache them; extract the `Authorization: Bearer <token>` header on every request; decode the JWT (JSON Web Token, the signed token format the server issues), verify its signature, and check `exp`; reject failures with HTTP 401.
 > 4. Create `server_http.py`, a thin FastAPI wrapper that validates the token and forwards the body to your MCP logic (the SDK's stdio transport has no HTTP header to read, so this wrapper is where the token arrives).  Complete its final `TODO` so it forwards to your tool logic instead of returning the placeholder.
 > 5. **Enforce scopes**: `mcp:read` for any `tools/call`, `mcp:admin` for `tools/list`.  Test with the scope commands below, then repeat the token request with `scope=mcp:read mcp:admin` and confirm `tools/list` succeeds with that token and is refused with the read-only one.
-> 6. **Demonstrate expiry**: request a token, wait for it to expire (or adjust the `exp` claim by hand for testing), re-send, and save the 401 response.
+> 6. **Demonstrate expiry**: request a token, wait for it to expire, re-send, and save the 401 response.  Do not edit the `exp` claim by hand: that breaks the signature, so the 401 you get is for a bad signature, not expiry.  To avoid waiting an hour, restart the mock server with a `JSON_CONFIG` environment variable whose token callback for the `default` issuer sets `tokenExpiry` to `60` (seconds; see *Token Customization via JSON_CONFIG* in the [mock-oauth2-server README](https://github.com/navikt/mock-oauth2-server#token-customization-via-json_config), and make sure the callback's claims still carry your `scope`), then mint a token, wait a minute, and re-send.
 
 ```bash
 curl -s -X POST http://localhost:8090/default/token \
@@ -1141,13 +1148,13 @@ Pick the route that matches what you built in Part 4.
 
 - **Code route, your own server (Options 4A, 4C code path, and 4D).**  Build a small image that is the course image plus your server and nothing else.  Save the file below as `Dockerfile.mcp` next to `mcp_server.py`, adjust the `COPY` lines to your files, and build it with `docker build -f Dockerfile.mcp -t cs357-mcp .`.  The server's code is owned by root and the root filesystem will be read-only, so the server cannot rewrite itself.
 - **Code route, someone else's server (Option 4B).**  Run that server's own image, or install it into an image built the same way, and put the same flags around it.  GitHub's local server already ships as an image; the flags are what you add.  Check its user with {% raw %}`docker image inspect <image> --format '{{.Config.User}}'`{% endraw %}: an empty answer means root, so add `--user 1000:1000` and confirm it still starts.
-- **Low-code route (any Part 4 option).**  Run the **Model 3 vault server** from the [MCP deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md), copied into `vault_server.py` without edits, inside the unmodified course image, with the command in Step 5.2.  You write no Dockerfile and no code; your work is reading the flags, checking them, and filling the table.  The deck's server speaks the list-then-call pattern over plain HTTP rather than the MCP protocol itself, and that is fine here: this part grades the box, not the protocol, and Part 4 already graded the protocol.
+- **Low-code route (any Part 4 option).**  Run the **vault server** (`vault_server.py`, from Part IIb, *A Vault Behind a Tool Server*) from the [MCP deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md), copied into `vault_server.py` without edits, inside the unmodified course image, with the command in Step 5.2.  You write no Dockerfile and no code; your work is reading the flags, checking them, and filling the table.  The deck's server speaks the list-then-call pattern over plain HTTP rather than the MCP protocol itself, and that is fine here: this part grades the box, not the protocol, and Part 4 already graded the protocol.
 
 ```dockerfile
 # Dockerfile.mcp: the course image plus your Part 4 server, nothing else
 FROM cs357-dev
 USER root
-RUN pip install --no-cache-dir "mcp[cli]"
+RUN pip install --no-cache-dir "mcp[cli]<2"
 COPY mcp_server.py /app/
 COPY tools/ /app/tools/
 USER student

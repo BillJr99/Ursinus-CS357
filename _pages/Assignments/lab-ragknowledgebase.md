@@ -125,7 +125,7 @@ tags:
 
 ---
 
-In this lab, you and your partner build a question-answering system over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  This is a **pair lab**: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.
+In this lab, you and your partner build a question-answering system, a retrieval-augmented generation (RAG) pipeline, over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  This is a **pair lab**: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.
 
 ---
 
@@ -147,7 +147,7 @@ The rubric is the same on both paths: a pipeline earns each row whether it is ha
 Complete these activities before writing any code:
 
 - [RAG Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md): the index, retrieve, generate pipeline
-- [RAG Quality: Chunking and Measuring Retrieval]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md): recall@k, faithfulness, and abstention
+- [RAG and Fine-Tuning: Retrieval Quality and LoRA]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md): recall@k, faithfulness, and abstention
 
 Install the tools (the code path needs all three; the no-code path installs Langflow in Direction 0 instead):
 
@@ -238,7 +238,7 @@ python -c "import pathlib; fs = [*pathlib.Path('corpus').glob('*.txt'), *pathlib
 
 ## Part 2: Index with Two Chunking Strategies (Chunking Strategy row, 12%)
 
-A chunk is the unit of text you embed and retrieve, and its size decides whether an answer arrives whole or in pieces.  You implement two chunking strategies (fixed-size with overlap, and paragraph-structural), keep the parameters in a JSON file rather than in code, build a question set of at least ten questions with hand-located answers, and report recall@k for $$k \in \{1, 3, 5\}$$ under both strategies.
+A chunk is the unit of text you embed and retrieve, and its size decides whether an answer arrives whole or in pieces.  You implement two chunking strategies (fixed-size with overlap, and paragraph-structural), keep the parameters in a JSON file rather than in code, build a question set of at least ten questions with hand-located answers, and report recall@k (how often the chunk holding the answer appears in the top $$k$$ results, defined below) for $$k \in \{1, 3, 5\}$$ under both strategies.
 
 > **No-code path.** Build this part as Direction 0, Steps B and C: two Langflow flows that differ only in the Text Splitter settings, measured on the same ten questions.  The requirements in this part still apply.
 
@@ -580,13 +580,13 @@ Part 5 is a structured checkup on the pipeline from Parts 2 through 4.  You do t
 
 It sits mid-window on purpose.  Your pipeline is running by then and not yet due, which is the only point in the term when a diagnostic can still change what you build.
 
-The metrics come from *RAG Quality: Chunking and Measuring Retrieval*.  The *RAG Quality* session walks through Part 5 before the lab is handed out; do the worksheet itself mid-window, with your pipeline-in-progress in front of you, and bring stuck points to office hours.
+The metrics come from *RAG and Fine-Tuning: Retrieval Quality and LoRA*.  That session walks through Part 5 before the lab is handed out; do the worksheet itself mid-window, with your pipeline-in-progress in front of you, and bring stuck points to office hours.
 
 The harness follows you forward: the rubric judge you build in the Judge Pipeline Workshop grows from the same pattern, and Evaluation Workshop II turns that judge on your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
 
 ### Before You Start Part 5
 
-This builds on the *Hallucinations and Evaluating Agent Outputs* session (where you mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from), the *RAG Quality* session, and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  If it is not running, start there, and bring it to office hours if it stays stuck: debugging it is the first step of the checkup, and the checkup works on a pipeline you got running at 12:20.
+This builds on the *Hallucinations and Evaluating Agent Outputs* session (where you mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from), the *RAG and Fine-Tuning* session, and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  If it is not running, start there, and bring it to office hours if it stays stuck: debugging it is the first step of the checkup, and the checkup works on a pipeline you got running yourself.
 
 > **Have ready.**
 > - Your lab repository, cloned and runnable, with your corpus indexed and at least one chunking configuration working end to end.
@@ -674,18 +674,18 @@ In the worked row, Config A retrieved `c14` and stopped; the policy spanned two 
 Freeze your evaluation so it can be rerun forever.  The point is not the code; it is that **six weeks from now you can prove a change made things better rather than believing it did.**
 
 > **Do this.**
-> 1. **Pin a golden set.** Take your 5a items and **extend** them with at least five corpus-specific questions from your own corpus.  Keep the 5a items; step 6 grades your predictions against what happened.  Include at least one question that **should trigger abstention**; a harness with no abstention case cannot tell a confident wrong answer from a right one.
+> 1. **Pin a golden set.** Take your 5a items and **extend** them with at least five corpus-specific questions from your own corpus.  Keep the 5a items; item 6 of this list grades your predictions against what happened.  Include at least one question that **should trigger abstention**; a harness with no abstention case cannot tell a confident wrong answer from a right one.
 > 2. **Pin the protocol.** Temperature 0.0, a fixed seed, the model name, the chunking configuration, and `k`.  Write all five at the top of the harness, not in your memory of what you did.
 > 3. **Build it in your chosen medium**: a spreadsheet run sheet with a dated column per run, a promptfoo YAML case list, or a Python script grown from the class harness.
 > 4. **Run it twice**, changing nothing between runs.
-> 5. **Compare the two runs and show they agree.** open `run1.txt` beside `run2.txt` on the code route; two columns side by side on the no-code route.  Paste the comparison, not a claim about it.
+> 5. **Compare the two runs and show they agree.** Open `run1.txt` beside `run2.txt` on the code route; two columns side by side on the no-code route.  Paste the comparison, not a claim about it.
 > 6. **Classify your misses.** A miss is any 5a item whose outcome differs from its predicted `rationale`, in *either* direction; a fragile item that passed is as interesting as a reliable one that failed.  In one sentence each, say which it was:
 >    - **Knowledge failure**: the model does not have the fact.
 >    - **Metric failure**: the model answered correctly (or incorrectly) and *your rule graded it wrong*, for example "seventeen seventy-six" against a substring rule looking for "1776".
 >    - You may also find a third kind in a RAG pipeline, a **retrieval failure**: the model would have known the answer from the right chunk and did not get it.  Name it; it points straight back at 5b's recall numbers.
 > 7. **Commit** the harness and the golden set inside your lab repository (and include them in the submission ZIP), where Evaluation Workshop II can pick them up.
 
-Step 6 is why you wrote the predictions down first: a benchmark whose failures are mostly metric failures is measuring your rules, not your system.  A worked miss, for calibration:
+Item 6 (classifying your misses) is why you wrote the predictions down first: a benchmark whose failures are mostly metric failures is measuring your rules, not your system.  A worked miss, for calibration:
 
 > **Item 7** (fragile, citation-shaped).  Predicted FAIL, outcome PASS.
 >
@@ -942,7 +942,7 @@ Your RAG system kept knowledge *outside* the model and retrieved it at query tim
 > - **Accounts:** a free Hugging Face account.  If you use a gated Llama base model, accept the model license on its Hugging Face page and log in with `huggingface-cli`; the non-gated bases in the table below need no license step.  A Google account if you take the free Colab path.
 > - **API costs:** none.  Training runs on your own GPU or on Google Colab's free tier; nothing is billed.
 > - **Installs / disk:** the training toolchain (`unsloth`, or `transformers` + `peft` + `trl`) in Colab or locally, plus a few GB of disk for model weights and the exported GGUF.
-> - **Hardware:** a CUDA GPU with roughly 6-8 GB of VRAM, **or no GPU at all** using one of the two no-GPU paths below.
+> - **Hardware:** a CUDA GPU with roughly 6-8 GB of VRAM (the GPU's own memory), **or no GPU at all** using one of the two no-GPU paths below.
 > - **No-cost fallback:** Google Colab's free T4 tier runs every step; if Colab is unavailable to you, the provided-artifact variant skips training and still earns full credit.
 
 **No GPU?  Two paths, both full credit.**
@@ -1090,7 +1090,7 @@ Without systematic evaluation, fine-tuning is a black box: hours of training and
 > **Do this.**
 > 1. Create `evaluate_models.py`: load the base model and your fine-tuned model, write **10 test prompts** from your domain that are **not** in the training set (15 on the provided-artifact variant), run both models, and save `eval_comparison.csv`.
 > 2. Open the CSV and fill in the `improvement` (Y / N / Partial) and `notes` columns by hand.
-> 3. Compute at least one quantitative metric: **Option A**, perplexity on a held-out test set (lower is better; the function below); **Option B**, task accuracy for an MCQ dataset such as `sciq` (compare the model's top predicted answer to `correct_answer`); or **Option C**, an LLM-as-judge score from 1 to 5 on each test prompt.
+> 3. Compute at least one quantitative metric: **Option A**, perplexity on a held-out test set (lower is better; the function below); **Option B**, task accuracy for a multiple-choice question (MCQ) dataset such as `sciq` (compare the model's top predicted answer to `correct_answer`); or **Option C**, an LLM-as-judge score from 1 to 5 on each test prompt.
 > 4. Document at least one **regression** in your writeup: a prompt where the base model was better.  This is expected, and honesty about it is graded.
 > 5. Compare against your RAG pipeline: ask the fine-tuned model two or three questions your RAG system answered from your corpus, with no retrieval.  Which answered more faithfully?  Which hallucinated?  Record the head-to-head so your recommendation rests on evidence.
 

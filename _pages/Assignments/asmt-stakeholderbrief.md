@@ -79,7 +79,7 @@ This is a team assignment, and the order matters more here than in anything else
 | 2. Stakeholder contact or persona | Your team claims a roster partner (or I approve a self-identified one) and sends a first message, or decides to build a stakeholder persona instead. | The day of the kickoff; see the course schedule. |
 | 3. Interview or persona brainstorm | A prepared, listen-and-learn conversation with consent recorded and a follow-up message sent, or a persona brainstorm that anticipates and answers the persona's questions. | In the first week of the milestone; see the course schedule. |
 | 4. Team brief draft | The team writes the 2-3 page brief and the interview packet, with any tools and with disclosure. | Before the peer exchange; see the course schedule. |
-| 5. Peer exchange and revision | Teams swap drafts in class using SQR cards, then revise and submit. | At the *RAG Quality: Chunking and Measuring Retrieval* session; the revised brief is due by the date in the course schedule. |
+| 5. Peer exchange and revision | Teams swap drafts in class using SQR cards, then revise and submit. | At the *RAG and Fine-Tuning: Retrieval Quality and LoRA* session; the revised brief is due by the date in the course schedule. |
 
 > **Time budget.** The milestone spans a little over three weeks on purpose, but the interview or persona brainstorm has to happen in the first week, because the team drafts the brief from it. If you are interviewing, scheduling is the long pole: a person has to answer you, and you do not control that lead time. Start on it the day the assignment is handed out, and switch to a persona if no one answers in time.
 
@@ -107,7 +107,7 @@ You need these in place before the kickoff:
 - Your team charter and roles from the [Project Thread]({{ site.baseurl }}/Projects/PBLThread), including a Recorder and a decision log. The kickoff and the stakeholder choice both get logged there.
 - The partner roster, which I share in class. It is not on the website.
 - A way to reach me quickly (a one-sentence message on Teams is enough) to confirm a stakeholder choice or ask for an introduction.
-- The [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview), read before the exchange session, so you know how SQR cards work.
+- The [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview), read before the exchange session, so you know how SQR cards (Strength / Question / Risk) work.
 
 Start the stakeholder contact this week. If nobody on your team knows a fitting partner, ask me. I will broker an introduction within one week of the request, and no team's brief is blocked by the roster. What blocks teams is waiting until week two to discover they have nobody.
 
@@ -277,7 +277,7 @@ Write 2-3 pages with the six sections below. Every section names its primary aut
 
 ## Phase 5: Exchange Drafts and Revise
 
-At the *RAG Quality: Chunking and Measuring Retrieval* session, teams exchange draft briefs in class for structured peer review using SQR cards (Strength / Question / Risk). The protocol, and how to give and receive this feedback well, is in the [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview). The cycle is artifact -> peer review -> revise, and it repeats at the proposal and the gallery walk.
+At the *RAG and Fine-Tuning: Retrieval Quality and LoRA* session, teams exchange draft briefs in class for structured peer review using SQR cards (Strength / Question / Risk). The protocol, and how to give and receive this feedback well, is in the [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview). The cycle is artifact -> peer review -> revise, and it repeats at the proposal and the gallery walk.
 
 > **Do this.**
 > 1. Bring your team's draft brief to the session.

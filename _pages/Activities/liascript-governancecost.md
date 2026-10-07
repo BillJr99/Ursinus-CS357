@@ -22,7 +22,7 @@ Due today: the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Today ends in a drafting workshop with structured peer review.  The Manager keeps the team working the numbers in Part II rather than skimming them; the Recorder types the two policy sections and logs the team's estimates before anyone opens the worked answers; the Presenter prepares to explain one mechanism the team could not make concrete; the Reflector watches for moments when the team defends its AI use instead of evaluating it, and names them.  After class, answer the reflection prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Today ends in a drafting workshop with structured peer review.  The Manager keeps the team working the numbers in Part II rather than skimming them; the Recorder types the two policy sections and logs the team's estimates before anyone opens the worked answers; the Presenter prepares to explain one mechanism the team could not make concrete; the Reflector watches for moments when the team defends its AI use instead of evaluating it, and names them.  After class, answer the reflection prompt on your own in your notebook.
 
 ---
 
@@ -40,7 +40,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Embodied Carbon** | The greenhouse gas emissions produced by manufacturing the hardware (GPUs, servers, cables) that AI runs on, *before* the hardware is even switched on. | Embodied carbon may represent 50-80% of a data center's lifetime footprint for hardware-intensive workloads, but it is almost never included in AI carbon estimates. |
 | **Model Right-Sizing** | Choosing the smallest model that achieves adequate accuracy for a specific task, rather than defaulting to the most capable (and most energy-intensive) model available. | Using a 7B-parameter local model to summarize documents instead of a 70B frontier API, when accuracy is comparable, reduces inference energy by roughly 10x. |
 | **Jevons Paradox** | The historical observation that improvements in the efficiency of using a resource tend to increase total resource consumption rather than decrease it, because efficiency lowers cost per use and expands the range of economically viable applications. | Fuel-efficient cars led to more total driving; energy-efficient LEDs led to more total light-hours. The same dynamic may apply to more efficient AI models. |
-| **Thinking tokens** | The intermediate stream a reasoning model emits before answering. Billed and burned as *output* tokens, the expensive kind, so extended thinking can multiply the cost of an unchanged reply many times over. | The 21x row in Section 7, where the user sees the same 150-word answer. |
+| **Thinking tokens** | The intermediate stream a reasoning model emits before answering. They are billed and burned as *output* tokens, the expensive kind, so extended thinking can multiply the cost of an unchanged reply many times over. | The 21x row in Section 7, where the user sees the same 150-word answer. |
 
 ---
 
@@ -112,7 +112,7 @@ Your governance one-pager for the final project uses this skeleton, each section
 2.  **System description**: agents, models, tools, data flows (your design table and audit, imported).
 3.  **Permitted and prohibited uses**: concrete, with the prohibition list as specific as the permission list.
 4.  **Human oversight**: which actions require confirmation, who confirms, and what the human sees before deciding.
-5.  **Data handling**: what is collected, where it lives, how long it is retained, and which regulated categories it touches (FERPA, IRB).
+5.  **Data handling**: what is collected, where it lives, how long it is retained, and which regulated categories it touches (FERPA, the federal law that protects student education records; IRB, the institutional review board that approves research involving people).
 6.  **Evaluation and monitoring**: metrics, disaggregation plan, audit schedule, and the harness that produces the data.
 7.  **Accountability and incident response**: the owner by name or role, the reporting path, and response timelines measured in hours or days.
 8.  **Review and sunset**: when the policy is re-examined and the conditions under which the system is retired.
@@ -159,7 +159,7 @@ The consequence for your policy: training gives you the model's intent, not its 
 | Control | Implementation Cost | Bypass Difficulty | What It Covers | Example |
 |---|---|---|---|---|
 | **System prompt constraints** | Very low: add text to the system prompt | Low: prompt injection or roleplay framing can bypass it | Broad but weak; sets the intent without enforcing it mechanically | "Do not share other students' data or grades with anyone" |
-| **Output filtering** | Low: a regex or classifier runs on every response before it reaches the user | Medium: requires knowing what patterns to block; misses novel attacks | Specific patterns that can be described precisely, like PII or profanity | Block any output matching a social security number regex pattern |
+| **Output filtering** | Low: a regex or classifier runs on every response before it reaches the user | Medium: requires knowing what patterns to block; misses novel attacks | Specific patterns that can be described precisely, like personally identifiable information (PII) or profanity | Block any output matching a social security number regex pattern |
 | **Input filtering** | Low-medium: a classifier screens user messages before they reach the model | Medium: known attack patterns are blocked; novel ones slip through | Known attack patterns like prompt injection markers | Reject any message containing "ignore previous instructions" |
 | **Sandboxed execution** | High: requires container orchestration and security engineering | High: the agent literally cannot affect things outside the sandbox | Code and tool misuse that could affect external systems | Run all agent-invoked Python code in an isolated container with no network access |
 | **Human review queue** | Very high: requires staffing and workflow design | Near-impossible: a human sees the output before it reaches the user | All high-risk outputs; highest coverage, highest cost | Route any query containing mental health keywords to a counselor before responding |
@@ -178,7 +178,7 @@ Most people who use AI daily know that large models need a lot of computation an
 
 **Training** a large language model is a one-time but enormous expenditure.  Estimates for GPT-3 (175B parameters) place training energy at approximately 1,287 MWh and carbon emissions at roughly 500 tonnes of CO$_2$ equivalent, comparable to the lifetime emissions of five average American cars or about 125 transatlantic flights.  GPT-4-scale models need substantially more, though developers do not publish precise figures.  The actual figure depends heavily on the grid carbon intensity (the grams of CO$_2$ emitted per kilowatt-hour, which swings from near-zero on Iceland's geothermal grid to several hundred grams in coal-heavy regions) where training runs.
 
-Inference at scale often exceeds training in total impact because it recurs with every query.  A single ChatGPT prompt is estimated to consume roughly ten times the energy of a Google search; with hundreds of millions of queries per day, inference becomes the dominant term.  Water compounds this: Microsoft reported in 2023 that its data centers consumed approximately 1.7 liters of cooling water per 20-50 ChatGPT prompts.  Water stress in regions hosting large data centers is a real externality.
+Inference at scale often exceeds training in total impact because it recurs with every query.  A single ChatGPT prompt is estimated to consume roughly ten times the energy of a Google search; with hundreds of millions of queries per day, inference becomes the dominant term.  Water compounds this: a widely cited 2023 estimate from UC Riverside researchers (Li et al., "Making AI Less 'Thirsty'") put the water cost of a GPT-3-era model at roughly a 500 mL bottle per 20-50 prompts, depending on when and where the model runs.  Water stress in regions hosting large data centers is a real externality.
 
 Embodied carbon (the emissions from manufacturing GPUs, servers, networking equipment, and undersea cables, before any of them are switched on) is usually excluded from AI carbon accounting.  Estimates put it at 50-80% of a data center's lifetime footprint for hardware-intensive workloads.  Ignoring it systematically understates the cost of "upgrading to a more efficient model."
 
@@ -186,7 +186,7 @@ Embodied carbon (the emissions from manufacturing GPUs, servers, networking equi
 
 ## Model 3: Carbon Cost Comparison
 
-Every time you choose which model to use for a task (a frontier API, a local quantized model, a fine-tuned small model) you make an environmental decision, whether or not you think of it that way.  The table gives you proportional anchors for that choice.  As you read it, look for the ratio between the smallest and largest entries; that span of nine orders of magnitude is the intuition to carry into Section 5.
+Every time you choose which model to use for a task (a frontier API, a local quantized model, a fine-tuned small model) you make an environmental decision, whether or not you think of it that way.  The table gives you proportional anchors for that choice.  As you read it, look for the ratio between the smallest and largest entries; that span of more than eleven orders of magnitude is the intuition to carry into Section 5.
 
 | Action | Estimated CO$_2$ equivalent | Approximate real-world equivalent | Engineering implication |
 |---|---|---|---|
@@ -194,8 +194,8 @@ Every time you choose which model to use for a task (a frontier API, a local qua
 | Training a GPT-4-scale model | ~1,000-10,000 tonnes (estimated) | 250-2,500 transatlantic flights | Undisclosed costs from frontier labs mean independent accountability is not possible |
 | 1 million ChatGPT-style queries | ~0.5 tonnes | Driving a gasoline car ~2,000 km | At scale, inference dominates; caching repeated queries is a significant lever |
 | 1 AI image generation (diffusion model) | ~0.003 kg | Charging a smartphone once | Individually small, but frequency and user base scale this rapidly |
-| 1 standard email (no attachment) | ~0.000004 kg | 1 second of a 60W light bulb | Baseline for comparison; AI queries are several thousand times more expensive |
-| A laptop running for 8 hours | ~0.07 kg | 700 emails or ~23 AI image generations | Local inference shares the laptop's base consumption; no additional cooling overhead |
+| 1 standard email (no attachment) | ~0.000004 kg | 1 second of a 60W light bulb | Baseline for comparison; at the table's per-query figure, an AI query is roughly 125 times more expensive |
+| A laptop running for 8 hours | ~0.07 kg | ~17,500 emails or ~23 AI image generations | Local inference shares the laptop's base consumption; no additional cooling overhead |
 | 1 hour of video streaming | ~0.036 kg | Comparable to a laptop at moderate load | Streaming infrastructure is already at data-center scale; AI inference is an additional load |
 
 *Note: All figures are order-of-magnitude estimates that vary by grid carbon intensity, hardware generation, and methodology.  Treat them as rough anchors for proportional reasoning, not precise measurements.*
@@ -225,14 +225,14 @@ The central proportional insight of Model 3 is that:
 
 A campus helpdesk deploys a cloud chatbot that handles **3,000 queries per day, every day of a 30-day month**.  Using only your intuition first (no arithmetic yet) each team writes down an estimate of the deployment's monthly electricity use (in kWh) and monthly cooling-water use (in liters).  The Recorder logs both estimates before anyone opens the worked numbers.
 
-Then compute it properly from the figures in this Part: take a ChatGPT-style query at roughly 3 Wh (about ten times a ~0.3 Wh web search) and cooling water at roughly 1.7 liters per 35 prompts (the midpoint of the reported 20-50 prompt range).  Compare against the worked numbers below.
+Then compute it properly from the figures in this Part: take a ChatGPT-style query at roughly 3 Wh (about ten times a ~0.3 Wh web search) and cooling water at roughly 0.5 liters per 35 prompts (the midpoint of the reported 20-50 prompt range).  Compare against the worked numbers below.
 
 <details>
 <summary>Worked numbers (open only after both estimates are recorded)</summary>
 
 - Queries per month: 3,000 × 30 = **90,000 queries**
 - Electricity: 90,000 × 3 Wh = 270,000 Wh ≈ **270 kWh per month** (roughly a US household's electricity for about a week and a half)
-- Water: (90,000 ÷ 35) × 1.7 L ≈ **4,400 liters per month** (about 29 full bathtubs)
+- Water: (90,000 ÷ 35) × 0.5 L ≈ **1,300 liters per month** (about 8 full bathtubs)
 
 </details>
 
@@ -258,9 +258,9 @@ Individually good decisions (use a smaller model, cache more queries, choose ren
 
 **Jevons paradox** is named for economist William Stanley Jevons, who documented in *The Coal Question* (1865) that more efficient steam engines in Victorian England did not reduce coal consumption; they increased it, because efficiency lowered the cost per unit of work, expanding the range of economically viable uses and the scale of deployment.  The pattern recurs across energy history: fuel-efficient cars increase vehicle miles traveled; LED lighting increases total light-hours consumed; efficient appliances are bought in larger numbers.
 
-Applied to AI: as models become more capable and cheaper to run, the range of tasks they are applied to expands.  A 10x efficiency improvement met with a 20x increase in use produces a net doubling of total consumption.  There are strong economic incentives that push toward exactly this.
+Applied to AI: as models become more capable and cheaper to run, the range of tasks they are applied to expands.  A 10x efficiency improvement met with a 20x increase in use produces a net doubling of total consumption.  Strong economic incentives push toward exactly this.
 
-The Green AI movement (Schwartz et al., 2019) proposed reporting efficiency metrics alongside accuracy: energy per FLOP, accuracy per watt, CO$_2$ per benchmark point, so that efficiency is visible in the research community's incentive structure.  Adoption has been partial.
+The Green AI movement (Schwartz et al., 2019) proposed reporting efficiency metrics alongside accuracy: energy per FLOP (floating-point operation), accuracy per watt, CO$_2$ per benchmark point, so that efficiency is visible in the research community's incentive structure.  Adoption has been partial.
 
 ---
 
@@ -490,7 +490,7 @@ Your policy has a structure, your project is mapped onto real frameworks, and yo
 
 ## Reflection Prompt
 
-*Personal:* Which of the four roles (builder, evaluator, auditor, policy author) felt most natural to you today, and which felt most uncomfortable?  Then look at the numbers from Part II.  Did they change how you feel about your own AI use this semester, or did you find yourself rationalizing the usage you already had?  Either answer is informative.
+*Personal:* Which of the four roles (Manager, Recorder, Presenter, Reflector) felt most natural to you today, and which felt most uncomfortable?  Then look at the numbers from Part II.  Did they change how you feel about your own AI use this semester, or did you find yourself rationalizing the usage you already had?  Either answer is informative.
 
 *Technical:* The sections you wrote commit you, in writing, to a data retention schedule, a model tier, a token budget, and a measurement someone posts on a schedule.  What would it mean to enforce those commitments on yourself and your team after the course ends?  And is there a version of your project that fits the Jevons pattern, where making it efficient is exactly what makes expansion rational?
 

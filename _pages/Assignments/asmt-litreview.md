@@ -94,7 +94,7 @@ Phase 1 is due first, and it is the longer half.  Schedule the Phase 2 team meet
 - **The two phases have a hard boundary.**  Everyone writes an individual annotated bibliography first.  Only then does the team synthesize.  The individual phase is not a formality: a synthesis assembled from four people who each read one source is visibly thinner than one assembled from four people who each read several.
 - **Search where the evidence lives.**  Start with the *Information Literacy* section below rather than with a general web search.  The library's databases and Google Scholar surface different things, and the difference matters for what you are able to claim.
 
-> **On using AI here.**  AI tools are permitted, disclosed, and useful for finding and triaging sources.  They are also the single most reliable way to end up citing a paper that does not exist.  **Every source you cite must be one you opened.**  Not one a model described to you: one you opened, with a link or DOI that resolves.  Check every one before you submit, and say in your disclosure how you checked.
+> **On using AI here.**  AI tools are permitted, disclosed, and useful for finding and triaging sources.  They are also the single most reliable way to end up citing a paper that does not exist.  **Every source you cite must be one you opened.**  Not one a model described to you: one you opened, with a link or DOI (digital object identifier) that resolves.  Check every one before you submit, and say in your disclosure how you checked.
 
 ---
 
@@ -104,7 +104,7 @@ Each team member, working alone, finds and annotates 2-3 sources relevant to the
 
 > **Do this.**
 > 1. In a standup, divide the territory with your team so that, combined, at least one source comes from the stakeholder's discipline and the set is not three copies of the same paper.  Log the division.
-> 2. Find 2-3 sources using the search recipe in the *Information Literacy* section below.  At least one must be a **scholarly source** (peer-reviewed article, conference paper, or academic book chapter).  **Technical documentation** (official docs, standards, agency or NGO reports) is allowed where it is the right tool, but it supplements the scholarly requirement rather than replacing it.
+> 2. Find 2-3 sources using the search recipe in the *Information Literacy* section below.  At least one must be a **scholarly source** (peer-reviewed article, conference paper, or academic book chapter).  **Technical documentation** (official docs, standards, agency or nongovernmental organization (NGO) reports) is allowed where it is the right tool, but it supplements the scholarly requirement rather than replacing it.
 > 3. Open every source and read it with the critical-reading protocol below.  If you cannot summarize it without the abstract open, read it again.
 > 4. Write one annotation of 150-250 words per source, with the three labeled parts listed next.
 > 5. Record how you found each source (database and search terms, or what you chained from).

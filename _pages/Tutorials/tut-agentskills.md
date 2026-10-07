@@ -28,13 +28,13 @@ Start with the vocabulary.  Every term in this table appears in the lab.  Return
 | Term | Plain-English Definition | Example You'll See |
 |------|--------------------------|--------------------|
 | **Skill** | A named instruction set that an agent can invoke on demand, scoped to a specific purpose | A "code-review" skill that instructs the agent to always check for hardcoded secrets before approving a change |
-| **Plugin / extension** | Harness-specific executable code that adds new capability to the agent itself (a pi TypeScript extension, an opencode plugin). Distinct from a skill, which is instructions any harness can read | `pi install npm:@billjr99/pi-openai-compat` adds provider support; no skill could do that |
+| **Plugin / extension** | Harness-specific executable code (code written for one agent program, or harness, such as pi or opencode) that adds new capability to the agent itself (a pi TypeScript extension, an opencode plugin). Distinct from a skill, which is instructions any harness can read | `pi install npm:@billjr99/pi-openai-compat` adds provider support; no skill could do that |
 | **System prompt** | An always-on, always-active instruction injected before every conversation turn | "You are a helpful coding assistant. Always explain your reasoning." Loaded automatically, not invokable by name |
 | **`opencode.json`** | OpenCode's configuration file, at `~/.config/opencode/opencode.json` (global) or `opencode.json` in a project root. It holds model routing and **permissions**; skills are directories on disk, not entries in it | The `permission.skill` block that decides which skills an agent may load |
 | **`SKILL.md`** | The file that *is* the skill, inside a directory named for it. YAML front matter carries `name` and `description`; the body is the instruction text | `.agents/skills/safety-check/SKILL.md`, discovered by both opencode and pi |
 | **Tool (function call)** | A piece of code the agent can execute, a real function that runs in the host environment and returns structured data | `read_file("main.py")` runs in the shell and returns the file's contents; it is not an instruction template |
 | **Description-as-trigger** | There is no separate trigger field. The agent decides whether to load a skill by matching your request against the skill's `description`, which makes the description the matching surface rather than documentation | "Use when the user asks to delete, remove, overwrite, or drop anything" fires; "Safety utilities" does not |
-| **Superpowers** | A community skill bundle for agent CLIs, distributed as a Git repository of skill directories | Cloned into a discovery path: `git clone https://github.com/obra/superpowers.git ~/.agents/skills/superpowers` |
+| **Superpowers** | A community skill bundle for agent command-line interfaces (CLIs), distributed as a Git repository of skill directories | Cloned into a discovery path: `git clone https://github.com/obra/superpowers.git ~/.agents/skills/superpowers` |
 | **caveman** | A community skill (`JuliusBrussee/caveman`, MIT) that compresses the agent's output by forcing terse, article-free responses. Three intensity levels, `lite`, `full`, and `ultra`, the last intended for token-budget-constrained pipelines. It reverts to normal communication for security warnings and irreversible actions, which is a design decision worth reading before you install it | Clone it into a discovery path, which is the whole installation: `git clone https://github.com/JuliusBrussee/caveman.git .agents/skills/caveman`.  Also the compression condition in the lab's deliberation-harness experiment |
 | **Token meter** | Reading the token counts a provider actually reports, rather than estimating them from word counts. Ollama returns `prompt_eval_count` and `eval_count` on every non-streaming call, so the measurement costs nothing | `tools/token_meter.py` in the deliberation-harness starter, whose numbers land in `summary.json` |
 | **Amortized training cost** | A request's share of the one-time carbon cost of training the model that serves it: the training total divided by an assumed number of lifetime requests. Additive to the request's own operational cost | `config/energy-profiles.json`. The denominator is an assumption, and the term moves by orders of magnitude with it |
@@ -60,7 +60,7 @@ The last column hides what the four have in common when the agent runs.  The fir
 
 The distinction that matters most is skill versus tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a change, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
 
-> Many students assume that adding a skill to `opencode.json` makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
+> Many students assume that installing a skill (dropping its directory into `.agents/skills/`) makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
 {: .tb-warning data-title="Watch out"}
 
 ---
@@ -140,7 +140,7 @@ Permissions live in `opencode.json`, and skills no longer do.  The config file s
 }
 ```
 
-Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also the fourth thing to check when a skill you installed never appears.  `ask` prompts you before the skill loads, and it is the one that earns its keep here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
+Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also one of the things to check (item 6 in *If a Skill Does Not Load*, below) when a skill you installed never appears.  `ask` prompts you before the skill loads, and it is the one that earns its keep here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
 
 ### Installing Someone Else's Skills
 
@@ -227,7 +227,7 @@ One common skill shape is the menued-question pattern, sometimes called a grill-
 
 ## Enforcing What a Skill Asks For
 
-The authoring principles above tell you to write constraints that can be tested.  This section is the answer to the question that raises, which is tested by what.
+The authoring principles above tell you to write constraints that can be tested.  This section answers the question that raises: tested by what?
 
 Start from the structural fact, because every practical consequence follows from it.  A skill is text that the model reads.  The mechanism has no step at which anything other than the model decides whether the skill loads or whether its instructions are obeyed.  The `description` is matched by the model, the body is interpreted by the model, and a request that arrives worded slightly differently may match nothing at all.  **Every clause in a `SKILL.md` is a request, not a rule.**  That is not a defect to be fixed by better wording; it is what a skill is, and it is why the spectrum at the top of this page puts skills on the same side of the line as system prompts and project instruction files.
 
@@ -244,7 +244,7 @@ The events, and what each can see and do about a skill:
 | `SessionStart` | The session begins | Nothing of yours yet | Put the skill's rules in context regardless of description matching |
 | `UserPromptSubmit` | You press enter | The prompt text | Re-inject the rules each turn; reject a prompt outright |
 | `PreToolUse` | Before a tool runs | The tool name and its real arguments | Block an operation the skill said not to perform |
-| `PostToolUse` | After a tool runs | The tool's output | Record what happened; rewrite an MCP result before the model reads it |
+| `PostToolUse` | After a tool runs | The tool's output | Record what happened; rewrite an MCP (Model Context Protocol) result before the model reads it |
 | `Stop` | The agent wants to end its turn | Whatever a program can check | Refuse the stop while the skill's contract is unmet |
 {: .tb-full}
 
@@ -262,9 +262,9 @@ Three limits are worth stating before you rely on any of this.
 
 A gate sees state, not intent.  A `Stop` hook that requires `.ai/CURRENT_TASK.md` to be non-empty proves that a file exists, not that its contents are a real interview.  Every gate checks a proxy, and the engineering question is always how far the proxy sits from the thing you care about.
 
-Injection is not compliance.  A `SessionStart` hook guarantees that the rules reached the context window.  What the model does with them is the same open question it was before, which is precisely why the load-time and exit-time jobs have to be kept separate in your head.
+Injection is not compliance.  A `SessionStart` hook guarantees that the rules reached the context window.  What the model does with them is the same open question it was before, which is why the load-time and exit-time jobs have to be kept separate in your head.
 
-A hook that asks a model is not a gate.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model for judgment.  Those are useful when the question genuinely needs an opinion, and they are not enforcement: a model asked to judge can be argued with, exactly like the model it is judging.  Use a `command` hook for what must hold every time.
+A hook that asks a model is not a gate.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model for judgment.  Those are useful when the question needs an opinion, and they are not enforcement: a model asked to judge can be argued with, exactly like the model it is judging.  Use a `command` hook for what must hold every time.
 
 Finally, note the scope.  Hooks are configured per harness and per project, in `.claude/settings.json` or a plugin's `hooks/hooks.json` for Claude Code and in `opencode.json` or `.opencode/plugins/` for opencode.  A skill you publish as a directory travels with its instructions and without its enforcement, so a classmate who installs your skill gets the requests and not the gates.  If the gates matter, publish them alongside the skill and say so in the README, the way [planning-with-files](https://github.com/OthmanAdi/planning-with-files) ships its hooks as a plugin rather than leaving them to the installer.
 

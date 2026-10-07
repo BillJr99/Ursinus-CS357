@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Project Studio and Gallery Walk
 
-This deck serves two sessions: Tuesday's studio and gallery walk, and Thursday's final integration and demo rehearsal (see the Thursday section below).  Today the classroom becomes a studio.  The *Project Studio: Sprint and Threat Model* session gave you a sprint plan and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.
+This deck covers two sessions: Tuesday's studio and gallery walk, and Thursday's final integration and demo rehearsal (see the Thursday section below).  Today the classroom becomes a studio.  The *Project Studio: Sprint and Threat Model* session gave you a sprint plan and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.
 
 ---
 
@@ -41,10 +41,10 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 | Minutes | What we do |
 |---|---|
-| 0-10 | Set up: get your artifact displayed and your SQR cards in hand |
-| 10-45 | Gallery walk: every team sees every other team's work |
-| 45-70 | Studio time on what the walk surfaced |
-| 70-75 | One commitment per team for the next session |
+| 0-10 | Stand-up (section 1), with your artifact already displayed and your SQR (Strength, Question, Risk) cards in hand |
+| 10-50 | Gallery walk (section 2): every team sees every other team's work |
+| 50-70 | Triage (section 3): sort what the walk surfaced into a dated backlog |
+| 70-75 | Release readiness checklist (section 4) and one commitment per team for the next session |
 
 ---
 
@@ -58,7 +58,7 @@ The second session is a rehearsal, not a work session.  The rehearsal rule: if y
 
 Stand-ups exist to surface the truth quickly.  In this first section, each team answers four fixed questions in two minutes, no more.  You use the stand-up to put the current state of your project in the room: real metrics, real blockers, and the single riskiest unfinished piece.  Getting this right before the gallery walk helps you point visitors at the things that most need feedback.
 
-The instinct to say "it's going pretty well" instead of "the evaluation harness reports 41%" is understandable and counterproductive.  The whole point of a stand-up is to get the real number into the room so the team and the instructor can help.  Think of it as a 120-second system health check: inputs (what you did), outputs (what the numbers say), and blockers (what is in the way).
+The instinct to say "it's going pretty well" instead of "the evaluation harness reports 41%" is understandable and counterproductive.  The point of a stand-up is to get the real number into the room so the team and the instructor can help.  Think of it as a 120-second system health check: inputs (what you did), outputs (what the numbers say), and blockers (what is in the way).
 
 ### 1.  Stand-Up (10 minutes)
 
@@ -104,7 +104,7 @@ Hosts demonstrate honestly.  Every station must show at least one *known failure
 
 [[___ Your answer here ___]]
 
-*Hint:* Recall the patterns from Unit 3: pipeline, planner, parallel specialist, self-critique, and human-in-the-loop.  "A planner where a pipeline would do" means a team added dynamic task-planning overhead to a sequence of steps that is always the same.  The planner adds cost and complexity without adding flexibility.  Look for systems where the agents always take the same steps in the same order: that is a pipeline, not a planner problem.
+*Hint:* Recall the patterns from Unit 3: pipeline, planner, parallel specialist, self-critique, and human-in-the-loop.  "A planner where a pipeline would do" means a team added dynamic task-planning overhead to a sequence of steps that is always the same.  The planner adds cost and complexity without adding flexibility.  Look for systems where the agents always take the same steps in the same order: that is a pipeline problem, not a planner problem.
 
 **Question 4.**  As a host: which visitor question exposed something your team had not considered?  The Scribe records it verbatim; it likely belongs in your report's limitations section.
 
@@ -189,7 +189,7 @@ The Evaluator signs off only when all six items are Yes with evidence.  A partia
 
 **Exercise 3.**  Rehearse the 90-second explainability story.  Each teammate delivers it to the rest of the team.  The team rates each delivery on three criteria: Does it name what the system does?  Does it explain why the system's answer can be trusted (or what its limits are)?  Does it avoid jargon that a non-CS audience would not understand?
 
-*What to do:* Set a timer for 90 seconds.  Each teammate delivers the story individually.  After each delivery, the Reflector gives one piece of specific feedback on the three criteria.
+*What to do:* Set a timer for 90 seconds.  Each teammate delivers the story individually.  After each delivery, the Evaluator gives one piece of specific feedback on the three criteria.
 
 *Starter hint:* A well-structured 90-second story: (1) What does the system do, in one sentence?  (2) Here is a concrete example: [show it].  (3) Here is how you can tell whether its answer is reliable: [show the explainability affordance].  (4) Here is one thing it does not do well: [state the disclosure].
 
@@ -211,7 +211,7 @@ The Evaluator signs off only when all six items are Yes with evidence.  A partia
 
 > *Hint:* Consider the analogy to drug side-effect disclosures, which are now legally required on packaging and in ads.  Before that regulation, pharmaceutical companies also had strong incentives to say little about side effects.  What changed?  Was it a high-profile failure, regulatory action, litigation, or cultural pressure?  Which of those seems most plausible for AI, and which actor (government, courts, journalists, or the public) would most likely trigger it?
 
-Write a combined reflection of 150-200 words addressing at least two of the three levels.  The Reflector should be prepared to share the team's most surprising piece of gallery feedback with the class.
+Write a combined reflection of 150-200 words addressing at least two of the three levels.  The Scribe, who recorded the gallery feedback verbatim, should be prepared to share the team's most surprising piece of it with the class.
 
 [[___ Your reflection here ___]]
 

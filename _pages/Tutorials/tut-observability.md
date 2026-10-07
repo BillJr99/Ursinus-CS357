@@ -13,7 +13,7 @@ tags:
 ---
 ## About This Tutorial
 
-A deployed agent that silently fails is worse than one that visibly crashes.  A crash produces an error message and a stack trace.  Silent failure produces a wrong answer, a missed tool call, or a hallucination, and the operator has no idea it happened.  **Observability** is the discipline of making the internal state of a system legible from the outside, so that you can ask arbitrary questions about its behavior without knowing in advance what questions you will need to ask.  This tutorial introduces the three pillars of observability, distributed tracing for agent pipelines, and the OpenTelemetry standard for instrumenting LLM applications.
+A deployed agent that silently fails is worse than one that visibly crashes.  A crash produces an error message and a stack trace.  Silent failure produces a wrong answer, a missed tool call, or a hallucination, and the operator has no idea it happened.  **Observability** is the discipline of making the internal state of a system legible from the outside, so that you can ask arbitrary questions about its behavior without knowing in advance what questions you will need to ask.  This tutorial introduces the three pillars of observability, distributed tracing for agent pipelines, and the OpenTelemetry standard for instrumenting large language model (LLM) applications.
 {: .tb-lede}
 
 ## Key Concepts
@@ -36,7 +36,7 @@ A deployed agent that silently fails is worse than one that visibly crashes.  A 
 > Flying an agent without traces is like flying a plane with no instruments: you only know something's wrong when you crash.  In production, your agent will fail in ways you did not anticipate.  The three pillars below are your cockpit instruments: they let you see the problem, measure its scale, and trace it to its source before a user reports it.
 {: .tb-key data-title="Why this matters"}
 
-Observability in distributed systems is built on three complementary data types.  No single pillar is sufficient on its own; together they provide a complete picture of system behavior.
+Observability in distributed systems is built on three complementary data types.  No single pillar is sufficient on its own; each answers a question the other two cannot, as the key insight below shows.
 
 | Pillar | What It Captures | Time Granularity | Best For | Example Tool | In Our Course |
 |:-------|:-----------------|:----------------|:---------|:-------------|:--------------|
@@ -51,13 +51,13 @@ Observability in distributed systems is built on three complementary data types.
 
 1.  An agent processes 10,000 requests per day.  If you logged the full input prompt and output for every request, what storage and privacy problems would that create?  What would you log instead, and why would that information still be useful for debugging?
 
-    *Hint:* Think about what information you actually need to diagnose a bug versus what information you only think you might need "just in case."  Also consider: what if a user typed their SSN into a prompt?
+    *Hint:* Think about what information you actually need to diagnose a bug versus what information you only think you might need "just in case."  Also consider: what if a user typed their Social Security number (SSN) into a prompt?
 
 2.  A metric shows that 95th-percentile latency for your agent doubled between Tuesday and Wednesday.  Explain why a metric alone cannot tell you *why* this happened, and describe the sequence of steps (which other pillars you would consult, in which order) to diagnose the root cause.
 
     *Hint:* A metric is a summary.  Summaries throw away details to save space.  What details were thrown away here, and which pillar preserves them?
 
-3.  Logs, metrics, and traces all have associated costs: storage, compute, and egress bandwidth.  If you had to pick only two of the three pillars for an MVP deployment of a new agent, which two would you choose and why?  Be explicit about what visibility you are giving up by omitting the third.
+3.  Logs, metrics, and traces all have associated costs: storage, compute, and egress bandwidth.  If you had to pick only two of the three pillars for a minimum viable product (MVP) deployment of a new agent, which two would you choose and why?  Be explicit about what visibility you are giving up by omitting the third.
 
     *Hint:* Consider the order of operations for debugging: what do you need first when something goes wrong?  What do you add when you have more time and budget?
 
@@ -90,14 +90,14 @@ Below is the span tree for an agent handling a Retrieval-Augmented Generation (R
 
 Attributes on spans are the primary mechanism for answering questions about production behavior.  They turn a timing graph into a searchable, filterable record of what the agent did.  However, attributes must be chosen carefully: they are stored in your tracing backend, may be retained for weeks, and may be exported to third-party vendors.
 
-> Many developers assume that adding more span attributes is always better: "the more data, the more observability."  In practice, storing raw prompt text as a span attribute can expose private user data to your tracing vendor, violate GDPR or FERPA, and generate storage costs that make your traces unusable at scale.  Good observability is about storing the *right* attributes (identifiers and measurements), not the raw content.
+> Many developers assume that adding more span attributes is always better: "the more data, the more observability."  In practice, storing raw prompt text as a span attribute can expose private user data to your tracing vendor, violate the General Data Protection Regulation (GDPR) or the Family Educational Rights and Privacy Act (FERPA), and generate storage costs that make your traces unusable at scale.  Good observability is about storing the *right* attributes (identifiers and measurements), not the raw content.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
 4.  Looking at the span tree above, the `llm_generate` span consumed 73% of the total request duration (1710ms out of 2340ms).  Before you decide to optimize the LLM call, what information would you need to determine whether that latency is acceptable or problematic?  Consider both technical and business factors in your answer.
 
-    *Hint:* What does your SLA say?  Is this a synchronous user-facing call or a background batch job?  Does the user experience the full 2340ms, or do you stream tokens as they are generated?
+    *Hint:* What does your service level agreement (SLA) say?  Is this a synchronous user-facing call or a background batch job?  Does the user experience the full 2340ms, or do you stream tokens as they are generated?
 
 5.  A teammate suggests adding a `prompt_text` attribute to the `llm_generate` span so you can inspect what was sent to the model during debugging.  Identify at least two categories of information that might appear in a RAG prompt that would be inappropriate to store in a tracing backend.  Then propose an alternative approach that gives you the debugging benefit without the privacy risk.
 
@@ -112,7 +112,7 @@ Attributes on spans are the primary mechanism for answering questions about prod
 
 ## OpenTelemetry Integration
 
-> Before OpenTelemetry existed, every observability vendor had its own SDK. Switching from Datadog to Honeycomb meant rewriting all your instrumentation.  OTel solves this the same way USB solved the "every device needs its own cable" problem: one standard API, any backend.  For agents, this means you can instrument your code once and export to whatever backend your employer uses.
+> Before OpenTelemetry existed, every observability vendor had its own software development kit (SDK).  Switching from Datadog to Honeycomb meant rewriting all your instrumentation.  OTel solves this the same way USB solved the "every device needs its own cable" problem: one standard API, any backend.  For agents, this means you can instrument your code once and export to whatever backend your employer uses.
 {: .tb-key data-title="Why this matters"}
 
 **OpenTelemetry** (OTel) is a vendor-neutral open standard for collecting and exporting telemetry data (traces, metrics, and logs) from applications.  It provides a unified API and SDK so you can instrument your agent once and export to any compatible backend (Jaeger, Honeycomb, Grafana Tempo, etc.) by changing configuration, not code.
@@ -207,7 +207,7 @@ A token count is both kinds of telemetry at once.  On a single call it is a **sp
 
 These commands were checked against opencode 1.18, the version the course container and the [opencode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) install.  Field names in the exported JSON can change between releases, so if a key below is missing, open the file and look before you conclude the count is zero.
 
-**During a session.**  The TUI sidebar has a Context panel with the session's token count and cost.  If the sidebar is hidden, `ctrl+x b` toggles it (the leader key is `ctrl+x`; see the [keybinds reference](https://opencode.ai/docs/keybinds/)).  The percentage of the context window it shows depends on opencode knowing the model's window, which for an Ollama model is the `limit.context` value in that model's entry in `opencode.json` ([providers reference](https://opencode.ai/docs/providers/)).  The cost reads `$0.00` for a local model.  That is the bill you avoided, not the energy you spent.
+**During a session.**  The TUI (terminal user interface) sidebar has a Context panel with the session's token count and cost.  If the sidebar is hidden, `ctrl+x b` toggles it (the leader key is `ctrl+x`; see the [keybinds reference](https://opencode.ai/docs/keybinds/)).  The percentage of the context window it shows depends on opencode knowing the model's window, which for an Ollama model is the `limit.context` value in that model's entry in `opencode.json` ([providers reference](https://opencode.ai/docs/providers/)).  The cost reads `$0.00` for a local model.  That is the bill you avoided, not the energy you spent.
 
 **Across sessions.**  `opencode stats` prints token and cost totals for every session on your machine ([CLI reference](https://opencode.ai/docs/cli/)):
 
@@ -481,7 +481,7 @@ These attributes are still marked *Development* in the specification, and the Ge
 
 10.  Run the same question through your agent twice, once with a fresh history and once after ten turns.  `eval_count` barely changes but `prompt_eval_count` and `prompt_eval_duration` grow.  Explain why, and say which of the two numbers an agent that resends its whole history is really paying for.
 
-     *Hint:* Every turn resends every earlier turn as input.  What does the small context principle from the Observability session say to do about it, and which column of your CSV would show that it worked?
+     *Hint:* Every turn resends every earlier turn as input.  What does the Small Context Window Principle from the [Memory and Context tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MemoryAndContext) say to do about it, and which column of your CSV would show that it worked?
 
 11.  Your multi-agent system's CSV shows the critic agent using 70% of all input tokens but only 10% of output tokens.  What does that pattern suggest the critic is being sent, and what one change would you test first?
 
@@ -500,13 +500,13 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 1.  **Trace tree design.**
 
-    *What to do:* A 3-step ReAct loop for a research agent consists of: (1) the agent deciding to search the web, (2) executing the web search tool, (3) the agent synthesizing results and deciding whether to search again or answer.  Draw the full span tree for one complete ReAct iteration that ends with an answer.  Label each span with its name, key attributes, and approximate duration.  Indicate parent-child relationships with indentation or arrows.
+    *What to do:* A 3-step ReAct (reason, then act) loop for a research agent consists of: (1) the agent deciding to search the web, (2) executing the web search tool, (3) the agent synthesizing results and deciding whether to search again or answer.  Draw the full span tree for one complete ReAct iteration that ends with an answer.  Label each span with its name, key attributes, and approximate duration.  Indicate parent-child relationships with indentation or arrows.
 
     *Starter hint:* Start with a root span called `react_loop` that contains the full iteration.  Under it, create child spans for `plan` (the LLM deciding what to do), `tool_execute` (the actual web search), and `synthesize` (the LLM reading results).  For each span, think: what measurement or identifier would help you debug a failure in that specific step?  Example attributes for `tool_execute`: `tool_name=search_web`, `query_text_length=45`, `results_returned=5`, `duration_ms=320`.
 
     *You've succeeded when:* Your tree shows clear parent-child relationships, every span has at least two non-trivial attributes, and a classmate could use your diagram to identify which step was the bottleneck in a hypothetical slow request.
 
-2.  **PII audit.**
+2.  **PII (personally identifiable information) audit.**
 
     *What to do:* Review the following list of candidate span attributes and classify each as "safe to store in traces," "store with caution (explain the specific concern)," or "do not store (explain the specific harm)."  Attributes: `user_id`, `full_prompt_text`, `retrieved_document_ids`, `retrieved_document_content`, `model_name`, `finish_reason`, `user_email`, `response_text`, `session_duration_ms`, `ip_address`.
 

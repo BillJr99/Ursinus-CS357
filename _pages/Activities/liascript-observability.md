@@ -20,7 +20,7 @@ In *How I AI*, you built a vault, a charter, and a `.ai/` directory so that one 
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol; the Presenter reads one rule of it aloud at report-out; the Reflector notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol; the Presenter reads one rule of it aloud at report-out; the Reflector notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
 
 ---
 
@@ -151,7 +151,7 @@ Observability answers *what happened*.  Traceability answers *why*, weeks later,
 3.  **The task.**  The `.ai/CURRENT_TASK.md` milestone the entry served, or the GitHub issue.  Answers: which piece of work was this part of?
 4.  **The rule or goal.**  The `CHARTER.md` value, gate, or `AGENTS.md` rule that permitted or required the action.  Answers: what standing decision made this the right move?
 
-You walked this chain in the traceability drill in *How I AI*, and you found the link that broke.  The trace closes the smallest gap: every logged action carries a `rule` field naming the rule that allowed it.  Then "why did the agent call `search` here?" is answered by the trace line, and "why is that the rule?" is answered by the charter.  A trace without a `rule` field tells you what happened.  A trace with one tells you what to change.
+You walked this chain in the traceability drill in *How I AI*, and you found the link that broke.  The trace extends that chain down to its finest grain, the single action: every logged action carries a `rule` field naming the rule that allowed it.  Then "why did the agent call `search` here?" is answered by the trace line, and "why is that the rule?" is answered by the charter.  A trace without a `rule` field tells you what happened.  A trace with one tells you what to change.
 
 > **Common Misconception:** "Traceability is `git blame`."  `git blame` gives you link 1 and the name of whoever committed, which for an agent is nearly useless.  The other three links are documents somebody chose to write.  If nobody wrote them, the chain ends at the change, and the only way to find out why is to ask the agent, whose context is gone.
 
@@ -366,7 +366,7 @@ Every entry in `SESSION.md` ends with a "Next Safe Action" because:
 [(X)] A brand-new agent with no conversation history needs exactly one trustworthy, concrete first step, and the outgoing session is the only party that can name it
 [( )] It prevents the session log from growing without bound
 
-> **Common Misconception:** "Handoff notes are for when you switch agents."  The rule says *before stopping for any reason*, including finishing normally, because you cannot predict which stop becomes a swap: the session that completed its task on Friday becomes a handoff on Monday when the vendor has an outage and a different CLI picks up the work.  Every stop is treated as a potential handoff, so no stop is a bad one.
+> **Common Misconception:** "Handoff notes are for when you switch agents."  The rule says *before stopping for any reason*, including finishing normally, because you cannot predict which stop becomes a swap: the session that completed its task on Friday becomes a handoff on Monday when the vendor has an outage and a different command-line interface (CLI) tool picks up the work.  Every stop is treated as a potential handoff, so no stop is a bad one.
 
 ---
 
@@ -376,7 +376,7 @@ A handoff to your own next session has one writer.  Real systems have two: a wor
 
 | Medium | The channel is | A claim looks like | Done looks like |
 |---|---|---|---|
-| **GitHub** | Issues carry the task, pull requests carry the attempt, review comments carry the correction | The agent assigns itself the issue and opens a draft PR that references it | The PR is merged and the issue is closed with a comment naming the merge commit |
+| **GitHub** | Issues carry the task, pull requests carry the attempt, review comments carry the correction | The agent assigns itself the issue and opens a draft pull request (PR) that references it | The PR is merged and the issue is closed with a comment naming the merge commit |
 | **Shared folder (Dropbox-style, or `vault/handoff/` under the zone rules from *How I AI*)** | `handoff/inbox/` holds pending items, `handoff/done/` holds finished ones; no Git, no accounts, no network | The agent writes `claimed_by` and `claimed_at` into the item, or renames it to mark the claim | The item moves to `handoff/done/` with a result section appended |
 
 The plain folder is not the lesser option.  Strip away the tooling and every medium is the same thing: a place to put work, a place to put finished work, and a rule about who may move what between them.  If your protocol only works because GitHub happens to serialize writes for you, you have not written a protocol.
@@ -482,7 +482,7 @@ The *Design Your Agent System* assignment asks for this protocol, and this is th
 
 2.  *The mid-session swap.*
 
-   - *What to do*: An agent has been refactoring a parser for 40 minutes.  Its quota window expires in about 10 minutes.  Tests currently fail on 2 of 14 cases.  Put these scrambled steps in order: (A) commit one logical change containing the passing subset of the work, with documentation updates; (B) append a `SESSION.md` entry with scope, what was completed (with the test command output), what remains, the two failing cases by name, and a Next Safe Action; (C) stop starting new work the moment the limit is recognized as near; (D) update `CURRENT_TASK.md` so the Reality Check shows 12/14 passing with the verifying command and the next immediate action names the first failing case; (E) a new agent from a different vendor is started with the kickoff prompt, reads the funnel, and states the mission, active task, and Next Safe Action before proceeding.
+   - *What to do*: An agent has been refactoring a parser for 40 minutes.  Its quota window expires in about 10 minutes.  Tests currently fail on 2 of 14 cases.  Put these scrambled steps in order: (A) commit one logical change containing the passing subset of the work, with documentation updates; (B) append a `SESSION.md` entry with scope, what was completed (with the test command output), what remains, the two failing cases by name, and a Next Safe Action; (C) stop starting new work the moment the limit is recognized as near; (D) update `CURRENT_TASK.md` so the Reality Check shows 12/14 passing with the verifying command and the next immediate action names the first failing case; (E) a new agent from a different vendor is started with the kickoff prompt, reads the project files in read-order funnel order (`START_HERE.md`, `CHARTER.md`, `docs/ROADMAP.md`, `.ai/CURRENT_TASK.md`, `.ai/SESSION.md`, then the latest commits; see the [Agent Governance tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentGovernance)), and states the mission, active task, and Next Safe Action before proceeding.
    - *Starter hint*: Ask which document is the only one that distinguishes "12 passing because fixed" from "12 passing because the last two were never run."
    - *You've succeeded when*: Your order is defended, and you have named the single step that, if skipped, would most likely make the next agent duplicate or destroy work.
 

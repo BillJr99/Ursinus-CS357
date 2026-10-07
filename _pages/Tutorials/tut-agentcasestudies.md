@@ -158,7 +158,7 @@ Agents also operate with persistent state (memory), external tool access (APIs, 
 
 | Attack Type | Traditional Web App | LLM Agent | Why the Difference Matters |
 |---|---|---|---|
-| Data injection | Malicious user input enters a SQL query or HTML template and executes as code, constrained to that query/page | Malicious input enters the model's reasoning context and can redirect any subsequent decision or tool call | The blast radius is the agent's entire capability set, not just one query or one page |
+| Data injection | Malicious user input enters a SQL query or HTML template and executes as code, constrained to that query/page | Malicious input enters the model's reasoning context and can redirect any subsequent decision or tool call | The blast radius (how much damage a successful attack can do) is the agent's entire capability set, not just one query or one page |
 | Logic manipulation | The application's code logic is fixed; input can only trigger existing paths | The model's "logic" is its reasoning, which can be redirected by sufficiently persuasive text | The attacker does not need to exploit a memory error; they just need to write convincingly |
 | Trust boundary | Clear: server-side code is trusted; user input is untrusted | Blurred: the model trusts retrieved documents, tool outputs, and user messages differently, but may conflate them | An agent reading an attacker-controlled document is like running attacker-controlled code with elevated trust |
 | Persistence | SQL injection is stateless, each request is a fresh execution | Memory-based agents carry state across sessions; a poisoned memory persists after the attack session ends | A single successful attack can affect all future sessions for that agent |
@@ -184,9 +184,9 @@ Remember two things from this section.  In an agent, text that reaches the conte
 
 ### The OWASP LLM Top 10
 
-The Open Web Application Security Project (OWASP) publishes an annually updated list of the most critical security risks for LLM applications.  The 2025 edition names ten risks.  The table gives you a vocabulary and a checklist that transfers to any agentic project you build.  Each row describes the risk and how to recognize it in the wild.
+The Open Worldwide Application Security Project (OWASP) publishes a periodically revised list of the most critical security risks for LLM applications.  The table below follows the 2023 list (version 1.1), which names ten risks.  OWASP's 2025 edition renumbered and renamed several of these items (for example, Excessive Agency is LLM06:2025, and System Prompt Leakage and Vector and Embedding Weaknesses are new), so check which edition a label refers to; this page uses the 2023 numbering throughout.  The table gives you a vocabulary and a checklist that transfers to any agentic project you build.  Each row describes the risk and how to recognize it in the wild.
 
-#### OWASP LLM Top 10 (2025) - With Detection and Response
+#### OWASP LLM Top 10 (2023, v1.1) - With Detection and Response
 
 | OWASP ID | Risk Name | What It Means | How to Recognize It | Primary Defense |
 |---|---|---|---|---|
@@ -195,14 +195,14 @@ The Open Web Application Security Project (OWASP) publishes an annually updated 
 | LLM03 | Training Data Poisoning | Malicious data inserted into the training set causes the model to behave incorrectly at inference time; the vulnerability is baked in before deployment | The model consistently produces biased, incorrect, or harmful outputs on specific triggers, even when prompted correctly | Vet training data sources; validate fine-tuning datasets with adversarial examples before deployment |
 | LLM04 | Model Denial of Service | Crafted inputs that consume excessive compute (very long contexts, recursive expansions, adversarially constructed prompts) degrade availability for all users | Response times degrade dramatically; token consumption per session exceeds norms by 10x or more; service becomes unavailable | Rate limiting per user and per session; maximum context length limits; token consumption monitoring and alerting |
 | LLM05 | Supply Chain Vulnerabilities | Compromised model weights, fine-tuning datasets, plugins, or third-party integrations introduce malicious behavior before the application is deployed | Model behaves unexpectedly on specific inputs; a plugin produces outputs that differ from its documented API | Use model checksums; audit third-party plugins before integration; prefer models from audited, well-known sources |
-| LLM06 | Sensitive Information Disclosure | The model reveals private data from its training set, its current retrieved context, or its system prompt when prompted cleverly | The model recites what appears to be PII, proprietary data, or system prompt contents in response to benign-seeming questions | Never put credentials in system prompts; apply output filters for PII patterns; use retrieval access controls to limit what each user's agent can see |
+| LLM06 | Sensitive Information Disclosure | The model reveals private data from its training set, its current retrieved context, or its system prompt when prompted cleverly | The model recites what appears to be personally identifiable information (PII), proprietary data, or system prompt contents in response to benign-seeming questions | Never put credentials in system prompts; apply output filters for PII patterns; use retrieval access controls to limit what each user's agent can see |
 | LLM07 | Insecure Plugin Design | Plugins or tools that the agent can invoke lack proper authorization checks, input validation, or scope controls, amplifying any compromise | The refund tool accepts any order ID without verifying the current user owns that order; the file-read tool accepts arbitrary paths without sandbox restrictions | Each tool must enforce its own authorization; validate and sanitize all tool inputs; scope tools to the minimum necessary operations |
 | LLM08 | Excessive Agency | The agent is granted tool permissions beyond what its task requires; a successful attack has an outsized impact | The summarization agent also has email-send permissions; the reading assistant also has file-delete access; permissions were granted "just in case" | Audit and enumerate every tool permission; apply least-privilege principle; separate read-only from destructive tools |
 | LLM09 | Overreliance | Users or downstream systems trust the agent's output without independent verification; hallucinations or injected content propagate into decisions | Legal documents cite cases that don't exist; financial reports contain fabricated figures; medical recommendations contradict established guidelines | Human-in-the-loop review for high-stakes outputs; output confidence scoring; downstream validation against authoritative sources |
 | LLM10 | Model Theft | The model's weights or learned behavior are extracted through repeated querying, enabling reproduction without training cost or the application of adversarial fine-tuning | Unusually large numbers of systematically varied queries from a single IP; queries that appear designed to probe the model's decision boundary | Rate limiting; anomaly detection on query patterns; watermarking of model outputs |
 {: .tb-full}
 
-> Many developers focus almost exclusively on LLM01 (Prompt Injection) and treat the other nine risks as secondary.  In practice, LLM08 (Excessive Agency) is responsible for some of the most severe real-world incidents because it multiplies the impact of every other attack.  A prompt injection into an agent with read-only access causes information disclosure; the same injection into an agent with delete access causes data loss.  Defense starts with LLM08.
+> Many developers focus almost exclusively on LLM01 (Prompt Injection) and treat the other nine risks as secondary.  In practice, LLM08 (Excessive Agency) deserves at least as much attention because it multiplies the impact of every other attack.  A prompt injection into an agent with read-only access causes information disclosure; the same injection into an agent with delete access causes data loss.  Defense starts with LLM08.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---
@@ -489,7 +489,7 @@ There are two primary categories:
 - **Direct prompt injection**: The user is the attacker.  They send a malicious message directly to the agent, attempting to override its instructions.
 - **Indirect prompt injection**: A third party has pre-positioned malicious instructions somewhere the agent will later read: a webpage, a database record, an email in the user's inbox, a PDF the agent was asked to summarize.  The attacker never contacts the agent directly.
 
-The OWASP LLM Top 10 (2025) lists ten risk categories for LLM-based systems: (1) Prompt Injection, (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  Prompt injection is listed first because it is the most direct path to exploiting all the others.
+The OWASP LLM Top 10 (2023, v1.1) lists ten risk categories for LLM-based systems: (1) Prompt Injection, (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  Prompt injection is listed first because it is the most direct path to exploiting all the others.
 
 **Before and after: an indirect injection attack and its defense.**
 
@@ -588,7 +588,7 @@ Remember two things from this section.  You may not be able to stop the injectio
 
 ### Red Team Exercise
 
-Understanding the attack is a prerequisite to designing the defense.  This is an educational red-team exercise: you are building the defense, but you must understand the offense to test it.  Red-teaming is standard practice at every major AI company, because you want to find your own vulnerabilities before adversaries do.
+Understanding the attack is a prerequisite to designing the defense.  This is an educational red-team exercise: you are building the defense, but you must understand the offense to test it.  Red-teaming is common practice at major AI companies, because you want to find your own vulnerabilities before adversaries do.
 
 Below is a "hardened" system prompt for an agent that summarizes documents:
 
@@ -710,7 +710,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
    *What to do:* For each of the four attack scenarios in the injection taxonomy table above, identify the secondary OWASP LLM Top 10 category that is most relevant beyond the primary Prompt Injection category, and explain in two sentences why that secondary category applies to this specific scenario.
 
-   *Starter hint:* The OWASP LLM Top 10 (2025) categories include: (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  For the email scenario where the agent might send the user's API keys to an attacker, which category beyond Prompt Injection is most directly applicable?
+   *Starter hint:* The OWASP LLM Top 10 (2023, v1.1) categories include: (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  For the email scenario where the agent might send the user's API keys to an attacker, which category beyond Prompt Injection is most directly applicable?
 
    *You've succeeded when:* You have four scenarios mapped to four secondary OWASP categories (not all the same), each with a two-sentence explanation that specifically connects the scenario's mechanism to the category definition.
 

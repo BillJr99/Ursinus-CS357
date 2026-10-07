@@ -286,7 +286,7 @@ Each line of that budget is filled from a different source, and all of it arrive
 
 Read memory, skills, and tools as rows of this table and the 8K budget above stops being abstract: a 40-line skill, a memory file, or a server with 30 tools takes its share of every call that carries it.
 
-The "Lost in the Middle" phenomenon adds a second constraint.  Research (Liu et al., 2023) shows that facts placed in the middle of a long context are retrieved less reliably than facts at the very beginning or very end.  This is not a quirk of one model; it has been replicated across multiple LLM families.  It means that context *layout* (the order in which you place the system prompt, retrieved documents, conversation history, and new messages) is a design decision with measurable impact on model accuracy.
+The "Lost in the Middle" phenomenon adds a second constraint.  Research (Liu et al., 2024) shows that facts placed in the middle of a long context are retrieved less reliably than facts at the very beginning or very end.  This is not a quirk of one model; the original study found it across several open and closed models of the time.  It means that context *layout* (the order in which you place the system prompt, retrieved documents, conversation history, and new messages) is a design decision with measurable impact on model accuracy.
 
 A user has a 40-turn conversation with an agent.  On turn 41, the agent addresses the user as "there" instead of by name, even though the user introduced themselves on turn 1.  Which of these is the most likely cause?
 
@@ -459,7 +459,7 @@ for msg in ["I have exams in chemistry on Dec 14 and statistics on Dec 16.",
 
 ## Model 3: Watching Compression
 
-> The `SummarizingMemory` class is a concrete implementation of a principle you have seen abstractly: replace bulk with essence.  Watch carefully which facts survive compression and which are lost.  The summary is the agent's only link to conversations that have scrolled out of the verbatim window, so a fact lost from the summary is lost for good (until retrieved from long-term storage).  This is not a theoretical problem: real production agents fail tasks because their summaries dropped a key constraint stated early in the conversation.
+> The `SummarizingMemory` class is a concrete implementation of a principle you have seen abstractly: replace bulk with essence.  Watch carefully which facts survive compression and which are lost.  The summary is the agent's only link to conversations that have scrolled out of the verbatim window, so a fact lost from the summary is lost for good (until retrieved from long-term storage).  This is not a theoretical problem: an agent whose summary drops a key constraint stated early in the conversation will go on to violate that constraint with full confidence.
 {: .tb-key data-title="Why this matters"}
 
 ### Questions to Work Through
@@ -518,7 +518,7 @@ These exercises quantify the memory savings from summarization, stress-test the 
 
 **Personal level:** In your notebook: the agent forgot your exact words but kept a summary it wrote about you.  Human memory works similarly; we remember the gist and reconstruct the details.  Describe one time your memory of a conversation differed from someone else's.  Who was "right"?
 
-**Technical level:** The `SummarizingMemory` class calls the model to compress its own history, so the summarizer can hallucinate facts or drop important constraints.  Design a summarization approach that checks the summary's faithfulness, drawing on what you learned in the *RAG Quality: Chunking, Clustering, and Reranking* activity.
+**Technical level:** The `SummarizingMemory` class calls the model to compress its own history, so the summarizer can hallucinate facts or drop important constraints.  Design a summarization approach that checks the summary's faithfulness, drawing on what you learned in the *RAG and Fine-Tuning: Retrieval Quality and LoRA* activity.
 
 **Societal level:** The agent kept a summary it wrote about you.  If an AI assistant used this pattern over months of conversations, it would build up an increasingly detailed (but potentially distorted) model of who you are.  Who should have the right to read, correct, or delete that summary?  Is it meaningfully different from a therapist's session notes?
 

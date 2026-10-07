@@ -188,6 +188,19 @@ print("\nRETRIEVED:\n", ctx, "\n\nANSWER:\n", answer)
 
 > **Common Misconception:** RAG does not teach the model new facts, and it does not fine-tune or update the model in any way.  The model's weights are unchanged.  RAG places text in the prompt that the model then reads and summarizes, the same way you could hand a book to someone who has never seen it and ask them questions from it.  The intelligence is in the language model; the facts come from your documents.  So RAG is only as accurate as your documents, and if your documents contain errors, the model will faithfully repeat them.
 
+**Three ways to change an answer.**  Keep these apart, because people often blur them:
+
+| | Prompt only | RAG | Fine-tuning (LoRA) |
+|---|---|---|---|
+| What changes | Only the words you send | The text placed in the prompt, chosen by a search | The model's weights, through a small trained adapter |
+| Do the generator's weights change? | No | No | Yes, but only while the adapter is loaded or merged |
+| Which models are involved | One generator | An **embedding model** that searches (here `nomic-embed-text`) and a separate **generator** that writes (here `llama3.2`) | The generator, plus an adapter trained for that exact base model |
+| A fact changes | Edit the prompt | Re-index one document | Collect data and train again |
+| Good at | Instructions and examples | Specific, current, citable facts | Format, tone, and when to refuse |
+| Guarantees the answer is true? | No | No: the model can still misread a correct passage | No: it can state a trained fact confidently and wrongly |
+
+The embedding model never writes an answer, and the generator never searches; RAG works only because both sit in one pipeline.  *RAG and Fine-Tuning: Retrieval Quality and LoRA* covers the third column, and *Offline RAG and LoRA, End to End* (https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OfflineRAGFineTuning) builds all three on one machine and compares them on held-out questions.
+
 The single most important reason RAG reduces factual hallucination is that it:
 
 [( )] Increases the model's parameter count at query time
@@ -267,7 +280,7 @@ In this Part you apply the RAG pipeline to real documents you choose, stress-tes
 
 ## -> Coming Up Next
 
-Our RAG system worked because our "documents" were clean, single-sentence facts.  Real documents are messy: long, overlapping, poorly organized.  *RAG Quality: Chunking and Measuring Retrieval* takes this up next: how you cut documents into chunks determines what you can find, and we will build the tools to measure and improve retrieval quality, the same levers you will tune in the RAG Knowledge Base lab.
+Our RAG system worked because our "documents" were clean, single-sentence facts.  Real documents are messy: long, overlapping, poorly organized.  *RAG and Fine-Tuning: Retrieval Quality and LoRA* takes this up next: how you cut documents into chunks determines what you can find, and we will build the tools to measure and improve retrieval quality, the same levers you will tune in the RAG Knowledge Base lab.
 
 ---
 
@@ -275,6 +288,7 @@ Our RAG system worked because our "documents" were clean, single-sentence facts.
 
 - Patrick Lewis et al. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks."  *NeurIPS* (2020).  The original RAG paper.
 - Chroma documentation: https://docs.trychroma.com
+- *Offline RAG and LoRA, End to End*, which rebuilds today's pipeline with a persistent Chroma store that survives a restart, runs with the network unplugged, and puts it behind a Pydantic AI agent: https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OfflineRAGFineTuning
 - Melanie Mitchell.  *AI: A Guide for Thinking Humans*, Chapter 4.
 
 ---

@@ -27,7 +27,7 @@ Then the room is yours for the rest of the session: bring what is stuck.
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  This is a build-and-discuss day.  The Manager keeps the setup moving.  The Recorder captures the team's design decisions, especially the zone boundaries you choose.  The Presenter shows the team's `AGENTS.md` to the class.  The Reflector notes where the group disagreed about what an agent should be allowed to write.  After class, answer the reflective prompt individually.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  This is a build-and-discuss day.  The Manager keeps the setup moving.  The Recorder captures the team's design decisions, especially the zone boundaries you choose.  The Presenter shows the team's `AGENTS.md` to the class.  The Reflector notes where the group disagreed about what an agent should be allowed to write.  After class, answer the reflective prompt individually.
 
 ---
 
@@ -89,7 +89,7 @@ The design has four pieces.  Each one can be replaced on its own, and that repla
 
 Note what is *not* in that table: any particular AI company.  The vault outlives whichever model you are using this year, and that is most of the argument for building it this way.
 
-**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN, which is the part the table above leaves implicit; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is exactly the argument the table is making.
+**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN (virtual private network), which is the part the table above leaves implicit; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is the argument the table is making.
 
 ---
 
@@ -150,7 +150,7 @@ And three operations, each of which is a prompt:
 2.  **Query.**  You ask a question.  The agent answers from `wiki/`, with citations, and an answer worth keeping becomes a page.
 3.  **Lint.**  Periodically, the agent audits its own wiki: contradictions between pages, claims that have gone stale, orphan pages nothing links to, gaps where a topic is named but never written.
 
-Notice what makes this different from RAG (retrieval-augmented generation), which we build later in the semester.  RAG re-discovers the same context on every query and keeps nothing; the wiki pays the synthesis cost once and keeps the result.  Karpathy's argument for why this is newly practical is a labor argument rather than a technical one: wikis have always been good and have always died of maintenance, and maintenance is exactly the work a model will do for free, forever, without getting bored.  Your job shifts from writing to curating: choosing sources, asking good questions, and reviewing what the agent wrote before you trust it.
+Notice what makes this different from RAG (retrieval-augmented generation), which you built in the *RAG Knowledge Base* session and will build out further in the RAG Knowledge Base lab.  RAG re-discovers the same context on every query and keeps nothing; the wiki pays the synthesis cost once and keeps the result.  Karpathy's argument for why this is newly practical is a labor argument rather than a technical one: wikis have always been good and have always died of maintenance, and maintenance is exactly the work a model will do for free, forever, without getting bored.  Your job shifts from writing to curating: choosing sources, asking good questions, and reviewing what the agent wrote before you trust it.
 
 > **Why Obsidian and GitHub, specifically.**  The gist is deliberately tool-agnostic, but the pattern asks for two things, and these two supply them.  Obsidian supplies the reading experience: `[[wikilinks]]` between entity pages, backlinks that show you what else cites a claim, and a graph view in which an orphan page is visible at a glance.  GitHub supplies the safety: every ingest is a commit, so a synthesis pass that went wrong is one `git revert` away, and a scoped token is what lets an agent running in a container do the writing at all.  The setup is stepwise and takes an evening: [The Second Brain](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SecondBrain) builds the vault and the contract, and [Syncing Obsidian to GitHub](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync) walks the wiring, including a section on standing up the LLM wiki itself.
 
@@ -218,7 +218,7 @@ The `:ro` is the whole difference between a rule the agent is asked to follow an
 
 4.  The vault is a retrieval problem, and you built the machinery for it in the *RAG Knowledge Base* session, and the RAG Knowledge Base lab builds it out later this term.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
 
-   > *Hint: You do not need a number to answer this; you need the reason.  A model can only read a fixed amount of text at once.  What happens to the oldest part of what you handed it when the folder outgrows that limit, and how would you notice?  Next session, *Memory and the Small Context Window Principle*, gives that limit its name and its arithmetic.*
+   > *Hint: You do not need a number to answer this; you need the reason.  A model can only read a fixed amount of text at once.  What happens to the oldest part of what you handed it when the folder outgrows that limit, and how would you notice?  Next session, *Observability, Traceability, and Handoff Protocols*, and its reading, *Memory and the Small Context Window Principle*, give that limit its name and its arithmetic.*
 
 ---
 
@@ -337,7 +337,7 @@ You met these three in *Your AI Workbench*, Step 8.5, as properties of a contain
 
 | Property | In the vault (Part I) | In the repository (Part II) | The failure it prevents |
 |---|---|---|---|
-| **Observability** | `git log` on the vault shows every agent write, with a change. The wiki cites `raw/`, so a claim traces to a source | `SESSION.md` says what was done and *not* done; the PR shows the change; the decision log says why | "Something in my notes is wrong and I have no idea when it got there or what it was based on" |
+| **Observability** | `git log` on the vault shows every agent write and what it changed. The wiki cites `raw/`, so a claim traces to a source | `SESSION.md` says what was done and *not* done; the PR shows the change; the decision log says why | "Something in my notes is wrong and I have no idea when it got there or what it was based on" |
 | **Isolation** | Zones, plus `:ro` on the `raw/` mount. An agent authoring the wiki cannot corrupt the sources it is summarizing | A scoped token for one repository; a branch per attempt; an agent that can open a PR and cannot merge it | "The agent asked to tidy my notes and rewrote a source I can no longer recover" |
 | **Reversibility** | Every vault write is a commit. `git revert` puts a bad synthesis back | Every change arrives as a reviewable, revertible commit on a branch, not as an edit to `main` | "The agent's cleanup pass was wrong and there is no earlier version" |
 
@@ -446,7 +446,7 @@ The second agent reads the claim, sees it is older than the timeout, and takes t
 
    > *Hint: "Check, then act" is two steps, and anything can happen between them.  A rename is one step.  Across a sync, even one step on each machine is still two steps on the server.*
 
-> **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude and this practice has become *more* common, not less, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to CI, unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
+> **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude and this practice has become *more* common, not less, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to continuous integration (CI), unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
 
 ---
 
@@ -535,7 +535,7 @@ For the visual-building route through a local agent stack (Langflow, wiring cont
 
 ## Further Reading
 
-- [`files/agent-templates/`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md), the full set of course templates: charter, kickoff prompt, decision log, RFC skeleton, and the personal-assistant layer.
+- [`files/agent-templates/`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md), the full set of course templates: charter, kickoff prompt, decision log, RFC (request for comments) skeleton, and the personal-assistant layer.
 - Obsidian: [obsidian.md](https://obsidian.md).  The vault is a folder; nothing here depends on the app.
 - Andrej Karpathy, [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) (gist, April 2026): the "LLM wiki" pattern in the author's own words.  A curated, linked knowledge base maintained *with* a model rather than retrieved *by* one: raw sources in, entity pages out, an `index.md` you can navigate without embeddings, and ingest/query/lint as the three standing prompts.
 - This course: [The Second Brain](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SecondBrain) builds the vault and the agent contract; [Syncing Obsidian to GitHub](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync) is the step-by-step setup, including a section on standing up an LLM wiki inside your own vault.

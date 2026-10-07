@@ -24,7 +24,7 @@ This case study runs **the three-file contract → confirmation gates and govern
 
 | Term | Plain-English Definition | Where You'll Meet It |
 |------|--------------------------|--------------------------|
-| **Standing Prompt** | A versioned system-prompt file that governs *every* session of a personal assistant: habits, style, gates, and escalation: the law the persona operates under. | `SYSTEMPROMPT.md` §9: "Drafting is permitted without confirmation; sending is not." |
+| **Standing Prompt** | A versioned system-prompt file that governs *every* session of a personal assistant (habits, style, gates, and escalation): the law the persona operates under. | `SYSTEMPROMPT.md` §9: "Drafting is permitted without confirmation; sending is not." |
 | **Confirmation Gate** | A rule that a specific category of irreversible action requires fresh, explicit approval at the moment of execution; no blanket consent. | "Go ahead and handle everything" still does NOT authorize sending an email |
 | **Governed Autonomy** | An architecture where an unattended agent may *propose* any action but may *execute* only actions its gate policy classifies as safe; everything else queues for approval. | An Automation Spine that classifies each action as Autorun, Queue, or Forbidden |
 | **Self-Updating Memory** | A durable memory file the assistant itself writes back to, under a sync rule that no live memory may be deleted or compressed before it is reflected in the file. | `LLMMEMORIES.md`, appended with dated entries rather than silently rewritten |
@@ -44,8 +44,8 @@ In this part, you will see how the vault contract you built in *The Second Brain
 
 **`AGENTS.md`: the environment contract.**  You already know its core (three zones, sync metadata, write scope) from *The Second Brain*.  The production version adds teeth:
 
-- A **question-answering protocol**: read `/wiki/` first as the authoritative curated source; use `/raw/` only to fill gaps or catch new material; *if `/wiki/` is stale relative to `/raw/`, update `/wiki/` first, then answer*; so answering questions continuously repairs the knowledge base.
-- A **maintenance loop** (the vault linter): enumerate files, repair broken links (classifying each as valid / file-not-found / ambiguous / heading-not-found), audit metadata, and emit a dated lint report.  With two write disciplines: *"Before writing any file back to disk, change the proposed content against the current content.  Do not write if the change is empty"* and *"Prefer surgical edits over full file rewrites."*
+- A **question-answering protocol**: read `/wiki/` first as the authoritative curated source; use `/raw/` only to fill gaps or catch new material; *if `/wiki/` is stale relative to `/raw/`, update `/wiki/` first, then answer*, so answering questions continuously repairs the knowledge base.
+- A **maintenance loop** (the vault linter): enumerate files, repair broken links (classifying each as valid / file-not-found / ambiguous / heading-not-found), audit metadata, and emit a dated lint report.  It adds two write disciplines: *"Before writing any file back to disk, diff the proposed content against the current content.  Do not write if the diff is empty"* and *"Prefer surgical edits over full file rewrites."*
 - A **judgment clause** for everything unenumerated: *"prefer clean structure over clutter; prefer canonical pages over duplicates; prefer linking over copying; prefer thoughtful synthesis over raw aggregation; prefer preserving useful detail over vague summarization."*
 
 **`SYSTEMPROMPT.md`: the standing prompt.**  Where *Designing Agent Personas* taught you to shape a voice, the production standing prompt is mostly **governance**.  Its load-bearing sections:
@@ -130,7 +130,7 @@ A gate is easy when the owner is in the chat.  But this assistant also runs *una
 
 | Lane | Meaning | Examples from the production policy |
 |---|---|---|
-| **Autorun** | Execute immediately + write an audit row | Create/update/complete a task; send a digest *to the owner*; create a branch; open a *draft* PR; capture a note; authorized vault write-backs |
+| **Autorun** | Execute immediately + write an audit row | Create/update/complete a task; send a digest *to the owner*; create a branch; open a *draft* pull request (PR); capture a note; authorized vault write-backs |
 | **Queue** | Store as a proposal; wait for explicit approval | Send email/message to a third party; push to a non-vault repo; merge; force-push; deploy a site; any financial transaction; modify an institutional system; large batches |
 | **Forbidden** | Refuse outright, even if asked casually | Write a secret to the vault; log a secret; exfiltrate a credential; send raw regulated personal data to a cloud service |
 {: .tb-full}
@@ -146,7 +146,7 @@ Classify each action into **Autorun**, **Queue**, or **Forbidden** under the pol
 1.  Mark yesterday's completed tasks done in the task manager
 2.  Reply to a colleague's email asking about a meeting time
 3.  Append today's meeting notes to the vault's project page
-4.  Merge the assistant's own draft PR now that CI is green
+4.  Merge the assistant's own draft PR now that CI (continuous integration) is green
 5.  Store the owner's API key in the vault "so it isn't lost"
 6.  Send the owner their morning schedule digest
 7.  Renew a $12 domain registration that expires tomorrow
@@ -192,7 +192,7 @@ In this part, you will see the pattern for wiring one assistant into many extern
 
 ## 4.  Reads Are Free; Writes Are Gated
 
-**Why this matters:** The production assistant connects over MCP (which you built servers for in the MCP modules) to a task manager, calendar, file store, email, and GitHub.  Across all five, one asymmetry repeats:
+**Why this matters:** The production assistant connects over the Model Context Protocol, MCP (which you built servers for in the MCP modules) to a task manager, calendar, file store, email, and GitHub.  Across all five, one asymmetry repeats:
 
 - **Task manager:** read tasks, comments, and project state freely for context; task *mutations* are Autorun-with-audit (low stakes, fully reversible), but only inside the owner's own workspace.
 - **Calendar:** read free; event creation proposes.
@@ -200,7 +200,7 @@ In this part, you will see the pattern for wiring one assistant into many extern
 - **Email:** triage and drafting are unrestricted; **sending never is** (drafts-never-sends).
 - **GitHub:** read and draft-PR free; merge/push to shared repos queues.
 
-The second big pattern is **no-agent routines**: the scheduled layer is almost entirely *deterministic scripts with no LLM call at all*: a morning brief, a deadline radar scanning the next 14 days, a weekly digest per project, and infrastructure watchdogs (network and container liveness every five minutes, *silent on success*, alerting only on actionable failure).  A script that finds nothing prints nothing, and empty output means no message.  Each job "writes only local report files and performs no source-system mutations."
+The second big pattern is **no-agent routines**.  The scheduled layer is almost entirely *deterministic scripts with no LLM call at all*: a morning brief, a deadline radar scanning the next 14 days, a weekly digest per project, and infrastructure watchdogs (network and container liveness every five minutes, *silent on success*, alerting only on actionable failure).  A script that finds nothing prints nothing, and empty output means no message.  Each job "writes only local report files and performs no source-system mutations."
 
 And because an always-on host is sometimes off, the routines carry a **catch-up policy**: after a restart, "collapse the downtime into one missed-execution event, run the job exactly once immediately as catch-up, record that catch-up, advance the next scheduled run normally, and avoid replaying every missed interval."
 
@@ -270,7 +270,7 @@ An assistant using the harness was asked to "clean up the vault's project pages:
 
 2.  The vocabulary standardization might well be an improvement.  What is the harness-compliant way to handle a mid-task better idea, and why does the harness refuse to let even *good* ideas bypass it?
 
-    > *Hint: The freeze exists because a weak model cannot reliably distinguish "improving the criteria" from "drifting away from the request."  Where do good mid-task ideas go instead; recall the parking-lot pattern from the companion activity?*
+    > *Hint: The freeze exists because a weak model cannot reliably distinguish "improving the criteria" from "drifting away from the request."  Where do good mid-task ideas go instead?  Recall the parking-lot pattern from the companion activity.*
 
 3.  The blind cross-checker receives only the frozen criteria and the artifact, deliberately *not* the transcript.  What class of error does withholding the transcript prevent the verifier from inheriting?
 

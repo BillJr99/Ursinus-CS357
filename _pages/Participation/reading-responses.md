@@ -43,7 +43,7 @@ tags:
 
 ---
 
-You cannot debug an agent you have only read about, and you cannot discuss a paper you have only skimmed.  A reading response is a short note, three or four sentences, that you write *before* a discussion day or a classmate's Reading Group session.  It means you arrive with something to say, and the conversation starts from real engagement instead of a cold open.  This page explains how to write one, how they earn participation, and gives a bank of reading-linked prompts for each unit.
+You cannot debug an agent you have only read about, and you cannot discuss a paper you have only skimmed.  A reading response is a short note, three sentences, that you write *before* a discussion day or a classmate's Reading Group session.  It means you arrive with something to say, and the conversation starts from real engagement instead of a cold open.  This page explains how to write one, how they earn participation, and gives a bank of reading-linked prompts for each unit.
 
 ## Purpose
 
@@ -63,15 +63,15 @@ Reading responses do two things.  They make you an active reader (turning a pass
 
 ## How to Write a Reading Response
 
-Keep it to three or four sentences, posted to the discussion board before the marked session.  A strong response has three moves:
+Keep it to three sentences, one for each move, posted to the discussion board before the marked session.  A strong response has three moves:
 
 1.  **One takeaway.**  The single most important claim or result, in your own words, not a summary of the whole thing.
 2.  **One question.**  A real question the reading raised for you: something you doubt, something unresolved, or something you would test.
-3.  **One connection to your own system.**  This is the move that matters most in this course: tie the reading to something you run or could run yourself.  Does this change how you would configure your local model, chunk your RAG corpus, scope an MCP server's permissions, or evaluate an agent's output?  The goal of the course is fluency operating your own AI stack, and reading responses are where reading becomes that fluency.
+3.  **One connection to your own system.**  This is the move that matters most in this course: tie the reading to something you run or could run yourself.  Does this change how you would configure your local model, chunk your retrieval-augmented generation (RAG) corpus, scope a Model Context Protocol (MCP) server's permissions, or evaluate an agent's output?  The goal of the course is fluency operating your own AI stack, and reading responses are where reading becomes that fluency.
 
 ## Reading Responses for Student-Led Reading Group Sessions
 
-When a classmate leads a [Reading Group]({{ site.baseurl }}/Assignments/ReadingGroup) discussion, the audience has a defined job, and doing it earns participation.  Before the session, post a brief response to the presenter's source (or, if it is circulated same-day, come with one real question ready).  During the session, engage: build on the presenter's framing, offer a counter-view, or connect their source to something we have built.  Leading a session remains separately available for extra credit; being a strong audience member is ordinary, expected participation, and it is what makes the student-led sessions worth holding.
+When a classmate leads a [Reading Group]({{ site.baseurl }}/Assignments/ReadingGroup) discussion, the audience has a defined job, and doing it earns participation.  Before the session, post a brief response to the presenter's source (or, if it is circulated same-day, come with one real question ready).  During the session, engage: build on the presenter's framing, offer a counter-view, or connect their source to something we have built.  Leading a session is graded separately, with a 10-point base grade plus an early-slot extra-credit bonus; being a strong audience member is ordinary, expected participation, and it is what makes the student-led sessions worth holding.
 
 ## Reading-Linked Prompts, by Unit
 

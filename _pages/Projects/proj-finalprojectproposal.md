@@ -199,7 +199,7 @@ The system you audit must be specific: not "AI in hiring" but a named tool as de
 > **Paste into your submission.**
 > - **System identification**: name, operator, what it does, where it is deployed.
 > - **Affected populations**: who is affected and how the system's decisions reach them.
-> - **Framework choice** (NIST AI RMF, EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives.
+> - **Framework choice** (the NIST AI Risk Management Framework (AI RMF), EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives.
 > - **Preliminary hypothesis**: where you expect the highest risks to lie, written before the deep analysis.
 > - Evidence that enough public information exists: at least two independent sources from an initial search.
 

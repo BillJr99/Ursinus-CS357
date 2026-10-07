@@ -114,7 +114,7 @@ On the no-code path, read "log" as "exported chat transcript" and "code" as "con
 
 **Tools to install.**
 
-*Both paths.*  Ollama is a local server that runs open language models on your machine; `llama3.2` is a 2 GB model that fits on most laptops.  If you finished the Overview assignment, you already have both.  If your computer cannot run a local model well, you can use a hosted provider instead; Step 1.1 shows the two lines to change, and I can help you pick one.
+*Both paths.*  Ollama is a local server that runs open language models on your machine; `llama3.2` is a 2 GB model that fits on most laptops.  If you finished the Overview assignment, you already have both.  If your computer cannot run a local model well, you can use a hosted provider instead; Step 1.1 shows the three lines to change, and I can help you pick one.
 
 ```bash
 # Install Ollama (macOS/Linux).  On Windows, download the installer from https://ollama.com/download
@@ -123,6 +123,8 @@ curl -fsSL https://ollama.com/install.sh | sh
 # Pull a model (llama3.2 is a good starting point; ~2 GB)
 ollama pull llama3.2
 ```
+
+> **For the tool-calling parts.**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  Either model is accepted.  If your tools do not fire reliably, set `"model": "qwen2.5:3b"` in `config.json` and name the model in your writeup.
 
 *Code path.*  Python 3 and the `requests` library:
 
@@ -202,7 +204,7 @@ llama3.2:latest    a80c4f17acd5    2.0 GB  2 minutes ago
 
 ## Part 0: Five Small Steps (code path)
 
-Before you build the full loop, build its pieces one at a time.  Section *Part IIb: Build It in Five Small Steps* of the *Running Your Own AI* activity gives you five short programs.  Each one runs by itself and adds exactly one idea to the one before it.  Type each one in, run it, and check it before you open the next.
+Before you build the full loop, build its pieces one at a time.  *Part IIb: Build It in Five Small Steps* of the *Running Your Own AI* activity (Sections 4a through 4e) gives you five short programs.  Each one runs by itself and adds exactly one idea to the one before it.  Type each one in, run it, and check it before you open the next.
 
 > **Do this.**  Create `cs357-work/localagent/part0/` and work there.  Complete each step, run its check, and commit before you move on.  Five steps, five commits.
 
@@ -218,7 +220,7 @@ Or have opencode do each step, one at a time:
 
 ```text
 In localagent/part0/, create stepN_<name>.py exactly as shown in Section 4<letter>
-of the Running Your Own AI activity.  Do not add features.  Then tell me the one
+(4a through 4e, in Part IIb) of the Running Your Own AI activity.  Do not add features.  Then tell me the one
 command to run it and what output means it worked.  Create nothing else.
 ```
 
@@ -411,9 +413,10 @@ def parse_response(text):
 Or have opencode do it:
 
 ```text
-In localagent/agent.py, write parse_action(reply) that returns the tool name and
-argument when the reply contains an Action line, and returns the final answer when
-it contains a Final Answer line.  Handle the case where it contains neither.
+In localagent/agent.py, write parse_response(text) that returns the three-tuple
+("action", tool_name, argument) when the reply contains an Action line,
+("final", None, answer_text) when it contains a Final Answer line, and
+("unknown", None, text) when it contains neither.
 Change nothing else in the file.
 ```
 
@@ -523,14 +526,6 @@ Steps used: 1 | Reason: final_answer
 > - `401 Unauthorized` or `403 Forbidden`: a hosted provider did not accept your key.  Check `api_key` in `config.json`, and that the key has not expired.
 > - The model never emits `Action:` or `Final Answer:`: your system prompt does not yet describe the format.  Write `build_system_prompt` in Part 2, then re-run.
 
-> **Checkpoint.**  Before moving to Part 2, make sure you can answer:
-> 1. What are the four phases of the perceive-plan-act-remember cycle, and which line(s) in your code implement each one?
-> 2. What happens in your loop when the model exhausts the step budget; what does the caller receive?
-> 3. After a tool runs, the loop appends `{"role": "user", "content": "Observation: ..."}` even though no human typed it.  Why the user role, and what would break if you used `"role": "assistant"` instead?
-
----
-
-
 Or have opencode do it:
 
 ```text
@@ -541,6 +536,13 @@ and show me the full output.
 ```
 
 The only thing this step proves is that the loop terminates.  If the output scrolls until the step budget stops it, the parser is not recognizing the final answer, and that is a Step 1.3 problem rather than a prompt problem.
+
+> **Checkpoint.**  Before moving to Part 2, make sure you can answer:
+> 1. What are the four phases of the perceive-plan-act-remember cycle, and which line(s) in your code implement each one?
+> 2. What happens in your loop when the model exhausts the step budget; what does the caller receive?
+> 3. After a tool runs, the loop appends `{"role": "user", "content": "Observation: ..."}` even though no human typed it.  Why the user role, and what would break if you used `"role": "assistant"` instead?
+
+---
 
 ## Part 2: A Persona and Two Tools
 
@@ -564,9 +566,9 @@ def calculator(expression):
     Example: calculator("2 + 2") -> "4"
     """
     # TODO: Replace eval with a safe parser if desired.
-    # For now, restrict to digits and basic operators.
+    # For now, restrict to digits, basic operators, and the name sqrt.
     allowed = set("0123456789+-*/().% ")
-    if not all(c in allowed for c in expression):
+    if not all(c in allowed for c in expression.replace("sqrt", "")):
         return "Error: unsafe characters in expression"
     try:
         result = eval(expression, {"__builtins__": {}}, {"sqrt": math.sqrt})
@@ -697,14 +699,6 @@ Steps: 3 | Termination: final_answer
 > - The model emits an Action and a Final Answer in the same reply: shorten the system prompt, and make sure FORMAT says "Only one action per response.  Wait for the Observation before continuing."
 > - The model ignores the GUARDRAILS: small models follow instructions less reliably.  Make the guardrail more explicit ("If asked about [X], respond only with: 'I can only help with study planning.'"), or add a post-processing filter in Python.
 
-> **Checkpoint.**  Before moving to Part 3, make sure you can answer:
-> 1. What are the five elements of a well-formed system prompt?  Where does each appear in your prompt?
-> 2. Run your agent on a goal that requires both tools and paste the full transcript into your notes.  Which step used each tool?
-> 3. What happens if the model calls a tool that is not in your `TOOLS` dict?  Trace the code path and confirm your loop handles it gracefully.
-
----
-
-
 Or have opencode do it:
 
 ```text
@@ -714,6 +708,13 @@ step-by-step output.
 ```
 
 Read the printed steps rather than the final answer.  A goal that needs both tools and gets the right answer from one of them is a result worth noticing, and it is invisible if you only read the last line.
+
+> **Checkpoint.**  Before moving to Part 3, make sure you can answer:
+> 1. What are the five elements of a well-formed system prompt?  Where does each appear in your prompt?
+> 2. Run your agent on a goal that requires both tools and paste the full transcript into your notes.  Which step used each tool?
+> 3. What happens if the model calls a tool that is not in your `TOOLS` dict?  Trace the code path and confirm your loop handles it gracefully.
+
+---
 
 ## Part 3: Evaluate It
 
@@ -741,7 +742,8 @@ TASKS = [
     {
         "id": "T02",
         "goal": "What is 17 multiplied by 23?",
-        "correct_answer_check": lambda ans: "391" in ans,
+        # parse the integers, as in T01; a bare substring check passes "3910"
+        "correct_answer_check": lambda ans: "391" in re.findall(r"-?\d+", ans),
         "notes": "Should use calculator tool"
     },
     # TODO: Add 3 more tasks:
@@ -821,7 +823,7 @@ agent.py and TASKS from task_set.py, runs every task, and writes id, goal, answe
 passed, and steps to results.csv.  Then run it and show me the file.
 ```
 
-Confirm the seed from Step 1.1 is actually reaching the model call.  An evaluation you cannot re-run and get the same numbers from is a single observation, not a measurement, and Part 3.4 asks you to compare two of them.
+Confirm the seed from Step 1.1 is actually reaching the model call.  An evaluation you cannot re-run and get the same numbers from is a single observation, not a measurement, and Step 3.4 asks you to compare two of them.
 
 ### Step 3.3: Capture and annotate a failure transcript
 
@@ -859,14 +861,6 @@ Change one thing: a prompt edit, a parser hardening, a budget adjustment.  If th
 > - The agent passes at the same seed but fails on new runs: check that `"seed"` is actually being sent to Ollama.  Print `config["seed"]` before the loop to confirm it is not `None`.
 > - `budget_exhausted` appears often: the model may be stuck in a tool-call loop.  Raise `step_budget` temporarily to see the full transcript, then diagnose whether the loop is getting no Observation, ignoring it, or re-calling the same tool.
 
-> **Checkpoint.**  Before writing your deliverables, make sure you can answer:
-> 1. What is your agent's accuracy on the five-task set, and what kind of failure did you see?
-> 2. Describe your mitigation in one sentence.  Did it fix the root cause or just the symptom?
-> 3. If you ran the evaluation at a higher temperature, what would you expect to happen to accuracy, and why?
-
----
-
-
 Or have opencode do it:
 
 ```text
@@ -876,6 +870,13 @@ after accuracy.
 ```
 
 Keep it to one change, and say so in the prompt, because an agent asked to fix a failure will often improve the prompt, harden the parser, and raise the budget in one turn.  Three changes at once give you a better number and no idea which one earned it.
+
+> **Checkpoint.**  Before writing your deliverables, make sure you can answer:
+> 1. What is your agent's accuracy on the five-task set, and what kind of failure did you see?
+> 2. Describe your mitigation in one sentence.  Did it fix the root cause or just the symptom?
+> 3. If you ran the evaluation at a higher temperature, what would you expect to happen to accuracy, and why?
+
+---
 
 ## No-code Path
 
@@ -963,7 +964,7 @@ This is Part 3 run through the UI: a fixed task set, a defined metric, an accura
 > |----|-------|----------|---------------|-------------|-------|--------------|
 > | T01 | ... | ... | calculator | yes | yes | - |
 
-> **If it fails.**  Responses are extremely slow: same model and hardware as the code path; the UI adds little.  If chats hang, check whether Ollama is swapping (`ollama ps`) and close other memory-heavy applications.
+> **If it fails.**  Responses are extremely slow: the model and hardware are the same as on the code path, and the UI adds little overhead.  If chats hang, check whether Ollama is swapping (`ollama ps`) and close other memory-heavy applications.
 
 ---
 

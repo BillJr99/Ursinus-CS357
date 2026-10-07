@@ -116,7 +116,7 @@ The Final Project is **one required project with three directions**.  Every team
 
 | Direction | What you build | What you need | Pick this if |
 |---|---|---|---|
-| **A: Custom Agent Team** | A system of at least three cooperating, specialized agents that accomplishes a real goal-oriented task end to end on your local stack, benchmarked against a monolithic baseline and governed by a document you can defend | Your local AI stack, a public repository with CI, and a task a multi-agent system actually fits | Your team wants to build, and has people who enjoy making things run |
+| **A: Custom Agent Team** | A system of at least three cooperating, specialized agents that accomplishes a real goal-oriented task end to end on your local stack, benchmarked against a monolithic baseline and governed by a document you can defend | Your local AI stack, a public repository with continuous integration (CI), and a task a multi-agent system actually fits | Your team wants to build, and has people who enjoy making things run |
 | **B: Responsible AI Audit** | A structured, evidenced responsible-AI audit of a specific deployed system: a risk analysis with mechanistic failure modes, a governance document a real organization could adopt, and a presentation a real board could act on | Public documentation, news coverage, academic studies, and regulatory filings; no code and no access to the system's internals | Your team wants to investigate.  This is a **fully non-programming** direction and it is not the lesser one; a good audit is harder than a mediocre build |
 | **C: Build and Publish an Open-Source Agent** | A verified gap in the agent tooling ecosystem filled by an open-source agent that is built, tested, documented, and published to a public registry, with a real community engaged and its governance and limitations disclosed.  As a variant, reviewed pull requests to an existing open-source agent project (see Direction C below) | A public repository with CI, a registry account (npm, PyPI, Docker Hub, or the MCP marketplace), and a community to post in | Your team wants what you make to outlive the semester, and will take documentation, packaging, and licensing as seriously as the code |
 
@@ -304,7 +304,7 @@ Build in three sprints between the proposal and Demo Day, aligned with in-class 
 
 | Sprint | Direction A milestone | Direction B milestone | Direction C milestone |
 |---|---|---|---|
-| Sprint 1 (proposal submitted -> cross-team proposal critique) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running MVP (core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
+| Sprint 1 (proposal submitted -> cross-team proposal critique) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running minimum viable product (MVP: core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
 | Sprint 2 (proposal critique -> gallery walk; spans the Thanksgiving break) | All agents implemented and individually testable; at least 5 evaluation tasks run; GOVERNANCE.md first draft committed | Risk analysis report drafted (4-6 pages, 8+ citations, 3 mechanistic failure modes); governance document outlined | Non-trivial feature implemented; third property test added; README quickstart drafted and cold-tested by a classmate |
 | Sprint 3 (gallery walk -> Demo Day) | Full evaluation with baseline comparison; 3+ failure modes documented with transcripts; one mitigation re-measured; gallery-walk prep | Governance document complete (monitoring plan, incident response, communication plan, appeal process); board presentation rehearsed | Published to a registry, tagged v1.0.0; community post made; CONTRIBUTING.md and GOVERNANCE.md complete |
 
@@ -409,10 +409,10 @@ In addition to the shared elements:
 
 ### Direction A final deliverables
 
-- [ ] **The system:** a repository that runs from a fresh start following the README in under 3 minutes on a machine the team has not configured; configuration externalized to `config.json`, model versions and seeds pinned, exceptions handled with located messages, a test suite with at least one end-to-end test, CI on every push, and a publish step (triggered by the `submission` tag) pushing the artifact to GHCR, Docker Hub, or npm
+- [ ] **The system:** a repository that runs from a fresh start following the README in under 3 minutes on a machine the team has not configured; configuration externalized to `config.json`, model versions and seeds pinned, exceptions handled with located messages, a test suite with at least one end-to-end test, CI on every push, and a publish step (triggered by the `submission` tag) pushing the artifact to GitHub Container Registry (GHCR), Docker Hub, or npm
 - [ ] **The report** (6-8 pages): design rationale tied to named course patterns; evaluation results with the baseline comparison table, failure analysis with transcripts, and re-measurement after mitigation; explainability design; limitations (your "disclose" bucket from the gallery walk, verbatim); a governance summary referencing the committed GOVERNANCE.md; the Responsible AI Report; and individual contribution statements documenting the role rotation
 - [ ] **The presentation** (12 minutes plus questions), meeting the shared Demo Day requirements, plus: the evaluation table (baseline vs. multi-agent, side by side) and the 90-second explainability story (what does a user see when the system makes a decision?)
-- [ ] **The artifacts folder:** final agent design table, final pre-mortem with binding governance clauses noted, all sprint notes, gallery-walk cards received with your triage, and a release-readiness checklist signed by the Evaluator confirming CI passes on the submission SHA, the artifact is live at its published URL, and the README was tested by a stranger
+- [ ] **The artifacts folder:** final agent design table, final pre-mortem with binding governance clauses noted, all sprint notes, gallery-walk cards received with your triage, and a release-readiness checklist signed by the Evaluator confirming CI passes on the submission SHA (the commit hash of the version you submit), the artifact is live at its published URL, and the README was tested by a stranger
 
 ---
 
@@ -420,7 +420,7 @@ In addition to the shared elements:
 
 > **What this direction requires.** A **specific** system: a named, deployed product with a defined purpose and identifiable affected populations, in the domain your community partner cares about.  Not "AI in hiring," but a named tool as deployed by a named operator.  You are not expected to have access to the system's internals.  Base the analysis on public documentation, news coverage, academic studies, and regulatory filings, and cite every claim.  Documented absence of information is itself a finding.
 
-Perform a structured **responsible AI audit** of a publicly available, deployed AI system.  Regulators, investors, and the communities a system touches increasingly ask for exactly this analysis.  The deliverable is not an opinion piece.  It is evidenced, structured, and written for people who will make decisions based on it.  Strong candidates: a hiring screening tool, a medical imaging AI, a content moderation system, a predictive risk tool in criminal justice or benefits eligibility, or an educational AI that grades or places students.  Avoid general-purpose chatbots unless scoped to a specific deployment context.
+Perform a structured **responsible AI audit** of a publicly available, deployed AI system.  This is the kind of analysis that regulatory frameworks such as the EU AI Act and the NIST AI RMF call for, and that the communities a system touches have reason to ask for.  The deliverable is not an opinion piece.  It is evidenced, structured, and written for people who will make decisions based on it.  Strong candidates: a hiring screening tool, a medical imaging AI, a content moderation system, a predictive risk tool in criminal justice or benefits eligibility, or an educational AI that grades or places students.  Avoid general-purpose chatbots unless scoped to a specific deployment context.
 
 ### Direction B proposal elements
 
@@ -428,7 +428,7 @@ In addition to the shared elements:
 
 - **System identification**: name, operator, what it does, where it is deployed
 - **Affected populations**: who is affected and how the system's decisions reach them
-- **Framework choice** (NIST AI RMF, EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives
+- **Framework choice** (the NIST AI Risk Management Framework (AI RMF), EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives
 - **Preliminary hypothesis**: where you expect the highest risks to lie, written before the deep analysis
 - Evidence that enough public information exists (at least two independent sources from an initial search)
 
@@ -464,7 +464,7 @@ Instead of publishing a new artifact, your team may make substantive, reviewed c
 - The CONTRIBUTING.md and GOVERNANCE.md requirements are met by following the upstream project's own documents and stating in your report what they required of you.
 - Scope must be approved in the proposal, whose "what the artifact does / who would use it / how they would install it" elements describe the upstream feature you are adding.
 
-A contribution reviewed by the maintainers of a real project is a portfolio line few graduates have.
+A contribution reviewed by the maintainers of a real project is a strong portfolio line, and one that many graduates do not have.
 
 ### Direction C proposal elements
 
@@ -689,7 +689,7 @@ Demo Day is already a multi-audience event: your community partner's world and y
 
 During the *Final Integration and Demo Rehearsal* studio, you will pair **across teams** for interview rounds, credited as class participation.
 
-**Format.**  Ten minutes per round, then swap roles.  The interviewer asks from the question bank below (or invents better ones).  The interviewee answers **without slides**; a whiteboard or paper is allowed, your repository is not.  Close each round with an SQR-style feedback card: one **Strength**, one **Question** the interviewee should be ready for at Demo Day.
+**Format.**  Ten minutes per round, then swap roles.  The interviewer asks from the question bank below (or invents better ones).  The interviewee answers **without slides**; a whiteboard or paper is allowed, your repository is not.  Close each round with an SQR-style feedback card: one **Strength** with evidence, one **Question** the interviewee should be ready for at Demo Day, and one **Risk** in how they explain the project, with a suggested fix.
 
 **Question bank** (interviewers: pick three or four, follow the answers, dig where they wobble):
 
@@ -723,7 +723,7 @@ A: The presentation is graded by the Final Project's existing rubric.  Guest att
 A: Talk to the instructor beforehand; the format can be adjusted (a smaller room, a written walk-through, extra prep time).  The rehearsal exists because the tenth time explaining your architecture is calmer than the first.  We want you to spend the nervous repetitions here, where they are cheap.
 
 **Q: Our project is an audit with no running system.  What do we demo to a guest?**
-A: The evidence walkthrough is your demo: one failure mode, its mechanism, and the trail of citations behind it, shown rather than asserted.  Guests with industry experience often find the audit conversations the most engaging in the room.
+A: The evidence walkthrough is your demo: one failure mode, its mechanism, and the trail of citations behind it, shown rather than asserted.  Done well, an audit conversation can be among the most engaging in the room, for guests and classmates alike.
 
 ### Demo Day Guide Reflection Prompts
 

@@ -73,7 +73,7 @@ Stopping rules prevent infinite polishing.  Loop until the verdict is `accept`, 
 
 *Why Different Answers Every Time?* introduced reasoning models, which deliberate inside the model in one long response.  Today's loop deliberates outside the model, in code you wrote: the stopping rule is yours, the rubric is a string you can read, every draft and issue list is an object you can log, and you can swap the critic for a different model, a test suite, or a person.  When a reasoning model's answer is wrong, you have a trace and a shrug; when this loop's answer is wrong, you have the exact rubric line that failed to catch it, and you can fix that line.
 
-The point that survives both: an extra round only helps if it introduces something the previous round did not have.  Here that is the critic's rubric, which the generator never sees and therefore cannot simply agree with.  A loop that feeds a draft back with "make it better" adds rounds and no evidence, and you will watch that fail in Model 1.
+The point that holds for both kinds of deliberation: an extra round only helps if it introduces something the previous round did not have.  Here that is the critic's rubric, which the generator never sees and therefore cannot simply agree with.  A loop that feeds a draft back with "make it better" adds rounds and no evidence, and you will watch that fail in Model 1.
 
 ## Model 1: Two Transcripts
 
@@ -596,7 +596,7 @@ The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026
 
 # Extension: Human-in-the-Loop (self-paced)
 
-Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius.  Your final project will make you answer that in writing, so read this before the proposal.
+Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius (how much damage a mistake could do).  Your final project will make you answer that in writing, so read this before the proposal.
 
 ## Key Concepts
 
@@ -611,7 +611,7 @@ Optional, and not assumed by the parts above.  Critique and refine puts a second
 
 ---
 
-In this first model, you will map out the space between fully manual and fully autonomous agent operation, and you will learn to apply five specific trigger conditions that determine when a human checkpoint is warranted.  This is the foundation of all the design decisions that follow.
+In this first model, you will map out the space between fully manual and fully autonomous agent operation, and you will learn to apply five specific trigger conditions that determine when a human checkpoint is warranted.  The design decisions that follow build on it.
 
 ### The Autonomy Spectrum and Checkpoint Criteria
 
@@ -620,7 +620,7 @@ Agent deployment exists on a spectrum from fully manual (the human does every st
 - **Human-on-the-loop**: The agent acts immediately but a human monitors and can intervene.  Used for low-stakes, reversible, high-volume tasks where errors are catchable before they cause harm.
 - **Human-in-the-loop**: The agent *pauses before acting* on specific trigger conditions and waits for explicit human approval.  Used for high-stakes, irreversible, or ambiguous situations where a mistake before intervention could cause lasting harm.
 
-The key design decision is identifying the **trigger conditions** that promote an action from autonomous execution to human review.  Research and practice have converged on five primary triggers:
+The key design decision is identifying the **trigger conditions** that promote an action from autonomous execution to human review.  This course works with five common triggers, which recur across many agent design guides even though no single standard list exists:
 
 1.  **Irreversibility**: The action cannot be undone: file deletion, sent email, financial transaction, published post.
 2.  **High stakes**: The consequences of error are large: production deployment, external communication to many people, legally binding document.
@@ -659,7 +659,7 @@ The **minimal footprint principle** is a design heuristic that says: when multip
 
 ### The Escalation Protocol
 
-When a trigger condition fires, the agent must pause execution, preserve its current state, communicate the reason for escalation to the human in a way that enables an informed decision, and then resume (or abort) once the human responds.  A naive implementation blocks the entire process synchronously; the agent freezes and waits.  A production-grade implementation suspends state asynchronously (saving its work and returning immediately, resuming only when the human responds): the agent saves its work and resumes when the human responds, potentially hours later.
+When a trigger condition fires, the agent must pause execution, preserve its current state, communicate the reason for escalation to the human in a way that enables an informed decision, and then resume (or abort) once the human responds.  A naive implementation blocks the entire process synchronously; the agent freezes and waits.  A production-grade implementation suspends state asynchronously: the agent saves its work, returns immediately, and resumes only when the human responds, potentially hours later.
 
 The following Python pseudocode (simplified illustration, not runnable as-is) shows the escalation logic:
 
@@ -707,7 +707,7 @@ def execute_action(action, context, confidence):
     return sandbox.execute(action, context)
 ```
 
-In **asynchronous HITL**, the agent saves a complete state snapshot before raising `EscalationPending`.  The human reviews the checkpoint (potentially hours later) approves, rejects, or modifies the action, and the agent reloads the snapshot and continues.  The human's response must be cryptographically tied to the specific checkpoint (not merely "approve the last thing") to prevent replay attacks where an old approval is reused for a new action.
+In **asynchronous HITL**, the agent saves a complete state snapshot before raising `EscalationPending`.  The human reviews the checkpoint (potentially hours later), approves, rejects, or modifies the action, and the agent reloads the snapshot and continues.  The human's response must be cryptographically tied to the specific checkpoint (not merely "approve the last thing") to prevent replay attacks where an old approval is reused for a new action.
 
 > **Common Misconception:** Many students assume that "human-in-the-loop" means a human watches every single action the agent takes.  This is not scalable and, paradoxically, produces worse oversight; humans who must approve hundreds of actions per day stop reading them carefully.  Good HITL design is *selective*: humans review the actions that most need their judgment, and the agent handles everything else autonomously.  The goal is quality of oversight, not quantity of approvals.
 

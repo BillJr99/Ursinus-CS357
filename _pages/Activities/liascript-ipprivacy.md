@@ -181,8 +181,8 @@ Notice that the last sentence still implies a health event and a hospital.  A re
 
 These two terms are often confused:
 
-- **Anonymization**: Removing or altering data so that re-identification is impossible, even with auxiliary data.  True anonymization is extremely hard.  Most "anonymized" datasets have been re-identified using public auxiliary information (for example, Netflix viewing histories re-identified using IMDb ratings).
-- **Pseudonymization**: Replacing identifiers such as names and Social Security numbers with pseudonyms such as arbitrary IDs.  Re-identification is possible if the pseudonym mapping leaks or if enough quasi-identifiers remain.  The GDPR treats pseudonymized data as still personal data, and still regulated.
+- **Anonymization**: Removing or altering data so that re-identification is impossible, even with auxiliary data.  True anonymization is extremely hard.  Many "anonymized" datasets have been re-identified using public auxiliary information (for example, Netflix viewing histories re-identified using IMDb ratings), and one study (Rocher, Hendrickx, and de Montjoye, *Nature Communications*, 2019) estimated that 99.98% of Americans could be correctly re-identified in any dataset using 15 demographic attributes.
+- **Pseudonymization**: Replacing identifiers such as names and Social Security numbers with pseudonyms such as arbitrary IDs.  Re-identification is possible if the pseudonym mapping leaks or if enough quasi-identifiers remain (details such as age, zip code, and gender that can identify a person when combined).  The GDPR treats pseudonymized data as still personal data, and still regulated.
 
 ### Critical Thinking Questions
 
@@ -241,7 +241,7 @@ Key properties:
 
 - Raw data never leaves the client's premises
 - The aggregated model incorporates learning from all clients' private data
-- **Gradient inversion attacks** (Zhu et al., 2019) showed that an honest-but-curious aggregation server can sometimes reconstruct training images or text from the gradient updates alone, so federated learning does not provide perfect privacy by itself
+- **Gradient inversion attacks** (Zhu et al., 2019) showed that an honest-but-curious aggregation server (one that follows the protocol but tries to learn from what it sees) can sometimes reconstruct training images or text from the gradient updates alone, so federated learning does not provide perfect privacy by itself
 
 FL is strongest when combined with DP (adding calibrated noise to gradient updates before sharing) and secure aggregation (cryptographic techniques that keep the server from seeing any individual client's update).
 
@@ -250,7 +250,7 @@ FL is strongest when combined with DP (adding calibrated noise to gradient updat
 Three approaches remove PII from text before training or inference:
 
 1.  **Regex patterns**: Fast and cheap.  Reliably catches structured PII such as phone numbers in standard formats, Social Security numbers, email addresses, and credit card numbers.  Misses unstructured PII such as names inside natural prose or addresses in non-standard formats.
-2.  **NER (Named Entity Recognition) models**: ML models such as spaCy and Microsoft Presidio that detect entities including PERSON, LOCATION, ORG, and DATE.  Better recall than regex on natural language text.  But they produce false positives (flagging common words as names) and still miss domain-specific PII such as employee badge numbers or patient MRN codes.
+2.  **NER (Named Entity Recognition) models**: ML models such as spaCy and Microsoft Presidio that detect entities including PERSON, LOCATION, ORG, and DATE.  Better recall than regex on natural language text.  But they produce false positives (flagging common words as names) and still miss domain-specific PII such as employee badge numbers or patient medical record numbers (MRNs).
 3.  **LLM-based redaction**: Use a language model to find and replace PII in context, including implicit PII conveyed by context rather than by an explicit identifier.  Most accurate but most expensive, and it depends on the very technology whose outputs may contain PII.
 
 **Comparison of Privacy-Preserving Techniques**
@@ -258,14 +258,14 @@ Three approaches remove PII from text before training or inference:
 | Technique | What It Protects | Implementation Complexity | Accuracy Cost | Practical Limitation |
 |-----------|-----------------|--------------------------|---------------|---------------------|
 | Differential Privacy | Statistical inference about whether any individual's record was in the training set | High: requires careful noise calibration per query type | Moderate to severe depending on ε and task complexity | Extremely hard to apply meaningfully to large language models; ε values achievable at LLM scale are often too loose to provide strong guarantees |
-| Federated Learning | Raw data leaving the client's premises or network | High: requires distributed infrastructure, an aggregation protocol, and synchronization across clients | Low to moderate: non-IID data distributions across clients can harm model quality | Gradient inversion attacks undermine privacy guarantees; communication overhead slows training; client dropout creates uneven updates |
+| Federated Learning | Raw data leaving the client's premises or network | High: requires distributed infrastructure, an aggregation protocol, and synchronization across clients | Low to moderate: non-IID data distributions across clients (each client's data follows a different distribution) can harm model quality | Gradient inversion attacks undermine privacy guarantees; communication overhead slows training; client dropout creates uneven updates |
 | PII Scrubbing | Verbatim PII appearing in training data or in real-time prompts and responses | Low to medium: regex is easy to implement; NER models require setup; LLM-based scrubbing requires an additional model call | Low if recall is high: scrubbing accurate PII tokens does not degrade model utility | Cannot remove all forms of re-identifiable information; implicit PII conveyed through context requires semantic understanding to detect |
 
 > **Common Misconception:** Many people assume that "anonymizing" a dataset before training fully protects privacy.  In practice, anonymization is nearly impossible for rich text data.  Clinical notes, support tickets, and personal narratives contain combinations of rare details (unusual diagnoses, specific events, distinctive writing styles) that remain re-identifiable even after named entities are removed.  Differential privacy is the only technique that provides a *formal* guarantee.  Even then, the strength of the guarantee depends entirely on the ε value chosen and the size of the dataset.
 
 ### Critical Thinking Questions
 
-**Question 4.**  A hospital wants to fine-tune a clinical NLP model.  They are choosing between ε = 0.1 and ε = 10 for differential privacy.  They are optimizing for early detection of rare diseases from clinical notes, where accuracy is critical.  Which value would you recommend, and what trade-off are you accepting?  Is there a better approach than a binary choice between these two values?
+**Question 4.**  A hospital wants to fine-tune a clinical natural language processing (NLP) model.  They are choosing between ε = 0.1 and ε = 10 for differential privacy.  They are optimizing for early detection of rare diseases from clinical notes, where accuracy is critical.  Which value would you recommend, and what trade-off are you accepting?  Is there a better approach than a binary choice between these two values?
 
 > *Hint:* ε = 0.1 adds so much noise that the model may be unable to learn patterns for rare diseases; if only 5 patients in the dataset have the rare condition, the noise swamps the signal.  ε = 10 provides a formal guarantee that is technically valid but practically loose.  Are there better alternatives?  Consider training on high-quality synthetic patient data generated from a separately privacy-protected model, using federated learning without DP on already-aggregated statistics, or carefully limiting what the model is allowed to output even if training is less private.
 
@@ -477,7 +477,7 @@ Generative AI has created a legal and ethical crisis in creative fields.  Public
 
 #### Training on Copyrighted Work
 
-When an AI company scrapes copyrighted images, books, or music to train a model, is that infringement?  The legal question is whether training is a reproduction of the original work, a "transformative use" protected under the US fair use doctrine, or a permitted "text-and-data mining" activity under EU law.  Key active cases include **Getty Images v.  Stability AI** (filed 2023), **Andersen v.  Stability AI** (illustrators' class action), and several consolidated author class actions against OpenAI and Meta.
+When an AI company scrapes copyrighted images, books, or music to train a model, is that infringement?  The legal question is whether training is a reproduction of the original work, a "transformative use" protected under the US fair use doctrine, or a permitted "text-and-data mining" activity under EU law.  Key active cases include **Getty Images v. Stability AI** (filed 2023), **Andersen v. Stability AI** (illustrators' class action), and several consolidated author class actions against OpenAI and Meta.
 
 The training/output distinction matters legally.  Even if training is eventually found to infringe, a specific AI output that does not reproduce copyrightable expression from a specific work may itself be non-infringing.  And even if training is found to be fair use, an AI output that is substantially similar to a specific work it was trained on could still infringe that work's copyright.
 
@@ -553,7 +553,7 @@ Generative AI does more than replace human creativity.  Increasingly it collabor
 
 **AI-assisted novel writing.**  Several published novels have used a pipeline of AI tools: Midjourney for concept art to set a scene's mood, a language model for draft prose, and human editors for selection, revision, voice, and coherence.  At what percentage of AI-generated words does authorship shift meaningfully?  Does the answer change if the human's contribution is mainly *choosing* among AI outputs rather than writing prose directly?
 
-**AI in drug discovery.**  Generative models propose novel molecular structures; human researchers validate them computationally and then in wet-lab experiments.  AlphaFold's protein structure predictions and generative chemistry models have shortened drug discovery timelines dramatically.  Here, AI collaboration is widely seen as clearly beneficial: the AI generates candidates, and humans verify them and make deployment decisions.  Does the fact that lives are saved change the ethical calculus around the collaboration?
+**AI in drug discovery.**  Generative models propose novel molecular structures; human researchers validate them computationally and then in wet-lab experiments.  AlphaFold's protein structure predictions and generative chemistry models have shortened parts of the drug discovery pipeline, especially early structure prediction and candidate generation.  Here, AI collaboration is widely seen as clearly beneficial: the AI generates candidates, and humans verify them and make deployment decisions.  Does the fact that lives are saved change the ethical calculus around the collaboration?
 
 #### The Diminishing-Returns Hypothesis
 
@@ -595,7 +595,7 @@ As AI pushes the marginal cost of generating creative content toward zero, the s
 
 *What to do:* Find one ongoing or recently decided legal case about AI and copyright.  Research the case using primary and secondary sources and write a structured summary.
 
-*Starter hint:* Good cases to research (search by name): Getty Images v.  Stability AI (visual artists, UK and US cases running in parallel); Andersen v.  Stability AI (illustrator class action, ongoing); the Authors Guild class action against OpenAI (book authors, multiple consolidated cases); Concord Music Group v.  Anthropic (song lyrics in AI outputs).  For each case, look for the original complaint (available on PACER or summarized in legal news), any published opinions or orders, and commentary by intellectual property law professors or practitioners.
+*Starter hint:* Good cases to research (search by name): Getty Images v. Stability AI (visual artists, UK and US cases running in parallel); Andersen v. Stability AI (illustrator class action, ongoing); the Authors Guild class action against OpenAI (book authors, multiple consolidated cases); Concord Music Group v. Anthropic (song lyrics in AI outputs).  For each case, look for the original complaint (available on PACER or summarized in legal news), any published opinions or orders, and commentary by intellectual property law professors or practitioners.
 
 *You've succeeded when:* Your summary covers (a) who the plaintiff is and what specific harm they allege, in concrete terms; (b) who the defendant is and what specific legal defense they assert (fair use? lack of substantial similarity? something else?); and (c) the central legal question the court must resolve, stated precisely enough that someone unfamiliar with the case could see what outcome would matter and why.  You do not need to predict the outcome.
 

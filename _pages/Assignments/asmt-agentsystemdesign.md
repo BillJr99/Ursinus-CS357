@@ -87,7 +87,7 @@ tags:
 
 Every trustworthy agent system exists twice: once as running code, and once on paper, as the specification, contract, and gates that say what it is supposed to do, what it must never do, and how anyone would know the difference.  In this assignment you write that paper system.
 
-You choose one of two directions.  **Direction A** designs a system that does not exist yet: a spec-first design document of the kind engineering teams call a design proposal, system spec, or RFC.  **Direction B** designs the operating system *around* an agent: the charter, contract, gates, and handoff state that make it trustworthy, interruptible, and independent of any single model or vendor, and then proves it works by interrupting a session mid-task.
+You choose one of two directions.  **Direction A** designs a system that does not exist yet: a spec-first design document of the kind engineering teams call a design proposal, system spec, or RFC (request for comments).  **Direction B** designs the operating system *around* an agent: the charter, contract, gates, and handoff state that make it trustworthy, interruptible, and independent of any single model or vendor, and then proves it works by interrupting a session mid-task.
 
 Both directions include an Observability, Traceability, and Handoff Protocol: the part of the design that says what gets logged, how a decision traces back to the rule that produced it, and what a fresh process reads when it starts or restarts.  In both, the document *is* the deliverable, and polish matters exactly as much as it would in production, because in Direction B these documents are the production system.  Read both directions before choosing, then complete **one** in full depth.  Depth on one is worth far more than a shallow pass over both.
 
@@ -233,7 +233,7 @@ Imagine your system has been deployed for two weeks and has failed.  Working bac
 |---|---|---|
 | *(be specific: name the agent, the input type, the output fault)* | *(name a specific observable signal, not "we would notice")* | *(name an action your system or team could actually take, not "we would be more careful")* |
 
-**Required coverage (not negotiable; these are the two most common failure categories in real multi-agent deployments):** at least one row must address a failure where two agents produce contradictory or incompatible outputs, and at least one row must address a risk involving user data or privacy.
+**Required coverage (not negotiable; these are two failure categories that come up again and again in multi-agent deployments):** at least one row must address a failure where two agents produce contradictory or incompatible outputs, and at least one row must address a risk involving user data or privacy.
 
 Example row:
 

@@ -41,7 +41,7 @@ In this part, you will understand why a local Obsidian vault is invisible to age
 
 ## The Locality Problem and the Git Solution
 
-Agents read files.  When you run OpenCode or pi.ai in a project directory, the agent can see every file in that directory tree.  But your Obsidian vault is somewhere else (probably `~/Documents/Obsidian/MyVault` or a similar location) and unless you explicitly point an agent at it, the agent has no idea it exists.  This is the **locality problem**: your knowledge lives in one place; your agents work in another.
+Agents read files.  When you run OpenCode or pi (the minimal terminal coding agent from pi.dev, covered in the [Agent CLIs tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs); not the pi.ai chatbot) in a project directory, the agent can see every file in that directory tree.  But your Obsidian vault is somewhere else (probably `~/Documents/Obsidian/MyVault` or a similar location) and unless you explicitly point an agent at it, the agent has no idea it exists.  This is the **locality problem**: your knowledge lives in one place; your agents work in another.
 
 There are two ways to bridge the gap.  The expensive way is a retrieval-augmented generation (RAG) pipeline: embed every note as a vector, run a similarity search on each query, and inject the top results.  RAG is powerful for large vaults but requires infrastructure.  The cheap, reliable alternative is **file-based context**: make the vault a git repository, push it to GitHub, and let agents clone or read it directly.  Every note is already plain Markdown.  No embedding pipeline required.  No vector database to maintain.  Agents that can read files can read your vault.  This is the bet Andrej Karpathy's [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) gist makes as well, and Part IV of this tutorial walks the setup: rather than searching raw documents on every query, you have the agent *compile* them into a maintained wiki whose `index.md` is the retrieval layer.  [The Second Brain]({{ site.baseurl }}/Tutorials/SecondBrain) covers what the pattern is and why it works; this page is the wiring.
 
@@ -116,7 +116,7 @@ Categories to exclude by policy:
 - **Credentials and API keys**: never in plaintext, anywhere, ever.  Use a password manager.  This matters twice over in a vault you point an agent at: a key sitting in a note is a key the agent will read and may quote back, and a key you paste into a prompt is one you can no longer un-send.  Revoke rather than hope.
 - **Legal/medical/financial records**: subject to breach notification requirements even from private repos.
 - **Information belonging to others**: private conversations, contact details, notes about third parties who did not consent.
-- **Work product with an NDA**: your employer's confidential information does not belong in your personal vault.
+- **Work product covered by a non-disclosure agreement (NDA)**: your employer's confidential information does not belong in your personal vault.
 
 A rule of thumb: the vault is for *your knowledge about the world*, not *secrets that unlock access to the world*.
 
@@ -124,7 +124,7 @@ A rule of thumb: the vault is for *your knowledge about the world*, not *secrets
 
 1.  You generate a fine-grained PAT scoped to Contents read/write on your vault repo.  Your roommate generates a classic `repo`-scope PAT for the same task.  Compare what an attacker gains from each token if it leaks.  Which token does the principle of least privilege select, and why?
 
-    > *Hint:* A fine-grained PAT scoped to one repo gives access to exactly one repository's file contents.  A classic `repo`-scope PAT gives read/write access to every repository in your account, including private ones you haven't mentioned.  Consider: if the token appeared in a public CI log, what is the blast radius of each?
+    > *Hint:* A fine-grained PAT scoped to one repo gives access to exactly one repository's file contents.  A classic `repo`-scope PAT gives read/write access to every repository in your account, including private ones you haven't mentioned.  Consider: if the token appeared in a public continuous integration (CI) log, what is the blast radius of each?
 
 2.  The plugin's auto-push interval defaults to 5 minutes.  A student changes it to 60 minutes to reduce API calls.  Describe a concrete scenario where the 60-minute interval causes a problem that the 5-minute interval would have caught in time.
 
@@ -142,11 +142,11 @@ With your vault synced to GitHub and your `.gitignore` keeping the commit histor
 
 # Part II: The Vault as Agent Context (Read Path)
 
-In this part, you will learn how agents read from files, build a vault index that lets an agent navigate without reading everything, and wire OpenCode and pi.ai to your vault so they start every session informed by your notes.
+In this part, you will learn how agents read from files, build a vault index that lets an agent navigate without reading everything, and wire OpenCode and pi to your vault so they start every session informed by your notes.
 
 ## File-Based Context vs. RAG
 
-There are two ways to get your vault contents into an agent's context window.  Understanding the tradeoff guides your design choice.
+There are two ways to get your vault contents into an agent's context window, and the tradeoff between them guides your design choice.
 
 | Approach | How It Works | When to Use It | Limitation |
 |----------|-------------|----------------|------------|
@@ -154,7 +154,7 @@ There are two ways to get your vault contents into an agent's context window.  U
 | **RAG (Retrieval-Augmented Generation)** | Embed every note as a vector; at query time, retrieve the top-k most similar notes and inject only those. | Large vaults (hundreds of notes) where you cannot predict which notes are relevant to any given query. | Requires a running embedding model and vector store (e.g., Chroma, Qdrant). More infrastructure, more failure modes. |
 {: .tb-full}
 
-For the local agents in this course (OpenCode, pi.ai, Ollama-backed tools), file-based injection is almost always the right starting point.  It requires no infrastructure, it is transparent (you can see exactly what the agent sees), and it is fast.
+For the local agents in this course (OpenCode, pi, Ollama-backed tools), file-based injection is almost always the right starting point.  It requires no infrastructure, it is transparent (you can see exactly what the agent sees), and it is fast.
 
 ### The Vault Index Pattern
 
@@ -252,9 +252,9 @@ described in Part III of the vault's standing-instructions.md.
 
 Because OpenCode reads and follows `AGENTS.md` at session start, this instruction is applied automatically every time you open a session in that project directory; no flags, no pasting.
 
-### Pointing pi.ai at Your Vault
+### Pointing pi at Your Vault
 
-pi.ai reads a minimal `pi.md` context file if one is present in the working directory.  Add a knowledge directory reference:
+pi reads a minimal `pi.md` context file if one is present in the working directory.  Add a knowledge directory reference:
 
 ```markdown
 
@@ -321,19 +321,19 @@ In this part, you will learn why agent write-back matters, design a structured m
 
 ## Persistent Memory via Write-Back
 
-An agent that reads your vault but never writes to it is a student who does your homework but never updates your notes.  Every insight the agent produces, every decision it makes with you, every refinement it surfaces: all of it disappears when the session ends.  The next session starts from the same place as the last one.  Over weeks, this is a significant waste.
+An agent that reads your vault but never writes to it is a student who does your homework but never updates your notes.  Every insight the agent produces, every decision it makes with you, every refinement it surfaces: all of it disappears when the session ends.  The next session starts from the same place as the last one.  Over weeks, that waste adds up.
 
 Write-back solves this: at the end of a session, the agent appends a structured summary to `memories/session-log.md`.  Every future session reads that log as part of its context injection, so the accumulated record of past sessions is available as context from the start.
 
 ### The Memory Entry Format
 
-Structure each memory entry with YAML frontmatter for machine-readable metadata and a narrative body for human and agent readability:
+Structure each memory entry with a fenced YAML metadata block for machine-readable metadata (true YAML front matter is only valid at the very top of a file, and every entry after the first sits further down) and a narrative body for human and agent readability:
 
-```markdown
+````markdown
 
 ## 2026-06-21
 
----
+```yaml
 date: 2026-06-21
 project: cs357-rag-pipeline
 agent: opencode
@@ -341,7 +341,7 @@ key_decisions:
   - "Chose Chroma over Qdrant: team knows Python, Chroma has no external server"
   - "Chunking strategy: 512 tokens, 64-token overlap, paragraph boundaries preferred"
   - "Embedding model: nomic-embed-text via Ollama (already in our stack)"
----
+```
 
 Worked on the chunking module for the RAG pipeline assignment. The main design
 question was chunking strategy. After testing three approaches (fixed-size,
@@ -355,7 +355,7 @@ configurable without code changes.
 
 Next session should start with: reviewing the embedding step and connecting
 it to the retrieval query path.
-```
+````
 
 The YAML block lets a script extract structured data (dates, projects, decisions) without parsing prose.  The narrative body lets a future agent (or you) understand what happened in context.  Together they serve both audiences.
 
@@ -378,7 +378,7 @@ At the end of every session, before closing:
 
 1. Create a new section in ~/Documents/Obsidian/MyVault/memories/session-log.md
    with today's date as the heading (## YYYY-MM-DD).
-2. Write a YAML frontmatter block with: date, project name, agent (opencode),
+2. Write a YAML metadata block, fenced as a yaml code block, with: date, project name, agent (opencode),
    and a list of key_decisions (2-5 bullet points, each a complete sentence).
 3. Write a narrative paragraph summarizing what was accomplished and why the
    key decisions were made.
@@ -438,9 +438,9 @@ Add a new section with today's date at the bottom of the file, below all existin
 
 ### Questions to Work Through
 
-7.  The YAML frontmatter in each memory entry includes `key_decisions` as a list.  Write a ten-line Python function that parses `session-log.md` and returns all `key_decisions` entries tagged with a given `project` name, as a flat list of strings.
+7.  The YAML metadata block in each memory entry includes `key_decisions` as a list.  Write a ten-line Python function that parses `session-log.md` and returns all `key_decisions` entries tagged with a given `project` name, as a flat list of strings.
 
-    > *Hint:* Each entry is separated by `## YYYY-MM-DD`.  Within each entry, the YAML block is between the `---` delimiters.  You can use the `yaml` module to parse the frontmatter.  Walk through the file section by section: when you find a `## ` heading, start a new section; when you hit the second `---`, you've finished the frontmatter for that section.
+    > *Hint:* Each entry is separated by `## YYYY-MM-DD`.  Within each entry, the YAML block is between the opening yaml code fence and its closing fence.  You can use the `yaml` module to parse that block.  Walk through the file section by section: when you find a `## ` heading, start a new section; when you hit the closing fence, you've finished the metadata for that section.
 
 8.  An agent rewrites `session-log.md` instead of appending.  You don't notice for three weeks.  Describe the specific data loss that occurred and explain why git history does not fully protect you from this mistake.
 
@@ -466,7 +466,7 @@ In this part, you will execute each component of the vault-agent system from scr
 When all four pieces are working, the session rhythm looks like this:
 
 1.  You edit notes in Obsidian on any device.  The plugin pushes them to GitHub within 5 minutes.
-2.  You start an OpenCode or pi.ai session.  The agent reads `agent-context/` and `_index.md` before any task.
+2.  You start an OpenCode or pi session.  The agent reads `agent-context/` and `_index.md` before any task.
 3.  The agent works with you.  It navigates to relevant vault notes as needed using the index.
 4.  At session end, the agent appends a structured memory entry to `memories/session-log.md` and commits it.
 5.  You open Obsidian, sync once, and the session memory is visible as a note.
@@ -631,9 +631,9 @@ Note the shape all three share: the agent reports before it writes, and you appr
 
 Everything below is optional.  Nothing here is collected and nothing here is graded; this is a tutorial, and the exercises exist so that you can sync a vault of your own and watch an agent navigate it rather than only read about it.  Each one ends with a check you apply yourself, so you can tell whether it worked.
 
-1.  **Set up Gitless Sync on your Obsidian vault and confirm push to GitHub.**
+1.  **Set up Obsidian Git sync on your Obsidian vault and confirm push to GitHub.**
 
-    *What to do:* Complete the five-step setup from Model 1 (create private repo, generate fine-grained PAT, initialize git in vault, install Obsidian Git plugin, configure auto-push).  Create one new note titled `test-sync.md`, wait for the auto-push interval, and verify the note appears in your GitHub repository.  Check for yourself that the GitHub repository shows `test-sync.md` in the commit history, and confirm that your PAT does not appear in any screenshot or settings view you captured.
+    *What to do:* Complete the setup steps from *The Locality Problem and the Git Solution* in Part I (create private repo, generate fine-grained PAT, initialize git in vault, install Obsidian Git plugin, configure auto-push).  Create one new note titled `test-sync.md`, wait for the auto-push interval, and verify the note appears in your GitHub repository.  Check for yourself that the GitHub repository shows `test-sync.md` in the commit history, and confirm that your PAT does not appear in any screenshot or settings view you captured.
 
     *Starter hint:* If auto-push does not fire, check the plugin's status bar icon in Obsidian (bottom right); it shows sync status.  You can also trigger a manual push with the command palette (`Ctrl+P` or `Cmd+P`): search for "Obsidian Git: Commit and push all changes".
 
@@ -641,7 +641,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 2.  **Write a `_index.md` for your vault and verify an agent can use it to navigate.**
 
-    *What to do:* Create `_index.md` at the root of your vault following the structure in Model 2.  Include at least 8 entries across at least 3 topic sections.  Then start an OpenCode or pi.ai session, give the agent only the path to `_index.md` and a question whose answer is in one of your listed notes, and observe whether the agent navigates correctly to that note.  Reread your `_index.md` next to the agent's answer and write yourself a two-sentence note on whether the agent used the index successfully and what (if anything) it missed.
+    *What to do:* Create `_index.md` at the root of your vault following the structure in *The Vault Index Pattern* in Part II.  Include at least 8 entries across at least 3 topic sections.  Then start an OpenCode or pi session, give the agent only the path to `_index.md` and a question whose answer is in one of your listed notes, and observe whether the agent navigates correctly to that note.  Reread your `_index.md` next to the agent's answer and write yourself a two-sentence note on whether the agent used the index successfully and what (if anything) it missed.
 
     *Starter hint:* Ask the agent something specific: "Based on my vault index at `~/Documents/Obsidian/MyVault/_index.md`, which note should I look at for information about [topic]?  Read that note and summarize its key point."  This forces the agent to use the index rather than guessing.
 
@@ -649,17 +649,17 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 3.  **Write a session memory entry by hand, then script it so OpenCode does it automatically.**
 
-    *What to do:* First, manually write one well-formed memory entry in `memories/session-log.md`, following the YAML frontmatter format from Model 3.  Commit and push it.  Then add the Memory Write-Back Protocol to your project's `AGENTS.md` and start an OpenCode session.  After completing any small task, verify that OpenCode appended a new entry at the bottom of `session-log.md` without modifying your hand-written entry.  Read the file after the agent's write and confirm for yourself that both entries are visible.
+    *What to do:* First, manually write one well-formed memory entry in `memories/session-log.md`, following the YAML metadata format from *The Memory Entry Format* in Part III.  Commit and push it.  Then add the Memory Write-Back Protocol to your project's `AGENTS.md` and start an OpenCode session.  After completing any small task, verify that OpenCode appended a new entry at the bottom of `session-log.md` without modifying your hand-written entry.  Read the file after the agent's write and confirm for yourself that both entries are visible.
 
-    *Starter hint:* After adding the protocol to `AGENTS.md`, tell OpenCode explicitly at the end of the session: "We're done; please write the session memory entry now."  Review the result before committing.  Check that the YAML frontmatter is well-formed (valid YAML, no tab characters), and that the `## 2026-XX-XX` heading is at the bottom.
+    *Starter hint:* After adding the protocol to `AGENTS.md`, tell OpenCode explicitly at the end of the session: "We're done; please write the session memory entry now."  Review the result before committing.  Check that the YAML metadata block is well-formed (valid YAML, no tab characters), and that the `## 2026-XX-XX` heading is at the bottom.
 
-    *You've succeeded when:* `session-log.md` contains your hand-written entry unchanged at the top, and the agent's new entry below it, separated by the correct heading and frontmatter.
+    *You've succeeded when:* `session-log.md` contains your hand-written entry unchanged at the top, and the agent's new entry below it, separated by the correct heading and metadata block.
 
 4.  **Design the folder structure for a vault that is both a personal knowledge base and an AI project memory.**
 
     *What to do:* Design (on paper or in a Markdown file) the complete folder structure for a vault that you would actually use for the rest of this course and beyond.  The structure must support: (a) human-authored course notes that agents can read; (b) an agent context folder injected at session start; (c) an append-only session memory log; (d) a read-only inbox for source material (PDFs, transcripts); (e) at least one personal project area.  For each folder, write one sentence explaining its purpose and who (human, agent, or both) is expected to write to it.  Reread the annotated folder tree yourself and check that no folder is missing its sentence.
 
-    *Starter hint:* Start from the reference structure in Model 4 and adapt it.  Ask yourself: where do my class notes actually live today?  Where should the agent's memories go so I can find them in Obsidian's graph view?  What is the one source of truth for "what am I working on right now"?  Your design should answer all three.
+    *Starter hint:* Start from the *Reference Folder Structure* in Part IV and adapt it.  Ask yourself: where do my class notes actually live today?  Where should the agent's memories go so I can find them in Obsidian's graph view?  What is the one source of truth for "what am I working on right now"?  Your design should answer all three.
 
     *You've succeeded when:* Every folder in your design has a clear owner (human, agent, or both), the structure satisfies all five requirements, and you can explain in one sentence why the `raw/` folder must be read-only for agents.
 
