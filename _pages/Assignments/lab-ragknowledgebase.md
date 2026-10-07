@@ -60,7 +60,7 @@ info:
       preemerging: An incomplete submission is provided
       beginning: The program is submitted, but not according to the directions in one or more ways
       progressing: The program is submitted according to the directions with a minor omission, with at least superficial responses to the reflection prompts
-      proficient: The program is submitted according to the directions, including a readme writeup, a pair programming log with at least two timestamped role swaps, a corpus datasheet covering sources, time range, representation gaps, and known limitations, and reflection answers that each cite a specific experimental result from the lab rather than restating the prompt
+      proficient: The program is submitted according to the directions, including a readme writeup, a pair programming log with at least two timestamped role swaps (if you worked in a pair), a corpus datasheet covering sources, time range, representation gaps, and known limitations, and reflection answers that each cite a specific experimental result from the lab rather than restating the prompt
     - weight: 12
       description: "Quality Checkup: Benchmark Design"
       preemerging: Fewer than ten items exist, or items lack expected answers
@@ -125,7 +125,7 @@ tags:
 
 ---
 
-In this lab, you and your partner build a question-answering system, a retrieval-augmented generation (RAG) pipeline, over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  This is a **pair lab**: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.
+In this lab, you build a question-answering system, individually or with a partner, a retrieval-augmented generation (RAG) pipeline, over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  **Pair policy.**  You may do this lab in pairs: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.
 
 ---
 
@@ -582,7 +582,7 @@ It sits mid-window on purpose.  Your pipeline is running by then and not yet due
 
 The metrics come from *RAG and Fine-Tuning: Retrieval Quality and LoRA*.  That session walks through Part 5 before the lab is handed out; do the worksheet itself mid-window, with your pipeline-in-progress in front of you, and bring stuck points to office hours.
 
-The harness follows you forward: the rubric judge you build in the Judge Pipeline Workshop grows from the same pattern, and Evaluation Workshop II turns that judge on your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
+The harness follows you forward: the rubric judge you build in the Judge Pipeline Workshop grows from the same pattern, and Evaluation Workshop II turns that judge on your own project work.  Work on your own pipeline and corpus (your pair's, if you have a partner), and keep the swap log going if you are pairing.
 
 ### Before You Start Part 5
 
@@ -599,7 +599,7 @@ Sanity check before you start: `python3 ask.py "a question your corpus should be
 
 ### Choose Your Part 5 Route
 
-Same rubric, same credit.  Step 5a is identical on every route (designing ten good items is the assignment, and the file format is a detail), and so is the judgment in the rest of Part 5: which configuration wins, which citations are real, what the failure means.  The routes differ only in how you collect and rerun the numbers.  Pairs on Direction 0 usually take the no-code or low-code route; pairs who coded Parts 2 and 3 usually take the code route.  Any combination is allowed.
+Same rubric, same credit.  Step 5a is identical on every route (designing ten good items is the assignment, and the file format is a detail), and so is the judgment in the rest of Part 5: which configuration wins, which citations are real, what the failure means.  The routes differ only in how you collect and rerun the numbers.  Students on Direction 0 usually take the no-code or low-code route; students who coded Parts 2 and 3 usually take the code route.  Any combination is allowed.
 
 | Route | Golden set and harness | How you measure | Pick this if |
 |-------|------------------------|-----------------|--------------|
@@ -914,7 +914,7 @@ Context:
 
 > **Do this.**
 > 1. Complete core Part 4 unchanged: audit every citation in a sample of at least ten answers from your shipped flow by hand, report a faithfulness rate, and classify failures with the hallucination taxonomy.  The playground's node-inspection view shows exactly which chunk text the model was given; check each bracketed citation against its source chunk there.
-> 2. Write the readme, datasheet, learning log, and pair log to the core lab's requirements, and add one paragraph on what the canvas made easier and what it hid from you compared with the code your classmates wrote.
+> 2. Write the readme, datasheet, learning log, and (if you paired) pair log to the core lab's requirements, and add one paragraph on what the canvas made easier and what it hid from you compared with the code your classmates wrote.
 
 ### Direction 0 Deliverables
 
@@ -1255,7 +1255,7 @@ In the core lab you audited whether a model faithfully used *text* you retrieved
 
 You build a Monte Carlo retirement simulation, send its chart to a local vision model, and find that AI image analysis is strong at pattern recognition and fragile on numerical precision.  A Monte Carlo simulation, rather than projecting one "expected" future, draws a thousand possible return sequences and looks at the spread of endings, which is what matters for a decision whose consequences compound for decades.
 
-The ground-truth-versus-AI-claim audit is the citation audit applied to pixels instead of passages.  Work in driver/navigator pairs as in the core lab, swapping at least every 30 minutes, and keep the swap log.
+The ground-truth-versus-AI-claim audit is the citation audit applied to pixels instead of passages.  If you are pairing, work as driver and navigator as in the core lab, swapping at least every 30 minutes, and keep the swap log.
 
 > **What this direction requires.**
 > - **Accounts:** none.
@@ -1529,7 +1529,7 @@ Fold these into the submission ZIP and readme:
 - `tool_call_transcript.txt`: the Step E transcript: the user goal, the model's tool call (name and arguments), the tool's returned statistics, and the model's interpretation
 - Step E critique (in the readme): the agent's parameter choices and its interpretation, each audited against `simulation_stats.txt` and the tool's stats dict, with verbatim excerpts
 - A readme section covering: (1) the sensitivity analysis with all three scenarios and four statistics each, (2) the critical analysis with three AI/human comparison items including at least one AI error with a verbatim excerpt, (3) the prompt engineering change you tested and whether it helped, (4) your guardrail statement
-- `pair_log.txt`: the driver/navigator swap log with timestamps and roles
+- `pair_log.txt` (if you worked in a pair): the driver/navigator swap log with timestamps and roles
 
 **What proficient work looks like.**
 
@@ -1562,7 +1562,7 @@ Submit one ZIP.  Fix random seeds and list software version information so the w
 | Evaluation results (CSV or table): recall@k for k in {1, 3, 5} under both strategies, with the defended choice | The chunking decision rests on numbers | Chunking Strategy and Justification |
 | Audit results: the ten-row table, the faithfulness rate, failures verbatim and classified | Citations were checked by hand | Evaluation and Citation Audit |
 | Transcripts or log: five cited answers, two abstentions, the bare-model contrast | All three required behaviors | Pipeline Implementation |
-| Pair log with at least two timestamped role swaps | Driver/navigator discipline | Writeup, Reflection, and Submission |
+| Pair log with at least two timestamped role swaps (if you worked in a pair) | Driver/navigator discipline | Writeup, Reflection, and Submission |
 | Readme writeup (about two pages) with the route named at the top, the learning log, and reflection answers | Each answer cites a specific experimental result | Writeup, Reflection, and Submission |
 | Golden set (`goldenset.json`, the promptfoo YAML case list, or the spreadsheet CSV) | Ten items with question, expected, rule, and rationale | Quality Checkup: Benchmark Design |
 | `checkup.md`, with the Part 5 route named at the top | Real measurements from your own pipeline plus the prediction-versus-outcome miss analysis | Quality Checkup: The Checkup Worksheet |
@@ -1584,7 +1584,7 @@ Held against the rubric's `proficient` column.  On Direction 0, read "code" as "
 - [ ] Chunk size, overlap, top-k, abstention threshold, and model name are in a **config file** (or in the exported flow JSON).
 - [ ] Located exception handlers with tracebacks on network, embedding, and database calls.
 - [ ] Corpus **datasheet** covers sources, time range, representation gaps, and known limitations.
-- [ ] Pair log with at least two timestamped role swaps.
+- [ ] If I worked in a pair: pair log with at least two timestamped role swaps.
 - [ ] Every reflection answer cites a specific experimental result of mine.
 - [ ] The route I took is named at the top of the writeup.
 

@@ -86,7 +86,7 @@ In every agent system you build this semester, the expensive and durable part is
 
 So this lab inverts the usual order.  You write the instruction layer first, and only then do you let an agent build anything.  By the end you will have seven things: a configured opencode project, a charter with ranked values, an agent contract with real confirmation gates, a project memory the agent writes to, one gate the harness enforces, one artifact of your own choosing, and proof that a fresh session can pick the work up from the repository alone.  The artifact can be software, a document, or an automation.  All three routes are graded identically, and Part 1 helps you choose.
 
-**Work on this one individually.**  The Local Agent Lab that follows owns the pair programming requirement and its swap log.  Here, the cold handoff in Part 6 only means something if nobody in the room is carrying the context in their head, and a partner quietly defeats that.
+**Work on this one individually.**  The Local Agent Lab that follows is where pair programming (optional) and its swap log come in.  Here, the cold handoff in Part 6 only means something if nobody in the room is carrying the context in their head, and a partner quietly defeats that.
 
 ---
 
