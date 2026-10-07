@@ -146,7 +146,7 @@ In this part, you will learn how agents read from files, build a vault index tha
 
 ## File-Based Context vs. RAG
 
-There are two ways to get your vault contents into an agent's context window.  Understanding the tradeoff guides your design choice.
+There are two ways to get your vault contents into an agent's context window, and the tradeoff between them guides your design choice.
 
 | Approach | How It Works | When to Use It | Limitation |
 |----------|-------------|----------------|------------|
@@ -321,7 +321,7 @@ In this part, you will learn why agent write-back matters, design a structured m
 
 ## Persistent Memory via Write-Back
 
-An agent that reads your vault but never writes to it is a student who does your homework but never updates your notes.  Every insight the agent produces, every decision it makes with you, every refinement it surfaces: all of it disappears when the session ends.  The next session starts from the same place as the last one.  Over weeks, this is a significant waste.
+An agent that reads your vault but never writes to it is a student who does your homework but never updates your notes.  Every insight the agent produces, every decision it makes with you, every refinement it surfaces: all of it disappears when the session ends.  The next session starts from the same place as the last one.  Over weeks, that waste adds up.
 
 Write-back solves this: at the end of a session, the agent appends a structured summary to `memories/session-log.md`.  Every future session reads that log as part of its context injection, so the accumulated record of past sessions is available as context from the start.
 

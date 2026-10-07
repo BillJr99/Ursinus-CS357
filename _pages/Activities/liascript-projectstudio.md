@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Project Studio and Gallery Walk
 
-This deck serves two sessions: Tuesday's studio and gallery walk, and Thursday's final integration and demo rehearsal (see the Thursday section below).  Today the classroom becomes a studio.  The *Project Studio: Sprint and Threat Model* session gave you a sprint plan and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.
+This deck covers two sessions: Tuesday's studio and gallery walk, and Thursday's final integration and demo rehearsal (see the Thursday section below).  Today the classroom becomes a studio.  The *Project Studio: Sprint and Threat Model* session gave you a sprint plan and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.
 
 ---
 
@@ -58,7 +58,7 @@ The second session is a rehearsal, not a work session.  The rehearsal rule: if y
 
 Stand-ups exist to surface the truth quickly.  In this first section, each team answers four fixed questions in two minutes, no more.  You use the stand-up to put the current state of your project in the room: real metrics, real blockers, and the single riskiest unfinished piece.  Getting this right before the gallery walk helps you point visitors at the things that most need feedback.
 
-The instinct to say "it's going pretty well" instead of "the evaluation harness reports 41%" is understandable and counterproductive.  The whole point of a stand-up is to get the real number into the room so the team and the instructor can help.  Think of it as a 120-second system health check: inputs (what you did), outputs (what the numbers say), and blockers (what is in the way).
+The instinct to say "it's going pretty well" instead of "the evaluation harness reports 41%" is understandable and counterproductive.  The point of a stand-up is to get the real number into the room so the team and the instructor can help.  Think of it as a 120-second system health check: inputs (what you did), outputs (what the numbers say), and blockers (what is in the way).
 
 ### 1.  Stand-Up (10 minutes)
 

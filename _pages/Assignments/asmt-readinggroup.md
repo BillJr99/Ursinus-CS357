@@ -139,7 +139,7 @@ The session structure and timing are unchanged: within the ten-minute session, y
 
 ## Seed Reading List
 
-These are suggested sources.  You are not limited to this list, propose others with instructor approval.
+These are suggested sources.  You are not limited to this list; propose others with instructor approval.
 
 ### Foundational Books (chapters or excerpts)
 
@@ -191,7 +191,7 @@ This one rewards the **Competing Texts** format above: stage it against a techno
 
 Prepare exactly **three to five** discussion questions.  They should progress in depth:
 
-1.  **Comprehension**, What did the source say?  (Ensures everyone is on the same page.)
+1.  **Comprehension**: What did the source say?  (Ensures everyone is on the same page.)
 2.  **Analysis**: What does this imply?  What are the assumptions behind it?
 3.  **Synthesis or Position**: What should we do, or what do you now believe?  (At least one question must be at this level.)
 
@@ -216,7 +216,7 @@ If you chose the **Competing Texts Session** format, your reflection must also i
 
 ## Grading
 
-This assignment is scored on the rubric above.  Leading a session earns a **10-point base grade**: the rubric's five criteria each contribute one-fifth, scaled by the proficiency level earned, Proficient, the top level, earns full credit (4 of 4) on that criterion.  On top of the base, you earn **extra credit** equal to your slot's extra-credit maximum (see the scale above), scaled by the same rubric proficiency.
+This assignment is scored on the rubric above.  Leading a session earns a **10-point base grade**: the rubric's five criteria each contribute one-fifth, scaled by the proficiency level earned.  Proficient, the top level, earns full credit (4 of 4) on that criterion.  On top of the base, you earn **extra credit** equal to your slot's extra-credit maximum (see the scale above), scaled by the same rubric proficiency.
 
 **Example:** a Week-5 leader (8 extra-credit points available) earning Proficient on all five criteria receives the full **10-point base grade** *and* the full **8 extra-credit points**; one earning Progressing (3 of 4) on all five criteria receives 10 × 0.75 = 7.5 base points and 8 × 0.75 = 6 extra-credit points added to the final grade.
 

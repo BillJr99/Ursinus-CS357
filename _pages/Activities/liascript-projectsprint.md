@@ -76,7 +76,7 @@ Before next time I will: ...
 I am blocked by / worried about: ...
 ```
 
-The third line is the one that matters: it is the psychological-safety line.  A standup where nobody is ever blocked is a standup where nobody is being honest.
+The third line is the one that matters: it is the psychological-safety line.  A stand-up where nobody is ever blocked is a stand-up where nobody is being honest.
 
 ### Critical Thinking Questions
 

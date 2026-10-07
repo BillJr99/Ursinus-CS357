@@ -6,3 +6,4 @@
 - [ ] Improve materials and tutorials on using the shell and configuring applications. (added 2026-09-25)
 - [ ] Eliminate "bring with you" items from the readings
 - [ ] Slow down the first half of the course: spread the early units (workbench and coding agents, local AI, skills, prompt engineering, the Karpathy and Gauntlet loops, tool use, and MCP) across more meetings, and shift the first-half deliverable dates to match, so each concept gets its own small, runnable step before the next begins. (added 2026-09-30)
+- [ ] Consider an assignment in which students fine-tune a small model with LoRA or build a RAG system over a corpus of their own, then compare the two on held-out questions (the Offline RAG and LoRA tutorial is a possible starting point). (added 2026-10-07)

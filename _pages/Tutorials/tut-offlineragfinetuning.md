@@ -68,7 +68,7 @@ pip install "torch==2.14.1" --index-url https://download.pytorch.org/whl/cpu   #
 
 ollama pull nomic-embed-text      # embeddings, 274 MB, Apache-2.0
 ollama pull llama3.2              # generator, 2.0 GB, Llama 3.2 Community License
-ollama pull qwen2.5:3b            # optional generator, 1.9 GB, Qwen Research License (check its terms before any commercial use)
+ollama pull qwen2.5:3b            # tool-calling generator for Section C, 1.9 GB, Qwen Research License (check its terms before any commercial use)
 
 export HF_HOME="$PWD/hf_home"     # keep the Hugging Face cache inside the project
 python - <<'EOF'
@@ -394,7 +394,7 @@ One chunk re-embedded, the answer changed, and no model was retrained.  That is 
 
 ## Section C: The Same RAG System Through Pydantic AI
 
-This section reuses `common.py` from the [Pydantic AI tutorial]({{ site.baseurl }}/Tutorials/PydanticAI) (put it beside these files, or keep the `sys.path` line below pointing at it).  It shows two designs.  **Path 1** keeps retrieval in your code, before the model is called, so it works with any model.  **Path 2** offers retrieval as a typed tool and lets the model decide when to search, which only works with a model that calls tools reliably.
+This section reuses `common.py` from the [Pydantic AI tutorial]({{ site.baseurl }}/Tutorials/PydanticAI) (put it beside these files, or keep the `sys.path` line below pointing at it).  Its default model is `qwen2.5:3b`, because Path 2 depends on tool calling and `qwen2.5:3b` calls tools far more reliably than `llama3.2`; Sections B and F keep `llama3.2` and SmolLM2, which never need to call a tool.  It shows two designs.  **Path 1** keeps retrieval in your code, before the model is called, so it works with any model.  **Path 2** offers retrieval as a typed tool and lets the model decide when to search, which only works with a model that calls tools reliably.
 
 ```python
 # rag_agent.py: the same RAG system through Pydantic AI, first explicit, then as a typed tool.
@@ -489,7 +489,7 @@ if __name__ == "__main__":
         sys.exit(1)
 ```
 
-The output validator in Path 1 checks two structural rules: every cited ID was actually retrieved, and an abstention cites nothing.  What it cannot check is whether the cited text **supports** the answer.  Our test with `qwen2.5:3b` (`MODEL=qwen2.5:3b python rag_agent.py "How much does filament cost?"`) shows the gap:
+The output validator in Path 1 checks two structural rules: every cited ID was actually retrieved, and an abstention cites nothing.  What it cannot check is whether the cited text **supports** the answer.  Our test with the default `qwen2.5:3b` (`python rag_agent.py "How much does filament cost?"`) shows the gap:
 
 ```text
 Path 1, explicit retrieval:

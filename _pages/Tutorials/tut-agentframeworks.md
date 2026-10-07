@@ -534,6 +534,7 @@ If you have not met Pydantic AI before, read [Pydantic AI From the Loop Up]({{ s
 ```bash
 pip install "pydantic-ai-slim[openai,mcp]" fastmcp
 ollama pull llama3.2               # any local model trained for tool calling will do
+ollama pull qwen2.5:3b             # recommended for the tool steps (4 to 6); export MODEL=qwen2.5:3b
 export PYDANTIC_AI_NO_BANNER=1     # hides a start-up banner that otherwise prints on every run
 ```
 
@@ -583,6 +584,9 @@ def show_context(i=-1):
 ```
 
 To route through OpenWebUI instead, set `BASE_URL=http://localhost:3000/api` and `API_KEY` to your OpenWebUI key before running; nothing else changes.
+
+> **Model choice for tools:** `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  `make_model()` reads the `MODEL` environment variable, so `export MODEL=qwen2.5:3b` switches every step without editing code.
+{: .tb-tip data-title="qwen2.5:3b for tool calling"}
 
 **Step 1: a basic request.**  An agent with instructions and nothing else:
 

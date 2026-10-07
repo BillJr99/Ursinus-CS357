@@ -20,7 +20,7 @@ Your individual Annotated Bibliographies for the Literature Review are due today
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Thoughtful people disagree on several of today's questions.  So the Reflector has one added duty: notice when the team agrees too quickly, and voice the strongest view nobody has raised.  After class, respond to the reflection prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Thoughtful people disagree on several of today's questions.  So the Reflector has one added duty: notice when the team agrees too quickly, and voice the strongest view nobody has raised.  After class, respond to the reflection prompt on your own in your notebook.
 
 ---
 
@@ -55,7 +55,7 @@ In this part, you trace how bias enters an AI system.  It does not enter once, a
 
 ## Model 1: Bias Is a Property of the Pipeline, Not a Bug in the Weights
 
-Start with an analogy.  Think of a newspaper that has been published for 100 years.  Train a language model on every issue, and the model learns 100 years of editorial decisions: which occupations were called prestigious, whose names appeared in which sections, whose voices were quoted as experts.  None of that is a bug in the printing press.  It is a property of the culture the newspaper was written in, and a model trained on the newspaper inherits it.  The analogy stops here: a newspaper archive sits on a shelf, while a model answers new questions every day, so the inherited associations reach far more people.  Today's code probe shows you exactly this effect.  It is not a flaw in the model's reasoning.  It is the statistical echo of who wrote the text the model was trained on.
+Start with an analogy.  Think of a newspaper that has been published for 100 years.  Train a language model on every issue, and the model learns 100 years of editorial decisions: which occupations were called prestigious, whose names appeared in which sections, whose voices were quoted as experts.  None of that is a bug in the printing press.  It is a property of the culture the newspaper was written in, and a model trained on the newspaper inherits it.  The analogy stops here: a newspaper archive sits on a shelf, while a model answers new questions every day, so the inherited associations reach far more people.  Today's code probe shows you this effect.  It is not a flaw in the model's reasoning.  It is the statistical echo of who wrote the text the model was trained on.
 
 Models learn the distribution they are fed.  A language model's probabilities estimate $P(\text{text})$ over its training corpus.  Whatever that corpus over- or under-represents, the model reproduces.  Our *consensus* machinery (taking the most common answer across many samples) then amplifies the skew, because the mode of a skewed distribution is its skew.  *Coded Bias* documents the input side: benchmark face datasets were overwhelmingly light-skinned and male, so the error rates stayed invisible until someone disaggregated them (broke the results apart by demographic group).
 

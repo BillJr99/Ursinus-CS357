@@ -659,7 +659,7 @@ The **minimal footprint principle** is a design heuristic that says: when multip
 
 ### The Escalation Protocol
 
-When a trigger condition fires, the agent must pause execution, preserve its current state, communicate the reason for escalation to the human in a way that enables an informed decision, and then resume (or abort) once the human responds.  A naive implementation blocks the entire process synchronously; the agent freezes and waits.  A production-grade implementation suspends state asynchronously (saving its work and returning immediately, resuming only when the human responds): the agent saves its work and resumes when the human responds, potentially hours later.
+When a trigger condition fires, the agent must pause execution, preserve its current state, communicate the reason for escalation to the human in a way that enables an informed decision, and then resume (or abort) once the human responds.  A naive implementation blocks the entire process synchronously; the agent freezes and waits.  A production-grade implementation suspends state asynchronously: the agent saves its work, returns immediately, and resumes only when the human responds, potentially hours later.
 
 The following Python pseudocode (simplified illustration, not runnable as-is) shows the escalation logic:
 
@@ -707,7 +707,7 @@ def execute_action(action, context, confidence):
     return sandbox.execute(action, context)
 ```
 
-In **asynchronous HITL**, the agent saves a complete state snapshot before raising `EscalationPending`.  The human reviews the checkpoint (potentially hours later) approves, rejects, or modifies the action, and the agent reloads the snapshot and continues.  The human's response must be cryptographically tied to the specific checkpoint (not merely "approve the last thing") to prevent replay attacks where an old approval is reused for a new action.
+In **asynchronous HITL**, the agent saves a complete state snapshot before raising `EscalationPending`.  The human reviews the checkpoint (potentially hours later), approves, rejects, or modifies the action, and the agent reloads the snapshot and continues.  The human's response must be cryptographically tied to the specific checkpoint (not merely "approve the last thing") to prevent replay attacks where an old approval is reused for a new action.
 
 > **Common Misconception:** Many students assume that "human-in-the-loop" means a human watches every single action the agent takes.  This is not scalable and, paradoxically, produces worse oversight; humans who must approve hundreds of actions per day stop reading them carefully.  Good HITL design is *selective*: humans review the actions that most need their judgment, and the agent handles everything else autonomously.  The goal is quality of oversight, not quantity of approvals.
 

@@ -22,7 +22,7 @@ You leave with three things: the vocabulary for how agents communicate (message 
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  The Manager keeps the group moving and calls for a prediction before anyone runs the code cell.  The Recorder writes down the team's claim protocol in Model 2b as paths and conditions, not sentiments.  The Presenter reports which OWASP rows the team decided apply to a repository channel but not to a folder channel, and why.  The Reflector watches for the moment the team assumes GitHub is doing something for free that a folder would not.  After class, answer the reflection prompt individually.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  The Manager keeps the group moving and calls for a prediction before anyone runs the code cell.  The Recorder writes down the team's claim protocol in Model 2b as paths and conditions, not sentiments.  The Presenter reports which OWASP rows the team decided apply to a repository channel but not to a folder channel, and why.  The Reflector watches for the moment the team assumes GitHub is doing something for free that a folder would not.  After class, answer the reflection prompt individually.
 
 ---
 
@@ -136,7 +136,7 @@ Recap: a chat window is a channel only one party can see and nothing can audit. 
 
 ## 3.  Coordination Problems Have Names
 
-Once agents share any state at all, a class of problems appears that no communication style prevents.  Distributed systems engineers found these while building databases in the 1970s and 80s, and multi-agent LLM systems fall into exactly the same traps.  Learning the names now means you can diagnose a failure in your own pipeline instead of wondering what went wrong.
+Once agents share any state at all, a class of problems appears that no communication style prevents.  Distributed systems engineers found these while building databases in the 1970s and 80s, and multi-agent LLM systems fall into the same traps.  Learning the names now means you can diagnose a failure in your own pipeline instead of wondering what went wrong.
 
 | Problem | Description | Example with Agents | Prevention Strategy |
 |---------|-------------|--------------------|--------------------|
@@ -161,7 +161,7 @@ Here is the working pattern I use daily, and it scales from one agent to a team 
 | **PR checks (CI)** | The objective verdict: tests pass or they do not | The machine |
 | **Merge** | Consensus: this attempt is accepted | You |
 
-A conversation with an agent is ephemeral, unreviewable by teammates, and invisible to CI.  The same exchange conducted through an issue and a PR is permanent, searchable a semester later, reviewable by your project team, and gated by tests.
+A conversation with an agent is ephemeral, unreviewable by teammates, and invisible to continuous integration (CI).  The same exchange conducted through an issue and a PR is permanent, searchable a semester later, reviewable by your project team, and gated by tests.
 
 The loop is five steps, and you ran the commands for them in [Where the Work Comes From: GitHub and the Agent](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-codingagents.md#2.-where-the-work-comes-from:-github-and-the-agent).  Here they are by name, because the questions below turn on their order rather than on their syntax:
 
@@ -336,7 +336,7 @@ The incident simulation that follows this material in the case-studies deck (a m
 
 The classic CIA triad sorts every threat above into three properties.  **Confidentiality**: only authorized parties can read protected information, so the agent must not reveal training data, system prompt contents, or another user's retrieved documents (system prompt extraction, cross-user retrieval leakage, tool output disclosure).  **Integrity**: information and behavior are not altered by unauthorized parties, so the agent does exactly what its principal instructed and its reasoning cannot be redirected by external content (prompt injection, memory poisoning, tool chain hijacking, goal subversion).  **Availability**: legitimate users can reach the system when they need it (model denial of service via crafted prompts, token exhaustion, recursive expansion of context, resource abuse through unrestricted tool calls).  One malicious file in `handoff/inbox/` can attack all three at once: redirect the worker, tell it to copy another task's result into its notes, and instruct it to retry a failing step a hundred times.
 
-No single control is sufficient.  Effective agent security stacks independent layers so that an attacker who defeats one still faces the others, and each layer should be independent, so a failure in one does not imply failure in the next.
+No single control is sufficient.  Effective agent security stacks independent layers, so an attacker who defeats one still faces the others, and a failure in one does not imply failure in the next.
 
 | Layer | Control | What It Prevents | What It Does NOT Prevent | Implementation Example |
 |:------|:--------|:-----------------|:------------------------|:----------------------|

@@ -13,7 +13,7 @@ tags:
 ---
 ## About This Tutorial
 
-A deployed agent that silently fails is worse than one that visibly crashes.  A crash produces an error message and a stack trace.  Silent failure produces a wrong answer, a missed tool call, or a hallucination, and the operator has no idea it happened.  **Observability** is the discipline of making the internal state of a system legible from the outside, so that you can ask arbitrary questions about its behavior without knowing in advance what questions you will need to ask.  This tutorial introduces the three pillars of observability, distributed tracing for agent pipelines, and the OpenTelemetry standard for instrumenting LLM applications.
+A deployed agent that silently fails is worse than one that visibly crashes.  A crash produces an error message and a stack trace.  Silent failure produces a wrong answer, a missed tool call, or a hallucination, and the operator has no idea it happened.  **Observability** is the discipline of making the internal state of a system legible from the outside, so that you can ask arbitrary questions about its behavior without knowing in advance what questions you will need to ask.  This tutorial introduces the three pillars of observability, distributed tracing for agent pipelines, and the OpenTelemetry standard for instrumenting large language model (LLM) applications.
 {: .tb-lede}
 
 ## Key Concepts
@@ -57,7 +57,7 @@ Observability in distributed systems is built on three complementary data types.
 
     *Hint:* A metric is a summary.  Summaries throw away details to save space.  What details were thrown away here, and which pillar preserves them?
 
-3.  Logs, metrics, and traces all have associated costs: storage, compute, and egress bandwidth.  If you had to pick only two of the three pillars for an MVP deployment of a new agent, which two would you choose and why?  Be explicit about what visibility you are giving up by omitting the third.
+3.  Logs, metrics, and traces all have associated costs: storage, compute, and egress bandwidth.  If you had to pick only two of the three pillars for a minimum viable product (MVP) deployment of a new agent, which two would you choose and why?  Be explicit about what visibility you are giving up by omitting the third.
 
     *Hint:* Consider the order of operations for debugging: what do you need first when something goes wrong?  What do you add when you have more time and budget?
 
@@ -90,14 +90,14 @@ Below is the span tree for an agent handling a Retrieval-Augmented Generation (R
 
 Attributes on spans are the primary mechanism for answering questions about production behavior.  They turn a timing graph into a searchable, filterable record of what the agent did.  However, attributes must be chosen carefully: they are stored in your tracing backend, may be retained for weeks, and may be exported to third-party vendors.
 
-> Many developers assume that adding more span attributes is always better: "the more data, the more observability."  In practice, storing raw prompt text as a span attribute can expose private user data to your tracing vendor, violate GDPR or FERPA, and generate storage costs that make your traces unusable at scale.  Good observability is about storing the *right* attributes (identifiers and measurements), not the raw content.
+> Many developers assume that adding more span attributes is always better: "the more data, the more observability."  In practice, storing raw prompt text as a span attribute can expose private user data to your tracing vendor, violate the General Data Protection Regulation (GDPR) or the Family Educational Rights and Privacy Act (FERPA), and generate storage costs that make your traces unusable at scale.  Good observability is about storing the *right* attributes (identifiers and measurements), not the raw content.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through
 
 4.  Looking at the span tree above, the `llm_generate` span consumed 73% of the total request duration (1710ms out of 2340ms).  Before you decide to optimize the LLM call, what information would you need to determine whether that latency is acceptable or problematic?  Consider both technical and business factors in your answer.
 
-    *Hint:* What does your SLA say?  Is this a synchronous user-facing call or a background batch job?  Does the user experience the full 2340ms, or do you stream tokens as they are generated?
+    *Hint:* What does your service level agreement (SLA) say?  Is this a synchronous user-facing call or a background batch job?  Does the user experience the full 2340ms, or do you stream tokens as they are generated?
 
 5.  A teammate suggests adding a `prompt_text` attribute to the `llm_generate` span so you can inspect what was sent to the model during debugging.  Identify at least two categories of information that might appear in a RAG prompt that would be inappropriate to store in a tracing backend.  Then propose an alternative approach that gives you the debugging benefit without the privacy risk.
 
@@ -207,7 +207,7 @@ A token count is both kinds of telemetry at once.  On a single call it is a **sp
 
 These commands were checked against opencode 1.18, the version the course container and the [opencode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) install.  Field names in the exported JSON can change between releases, so if a key below is missing, open the file and look before you conclude the count is zero.
 
-**During a session.**  The TUI sidebar has a Context panel with the session's token count and cost.  If the sidebar is hidden, `ctrl+x b` toggles it (the leader key is `ctrl+x`; see the [keybinds reference](https://opencode.ai/docs/keybinds/)).  The percentage of the context window it shows depends on opencode knowing the model's window, which for an Ollama model is the `limit.context` value in that model's entry in `opencode.json` ([providers reference](https://opencode.ai/docs/providers/)).  The cost reads `$0.00` for a local model.  That is the bill you avoided, not the energy you spent.
+**During a session.**  The TUI (terminal user interface) sidebar has a Context panel with the session's token count and cost.  If the sidebar is hidden, `ctrl+x b` toggles it (the leader key is `ctrl+x`; see the [keybinds reference](https://opencode.ai/docs/keybinds/)).  The percentage of the context window it shows depends on opencode knowing the model's window, which for an Ollama model is the `limit.context` value in that model's entry in `opencode.json` ([providers reference](https://opencode.ai/docs/providers/)).  The cost reads `$0.00` for a local model.  That is the bill you avoided, not the energy you spent.
 
 **Across sessions.**  `opencode stats` prints token and cost totals for every session on your machine ([CLI reference](https://opencode.ai/docs/cli/)):
 

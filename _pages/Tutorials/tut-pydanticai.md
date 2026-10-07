@@ -51,14 +51,17 @@ Everything here runs against the Ollama server on your own machine.  Nothing cal
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install "pydantic-ai-slim[openai,mcp]==2.54.0" "fastmcp==4.0.11" "pytest==8.*"
-ollama pull llama3.2       # the course default (3B, about 2 GB)
-ollama pull qwen2.5:3b     # optional, a more reliable tool caller at the same size (about 1.9 GB)
+ollama pull qwen2.5:3b     # this tutorial's default: a reliable tool caller (3B, about 1.9 GB)
+ollama pull llama3.2       # the course's general chat model, for the comparisons (3B, about 2 GB)
 ```
 
 > **Tested versions:** `pydantic-ai-slim` 2.54.0, `fastmcp` 4.0.11 (which brings `mcp` 2.3.0), `pydantic` 2.13.5, Python 3.13, and Ollama 0.40.0, on a 4-core CPU with no GPU.  Each model call in this tutorial took between 5 and 45 seconds on that machine.  Pydantic AI moves quickly, so if an import fails, check [ai.pydantic.dev](https://ai.pydantic.dev) before fighting the error.
 {: .tb-warning data-title="Versions"}
 
 Save this helper as `common.py`.  `make_model()` is the only place the code names a model, and `show_trace()` prints every message in a run so that you can compare it with the `[tool]` lines your hand-written loop printed.
+
+> **Why qwen2.5:3b for tool calling:** The rest of the course uses `llama3.2` for chat, and it is fine there.  For tool calling, we switch to `qwen2.5:3b`, which is the same size and calls tools far more reliably.  When we ran this tutorial with `llama3.2`, it wrote a tool call as plain text instead of making one (Part 7), and it ignored a tool's result in its answer (Part 5).  `qwen2.5:3b` did neither.  Every output below comes from `qwen2.5:3b` unless it says otherwise, and setting `MODEL=llama3.2` reproduces the comparisons.  `qwen2.5:3b` is released under the Qwen Research License, so read its terms before using it outside class.
+{: .tb-tip data-title="Model choice"}
 
 ```python
 # common.py: one place that says which model the agent talks to, plus a trace printer.
@@ -71,10 +74,13 @@ from pydantic_ai.providers.ollama import OllamaProvider
 
 
 def make_model():
-    """A local Ollama model through its OpenAI-compatible endpoint. No hosted fallback."""
+    """A local Ollama model through its OpenAI-compatible endpoint. No hosted fallback.
+
+    qwen2.5:3b is the default because it calls tools reliably; set MODEL=llama3.2 to compare.
+    """
     provider = OllamaProvider(base_url=os.environ.get("BASE_URL", "http://localhost:11434/v1"),
                               api_key=os.environ.get("API_KEY"))
-    return OpenAIChatModel(os.environ.get("MODEL", "llama3.2"), provider=provider)
+    return OpenAIChatModel(os.environ.get("MODEL", "qwen2.5:3b"), provider=provider)
 
 
 def show_trace(messages):
@@ -90,7 +96,7 @@ def show_trace(messages):
                 print(f"  [{kind}] {str(part.content)[:120]!r}")
 ```
 
-`MODEL=qwen2.5:3b python step1_paired.py` switches models without editing code.  To go through OpenWebUI instead, set `BASE_URL=http://localhost:3000/api` and `API_KEY` to your OpenWebUI key.
+`MODEL=llama3.2 python step1_paired.py` switches models without editing code.  To go through OpenWebUI instead, set `BASE_URL=http://localhost:3000/api` and `API_KEY` to your OpenWebUI key.
 
 ---
 
@@ -148,12 +154,12 @@ print(result.usage)
 
 ```text
 $ python step1_paired.py
-The number of days until the last day of classes, December 7, 2026 is 61.
+There are 61 days until the last day of classes on December 7, 2026.
   [user-prompt] 'How many days until the last day of classes, December 7, 2026?'
   [tool-call] days_until({"target":"2026-12-07"})
   [tool-return] days_until -> '61'
-  [text] 'The number of days until the last day of classes, December 7, 2026 is 61.'
-RunUsage(input_tokens=378, output_tokens=41, requests=2, tool_calls=1)
+  [text] 'There are 61 days until the last day of classes on December 7, 2026.'
+RunUsage(input_tokens=520, output_tokens=53, requests=2, tool_calls=1)
 ```
 
 The trace is the deck's Model 2 protocol: a user message, a model reply that asks for a tool, a tool result that **your program** wrote, and a final reply.  Pydantic AI did not change the protocol.  It wrote the parts of the program that every agent repeats.
@@ -340,14 +346,16 @@ show_trace(result.all_messages())
 ```text
 $ python step3_run.py
 Approve save_deadline({"course":"CS357","due":"2026-11-17","title":"RAG lab"})? [y/N] y
-  ...
+I have saved your CS357 RAG lab deadline, titled 'RAG lab', for the due date of 2026-11-17.
+  [user-prompt] "Save my CS357 RAG lab deadline, 2026-11-17, titled 'RAG lab'."
   [tool-call] save_deadline({"course":"CS357","due":"2026-11-17","title":"RAG lab"})
   [tool-return] save_deadline -> 'saved to CS357.md'
+  [text] "I have saved your CS357 RAG lab deadline, titled 'RAG lab', for the due date of 2026-11-17."
 $ cat notes/CS357.md
 - 2026-11-17: RAG lab
 ```
 
-Answer `n` instead and the tool returns the denial message to the model, and the file is never created.  Two things we saw while testing this with `llama3.2` are worth knowing.  First, after a plain denial the model sometimes asked for the same call again, which is why the loop above asks at most twice and why the denial message tells it not to retry.  Second, after a successful save, the model's final sentence was muddled ("User question: Add a deadline...") even though the file was correct.  **The file is the truth, not the model's description of it.**  Check the side effect, not the sentence.
+Answer `n` instead and the tool returns the denial message to the model, and the file is never created.  `qwen2.5:3b` then simply repeated the denial message as its answer.  Two things we saw while testing with `llama3.2` are worth knowing too.  First, after a plain denial it sometimes asked for the same call again, which is why the loop above asks at most twice and why the denial message tells the model not to retry.  Second, after a successful save, its final sentence was muddled ("User question: Add a deadline...") even though the file was correct.  **The file is the truth, not the model's description of it.**  Check the side effect, not the sentence.
 
 > **Two different budgets:** `request_limit` caps how many times the model is called.  `tool_calls_limit` caps how many tools actually run.  A model that asks for three tools in one reply uses one request and three tool calls, so a loop can stay under one limit and still blow through the other.  Part 5 trips each one on purpose.
 {: .tb-tip data-title="Request limits and tool-call limits"}
@@ -358,7 +366,7 @@ Answer `n` instead and the tool returns the denial message to the model, and the
 
 ## Part 4: Structured Output, and What Validation Cannot Catch
 
-Sometimes the answer itself should be data rather than prose.  Pydantic AI can require that the final answer validate against a model.  Our first attempt asked for `{event, target, days_left}` and let the model call `days_until` along the way.  With `llama3.2` on CPU, that failed in instructive ways:
+Sometimes the answer itself should be data rather than prose.  Pydantic AI can require that the final answer validate against a model.  Our first attempt asked for `{event, target, days_left}` and let the model call `days_until` along the way.  With `llama3.2` on CPU (this part was tested before the switch to `qwen2.5:3b`), that failed in instructive ways:
 
 - With the default tool-based output, the model answered in prose instead of calling the output tool, and the run stopped at its request limit.
 - With `NativeOutput` (Ollama constrains the reply to the JSON schema), the reply always parsed, but `days_left` was `0`, and the model had not called the tool at all.
@@ -412,8 +420,8 @@ except Exception as e:
 
 ```text
 $ python step4_output.py
-Deadline(event='Countdown to the last day of classes', target=datetime.date(2026, 12, 7))
-Countdown to the last day of classes: 61 days left
+Deadline(event='last day of classes', target=datetime.date(2026, 12, 7))
+last day of classes: 61 days left
 ```
 
 The schema guarantees that `target` is a date.  The validator adds a rule the schema cannot express (not in the past).  The arithmetic, which a 3B model gets wrong and a dozen lines of Python get right, never touches the model.
@@ -494,17 +502,15 @@ CallToolsNode: model asked for ['get_today', 'days_until']
 ModelRequestNode
 CallToolsNode: model asked for no tools (final answer)
 End
-Today's date is October 7, 2023.
-
-There are 61 days until December 7, 2026.
-RunUsage(input_tokens=361, output_tokens=56, requests=2, tool_calls=2)
+Today's date is 2026-10-07, and there are 61 days until 2026-12-07.
+RunUsage(input_tokens=490, output_tokens=82, requests=2, tool_calls=2)
 UsageLimits(request_limit=1) -> The next request would exceed the request_limit of 1
 UsageLimits(tool_calls_limit=1) -> The next tool call(s) would exceed the tool_calls_limit of 1 (tool_calls=2)
 ```
 
 Map the nodes onto your hand-written loop.  `ModelRequestNode` is the `requests.post` to the model.  `CallToolsNode` is the `for c in calls` dispatch.  `End` is the `if not calls: return` line.  The two limits stop the run in different places: the request limit before the second model call, and the tool-call limit when one reply asks for two tools at once.
 
-Now look at the answer again.  The model called `get_today`, received `2026-10-07`, and then wrote "October 7, **2023**."  The tool ran, the result was in the context, and the model still did not copy it correctly.  With `MODEL=qwen2.5:3b` the same run printed `2026-10-07`.  A tool call guarantees that the right number reached the model.  It does not guarantee that the model used it, which is why Part 4 moved arithmetic into code and why Part 9 checks tool results rather than final sentences.
+Now run it with `MODEL=llama3.2`.  The trace is the same: it called `get_today`, received `2026-10-07`, and then wrote "Today's date is October 7, **2023**."  The tool ran, the result was in the context, and the model still did not copy it correctly.  A tool call guarantees that the right number reached the model.  It does not guarantee that the model used it, which is why Part 4 moved arithmetic into code and why Part 9 checks tool results rather than final sentences.
 
 ---
 
@@ -554,7 +560,7 @@ you> agent> Your name is Sam.
 saved 2 messages to history.json
 $ echo "What is my name, and when is my exam?" | python step6_memory.py
 loaded 2 earlier messages
-you> agent> Your name is Sam, and your exam is on Friday.
+you> agent> Your name is Sam. Your exam is on Friday. Please let me know if you need any help preparing for your exam.
 saved 4 messages to history.json
 ```
 
@@ -635,7 +641,7 @@ show_trace(result.all_messages())
 
 `SkillCard` is core Pydantic again, checking the front matter.  `load_skill` refuses any name that is not in `SKILLS` and lists the valid ones; the registry, not the model's string, decides what can be read.  That is the same lesson as the deck's `REGISTRY[name]`, and the same lesson as a path-traversal check.
 
-This step separated the two local models more clearly than any other:
+This step separated the two local models more clearly than any other, and it is the main reason this tutorial defaults to `qwen2.5:3b`:
 
 ```text
 $ MODEL=qwen2.5:3b python step7_skills.py

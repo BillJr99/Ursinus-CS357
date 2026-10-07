@@ -477,7 +477,7 @@ Generative AI has created a legal and ethical crisis in creative fields.  Public
 
 #### Training on Copyrighted Work
 
-When an AI company scrapes copyrighted images, books, or music to train a model, is that infringement?  The legal question is whether training is a reproduction of the original work, a "transformative use" protected under the US fair use doctrine, or a permitted "text-and-data mining" activity under EU law.  Key active cases include **Getty Images v.  Stability AI** (filed 2023), **Andersen v.  Stability AI** (illustrators' class action), and several consolidated author class actions against OpenAI and Meta.
+When an AI company scrapes copyrighted images, books, or music to train a model, is that infringement?  The legal question is whether training is a reproduction of the original work, a "transformative use" protected under the US fair use doctrine, or a permitted "text-and-data mining" activity under EU law.  Key active cases include **Getty Images v. Stability AI** (filed 2023), **Andersen v. Stability AI** (illustrators' class action), and several consolidated author class actions against OpenAI and Meta.
 
 The training/output distinction matters legally.  Even if training is eventually found to infringe, a specific AI output that does not reproduce copyrightable expression from a specific work may itself be non-infringing.  And even if training is found to be fair use, an AI output that is substantially similar to a specific work it was trained on could still infringe that work's copyright.
 
@@ -595,7 +595,7 @@ As AI pushes the marginal cost of generating creative content toward zero, the s
 
 *What to do:* Find one ongoing or recently decided legal case about AI and copyright.  Research the case using primary and secondary sources and write a structured summary.
 
-*Starter hint:* Good cases to research (search by name): Getty Images v.  Stability AI (visual artists, UK and US cases running in parallel); Andersen v.  Stability AI (illustrator class action, ongoing); the Authors Guild class action against OpenAI (book authors, multiple consolidated cases); Concord Music Group v.  Anthropic (song lyrics in AI outputs).  For each case, look for the original complaint (available on PACER or summarized in legal news), any published opinions or orders, and commentary by intellectual property law professors or practitioners.
+*Starter hint:* Good cases to research (search by name): Getty Images v. Stability AI (visual artists, UK and US cases running in parallel); Andersen v. Stability AI (illustrator class action, ongoing); the Authors Guild class action against OpenAI (book authors, multiple consolidated cases); Concord Music Group v. Anthropic (song lyrics in AI outputs).  For each case, look for the original complaint (available on PACER or summarized in legal news), any published opinions or orders, and commentary by intellectual property law professors or practitioners.
 
 *You've succeeded when:* Your summary covers (a) who the plaintiff is and what specific harm they allege, in concrete terms; (b) who the defendant is and what specific legal defense they assert (fair use? lack of substantial similarity? something else?); and (c) the central legal question the court must resolve, stated precisely enough that someone unfamiliar with the case could see what outcome would matter and why.  You do not need to predict the outcome.
 

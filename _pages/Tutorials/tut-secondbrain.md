@@ -25,7 +25,7 @@ Every AI tool you use maintains its own little memory of you, in its own format,
 | **Personal Access Token (PAT)** | A secret string that acts as a password for GitHub API calls. It grants specific permissions (like reading and writing a single repository) without sharing your full GitHub account credentials. | Your sync plugin uses the PAT to push note changes to GitHub; your agent uses it to pull the vault and write new wiki pages. |
 | **Gitless sync** | A sync mechanism that uses the GitHub REST API directly to push and pull files, rather than running `git` commands locally. No `.git` folder, no merge conflicts, one consistent state machine. | The GitHub Gitless Sync Obsidian plugin translates every file save into an API call; your phone and your laptop sync the same vault without ever needing git installed. |
 | **AGENTS.md contract** | A file at the root of the vault that tells any agent exactly how to behave: which folders it can read, which it can write, how to handle sources, and what metadata to update. Because the file travels inside the repo, every agent reads it automatically. | An agent that reads AGENTS.md learns that `raw/` is read-only, that `wiki/` is where it should write, and that it must update `github-sync-metadata.json` in the same commit as any file it creates. |
-| **LLM wiki** | The pattern this tutorial implements: a folder of Markdown pages that a model builds and maintains from your raw sources, so knowledge compounds across sessions instead of being re-derived on every query. Named in Andrej Karpathy's April 2026 [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) gist. | Your `wiki/` zone, its `index.md` catalog and `log.md` history, and the ingest/query/lint prompts that keep them current. |
+| **LLM wiki** | The pattern this tutorial implements: a folder of Markdown pages that a large language model (LLM) builds and maintains from your raw sources, so knowledge compounds across sessions instead of being re-derived on every query. Named in Andrej Karpathy's April 2026 [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) gist. | Your `wiki/` zone, its `index.md` catalog and `log.md` history, and the ingest/query/lint prompts that keep them current. |
 | **Blob SHA** | The specific hash value Git uses to uniquely identify file contents. It is computed differently from a plain SHA-1 hash; Git prefixes the content with `blob {bytecount}\0` before hashing. | When an agent writes a file to the vault, it may need to compute the blob SHA to correctly update the sync metadata file. |
 | **Zone boundary** | A deliberate structural rule about which areas of the vault serve which purpose and who is allowed to write to them. Zone boundaries are what make the vault safe to open to agents. | The `raw/` zone is read-only for everyone including agents; the `wiki/` zone is write-enabled for agents; the `.obsidian/` zone is off-limits except for the specific metadata file. |
 | **Memory scope** | Whether a remembered fact applies everywhere (global) or only inside one project. Zone boundaries govern *where* an agent may write; memory scope governs *how widely* what it writes should apply. | A global memory lives in `LLMMEMORIES.md`; a project memory lives in `wiki/projects/<project>/MEMORIES.md`, and your `AGENTS.md` states which is the default. |
@@ -45,7 +45,7 @@ The second-brain architecture solves this by making your accumulated context a f
 
 The design has four pieces, each independently replaceable:
 
-- **Obsidian** is a free note application that edits a folder of plain Markdown files (a *vault*) with wikilinks, graph view, and mobile apps.  Crucially, it imposes no proprietary format; the vault is just files, so any other tool can read and write them too.
+- **Obsidian** is a free note application that edits a folder of plain Markdown files (a *vault*) with wikilinks, graph view, and mobile apps.  It imposes no proprietary format; the vault is just files, so any other tool can read and write them too.
 - **GitHub** hosts the vault as a private repository, providing versioning (you can see what changed and when), an API surface agents can reach from anywhere, and a webhook surface for automation.
 - **The GitHub Gitless Sync plugin** (a community Obsidian plugin) bridges the two *without git*: it translates every file operation into GitHub REST API calls, so there is no `.git` directory, no merge conflicts from stray command-line operations, and identical behavior on desktop and phone.
 - **Your agents** complete the loop: they read the vault for context and, following a contract you will write, push changes that appear in Obsidian on the next sync.
@@ -150,7 +150,7 @@ Leave the PDF untouched (raw/ is read-only), add the index link, and note the so
 
 > "Since it's my private repository, agents can write anywhere they want; I can always fix mistakes."
 >
-> This reasoning underestimates two risks.  First, agents that overwrite source files in `raw/` destroy the pristine record of what your original sources actually said, and if the agent's interpretation was wrong, you've lost the ability to reprocess from scratch.  Second, agents that write to `.obsidian/` can corrupt the plugin's sync state in ways that cause silent data loss (your edits in Obsidian stop syncing to GitHub without any error message).  The zone boundaries exist precisely because "I can fix it later" is not a recovery strategy when the failure is silent.
+> This reasoning underestimates two risks.  First, agents that overwrite source files in `raw/` destroy the pristine record of what your original sources actually said, and if the agent's interpretation was wrong, you've lost the ability to reprocess from scratch.  Second, agents that write to `.obsidian/` can corrupt the plugin's sync state in ways that cause silent data loss (your edits in Obsidian stop syncing to GitHub without any error message).  The zone boundaries exist because "I can fix it later" is not a recovery strategy when the failure is silent.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---
@@ -234,7 +234,7 @@ In this part, you will learn the specific metadata bookkeeping step that every a
 
 ## Why Agent Writes Need One Extra Step
 
-The plugin tracks every file's sync state in `.obsidian/github-sync-metadata.json`.  When **you** edit in Obsidian, the plugin maintains this file automatically.  But when an **agent** creates or modifies vault files directly through the GitHub API, the plugin has no record of the change, and on the next sync, it may simply not pull the agent's work, or may overwrite it.
+The plugin tracks every file's sync state in `.obsidian/github-sync-metadata.json`.  When **you** edit in Obsidian, the plugin maintains this file automatically.  But when an **agent** creates or modifies vault files directly through the GitHub API, the plugin has no record of the change, and on the next sync, it may not pull the agent's work, or may overwrite it.
 
 **The rule: any process that writes vault files outside Obsidian must update the metadata file in the same atomic commit.**
 
@@ -305,7 +305,7 @@ Notice the last line: for content containing multi-byte characters (accented let
 
 ---
 
-Having mastered the metadata protocol, you have everything you need to wire an actual agent to the vault and observe the full read-synthesize-write loop in action.
+With the metadata protocol in hand, you have everything you need to wire an actual agent to the vault and watch the full read-synthesize-write loop run.
 
 # Part IV: Wiring an Agent (hermes) by Prompting
 

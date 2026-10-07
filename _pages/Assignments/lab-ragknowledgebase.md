@@ -678,7 +678,7 @@ Freeze your evaluation so it can be rerun forever.  The point is not the code; i
 > 2. **Pin the protocol.** Temperature 0.0, a fixed seed, the model name, the chunking configuration, and `k`.  Write all five at the top of the harness, not in your memory of what you did.
 > 3. **Build it in your chosen medium**: a spreadsheet run sheet with a dated column per run, a promptfoo YAML case list, or a Python script grown from the class harness.
 > 4. **Run it twice**, changing nothing between runs.
-> 5. **Compare the two runs and show they agree.** open `run1.txt` beside `run2.txt` on the code route; two columns side by side on the no-code route.  Paste the comparison, not a claim about it.
+> 5. **Compare the two runs and show they agree.** Open `run1.txt` beside `run2.txt` on the code route; two columns side by side on the no-code route.  Paste the comparison, not a claim about it.
 > 6. **Classify your misses.** A miss is any 5a item whose outcome differs from its predicted `rationale`, in *either* direction; a fragile item that passed is as interesting as a reliable one that failed.  In one sentence each, say which it was:
 >    - **Knowledge failure**: the model does not have the fact.
 >    - **Metric failure**: the model answered correctly (or incorrectly) and *your rule graded it wrong*, for example "seventeen seventy-six" against a substring rule looking for "1776".
@@ -1090,7 +1090,7 @@ Without systematic evaluation, fine-tuning is a black box: hours of training and
 > **Do this.**
 > 1. Create `evaluate_models.py`: load the base model and your fine-tuned model, write **10 test prompts** from your domain that are **not** in the training set (15 on the provided-artifact variant), run both models, and save `eval_comparison.csv`.
 > 2. Open the CSV and fill in the `improvement` (Y / N / Partial) and `notes` columns by hand.
-> 3. Compute at least one quantitative metric: **Option A**, perplexity on a held-out test set (lower is better; the function below); **Option B**, task accuracy for an MCQ dataset such as `sciq` (compare the model's top predicted answer to `correct_answer`); or **Option C**, an LLM-as-judge score from 1 to 5 on each test prompt.
+> 3. Compute at least one quantitative metric: **Option A**, perplexity on a held-out test set (lower is better; the function below); **Option B**, task accuracy for a multiple-choice question (MCQ) dataset such as `sciq` (compare the model's top predicted answer to `correct_answer`); or **Option C**, an LLM-as-judge score from 1 to 5 on each test prompt.
 > 4. Document at least one **regression** in your writeup: a prompt where the base model was better.  This is expected, and honesty about it is graded.
 > 5. Compare against your RAG pipeline: ask the fine-tuned model two or three questions your RAG system answered from your corpus, with no retrieval.  Which answered more faithfully?  Which hallucinated?  Record the head-to-head so your recommendation rests on evidence.
 

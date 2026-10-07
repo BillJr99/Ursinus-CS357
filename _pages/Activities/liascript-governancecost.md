@@ -40,7 +40,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Embodied Carbon** | The greenhouse gas emissions produced by manufacturing the hardware (GPUs, servers, cables) that AI runs on, *before* the hardware is even switched on. | Embodied carbon may represent 50-80% of a data center's lifetime footprint for hardware-intensive workloads, but it is almost never included in AI carbon estimates. |
 | **Model Right-Sizing** | Choosing the smallest model that achieves adequate accuracy for a specific task, rather than defaulting to the most capable (and most energy-intensive) model available. | Using a 7B-parameter local model to summarize documents instead of a 70B frontier API, when accuracy is comparable, reduces inference energy by roughly 10x. |
 | **Jevons Paradox** | The historical observation that improvements in the efficiency of using a resource tend to increase total resource consumption rather than decrease it, because efficiency lowers cost per use and expands the range of economically viable applications. | Fuel-efficient cars led to more total driving; energy-efficient LEDs led to more total light-hours. The same dynamic may apply to more efficient AI models. |
-| **Thinking tokens** | The intermediate stream a reasoning model emits before answering. Billed and burned as *output* tokens, the expensive kind, so extended thinking can multiply the cost of an unchanged reply many times over. | The 21x row in Section 7, where the user sees the same 150-word answer. |
+| **Thinking tokens** | The intermediate stream a reasoning model emits before answering. They are billed and burned as *output* tokens, the expensive kind, so extended thinking can multiply the cost of an unchanged reply many times over. | The 21x row in Section 7, where the user sees the same 150-word answer. |
 
 ---
 
@@ -258,7 +258,7 @@ Individually good decisions (use a smaller model, cache more queries, choose ren
 
 **Jevons paradox** is named for economist William Stanley Jevons, who documented in *The Coal Question* (1865) that more efficient steam engines in Victorian England did not reduce coal consumption; they increased it, because efficiency lowered the cost per unit of work, expanding the range of economically viable uses and the scale of deployment.  The pattern recurs across energy history: fuel-efficient cars increase vehicle miles traveled; LED lighting increases total light-hours consumed; efficient appliances are bought in larger numbers.
 
-Applied to AI: as models become more capable and cheaper to run, the range of tasks they are applied to expands.  A 10x efficiency improvement met with a 20x increase in use produces a net doubling of total consumption.  There are strong economic incentives that push toward exactly this.
+Applied to AI: as models become more capable and cheaper to run, the range of tasks they are applied to expands.  A 10x efficiency improvement met with a 20x increase in use produces a net doubling of total consumption.  Strong economic incentives push toward exactly this.
 
 The Green AI movement (Schwartz et al., 2019) proposed reporting efficiency metrics alongside accuracy: energy per FLOP, accuracy per watt, CO$_2$ per benchmark point, so that efficiency is visible in the research community's incentive structure.  Adoption has been partial.
 

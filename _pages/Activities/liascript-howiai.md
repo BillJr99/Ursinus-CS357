@@ -27,7 +27,7 @@ Then the room is yours for the rest of the session: bring what is stuck.
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  This is a build-and-discuss day.  The Manager keeps the setup moving.  The Recorder captures the team's design decisions, especially the zone boundaries you choose.  The Presenter shows the team's `AGENTS.md` to the class.  The Reflector notes where the group disagreed about what an agent should be allowed to write.  After class, answer the reflective prompt individually.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  This is a build-and-discuss day.  The Manager keeps the setup moving.  The Recorder captures the team's design decisions, especially the zone boundaries you choose.  The Presenter shows the team's `AGENTS.md` to the class.  The Reflector notes where the group disagreed about what an agent should be allowed to write.  After class, answer the reflective prompt individually.
 
 ---
 
@@ -89,7 +89,7 @@ The design has four pieces.  Each one can be replaced on its own, and that repla
 
 Note what is *not* in that table: any particular AI company.  The vault outlives whichever model you are using this year, and that is most of the argument for building it this way.
 
-**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN, which is the part the table above leaves implicit; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is exactly the argument the table is making.
+**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN, which is the part the table above leaves implicit; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is the argument the table is making.
 
 ---
 
@@ -446,7 +446,7 @@ The second agent reads the claim, sees it is older than the timeout, and takes t
 
    > *Hint: "Check, then act" is two steps, and anything can happen between them.  A rename is one step.  Across a sync, even one step on each machine is still two steps on the server.*
 
-> **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude and this practice has become *more* common, not less, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to CI, unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
+> **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude and this practice has become *more* common, not less, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to continuous integration (CI), unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
 
 ---
 

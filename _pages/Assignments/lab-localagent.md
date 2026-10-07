@@ -124,6 +124,8 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama pull llama3.2
 ```
 
+> **For the tool-calling parts.**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  Either model is accepted.  If your tools do not fire reliably, set `"model": "qwen2.5:3b"` in `config.json` and name the model in your writeup.
+
 *Code path.*  Python 3 and the `requests` library:
 
 ```bash

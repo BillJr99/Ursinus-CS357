@@ -26,7 +26,7 @@ The written assignment [Design Your Agent System](https://www.billmongan.com/Urs
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Read each model as a team before you start its questions.  The Manager keeps discussion moving.  The Reflector watches for assumptions the team makes without evidence.  The Recorder documents the team's answers.  The Presenter prepares to explain the team's pre-mortem (Model 2) to the class.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Read each model as a team before you start its questions.  The Manager keeps discussion moving.  The Reflector watches for assumptions the team makes without evidence.  The Recorder documents the team's answers.  The Presenter prepares to explain the team's pre-mortem (Model 2) to the class.
 
 ---
 
@@ -79,7 +79,7 @@ For every agent in your system, before it exists, answer:
 
 The last column is the one that changes designs.  Work through your system and label each action **free** to undo (a commit in a repository you control), **costly** (a database write you have a backup for, restorable in an hour), or **irreversible** (an email sent, a payment made, a message posted, a record deleted from a system you do not own).
 
-Then apply the rule the labels imply: every irreversible action gets a human gate, and the gate goes in the design, not in a later hardening pass.  Agents are not unusually careless.  "Confidently wrong at scale, quickly" is simply the failure mode of this technology, and the only defense that survives a real deployment is that the irreversible step could not happen without someone approving it.
+Then apply the rule the labels imply: every irreversible action gets a human gate, and the gate goes in the design, not in a later hardening pass.  Agents are not unusually careless.  "Confidently wrong at scale, quickly" is the failure mode of this technology, and the only defense that survives a real deployment is that the irreversible step could not happen without someone approving it.
 
 One design move is worth knowing here: convert irreversible into reversible before you gate it.  An agent that sends email is irreversible.  An agent that *drafts* email into a folder, with a human pressing send, is free to undo, and it keeps almost all of the value.  Most irreversible agent actions have a draft-shaped version, and finding it is usually a better answer than adding a confirmation dialog.
 
@@ -301,7 +301,7 @@ The pre-mortem identified what could go wrong.  The next model shows, week by we
 
 ## Model 3 (At Home): A Six-Week Timeline, Design-First vs. Code-First
 
-In this model you compare two student teams building the same pipeline on parallel tracks and trace exactly when, and why, the code-first team's early-saved time is spent back, with interest.
+In this model you compare two student teams building the same pipeline on parallel tracks and trace exactly when, and why, the time the code-first team saved early is spent back, with interest.
 
 **Why this matters:** The design-first approach is sometimes dismissed as "slowing down" development.  This timeline shows that the total time spent is similar, but *where* the work happens differs.  Design-first front-loads effort into cheap, reversible planning.  Code-first back-loads the same effort into expensive, disruptive rework.  The question is not whether to do the hard thinking; it is whether to do it on paper or in production.
 

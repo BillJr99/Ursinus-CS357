@@ -20,7 +20,7 @@ In *How I AI*, you built a vault, a charter, and a `.ai/` directory so that one 
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol; the Presenter reads one rule of it aloud at report-out; the Reflector notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol; the Presenter reads one rule of it aloud at report-out; the Reflector notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
 
 ---
 
@@ -376,7 +376,7 @@ A handoff to your own next session has one writer.  Real systems have two: a wor
 
 | Medium | The channel is | A claim looks like | Done looks like |
 |---|---|---|---|
-| **GitHub** | Issues carry the task, pull requests carry the attempt, review comments carry the correction | The agent assigns itself the issue and opens a draft PR that references it | The PR is merged and the issue is closed with a comment naming the merge commit |
+| **GitHub** | Issues carry the task, pull requests carry the attempt, review comments carry the correction | The agent assigns itself the issue and opens a draft pull request (PR) that references it | The PR is merged and the issue is closed with a comment naming the merge commit |
 | **Shared folder (Dropbox-style, or `vault/handoff/` under the zone rules from *How I AI*)** | `handoff/inbox/` holds pending items, `handoff/done/` holds finished ones; no Git, no accounts, no network | The agent writes `claimed_by` and `claimed_at` into the item, or renames it to mark the claim | The item moves to `handoff/done/` with a result section appended |
 
 The plain folder is not the lesser option.  Strip away the tooling and every medium is the same thing: a place to put work, a place to put finished work, and a rule about who may move what between them.  If your protocol only works because GitHub happens to serialize writes for you, you have not written a protocol.

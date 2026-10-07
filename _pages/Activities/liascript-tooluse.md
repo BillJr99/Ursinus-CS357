@@ -263,6 +263,8 @@ The agent above talks straight to Ollama on port `11434`.  In many of our setups
 
 Whether native tool calling works at all still depends on the model underneath.  A tool-capable model (for example `llama3.1`/`llama3.2`, `qwen2.5`, or `mistral-nemo`) fills in `tool_calls`.  A model without tool training answers in prose, and you fall back to the week-1 parsing approach.
 
+> **Which model for tool calling?**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  To switch the agent above, change `"model": "llama3.2"` to `"model": "qwen2.5:3b"`.
+
 ---
 
 ## Code Cell

@@ -692,9 +692,9 @@ Respond to all three levels in your notebook:
 
 # Going Deeper (at home): More Fixed Shapes, and Framework Pointers
 
-> **The full advanced-loops activity:** Model 3 above compresses two models from [Advanced Agent Loops: Control Flow, Reflection, and Recovery](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestration.md), read that activity for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
+> **The full advanced-loops activity:** Model 3 above compresses two models from [Advanced Agent Loops: Control Flow, Reflection, and Recovery](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestration.md); read that activity for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
 
-> **The supervisor loop moved in-class.**  The dynamic-orchestration material now lives in **Part IIc** above rather than here: Two Families, the Code Cell, and the who-decides-control-flow recap.  What remains below is at-home material.  It covers the two fan-out and consensus shapes class had no time for, plus a reference sheet for all six patterns.
+> **The supervisor loop moved in-class.**  The dynamic-orchestration material now lives in **Part IIc** above rather than here: Two Families, the Code Cell, and the who-decides-control-flow recap.  What remains below covers the two fan-out and consensus shapes class had no time for, plus a reference sheet for all six patterns.
 
 Everything below is at-home material.  Nothing in this section is needed for today's in-class session, but all of it deepens what you built in class.  Parts I-III gave you the vocabulary (pipeline, router, planner) and two working orchestrators in code.  Part IIc gave you the supervisor.  This section rounds out the fixed family with two shapes you have not yet built by hand.
 

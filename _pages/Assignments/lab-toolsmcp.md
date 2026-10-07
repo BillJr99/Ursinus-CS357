@@ -110,6 +110,8 @@ python3 -c "import requests; print('requests ok')"   # confirm Python can import
 ollama pull llama3.2                                  # a model that supports tool calling
 ```
 
+> **Recommended for tool calling.**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  Any tool-capable model is accepted for this lab; if your tools do not fire reliably with `llama3.2`, switch the `model` setting to `qwen2.5:3b` and say so in your writeup.
+
 Then confirm Ollama is answering.  `curl -s` fetches a URL quietly, and `head -c 120` keeps only the first 120 characters so the model list does not flood your terminal.
 
 ```bash

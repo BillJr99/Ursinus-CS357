@@ -227,7 +227,7 @@ One common skill shape is the menued-question pattern, sometimes called a grill-
 
 ## Enforcing What a Skill Asks For
 
-The authoring principles above tell you to write constraints that can be tested.  This section is the answer to the question that raises, which is tested by what.
+The authoring principles above tell you to write constraints that can be tested.  This section answers the question that raises: tested by what?
 
 Start from the structural fact, because every practical consequence follows from it.  A skill is text that the model reads.  The mechanism has no step at which anything other than the model decides whether the skill loads or whether its instructions are obeyed.  The `description` is matched by the model, the body is interpreted by the model, and a request that arrives worded slightly differently may match nothing at all.  **Every clause in a `SKILL.md` is a request, not a rule.**  That is not a defect to be fixed by better wording; it is what a skill is, and it is why the spectrum at the top of this page puts skills on the same side of the line as system prompts and project instruction files.
 
@@ -244,7 +244,7 @@ The events, and what each can see and do about a skill:
 | `SessionStart` | The session begins | Nothing of yours yet | Put the skill's rules in context regardless of description matching |
 | `UserPromptSubmit` | You press enter | The prompt text | Re-inject the rules each turn; reject a prompt outright |
 | `PreToolUse` | Before a tool runs | The tool name and its real arguments | Block an operation the skill said not to perform |
-| `PostToolUse` | After a tool runs | The tool's output | Record what happened; rewrite an MCP result before the model reads it |
+| `PostToolUse` | After a tool runs | The tool's output | Record what happened; rewrite an MCP (Model Context Protocol) result before the model reads it |
 | `Stop` | The agent wants to end its turn | Whatever a program can check | Refuse the stop while the skill's contract is unmet |
 {: .tb-full}
 
@@ -262,9 +262,9 @@ Three limits are worth stating before you rely on any of this.
 
 A gate sees state, not intent.  A `Stop` hook that requires `.ai/CURRENT_TASK.md` to be non-empty proves that a file exists, not that its contents are a real interview.  Every gate checks a proxy, and the engineering question is always how far the proxy sits from the thing you care about.
 
-Injection is not compliance.  A `SessionStart` hook guarantees that the rules reached the context window.  What the model does with them is the same open question it was before, which is precisely why the load-time and exit-time jobs have to be kept separate in your head.
+Injection is not compliance.  A `SessionStart` hook guarantees that the rules reached the context window.  What the model does with them is the same open question it was before, which is why the load-time and exit-time jobs have to be kept separate in your head.
 
-A hook that asks a model is not a gate.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model for judgment.  Those are useful when the question genuinely needs an opinion, and they are not enforcement: a model asked to judge can be argued with, exactly like the model it is judging.  Use a `command` hook for what must hold every time.
+A hook that asks a model is not a gate.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model for judgment.  Those are useful when the question needs an opinion, and they are not enforcement: a model asked to judge can be argued with, exactly like the model it is judging.  Use a `command` hook for what must hold every time.
 
 Finally, note the scope.  Hooks are configured per harness and per project, in `.claude/settings.json` or a plugin's `hooks/hooks.json` for Claude Code and in `opencode.json` or `.opencode/plugins/` for opencode.  A skill you publish as a directory travels with its instructions and without its enforcement, so a classmate who installs your skill gets the requests and not the gates.  If the gates matter, publish them alongside the skill and say so in the README, the way [planning-with-files](https://github.com/OthmanAdi/planning-with-files) ships its hooks as a plugin rather than leaving them to the installer.
 
