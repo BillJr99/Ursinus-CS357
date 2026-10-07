@@ -309,8 +309,11 @@ At the *RAG and Fine-Tuning: Retrieval Quality and LoRA* session, teams exchange
 - [ ] Constraints they named are recorded even where they are inconvenient for the system we want to build.
 - [ ] We separated what they told us from what we inferred.
 - [ ] SQR cards given to another team: one Strength with evidence, one genuine Question, one Risk with a suggested mitigation.
+- [ ] The brief is 2-3 pages with all six sections, including a candidate track fit that works for all three final-project directions and a *what we don't yet know* section of concrete open questions.
+- [ ] At least two disciplinary perspectives beyond CS appear, each with what it notices, and we named at least one point where they pull against each other.
+- [ ] The interview packet (prep questions, notes, consent record, follow-up exchange) or the persona packet (persona, sources, anticipated questions and answers) is attached as an appendix.
 - [ ] AI disclosure states what was AI-assisted and how we verified it.
-- [ ] Contribution statement says who did what.
+- [ ] Every section names its primary author, every member is primary author of at least one section, and the PDF carries all members' typed signatures.
 
 ---
 

@@ -360,7 +360,7 @@ opencode x.x.x
 
 The agent is baked into the image, so a version string here means Step 8 has nothing left to install and only needs its provider configured.
 
-**5.5: gh (the GitHub CLI, which Thursday's session runs its whole loop through):**
+**5.5: gh (the GitHub CLI, which the next session, *Coding Agents*, runs its whole loop through):**
 
 ```bash
 gh --version
@@ -406,7 +406,7 @@ Pushing needs credentials, and this is the one place in the course where your ow
 **Choice 1: HTTPS with a personal access token (PAT).  Recommended default inside the container.**
 
 1.  GitHub -> **Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens -> Generate new token**.
-2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.  Add **Issues: Read and write** and **Pull requests: Read and write** if you already know you will let an agent open them for you, which is Thursday's session.  Granting them later means `gh auth refresh -s <scope>` or a fresh token, and the symptom that sends you looking is a bare 403 from a command that worked yesterday.
+2.  Scope it tightly: *Only select repositories* -> `cs357-work`; Repository permissions -> **Contents: Read and write**; expiration at or beyond the end of the semester.  Add **Issues: Read and write** and **Pull requests: Read and write** if you already know you will let an agent open them for you, which is the next session, *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log*.  Granting them later means `gh auth refresh -s <scope>` or a fresh token, and the symptom that sends you looking is a bare 403 from a command that worked yesterday.
 3.  Copy the token (shown once).  When `git push` prompts for a password, paste the token.  Cache it for a work session so you are not retyping:
 
 ```bash

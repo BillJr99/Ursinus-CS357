@@ -131,7 +131,7 @@ The milestones run in the sequence below.  See the [course schedule]({{ site.bas
 | Milestone | What is due | Points |
 |---|---|---|
 | Project handed out | Nothing yet.  Teams read all three directions and begin converging on one | - |
-| Intra-team check-in 2 | A private check-in to me, due two days before the proposal; it precedes and informs the proposal | - |
+| Intra-team check-in 2 | A private check-in to me, due at the *Orchestration and Multi-Agent Patterns* session, before the proposal; it precedes and informs the proposal | - |
 | Proposal | The proposal, with direction declared, stakeholder grounding, and an AI-use disclosure | **25 / 100** |
 | Literature Review handed out | Handed out the day the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
 | Sprints 1, 2, and 3 | Rotating roles, a runnable increment (or evidenced stage checkpoint) at every sprint boundary, and a **partner feedback pass** during the final sprint | - |
@@ -147,11 +147,11 @@ The registrar's final-exam slot is reserved for Demo Day overflow only.  If all 
 
 This is not a new assignment.  It is the point every Project Thread milestone has been building toward, and most of what it asks for already exists somewhere in your team's work: the stakeholder you interviewed, the agent systems you designed, the labs you built, and, during the sprints, the literature you review.  Read the timeline above as an assembly plan, not a fresh start.
 
-> **Time budget.** This is the largest single commitment of the term, spread across the back half of the semester.  The proposal is due about six weeks before Demo Day (see the [course schedule]({{ site.baseurl }}/) for exact dates), so the sprints are where the work lives.  A team that starts building in the last two weeks will demo something that does not run.
+> **Time budget.** This is the largest single commitment of the term, spread across the back half of the semester.  The proposal is due well before Demo Day (see the [course schedule]({{ site.baseurl }}/) for exact dates), so the sprints are where the work lives.  A team that starts building in the last two weeks will demo something that does not run.
 
 > **Watch out.** The thing that most often goes wrong is almost never technical.  Teams build the system they find interesting and present it to an audience that includes the stakeholder they interviewed in week 5.  Demo Day is a **multi-audience** presentation.  Keep the stakeholder's problem visible in every sprint, or you will discover in week 14 that you built something impressive that answers a different question.
 
-> **Watch out.** Whatever you build, it must run at the start of week 14.  The *Final Integration and Demo Rehearsal* studio is a rehearsal, not a work session.  That is not a scheduling preference.  It is the difference between a demo and an apology.
+> **Watch out.** Whatever you build, it must run at the start of the *Final Integration and Demo Rehearsal* studio.  That studio is a rehearsal, not a work session.  That is not a scheduling preference.  It is the difference between a demo and an apology.
 
 ---
 
@@ -252,7 +252,7 @@ Run a **counterfactual or perturbation probe**: send inputs that are identical e
 
 ## Phase 1: Converge on a Direction and Check In
 
-Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due two days before the proposal; use it to raise scope disagreements early.
+Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *Orchestration and Multi-Agent Patterns* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
 
 > **Do this.**
 > 1. Read all three directions below, including the Direction C variant, and the [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal) page.
@@ -262,7 +262,7 @@ Between the hand-out and the proposal, your team reads all three directions, wei
 
 **Deliverables for this phase:**
 
-- [ ] Intra-team check-in 2, submitted two days before the proposal
+- [ ] Intra-team check-in 2, submitted at the *Orchestration and Multi-Agent Patterns* session, before the proposal
 - [ ] A decision-log entry naming the directions weighed and the one chosen
 
 ---
@@ -354,7 +354,7 @@ The gallery walk and peer review happen during the final sprint.  They are manda
 
 ## Phase 5: Demo Day and Final Submission (75 points)
 
-**Demo Day logistics:** all teams present within the single class slot, splitting the time evenly, so each team's window is short and fixed, including Q&A.  Rehearse to time.  Demo Day is **external-facing**: alumni, industry guests, and faculty from other departments may join the audience and Q&A, as available; your grade never depends on who attends.
+**Demo Day logistics:** all teams present within the single class slot, splitting the time evenly, so each team's window is short and fixed: **15 minutes per team, including Q&A**, with the rest of the class meeting held for setup and changeovers.  Each direction's presentation length below is set to fit inside that window, and whatever your presentation does not use is Q&A.  Rehearse to time.  Demo Day is **external-facing**: alumni, industry guests, and faculty from other departments may join the audience and Q&A, as available; your grade never depends on who attends.
 
 Every team, regardless of direction, delivers at Demo Day:
 
@@ -411,7 +411,7 @@ In addition to the shared elements:
 
 - [ ] **The system:** a repository that runs from a fresh start following the README in under 3 minutes on a machine the team has not configured; configuration externalized to `config.json`, model versions and seeds pinned, exceptions handled with located messages, a test suite with at least one end-to-end test, CI on every push, and a publish step (triggered by the `submission` tag) pushing the artifact to GitHub Container Registry (GHCR), Docker Hub, or npm
 - [ ] **The report** (6-8 pages): design rationale tied to named course patterns; evaluation results with the baseline comparison table, failure analysis with transcripts, and re-measurement after mitigation; explainability design; limitations (your "disclose" bucket from the gallery walk, verbatim); a governance summary referencing the committed GOVERNANCE.md; the Responsible AI Report; and individual contribution statements documenting the role rotation
-- [ ] **The presentation** (12 minutes plus questions), meeting the shared Demo Day requirements, plus: the evaluation table (baseline vs. multi-agent, side by side) and the 90-second explainability story (what does a user see when the system makes a decision?)
+- [ ] **The presentation** (12 minutes, leaving 3 minutes of questions in your 15-minute window), meeting the shared Demo Day requirements, plus: the evaluation table (baseline vs. multi-agent, side by side) and the 90-second explainability story (what does a user see when the system makes a decision?)
 - [ ] **The artifacts folder:** final agent design table, final pre-mortem with binding governance clauses noted, all sprint notes, gallery-walk cards received with your triage, and a release-readiness checklist signed by the Evaluator confirming CI passes on the submission SHA (the commit hash of the version you submit), the artifact is live at its published URL, and the README was tested by a stranger
 
 ---
@@ -442,7 +442,7 @@ In addition to the shared elements:
 ### Direction B final deliverables
 
 - [ ] **The artifact package**, organized so it could be handed to a regulator without modification: the approved proposal, the risk analysis report, the governance document, the presentation materials, and the Responsible AI Report on your team's own AI use and probing
-- [ ] **The board presentation** (15 minutes, timing graded): the class role-plays the operator's board: intelligent, busy, skeptical, and mixed technical/non-technical.  Required arc: what the system does and who uses it (2 min, plain English); who is at risk and how (3 min, including at least one concrete individual harm example); what you found, by severity (5 min, most serious first, sources on request); what you recommend, in priority order (3 min, each with estimated effort and timeline); questions (remaining).  Prepare evidence-based responses to the three standard board objections: "these risks are theoretical," "the vendor tested it for fairness," and "we lack the resources"
+- [ ] **The board presentation** (your full 15-minute window, questions included, timing graded): the class role-plays the operator's board: intelligent, busy, skeptical, and mixed technical/non-technical.  Required arc: what the system does and who uses it (2 min, plain English); who is at risk and how (3 min, including at least one concrete individual harm example); what you found, by severity (5 min, most serious first, sources on request); what you recommend, in priority order (3 min, each with estimated effort and timeline); questions (remaining).  Prepare evidence-based responses to the three standard board objections: "these risks are theoretical," "the vendor tested it for fairness," and "we lack the resources"
 - [ ] **Demo Day additions:** the shared requirements above; the technically grounded evidence walkthrough serves as this direction's technical segment, and the partner-facing artifact presents the stakeholder context, the top findings by severity, and the priority recommendations
 - [ ] Individual contribution statements and reflections
 
@@ -490,7 +490,7 @@ In addition to the shared elements:
 
 - [ ] **The repository and the published package**: public GitHub repo running from a fresh start, CI green on the submission SHA, and a live registry URL where the artifact is installable
 - [ ] **The report** (3-5 pages): the gap and how it was verified; key design decisions and tradeoffs; property-test results; documentation strategy and the classmate quickstart-test result; license justification; governance rationale; the community engagement summary with evidence; the Responsible AI Report; and individual contribution statements
-- [ ] **The presentation** (8 minutes plus questions), meeting the shared Demo Day requirements, plus: property-test results and a 60-second governance statement addressed to the audience as potential users; the partner-facing artifact may be a well-crafted public project page presenting the stakeholder context, what the artifact does, its limits, and how to get it
+- [ ] **The presentation** (8 minutes, leaving 7 minutes of questions in your 15-minute window), meeting the shared Demo Day requirements, plus: property-test results and a 60-second governance statement addressed to the audience as potential users; the partner-facing artifact may be a well-crafted public project page presenting the stakeholder context, what the artifact does, its limits, and how to get it
 
 ---
 
