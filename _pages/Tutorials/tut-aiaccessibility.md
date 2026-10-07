@@ -88,7 +88,7 @@ An impressive overall number can hide serious failures for specific groups.  Tha
 | Speaker with dysarthria or other motor speech difference | 3% of test speakers | 84.3% accuracy, roughly one word in six is wrong, making captions difficult to follow. | This is the group for whom real-time captioning is most critical, and they experience the worst performance. |
 {: .tb-full}
 
-The weighted average across these groups is about 99%, the headline number.  The group with the highest error rate (15.7% of words wrong) is the group for whom captioning is not a convenience but a necessary communication bridge.
+The weighted average across these groups (each group's accuracy times its share of the test set) works out to about 98.3%, within a point of the 99% headline.  The group with the highest error rate (15.7% of words wrong) is the group for whom captioning is not a convenience but a necessary communication bridge.
 
 An AI caption generator achieves 98% word accuracy across all test speakers.  A disability advocate argues this metric is insufficient.  Which of the following is the most compelling reason?
 

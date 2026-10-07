@@ -106,7 +106,7 @@ The order matters.  If you see the judge's scores first, your human scores will 
 
 ## Code Cell
 
-Run this after both sheets are complete, with your three files in place of the examples.  It is the workshop's agreement check written as a function; a printed number per criterion is what you report at the stand-up on Tuesday.
+Run this after both sheets are complete, with your three files in place of the examples.  As written, it measures human-to-human agreement between your two blind scorers, which is the ceiling on what the judge can reach (see Question 2).  To get human-to-judge agreement, call the same `percent_agreement` function with the judge's levels, in the same shape, as one of the two arguments.  The printed numbers per criterion are what you report at the next stand-up, in Tuesday's *Project Studio: Sprint and Threat Model* session; today's stand-up used the workshop's numbers.
 
 ```python
 # After both partners have scored independently:
@@ -142,7 +142,7 @@ for cid in criteria:
     print(f"  {cid}: {agr:.0%}")
 ```
 
-With three files, each disagreement moves a criterion's number by 33 points, so treat the percentage as a check and the table as the deliverable.  The workshop's agreement on its sample submissions stays your baseline; today's number tells you whether that agreement survived real outputs.
+With three files, each disagreement moves a criterion's number by 33 points, so treat the percentage as a check and the table as the deliverable.  The workshop's human-to-judge agreement on its sample submissions stays your baseline; today's human-to-judge number, read against today's human-to-human ceiling, tells you whether that agreement survived real outputs.
 
 ### Critical Thinking Questions
 

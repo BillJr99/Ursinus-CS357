@@ -181,7 +181,7 @@ Notice that the last sentence still implies a health event and a hospital.  A re
 
 These two terms are often confused:
 
-- **Anonymization**: Removing or altering data so that re-identification is impossible, even with auxiliary data.  True anonymization is extremely hard.  Most "anonymized" datasets have been re-identified using public auxiliary information (for example, Netflix viewing histories re-identified using IMDb ratings).
+- **Anonymization**: Removing or altering data so that re-identification is impossible, even with auxiliary data.  True anonymization is extremely hard.  Many "anonymized" datasets have been re-identified using public auxiliary information (for example, Netflix viewing histories re-identified using IMDb ratings), and one study (Rocher, Hendrickx, and de Montjoye, *Nature Communications*, 2019) estimated that 99.98% of Americans could be correctly re-identified in any dataset using 15 demographic attributes.
 - **Pseudonymization**: Replacing identifiers such as names and Social Security numbers with pseudonyms such as arbitrary IDs.  Re-identification is possible if the pseudonym mapping leaks or if enough quasi-identifiers remain (details such as age, zip code, and gender that can identify a person when combined).  The GDPR treats pseudonymized data as still personal data, and still regulated.
 
 ### Critical Thinking Questions
@@ -553,7 +553,7 @@ Generative AI does more than replace human creativity.  Increasingly it collabor
 
 **AI-assisted novel writing.**  Several published novels have used a pipeline of AI tools: Midjourney for concept art to set a scene's mood, a language model for draft prose, and human editors for selection, revision, voice, and coherence.  At what percentage of AI-generated words does authorship shift meaningfully?  Does the answer change if the human's contribution is mainly *choosing* among AI outputs rather than writing prose directly?
 
-**AI in drug discovery.**  Generative models propose novel molecular structures; human researchers validate them computationally and then in wet-lab experiments.  AlphaFold's protein structure predictions and generative chemistry models have shortened drug discovery timelines dramatically.  Here, AI collaboration is widely seen as clearly beneficial: the AI generates candidates, and humans verify them and make deployment decisions.  Does the fact that lives are saved change the ethical calculus around the collaboration?
+**AI in drug discovery.**  Generative models propose novel molecular structures; human researchers validate them computationally and then in wet-lab experiments.  AlphaFold's protein structure predictions and generative chemistry models have shortened parts of the drug discovery pipeline, especially early structure prediction and candidate generation.  Here, AI collaboration is widely seen as clearly beneficial: the AI generates candidates, and humans verify them and make deployment decisions.  Does the fact that lives are saved change the ethical calculus around the collaboration?
 
 #### The Diminishing-Returns Hypothesis
 

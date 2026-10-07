@@ -103,13 +103,13 @@ Sign-up is first-come, first-served via the course sign-up sheet (link on the co
 
 ## Before You Start
 
-This is extra credit for the presenter and required participation for everyone else.  If you are reading this because you are thinking about leading a session, the section below is for you; if you are reading it because you are in the audience that day, read *For the Audience* above and the [reading response guide]({{ site.baseurl }}/Participation/ReadingResponses).
+This is a graded assignment for the presenter (a 10-point base grade plus an early-slot extra-credit bonus) and required participation for everyone else.  If you are reading this because you are thinking about leading a session, the section below is for you; if you are reading it because you are in the audience that day, read *For the Audience* above and the [reading response guide]({{ site.baseurl }}/Participation/ReadingResponses).
 
 **If you lead a session,** budget your time across three things: reading your source properly, preparing the questions, and putting together slides and logistics.  People underestimate the reading every time.  You cannot facilitate a discussion about a text you skimmed, because the whole job is fielding a question the text only half-answers.
 
 **Pick your source at least two weeks out**, and tell me what you picked.  If it is not on the seed list, that is welcome; just check with me so we do not double up and so I can make sure the class has access to it.
 
-**Plan backwards from the room rather than forwards from the text.**  The usual failure is a well-summarized paper and a silent room.  Decide first what you want the class arguing about, then work out how much of the source they need to get there.  Fifteen minutes of setup and thirty of discussion beats the reverse, every time.
+**Plan backwards from the room rather than forwards from the text.**  The usual failure is a well-summarized paper and a silent room.  Decide first what you want the class arguing about, then work out how much of the source they need to get there.  Three minutes of setup and six of discussion beats the reverse, every time.
 
 ---
 
@@ -227,7 +227,7 @@ This assignment is scored on the rubric above.  Leading a session earns a **10-p
 - [ ] I read the source in full, not a summary of it, and I could answer a question about a part I am not presenting.
 - [ ] I cleared my source with the instructor at least two weeks out.
 - [ ] The class can get to the source: it is free, linked, or I arranged access.
-- [ ] Setup is fifteen minutes or less.  The discussion is the session.
+- [ ] Setup is about three minutes or less.  The discussion is the session.
 - [ ] I prepared the required discussion questions, and at least one has no comfortable answer.
 - [ ] At least one question connects the source to something we have actually built or read in this course.
 - [ ] I have a plan for a silent room, and a plan for a room where one person talks the whole time.

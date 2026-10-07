@@ -41,10 +41,10 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 | Minutes | What we do |
 |---|---|
-| 0-10 | Set up: get your artifact displayed and your SQR (Strength, Question, Risk) cards in hand |
-| 10-45 | Gallery walk: every team sees every other team's work |
-| 45-70 | Studio time on what the walk surfaced |
-| 70-75 | One commitment per team for the next session |
+| 0-10 | Stand-up (section 1), with your artifact already displayed and your SQR (Strength, Question, Risk) cards in hand |
+| 10-50 | Gallery walk (section 2): every team sees every other team's work |
+| 50-70 | Triage (section 3): sort what the walk surfaced into a dated backlog |
+| 70-75 | Release readiness checklist (section 4) and one commitment per team for the next session |
 
 ---
 
@@ -189,7 +189,7 @@ The Evaluator signs off only when all six items are Yes with evidence.  A partia
 
 **Exercise 3.**  Rehearse the 90-second explainability story.  Each teammate delivers it to the rest of the team.  The team rates each delivery on three criteria: Does it name what the system does?  Does it explain why the system's answer can be trusted (or what its limits are)?  Does it avoid jargon that a non-CS audience would not understand?
 
-*What to do:* Set a timer for 90 seconds.  Each teammate delivers the story individually.  After each delivery, the Reflector gives one piece of specific feedback on the three criteria.
+*What to do:* Set a timer for 90 seconds.  Each teammate delivers the story individually.  After each delivery, the Evaluator gives one piece of specific feedback on the three criteria.
 
 *Starter hint:* A well-structured 90-second story: (1) What does the system do, in one sentence?  (2) Here is a concrete example: [show it].  (3) Here is how you can tell whether its answer is reliable: [show the explainability affordance].  (4) Here is one thing it does not do well: [state the disclosure].
 
@@ -211,7 +211,7 @@ The Evaluator signs off only when all six items are Yes with evidence.  A partia
 
 > *Hint:* Consider the analogy to drug side-effect disclosures, which are now legally required on packaging and in ads.  Before that regulation, pharmaceutical companies also had strong incentives to say little about side effects.  What changed?  Was it a high-profile failure, regulatory action, litigation, or cultural pressure?  Which of those seems most plausible for AI, and which actor (government, courts, journalists, or the public) would most likely trigger it?
 
-Write a combined reflection of 150-200 words addressing at least two of the three levels.  The Reflector should be prepared to share the team's most surprising piece of gallery feedback with the class.
+Write a combined reflection of 150-200 words addressing at least two of the three levels.  The Scribe, who recorded the gallery feedback verbatim, should be prepared to share the team's most surprising piece of it with the class.
 
 [[___ Your reflection here ___]]
 

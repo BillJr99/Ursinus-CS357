@@ -481,7 +481,7 @@ These attributes are still marked *Development* in the specification, and the Ge
 
 10.  Run the same question through your agent twice, once with a fresh history and once after ten turns.  `eval_count` barely changes but `prompt_eval_count` and `prompt_eval_duration` grow.  Explain why, and say which of the two numbers an agent that resends its whole history is really paying for.
 
-     *Hint:* Every turn resends every earlier turn as input.  What does the small context principle from the Observability session say to do about it, and which column of your CSV would show that it worked?
+     *Hint:* Every turn resends every earlier turn as input.  What does the Small Context Window Principle from the [Memory and Context tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MemoryAndContext) say to do about it, and which column of your CSV would show that it worked?
 
 11.  Your multi-agent system's CSV shows the critic agent using 70% of all input tokens but only 10% of output tokens.  What does that pattern suggest the critic is being sent, and what one change would you test first?
 

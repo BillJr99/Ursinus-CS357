@@ -620,7 +620,7 @@ Agent deployment exists on a spectrum from fully manual (the human does every st
 - **Human-on-the-loop**: The agent acts immediately but a human monitors and can intervene.  Used for low-stakes, reversible, high-volume tasks where errors are catchable before they cause harm.
 - **Human-in-the-loop**: The agent *pauses before acting* on specific trigger conditions and waits for explicit human approval.  Used for high-stakes, irreversible, or ambiguous situations where a mistake before intervention could cause lasting harm.
 
-The key design decision is identifying the **trigger conditions** that promote an action from autonomous execution to human review.  Research and practice have converged on five primary triggers:
+The key design decision is identifying the **trigger conditions** that promote an action from autonomous execution to human review.  This course works with five common triggers, which recur across many agent design guides even though no single standard list exists:
 
 1.  **Irreversibility**: The action cannot be undone: file deletion, sent email, financial transaction, published post.
 2.  **High stakes**: The consequences of error are large: production deployment, external communication to many people, legally binding document.

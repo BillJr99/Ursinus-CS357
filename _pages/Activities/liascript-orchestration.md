@@ -58,7 +58,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 **Router (one decision, then dispatch).**  A classifier agent reads the input and forwards it to one of several specialists: billing questions to the billing agent, technical questions to the tech agent.  The router's entire context is the input plus the menu of destinations, about as small as a context gets.  Reliability comes from constraining the router's output to a closed set of labels.
 
-**Planner (dynamic decomposition).**  When the workflow is *not* known in advance, a planner agent writes a step list, worker agents execute steps, and the planner revises on failures.  Planners buy flexibility at the cost of predictability, so we bound them with step budgets, a technique covered in depth in the supplemental *Advanced Agent Loops: Control Flow, Reflection, and Recovery* activity, if you explored it.
+**Planner (dynamic decomposition).**  When the workflow is *not* known in advance, a planner agent writes a step list, worker agents execute steps, and the planner revises on failures.  Planners buy flexibility at the cost of predictability, so we bound them with step budgets, a technique covered in depth in *Part IIb: Loops That Recover* below.
 
 Those three are the patterns we build today.  Two more fixed shapes belong in your vocabulary from day one, because your project designs will reach for them.  Here are all five, with where each one gets its full treatment:
 
@@ -274,15 +274,15 @@ These patterns are not mutually exclusive.  Production systems often layer them:
 
 ### Critical Thinking Questions
 
-1.  A ReAct agent is solving a ten-step research task.  Each step adds approximately 800 tokens to the context (thought + action + observation).  The model has a 32,000-token context window.  At what step does the agent risk running out of context?  What options does the agent have at that point?
+7.  A ReAct agent is solving a ten-step research task.  Each step adds approximately 800 tokens to the context (thought + action + observation).  The model has a 32,000-token context window.  At what step does the agent risk running out of context?  What options does the agent have at that point?
 
    > *Hint: Divide the window size by the tokens per step.  Then think: if the agent must summarize earlier content to make room, what information is most important to preserve: the most recent steps, the earliest steps, or something else?*
 
-2.  The Reflexion pattern stores lessons in episodic memory between runs.  What is the difference between a lesson stored in memory and a change to the agent's system prompt?  When would you prefer each approach?
+8.  The Reflexion pattern stores lessons in episodic memory between runs.  What is the difference between a lesson stored in memory and a change to the agent's system prompt?  When would you prefer each approach?
 
    > *Hint: A system prompt change affects every future run permanently.  A memory entry affects runs until it is cleared or overridden.  If you discover that your ResearchAgent repeatedly makes the same mistake, which mechanism is more appropriate, and what would make you choose differently?*
 
-3.  Tree-of-Thought evaluates k branches at each step using an LLM judge.  If k = 3 and the task has 5 steps, how many total LLM calls does the agent make in the worst case (all branches evaluated at every step)?  Compare this to a simple loop with the same 5 steps.
+9.  Tree-of-Thought evaluates k branches at each step using an LLM judge.  If k = 3 and the task has 5 steps, how many total LLM calls does the agent make in the worst case (all branches evaluated at every step)?  Compare this to a simple loop with the same 5 steps.
 
    > *Hint: At each step: 3 branches generated + 3 branches scored = 6 calls.  Multiply by 5 steps.  Now compare to 5 calls for a simple loop.  When is this 6× overhead worth paying?*
 
@@ -299,24 +299,24 @@ The task: *"Find the three most-cited papers on transformer self-attention publi
 | 1 | The task asks for citation data. I should search Semantic Scholar, which has an API for academic papers and returns citation counts. I will start with a broad search and filter by year. | `search_papers(query="transformer self-attention", year_max=2019, limit=10)` | Returns 10 papers with titles and Semantic Scholar IDs, but no citation counts are included in the search response. | Citation counts require a separate API call per paper ID. I have 10 IDs. I will look up the most likely candidates by title first rather than fetching all 10 counts. |
 | 2 | "Attention Is All You Need" (Vaswani et al., 2017) is almost certainly the most-cited transformer paper. I will fetch its citation count first as a baseline. | `get_paper_citations(paper_id="204e3073870fae3d05bcbc2f6a8e263d9b72e776")` | Returns: 97,432 citations as of today's date. | That is the most-cited paper. Now I will fetch the BERT paper, which is also transformer-based and pre-2020. |
 | 3 | BERT (Devlin et al., 2018) is a major transformer paper published before 2020. I will retrieve its citation count next. | `get_paper_citations(paper_id="df2b0e26d0599ce3e70df8a9da02e51594e0e992")` | Returns: 51,618 citations. | Two papers found with counts. I need a third. The search results include "Universal Language Model Fine-Tuning (ULMFiT)" by Howard and Ruder (2018); I will check it. |
-| 4 | ULMFiT is a 2018 NLP transfer learning paper that is transformer-adjacent. It appeared in the top 10 search results, making it a reasonable candidate for third most-cited. | `get_paper_citations(paper_id="1e077413b25c4d68cd0a8e6e8e42fcc50c85db7a")` | Returns: 4,441 citations. | I now have three papers with citation counts: 97,432; 51,618; 4,441. I can compile and return the final answer. All sub-goals are satisfied. |
+| 4 | ULMFiT is a 2018 NLP transfer learning paper. It appeared in the top 10 search results, making it a reasonable candidate for third most-cited. | `get_paper_citations(paper_id="1e077413b25c4d68cd0a8e6e8e42fcc50c85db7a")` | Returns: 4,441 citations. | I now have three papers with citation counts: 97,432; 51,618; 4,441. I can compile and return the final answer. All sub-goals are satisfied. |
 | 5 | I have all data needed to answer the task. No more tool calls are required. The three papers are identified and their citation counts are verified from the API. | *(No tool call, generating final answer text)* | - | Task complete. Returning the three papers and their citation counts to the user. |
 
-At step 1 the agent decides it needs two separate API calls rather than assuming one call returns everything.  At step 5, the agent recognizes termination because it has satisfied all sub-goals, not because it hit a step limit.
+At step 1 the agent decides it needs two separate API calls rather than assuming one call returns everything.  At step 5, the agent recognizes termination because it has satisfied all sub-goals, not because it hit a step limit.  Notice, though, that step 4 is a flawed choice: ULMFiT is built on an LSTM language model, not a transformer, so it does not meet the task's "transformer self-attention" criterion at all.  The Thought sounds reasonable while quietly dropping a constraint, which is exactly why the misconception below matters.
 
 ### Critical Thinking Questions
 
-4.  At step 3, the agent chose the third candidate by heuristic ("ULMFiT appeared in the top 10 results").  A more rigorous approach would fetch citation counts for all 10 papers from step 1 and sort them.  What is the tradeoff between the heuristic approach (fewer steps, less cost) and the exhaustive approach (guaranteed accuracy)?
+10.  At step 3, the agent chose the third candidate by heuristic ("ULMFiT appeared in the top 10 results").  A more rigorous approach would fetch citation counts for all 10 papers from step 1 and sort them.  What is the tradeoff between the heuristic approach (fewer steps, less cost) and the exhaustive approach (guaranteed accuracy)?
 
-   > *Hint: The heuristic gets to step 5 in 5 API calls.  The exhaustive approach requires 10 API calls for citation lookups plus 1 search call = 11 calls.  For this specific task, which would you choose, and what information would change your answer?*
+    > *Hint: The heuristic gets to step 5 in 5 API calls.  The exhaustive approach requires 10 API calls for citation lookups plus 1 search call = 11 calls.  For this specific task, which would you choose, and what information would change your answer?*
 
-5.  Rewrite step 4 assuming the API call fails with a timeout error (HTTP 408).  What should appear in the "Next Thought" column?  Write the full Thought entry the agent should produce to handle this gracefully without abandoning the task or repeating a call that already timed out.
+11.  Rewrite step 4 assuming the API call fails with a timeout error (HTTP 408).  What should appear in the "Next Thought" column?  Write the full Thought entry the agent should produce to handle this gracefully without abandoning the task or repeating a call that already timed out.
 
-   > *Hint: The agent should (a) acknowledge the failure, (b) decide whether to retry or try a different approach, and (c) have a fallback plan.  What would a good fallback be if the Semantic Scholar API is unavailable?*
+    > *Hint: The agent should (a) acknowledge the failure, (b) decide whether to retry or try a different approach, and (c) have a fallback plan.  What would a good fallback be if the Semantic Scholar API is unavailable?*
 
-6.  This trace shows the agent terminating because it self-assessed completion at step 5.  Identify two ways the task could have been specified differently in the original prompt that would make termination detection more reliable, without relying on the agent's judgment that it is "done."
+12.  This trace shows the agent terminating because it self-assessed completion at step 5.  Identify two ways the task could have been specified differently in the original prompt that would make termination detection more reliable, without relying on the agent's judgment that it is "done."
 
-   > *Hint: What machine-checkable criterion could be added to the task?  For example, instead of "find three papers," what if the task specified a verifiable property each paper must have?*
+    > *Hint: What machine-checkable criterion could be added to the task?  For example, instead of "find three papers," what if the task specified a verifiable property each paper must have?*
 
 > **Common Misconception:** Students often assume that a ReAct trace is a log of what the model "really thought", that the `Thought:` entries are genuine inner reasoning.  They are not.  The `Thought:` entries are generated text, just like the `Action:` entries.  The model generates them because the ReAct prompt instructs it to, not because they reflect a separate internal deliberation process.  So a model can generate a confident-sounding `Thought:` entry that is factually wrong or that contradicts its own next step.  ReAct traces are useful for debugging and auditing because they make the agent's reasoning *visible and checkable*, but visibility does not guarantee correctness.  Always verify key claims in the thought entries against the observations they are based on.
 
@@ -345,17 +345,17 @@ In this section you examine six concrete engineering controls that keep agent lo
 
 ### Critical Thinking Questions
 
-7.  The idempotency check compares `(action, args)` hashes.  An agent calls `search("transformer attention mechanisms")` at step 2, gets 5 results, calls other tools, and then at step 8 calls `search("transformer attention mechanisms")` again, hoping for updated results from the search index.  Is this a true oscillation or a legitimate re-query?  How would you modify the idempotency check to allow legitimate re-queries while still catching true oscillation?
+13.  The idempotency check compares `(action, args)` hashes.  An agent calls `search("transformer attention mechanisms")` at step 2, gets 5 results, calls other tools, and then at step 8 calls `search("transformer attention mechanisms")` again, hoping for updated results from the search index.  Is this a true oscillation or a legitimate re-query?  How would you modify the idempotency check to allow legitimate re-queries while still catching true oscillation?
 
-   > *Hint: What distinguishes a legitimate re-query from an oscillation loop?  Is it the time elapsed?  The number of intervening actions?  The agent's stated reason for repeating the call?  Which of these can be checked programmatically?*
+    > *Hint: What distinguishes a legitimate re-query from an oscillation loop?  Is it the time elapsed?  The number of intervening actions?  The agent's stated reason for repeating the call?  Which of these can be checked programmatically?*
 
-8.  A checkpointed agent resumes at step 7 after a crash.  Steps 1-6 included writing a file to a cloud storage bucket.  When the agent resumes, should it re-verify that the file exists before proceeding, or should it trust the checkpoint's record of what was done?  Construct the strongest argument for one approach.
+14.  A checkpointed agent resumes at step 7 after a crash.  Steps 1-6 included writing a file to a cloud storage bucket.  When the agent resumes, should it re-verify that the file exists before proceeding, or should it trust the checkpoint's record of what was done?  Construct the strongest argument for one approach.
 
-   > *Hint: Consider two scenarios: (a) the file write succeeded and the crash happened after; (b) the file write appeared to succeed but silently failed due to a network issue.  Which scenario is more dangerous to assume incorrectly, and does that change your answer?*
+    > *Hint: Consider two scenarios: (a) the file write succeeded and the crash happened after; (b) the file write appeared to succeed but silently failed due to a network issue.  Which scenario is more dangerous to assume incorrectly, and does that change your answer?*
 
-9.  The "token budget check" estimates the next call's token cost before making it.  Why is estimation necessary rather than just letting the API call fail if the context is too long?
+15.  The "token budget check" estimates the next call's token cost before making it.  Why is estimation necessary rather than just letting the API call fail if the context is too long?
 
-   > *Hint: When a context window is exceeded, the API does not return a clean error; it silently truncates the input from the beginning of the context.  If the truncation removes the task description or early reasoning steps, what happens to the quality of the agent's response?  Is a truncated context more dangerous than a detected budget failure?*
+    > *Hint: What happens when a context window is exceeded depends on the server.  Many hosted APIs reject the request with an error, which stops the loop mid-task; some local servers and client libraries instead truncate the input, often from the beginning of the context, without telling you.  If the truncation removes the task description or early reasoning steps, what happens to the quality of the agent's response?  Is a silently truncated context more dangerous than a detected budget failure, and is a mid-task error any better than planning ahead?*
 
 ---
 
@@ -377,11 +377,11 @@ Production systems typically combine all three: an explicit criterion when possi
 
 ### Critical Thinking Questions
 
-10.  An agent is tasked with *"Write a complete test suite for this Python module."*  There is no explicit count of required tests.  The agent writes 12 tests and declares itself done.  How would you revise the task specification to give the agent a more checkable termination criterion without over-specifying the solution?
+16.  An agent is tasked with *"Write a complete test suite for this Python module."*  There is no explicit count of required tests.  The agent writes 12 tests and declares itself done.  How would you revise the task specification to give the agent a more checkable termination criterion without over-specifying the solution?
 
     > *Hint: What properties of a test suite can be verified automatically? Coverage percentage? Presence of tests for each public function? At least one edge case per function? Pick a criterion that is machine-checkable but does not dictate how the agent should write the tests.*
 
-11.  A "perfectionism spiral" occurs when an agent keeps improving its output without ever declaring completion.  Describe the observable signature of this failure in the ReAct trace format (write out what the `Thought:` entries would look like across five consecutive steps) and state which specific safety control from the Loop Safety Controls table breaks the cycle.
+17.  A "perfectionism spiral" occurs when an agent keeps improving its output without ever declaring completion.  Describe the observable signature of this failure in the ReAct trace format (write out what the `Thought:` entries would look like across five consecutive steps) and state which specific safety control from the Loop Safety Controls table breaks the cycle.
 
     > *Hint: In a perfectionism spiral, each Thought will say something like "The draft is good, but it could be improved by..." even when the draft is already high quality. Which control imposes a hard ceiling on how long this can continue?*
 
@@ -518,15 +518,15 @@ DeepAgents makes exactly these decisions (when to plan, when to spawn, when to f
 
 ### Critical Thinking Questions
 
-9.  A hospital wants an agent system to draft discharge summaries and must certify to a regulator that the process is auditable and behaves the same way for comparable patients.  Argue why a **fixed** pipeline is easier to certify than a supervisor loop, and name the specific property of each that a regulator would ask about.
+18.  A hospital wants an agent system to draft discharge summaries and must certify to a regulator that the process is auditable and behaves the same way for comparable patients.  Argue why a **fixed** pipeline is easier to certify than a supervisor loop, and name the specific property of each that a regulator would ask about.
 
-   > *Hint: A regulator asks "can you show me, in advance, every path this system can take, and can you reproduce a given run?"  For a fixed pipeline the path is the same every time and each seam's intermediate is inspectable.  For a supervisor, the path is a model output that can differ between two similar inputs.  Which property makes "we tested this exact flow" a true statement?*
+    > *Hint: A regulator asks "can you show me, in advance, every path this system can take, and can you reproduce a given run?"  For a fixed pipeline the path is the same every time and each seam's intermediate is inspectable.  For a supervisor, the path is a model output that can differ between two similar inputs.  Which property makes "we tested this exact flow" a true statement?*
 
-10.  A supervisor loop is given a vague task and, on each turn, decides to spawn "one more researcher to be thorough."  Describe the runaway failure this invites, and explain precisely how the `SPAWN_BUDGET` in the Code Cell caps it, including what should happen at the moment the budget is hit.
+19.  A supervisor loop is given a vague task and, on each turn, decides to spawn "one more researcher to be thorough."  Describe the runaway failure this invites, and explain precisely how the `SPAWN_BUDGET` in the Code Cell caps it, including what should happen at the moment the budget is hit.
 
     > *Hint: Without a ceiling, "one more to be thorough" has no natural stopping point; cost and latency grow unbounded while the answer never finalizes. The budget converts an open-ended loop into a bounded one. But capping is not enough: look at the final `return` in the code. Why does it prepend `[stopped: ...]` instead of returning the transcript as if it were a finished answer?*
 
-11.  You are handed a new task and must pick a family before writing any code.  Give one concrete question you would ask about the task whose answer decides between a **fixed** shape and a **dynamic supervisor**, and explain why the same "least dynamic pattern that works" heuristic from Part I still applies one level up.
+20.  You are handed a new task and must pick a family before writing any code.  Give one concrete question you would ask about the task whose answer decides between a **fixed** shape and a **dynamic supervisor**, and explain why the same "least dynamic pattern that works" heuristic from Part I still applies one level up.
 
     > *Hint: The decisive question is roughly "can I enumerate the sequence (or set) of sub-agents this task needs before it starts?" If yes, a fixed shape is cheaper, more predictable, and easier to debug, so prefer it. A supervisor earns its unpredictability only when the answer is "no, the needed steps depend on what we discover along the way." How does choosing dynamic-when-fixed-would-do repeat the exact mistake the Part I heuristic warns against?*
 
@@ -542,11 +542,11 @@ Which single property most distinguishes a supervisor (dynamic) orchestrator fro
 
 # Part III: Synthesis and Practice
 
-In this part you first fold in two reliability upgrades (reflection and recovery, summarized here from the supplemental *Advanced Agent Loops* activity) and then extend and evaluate the pipeline and router you built in Part II, designing the message format for a planner.  These exercises connect directly to Lab work, so the design decisions you make here carry forward.
+In this part you first fold in two reliability upgrades (reflection and recovery, summarized here from *Part IIb: Loops That Recover*) and then extend and evaluate the pipeline and router you built in Part II, designing the message format for a planner.  These exercises connect directly to Lab work, so the design decisions you make here carry forward.
 
 ## Model 3: Reflection and Recovery, Keeping Composed Loops Reliable
 
-*(A two-model summary of material from the supplemental Advanced Agent Loops activity; see Going Deeper at the end if you want the full treatment.)*
+*(A two-model summary of material from Part IIb: Loops That Recover; revisit that part if you want the full treatment.)*
 
 **Why this matters:** Every orchestration you built today is still a loop, and loops fail in loop-shaped ways: they oscillate, overrun budgets, crash mid-task, and repeat the same mistake on every run.  Two upgrades address this.  The first is the **reflection loop** (Reflexion, Shinn et al., 2023).  After each *complete attempt* at a task, the agent critiques its own trajectory and stores a short "lesson" in memory ("for arXiv IDs, search arXiv directly rather than Google"), and the next attempt starts with those lessons loaded.  It shines on tasks with a clear success/failure signal that you expect to run many times.  Its failure mode is that a poor self-critique stores a *bad* lesson that actively hurts future runs, and every lesson spends context tokens.  The second is the **recovery/budget model**: even a well-architected loop needs circuit breakers, controls that keep a small failure from cascading:
 
@@ -585,13 +585,13 @@ def attempt(task, max_steps=6):
 
 ### Critical Thinking Questions
 
-7.  Which of the five controls does the Part II *pipeline* barely need, and which does a dynamic *planner or supervisor* absolutely need?  Explain using the difference in who authors the control flow.
+21.  Which of the five controls does the Part II *pipeline* barely need, and which does a dynamic *planner or supervisor* absolutely need?  Explain using the difference in who authors the control flow.
 
-   > *Hint: the pipeline's step count is fixed at three by your code, so max-iterations is satisfied by construction, but a planner chooses its own next step every turn, so the ceiling, the idempotency ledger, and the escalation gate are the only things standing between it and an unbounded run.*
+    > *Hint: the pipeline's step count is fixed at three by your code, so max-iterations is satisfied by construction, but a planner chooses its own next step every turn, so the ceiling, the idempotency ledger, and the escalation gate are the only things standing between it and an unbounded run.*
 
-8.  The nightly digest pipeline mangles a date once a week.  Write the one-sentence Reflexion lesson you would want stored, and name the safeguard that prevents a bad lesson (say, "always skip the polish stage") from silently degrading every future run.
+22.  The nightly digest pipeline mangles a date once a week.  Write the one-sentence Reflexion lesson you would want stored, and name the safeguard that prevents a bad lesson (say, "always skip the polish stage") from silently degrading every future run.
 
-   > *Hint: a lesson should name the successful strategy, not just criticize the failure, and because lessons are generated by the same model that failed, they deserve the same review you give any seam: log them, cap how many load per run, and audit them when quality drifts.*
+    > *Hint: a lesson should name the successful strategy, not just criticize the failure, and because lessons are generated by the same model that failed, they deserve the same review you give any seam: log them, cap how many load per run, and audit them when quality drifts.*
 
 ---
 
@@ -686,13 +686,12 @@ Respond to all three levels in your notebook:
 
 - Anthropic engineering blog.  "Building Effective Agents" (2024, online).  The workflow patterns formalized today.
 - Wu et al. "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation."  (2023).
-- Leon Festinger's classic organizational-communication literature, for the human analogy (optional browse).
 
 ---
 
 # Going Deeper (at home): More Fixed Shapes, and Framework Pointers
 
-> **The full advanced-loops activity:** Model 3 above compresses two models from [Advanced Agent Loops: Control Flow, Reflection, and Recovery](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestration.md); read that activity for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
+> **The full advanced-loops treatment:** Model 3 above compresses material from *Part IIb: Loops That Recover* earlier on this page; revisit that part for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
 
 > **The supervisor loop moved in-class.**  The dynamic-orchestration material now lives in **Part IIc** above rather than here: Two Families, the Code Cell, and the who-decides-control-flow recap.  What remains below covers the two fan-out and consensus shapes class had no time for, plus a reference sheet for all six patterns.
 

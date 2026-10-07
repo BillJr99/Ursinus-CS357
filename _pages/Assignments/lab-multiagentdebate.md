@@ -770,7 +770,7 @@ Report the cost next to the quality every time, because a loop that always wins 
 
 ## Part A, Extended: Rubric Judge-and-Refine Loop (5 points)
 
-Your Part A critic says one of two words, "accept" or "revise", and a list of issues.  A **judge** says more: for every criterion of an explicit rubric it picks a level, quotes the sentence of the draft that justifies the level, and writes one concrete revision instruction.  The producing agent (your Part A generator) revises from those instructions, the judge scores again, and the pair iterates until every criterion meets its bar or the round cap of three is reached.  This is the judge you built in the W10D1 *Judge Pipeline Workshop*, with two additions: a one-line "meets" bar per criterion and a revision instruction per score.
+Your Part A critic says one of two words, "accept" or "revise", and a list of issues.  A **judge** says more: for every criterion of an explicit rubric it picks a level, quotes the sentence of the draft that justifies the level, and writes one concrete revision instruction.  The producing agent (your Part A generator) revises from those instructions, the judge scores again, and the pair iterates until every criterion meets its bar or the round cap of three is reached.  This is the judge you built in the *Judge Pipeline Workshop* (*Evaluating Agents With a Rubric*, Week 10), with two additions: a one-line "meets" bar per criterion and a revision instruction per score.
 
 The point of this part is not a better docstring.  It is the per-round log.  A loop whose scores climb from round 1 to round 3 can mean three different things, and only the log plus your own reading can tell them apart:
 
@@ -1799,7 +1799,7 @@ Held against the rubric's `proficient` column.  On the no-code or low-code route
 - [ ] A transcript shows at least two complete cycles, with a draft changing in response to a critique.
 - [ ] **Calibration:** drafts with planted defects spanning **every** rubric criterion, plus at least two defect-free drafts, with detection rate and **false positive** rate per criterion in a table and the weakest criterion shown before and after its rewrite.
 - [ ] The writeup shows a case where the critic was **wrong**, plus how I could tell.
-- [ ] **Reward hack:** a working one, shown verbatim, with the critic's "accept" next to my own judgment that the draft is poor; the patch shown as a **change**; a second transcript showing the patched rubric rejects the hack **and still accepts a defect-free draft**.
+- [ ] **Reward hack:** a working one, shown verbatim, with the critic's "accept" next to my own judgment that the draft is poor; the patch shown as a **change**, the patched criterion beside the original; a second transcript showing the patched rubric rejects the hack **and still accepts a defect-free draft**.
 - [ ] **Comparison:** fixed tasks, the same scoring instrument on both sides, and a paragraph that says what the loop cost in extra calls for the quality it bought.
 - [ ] **Judge-and-refine:** the judge scores **every** criterion against a stated `meets` bar with a quoted sentence and a revision instruction, the producer revises from those instructions, and the loop stops at **three rounds at most** or as soon as every criterion meets its bar.
 - [ ] Per-round scores are logged (`judge_rounds.csv` or the spreadsheet), and the writeup says whether refinement **converged, drifted, or was sycophantic**, with the draft change (or its absence) as evidence and the count of quotes not found in the draft.

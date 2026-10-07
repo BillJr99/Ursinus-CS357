@@ -60,7 +60,7 @@ The design has four pieces, each independently replaceable:
 
 ## The Pattern Has a Name: Karpathy's LLM Wiki
 
-What you are about to build is a specific, widely adopted pattern rather than a local invention, and it is worth knowing the name and reading the source.  In April 2026, Andrej Karpathy published a gist titled [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) describing what he called an **LLM wiki**: a folder of Markdown files that a model incrementally builds and maintains for you, so that what you learn accumulates instead of evaporating at the end of each session.  The gist is prose, not code (it is written to be handed to an agent), and it is short enough to read in ten minutes.  Read it before you build, because everything below is an implementation of it.
+What you are about to build is a specific, named pattern rather than a local invention, and it is worth knowing the name and reading the source.  In April 2026, Andrej Karpathy published a gist titled [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) describing what he called an **LLM wiki**: a folder of Markdown files that a model incrementally builds and maintains for you, so that what you learn accumulates instead of evaporating at the end of each session.  The gist is prose, not code (it is written to be handed to an agent), and it is short enough to read in ten minutes.  Read it before you build, because everything below is an implementation of it.
 
 The pattern has three layers, and our vault is one arrangement of them:
 
@@ -88,15 +88,15 @@ And three operations, each of which is a standing prompt rather than a piece of 
 
 ### Questions to Work Through
 
-1.  Compare the classic `repo`-scope Personal Access Token against a fine-grained token limited to a single repository's Contents permission.  What does an attacker gain with each token if it leaks?  Which does our data-minimization principle select, and why?
+1.  Compare the classic `repo`-scope Personal Access Token against a fine-grained token limited to a single repository's Contents permission.  What does an attacker gain with each token if it leaks?  Which does the principle of least privilege (grant a credential only the access its task needs) select, and why?  The [Obsidian Sync tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync) walks through creating the fine-grained token in its Part I setup table.
 
     *Hint:* A classic `repo`-scope token gives read/write access to all repositories in your account, including private ones.  A fine-grained token scoped to one repository gives access only to that repository's file contents.  What is the worst-case scenario for each if the token appears in a public log?
 
-2.  The expired-token failure is *silent*: local editing in Obsidian continues working, and only cross-device staleness or agent failures reveal the problem, sometimes days later.  Design the cheapest detection habit you can (a calendar reminder, a canary note an agent updates daily) and justify why your choice is the right tradeoff between effort and reliability.
+2.  A fine-grained PAT carries the expiration date you chose when you generated it (see the Part I setup in the [Obsidian Sync tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync)).  When it expires, the failure is *silent*: local editing in Obsidian continues working, and only cross-device staleness or agent failures reveal the problem, sometimes days later.  Design the cheapest detection habit you can (a calendar reminder, a canary note an agent updates daily) and justify why your choice is the right tradeoff between effort and reliability.
 
     *Hint:* A calendar reminder set for one day before the token's expiration date costs almost nothing to set up.  A canary note that an agent updates daily would reveal staleness within 24 hours but requires an agent running on a schedule.  Which failure mode do you actually care more about catching early?
 
-3.  Your vault will hold personal context by design.  List three categories of information you would deliberately keep *out* of even a private synced vault, and state the specific principle behind each exclusion.  Consider both the risk of token theft and the risk of the GitHub account itself being compromised.
+3.  Your vault will hold personal context by design.  List three categories of information you would deliberately keep *out* of even a private synced vault, and state the specific principle behind each exclusion.  The *Security Note: What NOT to Put in a Synced Vault* section of the [Obsidian Sync tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync) is a starting point.  Consider both the risk of token theft and the risk of the GitHub account itself being compromised.
 
     *Hint:* Consider categories like: credentials and passwords (should never be in plaintext anywhere), health or financial information with legal protection (subject to breach notification requirements even in private repos), and information that belongs to others (contacts, private conversations) rather than only to you.
 
@@ -230,7 +230,7 @@ With the zone structure and contract defined, you are ready to learn the metadat
 
 # Part III: The Metadata Protocol Every Agent Write Must Follow
 
-In this part, you will learn the specific metadata bookkeeping step that every agent commit must include to keep the bidirectional sync working, the single most common failure point when wiring agents to a gitless-synced vault.
+In this part, you will learn the specific metadata bookkeeping step that every agent commit must include to keep the bidirectional sync working, a common failure point when wiring agents to a gitless-synced vault.
 
 ## Why Agent Writes Need One Extra Step
 

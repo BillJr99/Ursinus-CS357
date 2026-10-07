@@ -184,9 +184,9 @@ Remember two things from this section.  In an agent, text that reaches the conte
 
 ### The OWASP LLM Top 10
 
-The Open Web Application Security Project (OWASP) publishes an annually updated list of the most critical security risks for LLM applications.  The 2025 edition names ten risks.  The table gives you a vocabulary and a checklist that transfers to any agentic project you build.  Each row describes the risk and how to recognize it in the wild.
+The Open Worldwide Application Security Project (OWASP) publishes a periodically revised list of the most critical security risks for LLM applications.  The table below follows the 2023 list (version 1.1), which names ten risks.  OWASP's 2025 edition renumbered and renamed several of these items (for example, Excessive Agency is LLM06:2025, and System Prompt Leakage and Vector and Embedding Weaknesses are new), so check which edition a label refers to; this page uses the 2023 numbering throughout.  The table gives you a vocabulary and a checklist that transfers to any agentic project you build.  Each row describes the risk and how to recognize it in the wild.
 
-#### OWASP LLM Top 10 (2025) - With Detection and Response
+#### OWASP LLM Top 10 (2023, v1.1) - With Detection and Response
 
 | OWASP ID | Risk Name | What It Means | How to Recognize It | Primary Defense |
 |---|---|---|---|---|
@@ -202,7 +202,7 @@ The Open Web Application Security Project (OWASP) publishes an annually updated 
 | LLM10 | Model Theft | The model's weights or learned behavior are extracted through repeated querying, enabling reproduction without training cost or the application of adversarial fine-tuning | Unusually large numbers of systematically varied queries from a single IP; queries that appear designed to probe the model's decision boundary | Rate limiting; anomaly detection on query patterns; watermarking of model outputs |
 {: .tb-full}
 
-> Many developers focus almost exclusively on LLM01 (Prompt Injection) and treat the other nine risks as secondary.  In practice, LLM08 (Excessive Agency) is responsible for some of the most severe real-world incidents because it multiplies the impact of every other attack.  A prompt injection into an agent with read-only access causes information disclosure; the same injection into an agent with delete access causes data loss.  Defense starts with LLM08.
+> Many developers focus almost exclusively on LLM01 (Prompt Injection) and treat the other nine risks as secondary.  In practice, LLM08 (Excessive Agency) deserves at least as much attention because it multiplies the impact of every other attack.  A prompt injection into an agent with read-only access causes information disclosure; the same injection into an agent with delete access causes data loss.  Defense starts with LLM08.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---
@@ -489,7 +489,7 @@ There are two primary categories:
 - **Direct prompt injection**: The user is the attacker.  They send a malicious message directly to the agent, attempting to override its instructions.
 - **Indirect prompt injection**: A third party has pre-positioned malicious instructions somewhere the agent will later read: a webpage, a database record, an email in the user's inbox, a PDF the agent was asked to summarize.  The attacker never contacts the agent directly.
 
-The OWASP LLM Top 10 (2025) lists ten risk categories for LLM-based systems: (1) Prompt Injection, (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  Prompt injection is listed first because it is the most direct path to exploiting all the others.
+The OWASP LLM Top 10 (2023, v1.1) lists ten risk categories for LLM-based systems: (1) Prompt Injection, (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  Prompt injection is listed first because it is the most direct path to exploiting all the others.
 
 **Before and after: an indirect injection attack and its defense.**
 
@@ -588,7 +588,7 @@ Remember two things from this section.  You may not be able to stop the injectio
 
 ### Red Team Exercise
 
-Understanding the attack is a prerequisite to designing the defense.  This is an educational red-team exercise: you are building the defense, but you must understand the offense to test it.  Red-teaming is standard practice at every major AI company, because you want to find your own vulnerabilities before adversaries do.
+Understanding the attack is a prerequisite to designing the defense.  This is an educational red-team exercise: you are building the defense, but you must understand the offense to test it.  Red-teaming is common practice at major AI companies, because you want to find your own vulnerabilities before adversaries do.
 
 Below is a "hardened" system prompt for an agent that summarizes documents:
 
@@ -710,7 +710,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
    *What to do:* For each of the four attack scenarios in the injection taxonomy table above, identify the secondary OWASP LLM Top 10 category that is most relevant beyond the primary Prompt Injection category, and explain in two sentences why that secondary category applies to this specific scenario.
 
-   *Starter hint:* The OWASP LLM Top 10 (2025) categories include: (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  For the email scenario where the agent might send the user's API keys to an attacker, which category beyond Prompt Injection is most directly applicable?
+   *Starter hint:* The OWASP LLM Top 10 (2023, v1.1) categories include: (2) Insecure Output Handling, (3) Training Data Poisoning, (4) Model Denial of Service, (5) Supply Chain Vulnerabilities, (6) Sensitive Information Disclosure, (7) Insecure Plugin Design, (8) Excessive Agency, (9) Overreliance, and (10) Model Theft.  For the email scenario where the agent might send the user's API keys to an attacker, which category beyond Prompt Injection is most directly applicable?
 
    *You've succeeded when:* You have four scenarios mapped to four secondary OWASP categories (not all the same), each with a two-sentence explanation that specifically connects the scenario's mechanism to the category definition.
 

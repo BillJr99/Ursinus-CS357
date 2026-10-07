@@ -464,7 +464,6 @@ schedule:
   readings:
   - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients.  Supports the Tools and MCP Lab"
     rlink: "https://huggingface.co/learn/mcp-course/"
-    rlink: false
   - rtitle: "Optional: install Obsidian before class.  Model 3 puts an MCP server in front of a vault, and it is more useful on your own notes"
     rlink: "https://obsidian.md"
   - rtitle: "Syncing Obsidian to GitHub and wiring agents to your vault: the read path and write path that today's Model 3 exposes as tools"

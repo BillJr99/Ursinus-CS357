@@ -420,7 +420,7 @@ In addition to the shared elements:
 
 > **What this direction requires.** A **specific** system: a named, deployed product with a defined purpose and identifiable affected populations, in the domain your community partner cares about.  Not "AI in hiring," but a named tool as deployed by a named operator.  You are not expected to have access to the system's internals.  Base the analysis on public documentation, news coverage, academic studies, and regulatory filings, and cite every claim.  Documented absence of information is itself a finding.
 
-Perform a structured **responsible AI audit** of a publicly available, deployed AI system.  Regulators, investors, and the communities a system touches increasingly ask for exactly this analysis.  The deliverable is not an opinion piece.  It is evidenced, structured, and written for people who will make decisions based on it.  Strong candidates: a hiring screening tool, a medical imaging AI, a content moderation system, a predictive risk tool in criminal justice or benefits eligibility, or an educational AI that grades or places students.  Avoid general-purpose chatbots unless scoped to a specific deployment context.
+Perform a structured **responsible AI audit** of a publicly available, deployed AI system.  This is the kind of analysis that regulatory frameworks such as the EU AI Act and the NIST AI RMF call for, and that the communities a system touches have reason to ask for.  The deliverable is not an opinion piece.  It is evidenced, structured, and written for people who will make decisions based on it.  Strong candidates: a hiring screening tool, a medical imaging AI, a content moderation system, a predictive risk tool in criminal justice or benefits eligibility, or an educational AI that grades or places students.  Avoid general-purpose chatbots unless scoped to a specific deployment context.
 
 ### Direction B proposal elements
 
@@ -464,7 +464,7 @@ Instead of publishing a new artifact, your team may make substantive, reviewed c
 - The CONTRIBUTING.md and GOVERNANCE.md requirements are met by following the upstream project's own documents and stating in your report what they required of you.
 - Scope must be approved in the proposal, whose "what the artifact does / who would use it / how they would install it" elements describe the upstream feature you are adding.
 
-A contribution reviewed by the maintainers of a real project is a portfolio line few graduates have.
+A contribution reviewed by the maintainers of a real project is a strong portfolio line, and one that many graduates do not have.
 
 ### Direction C proposal elements
 
@@ -689,7 +689,7 @@ Demo Day is already a multi-audience event: your community partner's world and y
 
 During the *Final Integration and Demo Rehearsal* studio, you will pair **across teams** for interview rounds, credited as class participation.
 
-**Format.**  Ten minutes per round, then swap roles.  The interviewer asks from the question bank below (or invents better ones).  The interviewee answers **without slides**; a whiteboard or paper is allowed, your repository is not.  Close each round with an SQR-style feedback card: one **Strength**, one **Question** the interviewee should be ready for at Demo Day.
+**Format.**  Ten minutes per round, then swap roles.  The interviewer asks from the question bank below (or invents better ones).  The interviewee answers **without slides**; a whiteboard or paper is allowed, your repository is not.  Close each round with an SQR-style feedback card: one **Strength** with evidence, one **Question** the interviewee should be ready for at Demo Day, and one **Risk** in how they explain the project, with a suggested fix.
 
 **Question bank** (interviewers: pick three or four, follow the answers, dig where they wobble):
 
@@ -723,7 +723,7 @@ A: The presentation is graded by the Final Project's existing rubric.  Guest att
 A: Talk to the instructor beforehand; the format can be adjusted (a smaller room, a written walk-through, extra prep time).  The rehearsal exists because the tenth time explaining your architecture is calmer than the first.  We want you to spend the nervous repetitions here, where they are cheap.
 
 **Q: Our project is an audit with no running system.  What do we demo to a guest?**
-A: The evidence walkthrough is your demo: one failure mode, its mechanism, and the trail of citations behind it, shown rather than asserted.  Guests with industry experience often find the audit conversations the most engaging in the room.
+A: The evidence walkthrough is your demo: one failure mode, its mechanism, and the trail of citations behind it, shown rather than asserted.  Done well, an audit conversation can be among the most engaging in the room, for guests and classmates alike.
 
 ### Demo Day Guide Reflection Prompts
 

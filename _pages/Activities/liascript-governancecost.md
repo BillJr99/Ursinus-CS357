@@ -178,7 +178,7 @@ Most people who use AI daily know that large models need a lot of computation an
 
 **Training** a large language model is a one-time but enormous expenditure.  Estimates for GPT-3 (175B parameters) place training energy at approximately 1,287 MWh and carbon emissions at roughly 500 tonnes of CO$_2$ equivalent, comparable to the lifetime emissions of five average American cars or about 125 transatlantic flights.  GPT-4-scale models need substantially more, though developers do not publish precise figures.  The actual figure depends heavily on the grid carbon intensity (the grams of CO$_2$ emitted per kilowatt-hour, which swings from near-zero on Iceland's geothermal grid to several hundred grams in coal-heavy regions) where training runs.
 
-Inference at scale often exceeds training in total impact because it recurs with every query.  A single ChatGPT prompt is estimated to consume roughly ten times the energy of a Google search; with hundreds of millions of queries per day, inference becomes the dominant term.  Water compounds this: Microsoft reported in 2023 that its data centers consumed approximately 1.7 liters of cooling water per 20-50 ChatGPT prompts.  Water stress in regions hosting large data centers is a real externality.
+Inference at scale often exceeds training in total impact because it recurs with every query.  A single ChatGPT prompt is estimated to consume roughly ten times the energy of a Google search; with hundreds of millions of queries per day, inference becomes the dominant term.  Water compounds this: a widely cited 2023 estimate from UC Riverside researchers (Li et al., "Making AI Less 'Thirsty'") put the water cost of a GPT-3-era model at roughly a 500 mL bottle per 20-50 prompts, depending on when and where the model runs.  Water stress in regions hosting large data centers is a real externality.
 
 Embodied carbon (the emissions from manufacturing GPUs, servers, networking equipment, and undersea cables, before any of them are switched on) is usually excluded from AI carbon accounting.  Estimates put it at 50-80% of a data center's lifetime footprint for hardware-intensive workloads.  Ignoring it systematically understates the cost of "upgrading to a more efficient model."
 
@@ -186,7 +186,7 @@ Embodied carbon (the emissions from manufacturing GPUs, servers, networking equi
 
 ## Model 3: Carbon Cost Comparison
 
-Every time you choose which model to use for a task (a frontier API, a local quantized model, a fine-tuned small model) you make an environmental decision, whether or not you think of it that way.  The table gives you proportional anchors for that choice.  As you read it, look for the ratio between the smallest and largest entries; that span of nine orders of magnitude is the intuition to carry into Section 5.
+Every time you choose which model to use for a task (a frontier API, a local quantized model, a fine-tuned small model) you make an environmental decision, whether or not you think of it that way.  The table gives you proportional anchors for that choice.  As you read it, look for the ratio between the smallest and largest entries; that span of more than eleven orders of magnitude is the intuition to carry into Section 5.
 
 | Action | Estimated CO$_2$ equivalent | Approximate real-world equivalent | Engineering implication |
 |---|---|---|---|
@@ -194,8 +194,8 @@ Every time you choose which model to use for a task (a frontier API, a local qua
 | Training a GPT-4-scale model | ~1,000-10,000 tonnes (estimated) | 250-2,500 transatlantic flights | Undisclosed costs from frontier labs mean independent accountability is not possible |
 | 1 million ChatGPT-style queries | ~0.5 tonnes | Driving a gasoline car ~2,000 km | At scale, inference dominates; caching repeated queries is a significant lever |
 | 1 AI image generation (diffusion model) | ~0.003 kg | Charging a smartphone once | Individually small, but frequency and user base scale this rapidly |
-| 1 standard email (no attachment) | ~0.000004 kg | 1 second of a 60W light bulb | Baseline for comparison; AI queries are several thousand times more expensive |
-| A laptop running for 8 hours | ~0.07 kg | 700 emails or ~23 AI image generations | Local inference shares the laptop's base consumption; no additional cooling overhead |
+| 1 standard email (no attachment) | ~0.000004 kg | 1 second of a 60W light bulb | Baseline for comparison; at the table's per-query figure, an AI query is roughly 125 times more expensive |
+| A laptop running for 8 hours | ~0.07 kg | ~17,500 emails or ~23 AI image generations | Local inference shares the laptop's base consumption; no additional cooling overhead |
 | 1 hour of video streaming | ~0.036 kg | Comparable to a laptop at moderate load | Streaming infrastructure is already at data-center scale; AI inference is an additional load |
 
 *Note: All figures are order-of-magnitude estimates that vary by grid carbon intensity, hardware generation, and methodology.  Treat them as rough anchors for proportional reasoning, not precise measurements.*
@@ -225,14 +225,14 @@ The central proportional insight of Model 3 is that:
 
 A campus helpdesk deploys a cloud chatbot that handles **3,000 queries per day, every day of a 30-day month**.  Using only your intuition first (no arithmetic yet) each team writes down an estimate of the deployment's monthly electricity use (in kWh) and monthly cooling-water use (in liters).  The Recorder logs both estimates before anyone opens the worked numbers.
 
-Then compute it properly from the figures in this Part: take a ChatGPT-style query at roughly 3 Wh (about ten times a ~0.3 Wh web search) and cooling water at roughly 1.7 liters per 35 prompts (the midpoint of the reported 20-50 prompt range).  Compare against the worked numbers below.
+Then compute it properly from the figures in this Part: take a ChatGPT-style query at roughly 3 Wh (about ten times a ~0.3 Wh web search) and cooling water at roughly 0.5 liters per 35 prompts (the midpoint of the reported 20-50 prompt range).  Compare against the worked numbers below.
 
 <details>
 <summary>Worked numbers (open only after both estimates are recorded)</summary>
 
 - Queries per month: 3,000 × 30 = **90,000 queries**
 - Electricity: 90,000 × 3 Wh = 270,000 Wh ≈ **270 kWh per month** (roughly a US household's electricity for about a week and a half)
-- Water: (90,000 ÷ 35) × 1.7 L ≈ **4,400 liters per month** (about 29 full bathtubs)
+- Water: (90,000 ÷ 35) × 0.5 L ≈ **1,300 liters per month** (about 8 full bathtubs)
 
 </details>
 
@@ -490,7 +490,7 @@ Your policy has a structure, your project is mapped onto real frameworks, and yo
 
 ## Reflection Prompt
 
-*Personal:* Which of the four roles (builder, evaluator, auditor, policy author) felt most natural to you today, and which felt most uncomfortable?  Then look at the numbers from Part II.  Did they change how you feel about your own AI use this semester, or did you find yourself rationalizing the usage you already had?  Either answer is informative.
+*Personal:* Which of the four roles (Manager, Recorder, Presenter, Reflector) felt most natural to you today, and which felt most uncomfortable?  Then look at the numbers from Part II.  Did they change how you feel about your own AI use this semester, or did you find yourself rationalizing the usage you already had?  Either answer is informative.
 
 *Technical:* The sections you wrote commit you, in writing, to a data retention schedule, a model tier, a token budget, and a measurement someone posts on a schedule.  What would it mean to enforce those commitments on yourself and your team after the course ends?  And is there a version of your project that fits the Jevons pattern, where making it efficient is exactly what makes expansion rational?
 

@@ -147,7 +147,7 @@ The rubric is the same on both paths: a pipeline earns each row whether it is ha
 Complete these activities before writing any code:
 
 - [RAG Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md): the index, retrieve, generate pipeline
-- [RAG Quality: Chunking and Measuring Retrieval]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md): recall@k, faithfulness, and abstention
+- [RAG and Fine-Tuning: Retrieval Quality and LoRA]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md): recall@k, faithfulness, and abstention
 
 Install the tools (the code path needs all three; the no-code path installs Langflow in Direction 0 instead):
 
@@ -580,13 +580,13 @@ Part 5 is a structured checkup on the pipeline from Parts 2 through 4.  You do t
 
 It sits mid-window on purpose.  Your pipeline is running by then and not yet due, which is the only point in the term when a diagnostic can still change what you build.
 
-The metrics come from *RAG Quality: Chunking and Measuring Retrieval*.  The *RAG Quality* session walks through Part 5 before the lab is handed out; do the worksheet itself mid-window, with your pipeline-in-progress in front of you, and bring stuck points to office hours.
+The metrics come from *RAG and Fine-Tuning: Retrieval Quality and LoRA*.  That session walks through Part 5 before the lab is handed out; do the worksheet itself mid-window, with your pipeline-in-progress in front of you, and bring stuck points to office hours.
 
 The harness follows you forward: the rubric judge you build in the Judge Pipeline Workshop grows from the same pattern, and Evaluation Workshop II turns that judge on your own project work.  Work on your pair's own pipeline and corpus, and keep the swap log going.
 
 ### Before You Start Part 5
 
-This builds on the *Hallucinations and Evaluating Agent Outputs* session (where you mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from), the *RAG Quality* session, and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  If it is not running, start there, and bring it to office hours if it stays stuck: debugging it is the first step of the checkup, and the checkup works on a pipeline you got running at 12:20.
+This builds on the *Hallucinations and Evaluating Agent Outputs* session (where you mapped the territory where models are unreliable and wrote the evaluation harness that Step 5a starts from), the *RAG and Fine-Tuning* session, and your in-progress pipeline.  You do not need Parts 2 through 4 finished; you need the pipeline *running*, even badly.  If it is not running, start there, and bring it to office hours if it stays stuck: debugging it is the first step of the checkup, and the checkup works on a pipeline you got running yourself.
 
 > **Have ready.**
 > - Your lab repository, cloned and runnable, with your corpus indexed and at least one chunking configuration working end to end.
@@ -674,7 +674,7 @@ In the worked row, Config A retrieved `c14` and stopped; the policy spanned two 
 Freeze your evaluation so it can be rerun forever.  The point is not the code; it is that **six weeks from now you can prove a change made things better rather than believing it did.**
 
 > **Do this.**
-> 1. **Pin a golden set.** Take your 5a items and **extend** them with at least five corpus-specific questions from your own corpus.  Keep the 5a items; step 6 grades your predictions against what happened.  Include at least one question that **should trigger abstention**; a harness with no abstention case cannot tell a confident wrong answer from a right one.
+> 1. **Pin a golden set.** Take your 5a items and **extend** them with at least five corpus-specific questions from your own corpus.  Keep the 5a items; item 6 of this list grades your predictions against what happened.  Include at least one question that **should trigger abstention**; a harness with no abstention case cannot tell a confident wrong answer from a right one.
 > 2. **Pin the protocol.** Temperature 0.0, a fixed seed, the model name, the chunking configuration, and `k`.  Write all five at the top of the harness, not in your memory of what you did.
 > 3. **Build it in your chosen medium**: a spreadsheet run sheet with a dated column per run, a promptfoo YAML case list, or a Python script grown from the class harness.
 > 4. **Run it twice**, changing nothing between runs.
@@ -685,7 +685,7 @@ Freeze your evaluation so it can be rerun forever.  The point is not the code; i
 >    - You may also find a third kind in a RAG pipeline, a **retrieval failure**: the model would have known the answer from the right chunk and did not get it.  Name it; it points straight back at 5b's recall numbers.
 > 7. **Commit** the harness and the golden set inside your lab repository (and include them in the submission ZIP), where Evaluation Workshop II can pick them up.
 
-Step 6 is why you wrote the predictions down first: a benchmark whose failures are mostly metric failures is measuring your rules, not your system.  A worked miss, for calibration:
+Item 6 (classifying your misses) is why you wrote the predictions down first: a benchmark whose failures are mostly metric failures is measuring your rules, not your system.  A worked miss, for calibration:
 
 > **Item 7** (fragile, citation-shaped).  Predicted FAIL, outcome PASS.
 >

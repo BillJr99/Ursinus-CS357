@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 **How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out on Thursday, October 29, and Part III previews the lab's Part 5, the RAG Quality Checkup pathway, which turns today's metrics into a golden set, a worksheet, and a regression harness.
 
-The *Local Agent* lab is [due today](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent), and the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP), which gives that agent hands, is handed out today.
+Keep the *Local Agent* lab moving; it is [due Tuesday, October 20](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent).  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP), which gives that agent hands, is handed out Thursday, October 15.
 
 ---
 

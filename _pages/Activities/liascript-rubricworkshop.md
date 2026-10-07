@@ -57,7 +57,7 @@ The library should stay open until 2 a.m. during finals week. Seventy-one percen
 `samples/s02.txt`:
 
 ```text
-I think the library should probably stay open later during finals. A lot of people study late and it would help them. Some students have said they wish it was open longer. It might cost a bit more, but that is probably worth it.
+A lot of people study late during finals, and longer hours would help them. I think the library should probably stay open later. Some students have said they wish it was open longer. It might cost a bit more, but that is probably worth it.
 ```
 
 `samples/s03.txt`:
@@ -296,7 +296,7 @@ Expected: 3 rows times 3 assertions, nine verdicts.
 
    *Hint:* The same model read the same text under two different prompts.  Disagreement between the routes is not a bug in either one; it measures how much the *wording* of the rubric line moves the judge.
 
-Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass line, and both routes grade the same `samples/` with the same model.  A configuration file is not more accurate than a script; what it buys you is one file holding rubric, judge, and tests that you can change, which is the Part 5 harness discipline in the lab.
+Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass line, and both routes grade the same `samples/` with the same model.  A configuration file is not more accurate than a script; what it buys you is one file holding rubric, judge, and tests that you can change.  It is the same discipline as Step A.1 of the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), where `config.json` and `rubric.json` hold every setting and criterion so you can change them without editing code.
 
 ---
 # Part III: Make It Trustworthy
@@ -374,7 +374,7 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 3.  *Regression tripwire.*
 
    - *What to do*: Delete the sentence "Quote the sentence that justifies each score." from the system prompt, re-run, and look at the `_quote_found` column.  Then restore it.
-   - *Starter hint*: This is Part 5 of the lab in miniature: a deliberate degradation, a measurable drop, a recovery.
+   - *Starter hint*: This is a regression test in miniature: a deliberate degradation, a measurable drop, a recovery.
    - *You've succeeded when*: You can show the column before, during, and after, and say in one sentence what a versioned config would have caught.
 
 ---
@@ -397,4 +397,4 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 
 - [promptfoo documentation](https://www.promptfoo.dev/docs/intro/): the harness from Part II, including the full list of assertion types and the results viewer.
 - Hamel Husain, ["Your AI Product Needs Evals"](https://hamel.dev/blog/posts/evals/): the error-analysis-first approach to evaluation, which is the discipline behind the disagreement table.
-- [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Institute): the Dataset, Solver, and Scorer framework, the Python-native alternative harness for Part 5 of the lab.
+- [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Institute): the Dataset, Solver, and Scorer framework, the Python-native alternative to promptfoo as a harness.

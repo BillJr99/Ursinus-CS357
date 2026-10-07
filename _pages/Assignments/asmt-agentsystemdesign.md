@@ -233,7 +233,7 @@ Imagine your system has been deployed for two weeks and has failed.  Working bac
 |---|---|---|
 | *(be specific: name the agent, the input type, the output fault)* | *(name a specific observable signal, not "we would notice")* | *(name an action your system or team could actually take, not "we would be more careful")* |
 
-**Required coverage (not negotiable; these are the two most common failure categories in real multi-agent deployments):** at least one row must address a failure where two agents produce contradictory or incompatible outputs, and at least one row must address a risk involving user data or privacy.
+**Required coverage (not negotiable; these are two failure categories that come up again and again in multi-agent deployments):** at least one row must address a failure where two agents produce contradictory or incompatible outputs, and at least one row must address a risk involving user data or privacy.
 
 Example row:
 

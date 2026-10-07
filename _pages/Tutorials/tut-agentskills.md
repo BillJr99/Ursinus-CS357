@@ -60,7 +60,7 @@ The last column hides what the four have in common when the agent runs.  The fir
 
 The distinction that matters most is skill versus tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a change, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
 
-> Many students assume that adding a skill to `opencode.json` makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
+> Many students assume that installing a skill (dropping its directory into `.agents/skills/`) makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
 {: .tb-warning data-title="Watch out"}
 
 ---
@@ -140,7 +140,7 @@ Permissions live in `opencode.json`, and skills no longer do.  The config file s
 }
 ```
 
-Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also the fourth thing to check when a skill you installed never appears.  `ask` prompts you before the skill loads, and it is the one that earns its keep here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
+Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also one of the things to check (item 6 in *If a Skill Does Not Load*, below) when a skill you installed never appears.  `ask` prompts you before the skill loads, and it is the one that earns its keep here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
 
 ### Installing Someone Else's Skills
 
