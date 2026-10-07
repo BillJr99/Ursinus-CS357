@@ -754,7 +754,7 @@ Report the cost next to the quality every time, because a loop that always wins 
 ### Troubleshooting, Part A
 
 - **The critic always returns `"verdict": "revise"` even after many rounds.**  Print the full critic output (`raw` before JSON parsing) to see what the model is actually saying.  Common causes: (1) the model is outputting JSON wrapped in markdown fences; the strip step in the parser should handle this, but check for unusual fence formats; (2) the rubric descriptors are so strict that no draft can satisfy them; loosen one criterion as a test.
-- **`json.JSONDecodeError` fires on valid-looking output.**  The model may be inserting a BOM or non-breaking space before the opening `{`.  Add `raw = raw.encode('ascii', 'ignore').decode('ascii')` before `json.loads` to strip non-ASCII, then re-try.
+- **`json.JSONDecodeError` fires on valid-looking output.**  The model may be inserting a BOM (byte order mark, an invisible marker character) or a non-breaking space before the opening `{`.  Add `raw = raw.encode('ascii', 'ignore').decode('ascii')` before `json.loads` to strip non-ASCII, then re-try.
 - **The loop never terminates (no `accept` and no budget exhaustion).**  Check that your `for round_num in range(1, config["round_budget"] + 1)` loop is iterating the correct number of times.  Print `round_num` at the start of each iteration.  If it runs forever, your `return` on `"accepted"` may be inside an inner scope; check indentation.
 - **Detection rate is 1.0 for all criteria even with weak descriptors.**  Your planted defects may be too obvious.  Try subtle defects: a parameter description that lists the name but not the type, or an example that shows a call but not the return value.  Make the defect require careful reading to spot.
 - **Detection rate is 0.0 for a criterion even after rewriting.**  The model may not be parsing your criterion ID correctly.  Change the prompt to include the criterion name in full (not just "C1") and check that the model's issue strings reference those names.
@@ -1248,7 +1248,7 @@ $$
 
 For questions with short checkable answers, accuracy rises with $$k$$, because many distinct reasoning paths tend to reach a correct answer while errors scatter.  This is what Part B.1's debate vote does.
 
-**Clustered consensus** votes on the *meaning*.  When answers are paragraphs rather than tokens, exact-match voting collapses: "simmer the tomatillos" and "boil them briefly" should count together, and a string comparison says they are unrelated.  Embed the $$k$$ drafts, cluster by cosine similarity, and treat the largest cluster as the consensus position.  It is the same machinery as the RAG-quality clustering you have already met, aimed now at agent outputs.
+**Clustered consensus** votes on the *meaning*.  When answers are paragraphs rather than tokens, exact-match voting collapses: "simmer the tomatillos" and "boil them briefly" should count together, and a string comparison says they are unrelated.  Embed the $$k$$ drafts, cluster by cosine similarity, and treat the largest cluster as the consensus position.  It is the same machinery as the clustering you have already met for checking retrieval-augmented generation (RAG) quality, aimed now at agent outputs.
 
 **Synthesis** writes the merged view.  A synthesizer receives the cluster representatives with their support counts and drafts one output that keeps majority positions and names real disagreements.  Its context stays small on purpose: cluster summaries, never all $$k$$ transcripts.
 

@@ -116,7 +116,7 @@ Categories to exclude by policy:
 - **Credentials and API keys**: never in plaintext, anywhere, ever.  Use a password manager.  This matters twice over in a vault you point an agent at: a key sitting in a note is a key the agent will read and may quote back, and a key you paste into a prompt is one you can no longer un-send.  Revoke rather than hope.
 - **Legal/medical/financial records**: subject to breach notification requirements even from private repos.
 - **Information belonging to others**: private conversations, contact details, notes about third parties who did not consent.
-- **Work product with an NDA**: your employer's confidential information does not belong in your personal vault.
+- **Work product covered by a non-disclosure agreement (NDA)**: your employer's confidential information does not belong in your personal vault.
 
 A rule of thumb: the vault is for *your knowledge about the world*, not *secrets that unlock access to the world*.
 
@@ -124,7 +124,7 @@ A rule of thumb: the vault is for *your knowledge about the world*, not *secrets
 
 1.  You generate a fine-grained PAT scoped to Contents read/write on your vault repo.  Your roommate generates a classic `repo`-scope PAT for the same task.  Compare what an attacker gains from each token if it leaks.  Which token does the principle of least privilege select, and why?
 
-    > *Hint:* A fine-grained PAT scoped to one repo gives access to exactly one repository's file contents.  A classic `repo`-scope PAT gives read/write access to every repository in your account, including private ones you haven't mentioned.  Consider: if the token appeared in a public CI log, what is the blast radius of each?
+    > *Hint:* A fine-grained PAT scoped to one repo gives access to exactly one repository's file contents.  A classic `repo`-scope PAT gives read/write access to every repository in your account, including private ones you haven't mentioned.  Consider: if the token appeared in a public continuous integration (CI) log, what is the blast radius of each?
 
 2.  The plugin's auto-push interval defaults to 5 minutes.  A student changes it to 60 minutes to reduce API calls.  Describe a concrete scenario where the 60-minute interval causes a problem that the 5-minute interval would have caught in time.
 

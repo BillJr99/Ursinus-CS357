@@ -182,7 +182,7 @@ Notice that the last sentence still implies a health event and a hospital.  A re
 These two terms are often confused:
 
 - **Anonymization**: Removing or altering data so that re-identification is impossible, even with auxiliary data.  True anonymization is extremely hard.  Most "anonymized" datasets have been re-identified using public auxiliary information (for example, Netflix viewing histories re-identified using IMDb ratings).
-- **Pseudonymization**: Replacing identifiers such as names and Social Security numbers with pseudonyms such as arbitrary IDs.  Re-identification is possible if the pseudonym mapping leaks or if enough quasi-identifiers remain.  The GDPR treats pseudonymized data as still personal data, and still regulated.
+- **Pseudonymization**: Replacing identifiers such as names and Social Security numbers with pseudonyms such as arbitrary IDs.  Re-identification is possible if the pseudonym mapping leaks or if enough quasi-identifiers remain (details such as age, zip code, and gender that can identify a person when combined).  The GDPR treats pseudonymized data as still personal data, and still regulated.
 
 ### Critical Thinking Questions
 
@@ -241,7 +241,7 @@ Key properties:
 
 - Raw data never leaves the client's premises
 - The aggregated model incorporates learning from all clients' private data
-- **Gradient inversion attacks** (Zhu et al., 2019) showed that an honest-but-curious aggregation server can sometimes reconstruct training images or text from the gradient updates alone, so federated learning does not provide perfect privacy by itself
+- **Gradient inversion attacks** (Zhu et al., 2019) showed that an honest-but-curious aggregation server (one that follows the protocol but tries to learn from what it sees) can sometimes reconstruct training images or text from the gradient updates alone, so federated learning does not provide perfect privacy by itself
 
 FL is strongest when combined with DP (adding calibrated noise to gradient updates before sharing) and secure aggregation (cryptographic techniques that keep the server from seeing any individual client's update).
 
@@ -250,7 +250,7 @@ FL is strongest when combined with DP (adding calibrated noise to gradient updat
 Three approaches remove PII from text before training or inference:
 
 1.  **Regex patterns**: Fast and cheap.  Reliably catches structured PII such as phone numbers in standard formats, Social Security numbers, email addresses, and credit card numbers.  Misses unstructured PII such as names inside natural prose or addresses in non-standard formats.
-2.  **NER (Named Entity Recognition) models**: ML models such as spaCy and Microsoft Presidio that detect entities including PERSON, LOCATION, ORG, and DATE.  Better recall than regex on natural language text.  But they produce false positives (flagging common words as names) and still miss domain-specific PII such as employee badge numbers or patient MRN codes.
+2.  **NER (Named Entity Recognition) models**: ML models such as spaCy and Microsoft Presidio that detect entities including PERSON, LOCATION, ORG, and DATE.  Better recall than regex on natural language text.  But they produce false positives (flagging common words as names) and still miss domain-specific PII such as employee badge numbers or patient medical record numbers (MRNs).
 3.  **LLM-based redaction**: Use a language model to find and replace PII in context, including implicit PII conveyed by context rather than by an explicit identifier.  Most accurate but most expensive, and it depends on the very technology whose outputs may contain PII.
 
 **Comparison of Privacy-Preserving Techniques**
@@ -258,14 +258,14 @@ Three approaches remove PII from text before training or inference:
 | Technique | What It Protects | Implementation Complexity | Accuracy Cost | Practical Limitation |
 |-----------|-----------------|--------------------------|---------------|---------------------|
 | Differential Privacy | Statistical inference about whether any individual's record was in the training set | High: requires careful noise calibration per query type | Moderate to severe depending on ε and task complexity | Extremely hard to apply meaningfully to large language models; ε values achievable at LLM scale are often too loose to provide strong guarantees |
-| Federated Learning | Raw data leaving the client's premises or network | High: requires distributed infrastructure, an aggregation protocol, and synchronization across clients | Low to moderate: non-IID data distributions across clients can harm model quality | Gradient inversion attacks undermine privacy guarantees; communication overhead slows training; client dropout creates uneven updates |
+| Federated Learning | Raw data leaving the client's premises or network | High: requires distributed infrastructure, an aggregation protocol, and synchronization across clients | Low to moderate: non-IID data distributions across clients (each client's data follows a different distribution) can harm model quality | Gradient inversion attacks undermine privacy guarantees; communication overhead slows training; client dropout creates uneven updates |
 | PII Scrubbing | Verbatim PII appearing in training data or in real-time prompts and responses | Low to medium: regex is easy to implement; NER models require setup; LLM-based scrubbing requires an additional model call | Low if recall is high: scrubbing accurate PII tokens does not degrade model utility | Cannot remove all forms of re-identifiable information; implicit PII conveyed through context requires semantic understanding to detect |
 
 > **Common Misconception:** Many people assume that "anonymizing" a dataset before training fully protects privacy.  In practice, anonymization is nearly impossible for rich text data.  Clinical notes, support tickets, and personal narratives contain combinations of rare details (unusual diagnoses, specific events, distinctive writing styles) that remain re-identifiable even after named entities are removed.  Differential privacy is the only technique that provides a *formal* guarantee.  Even then, the strength of the guarantee depends entirely on the ε value chosen and the size of the dataset.
 
 ### Critical Thinking Questions
 
-**Question 4.**  A hospital wants to fine-tune a clinical NLP model.  They are choosing between ε = 0.1 and ε = 10 for differential privacy.  They are optimizing for early detection of rare diseases from clinical notes, where accuracy is critical.  Which value would you recommend, and what trade-off are you accepting?  Is there a better approach than a binary choice between these two values?
+**Question 4.**  A hospital wants to fine-tune a clinical natural language processing (NLP) model.  They are choosing between ε = 0.1 and ε = 10 for differential privacy.  They are optimizing for early detection of rare diseases from clinical notes, where accuracy is critical.  Which value would you recommend, and what trade-off are you accepting?  Is there a better approach than a binary choice between these two values?
 
 > *Hint:* ε = 0.1 adds so much noise that the model may be unable to learn patterns for rare diseases; if only 5 patients in the dataset have the rare condition, the noise swamps the signal.  ε = 10 provides a formal guarantee that is technically valid but practically loose.  Are there better alternatives?  Consider training on high-quality synthetic patient data generated from a separately privacy-protected model, using federated learning without DP on already-aggregated statistics, or carefully limiting what the model is allowed to output even if training is less private.
 

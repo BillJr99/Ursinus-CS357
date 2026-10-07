@@ -18,7 +18,7 @@ Today is a build session.  You leave with a judge that reads a rubric, scores th
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Please think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board, and the Presenter reports out wherever you disagreed or found another approach.  After class, please respond to the reflective prompt on your own in your notebook.  Today one laptop per team runs the code; rotate who types at each Part.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Please think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board, and the Presenter reports out wherever you disagreed or found another approach.  After class, please respond to the reflective prompt on your own in your notebook.  Today one laptop per team runs the code; rotate who types at each Part.
 
 ---
 
@@ -301,7 +301,7 @@ Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass 
 ---
 # Part III: Make It Trustworthy
 
-A judge that runs is not yet a judge you can use.  Two checks make it trustworthy enough to hand in: agreement with a human score, and a controlled probe for one known bias.  A judge you rely on needs both at larger scale (a calibration set, Cohen's kappa, and a bias study); today you run each once so the shape is familiar, and Evaluation Workshop II runs them again on your own project's outputs.
+A judge that runs is not yet a judge you can use.  Two checks make it trustworthy enough to hand in: agreement with a human score, and a controlled probe for one known bias.  A judge you rely on needs both at larger scale (a calibration set, Cohen's kappa, which is an agreement score corrected for the agreement you would expect by chance, and a bias study); today you run each once so the shape is familiar, and Evaluation Workshop II runs them again on your own project's outputs.
 
 ## 4.  Agreement With Your Hand Scores
 

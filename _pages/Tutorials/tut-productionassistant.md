@@ -130,7 +130,7 @@ A gate is easy when the owner is in the chat.  But this assistant also runs *una
 
 | Lane | Meaning | Examples from the production policy |
 |---|---|---|
-| **Autorun** | Execute immediately + write an audit row | Create/update/complete a task; send a digest *to the owner*; create a branch; open a *draft* PR; capture a note; authorized vault write-backs |
+| **Autorun** | Execute immediately + write an audit row | Create/update/complete a task; send a digest *to the owner*; create a branch; open a *draft* pull request (PR); capture a note; authorized vault write-backs |
 | **Queue** | Store as a proposal; wait for explicit approval | Send email/message to a third party; push to a non-vault repo; merge; force-push; deploy a site; any financial transaction; modify an institutional system; large batches |
 | **Forbidden** | Refuse outright, even if asked casually | Write a secret to the vault; log a secret; exfiltrate a credential; send raw regulated personal data to a cloud service |
 {: .tb-full}
@@ -146,7 +146,7 @@ Classify each action into **Autorun**, **Queue**, or **Forbidden** under the pol
 1.  Mark yesterday's completed tasks done in the task manager
 2.  Reply to a colleague's email asking about a meeting time
 3.  Append today's meeting notes to the vault's project page
-4.  Merge the assistant's own draft PR now that CI is green
+4.  Merge the assistant's own draft PR now that CI (continuous integration) is green
 5.  Store the owner's API key in the vault "so it isn't lost"
 6.  Send the owner their morning schedule digest
 7.  Renew a $12 domain registration that expires tomorrow
@@ -192,7 +192,7 @@ In this part, you will see the pattern for wiring one assistant into many extern
 
 ## 4.  Reads Are Free; Writes Are Gated
 
-**Why this matters:** The production assistant connects over MCP (which you built servers for in the MCP modules) to a task manager, calendar, file store, email, and GitHub.  Across all five, one asymmetry repeats:
+**Why this matters:** The production assistant connects over the Model Context Protocol, MCP (which you built servers for in the MCP modules) to a task manager, calendar, file store, email, and GitHub.  Across all five, one asymmetry repeats:
 
 - **Task manager:** read tasks, comments, and project state freely for context; task *mutations* are Autorun-with-audit (low stakes, fully reversible), but only inside the owner's own workspace.
 - **Calendar:** read free; event creation proposes.

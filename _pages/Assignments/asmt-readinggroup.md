@@ -95,9 +95,9 @@ Leading a session always earns the **10-point base grade** (scaled by the rubric
 | Week 14 | 0 |
 | Week 15 | 0 |
 
-Sign-up is first-come, first-served via the course sign-up sheet (link on the course LMS).  **Two students may sign up per class meeting.**  If a slot is full, choose the next available slot.
+Sign-up is first-come, first-served via the course sign-up sheet (link on the course learning management system, or LMS).  **Two students may sign up per class meeting.**  If a slot is full, choose the next available slot.
 
-**Important:** You earn the base grade and the extra-credit points only if you complete both the in-class discussion *and* the written reflection on time.  Earning the slot without presenting forfeits both.
+**Important:** You earn the base grade and the extra-credit points only if you complete both the in-class discussion *and* the written reflection on time.  Signing up for a slot without presenting forfeits both.
 
 ---
 

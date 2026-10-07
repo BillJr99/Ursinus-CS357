@@ -25,7 +25,7 @@ Two sentences carry the whole tutorial.  **RAG changes what the model reads; it 
 
 | You will need | CPU track (everything here) | Suitable-hardware track (optional) |
 |---|---|---|
-| Disk | about 8 GB: 1.6 GB Python packages (CPU PyTorch is 0.8 GB), 4.2 GB of Ollama models, 0.7 GB for the SmolLM2-360M base, plus 1.5 GB if you merge | add 2 to 10 GB per larger base model |
+| Disk | about 6.5 GB: 1.6 GB Python packages (CPU PyTorch is 0.8 GB), 4.2 GB of Ollama models, 0.7 GB for the SmolLM2-360M base, plus 1.5 GB if you merge | add 2 to 10 GB per larger base model |
 | Memory | 8 GB RAM minimum; training peaked at 3.8 GB and inference at 2.5 GB | a GPU with at least 8 GB of VRAM for 0.5B to 3B models; QLoRA needs NVIDIA CUDA |
 | Time, measured on a 4-core CPU with no GPU | indexing seconds; one RAG answer 5 to 45 s; LoRA training about 95 s (4 epochs, 21 examples); the four-way comparison about 2 minutes | depends on the model and GPU |
 {: .tb-full}
@@ -37,12 +37,12 @@ Two sentences carry the whole tutorial.  **RAG changes what the model reads; it 
 | Term | Plain-English Definition | Where You'll Meet It |
 |---|---|---|
 | **Prompt-only generation** | The model answers from its weights alone | Section F, the `base` condition |
-| **RAG** | Retrieve passages, put them in the prompt, generate.  The weights never change. | Sections B and C |
+| **RAG** | Retrieval-augmented generation: retrieve passages, put them in the prompt, then generate.  The weights never change. | Sections B and C |
 | **Embedding model** | A model that turns text into a vector for searching.  It never writes the answer. | `nomic-embed-text` |
 | **Generator** | The model that writes the answer | `llama3.2`, `qwen2.5:3b`, SmolLM2 |
 | **Fine-tuning** | Continuing training so the weights change | Section D |
-| **LoRA** | Freeze the base weights and train two small matrices per layer; the update is $$W + \frac{\alpha}{r}BA$$ | Section D |
-| **QLoRA** | LoRA on a base model loaded in 4-bit precision, to fit larger models in less GPU memory.  The adapter itself is still trained in higher precision. | Section E |
+| **LoRA** | Low-Rank Adaptation: freeze the base weights and train two small matrices per layer; the update is $$W + \frac{\alpha}{r}BA$$ | Section D |
+| **QLoRA** | Quantized LoRA: LoRA on a base model loaded in 4-bit precision, to fit larger models in less GPU memory.  The adapter itself is still trained in higher precision. | Section E |
 | **Adapter** | The saved LoRA matrices, a few megabytes, useless without the exact base model they were trained on | `adapters/makerspace-format/` |
 | **Merge** | Adding the adapter into a copy of the base weights, producing a full-size model with no adapter | Section D |
 | **Online stage / offline stage** | Downloading everything once, then running with the network unavailable | Section A |
@@ -153,7 +153,7 @@ print("preflight ok: packages pinned, Ollama local, both models present")
 
 ### How we verified "offline"
 
-We ran the whole offline stage inside a Linux network namespace with no external interface (`unshare -rn`), so `localhost` worked and nothing else did.  Inside it, `curl https://huggingface.co` failed to resolve, and preflight, indexing, retrieval, generation, the Pydantic AI agent, the LoRA reload, and an MCP (Model Context Protocol) tool call all succeeded.  On your own machine, the honest equivalent is to turn off Wi-Fi and unplug the cable, then run the steps again.  Google Colab is not an offline fallback: it is someone else's computer on the internet.
+We ran the whole offline stage inside a Linux network namespace with no external interface (`unshare -rn`), so `localhost` worked and nothing else did.  Inside it, `curl https://huggingface.co` failed to resolve, and preflight, indexing, retrieval, generation, the Pydantic AI agent, and the LoRA reload all succeeded, as did an MCP (Model Context Protocol) tool call from Part 8 of the Pydantic AI tutorial.  On your own machine, the honest equivalent is to turn off Wi-Fi and unplug the cable, then run the steps again.  Google Colab is not an offline fallback: it is someone else's computer on the internet.
 
 ---
 
@@ -706,7 +706,7 @@ if __name__ == "__main__":
 What each piece does:
 
 - `local_files_only=True` and `HF_HUB_OFFLINE=1`: training cannot download anything.
-- `apply_chat_template`: the tokenizer wraps each conversation in exactly the special tokens the model was instruction-tuned with.  If you skip it, the model trains on text shaped unlike anything it will see at inference.
+- `apply_chat_template`: the tokenizer wraps each conversation in exactly the special tokens the model was instruction-tuned with.  If you skip it, the model trains on text shaped unlike anything it will see at inference time, when it answers new questions.
 - `labels = [-100] * len(prompt)`: the loss counts only the assistant's reply, so the model learns to answer rather than to repeat questions.
 - `get_peft_model` freezes all 362 million base weights and adds rank-8 matrices to the four attention projections (`q_proj`, `k_proj`, `v_proj`, `o_proj`) in every layer.  `lora_alpha=16` scales the update by $$\alpha/r = 2$$, and `lora_dropout=0.05` drops a few adapter inputs during training to reduce overfitting.
 
@@ -829,7 +829,7 @@ merged weights  : ANSWER: 9am to 5pm [hours-0]
 saved a full 1451 MB model to ./merged/makerspace-360m (the adapter alone was a few MB)
 ```
 
-Merging computes $$W + \frac{\alpha}{r}BA$$ once and saves an ordinary model: the same answers, no PEFT needed at inference, and 1.45 GB instead of 6.4 MB.  You cannot point Ollama at either folder and expect it to work.  Ollama runs GGUF files, and importing a fine-tuned model means converting it to GGUF with llama.cpp's tools for that architecture, or using Ollama's own adapter import, which supports only some base architectures and requires the adapter to match the base exactly ([Ollama: importing a model](https://docs.ollama.com/import)).  The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase)'s Direction 1 walks through that export for a supported Llama base.  Treat every arbitrary PEFT adapter as Transformers-only until you have converted and tested it.
+Merging computes $$W + \frac{\alpha}{r}BA$$ once and saves an ordinary model: the same answers, no PEFT needed at inference, and 1.45 GB instead of 6.4 MB.  You cannot point Ollama at either folder and expect it to work.  Ollama runs GGUF files (the single-file model format used by llama.cpp), and importing a fine-tuned model means converting it to GGUF with llama.cpp's tools for that architecture, or using Ollama's own adapter import, which supports only some base architectures and requires the adapter to match the base exactly ([Ollama: importing a model](https://docs.ollama.com/import)).  The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase)'s Direction 1 walks through that export for a supported Llama base.  Until you have converted and tested a PEFT adapter, treat it as something only Hugging Face Transformers can load.
 
 ---
 
@@ -837,7 +837,7 @@ Merging computes $$W + \frac{\alpha}{r}BA$$ once and saves an ordinary model: th
 
 **CPU track, which is everything above.**  A laptop with 8 GB of RAM can run all of Sections A to D and F.  Our measurements came from 4 CPU cores and 15 GB of RAM with no GPU: training peaked at 3.8 GB of RAM, inference at 2.5 GB, and four epochs took about 95 seconds.  The smaller `HuggingFaceTB/SmolLM2-135M-Instruct` (revision `12fd25f77366fa6b3b4b768ec3050bf629380bac`, Apache-2.0, 260 MB) trains several times faster if your machine is slower; expect worse answers.
 
-**Suitable-hardware track.**  Useful LoRA training on a 0.5B to 3B instruction model (for example `Qwen/Qwen2.5-0.5B-Instruct` or `Qwen2.5-1.5B-Instruct`, Apache-2.0) wants a GPU with at least 8 GB of VRAM and a few hundred to a few thousand examples.  QLoRA loads the base in 4-bit through `bitsandbytes`, which needs an NVIDIA GPU with CUDA; it cuts the memory for the base weights roughly by four, while the adapter still trains in 16-bit.  We did not test this track for this tutorial, so treat its numbers as starting points, and see the lab's Direction 1 and the [PEFT LoRA guide](https://huggingface.co/docs/peft/main/en/developer_guides/lora).
+**Suitable-hardware track.**  Useful LoRA training on a 0.5B to 3B instruction model (for example `Qwen/Qwen2.5-0.5B-Instruct` or `Qwen2.5-1.5B-Instruct`, Apache-2.0) wants a GPU with at least 8 GB of VRAM and a few hundred to a few thousand examples.  QLoRA loads the base in 4-bit through `bitsandbytes`, which needs an NVIDIA GPU with CUDA; it cuts the memory for the base weights to roughly a quarter, while the adapter still trains in 16-bit.  We did not test this track for this tutorial, so treat its numbers as starting points, and see the lab's Direction 1 and the [PEFT LoRA guide](https://huggingface.co/docs/peft/main/en/developer_guides/lora).
 
 **What not to expect.**  A mini PC or a laptop CPU will not produce a useful fine-tune of a 7B or 8B model in an afternoon.  If you have no suitable hardware, the honest options are the tiny CPU demonstration above, or **loading** an adapter someone else trained for the exact base revision you have (the lab's "provided adapter" path).  Loading is not training: it shows what an adapter does, not that you can make one.  And a hosted notebook such as Colab is a perfectly good place to train, but it is a cloud service, so it is never the offline fallback.
 
@@ -847,7 +847,7 @@ Merging computes $$W + \frac{\alpha}{r}BA$$ once and saves an ordinary model: th
 
 ### The design
 
-One base model (SmolLM2-360M-Instruct at the pinned revision), one prompt template, greedy decoding, and `max_new_tokens=48` for every condition.  The only things that change are whether retrieved sources are in the prompt and whether the adapter is active:
+Every condition uses one base model (SmolLM2-360M-Instruct at the pinned revision), one prompt template, greedy decoding (always choosing the single most likely next token), and `max_new_tokens=48`.  The only things that change are whether retrieved sources are in the prompt and whether the adapter is active:
 
 | Condition | Sources in prompt | Adapter |
 |---|---|---|
@@ -941,7 +941,7 @@ We measured these on the CPU track with the four-epoch adapter, and every answer
 | `LoRA+RAG` | 4 | 0 | no: "Monday through Friday at 6pm; Saturday at 9pm" | 8 | 0 | 6 | 37 s |
 {: .tb-full}
 
-Peak memory was 2.5 GB.  Retrieval found the right chunk for every answerable and changed question, so every miss in the RAG rows is a generation miss.
+Peak memory was 2.5 GB.  Retrieval recall@3 counts a question as found when the chunk holding its answer is among the 3 chunks retrieved.  Retrieval found the right chunk for every answerable and changed question, so every miss in the RAG rows is a generation miss.
 
 ### What the numbers do and do not show
 

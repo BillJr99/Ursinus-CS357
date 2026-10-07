@@ -965,7 +965,7 @@ This is Part 3 run through the UI: a fixed task set, a defined metric, an accura
 > |----|-------|----------|---------------|-------------|-------|--------------|
 > | T01 | ... | ... | calculator | yes | yes | - |
 
-> **If it fails.**  Responses are extremely slow: same model and hardware as the code path; the UI adds little.  If chats hang, check whether Ollama is swapping (`ollama ps`) and close other memory-heavy applications.
+> **If it fails.**  Responses are extremely slow: the model and hardware are the same as on the code path, and the UI adds little overhead.  If chats hang, check whether Ollama is swapping (`ollama ps`) and close other memory-heavy applications.
 
 ---
 

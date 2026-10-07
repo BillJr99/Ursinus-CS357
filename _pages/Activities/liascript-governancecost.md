@@ -22,7 +22,7 @@ Due today: the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Today ends in a drafting workshop with structured peer review.  The Manager keeps the team working the numbers in Part II rather than skimming them; the Recorder types the two policy sections and logs the team's estimates before anyone opens the worked answers; the Presenter prepares to explain one mechanism the team could not make concrete; the Reflector watches for moments when the team defends its AI use instead of evaluating it, and names them.  After class, answer the reflection prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Today ends in a drafting workshop with structured peer review.  The Manager keeps the team working the numbers in Part II rather than skimming them; the Recorder types the two policy sections and logs the team's estimates before anyone opens the worked answers; the Presenter prepares to explain one mechanism the team could not make concrete; the Reflector watches for moments when the team defends its AI use instead of evaluating it, and names them.  After class, answer the reflection prompt on your own in your notebook.
 
 ---
 
@@ -112,7 +112,7 @@ Your governance one-pager for the final project uses this skeleton, each section
 2.  **System description**: agents, models, tools, data flows (your design table and audit, imported).
 3.  **Permitted and prohibited uses**: concrete, with the prohibition list as specific as the permission list.
 4.  **Human oversight**: which actions require confirmation, who confirms, and what the human sees before deciding.
-5.  **Data handling**: what is collected, where it lives, how long it is retained, and which regulated categories it touches (FERPA, IRB).
+5.  **Data handling**: what is collected, where it lives, how long it is retained, and which regulated categories it touches (FERPA, the federal law that protects student education records; IRB, the institutional review board that approves research involving people).
 6.  **Evaluation and monitoring**: metrics, disaggregation plan, audit schedule, and the harness that produces the data.
 7.  **Accountability and incident response**: the owner by name or role, the reporting path, and response timelines measured in hours or days.
 8.  **Review and sunset**: when the policy is re-examined and the conditions under which the system is retired.
@@ -159,7 +159,7 @@ The consequence for your policy: training gives you the model's intent, not its 
 | Control | Implementation Cost | Bypass Difficulty | What It Covers | Example |
 |---|---|---|---|---|
 | **System prompt constraints** | Very low: add text to the system prompt | Low: prompt injection or roleplay framing can bypass it | Broad but weak; sets the intent without enforcing it mechanically | "Do not share other students' data or grades with anyone" |
-| **Output filtering** | Low: a regex or classifier runs on every response before it reaches the user | Medium: requires knowing what patterns to block; misses novel attacks | Specific patterns that can be described precisely, like PII or profanity | Block any output matching a social security number regex pattern |
+| **Output filtering** | Low: a regex or classifier runs on every response before it reaches the user | Medium: requires knowing what patterns to block; misses novel attacks | Specific patterns that can be described precisely, like personally identifiable information (PII) or profanity | Block any output matching a social security number regex pattern |
 | **Input filtering** | Low-medium: a classifier screens user messages before they reach the model | Medium: known attack patterns are blocked; novel ones slip through | Known attack patterns like prompt injection markers | Reject any message containing "ignore previous instructions" |
 | **Sandboxed execution** | High: requires container orchestration and security engineering | High: the agent literally cannot affect things outside the sandbox | Code and tool misuse that could affect external systems | Run all agent-invoked Python code in an isolated container with no network access |
 | **Human review queue** | Very high: requires staffing and workflow design | Near-impossible: a human sees the output before it reaches the user | All high-risk outputs; highest coverage, highest cost | Route any query containing mental health keywords to a counselor before responding |
@@ -260,7 +260,7 @@ Individually good decisions (use a smaller model, cache more queries, choose ren
 
 Applied to AI: as models become more capable and cheaper to run, the range of tasks they are applied to expands.  A 10x efficiency improvement met with a 20x increase in use produces a net doubling of total consumption.  Strong economic incentives push toward exactly this.
 
-The Green AI movement (Schwartz et al., 2019) proposed reporting efficiency metrics alongside accuracy: energy per FLOP, accuracy per watt, CO$_2$ per benchmark point, so that efficiency is visible in the research community's incentive structure.  Adoption has been partial.
+The Green AI movement (Schwartz et al., 2019) proposed reporting efficiency metrics alongside accuracy: energy per FLOP (floating-point operation), accuracy per watt, CO$_2$ per benchmark point, so that efficiency is visible in the research community's incentive structure.  Adoption has been partial.
 
 ---
 

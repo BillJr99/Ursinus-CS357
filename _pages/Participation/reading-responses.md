@@ -67,7 +67,7 @@ Keep it to three or four sentences, posted to the discussion board before the ma
 
 1.  **One takeaway.**  The single most important claim or result, in your own words, not a summary of the whole thing.
 2.  **One question.**  A real question the reading raised for you: something you doubt, something unresolved, or something you would test.
-3.  **One connection to your own system.**  This is the move that matters most in this course: tie the reading to something you run or could run yourself.  Does this change how you would configure your local model, chunk your RAG corpus, scope an MCP server's permissions, or evaluate an agent's output?  The goal of the course is fluency operating your own AI stack, and reading responses are where reading becomes that fluency.
+3.  **One connection to your own system.**  This is the move that matters most in this course: tie the reading to something you run or could run yourself.  Does this change how you would configure your local model, chunk your retrieval-augmented generation (RAG) corpus, scope a Model Context Protocol (MCP) server's permissions, or evaluate an agent's output?  The goal of the course is fluency operating your own AI stack, and reading responses are where reading becomes that fluency.
 
 ## Reading Responses for Student-Led Reading Group Sessions
 

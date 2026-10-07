@@ -23,7 +23,7 @@ Every AI tool you use maintains its own little memory of you, in its own format,
 |---|---|---|
 | **Obsidian vault** | A folder of plain Markdown files that Obsidian treats as a unified knowledge base. Because the files are just text files, they work with any other tool; no proprietary format lock-in. | Your vault might contain notes from class, links between ideas, summaries of papers, and context files that agents read before working with your data. |
 | **Personal Access Token (PAT)** | A secret string that acts as a password for GitHub API calls. It grants specific permissions (like reading and writing a single repository) without sharing your full GitHub account credentials. | Your sync plugin uses the PAT to push note changes to GitHub; your agent uses it to pull the vault and write new wiki pages. |
-| **Gitless sync** | A sync mechanism that uses the GitHub REST API directly to push and pull files, rather than running `git` commands locally. No `.git` folder, no merge conflicts, one consistent state machine. | The GitHub Gitless Sync Obsidian plugin translates every file save into an API call; your phone and your laptop sync the same vault without ever needing git installed. |
+| **Gitless sync** | A sync mechanism that uses the GitHub REST API (the web interface GitHub offers to programs) directly to push and pull files, rather than running `git` commands locally. No `.git` folder, no merge conflicts, one consistent state machine. | The GitHub Gitless Sync Obsidian plugin translates every file save into an API call; your phone and your laptop sync the same vault without ever needing git installed. |
 | **AGENTS.md contract** | A file at the root of the vault that tells any agent exactly how to behave: which folders it can read, which it can write, how to handle sources, and what metadata to update. Because the file travels inside the repo, every agent reads it automatically. | An agent that reads AGENTS.md learns that `raw/` is read-only, that `wiki/` is where it should write, and that it must update `github-sync-metadata.json` in the same commit as any file it creates. |
 | **LLM wiki** | The pattern this tutorial implements: a folder of Markdown pages that a large language model (LLM) builds and maintains from your raw sources, so knowledge compounds across sessions instead of being re-derived on every query. Named in Andrej Karpathy's April 2026 [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) gist. | Your `wiki/` zone, its `index.md` catalog and `log.md` history, and the ingest/query/lint prompts that keep them current. |
 | **Blob SHA** | The specific hash value Git uses to uniquely identify file contents. It is computed differently from a plain SHA-1 hash; Git prefixes the content with `blob {bytecount}\0` before hashing. | When an agent writes a file to the vault, it may need to compute the blob SHA to correctly update the sync metadata file. |
@@ -298,7 +298,7 @@ Notice the last line: for content containing multi-byte characters (accented let
 
     *Hint:* The null-and-dirty pattern tells the plugin "I made a change and I want you to be the authority on the final SHA after upload."  Pre-computing the SHA requires getting the byte length exactly right, handling encoding correctly, and matching the exact content that was committed; any discrepancy causes a mismatch.  Null-and-dirty eliminates all of those failure modes.
 
-6.  Why does the AGENTS.md contract make the *agent* responsible for the metadata bookkeeping rather than asking the human to "just resync manually after the agent commits"?  Connect your answer to the architecture's goal of spending whose time.
+6.  Why does the AGENTS.md contract make the *agent* responsible for the metadata bookkeeping rather than asking the human to "just resync manually after the agent commits"?  Connect your answer to the architecture's goal: whose time is the system designed to spend?
 
     *Hint:* The entire system is designed so that the human's interaction with agent output is "open Obsidian and sync once."  If the agent's commits require human follow-up (diagnose what didn't sync, fix metadata, trigger a second sync), the system is not actually reducing the human's cognitive load; it's just moving the manual work to a different moment.
 {: start="4"}
@@ -313,7 +313,7 @@ In this final part, you will see that connecting an agent to your vault requires
 
 ## The Wiring Is Just a Prompt
 
-Because the contract lives in the repository, connecting an agent requires no plugin and no integration code; it requires *telling the agent where the contract is*.  For hermes from our stack (or Claude Code, or any capable agent CLI), the entire wiring is:
+Because the contract lives in the repository, connecting an agent requires no plugin and no integration code; it requires *telling the agent where the contract is*.  For hermes from our stack (or Claude Code, or any capable agent command-line interface (CLI)), the entire wiring is:
 
 ```
 Clone https://github.com/YOURUSERNAME/Obsidian-Vault using the token in the
@@ -345,7 +345,7 @@ Treat them as authoritative for all decisions this session.
 
 The session rhythm that results: you drop a PDF into `raw/` from your phone and sync; hermes runs (manually or on an n8n schedule from the stack module), reads the contract, synthesizes wiki pages, updates the metadata, and commits; you open Obsidian, sync, and the new cross-linked pages are simply *there*.  The question-answering direction is one more prompt: *"Using the vault per AGENTS.md, what do my notes say about X? Update the wiki first if raw/ has newer material."*
 
-Obsidian becomes the comfortable viewer onto a knowledge base your agents largely maintain.  What becomes possible once that loop is running, a living wiki that grows more useful each session rather than a folder that grows larger, is the argument the *How I AI* session makes; this page is the deeper build behind it.
+Obsidian becomes the comfortable viewer onto a knowledge base your agents largely maintain.  What becomes possible once that loop is running (a living wiki that grows more useful each session, rather than a folder that grows larger) is the argument the *How I AI* session makes; this page is the deeper build behind it.
 
 ### The Same Move, for Code
 

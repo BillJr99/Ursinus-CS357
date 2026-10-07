@@ -107,7 +107,7 @@ You need these in place before the kickoff:
 - Your team charter and roles from the [Project Thread]({{ site.baseurl }}/Projects/PBLThread), including a Recorder and a decision log. The kickoff and the stakeholder choice both get logged there.
 - The partner roster, which I share in class. It is not on the website.
 - A way to reach me quickly (a one-sentence message on Teams is enough) to confirm a stakeholder choice or ask for an introduction.
-- The [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview), read before the exchange session, so you know how SQR cards work.
+- The [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview), read before the exchange session, so you know how SQR cards (Strength / Question / Risk) work.
 
 Start the stakeholder contact this week. If nobody on your team knows a fitting partner, ask me. I will broker an introduction within one week of the request, and no team's brief is blocked by the roster. What blocks teams is waiting until week two to discover they have nobody.
 

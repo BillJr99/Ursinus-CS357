@@ -192,7 +192,7 @@ Make exactly one repair today, write it down, and re-run.  A repair without a re
 
 ### When the Judge Is a Reasoning Model
 
-Sooner or later someone on your team proposes a reasoning model as the judge, on the theory that a model which deliberates before answering will grade more carefully.  That instinct is half right.  Multi-criterion rubrics are exactly the shape of problem extra dependent steps help with: hold four criteria in mind, check the artifact against each, keep the levels straight, and do not let a strong showing on criterion 1 bleed into criterion 3.  A reasoning model is measurably steadier at that bookkeeping.
+Sooner or later someone on your team proposes a reasoning model as the judge, on the theory that a model which deliberates before answering will grade more carefully.  That instinct is half right.  Multi-criterion rubrics are exactly the shape of problem that extra reasoning steps, each building on the one before, help with: hold four criteria in mind, check the artifact against each, keep the levels straight, and do not let a strong showing on criterion 1 bleed into criterion 3.  A reasoning model is measurably steadier at that bookkeeping.
 
 The wrong half is what the visible trace is.  It is generated text, produced by the same next-token mechanism as the verdict.  It reads like the judge's justification.  It is not, necessarily: research on chain-of-thought faithfulness finds cases where a model's stated reasoning does not match what drove its answer.
 
@@ -235,7 +235,7 @@ So far your confidence in the judge lives in a table the Scribe typed and a re-r
 1.  **Define the golden set.**  Your three artifacts, with the human-consensus level for each criterion (after today's repair).  Add two adversarial cases from the workshop's padding probe, for example the padded and unpadded versions of one artifact, which must receive the same level.
 2.  **Encode assertions.**  For each case, at least one assertion: the judge's returned level equals the human-consensus level (exact match on the parsed JSON field), or, for the adversarial pair, that the two levels are equal to each other.  In promptfoo these are `assert:` blocks; in Inspect they are scorers.  Assert on the *parsed* field, not the raw text; if parsing itself fails, that is a legitimate eval failure worth counting.
 3.  **Run the harness against your local model** and capture the results (promptfoo's `output.json` or web viewer screenshot, or Inspect's `.eval` log).  Record the pass rate.  It will likely not be 100%: that is a finding, not a failure.
-4.  **Demonstrate a regression.**  Make a deliberate, plausible-seeming degradation to your judge prompt in a copy of the config (delete the instruction that evidence must be quoted verbatim, or weaken one criterion's rubric text).  Re-run and change:
+4.  **Demonstrate a regression.**  Make a deliberate, plausible-seeming degradation to your judge prompt in a copy of the config (delete the instruction that evidence must be quoted verbatim, or weaken one criterion's rubric text).  Re-run it and compare the results with your baseline run:
 
     ```bash
     npx promptfoo@latest eval -c promptfooconfig-regressed.yaml --output run_regressed.json

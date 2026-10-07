@@ -125,7 +125,7 @@ tags:
 
 ---
 
-In this lab, you and your partner build a question-answering system over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  This is a **pair lab**: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.
+In this lab, you and your partner build a question-answering system, a retrieval-augmented generation (RAG) pipeline, over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  This is a **pair lab**: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.
 
 ---
 
@@ -238,7 +238,7 @@ python -c "import pathlib; fs = [*pathlib.Path('corpus').glob('*.txt'), *pathlib
 
 ## Part 2: Index with Two Chunking Strategies (Chunking Strategy row, 12%)
 
-A chunk is the unit of text you embed and retrieve, and its size decides whether an answer arrives whole or in pieces.  You implement two chunking strategies (fixed-size with overlap, and paragraph-structural), keep the parameters in a JSON file rather than in code, build a question set of at least ten questions with hand-located answers, and report recall@k for $$k \in \{1, 3, 5\}$$ under both strategies.
+A chunk is the unit of text you embed and retrieve, and its size decides whether an answer arrives whole or in pieces.  You implement two chunking strategies (fixed-size with overlap, and paragraph-structural), keep the parameters in a JSON file rather than in code, build a question set of at least ten questions with hand-located answers, and report recall@k (how often the chunk holding the answer appears in the top $$k$$ results, defined below) for $$k \in \{1, 3, 5\}$$ under both strategies.
 
 > **No-code path.** Build this part as Direction 0, Steps B and C: two Langflow flows that differ only in the Text Splitter settings, measured on the same ten questions.  The requirements in this part still apply.
 
@@ -942,7 +942,7 @@ Your RAG system kept knowledge *outside* the model and retrieved it at query tim
 > - **Accounts:** a free Hugging Face account.  If you use a gated Llama base model, accept the model license on its Hugging Face page and log in with `huggingface-cli`; the non-gated bases in the table below need no license step.  A Google account if you take the free Colab path.
 > - **API costs:** none.  Training runs on your own GPU or on Google Colab's free tier; nothing is billed.
 > - **Installs / disk:** the training toolchain (`unsloth`, or `transformers` + `peft` + `trl`) in Colab or locally, plus a few GB of disk for model weights and the exported GGUF.
-> - **Hardware:** a CUDA GPU with roughly 6-8 GB of VRAM, **or no GPU at all** using one of the two no-GPU paths below.
+> - **Hardware:** a CUDA GPU with roughly 6-8 GB of VRAM (the GPU's own memory), **or no GPU at all** using one of the two no-GPU paths below.
 > - **No-cost fallback:** Google Colab's free T4 tier runs every step; if Colab is unavailable to you, the provided-artifact variant skips training and still earns full credit.
 
 **No GPU?  Two paths, both full credit.**

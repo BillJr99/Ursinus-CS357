@@ -116,7 +116,7 @@ The Final Project is **one required project with three directions**.  Every team
 
 | Direction | What you build | What you need | Pick this if |
 |---|---|---|---|
-| **A: Custom Agent Team** | A system of at least three cooperating, specialized agents that accomplishes a real goal-oriented task end to end on your local stack, benchmarked against a monolithic baseline and governed by a document you can defend | Your local AI stack, a public repository with CI, and a task a multi-agent system actually fits | Your team wants to build, and has people who enjoy making things run |
+| **A: Custom Agent Team** | A system of at least three cooperating, specialized agents that accomplishes a real goal-oriented task end to end on your local stack, benchmarked against a monolithic baseline and governed by a document you can defend | Your local AI stack, a public repository with continuous integration (CI), and a task a multi-agent system actually fits | Your team wants to build, and has people who enjoy making things run |
 | **B: Responsible AI Audit** | A structured, evidenced responsible-AI audit of a specific deployed system: a risk analysis with mechanistic failure modes, a governance document a real organization could adopt, and a presentation a real board could act on | Public documentation, news coverage, academic studies, and regulatory filings; no code and no access to the system's internals | Your team wants to investigate.  This is a **fully non-programming** direction and it is not the lesser one; a good audit is harder than a mediocre build |
 | **C: Build and Publish an Open-Source Agent** | A verified gap in the agent tooling ecosystem filled by an open-source agent that is built, tested, documented, and published to a public registry, with a real community engaged and its governance and limitations disclosed.  As a variant, reviewed pull requests to an existing open-source agent project (see Direction C below) | A public repository with CI, a registry account (npm, PyPI, Docker Hub, or the MCP marketplace), and a community to post in | Your team wants what you make to outlive the semester, and will take documentation, packaging, and licensing as seriously as the code |
 
@@ -304,7 +304,7 @@ Build in three sprints between the proposal and Demo Day, aligned with in-class 
 
 | Sprint | Direction A milestone | Direction B milestone | Direction C milestone |
 |---|---|---|---|
-| Sprint 1 (proposal submitted -> cross-team proposal critique) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running MVP (core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
+| Sprint 1 (proposal submitted -> cross-team proposal critique) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running minimum viable product (MVP: core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
 | Sprint 2 (proposal critique -> gallery walk; spans the Thanksgiving break) | All agents implemented and individually testable; at least 5 evaluation tasks run; GOVERNANCE.md first draft committed | Risk analysis report drafted (4-6 pages, 8+ citations, 3 mechanistic failure modes); governance document outlined | Non-trivial feature implemented; third property test added; README quickstart drafted and cold-tested by a classmate |
 | Sprint 3 (gallery walk -> Demo Day) | Full evaluation with baseline comparison; 3+ failure modes documented with transcripts; one mitigation re-measured; gallery-walk prep | Governance document complete (monitoring plan, incident response, communication plan, appeal process); board presentation rehearsed | Published to a registry, tagged v1.0.0; community post made; CONTRIBUTING.md and GOVERNANCE.md complete |
 
@@ -409,10 +409,10 @@ In addition to the shared elements:
 
 ### Direction A final deliverables
 
-- [ ] **The system:** a repository that runs from a fresh start following the README in under 3 minutes on a machine the team has not configured; configuration externalized to `config.json`, model versions and seeds pinned, exceptions handled with located messages, a test suite with at least one end-to-end test, CI on every push, and a publish step (triggered by the `submission` tag) pushing the artifact to GHCR, Docker Hub, or npm
+- [ ] **The system:** a repository that runs from a fresh start following the README in under 3 minutes on a machine the team has not configured; configuration externalized to `config.json`, model versions and seeds pinned, exceptions handled with located messages, a test suite with at least one end-to-end test, CI on every push, and a publish step (triggered by the `submission` tag) pushing the artifact to GitHub Container Registry (GHCR), Docker Hub, or npm
 - [ ] **The report** (6-8 pages): design rationale tied to named course patterns; evaluation results with the baseline comparison table, failure analysis with transcripts, and re-measurement after mitigation; explainability design; limitations (your "disclose" bucket from the gallery walk, verbatim); a governance summary referencing the committed GOVERNANCE.md; the Responsible AI Report; and individual contribution statements documenting the role rotation
 - [ ] **The presentation** (12 minutes plus questions), meeting the shared Demo Day requirements, plus: the evaluation table (baseline vs. multi-agent, side by side) and the 90-second explainability story (what does a user see when the system makes a decision?)
-- [ ] **The artifacts folder:** final agent design table, final pre-mortem with binding governance clauses noted, all sprint notes, gallery-walk cards received with your triage, and a release-readiness checklist signed by the Evaluator confirming CI passes on the submission SHA, the artifact is live at its published URL, and the README was tested by a stranger
+- [ ] **The artifacts folder:** final agent design table, final pre-mortem with binding governance clauses noted, all sprint notes, gallery-walk cards received with your triage, and a release-readiness checklist signed by the Evaluator confirming CI passes on the submission SHA (the commit hash of the version you submit), the artifact is live at its published URL, and the README was tested by a stranger
 
 ---
 
@@ -428,7 +428,7 @@ In addition to the shared elements:
 
 - **System identification**: name, operator, what it does, where it is deployed
 - **Affected populations**: who is affected and how the system's decisions reach them
-- **Framework choice** (NIST AI RMF, EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives
+- **Framework choice** (the NIST AI Risk Management Framework (AI RMF), EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives
 - **Preliminary hypothesis**: where you expect the highest risks to lie, written before the deep analysis
 - Evidence that enough public information exists (at least two independent sources from an initial search)
 

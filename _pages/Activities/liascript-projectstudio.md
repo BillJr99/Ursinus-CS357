@@ -41,7 +41,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 | Minutes | What we do |
 |---|---|
-| 0-10 | Set up: get your artifact displayed and your SQR cards in hand |
+| 0-10 | Set up: get your artifact displayed and your SQR (Strength, Question, Risk) cards in hand |
 | 10-45 | Gallery walk: every team sees every other team's work |
 | 45-70 | Studio time on what the walk surfaced |
 | 70-75 | One commitment per team for the next session |
@@ -104,7 +104,7 @@ Hosts demonstrate honestly.  Every station must show at least one *known failure
 
 [[___ Your answer here ___]]
 
-*Hint:* Recall the patterns from Unit 3: pipeline, planner, parallel specialist, self-critique, and human-in-the-loop.  "A planner where a pipeline would do" means a team added dynamic task-planning overhead to a sequence of steps that is always the same.  The planner adds cost and complexity without adding flexibility.  Look for systems where the agents always take the same steps in the same order: that is a pipeline, not a planner problem.
+*Hint:* Recall the patterns from Unit 3: pipeline, planner, parallel specialist, self-critique, and human-in-the-loop.  "A planner where a pipeline would do" means a team added dynamic task-planning overhead to a sequence of steps that is always the same.  The planner adds cost and complexity without adding flexibility.  Look for systems where the agents always take the same steps in the same order: that is a pipeline problem, not a planner problem.
 
 **Question 4.**  As a host: which visitor question exposed something your team had not considered?  The Scribe records it verbatim; it likely belongs in your report's limitations section.
 

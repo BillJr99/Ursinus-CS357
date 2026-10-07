@@ -366,7 +366,7 @@ Every entry in `SESSION.md` ends with a "Next Safe Action" because:
 [(X)] A brand-new agent with no conversation history needs exactly one trustworthy, concrete first step, and the outgoing session is the only party that can name it
 [( )] It prevents the session log from growing without bound
 
-> **Common Misconception:** "Handoff notes are for when you switch agents."  The rule says *before stopping for any reason*, including finishing normally, because you cannot predict which stop becomes a swap: the session that completed its task on Friday becomes a handoff on Monday when the vendor has an outage and a different CLI picks up the work.  Every stop is treated as a potential handoff, so no stop is a bad one.
+> **Common Misconception:** "Handoff notes are for when you switch agents."  The rule says *before stopping for any reason*, including finishing normally, because you cannot predict which stop becomes a swap: the session that completed its task on Friday becomes a handoff on Monday when the vendor has an outage and a different command-line interface (CLI) tool picks up the work.  Every stop is treated as a potential handoff, so no stop is a bad one.
 
 ---
 

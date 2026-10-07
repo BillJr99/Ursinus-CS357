@@ -160,7 +160,7 @@ Here are two views of the same thread: a table for scanning, then a narrative fo
 
 ## Step 1: The Team Formation Survey
 
-This survey is **not in the LMS**.  It lives here, on this page.  Read the questions below, write your answers, and submit them **individually** to the **Team Formation Survey** assignment in Canvas (a text entry or an uploaded document is fine; there is no form to fill in).  Do not email your answers.  The [assignment page]({{ site.baseurl }}/Assignments/TeamSurvey) carries the rubric and the reflection prompts; the [course schedule]({{ site.baseurl }}/) carries the dates.
+The survey questions are **not in the LMS** (the learning management system).  They live here, on this page.  Read the questions below, write your answers, and submit them **individually** to the **Team Formation Survey** assignment in Canvas (a text entry or an uploaded document is fine; there is no form to fill in).  Do not email your answers.  The [assignment page]({{ site.baseurl }}/Assignments/TeamSurvey) carries the rubric and the reflection prompts; the [course schedule]({{ site.baseurl }}/) carries the dates.
 
 Your answers are the data I use to form the standing teams you will work with all semester.  Teams are *homogenized* on logistics (availability windows and deadline styles) while interests and perspectives are allowed to vary, following the CATME Smarter Teamwork research program ([catme.org](https://www.catme.org/)).  You will not self-select teams.  Accurate answers serve you directly: the only way to end up on a team that fits your actual life is to describe your actual life.
 

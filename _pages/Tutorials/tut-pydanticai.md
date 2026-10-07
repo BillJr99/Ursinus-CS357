@@ -17,7 +17,7 @@ tags:
 
 ## About This Tutorial
 
-You have already written an agent by hand.  The *Local Agent From Scratch* tutorial kept the message history in a list, parsed the model's requests, ran a gate before every command, and stopped after a budget.  The *Tool Use* deck's two-tool agent described `get_today` and `days_until` in JSON Schema, looked each request up in a registry, and appended every result as a `tool` message.  This tutorial keeps that same small task and moves it into [Pydantic AI](https://ai.pydantic.dev) one responsibility at a time.  Each part ends with two lists: what the framework did for you, and what is still yours.
+You have already written an agent by hand.  The *Local Agent From Scratch* tutorial kept the message history in a list, parsed the model's requests, ran a safety gate before every command, and stopped after a fixed budget of steps.  The *Tool Use* deck's two-tool agent described `get_today` and `days_until` in JSON Schema, looked each request up in a registry, and appended every result as a `tool` message.  This tutorial keeps that same small task and moves it into [Pydantic AI](https://ai.pydantic.dev) one responsibility at a time.  Each part ends with two lists: what the framework did for you, and what is still yours.
 {: .tb-lede}
 
 Read this after the hand-written versions, not instead of them.  A framework is only a time saver once you can say what it is doing on your behalf, and the fastest way to say that is to have done it yourself first.  After this tutorial, Part V of *Agent Frameworks* shows the same framework from a different angle, by printing the context window, and the rest of that tutorial compares other frameworks.
@@ -233,7 +233,7 @@ target=datetime.date(2026, 12, 7)
 rejected: Input should be a valid date or datetime, invalid character in year
 ```
 
-The first block is the JSON Schema you wrote by hand in the deck, generated here from the function's signature and the `Args:` line of its docstring.  The second half is plain Pydantic with no agent at all: `DaysUntilArgs` is the P1 cell from the Tool Use deck's Pydantic extension.  Pydantic AI uses this same machinery for every tool argument and every structured output, which is why the P1 to P9 cells in the [Tool Use]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-tooluse.md), [MCP]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md), and [RAG]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md) decks and Part V of [Local Agent From Scratch]({{ site.baseurl }}/Tutorials/LocalAgentFromScratch) are worth knowing before you use the framework.  Everything those cells check, the framework now checks for you.  Nothing those cells *could not* check is checked now either.
+The first block is the JSON Schema you wrote by hand in the deck, generated here from the function's signature and the `Args:` line of its docstring.  The second half is plain Pydantic with no agent at all: `DaysUntilArgs` is the P1 cell from the Tool Use deck's Pydantic extension.  Pydantic AI uses this same machinery for every tool argument and every structured output, which is why the P1 to P9 cells in the [Tool Use]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-tooluse.md), [MCP]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md), and [RAG]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md) decks and Part V of [Local Agent From Scratch]({{ site.baseurl }}/Tutorials/LocalAgentFromScratch) are worth knowing before you use the framework.  Everything those cells check, the framework now checks for you.  Anything those cells *could not* check, the framework does not check either.
 
 ---
 
@@ -366,9 +366,9 @@ Answer `n` instead and the tool returns the denial message to the model, and the
 
 ## Part 4: Structured Output, and What Validation Cannot Catch
 
-Sometimes the answer itself should be data rather than prose.  Pydantic AI can require that the final answer validate against a model.  Our first attempt asked for `{event, target, days_left}` and let the model call `days_until` along the way.  With `llama3.2` on CPU (this part was tested before the switch to `qwen2.5:3b`), that failed in instructive ways:
+Sometimes the answer itself should be data rather than prose.  Pydantic AI can require that the final answer validate against a Pydantic model (a typed validation class, not a language model).  Our first attempt asked for `{event, target, days_left}` and let the model call `days_until` along the way.  With `llama3.2` on CPU (this part was tested before the switch to `qwen2.5:3b`), that failed in instructive ways:
 
-- With the default tool-based output, the model answered in prose instead of calling the output tool, and the run stopped at its request limit.
+- With the default tool-based output, where the model is supposed to hand back its answer by calling a special output tool, the model answered in prose instead of calling that tool, and the run stopped at its request limit.
 - With `NativeOutput` (Ollama constrains the reply to the JSON schema), the reply always parsed, but `days_left` was `0`, and the model had not called the tool at all.
 - With an output validator that recomputed `days_left` and raised `ModelRetry`, the model never got the arithmetic right, and the run ended with "Exceeded maximum output retries (3)".
 
@@ -432,7 +432,7 @@ The schema guarantees that `target` is a date.  The validator adds a rule the sc
 
 ## Part 5: The Agentic Loop, Node by Node
 
-`run_sync` runs a loop.  `agent.iter` lets you walk it:
+`run_sync` runs a loop.  `agent.iter` lets you step through that loop one node, or stage, at a time:
 
 ```python
 # step5_loop.py: walk the agentic loop one node at a time, then trip each kind of limit.
@@ -516,7 +516,7 @@ Now run it with `MODEL=llama3.2`.  The trace is the same: it called `get_today`,
 
 ## Part 6: Memory
 
-Short-term memory is the message list, handed back with `message_history`.  Long-term memory is the same list saved to disk.  A history processor decides how much of it is sent each time, so the file can grow without the context window growing with it.
+Short-term memory is the message list, handed back with `message_history`.  Long-term memory is the same list saved to disk.  A history processor decides how much of it is sent to the model on each call, so the file can grow without the context window growing with it.
 
 ```python
 # step6_memory.py: short-term memory is the message list; saving it to disk makes it long-term.
@@ -658,13 +658,13 @@ $ MODEL=llama3.2 python step7_skills.py
 {"name":"exam-planner","parameters":{"target":"2026-10-12","topics":["series","integrals","limits"]}}
 ```
 
-`qwen2.5:3b` loaded the skill, followed its first instruction, and recovered from a malformed call through a validation retry.  `llama3.2` wrote a tool call *as text* in its final answer, so no tool ever ran.  Pydantic AI cannot repair that: it only sees a reply with no tool call in it.  If your agent depends on tool calls, choose a model that makes them, and check the trace.
+`qwen2.5:3b` loaded the skill and followed its first instruction.  Its second `days_until` call was malformed, so Pydantic AI sent back a validation retry, and the model then wrote out the study plan.  `llama3.2` wrote a tool call *as text* in its final answer, so no tool ever ran.  Pydantic AI cannot repair that: it only sees a reply with no tool call in it.  If your agent depends on tool calls, choose a model that makes them, and check the trace.
 
 ---
 
 ## Part 8: MCP, the Real Protocol
 
-The MCP deck's Flask server teaches the shape of MCP (`/tools/list`, `/tools/call`), but it is not an MCP server: it speaks plain HTTP and JSON, not the JSON-RPC protocol that MCP clients expect.  This part runs a real one.  The two date tools move out of your program and into a server process:
+The MCP deck's Flask server teaches the shape of MCP (`/tools/list`, `/tools/call`), but it is not an MCP server: it speaks plain HTTP and JSON, not the JSON-RPC protocol (a standard way to encode function calls and their results as JSON messages) that MCP clients expect.  This part runs a real one.  The two date tools move out of your program and into a server process:
 
 ```python
 # calendar_server.py: the same two tools, served over real MCP (JSON-RPC over stdio).
@@ -691,7 +691,7 @@ if __name__ == "__main__":
     mcp.run(show_banner=False)          # stdio by default: the client starts this process
 ```
 
-The client starts the server over stdio, asks what it offers, and calls a tool, first by hand and then through an agent:
+The client starts the server as a separate process and talks to it over stdio (standard input and output), asks what it offers, and calls a tool, first by hand and then through an agent:
 
 ```python
 # step8_mcp.py: discover the server's tools over MCP, then hand them to an agent.
