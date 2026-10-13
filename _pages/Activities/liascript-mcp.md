@@ -236,6 +236,38 @@ print(call_remote("room_lookup", {"building": "Pfahler"}))
 
 ---
 
+## Code Cell: Two Calls That Go Wrong
+
+> **Runs on your machine, not here.**  This cell needs `server.py` running on `localhost:8765`, which a web page has no route to.  Copy it into your course container and run it there.
+
+```python
+import requests
+import traceback
+
+try:
+    r = requests.post("http://localhost:8765/tools/call", json={"name": "weather", "arguments": {}}, timeout=10)
+    print(r.status_code, r.json())
+    r = requests.post("http://localhost:8765/tools/call", json={"name": "hours", "arguments": {"place": "gym"}}, timeout=10)
+    print(r.status_code, r.json())
+except Exception as e:
+    print(f"[mcpclient:bad_calls] {e}")
+    traceback.print_exc()
+```
+
+You should see:
+
+```text
+404 {'error': 'unknown tool'}
+500 {'error': "hours() got an unexpected keyword argument 'place'"}
+```
+
+### Reading the Code
+
+- The hand-written schema for `hours` said `facility`, but nothing checked the call against it.  The server passed `place` straight through, and the mistake surfaced only when Python's own function call failed, as a 500 with a Python error message.
+- Real MCP fixes this with a JSON Schema for each tool's input, which the server validates before it runs the tool.  A bad argument is then refused with a message that names the field, before any of your code executes.
+
+---
+
 ## Model 2: Discovery in Action
 
 ### Critical Thinking Questions
