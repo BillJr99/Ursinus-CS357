@@ -202,7 +202,7 @@ def agent(question, max_steps=4):
     for _ in range(max_steps):
         try:
             r = requests.post("http://localhost:11434/api/chat", json={
-                "model": "llama3.2", "stream": False, "tools": TOOLS,
+                "model": "qwen2.5:3b", "stream": False, "tools": TOOLS,
                 "options": {"temperature": 0.0, "seed": 42},
                 "messages": msgs}, timeout=120).json()["message"]
         except Exception as e:
@@ -223,6 +223,14 @@ def agent(question, max_steps=4):
 
 print(agent("How many days until the last day of classes, December 7, 2026?"))
 ```
+
+You should see one `[tool]` line followed by a one-sentence answer that states the number of days.  The `[tool]` line has this shape, with today's count in place of the placeholder:
+
+```text
+[tool] days_until({'target_iso': '2026-12-07'}) -> <number of days>
+```
+
+The model may call `get_today` first, which adds a second `[tool]` line above this one.  Both runs are correct.
 
 ---
 
@@ -263,7 +271,7 @@ The agent above talks straight to Ollama on port `11434`.  In many of our setups
 
 Whether native tool calling works at all still depends on the model underneath.  A tool-capable model (for example `llama3.1`/`llama3.2`, `qwen2.5`, or `mistral-nemo`) fills in `tool_calls`.  A model without tool training answers in prose, and you fall back to the week-1 parsing approach.
 
-> **Which model for tool calling?**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  To switch the agent above, change `"model": "llama3.2"` to `"model": "qwen2.5:3b"`.
+> **Which model for tool calling?**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  The agent above already uses `qwen2.5:3b`, and `llama3.2` remains the model for plain chat.
 
 ---
 
@@ -695,7 +703,7 @@ def agent(question, max_steps=4):
     for _ in range(max_steps):
         try:
             r = requests.post("http://localhost:11434/api/chat", json={
-                "model": "llama3.2", "stream": False, "tools": TOOLS,
+                "model": "qwen2.5:3b", "stream": False, "tools": TOOLS,
                 "options": {"temperature": 0.0, "seed": 42},
                 "messages": msgs}, timeout=120).json()["message"]
         except Exception as e:
