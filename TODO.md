@@ -9,3 +9,4 @@
 - [ ] Consider an assignment in which students fine-tune a small model with LoRA or build a RAG system over a corpus of their own, then compare the two on held-out questions (the Offline RAG and LoRA tutorial is a possible starting point). (added 2026-10-07)
 - [ ] Consider an opencode only environment possibly with Docker for isolation; look into Docker Sandbox
 - [ ] Restructure lecture and assignment topics to be more focused; consolidate material to "do less and be awesome"
+- [ ] Have a docker container that runs as the root user and runs opencode in auto mode, but that is isolated to a workspace subdirectory of the current directory
