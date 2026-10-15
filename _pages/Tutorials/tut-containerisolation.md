@@ -15,7 +15,7 @@ tags:
 
 ## About This Tutorial
 
-This tutorial is the background reading for putting an AI agent in a box.  It covers the two Linux kernel features that Docker builds on, the threat model for an agent that can write and run code, the safety gates that belong inside the agent loop itself, and the four mechanisms that set an agent's blast radius.  You use it in [Part 5 of the Tools and MCP Lab]({{ site.baseurl }}/Assignments/ToolsMCP#part-5-contain-the-server-and-size-its-blast-radius-10-points), where you put your MCP server in a container, restrict it one boundary at a time, try to cross each boundary, and write a blast-radius statement that I grade against this material.  "It runs in Docker" is not by itself a security claim, and this page is where you learn why.
+This tutorial is the background reading for putting an AI agent in a box.  It covers the two Linux kernel features that Docker builds on, the threat model for an agent that can write and run code, the safety gates that belong inside the agent loop itself, and the four mechanisms that set an agent's blast radius.  Use it whenever you put a tool server, such as an MCP server, in a container: restrict it one boundary at a time, try to cross each boundary, and write a blast-radius statement you can defend against this material.  "It runs in Docker" is not by itself a security claim, and this page is where you learn why.
 {: .tb-lede}
 
 If you have never used Docker, read [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker) first.  This page assumes you know what an image, a container, a volume, and a port mapping are.

@@ -740,7 +740,7 @@ There are 61 days until December 7, 2026.
   [text] 'There are 61 days until December 7, 2026.'
 ```
 
-The server validated the bad date itself, on its side of the connection, before your function ran.  The agent's trace is identical to Part 1's: the model sees a description going in and a result coming back, whether the function lives in your file or in another process.  What changed is who runs the code, and therefore where permission checks have to live.  A server you connect to decides for itself what its tools may do, so an approval gate in your agent cannot reach inside it.  Connect only servers you trust, and give them only the access their tools need; the Tools and MCP lab's containment part is about exactly that.
+The server validated the bad date itself, on its side of the connection, before your function ran.  The agent's trace is identical to Part 1's: the model sees a description going in and a result coming back, whether the function lives in your file or in another process.  What changed is who runs the code, and therefore where permission checks have to live.  A server you connect to decides for itself what its tools may do, so an approval gate in your agent cannot reach inside it.  Connect only servers you trust, and give them only the access their tools need; the [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) tutorial is about exactly that.
 
 > **Older examples:** FastMCP 4 warns when you pass a bare filename string (`MCPToolset("calendar_server.py")`); pass `Path("calendar_server.py")` as above.  `Tool.inputSchema` is now `Tool.input_schema`.
 {: .tb-warning data-title="FastMCP 4"}
@@ -894,7 +894,7 @@ Building that file is Exercise 1.
 
 ## Where This Goes Next
 
-[Agent Frameworks, Part V]({{ site.baseurl }}/Tutorials/AgentFrameworks#part-v-hands-on-pydantic-ai-and-the-context-window) uses the same framework to print the context window after each feature is added, which makes the cost of every tool description and memory line visible.  The [Tools and MCP lab]({{ site.baseurl }}/Assignments/ToolsMCP) accepts Pydantic AI for its framework option, and its MCP and containment parts build on Part 8.  The [Offline RAG and LoRA tutorial]({{ site.baseurl }}/Tutorials/OfflineRAGFineTuning) reuses `common.py` to put a retrieval tool behind the same kind of agent.
+[Agent Frameworks, Part V]({{ site.baseurl }}/Tutorials/AgentFrameworks#part-v-hands-on-pydantic-ai-and-the-context-window) uses the same framework to print the context window after each feature is added, which makes the cost of every tool description and memory line visible.  Part 8's MCP client is a natural next step after the [Tools and MCP lab]({{ site.baseurl }}/Assignments/ToolsMCP), which connects a client to an existing MCP server.  The [Offline RAG and LoRA tutorial]({{ site.baseurl }}/Tutorials/OfflineRAGFineTuning) reuses `common.py` to put a retrieval tool behind the same kind of agent.
 
 ## Further Reading
 
