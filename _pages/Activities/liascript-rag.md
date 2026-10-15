@@ -57,7 +57,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 In this Part you will distinguish the two kinds of memory a language model has (the knowledge baked into its parameters during training versus the text currently in its prompt) and see why RAG turns a hard "closed-book" question into a much easier "open-book" one.
 
-**Why this matters:** Ask someone a trivia question about an obscure historical event.  If they do not know it, they either admit ignorance or make something up, and AI models make something up convincingly.  RAG is the equivalent of saying "look it up in the encyclopedia first, then answer."  The model goes from guessing to reading and summarizing, which is a job it does much better.  This one insight is why RAG has become the most widely deployed AI engineering technique of the past three years.
+**Why this matters:** Ask someone a trivia question about an obscure historical event.  If they do not know it, they either admit ignorance or make something up, and AI models make something up convincingly.  RAG is the equivalent of saying "look it up in the encyclopedia first, then answer."  The model goes from guessing to reading and summarizing, which is a job it does much better.
 
 A model has two memories.  *Parametric memory* (from "parameters," the numbers learned during training) is whatever was baked into the weights: vast, fuzzy, frozen in time.  *Contextual memory* is whatever sits in the prompt right now: small, precise, current.  Hallucination (the model confidently stating something false) is what happens when we ask parametric memory for precision it does not have.  RAG converts the question from a closed-book exam into an open-book one:
 
@@ -489,7 +489,7 @@ Every RAG query passes through a fixed sequence of steps, like an assembly line 
 | 5. Top-$k$ documents returned | Vector database | Filtered IDs | Document text + metadata | If chunks are too long, they waste context window space; if too short, they lack the context the LLM needs to answer. |
 | 6. LLM generates with docs in context | Language model (e.g., `claude-sonnet-5-5`, `llama3.1:8b`) | Prompt = system instructions + retrieved chunks + user question | Answer string | LLM ignores the retrieved text and hallucinates from parametric memory; "lost in the middle" effect buries the relevant chunk. |
 
-> **Common Misconception:** Many beginners assume that if the LLM gives a wrong answer, the problem must be the LLM itself.  In practice, **the retrieval step fails far more often than the generation step**.  A perfect LLM cannot produce a correct answer if Step 3 or 4 returned the wrong documents.  Always check what was retrieved (Step 5's output) before debugging the LLM.
+> **Common Misconception:** Many beginners assume that if the LLM gives a wrong answer, the problem must be the LLM itself.  **Check retrieval first.**  A perfect LLM cannot produce a correct answer if Step 3 or 4 returned the wrong documents.  Always check what was retrieved (Step 5's output) before debugging the LLM.
 
 #### Critical Thinking Questions
 

@@ -555,7 +555,7 @@ Generative AI can replace human creative work, and increasingly it also collabor
 
 #### The Diminishing-Returns Hypothesis
 
-As AI pushes the marginal cost of generating creative content toward zero, the supply of generated content explodes.  Economic theory suggests that an oversupply of algorithmically generated content will drive down the value of average-quality creative work, while raising the premium on work that is novel, contextually embedded, or deeply rooted in specific human experience.  Authentic human perspective and embodied experience may become *more* economically valuable, not less, as AI-generated content floods the market.  This is not guaranteed.  It depends on whether consumers can tell AI-generated work from human-generated work, and whether they care to.
+As AI pushes the marginal cost of generating creative content toward zero, the supply of generated content explodes.  What that does to the value of human creative work is an open question, and the answer depends on whether consumers can tell AI-generated work from human-generated work, and whether they care to.
 
 #### Questions to Work Through
 

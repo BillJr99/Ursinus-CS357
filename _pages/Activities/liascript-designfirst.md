@@ -383,7 +383,7 @@ Respond to all three levels in your notebook:
 ## Further Reading
 
 - Gary Klein.  "Performing a Project Premortem."  *Harvard Business Review* (2007).  The origin of the pre-mortem technique applied here.
-- Chip Heath and Dan Heath.  *Decisive: How to Make Better Choices in Life and Work* (2013), Chapter 7.  The "premortem" and "preparade" as decision tools.
+- Chip Heath and Dan Heath.  *Decisive: How to Make Better Choices in Life and Work* (2013).  The "premortem" and "preparade" as decision tools.
 - Anthropic.  "Building Effective Agents." https://www.anthropic.com/research/building-effective-agents, the orchestration and agent design patterns section is directly relevant.
 - Fred Brooks.  *The Mythical Man-Month* (1975/1995), Chapter 11.  "Plan to throw one away", still the most candid advice about first-system costs.
 - This course: [Observability, Traceability, and Handoff Protocols](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-observability.md), where the `SKILL.md` and checklist that today's protocol section relies on were written.

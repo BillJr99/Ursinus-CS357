@@ -34,7 +34,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **System prompt** | Standing instructions sent ahead of every turn.  Always on, never invoked by name | The `BASELINE` string in the Part III harness |
 | **Project instructions** | A file such as `AGENTS.md` in the project root, read once at startup: architecture, invariants, test commands, what not to touch | The `AGENTS.md` you wrote for `cs357-work` in Week 1 |
 | **Hook** | A command the harness runs automatically at a fixed point, such as before a commit or after a file edit.  Enforced by code, so the model cannot talk its way past it | The `SessionStart` and `Stop` hooks in Model 1b |
-| **Golden set** | A fixed list of inputs with known expected outputs, scored automatically, so a change to a prompt or skill gets a number instead of an opinion | The capitals harness from *Prompt Engineering as Agent Design*, reused in Part III |
+| **Golden set** | A fixed list of inputs with known expected outputs, scored automatically, so a change to a prompt or skill gets a number instead of an opinion | The harness in Part III, which *Prompt Engineering as Agent Design* reuses next session on world capitals |
 | **Rubric** | A short list of checkable criteria, each answered pass or fail, so two people scoring the same output get the same score | The six items in Model 2, scored by `score()` in Part III |
 
 ---
@@ -357,7 +357,7 @@ You are writing a system prompt for an agent.
 Reply with the system prompt only: no code fence, no greeting, no commentary.
 ```
 
-Those six rules are not invented for this session.  They are the six principles for effective system prompts from *Prompt Engineering as Agent Design*, written in the shape a skill file takes, which is the point worth noticing: a skill is usually a thing you already knew, written down where an agent can read it.
+Those six rules are not invented for this session.  They are the six principles for effective system prompts that *Prompt Engineering as Agent Design* takes apart next session, written here in the shape a skill file takes, which is the point worth noticing: a skill is usually a thing you could already say, written down where an agent can read it.
 
 The test is a six-item rubric, one item per rule.  Each item is one check a program can make on the reply.
 
@@ -385,7 +385,7 @@ Install it and confirm the trigger before you measure anything: create `.agents/
 ---
 # Part III: Measure It
 
-In this part you find out whether the skill did anything.  The method is the golden-set harness from *Prompt Engineering as Agent Design*: hold everything fixed, change one thing, and score.  The one thing that changes is whether the skill's instructions are present.
+In this part you find out whether the skill did anything.  The method is a golden-set harness, the same one *Prompt Engineering as Agent Design* reuses next session: hold everything fixed, change one thing, and score.  The one thing that changes is whether the skill's instructions are present.
 
 ## 4.  The Protocol
 
@@ -525,7 +525,7 @@ Two derived numbers matter more than any single cell.  The **skill effect** for 
 
 9.  Your rubric has six items and your brief describes one agent.  If you edited the skill until every cell scored 6.00 on Aria, what could happen on a different agent?  Name the risk and the guard.
 
-   > *Hint: This is the same risk as tuning a prompt to five countries in the capitals harness.  A second brief you never tuned on is a held-out case.  Write one for an agent with a different audience and a different refusal.*
+   > *Hint: This is the same risk as tuning a prompt to the five inputs it was tested on.  A second brief you never tuned on is a held-out case.  Write one for an agent with a different audience and a different refusal.*
 
 ---
 # Part IV: Synthesis and Practice

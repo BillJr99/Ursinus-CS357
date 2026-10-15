@@ -66,7 +66,7 @@ Those three are the patterns we build today.  Two more fixed shapes belong in yo
 |---|---|---|---|
 | **Pipeline** | A fixed sequence; each stage's output is the next stage's input | You, before runtime | Part II, `digest_pipeline` |
 | **Router** | One classification, then dispatch to exactly one specialist | You; the classifier only picks a label from a closed set | Part II, `route()` |
-| **Fan-out / gather** | N independent subtasks run separately, then one aggregator merges the results | You; the branches are independent by design | Going Deeper, section 4c |
+| **Fan-out / gather** | N independent subtasks run separately, then one aggregator merges the results | You; the branches are independent by design | Going Deeper, section 5c |
 | **Critique-refine** | A generator and a critic loop until the critic passes or a revision budget runs out | You; the loop is bounded | *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* |
 | **Debate / consensus** | Several agents answer independently, and a fixed rule (majority vote, clustering) picks the result | You; the aggregation rule is fixed | the same session |
 
@@ -420,7 +420,7 @@ Everything so far is *fixed* orchestration: the pipeline, the router, and even t
 
 This extends Part I's heuristic (**choose the least dynamic pattern that solves the problem**) one rung further: fixed families before dynamic ones, and a *bounded* dynamic supervisor before free-roaming autonomy.
 
-## 5.  Dynamic Orchestration: the Supervisor Loop
+## 3.  Dynamic Orchestration: the Supervisor Loop
 
 When you *cannot* draw the diagram in advance (the task is open-ended, and which sub-agents are needed depends on what earlier ones discover), you promote the orchestrator itself to an LLM.  This is the pattern behind LangGraph's **supervisor** and behind LangChain **DeepAgents**, which you meet hands-on in the [Agent Frameworks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks) activity.
 
@@ -595,7 +595,7 @@ def attempt(task, max_steps=6):
 
 ---
 
-## 3.  Exercises
+## 4.  Exercises
 
 1.  **Add a fact-check stage to the pipeline.**
 
@@ -699,11 +699,11 @@ Everything below is at-home material.  Nothing in this section is needed for tod
 
 ---
 
-## 4.  Fixed Pipelines, Explained Separately
+## 5.  Fixed Pipelines, Explained Separately
 
 Fixed orchestration is a small family of reusable shapes.  Below is each one as its own "slide": a one-line *when to use*, a tiny flow sketch, and a pointer to where you have already met it.  In all five, notice the common property: **the wiring is authored by you and does not change based on what the agents produce.**
 
-### 4a.  Sequential Pipeline (A -> B -> C)
+### 5a.  Sequential Pipeline (A -> B -> C)
 
 *When to use:* the steps are known ahead of time and each stage refines the previous stage's output.
 
@@ -714,7 +714,7 @@ input --> [ Extract ] --> [ Draft ] --> [ Polish ] --> output
 
 This is the `digest_pipeline` from Part II.  Each stage carries a one-sentence system prompt and sees only its own input; the seams between stages are where you inspect for bugs.
 
-### 4b.  Router / Dispatch (classify, then one specialist)
+### 5b.  Router / Dispatch (classify, then one specialist)
 
 *When to use:* one input, several possible handlers, and exactly one of them applies.
 
@@ -726,7 +726,7 @@ input --> [ Classify ] +--> [ Software specialist ] --> output
 
 This is `route()` from Part II.  The classifier's only job is to emit one label from a closed set; a code-level guard forces any stray output back into the valid set.
 
-### 4c.  Parallel Fan-Out / Gather (map-reduce)
+### 5c.  Parallel Fan-Out / Gather (map-reduce)
 
 *When to use:* the task splits into N *independent* subtasks whose separate results are then combined.
 
@@ -738,7 +738,7 @@ input --> split +--> [ Agent 2 ] --+--> [ Aggregate ] --> output
 
 The subtasks share no context (that independence is what lets them run in parallel), and a final aggregator agent (or plain code) merges the results.  Compare this to the sequential pipeline: there each stage *depends* on the last; here the branches are deliberately isolated until the gather step.
 
-### 4d.  Critique-Refine (generator <-> critic loop)
+### 5d.  Critique-Refine (generator <-> critic loop)
 
 *When to use:* there is a quality bar you can articulate and check, and one pass is not reliably good enough.
 
@@ -748,7 +748,7 @@ input --> [ Generate ] --> draft <==> [ Critique ] --> (revise until pass OR bud
 
 The loop is bounded (it stops when the critic is satisfied or a revision budget expires) so the control flow is still fixed, even though it iterates.  This is the subject of its own activity: [Critique, Consensus, and the LLM Judge](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-critiqueconsensusjudge.md).
 
-### 4e.  Debate / Stochastic Consensus (many agents, vote or cluster)
+### 5e.  Debate / Stochastic Consensus (many agents, vote or cluster)
 
 *When to use:* the answer is uncertain or subjective, and several independent attempts give you a more reliable result than any single one.
 
@@ -768,9 +768,9 @@ Every shape above is *fixed*.  Even the critique loop and the debate vote follow
 |---|---|---|---|---|
 | Sequential pipeline | You, before runtime | The steps are known and each refines the last | An error at a seam propagates silently downstream | Part II |
 | Router / dispatch | You (the classifier only picks a label) | One input, several handlers, exactly one applies | A mis-classification sends the whole task to the wrong specialist | Part II |
-| Parallel fan-out / gather | You (branches are independent by design) | N independent subtasks whose results combine | The aggregator hides disagreement or drops a branch's result | Going Deeper, 4c |
-| Critique-refine | You (a bounded generator <-> critic loop) | A checkable quality bar that one pass misses | The loop never converges and burns the revision budget | Going Deeper, 4d |
-| Debate / consensus | You (a fixed voting or clustering rule) | Uncertain or subjective answers needing robustness | Correlated agents "agree" on the same wrong answer | Going Deeper, 4e |
+| Parallel fan-out / gather | You (branches are independent by design) | N independent subtasks whose results combine | The aggregator hides disagreement or drops a branch's result | Going Deeper, 5c |
+| Critique-refine | You (a bounded generator <-> critic loop) | A checkable quality bar that one pass misses | The loop never converges and burns the revision budget | Going Deeper, 5d |
+| Debate / consensus | You (a fixed voting or clustering rule) | Uncertain or subjective answers needing robustness | Correlated agents "agree" on the same wrong answer | Going Deeper, 5e |
 | Supervisor (dynamic) | An orchestrator LLM, each turn | The workflow cannot be enumerated in advance | Runaway spawning and unpredictable, hard-to-audit paths | Part IIc |
 
 For frameworks that build the supervisor pattern for you, see [Agent Frameworks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks).  It supplies sub-agents in isolated context windows and a built-in planning tool, and it picks up exactly where Part IIc's Code Cell left off.

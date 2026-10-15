@@ -997,7 +997,7 @@ Keep three things out.  API tokens, passwords, and any other secrets belong in e
 
 Two instructions are being considered for `opencode.json` in a project's repository.  Which instruction belongs in **project scope** (committed to the repository) rather than in a developer's personal global config?
 
-[( )] "Use Black for formatting"; this belongs in project scope because formatting consistency matters to all contributors, not just one developer's personal taste
+[( )] "Use Black for formatting"; this belongs only in your personal global config, because how code is formatted is a matter of each developer's taste
 [(X)] "Do not modify the database schema in `models.py` without creating an Alembic migration first"; this is a project-specific invariant that all contributors and all agent sessions must respect
 [( )] "My preferred model is llama3.2 at temperature 0.2"; this is a project-wide default that should be committed so all contributors use the same model for reproducibility
 [( )] "Open files in VSCode rather than the terminal editor"; this should be in project scope to enforce a consistent editing environment across the team
