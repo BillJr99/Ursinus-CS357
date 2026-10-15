@@ -212,6 +212,30 @@ async def main():
 
 For the time server, a call such as `session.call_tool("get_current_time", {"timezone": "America/New_York"})` returns the current time in that zone.  Check the names and argument shapes against your own discovery output rather than trusting this page.
 
+> **Do this first.**  The first time `uvx` runs a server, it downloads the server and its dependencies, and the client can give up waiting before the download finishes.  Fetch the server once by hand before you run the client:
+>
+> ```bash
+> uvx mcp-server-time --help
+> ```
+
+> **You should see.**  Two tools, then the current time in New York.  Your timestamp will differ:
+
+```text
+Discovered 2 tools:
+- get_current_time: Get current time in a specific timezone
+  arguments: {"timezone": {"type": "string", "description": "IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if no timezone p
+- convert_time: Convert time between timezones
+  arguments: {"source_timezone": {"type": "string", "description": "Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use 'Etc/UTC' as local timezone if
+
+Result:
+{
+  "timezone": "America/New_York",
+  "datetime": "2026-10-15T11:39:33-04:00",
+  "day_of_week": "Thursday",
+  "is_dst": true
+}
+```
+
 > **Paste into your submission.**  Your final `mcp_client.py` and its full output.
 
 ### Step A.3: Show When the Tool Should Not Fire
@@ -331,6 +355,7 @@ Answer each question in a short paragraph, and point at your own transcript or c
 | The client or opencode lists zero tools | The server is not running, the command in the configuration is wrong, or the address is mistyped | For a local server, run its command by hand first and check that it starts.  For a remote one, run `opencode mcp debug <name>` |
 | A 401, or a sign-in page that loops | You have not signed in yet, or the token expired | Run `opencode mcp auth <name>` again, or rerun the OneNote `--login` command |
 | "Need admin approval" at the Microsoft sign-in | A college account whose administrators restrict third-party apps | Use a personal Microsoft account, or pick another server |
+| A local server fails on the first run with `Connection closed` | `uvx` or `npx` was still downloading the server when the client gave up waiting | Run the server's command once by hand (for example `uvx mcp-server-time --help`), then run the client again |
 | `uvx: command not found` or `npx: command not found` | uv or Node.js is not installed | Install uv (`pip install uv`) or Node.js, or pick a remote server instead |
 | The agent answers from memory and never calls the tool | The question does not match the tool's description, or the model was not told the tools exist | Ask more specifically, or ask first what tools it has.  Note it in Part C, question 5: it is a finding, not a failure |
 | A local server works on your host but not from inside the course container | Inside a container, `localhost` and the installed programs are the container's own | Run the client, and the server it launches, on the same side of the container wall |
