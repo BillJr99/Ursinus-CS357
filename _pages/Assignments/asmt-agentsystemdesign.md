@@ -264,17 +264,11 @@ User uploads transcript (plain text)
 Final output delivered to Slack channel
 ```
 
-#### Step A3.1: Draw the main path
+#### Step A3.1: Draw the main path, then every branch
 
-**Goal:** items 1 through 4.  Trace one ordinary request from input through each agent to the final output, with the format on each arrow and every tool or retrieval call marked.  Leave out branches for now.
+**Goal:** items 1 through 5.  First trace one ordinary request from input through each agent to the final output, with the format on each arrow and every tool or retrieval call marked.  Then add a branch for each refusal condition from Step A2.2, wherever the flow leaves the main path, like the `On confidence < 0.80` line in the example.
 
-> **You should have.** One path that shows every agent from your table, a format on every handoff, and every external call.
-
-#### Step A3.2: Add every branch
-
-**Goal:** item 5.  Each refusal condition from Step A2.2 is a place the flow leaves the main path, like the `On confidence < 0.80` line in the example.
-
-> **You should have.** A labeled branch for every refusal or escalation condition.
+> **You should have.** One path that shows every agent from your table, a format on every handoff, every external call, and a labeled branch for every refusal or escalation condition.
 
 **Predict:** which of your branches do you expect to fire most often in real use?
 
@@ -296,17 +290,11 @@ Example row:
 |---|---|---|
 | The Summarizer Agent invents an action item not present in any transcript segment | String-match check between summary action items and transcript passages fails | Require the Summarizer to return a citation (transcript line number) for each action item; an automated checker verifies every action item maps to a real transcript line |
 
-#### Step A4.1: List what went wrong
+#### Step A4.1: List what went wrong, then how you would catch it
 
-**Goal:** the first column only.  Walk your data-flow diagram one agent and one handoff at a time and ask, "two weeks in, what did this do wrong?"
+**Goal:** walk your data-flow diagram one agent and one handoff at a time and ask, "two weeks in, what did this do wrong?"  Then give each risk a signal a checker could see (a failed string match, an empty field, a count that is off) and a response like the citation requirement in the example.
 
-> **You should have.** Six or more entries, including the two required-coverage rows.
-
-#### Step A4.2: Fill detection and mitigation
-
-**Goal:** give each risk a signal a checker could see (a failed string match, an empty field, a count that is off) and a response like the citation requirement in the example.
-
-> **You should have.** Every row complete, with no "we would notice" and no "we would be more careful."
+> **You should have.** Six or more complete rows, including the two required-coverage rows, with no "we would notice" and no "we would be more careful."
 
 **Reflect:** which row did you first think "could not happen"?  Reflection prompt 2 asks for it.
 
@@ -340,7 +328,7 @@ A protocol that says "the agent logs its actions" earns nothing here.  The test 
 
 #### Step A6.1: List the log fields and show one trace
 
-**Goal:** parts 1 and 2.  Every agent call, tool call, and branch in your diagram is a step type that needs a row.  Then pick one input that makes a branch from Step A3.2 fire, and write out its trace.
+**Goal:** parts 1 and 2.  Every agent call, tool call, and branch in your diagram is a step type that needs a row.  Then pick one input that makes a branch from Step A3.1 fire, and write out its trace.
 
 > **You should have.** One row per step type with no field that only describes intent, a list of rule names, and one worked trace.
 
@@ -461,19 +449,13 @@ Any agent CLI or chat agent from this course works, and any harness works: a she
 
 > **You should have.** Iteration one's transcript opening on the protocol skill and a restatement of the mission, the active task, and the next safe action.  If it skips these, the kickoff prompt or the skill is not saying it clearly enough.
 
-#### Step B3.3: Interrupt an iteration mid-task
+#### Step B3.3: Interrupt an iteration, then resume from the written state alone
 
-**Goal:** item 3.  Stop one iteration partway through something, and save `SESSION.md` and `CURRENT_TASK.md` exactly as they stand right after the stop.
-
-> **You should have.** Both handoff files as of the interrupted iteration.
-
-#### Step B3.4: Resume from the written state alone
-
-**Goal:** item 2, continued.  Start the next iteration from a fresh context, with nothing but your kickoff prompt, your documents, and what is on disk.
+**Goal:** items 3 and 2.  Stop one iteration partway through something, and save `SESSION.md` and `CURRENT_TASK.md` exactly as they stand right after the stop.  Then start the next iteration from a fresh context, with nothing but your kickoff prompt, your documents, and what is on disk.
 
 > **You should see.** Each iteration's transcript opens with the protocol skill reading the handoff state and restating the mission, the active task, and the next safe action, and closes with the skill updating `SESSION.md` and `CURRENT_TASK.md`.  The iteration after the interrupted one starts from those two files and does not redo work they mark complete.  If it asks you a question instead, that question is a leak: record it in the ledger and revise the document that should have answered it.
 
-#### Step B3.5: Fill the iteration ledger
+#### Step B3.4: Fill the iteration ledger
 
 **Goal:** item 4.  Add each row as soon as its iteration ends, while the transcript is fresh.
 
@@ -481,7 +463,7 @@ Any agent CLI or chat agent from this course works, and any harness works: a she
 
 **Reflect:** looking at the duplication column, which belief about your project turned out to be only in your head?
 
-#### Step B3.6: Write the runaway analysis (item 5)
+#### Step B3.5: Write the runaway analysis (item 5)
 
 > **You should have.** One paragraph naming a specific bad outcome and the **specific** gate or Forbidden-lane item that would have caught it.
 

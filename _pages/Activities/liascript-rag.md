@@ -212,9 +212,9 @@ The single most important reason RAG reduces factual hallucination is that it:
 
 # Part IIb: The Same Pipeline Without Code
 
-The RAG Knowledge Base lab offers Direction 0, a low-code route that builds this same pipeline on a Langflow canvas instead of in Python, for equal credit.  You should see both routes before you choose one, so here is the canvas version of what you just ran.
+The same pipeline can also be built on a Langflow canvas instead of in Python.  The RAG Knowledge Base lab uses Python with Pydantic AI, but it is worth seeing the canvas version of what you just ran.
 
-Langflow is a visual editor for language-model pipelines: each step is a node you configure in a side panel and wire to the next by dragging a connection.  The [*Visual Agents*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/VisualAgents) tutorial walks through the install and a first flow; the lab's Direction 0 section carries the exact node names for its version of Langflow.  On the canvas, the code cell above becomes three nodes:
+Langflow is a visual editor for language-model pipelines: each step is a node you configure in a side panel and wire to the next by dragging a connection.  The [*Visual Agents*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/VisualAgents) tutorial walks through the install and a first flow; that tutorial carries the exact node names for its version of Langflow.  On the canvas, the code cell above becomes three nodes:
 
 | Node | What it does | The code it replaces | The setting you carry over |
 |---|---|---|---|
