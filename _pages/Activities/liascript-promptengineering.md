@@ -169,7 +169,7 @@ The fastest way to a bad output is a rushed prompt.  Before you write the *final
 2.  **Describe what success looks like.**  State the done-conditions up front, exactly as Prompt B did in Model 1 and as every exercise in this course states "*You've succeeded when...*".  If you can name what a good output contains (an analogy, three sentences, valid JSON, a citation), the model can aim at it and you can *check* it.  A goal you can evaluate is a goal you can hit.
 3.  **Iterate on the plan and the prompt together.**  Treat the first response as a draft of the *plan*, not the final deliverable.  Refine the plan with the model over a few turns, and fold what you learn back into the prompt.  The prompt you finish with is almost never the prompt you started with.
 
-This is the Delegation competency from the Welcome activity's at-home AI Fluency reading, put into practice: converse to define success, then plan the work before executing it.
+This is the Description competency from the Welcome activity's at-home AI Fluency reading, put into practice: converse to define success, then plan the work before executing it.
 
 > **Tip:** Plan, describe success, iterate.  Ask the model what it needs to know, tell it what "done" looks like, and refine both the plan and the prompt before you commit to a full run.
 
@@ -334,8 +334,6 @@ The loop is the whole point: **write the test set once, then let it referee ever
 11.  Suppose you kept editing the prompt until it scored 5/5 on exactly these five countries.  What might happen on a sixth, unseen country?  Name the risk and one way to guard against it.
 
     > *Hint: This is overfitting to the test set.  What would a held-out set of countries reveal that the original five cannot?*
-
----
 
 ---
 

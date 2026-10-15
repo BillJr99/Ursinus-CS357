@@ -57,7 +57,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 In this Part you will distinguish the two kinds of memory a language model has (the knowledge baked into its parameters during training versus the text currently in its prompt) and see why RAG turns a hard "closed-book" question into a much easier "open-book" one.
 
-**Why this matters:** Ask someone a trivia question about an obscure historical event.  If they do not know it, they either admit ignorance or make something up, and AI models make something up convincingly.  RAG is the equivalent of saying "look it up in the encyclopedia first, then answer."  The model goes from guessing to reading and summarizing, which is a job it does much better.  This one insight is why RAG has become the most widely deployed AI engineering technique of the past three years.
+**Why this matters:** Ask someone a trivia question about an obscure historical event.  If they do not know it, they either admit ignorance or make something up, and AI models make something up convincingly.  RAG is the equivalent of saying "look it up in the encyclopedia first, then answer."  The model goes from guessing to reading and summarizing, which is a job it does much better.
 
 A model has two memories.  *Parametric memory* (from "parameters," the numbers learned during training) is whatever was baked into the weights: vast, fuzzy, frozen in time.  *Contextual memory* is whatever sits in the prompt right now: small, precise, current.  Hallucination (the model confidently stating something false) is what happens when we ask parametric memory for precision it does not have.  RAG converts the question from a closed-book exam into an open-book one:
 
@@ -428,13 +428,13 @@ Optional, and not assumed by anything above.  Chroma made retrieval look like on
 
 ## Why Brute Force Fails
 
-In this part, you will see why checking every vector in a million-document database is too slow to use, and how two approximate nearest-neighbor algorithms (HNSW and IVF) solve the problem with indexing.
+In this part, you will see why checking every vector in a million-document database does not scale, and how two approximate nearest-neighbor algorithms (HNSW and IVF) solve the problem with indexing.
 
 ### The Scale Problem
 
 Searching a vector database is like finding the most similar song in a music library, not by title, but by how it *sounds*.  If you had 1 million songs and had to listen to each one to decide which is most similar to your query, it would take forever.  ANN indexes are the equivalent of organizing songs by genre, tempo, and key so you can jump straight to the right neighborhood.
 
-An embedding vector for a single sentence is a point in $\mathbb{R}^{1536}$.  At query time, a RAG system must find the $k$ stored vectors closest to the query vector.  The naive approach computes the distance from the query to every stored vector.  For 1 million documents, each at 1536 dimensions, that is $1536 \times 10^6 \approx 1.5 \times 10^9$ floating-point operations per query, enough to take several seconds on a single CPU, which is unacceptable for an interactive assistant.
+An embedding vector for a single sentence is a point in $\mathbb{R}^{d}$, where $d$ is 768 for `nomic-embed-text` (the model in our pipeline) and 1536 for OpenAI's `text-embedding-3-small`.  At query time, a RAG system must find the $k$ stored vectors closest to the query vector.  The naive approach computes the distance from the query to every stored vector.  For 1 million documents at 768 dimensions, that is $768 \times 10^6 \approx 7.7 \times 10^8$ multiply-adds per query, and about 3 GB of float32 vectors to stream through memory.  On a single CPU core that is a fraction of a second to about a second per query, with memory bandwidth as the bottleneck.  That may be tolerable for one user, but it does not scale to many concurrent queries or to a corpus ten or a hundred times larger.
 
 **Approximate nearest-neighbor (ANN) search** accepts a small chance of missing the true nearest neighbor in exchange for a 100x to 1000x speedup.  Two algorithms dominate production systems:
 
@@ -483,13 +483,13 @@ Every RAG query passes through a fixed sequence of steps, like an assembly line 
 | Step | Component | Input | Output | What Can Go Wrong Here |
 |---|---|---|---|---|
 | 1. Query arrives | Application layer | Raw user question typed by the user | Plain text string | Query is ambiguous, misspelled, or in a different language than the indexed documents. |
-| 2. Query is embedded | Embedding model (e.g., `nomic-embed-text`; install: `ollama pull nomic-embed-text`) | Text string | Float array (1536-dim) | Using a different embedding model than was used at index time causes a "dialect mismatch"; vectors are incomparable. |
+| 2. Query is embedded | Embedding model (e.g., `nomic-embed-text`; install: `ollama pull nomic-embed-text`) | Text string | Float array (768-dim for `nomic-embed-text`) | Using a different embedding model than was used at index time causes a "dialect mismatch"; vectors are incomparable. |
 | 3. ANN search | Vector database index (HNSW or IVF) | Query vector, $k$ (how many results to return) | Candidate document IDs with distances | If $k$ is too small, the correct document is excluded before the filter even runs. |
 | 4. Metadata filter applied | Vector database filter engine | Candidate IDs, filter expression (e.g., `{"year": {"$gte": 2024}}`) | Filtered subset of IDs | Overly strict filters remove the correct document; overly loose filters let irrelevant documents through. |
 | 5. Top-$k$ documents returned | Vector database | Filtered IDs | Document text + metadata | If chunks are too long, they waste context window space; if too short, they lack the context the LLM needs to answer. |
-| 6. LLM generates with docs in context | Language model (e.g., `claude-sonnet-4-5`, `llama3.1:8b`) | Prompt = system instructions + retrieved chunks + user question | Answer string | LLM ignores the retrieved text and hallucinates from parametric memory; "lost in the middle" effect buries the relevant chunk. |
+| 6. LLM generates with docs in context | Language model (e.g., `claude-sonnet-5-5`, `llama3.1:8b`) | Prompt = system instructions + retrieved chunks + user question | Answer string | LLM ignores the retrieved text and hallucinates from parametric memory; "lost in the middle" effect buries the relevant chunk. |
 
-> **Common Misconception:** Many beginners assume that if the LLM gives a wrong answer, the problem must be the LLM itself.  In practice, **the retrieval step fails far more often than the generation step**.  A perfect LLM cannot produce a correct answer if Step 3 or 4 returned the wrong documents.  Always check what was retrieved (Step 5's output) before debugging the LLM.
+> **Common Misconception:** Many beginners assume that if the LLM gives a wrong answer, the problem must be the LLM itself.  **Check retrieval first.**  A perfect LLM cannot produce a correct answer if Step 3 or 4 returned the wrong documents.  Always check what was retrieved (Step 5's output) before debugging the LLM.
 
 #### Critical Thinking Questions
 
@@ -503,7 +503,7 @@ Every RAG query passes through a fixed sequence of steps, like an assembly line 
 
 6.  Metadata filters at step 4 operate *after* ANN search, not before.  Why is pre-filtering expensive, and what architectural pattern (called "filtered ANN") is used by databases like Qdrant to make it efficient?
 
-   *Hint:* Pre-filtering means scanning the entire metadata table before doing any vector math.  Qdrant's filtered ANN uses a different strategy: it builds separate HNSW graphs per metadata partition so that filters can be applied during graph traversal rather than after it.
+   *Hint:* Pre-filtering means scanning the entire metadata table before doing any vector math.  Qdrant's filtered ANN uses a different strategy: its filterable HNSW index adds extra graph links for indexed payload (metadata) values, so the graph stays connected under a filter and the filter can be applied during graph traversal rather than after it.
 
 ---
 
@@ -535,7 +535,7 @@ Vector search fails in predictable ways.  Knowing the failure signature helps yo
 | Semantic mismatch: the retrieved documents are topically wrong | Query and document use different vocabulary for the same concept (e.g., query says "layoffs," documents say "workforce reductions"); the embedding model treats them as distant because they rarely co-occur in training text | Recall@k falls below 0.6 on a labeled evaluation set; a human reviewer looks at the top-5 retrieved chunks and they are clearly off-topic | Add hybrid search to catch keyword matches; expand the query with synonyms before embedding; or switch to a domain-specific embedding model |
 | Hallucination about retrieved content: the LLM contradicts its own retrieved text | The LLM ignores the retrieved chunks and draws on parametric memory instead, especially when the retrieved content conflicts with what it learned during training | The LLM's answer contradicts text that is clearly present in the retrieved chunks; a citation check fails | Strengthen the grounding instruction in the system prompt ("Answer only using the provided documents"); lower temperature to 0; use a model with stronger instruction-following |
 | Stale index: correct answer exists in the source but is never retrieved | Documents updated or added after the index was last built are invisible to retrieval; the index is a snapshot, not a live view | The correct answer exists in the source database but is never returned even with broad queries | Build an incremental indexing pipeline that detects changes (file modification time, hash comparison, or a change data capture stream from the database) and re-embeds only changed documents |
-| Lost in the middle: the correct chunk is retrieved but the LLM ignores it | The relevant chunk is retrieved and placed in the middle of a long context window; research shows LLMs attend most strongly to the beginning and end of their context | Faithfulness score drops as $k$ increases past 5; manual inspection shows the correct chunk is present in the context but the LLM's answer ignores it | Apply a reranker (e.g., `pip install rerankers`) to place the highest-scoring chunk first in the context; reduce $k$ to 3-5; summarize the context before generation |
+| Lost in the middle: the correct chunk is retrieved but the LLM ignores it | The relevant chunk is retrieved and placed in the middle of a long context window; Liu et al., "Lost in the Middle: How Language Models Use Long Contexts" (TACL 2024; arXiv 2307.03172), found that LLMs use information at the beginning and end of their context most reliably | Faithfulness score drops as $k$ increases past 5; manual inspection shows the correct chunk is present in the context but the LLM's answer ignores it | Apply a reranker (e.g., `pip install rerankers`) to place the highest-scoring chunk first in the context; reduce $k$ to 3-5; summarize the context before generation |
 
 You are choosing between cosine similarity and L2 distance for a text retrieval system.  Your embedding model outputs unit-normalized vectors.  Which statement is correct?
 

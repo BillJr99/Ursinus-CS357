@@ -947,7 +947,7 @@ The `kept` line inside the loop is the discard rule from Model 4, so the cell de
 - opencode permissions and CLI: https://opencode.ai/docs/permissions/ and https://opencode.ai/docs/cli/, the source for the `permission` block, the pattern rules, and the `--auto` flag.
 - Andrej Karpathy, [`llm-wiki.md`](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) (gist, April 2026): the pattern behind keeping the agent's memory in files it maintains and you curate.
 - The practice kit this deck runs on, three scripts under `files/gauntlet-sample/`: [setup_gauntlet_sample.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/gauntlet-sample/setup_gauntlet_sample.sh) builds the repo, [apply_reference_fix.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/gauntlet-sample/apply_reference_fix.sh) runs the refine turn, and [setup_autoresearch_eval.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/gauntlet-sample/setup_autoresearch_eval.sh) writes the held-out metric.
-- Andrej Karpathy.  "Software 2.0."  *Medium* (2017).
+- Andrej Karpathy.  "[Software 2.0](https://karpathy.medium.com/software-2-0-a64152b37c35)."  *Medium* (2017).
 - Geoffrey Huntley.  "everything is a ralph loop." https://ghuntley.com/loop/, the origin and rationale of the fresh-context brute-force loop; see also https://ralph-wiggum.ai/.
 - **gnhf** ("good night, have fun"), overnight autonomous orchestrator: https://github.com/kunchenguid/gnhf.
 - **firstmate**, an agent distro for running a crew: https://github.com/kunchenguid/firstmate.

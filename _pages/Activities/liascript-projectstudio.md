@@ -104,7 +104,7 @@ Hosts demonstrate honestly.  Every station must show at least one *known failure
 
 [[___ Your answer here ___]]
 
-*Hint:* Recall the patterns from Unit 3: pipeline, planner, parallel specialist, self-critique, and human-in-the-loop.  "A planner where a pipeline would do" means a team added dynamic task-planning overhead to a sequence of steps that is always the same.  The planner adds cost and complexity without adding flexibility.  Look for systems where the agents always take the same steps in the same order: that is a pipeline problem, not a planner problem.
+*Hint:* Recall the patterns from Unit 3: pipeline, planner, parallel specialist, self-critique, and human-in-the-loop.  "A planner where a pipeline would do" means a team added dynamic task-planning overhead to a sequence of steps that is always the same.  The planner adds cost and complexity without adding flexibility.  Look for systems where the agents always take the same steps in the same order: that task is a fixed pipeline, and building it as a planner only adds ways to fail.
 
 **Question 4.**  As a host: which visitor question exposed something your team had not considered?  The Scribe records it verbatim; it likely belongs in your report's limitations section.
 

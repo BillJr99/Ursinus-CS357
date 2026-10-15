@@ -861,7 +861,7 @@ In this part, you will probe your local model across five different task types t
 
 3.  *Stack diagram.*
 
-   - *What to do*: Draw a box-and-arrow diagram showing the full data flow from OpenWebUI to Ollama to the model weights and back, plus your Python script as a separate entry point.  Label which component owns the system prompt, the sampling parameters (the temperature you turned in Section 3b, plus its sibling `top-p`), and the model weights.
+   - *What to do*: Draw a box-and-arrow diagram showing the full data flow from OpenWebUI to Ollama to the model weights and back, plus your Python script as a separate entry point.  Label which component owns the system prompt, the sampling parameters (the temperature you turned in Section 3c, plus its sibling `top-p`), and the model weights.
    - *Starter hint*: Your diagram should have at least four boxes: OpenWebUI (or your Python script), the Ollama process, the model weights file on disk, and the GPU or CPU memory where inference actually runs.  Arrows should show the direction of data flow for both the input prompt and the output response.
    - *You've succeeded when*: Someone who was not in class today could read your diagram and correctly answer: "Where does the system prompt live?  Where do the weights live?  What does Ollama actually do?"
 
@@ -877,7 +877,7 @@ In this part, you will probe your local model across five different task types t
 
 ---
 
--> Coming Up Next: Your model is running and you have turned your first dial on it.  In *Skills: Design One, Then Measure It*, you work on the instructions the agent reads before it produces anything, and measure whether they changed the output.  Keep this stack running, because the OpenCode Studio lab handed out today drives opencode against the model you just stood up, and *Prompt Engineering as Agent Design* edits system prompts against this same live model, where the temperature slider from Section 3b is one of the things we vary.  (*Why* that dial behaves the way it does gets its full treatment in *Why Different Answers Every Time?  Sampling, Temperature, and Generation*.)
+-> Coming Up Next: Your model is running and you have turned your first dial on it.  In *Skills: Design One, Then Measure It*, you work on the instructions the agent reads before it produces anything, and measure whether they changed the output.  Keep this stack running, because the OpenCode Studio lab handed out today drives opencode against the model you just stood up, and *Prompt Engineering as Agent Design* edits system prompts against this same live model, where the temperature slider from Section 3c is one of the things we vary.  (*Why* that dial behaves the way it does gets its full treatment in *Why Different Answers Every Time?  Sampling, Temperature, and Generation*.)
 
 ## 6.  Further Reading
 

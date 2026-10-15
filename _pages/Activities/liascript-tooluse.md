@@ -100,9 +100,6 @@ Two teams expose the same function with different schemas:
 
 ---
 
-
----
-
 ## Model 1b: Four Ways to Ask for Structure, and What Each One Guarantees
 
 Model 1 treated the schema as an interface.  Before you trust one, you need to know what enforces it.  "I asked for JSON" and "JSON is the only thing that can come out" are different promises, and only one of them survives a bad day.
@@ -345,15 +342,15 @@ Two facts fall out of this ledger.  First, the two tool schemas cost about 150 t
 
 ### Critical Thinking Questions
 
-1.  An agent is offered 15 tools, each with a schema costing about 80 tokens, but a typical conversation only ever uses 2 of them.  How many tokens per turn go to tool schemas, and how many of those go to tools that are never called in this conversation?
+7.  An agent is offered 15 tools, each with a schema costing about 80 tokens, but a typical conversation only ever uses 2 of them.  How many tokens per turn go to tool schemas, and how many of those go to tools that are never called in this conversation?
 
    > *Hint: Every offered schema rides along every turn regardless of use. $15 \times 80$ is the standing cost; only 2 tools are used, so how many schemas' worth is pure overhead here?*
 
-2.  A research tool returns 500 tokens of retrieved text.  The agent then has a 10-turn conversation.  Roughly how many token-turns does that one result consume, and why is that different from the cost of the *request* that triggered it?
+8.  A research tool returns 500 tokens of retrieved text.  The agent then has a 10-turn conversation.  Roughly how many token-turns does that one result consume, and why is that different from the cost of the *request* that triggered it?
 
    > *Hint: A result appended to history is re-sent on every later turn.  Multiply the result size by the remaining turns.  The request is small; the result is the heavy part that lingers.*
 
-3.  Connect this to cost and latency from *Cost Optimization for AI Systems* and [Serving LLMs in Production](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/LLMServing): if tool schemas and results inflate the input token count on every turn, which two user-facing quantities get worse, and why?
+9.  Connect this to cost and latency from *Cost Optimization for AI Systems* and [Serving LLMs in Production](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/LLMServing): if tool schemas and results inflate the input token count on every turn, which two user-facing quantities get worse, and why?
 
    > *Hint: More input tokens means more to bill for and more to prefill.  What happens to per-turn cost, and to time-to-first-token, as the prompt grows?*
 
@@ -370,15 +367,15 @@ Two practices follow directly from the ledger.
 
 Limit the tools you offer.  Beyond the raw token cost, a long tool list *degrades tool selection*.  The model must pick the right tool from everything on offer.  The more near-duplicate or irrelevant options crowd the list, the more often it picks wrong or fills in arguments poorly.  That is the lesson of the schema-quality ablation in the Exercises, now at the level of tool *count*.  Offer the smallest set of well-described tools the task needs, not everything you have ever built.
 
-Use subagents to keep each context focused.  When a task needs many tools or produces large intermediate results, hand a narrow sub-task to a **subagent** rather than having one agent hold all of it: a separate agent that runs in its *own* context window with only the few tools and the brief it needs, and returns only the answer to the main thread.  The main context then never accumulates the sub-task's schemas and scratch work.  This course teaches that pattern in depth elsewhere: the small-context-window principle (the *Memory and the Small Context Window Principle* activity), subagents with isolated context and filesystem offload (*Agent Frameworks*), and orchestration where each stage "sees only what it needs" (the *Orchestration and Agent Teams* activity).  The token ledger above is *why* those patterns work.
+Use subagents to keep each context focused.  When a task needs many tools or produces large intermediate results, hand a narrow sub-task to a **subagent** rather than having one agent hold all of it: a separate agent that runs in its *own* context window with only the few tools and the brief it needs, and returns only the answer to the main thread.  The main context then never accumulates the sub-task's schemas and scratch work.  This course teaches that pattern in depth elsewhere: the small-context-window principle (the *Memory and the Small Context Window Principle* activity), subagents with isolated context and filesystem offload (*Agent Frameworks*), and orchestration where each stage "sees only what it needs" (the *Orchestration and Multi-Agent Patterns* activity).  The token ledger above is *why* those patterns work.
 
 ### Critical Thinking Questions
 
-1.  You have built 30 tools across a semester.  A new task needs 3 of them.  Give two distinct reasons (one about tokens, one about accuracy) why you should offer only those 3 rather than all 30.
+10.  You have built 30 tools across a semester.  A new task needs 3 of them.  Give two distinct reasons (one about tokens, one about accuracy) why you should offer only those 3 rather than all 30.
 
    > *Hint: One reason is the standing schema cost from Model 3.  The other is what a crowded menu does to the model's chance of selecting the right tool and filling its arguments correctly.*
 
-2.  A subagent runs a 12-tool research sub-task and returns a 3-sentence summary to the main agent.  What does the main agent's context *avoid* carrying, compared to doing the research inline itself?
+11.  A subagent runs a 12-tool research sub-task and returns a 3-sentence summary to the main agent.  What does the main agent's context *avoid* carrying, compared to doing the research inline itself?
 
    > *Hint: Think about what stays in history when you do the work inline: the schemas, every tool request, every raw result.  What comes back from the subagent instead?*
 
@@ -395,7 +392,7 @@ Why does offering an agent *fewer, well-chosen* tools tend to improve tool-selec
 
 # Part IV: Synthesis and Practice
 
-With the protocol understood from Parts I and II, this hands-on section has you build three tools (a safe arithmetic evaluator, a clock, and a word counter) and watch how the model decides which one to call from the description field alone.
+With the protocol understood from Parts I and II, this hands-on section has you build three tools (`get_today`, `days_until`, and the `course_lookup` from Exercise 1) and watch how the model decides which one to call from the description field alone.
 
 ## Hands-On: Build and Call a Tool
 
@@ -459,8 +456,7 @@ The Pydantic extension below is core Pydantic: it validates data and knows nothi
 - Ollama tool-calling documentation: https://github.com/ollama/ollama/blob/main/docs/api.md
 - Schick et al. "Toolformer: Language Models Can Teach Themselves to Use Tools."  *NeurIPS* (2023).
 - Mialon et al. "Augmented Language Models: A Survey."  *TMLR* (2023).
-- [Monte Carlo retirement simulation notebook](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/MonteCarloRetirement.ipynb), a complete tool-calling case study: the simulation is wrapped as a schema-described tool, and an agent chooses its parameters, invokes it, and interprets the resulting chart.
-- [Monte Carlo Retirement companion notebook](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/MonteCarloRetirement.ipynb), a runnable version of that lab, including the full function-calling agent loop with offline sample responses.
+- [Monte Carlo retirement simulation notebook](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/MonteCarloRetirement.ipynb), a complete tool-calling case study: the simulation is wrapped as a schema-described tool, and an agent chooses its parameters, invokes it, and interprets the resulting chart.  It runs as-is, including the full function-calling agent loop with offline sample responses.
 
 ---
 

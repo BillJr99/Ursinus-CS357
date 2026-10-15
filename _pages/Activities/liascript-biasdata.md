@@ -45,7 +45,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 |---|---|
 | 0-10 | Part I, mechanism: how a training distribution becomes a behavior |
 | 10-40 | Part II, hands on the distribution |
-| 40-65 | Part III, mitigation without illusion, tested against the design choice you named in your reading response |
+| 40-65 | Part III, mitigation without illusion |
 | 65-75 | Reflection prompt |
 
 ---
@@ -242,6 +242,6 @@ Mitigations exist at every stage, and none of them is complete.  The right stanc
 
 ## Further Reading
 
-- *Coded Bias* (2020), dir.  Shalini Kantayya, and Buolamwini and Gebru, "Gender Shades."  *FAccT* (2018).
-- Gebru et al. "Datasheets for Datasets."  *CACM* (2021); Mitchell et al. "Model Cards for Model Reporting."  *FAccT* (2019).
+- *Coded Bias* (2020), dir. Shalini Kantayya, and Buolamwini and Gebru, "Gender Shades."  *FAT\** (2018) (now FAccT).
+- Gebru et al. "Datasheets for Datasets."  *CACM* (2021); Mitchell et al. "Model Cards for Model Reporting."  *FAT\** (2019) (now FAccT).
 - Bender, Gebru, McMillan-Major, and Mitchell.  "On the Dangers of Stochastic Parrots."  *FAccT* (2021).

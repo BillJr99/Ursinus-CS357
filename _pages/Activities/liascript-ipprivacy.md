@@ -135,8 +135,6 @@ Consider three pipelines you have built this term: the RAG Knowledge Base Lab (R
 
 ---
 
----
-
 # Part IIb: The Techniques Behind the Argument
 
 The case for local AI is technical as well as ethical, and the techniques have names.  Federated learning, differential privacy, and PII scrubbing each buy you something specific at a specific cost.  Knowing which is which turns a privacy preference into a design you can defend to a stakeholder.
@@ -528,7 +526,7 @@ An artist claims that an AI system was trained on their publicly posted portfoli
 [[x]] The legal status is unsettled; multiple court cases are actively pending and legal scholars disagree, though style itself is generally not considered copyrightable under existing doctrine
 [[ ]] The artist can only sue if an AI-generated output is found to be identical pixel-for-pixel to one of their specific original works
 
-> **Why this answer?**  As of 2025, no US court has issued a final ruling on whether training generative AI models on copyrighted works is infringement.  The cases are ongoing.  Style (as distinct from specific original expression) has historically not been protectable under US copyright law: you cannot copyright "impressionism" or "a distinctive color palette."  But whether training on copyrighted work is fair use remains open, and the answer may depend on the scale of copying, the commercial purpose, and the market impact on the original creator.  "Publicly posted" does not mean "in the public domain."  Copyright attaches automatically to original creative work at the moment of creation, not upon registration or upon certain types of publication.
+> **Why this answer?**  In June 2025, two federal district judges in the Northern District of California ruled on whether training a generative model on books is fair use.  In *Bartz v. Anthropic*, Judge Alsup held that training on lawfully acquired books was fair use, but that building a library from pirated copies was not.  In *Kadrey v. Meta*, Judge Chhabria granted summary judgment to Meta on the record presented, while warning that market dilution could defeat fair use in other cases.  These are district-court rulings, not appellate ones, and many other cases are still pending.  Style (as distinct from specific original expression) has historically not been protectable under US copyright law: you cannot copyright "impressionism" or "a distinctive color palette."  But whether training on copyrighted work is fair use remains open, and the answer may depend on the scale of copying, the commercial purpose, and the market impact on the original creator.  "Publicly posted" does not mean "in the public domain."  Copyright attaches automatically to original creative work at the moment of creation, not upon registration or upon certain types of publication.
 
 ---
 
@@ -557,7 +555,7 @@ Generative AI can replace human creative work, and increasingly it also collabor
 
 #### The Diminishing-Returns Hypothesis
 
-As AI pushes the marginal cost of generating creative content toward zero, the supply of generated content explodes.  Economic theory suggests that an oversupply of algorithmically generated content will drive down the value of average-quality creative work, while raising the premium on work that is novel, contextually embedded, or deeply rooted in specific human experience.  Authentic human perspective and embodied experience may become *more* economically valuable, not less, as AI-generated content floods the market.  This is not guaranteed.  It depends on whether consumers can tell AI-generated work from human-generated work, and whether they care to.
+As AI pushes the marginal cost of generating creative content toward zero, the supply of generated content explodes.  What that does to the value of human creative work is an open question, and the answer depends on whether consumers can tell AI-generated work from human-generated work, and whether they care to.
 
 #### Questions to Work Through
 
@@ -623,4 +621,4 @@ Write at least 200 words addressing at least two of the three levels above.  You
 
 ---
 
--> Coming Up Next: This was the final activity in the series.  Bring your reflections to the course's final discussion: what does it mean to build AI systems responsibly, and what role do you want to play in that work?
+-> Coming Up Next: *Governance, Policy, and the Cost of Inference* is next.  Bring your reflections to that discussion: what does it mean to build AI systems responsibly, and what role do you want to play in that work?

@@ -90,7 +90,7 @@ A student asks a local model for three peer-reviewed sources on a niche topic in
 
 ## 2.  Evaluation Foundations
 
-An evaluation needs three things.  A **task set** is a list of inputs with known correct outputs.  A metric is a function that turns a model output and a correct answer into a score.  A protocol fixes the model version, parameters, and seed so that anyone can reproduce the results and compare them over time.  For factual question answering, the simplest metric is exact-match accuracy: the fraction of items the model gets right, $\text{accuracy} = \frac{1}{N}\sum_{i=1}^{N} \mathbb{1}[\hat{y}_i = y_i]$, where $\hat{y}_i$ is the model's answer, $y_i$ is the known answer, and $\mathbb{1}[\cdot]$ is 1 when the condition holds and 0 otherwise (Python's `int(condition)`).  Exact match is harsh on purpose: a correct answer phrased differently scores zero.  That harshness is why we will later recruit *another model* as a judge (an LLM-as-evaluator), and why we must then evaluate the judge too.
+An evaluation needs three things.  A **task set** is a list of inputs with known correct outputs.  A metric is a function that turns a model output and a correct answer into a score.  A protocol fixes the model version, parameters, and seed so that anyone can reproduce the results and compare them over time.  For factual question answering, the simplest metric is exact-match accuracy: the fraction of items the model gets right, $\text{accuracy} = \frac{1}{N}\sum_{i=1}^{N} \mathbb{1}[y_i \in \hat{y}_i]$, where $\hat{y}_i$ is the model's answer, $y_i$ is the known answer, and $\mathbb{1}[\cdot]$ is 1 when the known answer appears as a substring of the model's answer and 0 otherwise (Python's `int(gold in pred)`, the rule today's code uses).  Exact match is harsh on purpose: a correct answer phrased differently scores zero.  That harshness is why we will later recruit *another model* as a judge (an LLM-as-evaluator), and why we must then evaluate the judge too.
 
 A team reports that their agent "seems pretty accurate" after trying a few questions.  The most important missing element of a real evaluation is:
 
@@ -173,8 +173,6 @@ Read the PASS/FAIL output line by line.  Before you talk with your group, form y
    > *Hint: A grader needs it so that "running the eval again" gives the same score.  A scientist needs it so that a published result can be independently replicated.  A debugger needs it so that a bug observed in one run appears again in the next run.*
 
 > **Common Misconception:** Many students assume that a model that answers a factual question wrong "does not know" the answer and will always fail that question.  In fact the same model with the same weights can answer the same question correctly at one temperature setting and fail it at another, or answer differently when the question is rephrased.  This is why evaluation needs a *fixed protocol*.  We do not hold parameters and phrasing constant because we distrust the model.  We hold them constant because the model's behavior depends on them, and we cannot learn anything unless they stay put.
-
----
 
 ---
 
@@ -291,7 +289,7 @@ Benchmark accuracy is one signal, and it is rarely enough on its own to decide a
 
 Human evaluators judge model outputs directly.  Three common formats:
 
-- *Pairwise preference:* Show two model responses side by side and ask a human which is better.  Used heavily in RLHF training and in platforms like Chatbot Arena (lmsys.org).  Pairwise judgments are more reliable than absolute ratings because they avoid the anchoring effects of rating scales.
+- *Pairwise preference:* Show two model responses side by side and ask a human which is better.  Used heavily in RLHF training and in platforms like LMArena (formerly LMSYS Chatbot Arena, https://lmarena.ai).  Pairwise judgments are more reliable than absolute ratings because they avoid the anchoring effects of rating scales.
 - *Likert scales:* Rate an output from 1 to 5 on several dimensions such as helpfulness, safety, and fluency.  Useful for profiling several quality dimensions at once.
 - *Task completion rate:* Give a human a goal and have them use the agent to reach it; measure whether they succeed within a set number of turns.  This is close to real use.
 

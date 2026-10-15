@@ -446,7 +446,7 @@ The second agent reads the claim, sees it is older than the timeout, and takes t
 
    > *Hint: "Check, then act" is two steps, and anything can happen between them.  A rename is one step.  Across a sync, even one step on each machine is still two steps on the server.*
 
-> **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude and this practice has become *more* common, not less, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to continuous integration (CI), unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
+> **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude, and that does not remove the need, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to continuous integration (CI), unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
 
 ---
 

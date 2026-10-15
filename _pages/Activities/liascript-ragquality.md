@@ -353,7 +353,7 @@ Consider a concrete deployment: **an HR policy assistant that answers questions 
 
 #### Questions to Work Through
 
-4.  The HR policy document is 50 pages.  Prompting is eliminated by context window limits.  Between RAG and fine-tuning, which approach provides better freshness when a policy changes, and why does the answer matter operationally for an HR department?
+4.  The HR policy document is 50 pages, about 25,000 tokens.  That fits in many current context windows, but resending it with every query is costly and slow, and a clause buried in the middle of a long context is easy for the model to miss, so set prompting aside.  Between RAG and fine-tuning, which approach provides better freshness when a policy changes, and why does the answer matter operationally for an HR department?
 
    *Hint:* When a policy changes, which approach requires re-indexing (minutes) versus retraining (hours or days)?  Think about the HR team's perspective: if the maternity leave policy changes tomorrow, how quickly can each approach reflect that change?
 
@@ -520,7 +520,7 @@ High-quality labeled data is the fuel of modern machine learning, but it is expe
 | **Instruction tuning** | Diverse (instruction, response) pairs covering many task types at scale | Scale fine-tuning to produce capable assistant models without expensive human labeling for each example | The model learns the generator model's biases, errors, and blindspots; mode collapse reduces diversity over iterations | Stanford Alpaca (2023), 52,000 examples from GPT-3.5 at a cost of ~$500 |
 | **Adversarial robustness** | Edge-case prompts and scenarios the model would rarely encounter in normal operation | Better resistance to unusual inputs, jailbreak attempts, and distribution shift | Synthetic adversarial examples may not cover the specific adversarial strategies real attackers use | Red-teaming augmentation in model safety pipelines |
 | **Privacy preservation** | Statistically similar fake records that replace real patient, user, or financial records | Share sensitive datasets safely in research collaborations without exposing individual records | Residual privacy leakage if the synthetic distribution closely mirrors specific real records | Synthetic patient record generation for medical AI research |
-| **Simulation environments** | Agent training scenarios such as customer service dialogues, code review sessions, or tool-use chains | Scale agent training to millions of scenarios without real user interactions or risks | Sim-to-real gap: the agent learns behaviors that work in clean simulation but fail on the messy variation in real deployments | OpenAI Codex training included synthetic verified code problems |
+| **Simulation environments** | Agent training scenarios such as customer service dialogues, code review sessions, or tool-use chains | Scale agent training to millions of scenarios without real user interactions or risks | Sim-to-real gap: the agent learns behaviors that work in clean simulation but fail on the messy variation in real deployments | A scripted user model playing customers so a support agent can practice thousands of conversations |
 
 #### Questions to Work Through
 
@@ -557,7 +557,7 @@ Self-Instruct is the pipeline behind several influential open-source instruction
 5.  Add the surviving instances to the growing dataset.
 6.  Return to step 2, now sampling from the full (and growing) dataset rather than just the original seeds.
 
-Stanford's **Alpaca** model (2023) applied this pipeline: it used GPT-3.5 to generate 52,000 instruction-response pairs from 175 human-written seeds, at a cost of approximately $500 in API fees.  The resulting model was competitive with early GPT-3.5 on many tasks despite being 10× smaller, a demonstration of how efficient synthetic instruction tuning can be.
+Stanford's **Alpaca** model (2023) applied this pipeline: it used GPT-3.5 to generate 52,000 instruction-response pairs from 175 human-written seeds, at a cost of approximately $500 in API fees.  In the team's own small blind comparison, the resulting 7B model performed about as well as the model that generated its data, a demonstration of how far a cheap synthetic dataset can go.
 
 #### Evol-Instruct (WizardLM, Xu et al., 2023)
 
@@ -587,10 +587,10 @@ seed_instructions
 
 - **Length check:** The response is not trivially short (one word) or obviously padded with filler content.
 - **Coherence check:** The response addresses the instruction rather than drifting to an unrelated topic.
-- **Non-duplication check:** Cosine similarity (a number between 0 and 1 measuring how semantically similar two pieces of text are; values above 0.9 mean the texts are nearly identical in meaning) to existing dataset items is below a threshold (typically 0.7-0.8) so the dataset remains diverse.
+- **Non-duplication check:** Cosine similarity (a number between -1 and 1 measuring how semantically similar two pieces of text are; for typical text embeddings the observed values are usually positive, and values above 0.9 mean the texts are nearly identical in meaning) to existing dataset items is below a threshold (typically 0.7-0.8) so the dataset remains diverse.
 - **Safety check:** The instruction and response do not contain toxic, harmful, or inappropriate content.
 
-> **Common Misconception:** Generating more synthetic data is not the same as generating *better* synthetic data.  A common error is to generate enormous quantities of synthetic instruction data and assume that more is always better.  In practice, quality filters matter more than quantity: a dataset of 10,000 high-quality, diverse, well-filtered examples typically produces better fine-tuning results than 100,000 low-quality or highly redundant examples.  The Alpaca model demonstrated this: 52,000 carefully generated examples from a seed of 175 produced a capable model.  Running the generation loop for 10 more hours to produce 500,000 examples would not have produced a model 10× better, and might have introduced more mode collapse.
+> **Common Misconception:** Generating more synthetic data is not the same as generating *better* synthetic data.  A common error is to generate enormous quantities of synthetic instruction data and assume that more is always better.  In practice, quality filters matter more than quantity: Zhou et al.'s LIMA (2023) fine-tuned a 65B LLaMA model on only 1,000 carefully curated examples and reported answers competitive with models tuned on far larger instruction sets.  Running the generation loop for 10 more hours to produce 500,000 examples would not have produced a model 10× better, and might have introduced more mode collapse (repetitive, low-diversity outputs, as distinct from the multi-generation *model collapse* defined above).
 
 #### Questions to Work Through
 
@@ -635,7 +635,7 @@ An agent trajectory is a sequence of tuples: `(observation₁, action₁, result
 
 Synthetic trajectories let agent training scale beyond what human demonstration collection alone can support:
 
-- **Verified code problems:** Generate a programming problem, generate a candidate solution, execute the solution in a sandboxed environment, and use pass/fail against test cases as ground-truth labels.  OpenAI's Codex training pipeline included synthetic problems with verified solutions generated this way, at a scale impossible to achieve with human demonstrators.
+- **Verified code problems:** Generate a programming problem, generate a candidate solution, execute the solution in a sandboxed environment, and use pass/fail against test cases as ground-truth labels.
 - **Customer service dialogues:** Generate a synthetic customer persona, a synthetic initial complaint or question, and a range of synthetic agent responses.  Have a judge model rate each response on helpfulness and policy compliance.  This provides training signal without accessing real user data that might contain PII.
 - **Tool-use chains:** Generate tasks that require specific sequences of tool calls (look up a weather forecast, then look up a transit schedule, then combine them to recommend departure time), execute those chains in a sandboxed environment, and label complete trajectories by whether the task was accomplished correctly.
 
@@ -665,7 +665,7 @@ A practical technique for rapidly building evaluation benchmarks for new domains
 
 **Question 9.**  Design a quality filter for synthetic instruction data.  Specify exactly three criteria that every generated (instruction, response) pair must satisfy before it is added to the training set.  For each criterion, explain how you would test it automatically and what failure rate you would tolerate before revising the generation pipeline.
 
-> *Hint:* Criterion 1: **Relevance**, the response must address the instruction rather than drift to an unrelated topic.  Test automatically by checking whether the top 3 most important noun phrases from the instruction appear in the response (simple heuristic) or by embedding both instruction and response and checking cosine similarity (more reliable).  Tolerate at most 5% failure rate before revisiting the generation prompt.  Criterion 2: **Minimum length**, the response must be at least 50 characters and at most 2,000 characters for the task types in your dataset.  Test by character count.  Tolerate at most 10% failure rate (responses that are too short are often low-quality; responses that are too long may be padded).  Criterion 3: **Non-toxicity**, the instruction and response must not contain harmful, discriminatory, or violating content.  Test using a toxicity classifier.  Tolerate 0% failure rate; any toxic generation indicates a problem with the generation prompt that must be fixed immediately.
+> *Hint:* Criterion 1: **Relevance**, the response must address the instruction rather than drift to an unrelated topic.  Test automatically by checking whether the top 3 most important noun phrases from the instruction appear in the response (simple heuristic) or by embedding both instruction and response and checking cosine similarity (more reliable).  Tolerate at most 5% failure rate before revisiting the generation prompt.  Criterion 2: **Minimum length**, the response must be at least 50 words and at most 300 words for the task types in your dataset.  Test by word count.  Tolerate at most 10% failure rate (responses that are too short are often low-quality; responses that are too long may be padded).  Criterion 3: **Non-toxicity**, the instruction and response must not contain harmful, discriminatory, or violating content.  Test using a toxicity classifier.  Tolerate 0% failure rate; any toxic generation indicates a problem with the generation prompt that must be fixed immediately.
 
 ---
 
@@ -675,7 +675,7 @@ A practical technique for rapidly building evaluation benchmarks for new domains
 
 *What to do:* Using a local model or API access, generate 20 synthetic instruction-tuning examples for a domain of your choice (options: cooking, Python debugging, academic writing, local Ursinus College history, or anything else that interests you).  Apply at least 2 quality filters from the Quality Filtering Pipeline above.
 
-*Starter hint:* Use this generation prompt structure: "You are generating instruction-tuning data for a language model assistant.  Generate 5 (instruction, response) pairs for the domain of [your domain].  Each instruction should be a specific, realistic task a user might ask.  Each response should be accurate, helpful, and 2-4 sentences long.  Format your output as a JSON array."  Run this prompt 4 times to get 20 candidates.  Then apply your filters: (1) remove any response shorter than 50 words; (2) remove any pair where the response does not mention any key term from the instruction.
+*Starter hint:* Use this generation prompt structure: "You are generating instruction-tuning data for a language model assistant.  Generate 5 (instruction, response) pairs for the domain of [your domain].  Each instruction should be a specific, realistic task a user might ask.  Each response should be accurate, helpful, and 3-5 sentences (at least 50 words) long.  Format your output as a JSON array."  Run this prompt 4 times to get 20 candidates.  Then apply your filters: (1) remove any response shorter than 50 words; (2) remove any pair where the response does not mention any key term from the instruction.
 
 *You've succeeded when:* You know how many of your 20 generated examples passed both filters, you have read the examples that failed and identified the most common failure mode, and you have written a one-paragraph reflection on what the failure pattern tells you about the limitations of this generation approach.
 

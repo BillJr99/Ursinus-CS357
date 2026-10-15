@@ -37,7 +37,7 @@ Most of what the Overview assignment asks you to paste comes out of this page.  
 | 2 | `docker run hello-world` | Your route choice: a working Docker means Route A |
 | 3 | `git remote -v` | Part 1.5, Step 2 (the repository you will push to) |
 | 4 | The `student@...:/workspace$` prompt | Route A evidence: include this prompt in every container transcript |
-| 5 | The four checks in 5.1 through 5.4 | The container verification lines the Overview's Route A asks for |
+| 5 | The five checks in 5.1 through 5.5 | The container verification lines the Overview's Route A asks for |
 | 7 | `python3 hello_agent.py`, then `git log --oneline` after the push | Part 1.5, Steps 1 and 2.  For Part 1A, Step 4, run the Overview's `ollama_check.py` from this same prompt; it prints the full JSON |
 | 8.1 through 8.3 | `opencode --version`, `/model`, and one answered prompt | Part 1B, Step 5 |
 | 10 | The `uv` commands | Part 1.5, Step 3, which runs on your host on both routes |
@@ -82,8 +82,8 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | Minutes | What we do |
 |---|---|
 | 0-10 | Check what everyone already has installed, and pair up anyone whose Docker did not survive the download |
-| 10-35 | Steps 0 through 3: the shell in ten minutes, the repository, and the container |
-| 35-60 | Steps 4 through 7: the model server, the gateway, and your first end-to-end call |
+| 10-35 | Steps 0 through 3: the shell in ten minutes, Ollama on the host, Docker, and your repository |
+| 35-60 | Steps 4 through 7: the container, its verification checks, Git credentials, and your first end-to-end call |
 | 60-75 | Step 8: hand opencode a real task and watch it work.  Any step you do not reach today is the homework |
 
 **Doing this on your own, outside class?**  Follow the same steps in the same order and skip the roles.  Budget about ninety minutes, most of it downloads: start the Step 1 model pull and the Step 4 image build as soon as you reach them, and read ahead while they run.
@@ -771,8 +771,6 @@ The installer downloads one release binary, verifies its SHA-256, and drops it i
 You do not need herdr today.  It is here so that it is on your bench before the session that assumes it.  The full treatment, including the "walk away and come back" discipline and why detaching is *not* the same as pausing, is Part IV of the [agentic CLI tools tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs).
 
 > **The governance point, early:** detaching does not pause an agent.  It keeps reading, editing, running commands, and spending tokens the entire time you are gone.  The three properties in 8.5 are what make that acceptable, and the less you are watching, the more the *environment* rather than your attention has to be the thing keeping the agent safe.
-
----
 
 ---
 

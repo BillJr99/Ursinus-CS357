@@ -227,7 +227,7 @@ That difference sounds cosmetic and is not, because your gates and your context 
 | **What it costs to carry** | Nothing is advertised; the agent simply knows `gh` | Every advertised tool occupies context whether or not it is used |
 | **Where it works** | Any agent with a shell, which is all of them | Only harnesses that speak the protocol |
 
-The table has no winner, and the rows disagree with each other on purpose.  The CLI takes setup, portability, and context cost, which is why the loop above is written with `gh` and why I run it that way daily.  The tool server takes the row a *supervisor* cares about most: a name your gate can match exactly, rather than a pattern you have to get right against every command line the agent might write.  So the decision follows the stakes, the same way the supervision levels in Part II do.  The CLI suits your own repository, where `git reset` is the whole recovery plan.  The tool server earns its setup where something you cannot undo is one plausible command away.  Extension E.8 writes that tool-name gate out in full.
+The table has no winner, and the rows disagree with each other on purpose.  The CLI takes setup, portability, and context cost, which is why the loop above is written with `gh` and why I run it that way daily.  The tool server takes the row a *supervisor* cares about most: a name your gate can match exactly, rather than a pattern you have to get right against every command line the agent might write.  So the decision follows the stakes, the same way the supervision levels in Part II do.  The CLI suits your own repository, where `git reset` is the whole recovery plan.  The tool server earns its setup where something you cannot undo is one plausible command away.  Extension D.8 writes that tool-name gate out in full.
 
 You add `"gh pr merge*": "deny"` to the `bash` map in your `permission` block, and the agent merges a pull request anyway.  What is the most likely explanation?
 
@@ -236,7 +236,7 @@ You add `"gh pr merge*": "deny"` to the `bash` map in your `permission` block, a
 [( )] `deny` is advisory in opencode and the model may proceed after acknowledging it; a denied tool call does not run, which is the whole distinction between a rule and a gate
 [( )] The merge went through the GitHub tool server instead, which the `bash` rule does not cover; that is a real gap, but only if you configured such a server, and the question says the agent used `gh`
 
-Hold your answer loosely on the right-hand column until you have built a server yourself.  Extension Question E.1 asks this same trade about file access rather than about GitHub, and it is worth returning to once the MCP session has given you something concrete to compare.
+Hold your answer loosely on the right-hand column until you have built a server yourself.  Extension Question D.1 asks this same trade about file access rather than about GitHub, and it is worth returning to once the MCP session has given you something concrete to compare.
 
 ---
 
@@ -568,7 +568,7 @@ export const Guard = async ({ project, client, $, directory, worktree }) => ({
 
 **OpenCode Studio, Part 3b, asks you to build this gate** for your own project: one charter rule that is only advisory today, made enforceable by the harness, with a transcript in which the tool, not the model, refuses.
 
-The delete gate is one scenario.  Section E of the Extension is a recipe book for the others: files the agent must not read, a secret pasted into a prompt, a tool result that needs scrubbing before the model reads it, tests that must pass before the agent stops, a network allowlist, an audit line per call, and a person before any write through a tool server, each in the Claude Code form and the opencode form.
+The delete gate is one scenario.  Section D of the Extension is a recipe book for the others: files the agent must not read, a secret pasted into a prompt, a tool result that needs scrubbing before the model reads it, tests that must pass before the agent stops, a network allowlist, an audit line per call, and a person before any write through a tool server, each in the Claude Code form and the opencode form.
 
 ## Model 3b: The Rule That Bent and the Gate That Held
 
@@ -723,7 +723,7 @@ def search_memory(query, k):
 
 > **Common Misconception:** "If all the tests pass, the code is correct."  Tests verify the behaviors you thought to test.  A function can pass a hundred tests and still hold a security hole, a resource leak, or a wrong answer on an input nobody imagined.  Passing tests are necessary and not sufficient, which is exactly why log review sits alongside testing rather than being replaced by it.
 
-A coding agent produces an implementation that passes all five acceptance-criterion tests.  A reviewer then spots `eval(query)` on line 4.  What does that demonstrate?
+A coding agent produces an implementation that passes all five acceptance-criterion tests.  A reviewer then spots `eval(query)` in the first line of `search_memory`.  What does that demonstrate?
 
 [( )] The tests were badly written and should be discarded
 [( )] The agent made a mistake the test suite should have caught automatically
@@ -853,7 +853,7 @@ Three open or widely-used coding agents take different architectural approaches 
 | Agent | Architecture | How It Plans | File Access Method | How It Executes | Safety Model |
 |---|---|---|---|---|---|
 | **OpenCode** | Terminal-native; single LLM session with tool calls | Inline reasoning: the agent plans and acts in the same generation loop without separating these phases | Shell tools (`read_file`, `list_dir`, shell exec) called directly from the agent loop with no intermediary | Executes shell commands directly in the user's live environment, affecting real files immediately | Permission prompts before destructive operations, declared in the `permission` block; the `--auto` flag approves everything not explicitly denied and lets the agent act freely |
-| **Plandex / pi.dev** | Plan-first; explicitly separates the planning phase from the execution phase | Generates a full *change plan* as a structured, human-readable artifact before touching any file | Loads relevant file segments into context via semantic search, finds the most relevant code rather than reading everything | Applies the pre-approved plan as a batch operation; the user reviews the plan document before any file is changed | Human approval gate sits between plan and apply; no file is changed until the human clicks approve; changes are reversible until committed |
+| **Plandex** | Plan-first; explicitly separates the planning phase from the execution phase | Generates a full *change plan* as a structured, human-readable artifact before touching any file | Loads relevant file segments into context via semantic search, finds the most relevant code rather than reading everything | Applies the pre-approved plan as a batch operation; the user reviews the plan document before any file is changed | Human approval gate sits between plan and apply; no file is changed until the human clicks approve; changes are reversible until committed |
 | **Hermes (tool-calling orchestrator)** | LLM acts as an orchestrator that selects and sequences registered function tools | Selects and sequences tool calls; each tool call is one discrete "action" the agent chooses | Registered filesystem tools (`read_file`, `write_file`) with defined JSON schemas that specify exactly what each tool can do | Tool functions run in the host process and return results to the LLM as observations it can reason about | Controlled entirely by which tools are registered; if a tool is not registered, that action is simply impossible |
 
 ### Critical Thinking Questions
@@ -903,7 +903,7 @@ B3.  The agent's context window at the Verify stage contains the original task, 
 
 ---
 
-## D.  Configuring OpenCode with Plugins and Project Instructions
+## C.  Configuring OpenCode with Plugins and Project Instructions
 
 OpenCode is configurable at two scopes: **project scope** (a file in your repository that everyone on the team shares) and **global scope** (a file in your home directory that applies to all your projects).  Deciding which configuration belongs where is the same discipline as deciding which secrets belong in environment variables and which belong in version control; the wrong choice exposes either too much or too little.
 
@@ -997,14 +997,14 @@ Keep three things out.  API tokens, passwords, and any other secrets belong in e
 
 Two instructions are being considered for `opencode.json` in a project's repository.  Which instruction belongs in **project scope** (committed to the repository) rather than in a developer's personal global config?
 
-[( )] "Use Black for formatting"; this belongs in project scope because formatting consistency matters to all contributors, not just one developer's personal taste
+[( )] "Use Black for formatting"; this belongs only in your personal global config, because how code is formatted is a matter of each developer's taste
 [(X)] "Do not modify the database schema in `models.py` without creating an Alembic migration first"; this is a project-specific invariant that all contributors and all agent sessions must respect
 [( )] "My preferred model is llama3.2 at temperature 0.2"; this is a project-wide default that should be committed so all contributors use the same model for reproducibility
 [( )] "Open files in VSCode rather than the terminal editor"; this should be in project scope to enforce a consistent editing environment across the team
 
 ---
 
-## E.  Hook Recipes: The Same Gate for Other Scenarios
+## D.  Hook Recipes: The Same Gate for Other Scenarios
 
 Part IIb built one hook for one scenario: a shell command you never want run.  The same mechanism covers most of the rules a charter asks for, and this section is a recipe book for the common ones, in both harnesses.  Each recipe names the scenario, gives the Claude Code form and the opencode form, and says what the gate cannot do, because every one of them has an edge.  Read the two shapes once before the recipes, since every recipe is a variation on them.
 
@@ -1012,7 +1012,7 @@ Part IIb built one hook for one scenario: a shell command you never want run.  T
 
 **The opencode shape.**  The `permission` block in `opencode.json` is the declarative form: a tool name maps to `allow`, `ask`, or `deny`, or to a map of patterns, and the last matching pattern wins.  A plugin in `.opencode/plugins/` is the programmable form: it returns hooks named `tool.execute.before` (throw to block; the message is the reason) and `tool.execute.after` (rewrite `output.output` to change what the model reads).  MCP tools in opencode are named `<server>_<tool>`, and the `tools` block can switch them off for an agent with a glob such as `"github_*": false`.
 
-### E.1  A shell command that must never run
+### D.1  A shell command that must never run
 
 This is Part IIb's recipe, restated so the two forms sit side by side.  The Claude Code `permissions` rule is enough when the command has a stable prefix; the hook from Section 4b is for a pattern a prefix cannot express, such as `rm` with its flags in either order.
 
@@ -1028,7 +1028,7 @@ This is Part IIb's recipe, restated so the two forms sit side by side.  The Clau
 
 *What it cannot do:* judge whether a particular delete was wanted.  Both forms refuse the pattern, every time, which is the point.
 
-### E.2  Files the agent must not read or edit
+### D.2  Files the agent must not read or edit
 
 Secrets on disk (`.env`, private keys, a credentials directory) should be unreadable to the agent, not merely undiscussed.  In Claude Code, `Read` and `Edit` rules take paths; a rule that names a bare filename such as `.env` matches that file at any depth under the project.  Note the second block: a `Read` rule governs the Read tool, and `cat .env` in a shell is a different path to the same bytes, so the Bash hook closes the gap.
 
@@ -1060,9 +1060,9 @@ exit 0
     "bash": { "*": "ask", "cat *.env*": "deny", "cat *.pem": "deny" } } }
 ```
 
-*What it cannot do:* recognize a secret by its contents.  A key pasted into `notes.txt` is readable under every rule above.  That is what E.3 and E.4 are for.
+*What it cannot do:* recognize a secret by its contents.  A key pasted into `notes.txt` is readable under every rule above.  That is what D.3 and D.4 are for.
 
-### E.3  A secret pasted into the prompt
+### D.3  A secret pasted into the prompt
 
 The person, not the agent, is the usual source of a secret in the context window: a token pasted into a message "so you can use it."  A `UserPromptSubmit` hook sees the prompt before the model does and can reject it.  The patterns are for common token shapes; add your own.
 
@@ -1083,9 +1083,9 @@ fi
 exit 0
 ```
 
-*In opencode:* the plugin hooks documented today run around tool calls, not around prompt submission, so there is no equivalent gate here.  The nearest defenses are E.2, which keeps the secret unreadable on disk, and E.4, which scrubs it if it arrives through a tool.
+*In opencode:* the plugin hooks documented today run around tool calls, not around prompt submission, so there is no equivalent gate here.  The nearest defenses are D.2, which keeps the secret unreadable on disk, and D.4, which scrubs it if it arrives through a tool.
 
-### E.4  Scrub a tool result before the model reads it
+### D.4  Scrub a tool result before the model reads it
 
 A file the agent reads, a page it fetches, or an issue it opens can contain a credential or an email address that should not travel into the context.  The two harnesses differ here, and the difference matters.  In Claude Code, a `PostToolUse` hook runs after the tool and can rewrite the result only for MCP tools, through `updatedMCPToolOutput`; for built-in tools such as `Read` and `Bash`, the text is already in the context by the time the hook runs, and the hook can only add a warning.  In opencode, `tool.execute.after` can rewrite `output.output` for any tool.
 
@@ -1135,7 +1135,7 @@ export const Scrub = async () => ({
 
 *What it cannot do:* catch what has no pattern.  A person's name in running text passes both scrubbers.  A scrubber is a floor, not a ceiling, and it earns its place by being the same on every call and by being one line to extend.
 
-### E.5  Do not stop while the tests fail
+### D.5  Do not stop while the tests fail
 
 A charter that says "always leave the tests green" is a model rule.  A `Stop` hook makes it a gate: when the agent wants to end its turn, the hook runs the tests and, if they fail, exits 2 with the failure as the reason, and the agent keeps working.  The `stop_hook_active` check is the loop breaker: when the agent is already continuing because of this hook, let it stop rather than trap it forever on a test it cannot fix.
 
@@ -1160,7 +1160,7 @@ exit 0
 
 *In opencode:* the documented plugin events include `session.idle`, which fires when the agent goes quiet, and a plugin can run the tests there with the `$` shell it receives; but there is no documented way to veto the stop from that event, so treat it as a notifier rather than a gate.  The enforceable version of this rule in opencode is the one from Part II: the tests are the specification, and CI runs them on every push.
 
-### E.6  Only the network destinations you named
+### D.6  Only the network destinations you named
 
 An agent that can `curl` can send a file anywhere.  Claude Code's own guidance is to deny the shell network tools and route fetches through the `WebFetch` tool, where a domain rule can allow specific hosts; a pattern such as `Bash(curl https://api.weather.gov/*)` is fragile, since a URL can be quoted, split, or built from a variable.  In opencode, a plugin can check the host of a `webfetch` call before it runs.
 
@@ -1190,9 +1190,9 @@ export const Hosts = async () => ({
 
 *What it cannot do:* see inside a program the agent writes and runs.  `python fetch.py` is a Bash call whose command line names no host.  The complete version of this gate is the container's network policy, which is where *Your AI Workbench* put it.
 
-### E.7  An audit line for every tool call
+### D.7  An audit line for every tool call
 
-Not a gate, but the record that makes gates auditable.  A `PostToolUse` hook with no matcher runs after every tool; it appends one JSON line per call.  Keep the inputs, since they are what you will want when something went wrong, but pass them through the E.4 scrubber first if a tool can carry a secret in its arguments.
+Not a gate, but the record that makes gates auditable.  A `PostToolUse` hook with no matcher runs after every tool; it appends one JSON line per call.  Keep the inputs, since they are what you will want when something went wrong, but pass them through the D.4 scrubber first if a tool can carry a secret in its arguments.
 
 ```json
 // .claude/settings.json (Claude Code): no matcher means every tool
@@ -1212,9 +1212,9 @@ export const Audit = async ({ directory }) => ({
 })
 ```
 
-*What it cannot do:* protect itself.  Add `.claude/audit.jsonl` and `.opencode/audit.jsonl` to the E.2 deny lists so the agent cannot edit its own record.
+*What it cannot do:* protect itself.  Add `.claude/audit.jsonl` and `.opencode/audit.jsonl` to the D.2 deny lists so the agent cannot edit its own record.
 
-### E.8  A person before any write through an MCP server
+### D.8  A person before any write through an MCP server
 
 Tool servers often expose reads and writes together.  A gate that asks a person before any write, and never before a read, is one rule in Claude Code's `permissions` block, where `ask` and `deny` rules accept a glob in the tool-name position.  In opencode, the plugin form checks the tool name and throws unless a confirmation file exists; the `tools` block is the blunter option and removes the write tools from an agent's view entirely.
 
@@ -1247,28 +1247,28 @@ export const ConfirmWrites = async ({ directory }) => ({
 
 | Recipe | Runs where | Sees | Deterministic? |
 |---|---|---|---|
-| E.1 destructive command | Before the tool | The real command line | Yes |
-| E.2 secret files | Before the tool | The path or the command line | Yes |
-| E.3 secret in the prompt | Before the model | The prompt text | Yes |
-| E.4 scrub a result | After the tool, before the model | The tool's output | Yes, for what has a pattern |
-| E.5 tests before stop | When the agent wants to stop | The test runner's exit code | Yes |
-| E.6 network allowlist | Before the tool | The URL or the command line | Yes, for the paths it covers |
-| E.7 audit line | After the tool | Everything | Yes |
-| E.8 human before a write | Before the tool | The tool's name | Yes; the decision is a person's |
+| D.1 destructive command | Before the tool | The real command line | Yes |
+| D.2 secret files | Before the tool | The path or the command line | Yes |
+| D.3 secret in the prompt | Before the model | The prompt text | Yes |
+| D.4 scrub a result | After the tool, before the model | The tool's output | Yes, for what has a pattern |
+| D.5 tests before stop | When the agent wants to stop | The test runner's exit code | Yes |
+| D.6 network allowlist | Before the tool | The URL or the command line | Yes, for the paths it covers |
+| D.7 audit line | After the tool | Everything | Yes |
+| D.8 human before a write | Before the tool | The tool's name | Yes; the decision is a person's |
 
 One more distinction belongs in this table.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model and ask it to decide.  Those are useful for judgment ("does this change touch billing code?"), but they are not gates in the sense of this section: a model asked to judge can be argued with, the same as the model it is judging.  Use a `command` hook for what must hold every time and a `prompt` hook for what needs an opinion.
 
 ### Critical Thinking Questions
 
-**Question E.1.**  E.4 rewrites MCP tool results in Claude Code but can only warn about a `Read` result.  Explain why the harness draws that line where it does, and what the design consequence is for a project that must never let an email address reach the model: which tools would you make the agent use for file access, and why?
+**Question D.1.**  D.4 rewrites MCP tool results in Claude Code but can only warn about a `Read` result.  Explain why the harness draws that line where it does, and what the design consequence is for a project that must never let an email address reach the model: which tools would you make the agent use for file access, and why?
 
 *Hint: A built-in tool's result is placed in the context by the harness itself, and the hook runs after that placement.  An MCP tool's result passes through the client on its way in, which is where a rewrite is possible.  If file access goes through an MCP filesystem server, every read has a scrub point.*
 
-**Question E.2.**  Two of the recipes above are recognizably the same rule as a line in a charter you wrote in *OpenCode Studio*.  Name the lines, then say which of your charter's remaining rules could become a hook with one of these eight shapes, and which could not, and why not.
+**Question D.2.**  Two of the recipes above are recognizably the same rule as a line in a charter you wrote in *OpenCode Studio*.  Name the lines, then say which of your charter's remaining rules could become a hook with one of these eight shapes, and which could not, and why not.
 
 *Hint: A rule about an operation (delete, push, send, read this path) has a shape here.  A rule about quality or intent ("write clear tests", "prefer small functions") does not, because no hook can see it in the arguments.*
 
-**Question E.3.**  Run E.5 against a project with one test that can never pass (assert `False`).  What happens on the first stop, and what happens on the second?  Then argue for or against the `stop_hook_active` check: is a gate that lets the agent stop on the second try still a gate?
+**Question D.3.**  Run D.5 against a project with one test that can never pass (assert `False`).  What happens on the first stop, and what happens on the second?  Then argue for or against the `stop_hook_active` check: is a gate that lets the agent stop on the second try still a gate?
 
 *Hint: The first stop is refused and the agent tries again; the second is allowed because the hook sees that it caused the retry.  Without the check the agent loops.  A gate with an escape hatch is still a gate if the escape hatch is visible in the transcript; what would you log there?*
 
