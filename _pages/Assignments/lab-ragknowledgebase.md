@@ -7,37 +7,37 @@ info:
   coursenum: CS357
   purpose: "To give an agent you run a memory of documents you care about, so that it answers from your notes rather than from what it happened to learn in training, and says so when the answer is not there."
   tilt:
-    task: "Index a small folder of your own documents in a local vector store, give a Pydantic AI agent one tool that searches it, and ask the agent questions: some your notes answer, one they do not, and one with the tool switched off so you can see the difference retrieval makes."
+    task: "Index a small folder of your own documents in a local vector store, connect it to a model that searches it before it answers (a Pydantic AI agent with a search tool on the code path, or a Langflow flow on the no-code path), and ask questions: some your notes answer, one they do not, and one with retrieval switched off so you can see the difference it makes."
     criteria: "I assess a working index, an agent that retrieves before it answers and names its sources, a transcript of the questions, and a short writeup on what retrieval changed.  The full breakdown is in the rubric below."
   points: 100
   goals:
     - To split a set of documents into chunks and store them in a vector database that can search them by meaning
-    - To give an agent a retrieval tool, so that it looks up evidence before it answers
+    - To connect a model to a retrieval step, as an agent tool in code or as a node on a Langflow canvas, so that it looks up evidence before it answers
     - To see, in your own transcript, what retrieval changes about an answer and what it does not
   rubric:
     - weight: 25
       description: "Corpus and Index"
       preemerging: "No index is built."
-      beginning: "An index is built, but on placeholder text rather than documents you chose, or the script does not run as submitted."
+      beginning: "An index is built, but on placeholder text rather than documents you chose, or the script (or, on the no-code path, the exported flow) does not run as submitted."
       progressing: "At least five documents you chose are split into chunks and stored in a Chroma collection, and the indexing script reports how many chunks it stored."
-      proficient: "As progressing, and the writeup says what the corpus is, why you chose it, and one thing about how the documents are written that made chunking easier or harder."
+      proficient: "As progressing, and the writeup says what the corpus is, why you chose it, and one thing about how the documents are written that made chunking easier or harder.  On the no-code path this row is earned on equal terms by a File, Text Splitter, Ollama Embeddings, and Chroma flow over the same documents, with the stored chunk count read from the Chroma node's inspection view."
     - weight: 35
       description: "Retrieval Agent"
-      preemerging: "No agent, or an agent with no retrieval tool."
-      beginning: "An agent exists and a search tool is defined, but the agent answers without calling it, or the tool's result never reaches the answer."
-      progressing: "A Pydantic AI agent calls a search tool over your collection, and its answers use the returned passages."
-      proficient: "As progressing, and the answers name the source file for each fact, the agent says it could not find an answer when the passages do not contain one, and every call to Chroma or the model is wrapped in an exception handler that prints a located message and a traceback."
+      preemerging: "No agent, or an agent with no retrieval tool (on the no-code path, no flow, or a flow with no search step)."
+      beginning: "An agent exists and a search tool is defined, but the agent answers without calling it, or the tool's result never reaches the answer.  On the no-code path: the flow runs, but the search results are not wired into the prompt."
+      progressing: "A Pydantic AI agent calls a search tool over your collection, and its answers use the returned passages.  On the no-code path: a Langflow flow searches your Chroma collection and passes the results into the Prompt node, and its answers use them."
+      proficient: "As progressing, and the answers name the source file for each fact, the agent says it could not find an answer when the passages do not contain one, and every call to Chroma or the model is wrapped in an exception handler that prints a located message and a traceback.  On the no-code path this row is earned on equal terms by the same source naming and abstention, with every node setting (models, Base URL, chunk size, number of results, temperature, prompt text) recorded in the readme in place of the exception handlers."
     - weight: 25
       description: "Queries and Transcript"
       preemerging: "No transcript."
-      beginning: "A transcript shows fewer than the five required questions, or does not show the tool calls."
-      progressing: "A transcript of five questions shows each tool call and answer: three your notes answer, one they do not, and one asked with retrieval turned off."
+      beginning: "A transcript shows fewer than the five required questions, or does not show the tool calls (on the no-code path, the retrieved chunks)."
+      progressing: "A transcript of five questions shows each tool call and answer: three your notes answer, one they do not, and one asked with retrieval turned off.  On the no-code path the transcript is the Playground conversation, with a screenshot or copy of the chunks the search step returned for each question."
       proficient: "As progressing, and for each question you note whether the answer was right and whether its named source actually says it."
     - weight: 15
       description: "Writeup and Reproducibility"
       preemerging: "No writeup, or one that cannot be followed."
       beginning: "A writeup exists, but a reader could not rebuild the index and rerun the questions from it."
-      progressing: "The model, package versions, commands, and corpus are recorded well enough to rerun."
+      progressing: "The model, package versions, commands, and corpus are recorded well enough to rerun.  On the no-code path: the exported flow JSON, the Langflow version, and the node settings."
       proficient: "Fully reproducible, with the three writeup questions answered and an AI-use disclosure."
   readings:
     - rtitle: "RAG Activity"
@@ -45,6 +45,8 @@ info:
       liapage: true
     - rtitle: "Pydantic AI From the Loop Up: the agent, tools, and Ollama setup this lab uses"
       rlink: "../Tutorials/PydanticAI"
+    - rtitle: "Visual Agents: Langflow setup and the RAG flow wiring the no-code path uses"
+      rlink: "../Tutorials/VisualAgents"
     - rtitle: "Chroma Documentation"
       rlink: "https://docs.trychroma.com"
     - rtitle: "Optional: RAG and Fine-Tuning: Retrieval Quality and LoRA, for measuring and improving retrieval beyond this lab"
@@ -64,9 +66,22 @@ In this lab you build that, small and complete.  You index a folder of documents
 
 ---
 
+## Choose Your Path
+
+Both paths build the same pipeline, reach the same learning objectives, and earn the same rubric.  Pick one before you start, and name it at the top of your readme.
+
+| Path | What you build | What you need | Pick this if |
+|------|----------------|---------------|--------------|
+| **Code** | `index.py` and `rag_agent.py`: a Chroma index and a Pydantic AI agent with a search tool (Steps 2 and 3) | Python, `pydantic-ai-slim` and `chromadb`, and Ollama with `qwen2.5:3b` | You want to see the tool call in your own code and control every line of it |
+| **No-code** | The same index and query path as one Langflow flow (the [No-code Path](#no-code-path) section, in place of Steps 2 and 3) | Langflow, and Ollama with `llama3.2` and `nomic-embed-text` | You would rather wire and inspect than write Python; you still choose the corpus, write the grounding prompt, and check every answer |
+
+Steps 1 and 4, the writeup, and the deliverables apply to both paths.  On the no-code path, read "script" as "exported flow JSON", "tool call" as "the chunks the search step returned", and "run" as "one question in the Playground" wherever this page and the rubric use those words.
+
+---
+
 ## Before You Start
 
-This lab builds on the *RAG Knowledge Base* session and on [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI), which sets up the same agent and model this lab uses.  You need Ollama running with a model that calls tools reliably, and two Python packages.
+This lab builds on the *RAG Knowledge Base* session.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need Ollama running with a model that calls tools reliably, and two Python packages.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -221,11 +236,71 @@ Run it with a question your notes answer, for example `python rag_agent.py "When
 
 ---
 
+## No-code Path
+
+Take this section in place of Steps 2 and 3 if you chose the no-code path.  You build the same two phases on a Langflow canvas: an **index path** that chunks, embeds, and stores your `corpus` once, and a **query path** that runs for every question.  Part IIb of the RAG session built this flow on five sentences, and the [Visual Agents]({{ site.baseurl }}/Tutorials/VisualAgents) tutorial walks through the same wiring.  Node names shift a little between Langflow versions; the dataflow is what matters.
+
+### Step N1: Install and Launch Langflow
+
+**Goal:** the Langflow canvas open in your browser, with both Ollama models available to it.
+
+```bash
+pip install langflow
+langflow run
+ollama pull llama3.2
+ollama pull nomic-embed-text
+```
+
+> **You should see.** A "Langflow is running" banner in the terminal and the canvas at `http://localhost:7860`.  `ollama list` shows `llama3.2` and `nomic-embed-text`.
+
+> **If it fails.** A dependency-resolver error from `pip install langflow` usually means your Python is too new or too old; create a fresh virtual environment on Python 3.11 or 3.12 and install there.  If `localhost:7860` refuses to connect, the server is still starting, so wait for the banner.
+
+### Step N2: Build the Index and Query Paths
+
+**Goal:** one flow that indexes your `corpus` and answers an in-corpus question in the Playground.
+
+Create a **New Flow** from a **Blank Canvas** and wire:
+
+1.  **Index path:** **File** (upload every file in your `corpus` folder) to **Text Splitter** (the recursive character splitter; start with a chunk size of 1000 and an overlap of 100) to **Chroma** (collection name `notes`), with an **Ollama Embeddings** node (model `nomic-embed-text`, Base URL `http://localhost:11434`) wired into Chroma's embedding input.
+2.  **Query path:** **Chat Input** to the same **Chroma** node's search input, with the number of results set to 3, then the search results to a **Prompt** node (the template in Step N3), to **Ollama** (model `llama3.2`, temperature 0, Base URL `http://localhost:11434`), to **Chat Output**.
+3.  Write every node setting in your readme as you go: the models, the Base URL, chunk size, overlap, number of results, and temperature.  On this path, that list takes the place of the code.
+
+> **You should see.** The Chroma node's inspection view lists the chunks it stored; write that count in your readme, as `index.py` would have printed it.
+
+> **If it fails.** A connection refusal at run time means a node's Base URL is wrong or Ollama is not running.  If old documents still show up after you change the corpus, give the Chroma collection a new name and run the index path again.
+
+### Step N3: Ground the Answers and Name the Source
+
+**Goal:** answers that come only from your notes, name the file each fact came from, and say so when the notes do not have the answer.
+
+Paste this into the Prompt node, then wire the search results into `{context}` and the Chat Input into `{question}`:
+
+```text
+Answer questions about the user's notes, using ONLY the passages below.
+Name the source file for each fact.
+If the passages do not contain the answer, say: I could not find that in your notes.
+
+Passages:
+{context}
+
+Question: {question}
+```
+
+Ask one in-corpus question in the **Playground**.
+
+> **You should see.** An answer that names a file from your `corpus`, and, in the search step's inspection view, the chunks that file came from.
+
+> **If it fails.** If the answer never names a file, check that the search results carry the file name; the File node usually stores it with each chunk, and the inspection view shows whether it is there.
+
+Then go on to Step 4.  For question 5, retrieval off, wire **Chat Input** straight into the Prompt's `{question}` and leave `{context}` empty, ask, then restore the wiring.  When you are done, export the flow (the flow menu's **Export**) and save the JSON file next to your readme.
+
+---
+
 ## Step 4: Ask Five Questions
 
 **Goal:** a transcript that shows what retrieval does, and what it does not do.
 
-Run `rag_agent.py` once for each question below and save the full output of every run.
+Run `rag_agent.py` once for each question below and save the full output of every run.  On the no-code path, ask each question in a fresh Playground session and save the conversation together with the chunks the search step returned.
 
 1. Three questions your notes answer, ideally worded differently from the notes themselves.
 2. One question your notes do not answer.  The agent should say it could not find it.
@@ -245,7 +320,7 @@ Answer each in a short paragraph, pointing at your own transcript:
 
 1. What did retrieval change between question 5 and the same question with the tool on?
 2. Did the agent ever name a source that did not actually support its answer?  What does that tell you about trusting the source it names?
-3. If your notes doubled in size tomorrow, what in `index.py` would you change first, and why?
+3. If your notes doubled in size tomorrow, what in `index.py` (or which node setting in your flow) would you change first, and why?
 
 ---
 
@@ -257,6 +332,8 @@ Answer each in a short paragraph, pointing at your own transcript:
 | The answer ignores the passages | The model is not following the instructions, or never called the tool | Check for a `[tool call]` line; use `qwen2.5:3b` |
 | Old documents still show up after you edit the corpus | The `chroma_db` folder still holds the previous chunks | Delete `chroma_db` and rerun `index.py` |
 | Connection refused | Ollama is not running | Start Ollama and retry |
+| (No-code) The answer ignores your notes | The search results are not wired into the Prompt's `{context}` | Open the Prompt node's inspection view and check that the passages arrived |
+| (No-code) The answer names no source file | The chunks do not carry their file name | Check the search step's inspection view; re-upload through the File node rather than pasting text |
 
 ---
 
@@ -264,18 +341,19 @@ Answer each in a short paragraph, pointing at your own transcript:
 
 | File or artifact | What it shows | Rubric row |
 |---|---|---|
-| `corpus/`, `index.py`, and its output | Your documents, chunked and stored | Corpus and Index (25) |
-| `rag_agent.py` | An agent that searches before it answers and names its sources | Retrieval Agent (35) |
-| The five saved runs and your one-line checks | What retrieval changed, question by question | Queries and Transcript (25) |
-| A readme with the corpus description, commands, model and package versions, the three writeup answers, and an AI-use disclosure | A reader could rerun everything | Writeup and Reproducibility (15) |
+| `corpus/`, `index.py`, and its output (no-code: the chunk count from the Chroma node) | Your documents, chunked and stored | Corpus and Index (25) |
+| `rag_agent.py` (no-code: the exported flow JSON and your node settings) | An agent that searches before it answers and names its sources | Retrieval Agent (35) |
+| The five saved runs and your one-line checks (no-code: Playground conversations with the retrieved chunks) | What retrieval changed, question by question | Queries and Transcript (25) |
+| A readme with your path, the corpus description, commands, model and package (or Langflow) versions, the three writeup answers, and an AI-use disclosure | A reader could rerun everything | Writeup and Reproducibility (15) |
 
 ---
 
 ## Self-Check Before You Submit
 
-- [ ] At least five documents you chose are indexed, and `index.py` reports the chunk count.
-- [ ] Every agent run shows a `[tool call]` line before the answer, except the retrieval-off run.
+- [ ] Your readme names your path, code or no-code.
+- [ ] At least five documents you chose are indexed, and `index.py` (or the Chroma node) reports the chunk count.
+- [ ] Every agent run shows a `[tool call]` line before the answer (no-code: the retrieved chunks), except the retrieval-off run.
 - [ ] Answers name their source file, and the not-in-my-notes question gets "I could not find that".
-- [ ] Every call to Chroma or the model sits inside an exception handler with a located message and a traceback.
+- [ ] Code path: every call to Chroma or the model sits inside an exception handler with a located message and a traceback.  No-code path: every node setting is in the readme and the flow JSON is exported.
 - [ ] Five saved runs, five one-line checks, and the three writeup answers are in the readme.
-- [ ] Model name and package versions are recorded.
+- [ ] Model name and package versions (or the Langflow version) are recorded.
