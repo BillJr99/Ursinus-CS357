@@ -60,6 +60,8 @@ In this Project Thread milestone, your team finds out what the world already kno
 
 A literature review is not a book report, and it is not a pile of links.  It is an argument: *here is what is known, here is who knows it, here is the hole in it, and here is why that hole matters to our stakeholder.*  The two-phase structure means every member does real source work (there is no way to ride along on a teammate's reading), and the synthesis forces the sources to talk to each other.
 
+**How this page is organized.**  Each phase is broken into small numbered steps.  Each step has a one-sentence goal, the action to take, and a **You should have** check that tells you what you should be holding when the step is done.  Finish a step and check it before you move on to the next one.  The *Information Literacy* section near the end is a reference: Phase 1 sends you there when you need the search recipe and the reading protocol.
+
 ---
 
 ## Timeline
@@ -70,6 +72,8 @@ A literature review is not a book report, and it is not a pile of links.  It is 
 | **Phase 2: Team Synthesis** | One PDF per team | One-page synthesis, plan-impact section, combined bibliography, signatures, AI-use disclosure | See the [course schedule]({{ site.baseurl }}/) |
 
 Phase 1 is due first, and it is the longer half.  Schedule the Phase 2 team meeting in advance.
+
+In other words: you read and write alone first, then you meet and write together.  The team cannot start Phase 2 until every Phase 1 bibliography is in.
 
 ---
 
@@ -96,11 +100,17 @@ Phase 1 is due first, and it is the longer half.  Schedule the Phase 2 team meet
 
 > **On using AI here.**  AI tools are permitted, disclosed, and useful for finding and triaging sources.  They are also the single most reliable way to end up citing a paper that does not exist.  **Every source you cite must be one you opened.**  Not one a model described to you: one you opened, with a link or DOI (digital object identifier) that resolves.  Check every one before you submit, and say in your disclosure how you checked.
 
+**Before Step 1.1, have these open:** your team's Stakeholder Brief (for the problem statement) and your Final Project Proposal (for the gap you claimed and the design decisions you made).  Every step below refers back to one or both of them.
+
 ---
 
 ## Phase 1: Individual Annotated Bibliography
 
+Imagine you sit down to search with only your project's name in mind.  You type it into a search box, get thousands of hits, skim a few abstracts, and come away with three links that all say roughly the same thing.  None of them tells you whether your plan holds up.  Phase 1 avoids that outcome by starting from your team's problem statement, dividing the reading before anyone searches, and asking you to judge each source rather than just list it.
+
 Each team member, working alone, finds and annotates 2-3 sources relevant to the team's problem statement.  You are the primary author of your own annotations; I grade them individually.
+
+**What is required, in one place.**  2-3 sources.  At least one is a scholarly source.  One annotation of 150-250 words per source, with the three labeled parts described in Step 1.5.  A note on how you found each source.  A complete citation for each.  Submitted individually via the LMS by the Phase 1 date.  Technical documentation is allowed but never replaces the scholarly source.  That is enough for Phase 1; you do not need more than three sources.
 
 > **Do this.**
 > 1. In a standup, divide the territory with your team so that, combined, at least one source comes from the stakeholder's discipline and the set is not three copies of the same paper.  Log the division.
@@ -110,11 +120,81 @@ Each team member, working alone, finds and annotates 2-3 sources relevant to the
 > 5. Record how you found each source (database and search terms, or what you chained from).
 > 6. Submit your bibliography individually via the LMS by the Phase 1 date.
 
+The steps below walk through that list one piece at a time.
+
+### Step 1.1: Divide the territory with your team
+
+**Goal:** agree, before anyone searches, on who looks where, so the team's combined set reaches the stakeholder's discipline and does not repeat itself.
+
+In a standup, look at the problem statement in your Stakeholder Brief together.  Decide which member will search which angle of it, and which member will search the stakeholder's own field.  Write the division into your team's log.
+
+> **You should have.**  A logged division of the territory: each member's name next to the angle they will search, and at least one member assigned to the stakeholder's discipline.
+
+**Predict:** if every member searched the same keywords independently, what would the team's combined bibliography probably look like?
+
+### Step 1.2: Run the search recipe and build a short candidate list
+
+**Goal:** find more candidate sources than you need, from the right places, and write down how you found each one.
+
+Follow *The search recipe* in the *Information Literacy* section below.  Start in the library databases and Google Scholar, search in both the stakeholder's vocabulary and yours, and chain from any good source you find.  Write down your search terms as you go; you will need them in Step 1.6.
+
+> **You should have.**  A short list of candidate sources in your assigned territory, each with a link or DOI and a note of the database and search terms (or the source you chained from) that led you to it.
+
+> **If it fails.**  If your searches return nothing useful in the stakeholder's discipline, you are probably using only your own vocabulary.  Try the stakeholder's terms, look up which journals their field reads (your interview's "what should we read?" question was for this), or ask a librarian.
+
+### Step 1.3: Choose your 2-3 sources and check them against the requirements
+
+**Goal:** narrow your candidates to the 2-3 you will annotate, and confirm they meet the source-type rules before you invest reading time.
+
+From your candidate list, pick 2-3 sources.  Then check each one:
+
+- Is at least one of them a **scholarly source** (peer-reviewed article, conference paper, or academic book chapter)?
+- If you chose **technical documentation**, is it supplementing the scholarly source rather than replacing it?
+- Does each link or DOI actually resolve to the source itself, and have you opened it?
+
+> **You should have.**  2-3 sources, each opened, each with a working link or DOI, and at least one of them scholarly.
+
+> **If it fails.**  If none of your picks is scholarly, go back to Step 1.2 and chain from your best technical source into the research literature it cites or that cites it.  If a link or DOI does not resolve, or the source turns out not to exist, drop it.  Do not cite a source you cannot open.
+
+### Step 1.4: Read each source with the critical-reading protocol
+
+**Goal:** understand each source well enough to explain its claim and its evidence in your own words.
+
+Use *The critical-reading protocol* in the *Information Literacy* section below.  For each source, write a few notes that answer the protocol's three questions (or, for technical documentation, its version and currency questions).
+
+> **You should have.**  For each source, brief notes on what the evidence is, who is not represented in it, and what the authors say it cannot show.
+
+**Check yourself:** close the abstract and summarize the source out loud or on paper.  If you cannot summarize it without the abstract open, read it again.
+
 ### What each annotation contains
 
 1. **Summary**: what the source claims and on what evidence, in your own words.
 2. **Credibility assessment**: venue and review process, method and sample, who funded or published it and what they might want, how current it is, and (most importantly) *what this source can and cannot support*.  "Peer-reviewed" is the start of an assessment, not the end of one.
 3. **Relevance to the problem**: which element of your team's problem statement this source informs, and what it changes.  Does it confirm an assumption, kill one, or open a question?
+
+Put plainly: the summary says what the source says, the credibility assessment says how far you can trust it and for what, and the relevance statement says why your team should care.
+
+### Step 1.5: Write one annotation per source
+
+**Goal:** turn your reading notes into one 150-250 word annotation per source, with the three labeled parts above.
+
+Write each annotation from your notes and from the source itself, not from the abstract.  Label the three parts (Summary, Credibility assessment, Relevance) so a reader can find each one.
+
+> **You should have.**  One annotation per source, each 150-250 words, each with all three labeled parts.  Each credibility assessment says specifically what the source can and cannot support, and each relevance statement names an element of your team's problem statement.
+
+**Predict:** a credibility assessment that reads "peer-reviewed, so credible" stops short.  For one of your sources, what is one thing it cannot support, even though it passed review?
+
+### Step 1.6: Record how you found each source and write its citation
+
+**Goal:** make your search reproducible and your citations complete.
+
+For each source, write down how you found it (database and search terms, or what you chained from), using the notes you kept in Step 1.2.  Then write a complete citation in one consistent format, and check it against the actual source.
+
+> **You should have.**  For each source, a "how I found it" line and a complete citation that matches the source you opened, in the same format as your other citations.
+
+### Step 1.7: Fill in the skeleton and submit
+
+**Goal:** assemble your bibliography in the required form and submit it individually.
 
 > **Paste into your submission.**  Use this skeleton for each of your 2-3 sources, and fill every line.
 >
@@ -126,9 +206,15 @@ Each team member, working alone, finds and annotates 2-3 sources relevant to the
 > Relevance to our problem statement:
 > ```
 
+Submit your bibliography individually via the LMS by the Phase 1 date.
+
+> **You should have.**  One filled skeleton per source, with no empty lines, submitted to the LMS under your own name.  Before you submit, run the *Individual annotated bibliography* items in the Self-Check at the end of this page.
+
 ---
 
 ## Phase 2: Team Synthesis
+
+Now picture your team's table after Phase 1: everyone's annotations are in, and there are several sources from at least two fields.  If you simply stack them up ("Source 1 says... Source 2 says..."), you have a longer bibliography, not a synthesis.  Phase 2 asks you to read across the stack: where do the sources agree, where do they disagree, what do none of them cover, and what does that mean for the plan you proposed?
 
 One page, with a **named primary author** who holds drafting responsibility.  The whole team reviews and signs.
 
@@ -142,7 +228,61 @@ One page, with a **named primary author** who holds drafting responsibility.  Th
 > 7. Record any resulting scope change in your decision log and raise it at your next intra-team check-in.
 > 8. Have every member review and sign, then assemble the team PDF listed under *Deliverables*.
 
+The steps below walk through that list one piece at a time.  The primary author drafts; everyone else reads, checks claims against their own sources, and signs.
+
+### Step 2.1: Meet and name the primary author
+
+**Goal:** start the synthesis with every bibliography in hand and one person responsible for the draft.
+
+Meet as a team after every Phase 1 bibliography is in.  Bring your annotations.  Name the primary author.
+
+> **You should have.**  Every member's annotations available to the team, and a named primary author recorded where the team will see it (and later, in the PDF).
+
+### Step 2.2: Group the sources by idea, not by source
+
+**Goal:** connect the team's combined sources to the problem statement from your Stakeholder Brief, organized around ideas.
+
+Read across everyone's annotations and sort the sources under the ideas they speak to.  Write "Three of our sources agree that X; the exception is..." rather than "Source 1 says... Source 2 says...".  Where sources disagree, state the disagreement; do not smooth it over.
+
+> **You should have.**  A rough outline of the synthesis whose headings or topic sentences are ideas tied to the problem statement, with each idea listing the sources that support or complicate it.
+
+**Predict:** look at your outline.  Is there any idea that only one source speaks to?  What does that tell you about how much weight the synthesis can put on it?
+
+### Step 2.3: Show where the disciplines meet
+
+**Goal:** make the disciplinary perspectives interact, rather than sit side by side.
+
+Find at least one place where your fields converge, conflict, or measure success differently, and say what that means for the project.
+
 > **Watch out.**  The team's combined review must span **at least two disciplinary perspectives** (for example, computer science and public health; education and economics), including the stakeholder's discipline.  A review whose every source is a CS paper fails this requirement regardless of quality.
+
+> **You should have.**  At least one explicit sentence or paragraph that names two disciplines, says where they agree, disagree, or define success differently, and says what that means for the project.
+
+> **If it fails.**  If every source in the combined set comes from one field, or none comes from the stakeholder's discipline, the team does not yet meet the requirement.  Go back to *The search recipe* below for the stakeholder's field before you keep drafting.
+
+### Step 2.4: Identify the gap and show that it follows from the sources
+
+**Goal:** name the specific gap the project will address, and show it comes out of the reading rather than being asserted before it.
+
+Write the gap in three parts: what exists, what is missing, and why the missing piece matters to your stakeholder.  Point to the sources behind each part.
+
+> **You should have.**  A specific gap statement (not "more work is needed") with sources cited for what exists and for what is missing, and a sentence on why it matters to the stakeholder.
+
+**Predict:** compare this gap with the one your proposal claimed.  Is it the same gap, a narrower one, or a different one?
+
+### Step 2.5: Note where your sources are weakest
+
+**Goal:** say honestly where the team's source base is thin.
+
+Note honestly where your source base is weakest.  That weakness is the seed of future work, and of your proposal's risk section.
+
+> **You should have.**  A short, specific statement of the weakest part of your source base (for example, a question only one source addresses, or a perspective missing from the set).
+
+### Step 2.6: State what this changes about the plan
+
+**Goal:** carry the evidence back into your proposal, one element at a time.
+
+Go through your [proposal]({{ site.baseurl }}/Projects/FinalProjectProposal) and, for each element the evidence touches, say whether the sources confirm it, complicate it, or kill it, and which source did it.  If the sources leave the plan standing, say so and say why.  That is a finding, not a formality.
 
 > **Paste into your submission.**  Give the "what this changes about the plan" section its own heading, one entry per proposal element.
 >
@@ -153,11 +293,29 @@ One page, with a **named primary author** who holds drafting responsibility.  Th
 > What we are doing about it (or why the plan stands):
 > ```
 
+> **You should have.**  A section with its own heading and one filled entry per proposal element, each naming the source responsible.  If nothing changed, an entry that says why the sources leave the plan standing.
+
+### Step 2.7: Record any scope change
+
+**Goal:** make sure what you learned reaches the project, not just this document.
+
+Record any resulting scope change in your decision log and raise it at your next intra-team check-in.
+
+> **You should have.**  A decision-log entry for each scope change (or a note that there was none), and the item on the agenda for your next intra-team check-in.
+
+### Step 2.8: Review, sign, and assemble the team PDF
+
+**Goal:** produce the one team PDF, reviewed and signed by everyone.
+
+Have every member review the synthesis and check its claims against the sources they read.  Then assemble the team PDF listed under *Deliverables*: the one-page synthesis with the primary author named, the *what this changes about the plan* section, the combined bibliography, all members' typed signatures, and the team AI-use disclosure.
+
+> **You should have.**  One PDF containing every item above.  Before you submit, run the *Team synthesis* items in the Self-Check at the end of this page.
+
 ---
 
 ## Information Literacy: Finding and Reading Sources Critically
 
-This section gives you two tools for the same skill: a search recipe and a reading protocol.
+This section gives you two tools for the same skill: a search recipe and a reading protocol.  Step 1.2 uses the recipe, and Step 1.4 uses the protocol.
 
 ### The search recipe
 
@@ -166,6 +324,8 @@ This section gives you two tools for the same skill: a search recipe and a readi
 > 2. When you find one good source, **chain it**.  Mine its references for older foundations (backward), and use Google Scholar's "Cited by" for what came after (forward).
 > 3. To reach the stakeholder's discipline, look up which journals their field actually reads (your interview's "what should we read?" question was for this), or ask a librarian.  Asking a librarian is a professional move, not a fallback.
 > 4. Log your search terms as you go.  Each annotation reports how its source was found.
+
+To restate the idea behind chaining: one good source already did part of your searching for you.  Its reference list points backward to the work it builds on, and its "Cited by" list points forward to the work that built on it.
 
 ### The critical-reading protocol
 

@@ -85,11 +85,15 @@ tags:
 
 **See the course schedule for the assigned and due dates.**
 
-Every trustworthy agent system exists twice: once as running code, and once on paper, as the specification, contract, and gates that say what it is supposed to do, what it must never do, and how anyone would know the difference.  In this assignment you write that paper system.
+Picture this: you restart your agent with a clean slate, and the first thing it does is ask you which test command to run.  You know the answer, but nothing you wrote down says it.  The system you thought you had was partly in your head.
+
+That is the idea behind this assignment.  Every trustworthy agent system exists twice: once as running code, and once on paper, as the specification, contract, and gates that say what it is supposed to do, what it must never do, and how anyone would know the difference.  In this assignment you write that paper system.
 
 You choose one of two directions.  **Direction A** designs a system that does not exist yet: a spec-first design document of the kind engineering teams call a design proposal, system spec, or RFC (request for comments).  **Direction B** designs the operating system *around* an agent: the charter, contract, gates, and handoff state that make it trustworthy, interruptible, and independent of any single model or vendor, and then proves it works by interrupting a session mid-task.
 
 Both directions include an Observability, Traceability, and Handoff Protocol: the part of the design that says what gets logged, how a decision traces back to the rule that produced it, and what a fresh process reads when it starts or restarts.  In both, the document *is* the deliverable, and polish matters exactly as much as it would in production, because in Direction B these documents are the production system.  Read both directions before choosing, then complete **one** in full depth.  Depth on one is worth far more than a shallow pass over both.
+
+**How this page is organized.**  Each direction is broken into small numbered steps.  Each step has a goal, an action, and a "You should have" check, so you can finish one step in a sitting, check it, and move on.  The steps are a path through the requirements, not extra requirements: if your document already satisfies a check, that step is done.
 
 ---
 
@@ -111,6 +115,8 @@ All are taught before this is due.
 **Carry three columns into your design.**  From the *Design First* session: for every agent and every action, be able to say **how it is observed**, **what it can reach**, and **how it is undone**.  Direction A's agent table and Direction B's action classification are both places those answers belong, and the protocol section is where "how it is observed" becomes concrete.  A design that cannot answer these questions for some component has found its own weakest point.
 
 > **Watch out.** The single most common way this assignment loses points is writing constraints that sound like values.  "The system should handle sensitive data responsibly" cannot be checked by anyone.  "The agent may read `students.csv` and may never write to it or transmit it off the machine" can.  Apply the stranger test to every constraint and every rule before you submit: could someone who has never met you determine, from evidence, whether it held?
+
+The **stranger test** comes up in almost every step below.  In plain terms: imagine handing your rule and your system's output to someone who has never met you.  If they could say "yes, it held" or "no, it did not" just by looking, the rule passes.  If they would have to ask you what you meant, it does not pass yet.
 
 ---
 
@@ -137,6 +143,10 @@ Read both directions in full before you pick.
 
 Both directions carry the full 100 points under the shared rubric above; each rubric row says which requirements apply to which direction.
 
+**Predict:** before you read further, which direction do you expect would expose more of what is "only in your head" about a project you know well, and why?
+
+Whichever you choose, the last two sections of the page (the token ledger questions and the reflection prompts) are required for both.
+
 ---
 
 ## Direction A: Design Before You Build
@@ -145,6 +155,12 @@ Both directions carry the full 100 points under the shared rubric above; each ru
 
 You define what the system does and for whom, design the agents that compose it, trace data as it flows through the system, anticipate failures before they happen, state success criteria that an outside evaluator could apply, and specify how the system is observed, traced, and resumed.
 
+The running example on this page is a meeting summarizer.  You will see its problem statement, part of its data flow, and one of its pre-mortem rows.  Use it to see the level of detail expected, then do the same for your own domain.
+
+#### Step A0.1: Choose your domain
+
+**Goal:** settle on one system to design.
+
 Choose one of the following domains for your system (or propose your own, with my confirmation first; an overly ambitious scope makes the document less precise, which hurts your grade):
 
 - **Course tutoring agent**: answers student questions about a specific course topic using provided materials
@@ -152,9 +168,17 @@ Choose one of the following domains for your system (or propose your own, with m
 - **Code reviewer**: reviews submitted code against a rubric and returns structured feedback
 - **Meeting summarizer**: processes a transcript and produces action items, decisions, and open questions
 
-Produce the six components below, in order.
+> **You should have.** One domain named in a sentence at the top of your document (and, if it is your own domain, my confirmation).
+
+Produce the six components below, in order.  Each component is broken into steps.
 
 ### Component 1: Problem Statement
+
+The problem statement is the paragraph every later component points back to.  If it is vague, every constraint and refusal condition downstream will be vague too.
+
+#### Step A1.1: Answer the four questions in notes
+
+**Goal:** get the raw answers down before you worry about the paragraph.
 
 > **Do this.** Write one paragraph (no more, no less) that answers all four questions:
 > 1. **What** does the system do?
@@ -162,7 +186,23 @@ Produce the six components below, in order.
 > 3. **In what context** is it used?
 > 4. **Under what constraints** must it operate?
 
+Start with a short note for each of the four questions; you will turn them into the paragraph in Step A1.3.
+
+> **You should have.** Four short notes, one per question.  If one of them is blank or reads like a feature list ("it summarizes, it searches, it formats"), you have not yet said who the system serves or why.
+
+#### Step A1.2: Turn your constraints into boundaries
+
+**Goal:** make every constraint pass the stranger test.
+
 A good constraint limits what the system may do, what data it may use, or how it may behave when uncertain.  Vague constraints ("the system should be safe and helpful") do not count; name the specific boundary, for example: "The system may only use documents the user has explicitly uploaded in the current session and must not retrieve information from the open internet."
+
+Go through your constraint notes one at a time.  For each one, ask: what would a stranger look at to decide whether it held?  If you cannot name that evidence, rewrite the constraint until you can.
+
+> **You should have.** A list of constraints, each naming a specific boundary, with at least two that **limit the system's behavior or data access** rather than describing a quality you hope it has.
+
+#### Step A1.3: Write the paragraph
+
+**Goal:** combine your notes into the single required paragraph.
 
 Example problem statement (meeting summarizer):
 
@@ -170,9 +210,15 @@ Example problem statement (meeting summarizer):
 This system processes audio transcripts of team meetings and produces structured summaries for remote employees who were unable to attend.  It is used within a corporate Slack workspace by teams of 5-20 people conducting 30-90 minute project syncs.  Constraints: the system must never include names or identifying information in summaries without the speaker's prior consent; it must complete processing within two minutes of transcript submission; and it must abstain from summarizing any segment it cannot parse with at least 80% word-recognition confidence, flagging those segments for human review instead.
 ```
 
+Notice how each constraint in the example could be checked from evidence: a name in a summary, a processing time, a confidence score.
+
+> **You should have.** One paragraph that answers all four questions, with your constraints from Step A1.2 written into it.
+
 ### Component 2: Agent Design Table
 
 Your system must have at least two meaningfully distinct agents.  If a single agent can handle the full task, split it into an orchestrator/router and a specialist; even simple systems benefit from a verification or formatting agent.
+
+An **orchestrator** (or router) is an agent whose job is to decide which other agent handles a request; a **specialist** does one kind of work well.  "Meaningfully distinct" means each agent has a job the others do not.
 
 > **Do this.**
 > 1. List your agents, one row each, using exactly these columns.
@@ -181,15 +227,49 @@ Your system must have at least two meaningfully distinct agents.  If a single ag
 | Agent Name | Role | System Prompt Skeleton (3 sentences) | Inputs | Outputs | Temperature | Tools | Failure Mode & Detection Signal |
 |---|---|---|---|---|---|---|---|
 
-Column guidance:
+We will fill this table one group of columns at a time.
+
+#### Step A2.1: Name the agents and their roles
+
+**Goal:** decide who does what.
+
+Fill in only the **Agent Name** and **Role** columns.  Read the roles side by side: if two of them could swap jobs without anyone noticing, merge them or sharpen them.
+
+> **You should have.** Two or more rows, each with a role no other row shares.
+
+#### Step A2.2: Write each prompt skeleton
+
+**Goal:** give each agent real instructions, not just a title.
 
 - **System Prompt Skeleton:** Write exactly three sentences.  Sentence 1 establishes persona and scope; sentence 2 states the primary task; sentence 3 states at least one explicit refusal or abstention condition.  Example: *"You are a document summarizer specialized in academic research papers.  Your task is to produce a 100-word abstract of the document provided.  If the document is not in English, respond: 'I cannot summarize this document; please provide an English-language version.'"*
+
+> **You should have.** Three sentences per agent, and the third sentence of each says when that agent refuses or abstains.  Keep these refusal conditions handy: you will name them as rules in Component 6.
+
+#### Step A2.3: Fill inputs, outputs, temperature, and tools
+
+**Goal:** say what each agent receives, produces, and can reach.
+
+**Temperature** is the sampling setting that controls how much a model's output varies from run to run: lower values make it more consistent, higher values more varied.
+
 - **Temperature:** A decimal value with a one-sentence justification.  Example: "0.2; low temperature reduces creative variation in structured classification tasks where consistency matters more than diversity."
+
+For **Tools**, list the external capabilities the agent can call (for example, a search or retrieval function).  If an agent has none, write "none" so the cell is not empty.  This column is also your answer to "what can it reach" from the three columns in *Before You Start*.
+
+> **You should have.** Inputs, outputs, a decimal temperature with its one-sentence justification, and tools filled in for every row.
+
+#### Step A2.4: Write each failure mode and its signal
+
+**Goal:** say how you would see each agent go wrong.
+
 - **Failure Mode & Detection Signal:** Name the specific observable signal that would indicate the failure, not the abstract risk.  "Hallucination" is not a failure mode.  "The agent returns a citation with an author name that does not appear in any uploaded document, detectable by string-matching cited names against the document index" is.
+
+> **You should have.** A complete table with no empty cells.  Read each failure cell and ask: could a checker spot this from the agent's output alone?
 
 ### Component 3: Data Flow Diagram
 
 Describe the flow of data through your system in text or ASCII art.  Length is not the goal; clarity is.  A two-agent system might need 10 lines, a four-agent system with branches might need 30.
+
+**ASCII art** here just means a diagram drawn with plain characters (boxes in brackets, arrows made of `|` and `v`), like the example below.  A text description is equally acceptable.
 
 > **Do this.** Show each of the following in the diagram:
 > 1. where user input enters and which agent receives it first;
@@ -197,6 +277,8 @@ Describe the flow of data through your system in text or ASCII art.  Length is n
 > 3. where external tools or retrieval systems are called;
 > 4. where the final output is produced;
 > 5. every branch: if an agent can refuse, escalate, or short-circuit the flow, draw that branch and label it with the condition that triggers it.
+
+**JSON** is a plain-text format for structured data, with named fields in braces (for example, a field holding a list of action items).  Naming the fields is what makes a handoff format specific enough for someone else to build.
 
 Example (excerpt, meeting summarizer):
 
@@ -223,6 +305,32 @@ User uploads transcript (plain text)
 Final output delivered to Slack channel
 ```
 
+#### Step A3.1: Draw the main path
+
+**Goal:** trace one ordinary request from start to finish (items 1 and 4 above).
+
+Start where user input enters, pass through each agent from your table in order, and end where the final output is produced.  Leave out branches for now.
+
+> **You should have.** A single path that shows every agent from your table at least once, from input to final output.
+
+#### Step A3.2: Label every handoff and external call
+
+**Goal:** show what moves between agents and what leaves the system (items 2 and 3).
+
+On each arrow, write the format of what is passed.  Mark every place a tool or retrieval system is called; these should match the **Tools** column in your table.
+
+> **You should have.** A format on every handoff, and every tool from your table appearing somewhere in the diagram.
+
+#### Step A3.3: Add every branch
+
+**Goal:** show where the flow can refuse, escalate, or short-circuit (item 5).
+
+Go back to the refusal conditions you wrote in Step A2.2.  Each one is a place the flow can leave the main path, so each one needs a labeled branch, like the `On confidence < 0.80` line in the example.
+
+> **You should have.** One labeled branch for every refusal or escalation condition in your agent table.
+
+**Predict:** which of your branches do you expect to fire most often in real use?  Keep your answer in mind for the pre-mortem.
+
 ### Component 4: Pre-mortem Table
 
 Imagine your system has been deployed for two weeks and has failed.  Working backwards, identify at least **six** specific things that could have gone wrong.
@@ -241,6 +349,30 @@ Example row:
 |---|---|---|
 | The Summarizer Agent invents an action item not present in any transcript segment | String-match check between summary action items and transcript passages fails | Require the Summarizer to return a citation (transcript line number) for each action item; an automated checker verifies every action item maps to a real transcript line |
 
+#### Step A4.1: List what went wrong
+
+**Goal:** fill only the first column, at least six rows.
+
+Walk through your data-flow diagram one agent and one handoff at a time and ask, "two weeks in, what did this do wrong?"  For each answer, name the agent, the input type, and the output fault, as the example row does.
+
+> **You should have.** Six or more first-column entries, each naming an agent, an input type, and an output fault.
+
+#### Step A4.2: Check the required coverage
+
+**Goal:** make sure the two required categories are present.
+
+> **You should have.** At least one row about two agents producing contradictory or incompatible outputs, and at least one row about user data or privacy.  If either is missing, add a row now.
+
+#### Step A4.3: Fill detection and mitigation
+
+**Goal:** give each risk an observable signal and a real response.
+
+For the detection column, name something a checker could see (a failed string match, a field that is empty, a count that is off).  For the mitigation column, name an action the system or team could take, like the citation requirement in the example row.
+
+> **You should have.** Every row complete, with no detection cell that amounts to "we would notice" and no mitigation that amounts to "we would be more careful."
+
+**Reflect:** which of your rows did you first think "could not happen"?  Write it down now; reflection prompt 2 asks for it.
+
 ### Component 5: Success Criteria
 
 State three to five measurable criteria that a third-party evaluator (someone who has never seen your system or spoken to you) could use to determine whether your system is working, from outputs alone.
@@ -250,11 +382,27 @@ State three to five measurable criteria that a third-party evaluator (someone wh
 | Criterion | What "Success" Looks Like | Measurement Method | Passing Threshold |
 |---|---|---|---|
 
-Criteria should cover distinct dimensions: functional correctness (does it do the right thing?), quality (is the output useful?), and at least one safety or reliability dimension (does it behave appropriately at the boundary?).  If all your criteria are variations on accuracy, you are missing a dimension.  Example row: *Privacy compliance, no participant's real name appears in the summary without consent, automated scan of output against the participant list, zero name appearances in summaries for meetings marked "anonymous."*
+#### Step A5.1: Choose your dimensions
+
+**Goal:** make sure your criteria do not all measure the same thing.
+
+Criteria should cover distinct dimensions: functional correctness (does it do the right thing?), quality (is the output useful?), and at least one safety or reliability dimension (does it behave appropriately at the boundary?).  If all your criteria are variations on accuracy, you are missing a dimension.
+
+> **You should have.** Three to five criterion names, covering functional correctness plus at least one safety or quality dimension.
+
+#### Step A5.2: Fill the remaining columns
+
+**Goal:** make every criterion measurable from outputs alone.
+
+Example row: *Privacy compliance, no participant's real name appears in the summary without consent, automated scan of output against the participant list, zero name appearances in summaries for meetings marked "anonymous."*
+
+> **You should have.** All four columns filled for every criterion.  For each one, ask: could the evaluator apply this without access to the system's internals or to you?
 
 ### Component 6: Observability, Traceability, and Handoff Protocol
 
 Specify how a stranger reading your system's logs could reconstruct what it did and why, and how a fresh process could pick up where the last one stopped.  This component follows the *Observability, Traceability, and Handoff Protocols* session.
+
+Put simply, this component answers three questions: what did the system write down at each step, which rule caused each decision, and what would a brand-new process need to read to carry on?
 
 > **Do this.** Write the three parts of the protocol:
 > 1. **What is logged at each step.**  For every agent call, tool call, and branch in your data-flow diagram, list the fields the log entry carries.  A table with one row per step type and one column listing its fields is enough.  Each field should be something a checker could read back, not a description of intent.
@@ -262,6 +410,38 @@ Specify how a stranger reading your system's logs could reconstruct what it did 
 > 3. **What the start/restart handoff file contains.**  Specify the file a fresh process reads when it starts or restarts, covering every row of the eight-row checklist from the *Observability, Traceability, and Handoff Protocols* session.  List the file's fields and give one filled example for a plausible interruption.
 
 A protocol that says "the agent logs its actions" earns nothing here.  The test is whether someone holding only the logs and the handoff file could say which rule produced a given decision and what the next safe action is.
+
+#### Step A6.1: List the log fields for each step type
+
+**Goal:** part 1 above.
+
+Use your data-flow diagram as the checklist: every agent call, tool call, and branch is a step type that needs a row.
+
+> **You should have.** A table with one row per step type and its fields, and no field that only describes intent.
+
+#### Step A6.2: Name your rules and show one trace
+
+**Goal:** part 2 above.
+
+Give a short name to each constraint from Component 1 and each refusal condition from Step A2.2.  Then pick one input that makes a branch from Step A3.3 fire, and write out the trace.
+
+> **You should have.** A list of rule names, and one worked trace showing the input, its log entries, the rule name that fired, and the branch taken.
+
+#### Step A6.3: Specify the handoff file
+
+**Goal:** part 3 above.
+
+Open your notes from the *Observability, Traceability, and Handoff Protocols* session and match each row of the eight-row checklist to a field in your file.
+
+> **You should have.** A list of the file's fields that covers all eight checklist rows, and one filled example for a plausible interruption.
+
+#### Step A6.4: Run the stranger test on your protocol
+
+**Goal:** check the protocol as a whole.
+
+Hide everything except your worked trace and your filled handoff example.  From those alone, can you say which rule produced the decision and what the next safe action is?
+
+> **You should have.** A "yes" to both.  If either answer depended on something only you know, add the missing field.
 
 ### Direction A Deliverable
 
@@ -279,9 +459,22 @@ Answer the shared reflection prompts below from Direction A's side.  Two of them
 
 The two production case studies you read describe an "agent operating system": the written contract, charter, gates, and handoff state that make an AI agent system trustworthy, interruptible, and independent of any single model or vendor.  You author that operating system for **your** domain, and then run it as a loop.
 
+A few terms come up throughout this direction:
+
+- A **fresh context** means the agent starts with no memory of any earlier conversation.  Whatever it knows, it learns from the files you give it.
+- A **confirmation gate** is a rule that the agent must stop and ask a human before a particular action.
+- An **irreversible action** is one that cannot be cleanly undone afterward, such as sending a message or deleting a file with no backup.
+- A **skill** here is a reusable written instruction the agent is told to follow at a specific moment (in this assignment, at the start and stop of each iteration).
+
 ### Step 1: Choose a Domain
 
+#### Step B1.1: Pick a domain and name its irreversible action
+
+**Goal:** settle on the domain your documents will govern.
+
 Any domain with real work and at least one irreversible action qualifies.  It does **not** need to be a software project.  Good examples: managing a student organization's communications and files; maintaining a research-notes vault; running a small online shop's catalog; organizing a family photo/document archive; operating a course-project repository; managing a fantasy-sports or gaming community.  You may reuse your Project Thread system.
+
+> **You should have.** One domain, and at least one irreversible action in it written down by name.
 
 ### Step 2: Author the Document Set
 
@@ -297,13 +490,83 @@ Start from the [course templates]({{ site.baseurl }}/files/agent-templates/READM
 
 Delete every template section you cannot honestly enforce, and list what you deleted and why (a rule nobody enforces is worse than no rule).  Every gate must earn its place with a concrete failure scenario: the action, the harm, and why after-the-fact recovery is impossible or expensive.  At least one forbidden item should carry an argument for why no approval should ever make it safe.  Retain the batch-threshold and blanket-consent rules with a domain-specific example, or remove them with a defensible argument.
 
+The files are Markdown (`.md`), plain text with light formatting such as `#` for headings.  The `.ai/` folder is just a folder in your workspace where the handoff files live, so that every new iteration knows where to look.  We will write the six pieces one per step, in the order an agent would need them.
+
+#### Step B2.1: Copy the templates into your workspace
+
+**Goal:** have a starting copy of each document to adapt.
+
+Copy the template files from the course templates link above into your project.
+
+> **You should have.** A charter, agent contract, standing prompt, and `.ai/` handoff files in your workspace, still in template form.
+
+#### Step B2.2: Write the charter
+
+**Goal:** piece 1 above.
+
+Write the one-sentence mission first.  Then rank your priorities, and test the ranking: think of a real situation in your domain where two priorities pull in opposite directions, and write down which one wins and why.
+
+> **You should have.** A `CHARTER.md` with a one-sentence mission, a **ranked** priority list demonstrated by one concrete conflict it resolves, a definition of success, rules you will actually enforce, and at least one milestone with a gate.
+
+#### Step B2.3: Write the agent contract
+
+**Goal:** piece 2 above.
+
+Walk through your workspace folder by folder and decide, for each one, whether the agent may read it, write it, or not touch it at all.
+
+> **You should have.** An `AGENTS.md`-style contract naming the read-only, writable, and off-limits zones, the write protocols, and maintenance behavior.
+
+#### Step B2.4: Write the standing prompt and its gates
+
+**Goal:** piece 3 above.
+
+Start from the irreversible action you named in Step B1.1.  For each gate, write the concrete failure scenario next to it: the action, the harm, and why recovery afterwards is impossible or expensive.
+
+> **You should have.** A `SYSTEMPROMPT.md`-style prompt with operating habits, confirmation gates rewritten for your domain, a failure scenario for every gate, and an escalation rule.
+
+#### Step B2.5: Prepare the handoff files
+
+**Goal:** piece 4 above.
+
+> **You should have.** `CURRENT_TASK.md` with completion criteria and a reality-check table, and `SESSION.md` ready to receive entries that end with a next safe action.
+
+#### Step B2.6: Classify ten actions
+
+**Goal:** piece 5 above.
+
+List the actions an agent would really take in your domain, then sort each into a lane: **Autorun** (the agent may just do it), **Queue** (the agent prepares it and waits for approval), or **Forbidden** (the agent never does it).  The reversibility reasoning is what decides the lane.
+
+> **You should have.** At least ten actions, each with a lane and one line of reversibility reasoning, and at least one Forbidden item with an argument for why no approval should ever make it safe.
+
+**Predict:** which of your Forbidden items would a reasonable person most want to move to Queue?  What is your argument against that?
+
+#### Step B2.7: Write the protocol skill
+
+**Goal:** piece 6 above.
+
+Write it as an instruction the agent follows twice per iteration: once at start, once at stop.  Use the rule names exactly as they appear in your charter or standing prompt, so a trace can point to them.
+
+> **You should have.** A skill that lists the fields logged at each step, shows how a decision carries the name of its rule, specifies a handoff file covering all eight checklist rows, reads and logs the handoff state at start, and refuses to end the iteration at stop until the checklist is satisfied.
+
+#### Step B2.8: Prune what you cannot enforce
+
+**Goal:** make sure every remaining rule is one you could actually enforce.
+
+Read every section that came from a template and ask: if the agent broke this rule, would I find out, and could I do anything about it?  If not, delete it and note why.  Decide on the batch-threshold and blanket-consent rules as described above.
+
+> **You should have.** A list of every deleted template section with a one-line reason, and the batch-threshold and blanket-consent rules either kept with a domain-specific example or removed with an argument.
+
 ### Step 3: Run the Governed Loop
 
 A single handoff proves your documents survive one interruption.  What you actually want to know is whether they survive *repetition*: whether an agent that starts over from nothing, again and again, keeps making forward progress instead of relitigating what the last one already did.
 
 So you run your document set as a **governed loop**: repeated unattended iterations, each beginning with a fresh context, with your `.ai/` files and workspace as the only thing carried between them.  This is the pattern *The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent* calls a self-running loop, and the reason it works is the one the *How I AI* session insists on: the memory lives on disk, not in the conversation.
 
+In other words: each iteration is a new agent that has never met the last one.  The only way the second iteration knows what the first one did is by reading what the first one wrote.
+
 Any agent CLI or chat agent from this course works, and any harness works: a shell `while` loop that re-invokes your agent, or hand-restarts with the history cleared between them.  The requirement is a **fresh context per iteration**, not a particular tool.  If your domain has no digital surface an agent can touch, a rigorous simulated transcript is acceptable; mark it as simulated.
+
+An **agent CLI** is an agent you run from a terminal (OpenCode, from the *Coding Agents* session, is one).  A **harness** is whatever restarts it: a shell `while` loop is a few lines of script that run the agent again each time the last run ends, and a hand-restart is you starting a new session yourself with the old history cleared.  Either is enough.
 
 > **Do this.**
 > 1. **Write the run brief, and commit it before you start.**  Four things, in the testable-versus-vague discipline you practiced in *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log*:
@@ -318,7 +581,61 @@ Any agent CLI or chat agent from this course works, and any harness works: a she
 > 4. **Keep an iteration ledger**, one row per iteration: what it read, what it did, what it wrote to the handoff state, whether the acceptance check passed, the next safe action it recorded, and, for the iteration that followed it, what that one duplicated or had to ask a human.  The duplication column is the finding; a document set that leaks shows up there first.
 > 5. **Write the runaway analysis** (one paragraph).  Name the worst thing that could have landed in your workspace if your acceptance criteria had been too weak, and name the charter gate or Forbidden-lane item that would have caught it.  When you are asleep and the loop is not, the acceptance check and the gates are the only supervision the system has.
 
+The steps below take these five items one at a time.
+
+#### Step B3.1: Write and commit the run brief
+
+**Goal:** item 1 above.
+
+"Commit" here means fix it in place before iteration one, so it cannot quietly change.  If your project is a git repository (git is the version-control tool that records each saved snapshot of your files with a timestamp), committing the run brief there is one way to show when it was written.
+
+> **You should have.** A run brief with a goal, a binary acceptance checklist, a stop condition (iteration budget plus the "done" check), and a protocol check, saved before any iteration runs.
+
+**Predict:** which item on your acceptance checklist is the agent most likely to "pass" without really doing the work?
+
+#### Step B3.2: Set up the harness and seed the first iteration
+
+**Goal:** start iteration one from a fresh context (item 2 above).
+
+Choose your harness (a shell `while` loop or hand-restarts) and confirm that each start really has no earlier history.  Seed it with only your kickoff prompt and your document set.
+
+> **You should have.** Iteration one running, with its transcript opening on the protocol skill and a restatement of the mission, the active task, and the next safe action.
+
+> **If it fails.** If the agent starts working without invoking the skill or restating those three things, the kickoff prompt or the skill is not saying it clearly enough.  That is a finding: record it in your ledger and revise the document before the next iteration.
+
+#### Step B3.3: Interrupt an iteration mid-task
+
+**Goal:** item 3 above.
+
+Stop one iteration at an inconvenient moment, while it is partway through something, not at a point it chose.  Save `SESSION.md` and `CURRENT_TASK.md` exactly as they stand right after the stop; you will include them verbatim.
+
+> **You should have.** A copy of both handoff files as of the interrupted iteration, each ending with a next safe action and an evidence-cited reality check.
+
+#### Step B3.4: Resume from the written state alone
+
+**Goal:** finish at least two iterations total, with the next one picking up the interrupted work cold (item 2 above).
+
+Start the next iteration from a fresh context, with nothing but your kickoff prompt, your documents, and what is on disk.
+
 > **You should see.** Each iteration's transcript opens with the protocol skill reading the handoff state and restating the mission, the active task, and the next safe action, and closes with the skill updating `SESSION.md` and `CURRENT_TASK.md`.  The iteration after the interrupted one starts from those two files and does not redo work they mark complete.  If it asks you a question instead, that question is a leak: record it in the ledger and revise the document that should have answered it.
+
+Keep running until your stop condition from Step B3.1 is met.
+
+#### Step B3.5: Fill the iteration ledger
+
+**Goal:** item 4 above.
+
+Add one row per iteration as soon as it ends, while the transcript is fresh.  For every question an iteration had to ask you, also note the document revision that now answers it.
+
+> **You should have.** A ledger with a row for every iteration, including the duplication column.
+
+**Reflect:** looking at the duplication column, which belief about your project turned out to be only in your head?
+
+#### Step B3.6: Write the runaway analysis
+
+**Goal:** item 5 above.
+
+> **You should have.** One paragraph that names a specific bad outcome and the **specific** charter gate or Forbidden-lane item that would have caught it.
 
 Include the two handoff files verbatim as of the interrupted iteration, the run brief, the ledger, and the relevant transcript excerpts, including the protocol skill's start and stop invocations.
 
@@ -342,15 +659,39 @@ One page or less: where did the document set hold, where did it leak, which docu
 
 Whichever direction you choose, close your submission with this short worked-theory section: the by-hand budget math from the Tool Use session's token ledger and Model 1 of the Observability, Traceability, and Handoff Protocols session (the Memory and the Small Context Window Principle tutorial works the same arithmetic), applied to *your* designed system.  Show your arithmetic; I grade these within the **Verifiability and Evidence** rubric row, because a design whose costs you cannot compute is a design you cannot verify.
 
+A quick refresher on the terms.  A **token** is the unit a model counts text in, a word or a piece of a word.  A **tool schema** is the description of one tool (its name and parameters) that is sent to the model on every turn so it knows the tool exists.  The **context window** is the most tokens a model can take in at once; when a conversation grows past it, the conversation overflows.
+
 1.  **Schema overhead.**  Your design advertises some number of tools.  Using ~80 tokens per schema, compute the per-turn token overhead of your tool menu, and the overhead per turn that is *wasted* on tools the turn does not use in your system's most common workflow.  State one design change (e.g., a sub-agent holding some tools, per the Small Context Window principle) and recompute.
 2.  **Conversation growth.**  Assume your system re-sends full history each turn and averages some tokens per exchange (state your estimate and justify it from your prompt skeletons).  Compute total tokens *sent* across a 10-turn session (show why the total grows roughly quadratically rather than linearly) and identify the turn at which your chosen model's context window overflows.
 3.  **The mitigation, priced.**  For one mitigation from the memory tutorial or the Observability session (sliding window with a pinned summary, or summarize-and-restart), recompute question 2's total and state what information your system loses in exchange.
+
+Work the three questions in order; question 3 reuses your answer to question 2.
+
+#### Step T.1: Price your tool menu
+
+**Goal:** question 1 above.  Start by counting the tools your design advertises.
+
+> **You should have.** The per-turn overhead, the wasted overhead for your most common workflow, one design change, and the recomputed numbers, with the arithmetic shown.
+
+#### Step T.2: Price a ten-turn conversation
+
+**Goal:** question 2 above.  Start by stating your tokens-per-exchange estimate and where it comes from in your prompt skeletons.
+
+**Predict:** before you compute, at which turn do you expect your chosen model's context window to overflow?
+
+> **You should have.** Your per-exchange estimate with its justification, the 10-turn total with the arithmetic shown, an explanation of why it grows roughly quadratically, and the overflow turn.
+
+#### Step T.3: Price one mitigation
+
+**Goal:** question 3 above.  Start by choosing one of the two mitigations named there.
+
+> **You should have.** The recomputed total and a statement of what information your system loses.  Across all three answers, the arithmetic is shown and uses your own tool count and prompt sizes.
 
 ---
 
 ## Reflection Prompts
 
-Answer each of the following with a specific observation from this assignment:
+Answer each of the following with a specific observation from this assignment.  If you kept the notes suggested in the steps above (the risk you thought "could not happen," the duplication column of your ledger), start from those.
 
 1.  **Which part of the design changed the most as you worked through it, and why?**  Name the component or document that required the most revision, and the assumption you discovered was wrong.
 2.  **What surprised you most**: the pre-mortem failure you initially believed "could not happen" (Direction A), or the leak your loop exposed in documents you thought were complete (Direction B)?  What does that surprise reveal about your initial assumptions?

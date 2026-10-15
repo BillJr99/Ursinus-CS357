@@ -55,15 +55,15 @@ tags:
 
 # Lab: Tools and MCP
 
-In the *Tool Use and Function Calling* session you watched a model ask for a tool and your code run it.  In the *MCP* session you saw the same idea standardized: a **server** advertises its tools, and any MCP-aware **client** can discover them at runtime and call them without anyone writing glue code for that pairing.  This lab is one small, complete step with that idea.  You connect to an MCP server that someone else already wrote, you watch your client discover what it offers, and you make one call.  Along the way you sign in to the server, where it needs it, without ever typing a password or key into a chat window or a configuration file.
+In the *Tool Use and Function Calling* session you watched a model ask for a tool and your code run it.  In the *MCP* session you saw the same idea standardized.  The Model Context Protocol (MCP) lets a **server** advertise its tools, so that any MCP-aware **client** can discover them at runtime and call them without anyone writing glue code for that particular pairing.  In this lab, we'll take one small, complete step with that idea.  You connect to an MCP server that someone else already wrote, you watch your client discover what it offers, and you make one call.  If the server needs you to sign in, you do that without ever typing a password or key into a chat window or a configuration file.
 
-You leave with a working connection to a real service, a transcript that shows the protocol doing its job, and a clear answer to two questions that every agent you build from here on will raise: where does my credential live, and what am I trusting when I run someone else's tools?
+By the end, you'll have a working connection to a real service, a transcript that shows the protocol doing its job, and an answer to two questions that every agent you build from here on will raise: where does my credential live, and what am I trusting when I run someone else's tools?
 
 ---
 
 ## Choose Your Path
 
-The rubric, the evidence, and the writeup questions are the same on both routes.  What differs is whether you write the client or let an agent configure one for you.
+The rubric, the evidence, and the writeup questions are the same on both routes.  What differs is whether you write the client yourself or let an agent configure one for you.  Pick **one** route; you do not need to do both.  The agent on the No-code route is opencode, an AI coding assistant that runs in your terminal and can edit files in the folder you start it in.
 
 | Route | What you do | What you need | Pick this if |
 |-------|-------------|---------------|--------------|
@@ -76,14 +76,16 @@ The rubric, the evidence, and the writeup questions are the same on both routes.
 
 ## Before You Start
 
-- **Code route:** install the official Python SDK and confirm that it imports.  The examples below were tested with version 2.2 of the SDK.
+- **Code route:** install the official MCP Python SDK with `pip` (Python's package installer) and confirm that it imports.  The examples below were tested with version 2.2 of the SDK.
 
   ```bash
   pip install "mcp>=2"
   python3 -c "import mcp.client.streamable_http; print('mcp ok')"
   ```
 
-- **No-code route:** opencode installed and working (the [OpenCode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) covers this), and a fresh, empty project folder to run it in.  For the OneNote example, also Node.js, so that `npx --version` prints a version.
+  > **You should see.**  The line `mcp ok`.  If you see an error instead, the *If it fails* note under Step A.1 covers the common ones.
+
+- **No-code route:** opencode installed and working (the [OpenCode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) covers this), and a fresh, empty project folder to run it in.  For the OneNote example, also Node.js, so that `npx --version` prints a version.  (`npx` downloads a Node.js package and runs it in one step; `uvx`, from the uv tool, does the same for Python packages.  Several servers in the table below start this way.)
 
 > **Time budget.** About two hours: thirty minutes to pick a server and connect, thirty to get the transcript you want, and an hour for the writeup.
 
@@ -107,7 +109,7 @@ Every server below is one you can use **without creating an OAuth app, registeri
 | **Atlassian** | Jira and Confluence | Browser sign-in, handled by opencode | `https://mcp.atlassian.com/v1/sse` | No-code |
 | **OneNote** (community server) | Your OneNote notebooks, sections, and pages | Device code, in a terminal | `npx -y @softeria/ms-365-mcp-server --preset onenote` | No-code |
 
-The no-sign-in servers are the quickest path and are a fine choice on either route.  The browser sign-in servers are only worth picking if you already use that service.  The point is to reach your own data, not to create an account for a lab.
+The no-sign-in servers are the quickest path and are a fine choice on either route.  One server is enough for this lab.  The browser sign-in servers are only worth picking if you already use that service: the point is to reach your own data, not to create an account for a lab.
 
 > **Why no app registration?**  The browser sign-in servers support *dynamic client registration*.  When opencode first gets a 401 from one of them, it registers itself with the server, opens your browser to the service's own sign-in page, and stores the token it gets back.  The OneNote server ships with its own public client ID and uses the *device code* flow: it prints a short code, you enter that code at Microsoft's sign-in page in your browser, and the server stores the token.  In neither case do you create anything in a developer portal, and in neither case does a secret pass through the chat.  The [MCP, REST, and OAuth 2.0 tutorial]({{ site.baseurl }}/Tutorials/MCPOAuth) explains what is happening behind that sign-in page, if you are curious.
 
@@ -119,7 +121,11 @@ The no-sign-in servers are the quickest path and are a fine choice on either rou
 
 ## Part A: Code Route
 
+Suppose you want your program to search Microsoft's documentation.  Without MCP, you would read the service's API documentation, write a function for each operation, and describe each one to your model by hand.  With MCP, your program asks the server what it can do and gets back the names, descriptions, and argument formats on its own.  Let's see that happen in about 30 lines.
+
 ### Step A.1: Write the Client
+
+**Goal:** connect to a server that needs no sign-in, list its tools, and call one of them.
 
 An MCP session always follows the same three moves:
 
@@ -167,7 +173,9 @@ except Exception as e:
     traceback.print_exc()
 ```
 
-Notice what is **not** in this file.  There is no list of tools, no description of `microsoft_docs_search`, and no schema for its arguments.  The client learned all of that from the server at runtime.  That is the thing a hand-rolled `tools` list cannot do, and Part C asks you to say why it matters.
+Notice what is **not** in this file.  There is no list of tools, no description of `microsoft_docs_search`, and no schema for its arguments.  The client learned all of that from the server at runtime.  In other words, the only thing the client knew ahead of time was where the server lives.  That is the thing a hand-rolled `tools` list cannot do, and Part C asks you to say why it matters.
+
+**Predict:** the file names one tool, `microsoft_docs_search`.  Where will the names of any *other* tools come from when you run it?
 
 Run it:
 
@@ -194,7 +202,11 @@ Result (first 400 characters):
 
 ### Step A.2: Point It at Your Server
 
+**Goal:** run the same client against the server you picked in Step 1, and call one of its tools.  If you picked Microsoft Learn, Step A.1 already did this, and you can go straight to the *Paste into your submission* note at the end of this step.
+
 If you picked a different **remote** server from the table, change `SERVER_URL`, run the client once to see the tool list, and then change the `call_tool` line to use one of the names and argument shapes you just discovered.
+
+> **You should see.**  For a remote server, the same shape as in Step A.1: a count of discovered tools, one line per tool with its arguments, and then the opening of the result from the tool you chose.
 
 If you picked a **local** server, the server runs as a process on your machine and talks over its standard input and output (*stdio*) instead of HTTP.  Replace the import and the first `async with` line.  The rest of the file does not change, and that is the point of the protocol:
 
@@ -218,7 +230,7 @@ For the time server, a call such as `session.call_tool("get_current_time", {"tim
 > uvx mcp-server-time --help
 > ```
 
-> **You should see.**  Two tools, then the current time in New York.  Your timestamp will differ:
+> **You should see.**  For the time server, two tools, then the current time in New York.  Your timestamp will differ:
 
 ```text
 Discovered 2 tools:
@@ -240,15 +252,23 @@ Result:
 
 ### Step A.3: Show When the Tool Should Not Fire
 
-Your client calls the tool because you told it to.  An agent decides for itself.  Show both sides of that decision with the smallest possible experiment: write down two questions, one that the server's tools can answer and one that they cannot (for Microsoft Learn, "how do I create an Azure storage account?" against "what is 17 times 23?").  For each, say which tool, if any, an agent *should* call and with what arguments, and justify it from the tool descriptions your client printed.  That is the input the model would have to decide from.
+**Goal:** predict, from the tool descriptions alone, when an agent should call a tool and when it should not.
 
-> **Go further (ungraded).**  Hand the discovered tools to a local model and let it choose.  Convert each discovered tool into the function-calling format from the *Tool Use* session (`name`, `description`, and `parameters` set to `tool.input_schema`), send both questions to Ollama with `qwen2.5:3b` and those tools attached, and when the model asks for a tool, run it with `session.call_tool` and feed the result back.  Did the model's choices match your predictions?
+Your client calls the tool because you told it to.  An agent decides for itself.  Let's show both sides of that decision with the smallest possible experiment.  Write down two questions, one that the server's tools can answer and one that they cannot (for Microsoft Learn, "how do I create an Azure storage account?" against "what is 17 times 23?").  For each, say which tool, if any, an agent *should* call and with what arguments, and justify it from the tool descriptions your client printed.  Those descriptions are all the model would have to decide from.
+
+> **You should see.**  In your notes, two questions, each with either a tool name and its arguments or "no tool," and a sentence that points at the words in the description that decided it.  That is enough for this step; no code is required.
+
+> **Go further (ungraded).**  Hand the discovered tools to a local model and let it choose.  (Ollama is a program that runs language models on your own machine.)  Convert each discovered tool into the function-calling format from the *Tool Use* session (`name`, `description`, and `parameters` set to `tool.input_schema`), send both questions to Ollama with `qwen2.5:3b` and those tools attached, and when the model asks for a tool, run it with `session.call_tool` and feed the result back.  Did the model's choices match your predictions?
 
 ---
 
 ## Part B: No-code Route
 
+Suppose you ask an agent to set up a connection to your notes, and it replies, "Sure, just paste your password here."  You would be handing a secret to a chat log that you do not control.  On this route, we'll have opencode write the configuration, but you stay in charge of three things: what it writes, where you sign in, and where the credential ends up.
+
 ### Step B.1: Ask opencode to Configure the Server
+
+**Goal:** get opencode to propose an MCP entry in this project's `opencode.json` without asking you for any secret.
 
 Open a terminal in a fresh, empty project folder and start opencode there.  Give it a prompt that says which server, where the configuration goes, how narrow it should be, and what it must not ask you for.  Here is the OneNote version; adapt the server line for any other server in the table:
 
@@ -264,7 +284,11 @@ Show me the file before you save it.
 
 For a remote server with browser sign-in, the prompt is shorter, because opencode handles the sign-in itself: *"Add the Notion MCP server at https://mcp.notion.com/mcp to this project's opencode.json as a remote server. Do not ask me for any key or token; I will run `opencode mcp auth` myself."*
 
+> **You should see.**  opencode shows you the proposed contents of `opencode.json` and waits before saving.  If it asks you for a password, key, or token instead, say no and repeat the constraint.
+
 ### Step B.2: Read What It Wrote Before You Accept It
+
+**Goal:** know exactly what will run, and confirm that nothing secret is in the file, before you accept it.
 
 An MCP configuration entry is a command that will run on your machine, or an address your agent will send data to.  Read it the way you would read a script someone emailed you.  For the OneNote prompt, a good result looks like this:
 
@@ -288,9 +312,13 @@ Before you accept it, answer three questions in your notes:
 - Is there anything secret in the file?  There should not be.
 - Which flag or field limits what the server can do?
 
+> **You should see.**  An answer to each of the three questions in your notes, and a saved `opencode.json` with no secret in it.
+
 If opencode put a placeholder such as `"YOUR_TOKEN_HERE"` in the file, or asked you to paste one, say no and repeat the constraint.
 
 ### Step B.3: Sign In Outside the Chat
+
+**Goal:** sign in through the service's own page, so that the credential never passes through opencode's chat.
 
 Quit opencode, then sign in from a terminal.
 
@@ -312,7 +340,11 @@ Quit opencode, then sign in from a terminal.
 
 - **No-sign-in servers:** skip this step, and say in your writeup why no credential was needed.
 
+> **You should see.**  A success message in the terminal or the browser, and at no point a request to type a password or key into opencode.
+
 ### Step B.4: Discover, Then Use
+
+**Goal:** show discovery, one invocation, and one question where the tool should not fire, all in one saved session.
 
 Confirm that opencode can see the server, then start it again:
 
@@ -320,19 +352,29 @@ Confirm that opencode can see the server, then start it again:
 opencode mcp list
 ```
 
+> **You should see.**  Your server listed under the name from your `opencode.json`.  If it is missing or shows an error, see the first two rows of *Troubleshooting* below.
+
 In a new opencode session, ask:
 
 1. *"What tools does the onenote server give you?"*  This is discovery.
 2. A question that needs the server, such as *"List the sections in my notebook called Personal."*  This is invocation.
 3. A question that does not, such as *"What is 17 times 23?"*  The tool should not fire.
 
+**Predict:** before you ask the second question, which of the tools from the first answer do you expect opencode to call, and why?
+
 Export the session with `/export`, which opens the conversation as Markdown in your editor, and save it, so the tool calls appear as their own entries.  A screenshot of the final answer is not enough; the evidence is the record of the tool being called, or not called.
 
+> **You should see.**  In the exported Markdown, the tool call for question 2 as its own entry, and no tool call for question 3.
+
 ### Step B.5: Find the Credential, Then Clean Up
+
+**Goal:** show where the credential is stored without revealing it, then sign out.
 
 Find out where the credential went.  opencode stores browser sign-in tokens in `~/.local/share/opencode/mcp-auth.json`; the OneNote server keeps its own in an encrypted file under `~/.config/ms-365-mcp-server/` on Linux, `~/Library/Application Support/ms-365-mcp-server/` on macOS, or `%APPDATA%\ms-365-mcp-server\` on Windows, with the encryption key held in your operating system's credential store.  **Do not open the file or paste its contents anywhere.**  It is enough to show that it exists (`ls -l` on the file) and that `opencode.json` contains no secret.
 
 When you are done, sign out: `opencode mcp logout <name>` for browser sign-in servers, or `npx -y @softeria/ms-365-mcp-server --logout` for OneNote.  Then revoke the app's access in the service's own account settings.
+
+> **You should see.**  An `ls -l` line showing that the credential file exists, which goes in your submission, and, after you sign out and revoke, the app no longer listed in the service's account settings.  For a no-sign-in server, there is no file to find; say so in Part C.
 
 ---
 

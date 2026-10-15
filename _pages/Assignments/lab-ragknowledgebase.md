@@ -125,7 +125,13 @@ tags:
 
 ---
 
-In this lab, you build a question-answering system, individually or with a partner, a retrieval-augmented generation (RAG) pipeline, over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.  **Pair policy.**  You may do this lab in pairs: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.
+Suppose you ask a chatbot about the late policy in one of your syllabi.  It has never seen that syllabus, so it either guesses or invents something that sounds right.  Now suppose that, before it answers, we hand it the two paragraphs of the syllabus that talk about late work and tell it to answer only from those paragraphs, citing which one it used.  That second setup is **retrieval-augmented generation (RAG)**: we *retrieve* relevant passages from our own documents and *augment* the model's prompt with them before it *generates* an answer.
+
+In this lab, you build that question-answering system, individually or with a partner, over a corpus that matters to you: your own course notes, a student organization's documents, a hobby wiki you maintain, or a set of public campus documents.  The system answers with citations when the corpus supports an answer and says so honestly when it does not.  Once it runs, you check it in Part 5 with a golden set of ten questions, a worksheet of real measurements from your own pipeline, and a regression harness you can rerun after any change.
+
+The lab is long, so it is broken into small steps.  Each step has a goal, something to do, and a **You should see** check.  Finish each step and confirm its result before moving to the next one; most problems are much easier to find one step at a time than at the end.
+
+**Pair policy.**  You may do this lab in pairs: driver and navigator, a swap at least every 30 minutes, and a swap log you turn in.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.
 
 ---
 
@@ -140,16 +146,34 @@ Decide before you install anything.  Core Part 1 (corpus and datasheet), core Pa
 
 The rubric is the same on both paths: a pipeline earns each row whether it is hand-coded or built as a flow.
 
+A few names in the table, briefly, since we will use them throughout:
+
+- **Ollama** runs language models locally on your own machine and answers requests over HTTP at `http://localhost:11434`.  `llama3.2` is the chat model we ask questions of, and `nomic-embed-text` is an embedding model (more on embeddings in Part 2).
+- **Chroma** (`chromadb`) is a vector database: it stores chunks of text alongside their embeddings and returns the chunks closest to a query.
+- **`sentence-transformers`** is a Python library that computes embeddings locally, with no API key.
+- **`requests`** is the Python library we use to send HTTP requests to Ollama.
+- **Langflow** is a visual builder: you drag components onto a canvas and wire them together instead of writing Python.
+
+**This is enough to decide:** pick Code or No-code now.  You can read the rest of the page either way.  On the no-code path, skip Steps 0.2 and 0.3 below: you install Langflow in Direction 0 instead, and Direction 0's Step A confirms that Ollama is running.
+
 ---
 
 ## Before You Start
+
+### Step 0.1: Complete the Prerequisite Activities
+
+**Goal:** see the index, retrieve, generate pipeline once in a guided setting before building your own.
 
 Complete these activities before writing any code:
 
 - [RAG Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md): the index, retrieve, generate pipeline
 - [RAG and Fine-Tuning: Retrieval Quality and LoRA]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md): recall@k, faithfulness, and abstention
 
-Install the tools (the code path needs all three; the no-code path installs Langflow in Direction 0 instead):
+### Step 0.2: Install the Python Libraries (Code Path)
+
+**Goal:** install the three libraries the code path needs.
+
+`pip` is Python's package installer; `pip install name` downloads a library and makes it importable.  If you use a virtual environment (a venv, a private folder of packages for one project, so this lab's installs do not collide with other courses), activate it first so every command below installs into the same place.  Install the tools (the code path needs all three; the no-code path installs Langflow in Direction 0 instead):
 
 ```bash
 pip install chromadb                # Chroma vector database (pure Python, no server needed)
@@ -157,7 +181,13 @@ pip install sentence-transformers   # local embeddings, no API key
 pip install requests                # HTTP calls to Ollama
 ```
 
-Then run one health check.  Each `python -c` line imports a library and prints a word if the import worked; the last one asks the Ollama server for its model list.
+> **You should see.** Each `pip install` ends without an error (usually a line beginning `Successfully installed`, or `Requirement already satisfied` if the library was already there).
+
+### Step 0.3: Run the Health Check
+
+**Goal:** confirm that all three libraries import and that the Ollama server is answering, before you write any lab code.
+
+Then run one health check.  `python -c "..."` runs the quoted Python without creating a file.  Each `python -c` line imports a library and prints a word if the import worked; the last one asks the Ollama server for its model list.
 
 ```bash
 python -c "import chromadb; print('chromadb ok')"
@@ -165,13 +195,17 @@ python -c "from sentence_transformers import SentenceTransformer; print('sentenc
 python -c "import requests; r = requests.get('http://localhost:11434/api/tags'); print('ollama ok' if r.ok else 'ollama NOT running')"
 ```
 
+> **You should see.** Three lines, one per check:
+
 ```text
 chromadb ok
 sentence_transformers ok
 ollama ok
 ```
 
-If you see `ollama NOT running`, start the server with `ollama serve` in a separate terminal.
+> **If it fails.**
+> - If you see `ollama NOT running` (or a `ConnectionError` traceback on the last line, which means nothing answered at that address), start the server with `ollama serve` in a separate terminal.
+> - An `ImportError` or `ModuleNotFoundError` on one of the first two lines usually means that library was installed into a different Python than the one running the check; rerun its `pip install` from the same terminal (and the same activated venv, if you use one).
 
 > **Time budget.**  This lab runs across a multi-week window (see the course schedule).  Get the core pipeline working early, and front-load if a break falls inside your window, so the direction, the audit, and Part 5 are not compressed into the final days.
 > - Core Parts 1-4 (corpus and datasheet; indexing; grounded generation; citation audit): 4-5 hours
@@ -184,9 +218,13 @@ If you see `ollama NOT running`, start the server with `ollama serve` in a separ
 
 ## Part 1: Curate and Document Your Corpus (datasheet, Writeup row)
 
+A RAG system can only be as good as the documents it retrieves from.  If the answer to a question is not in your corpus, the best the system can do is say so; if the corpus covers one side of a topic and not the other, every answer inherits that gap.  So before we write any pipeline code, we choose the documents carefully and write down what they do and do not contain.
+
 Assemble at least 15 documents or pages (markdown, text, or extracted PDF text) and write a half-page datasheet about them.  **Do not use any document containing another person's private information.**  If your corpus involves anything sensitive, the local-only nature of this pipeline is your friend, and your writeup must say so explicitly.
 
 ### Step 1.1: Collect Your Documents
+
+**Goal:** a `corpus/` folder of at least 15 plain-text or markdown files on a topic where you can check the answers yourself.
 
 Good corpus ideas: your notes from another class (15 or more lecture note files), a student club's public meeting minutes, Wikipedia articles on a hobby you know well (so you can verify answers), or Ursinus College's public web pages saved as text.
 
@@ -206,11 +244,15 @@ for pdf in pathlib.Path('corpus_pdfs').glob('*.pdf'):
 "
 ```
 
+> **You should see.** One `Extracted ...` line per PDF with its character count, and a matching `.txt` file in `corpus/` for each one.  Open one of the new files and skim it: readable sentences mean the extraction worked.
+
 > **If it fails.**
 > - Garbled text from a scanned PDF: `pymupdf` only extracts embedded text.  Use `pip install pytesseract` with Tesseract OCR, or choose different sources.
 > - Encoding errors when reading: always open files with `encoding="utf-8", errors="replace"`.
 
 ### Step 1.2: Verify Your Corpus Size
+
+**Goal:** confirm that you have at least 15 files before building anything on top of them.
 
 > **Do this.** Run this count from your repository root.  It lists every `.txt` and `.md` file in `corpus/` and adds up their sizes.
 
@@ -222,12 +264,18 @@ python -c "import pathlib; fs = [*pathlib.Path('corpus').glob('*.txt'), *pathlib
 
 ### Step 1.3: Write Your Corpus Datasheet
 
+**Goal:** a half-page description of your corpus that a stranger could use to predict where your system will be helpful and where it will fall short.
+
+A datasheet is to a dataset what a nutrition label is to food: it says what went in, where it came from, and what is missing.
+
 > **Do this.** In your readme, answer these in prose (about half a page):
 > 1. **Sources**: where each document came from, with URL or file path.
 > 2. **Time range**: when the documents were written or last updated.
 > 3. **Who and what is represented**: the topics, people, or events that appear.
 > 4. **Who and what is absent**: related topics not covered, and who would find this corpus unhelpful.
 > 5. **Known limitations**: documents that are incomplete, low-quality, or possibly outdated.
+
+> **You should see.** A readme section that answers all five items in prose.  About half a page is enough; the Writeup row checks that sources, time range, representation gaps, and known limitations are all covered, not that the section is long.
 
 > **Checkpoint.** Before Part 2, make sure you can answer:
 > 1. How many documents are in your corpus, and what is their total character count?
@@ -238,11 +286,17 @@ python -c "import pathlib; fs = [*pathlib.Path('corpus').glob('*.txt'), *pathlib
 
 ## Part 2: Index with Two Chunking Strategies (Chunking Strategy row, 12%)
 
+Imagine a course policy that says, in one paragraph, that a three-day extension is available, and in the next paragraph, that it requires prior permission.  If we cut the document into pieces so that those two sentences land in different pieces, a search can return the first piece without the second, and the model will confidently leave out the condition.  How we cut the documents matters.
+
 A chunk is the unit of text you embed and retrieve, and its size decides whether an answer arrives whole or in pieces.  You implement two chunking strategies (fixed-size with overlap, and paragraph-structural), keep the parameters in a JSON file rather than in code, build a question set of at least ten questions with hand-located answers, and report recall@k (how often the chunk holding the answer appears in the top $$k$$ results, defined below) for $$k \in \{1, 3, 5\}$$ under both strategies.
+
+Put more simply, by the end of Part 2 you have: a `config.json`, two ways of cutting your documents into chunks, a searchable index built each way, ten questions whose answers you found yourself, and a table of six numbers that tells you which way of cutting worked better on your corpus.
 
 > **No-code path.** Build this part as Direction 0, Steps B and C: two Langflow flows that differ only in the Text Splitter settings, measured on the same ten questions.  The requirements in this part still apply.
 
 ### Step 2.1: Create Your Configuration File
+
+**Goal:** one file that holds every setting you might want to change, so that changing an experiment never means editing code.
 
 > **Do this.** Create `config.json` in your repository root.  Model name, chunk size, overlap, top-k, and the abstention phrase live here, never in the code.
 
@@ -259,7 +313,13 @@ A chunk is the unit of text you embed and retrieve, and its size decides whether
 }
 ```
 
+> **You should see.** `python -c "import json; print(json.load(open('config.json')))"` prints the settings back as a dictionary.  A `JSONDecodeError` points at a missing comma or quote near the line it names.
+
 ### Step 2.2: Implement the Two Chunkers
+
+**Goal:** two functions that cut a document into chunks in two different ways.
+
+`chunk_fixed` slides a window of `chunk_size` characters across the text, stepping forward by `chunk_size - overlap` each time so that neighboring chunks share a little text at their edges.  `chunk_by_paragraph` splits on blank lines instead, merging short paragraphs together until they reach `min_size`.
 
 > **Do this.** Create `rag.py` and add both functions.  Each returns a list of `(chunk_text, position)` tuples.
 
@@ -287,9 +347,15 @@ def chunk_by_paragraph(text, min_size=100, max_size=1000):
     return chunks
 ```
 
+> **Predict:** with the defaults (`chunk_size=500`, `overlap=50`), how many chunks will `chunk_fixed` return for a 1,200-character document, and which characters will appear in two chunks?  Call it on a test string in a Python shell to check your prediction.
+
+> **You should see.** `python3 -c "import rag"` returns with no output, which means the file has no syntax errors so far.
+
 ### Step 2.3: Build the Chroma Index
 
-An embedding is a vector of numbers that places a piece of text so that similar meanings land near each other.  `build_index` chunks every document, embeds each chunk with a local model, and stores the vectors in a Chroma collection named for the strategy.
+**Goal:** every chunk of your corpus embedded and stored in a Chroma collection, once per strategy.
+
+An embedding is a vector of numbers that places a piece of text so that similar meanings land near each other.  `build_index` chunks every document, embeds each chunk with a local model, and stores the vectors in a Chroma collection named for the strategy.  A collection is Chroma's name for one searchable set of chunks, a little like a table in a database; we keep one per strategy so the two never mix.
 
 > **Do this.** Add this to `rag.py`.  The exception handlers around network, embedding, and database calls are a rubric requirement: each prints a located message such as `[lab2:build_index]` and a traceback.
 
@@ -334,13 +400,15 @@ def build_index(config, strategy="fixed"):
         raise
 ```
 
-> **You should see.** An embedding progress bar, then a total such as `Indexed 312 chunks using strategy='fixed'`.
+> **You should see.** An embedding progress bar, then a total such as `Indexed 312 chunks using strategy='fixed'`.  (`build_index` is not called yet by anything in `rag.py`; you can call it from a Python shell with `build_index(json.load(open("config.json")))` after `from rag import *`, or wait for Step 2.5, which calls it for both strategies.)
 
 > **If it fails.**
 > - `ValueError: Embedding function is required`: you pass embeddings yourself in `collection.add`, so do not also pass `embedding_function` when creating the collection.
 > - The `all-MiniLM-L6-v2` download (about 80 MB) is slow: pre-download on a fast connection with `python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"`.  It is cached afterward.
 
 ### Step 2.4: Write Ten Questions with Hand-Located Answers
+
+**Goal:** a ground-truth question set, written before the retriever has a chance to influence you.
 
 Before running any retrieval, find each answer yourself in the corpus and record the file and a short snippet that appears in the answering chunk.  This is your ground truth, and the retriever's output must not anchor it.
 
@@ -357,9 +425,15 @@ QUESTIONS = [
 ]
 ```
 
+> **You should see.** `python3 -c "from question_set import QUESTIONS; print(len(QUESTIONS))"` prints at least `10`.  For each answerable question, the `grep` check in Step 2.5's **If it fails** finds its snippet in the file you named.
+
 ### Step 2.5: Compute recall@k for Both Strategies
 
+**Goal:** six numbers, recall@1, recall@3, and recall@5 under each strategy, that let you choose a strategy from evidence.
+
 Recall@k is the fraction of answerable questions whose ground-truth snippet appears somewhere in the top `k` retrieved chunks.  A higher number means the retriever is putting the right chunk in front of the model more often.
+
+> **Predict:** before you run it, will recall@5 ever be lower than recall@1 for the same strategy?  Which of your two strategies do you expect to win, and why?
 
 > **Do this.** Add `recall_at_k` to `rag.py` and run the loop at the bottom with `python3 rag.py`.
 
@@ -393,7 +467,7 @@ if __name__ == "__main__":
 
 > **Paste into your submission.** Put these six numbers in a table in your readme and defend the strategy you ship with a specific numeric comparison ("fixed reaches recall@3 of 0.80 versus 0.70 for paragraph on our question set").  Then set `"strategy"` in `config.json` to the winner.
 
-> **If it fails.** `recall@1 = 0.0` everywhere under fixed chunking usually means `chunk_size` is too small and answers are split across chunks; try 800 or 1000.  Also confirm each `answer_text_snippet` really appears in its file: `grep -n "your snippet" corpus/yourfile.txt`.
+> **If it fails.** `recall@1 = 0.0` everywhere under fixed chunking usually means `chunk_size` is too small and answers are split across chunks; try 800 or 1000.  Also confirm each `answer_text_snippet` really appears in its file: `grep -n "your snippet" corpus/yourfile.txt` (`grep` prints every line of a file that contains the text, and `-n` adds line numbers; no output means no match).  Note that the snippet check is case-insensitive in `recall_at_k` but case-sensitive in `grep` unless you add `-i`.
 
 > **Checkpoint.** Before Part 3, make sure you can answer:
 > 1. What is a vector embedding, and why is it more useful for semantic search than exact keyword matching?
@@ -404,11 +478,17 @@ if __name__ == "__main__":
 
 ## Part 3: Generate Grounded Answers (Pipeline Implementation row, 15%)
 
+You now have an index that can find the right chunk most of the time.  But finding the chunk is only half the job: if we hand the model the chunk and simply ask the question, nothing stops it from mixing in what it remembers from training, or from answering anyway when the chunk is irrelevant.  In this part we write the instructions that hold the model to the retrieved text.
+
 The query path embeds the question, retrieves the top-k chunks, and assembles a prompt that tells the model to answer **only** from that context, to cite bracketed source numbers, and to reply with the designated abstention phrase when the context is insufficient.  You demonstrate five answered questions with correct citations, two abstentions, and one before/after comparison where the bare model hallucinates and your system answers correctly or abstains.  The Code Quality row (5%) is earned here and in Part 2: docstrings on every non-trivial function, located exception handlers, and no hardcoded parameters.
 
 > **No-code path.** Build this part as Direction 0, Step D: the Prompt node carries the same rules, and the playground transcripts are your demonstration.
 
 ### Step 3.1: Implement the Query-and-Generate Function
+
+**Goal:** one function that takes a question and returns a grounded, cited answer plus the chunks it was given.
+
+`query_rag` sends its request to Ollama's `/api/chat` endpoint: a JSON payload naming the model, a list of messages (a `system` message with our rules and the retrieved context, then the `user` message with the question), and `options` that pin the temperature and seed from `config.json`.
 
 > **Do this.** Add `query_rag` to `rag.py`.  The numbered `[i]` labels in the context are what the model cites.
 
@@ -459,7 +539,13 @@ CONTEXT:
     return answer, list(zip(chunks, metadatas))
 ```
 
+> **You should see.** `python3 -c "import rag"` still returns with no output.  The function's behavior is tested in the next step.
+
+> **Predict:** Rule 3 asks for the abstention phrase "exactly."  For one of your unanswerable questions, do you expect the model to reply with exactly that phrase, a paraphrase of it, or an answer from its training data?  Write your guess down before Step 3.2.
+
 ### Step 3.2: Demonstrate All Three Behaviors
+
+**Goal:** evidence, in one run, of the three behaviors the Pipeline Implementation row asks for: cited answers, abstentions, and the bare-model contrast.
 
 > **Do this.** Create `demo.py` with the three runs below (five cited answers, two abstentions, and the bare-model contrast) and run it with `python3 demo.py`.  Build the index with the strategy you chose in Part 2, and include the bare-model comparison verbatim in your readme.
 
@@ -498,7 +584,7 @@ print(f"\nBare model answer:\n{query_bare_model(example_q, config)}")
 print(f"\nRAG answer:\n{query_rag(example_q, collection, embed_model, config)[0]}")
 ```
 
-> **You should see.** Five answered blocks, each with at least one bracketed citation; two abstentions ending `Abstained correctly: True`; and a bare answer that is confident and wrong (or invented) next to a RAG answer that is cited or abstains.  If the bare model happens to be right, pick another question; the contrast is the deliverable.
+> **You should see.** Five answered blocks, each with at least one bracketed citation; two abstentions ending `Abstained correctly: True`; and a bare answer that is confident and wrong (or invented) next to a RAG answer that is cited or abstains.  If the bare model happens to be right, pick another question; the contrast is the deliverable.  An answered block and an abstention block look something like this:
 
 ```text
 Q: What is the main topic covered in lecture 3?
@@ -524,9 +610,15 @@ Abstained correctly: True
 
 ## Part 4: Audit Your Citations by Hand (Evaluation and Citation Audit row, 13%)
 
+A citation looks reassuring: the answer ends with `[1]`, so it must have come from passage 1.  But the model writes the bracket the same way it writes every other token, and nothing in the pipeline checks that passage 1 actually says what the answer claims.  The only way to know is to open the chunk and read it, which is what this part asks you to do.
+
 For at least ten answered questions, read the chunk each citation points to and decide whether it supports the claim.  Report a **faithfulness rate** (the fraction of audited citations whose chunk supports the claim) and show every failure verbatim, classified with the hallucination taxonomy from class.  This part is required on every path; on Direction 0, use the playground's node-inspection view to read the cited chunk.
 
 ### Step 4.1: Build the Audit Table and Classify Failures
+
+**Goal:** one row per audited citation, with your verdict and, for each failure, its category.
+
+> **Predict:** before you open a single chunk, write down how many of your ten citations you expect to be faithful.  The Part 4 checkpoint asks you to compare.
 
 > **Do this.** In your readme, record one row per audited citation, and label each unfaithful citation with one of the four categories from class:
 > - **Fabrication**: the cited chunk exists but does not contain the claimed fact; the model invented it.
@@ -539,7 +631,11 @@ For at least ten answered questions, read the chunk each citation points to and 
 | Q01 | "Gradient descent is ..." [1] | "lecture03: Gradient descent is a method..." | Yes | - |
 | Q02 | ... | ... | No | Fabrication |
 
+> **You should see.** A table in your readme with at least ten rows, every **No** row labeled with one of the four categories, and the answer excerpt copied verbatim rather than paraphrased.
+
 ### Step 4.2: Compute the Faithfulness Rate
+
+**Goal:** turn your table into a single faithfulness rate and a list of failures.
 
 > **Do this.** Create `audit.py`, fill it from your table, and run `python3 audit.py`.
 
@@ -561,7 +657,7 @@ for f in [r for r in audit_results if not r["faithful"]]:
 
 > **If it fails.**
 > - Every citation is faithful and the audit feels trivial: add at least two questions that need information from two chunks; those produce conflation and extrapolation errors.
-> - You cannot find a cited chunk: `collection.get(ids=["chunk_id"])` fetches one by ID; the IDs are in the `metadatas` list `query_rag` returns.
+> - You cannot find a cited chunk: `collection.get(ids=["chunk_id"])` fetches one by ID; each ID is the file stem, the strategy, and the chunk number joined by underscores (for example `policies_fixed_3`), as `build_index` builds it, and `build_index` returns the IDs alongside each chunk.
 
 > **Checkpoint.** Before Part 5, make sure you can answer:
 > 1. What was your faithfulness rate, and is it higher or lower than you expected?
@@ -571,6 +667,8 @@ for f in [r for r in audit_results if not r["faithful"]]:
 ---
 
 ## Part 5: Run the RAG Quality Checkup (three Quality Checkup rows, 50%)
+
+Suppose that next month you change your chunk size, or swap in a different model, and your pipeline feels better.  Is it?  Without a fixed set of questions, a fixed way of scoring them, and a record of the last run, "feels better" is all you can say.  Part 5 builds that record now, while you can still use what it tells you.
 
 Part 5 is a structured checkup on the pipeline from Parts 2 through 4.  You do three things:
 
@@ -593,13 +691,18 @@ This builds on the *Hallucinations and Evaluating Agent Outputs* session (where 
 > - Any benchmark questions you sketched in the *Hallucinations and Evaluating Agent Outputs* session (Part IIb and its Exercise 1).  Step 5a turns them into a finished ten-item set; if you have none, start there.
 > - Five questions you care about the answers to, drawn from your own corpus.
 
-Sanity check before you start: `python3 ask.py "a question your corpus should be able to answer"` returns an answer, however bad.  On Direction 0, the equivalent is one question answered in the Langflow playground.
+> **You should see.** Sanity check before you start: `python3 demo.py` from Part 3 runs and prints answers, however bad.  On Direction 0, the equivalent is one question answered in the Langflow playground.
 
 > **Time budget.** Step 5a is about one hour, most of it judgment rather than typing, and it is meant to be done before Steps 5b and 5c: it needs no running pipeline, and doing it early is the single best way to make those steps go quickly.  Steps 5b and 5c are one sitting with your pipeline plus an hour or two of finishing; 5c goes quickly because your golden set already exists.  If 5a runs past an hour you are polishing: ten adequate items beat six perfect ones.
 
 ### Choose Your Part 5 Route
 
 Same rubric, same credit.  Step 5a is identical on every route (designing ten good items is the assignment, and the file format is a detail), and so is the judgment in the rest of Part 5: which configuration wins, which citations are real, what the failure means.  The routes differ only in how you collect and rerun the numbers.  Students on Direction 0 usually take the no-code or low-code route; students who coded Parts 2 and 3 usually take the code route.  Any combination is allowed.
+
+Two tools in the table may be new:
+
+- **Open WebUI** is a browser chat interface for local models served by Ollama; its knowledge-base view lets you attach a set of documents and ask questions against them.
+- **promptfoo** is a command-line tool for testing prompts: you list test cases and their expected results in a YAML file, and it runs every case against a model (including Ollama) and reports which passed.
 
 | Route | Golden set and harness | How you measure | Pick this if |
 |-------|------------------------|-----------------|--------------|
@@ -610,6 +713,8 @@ Same rubric, same credit.  Step 5a is identical on every route (designing ten go
 > **Watch out.** The no-code route is not the shortcut.  Measuring recall@k by hand means you look at every retrieved chunk, which is exactly how people discover that their retriever returned the right document and the wrong *part* of it; a script that prints `recall@5 = 0.6` hides that.  Running ten items by hand likewise catches a *metric failure*, where your rule mis-graded a correct answer.  Students on the code route often miss those because the harness printed FAIL and they believed it.
 
 ### Step 5a: Design Your Golden Set
+
+**Goal:** ten benchmark items, each with a prediction you commit to before anything runs.  No running pipeline is needed for this step.
 
 Each item has four fields: `question`; `expected` (the answer text your scoring rule matches); `rule` (exact, substring, or normalized match, your choice per item, stated); and `rationale` (one sentence predicting whether the model will pass and *why*, reasoned from training data: how recent, how local, how specific, how citation-shaped the fact is).  These ten items are about the **model**, not yet about your corpus.  Step 5c extends the set with corpus-specific questions, and the gap between how the bare model does on the fragile five and how the same model does with your retrieved chunks in front of it is the entire argument for having built a RAG pipeline.
 
@@ -636,7 +741,11 @@ Two worked items, one of each kind.  Each rationale names a reason from the trai
 
 ### Step 5b: Complete the Checkup Worksheet
 
+**Goal:** three real measurements of your own pipeline, recorded in `checkup.md`.  Each measurement below is its own small step; finish and record one before starting the next.
+
 Complete `checkup.md` against your in-progress pipeline, with your Part 5 route named at the top.  Three measurements, in this order.
+
+#### Step 5b.1: Measure Retrieval Quality
 
 **Measurement 1: retrieval quality.** For five queries representative of your corpus, measure recall@k under your current chunking configuration and one alternative (a different chunk size or overlap), name the winner, and carry the winning configuration back into your Part 2 config.  Here recall is measured against *your* reading: for each query you decide which chunks contain the answer, ask the retriever for its top `k`, and count how many relevant ones came back.  Part 2's `recall_at_k` approximates that judgment with a snippet match; this measurement replaces the approximation with your own reading, on five queries, at one `k`.
 
@@ -653,6 +762,10 @@ Complete `checkup.md` against your in-progress pipeline, with your Part 5 route 
 
 In the worked row, Config A retrieved `c14` and stopped; the policy spanned two chunks, and the 512-token chunking put the second half of the sentence in a chunk that scored just below the cut.  That is a *chunking* failure that looks like a *retrieval* failure, and it is the single most common thing this checkup finds.
 
+> **You should see.** Five rows in your own version of this table, the same `k` in both configuration columns, and a named winner.
+
+#### Step 5b.2: Audit Five Citations
+
 **Measurement 2: citation audit.** For five answered queries, one row each: the answer's central claim, the chunk it cites, and your verdict.  Part 4's ten-row audit with the class taxonomy is the full version; these five rows are the same muscle, built early.
 
 > **Do this.**
@@ -663,6 +776,10 @@ In the worked row, Config A retrieved `c14` and stopped; the policy spanned two 
 
 > **Watch out.** A "partial" is the interesting finding.  The chunk says the extension is available "with prior permission"; the answer says students "may take a three-day extension."  Everything in the answer traces to the chunk, and a condition has quietly dropped.  No retrieval metric catches that.  You do.
 
+> **You should see.** Five audit rows, each with a central claim in your own words, the cited chunk, and a verdict of supported, unsupported, or partial.
+
+#### Step 5b.3: Record One Failure
+
 **Measurement 3: one failure.** Capture one concrete misbehavior you observed (a wrong retrieval, an unsupported citation, a failed abstention) with the query, the output, a one-paragraph hypothesis for the mechanism, and your planned fix.  "The model hallucinated" is a complaint; a hypothesis names the stage that failed and says why:
 
 > *"The retriever returned c31 rather than c14 for this query.  Both chunks mention 'extension,' but c31 is a syllabus paragraph about deadline extensions for the project and c14 is the late-work policy.  My embedding cannot distinguish the two senses because the chunks are short enough that neither carries the surrounding context that disambiguates them.  **Fix:** increase overlap so each chunk carries its section heading, and re-measure."*
@@ -671,13 +788,15 @@ In the worked row, Config A retrieved `c14` and stopped; the policy spanned two 
 
 ### Step 5c: Build the Regression Harness
 
+**Goal:** a pinned golden set and protocol that you run twice, getting the same results both times, with every prediction miss explained.
+
 Freeze your evaluation so it can be rerun forever.  The point is not the code; it is that **six weeks from now you can prove a change made things better rather than believing it did.**
 
 > **Do this.**
 > 1. **Pin a golden set.** Take your 5a items and **extend** them with at least five corpus-specific questions from your own corpus.  Keep the 5a items; item 6 of this list grades your predictions against what happened.  Include at least one question that **should trigger abstention**; a harness with no abstention case cannot tell a confident wrong answer from a right one.
 > 2. **Pin the protocol.** Temperature 0.0, a fixed seed, the model name, the chunking configuration, and `k`.  Write all five at the top of the harness, not in your memory of what you did.
 > 3. **Build it in your chosen medium**: a spreadsheet run sheet with a dated column per run, a promptfoo YAML case list, or a Python script grown from the class harness.
-> 4. **Run it twice**, changing nothing between runs.
+> 4. **Run it twice**, changing nothing between runs.  **Predict:** with temperature 0.0 and a fixed seed, do you expect every item to come out the same both times?  If not, which part of your pipeline could still vary?
 > 5. **Compare the two runs and show they agree.** Open `run1.txt` beside `run2.txt` on the code route; two columns side by side on the no-code route.  Paste the comparison, not a claim about it.
 > 6. **Classify your misses.** A miss is any 5a item whose outcome differs from its predicted `rationale`, in *either* direction; a fragile item that passed is as interesting as a reliable one that failed.  In one sentence each, say which it was:
 >    - **Knowledge failure**: the model does not have the fact.
@@ -718,6 +837,10 @@ Item 6 (classifying your misses) is why you wrote the predictions down first: a 
 This in-class walkthrough runs three chunking strategies over one short document and five test questions, with a word-frequency cosine similarity (a score between 0 and 1 measuring how much vocabulary two texts share) standing in for embeddings, so the comparison is purely about chunking.  No libraries are needed; for real RAG you would use a local embedding model such as `nomic-embed-text` via Ollama.
 
 ### Step W.1: Create the Script and Run It
+
+**Goal:** see, on a document small enough to read in full, how the same five questions fare under three ways of chunking.
+
+> **Predict:** Q5 asks about something that spans a paragraph boundary.  Which strategy do you expect to handle it worst?
 
 > **Do this.** Create `chunking_compare.py`, paste in the listing, and run `python3 chunking_compare.py`.  The document's facts span paragraph boundaries on purpose, and each question stresses a different boundary.
 
@@ -791,6 +914,8 @@ for name, chunker in STRATEGIES.items():
 
 ### Step W.2: Fill In the Results Table
 
+**Goal:** turn the printed chunks into a recall@2 score for each strategy, judged by your own reading.
+
 > **Do this.** Mark each cell **Y** if a returned chunk actually contains the answer, **N** if not, and total the row.
 
 | Chunking Strategy | Num Chunks | Q1 | Q2 | Q3 | Q4 | Q5 | Recall@2 |
@@ -845,6 +970,10 @@ You build the same pipeline the core lab specifies (your corpus chunked and embe
 
 ### Step A: Install and Launch Langflow
 
+**Goal:** the Langflow canvas open in your browser, with both Ollama models available to it.
+
+Langflow runs as a local web server: `langflow run` starts it, and you work in it through your browser.  `uv` is an alternative to `pip` that installs the same packages faster; either works.
+
 > **Do this.**
 > 1. Install and start Langflow.  The first launch is slow; wait for the "Langflow is running" banner, then browse to `http://localhost:7860`.
 > 2. Pull the embedding model your flow will use.
@@ -865,6 +994,10 @@ ollama pull nomic-embed-text
 
 ### Step B: Build the RAG Flow on the Canvas
 
+**Goal:** one working flow that indexes your corpus and answers an in-corpus question in the playground.
+
+The flow has two paths, and they mirror the code path's `build_index` and `query_rag`: an **ingest path** that chunks, embeds, and stores your documents once, and a **query path** that runs for every question.
+
 > **Do this.** Create a **New Flow, Blank Canvas** and wire the pipeline over the corpus you curated in Part 1 (upload your actual corpus files, not a toy document).
 > 1. **Ingest path:** **File** loader (your corpus documents) to **Text Splitter** (RecursiveCharacterTextSplitter; set the chunk size and overlap you will defend in Step C) to **Ollama Embeddings** (model `nomic-embed-text`, Base URL `http://localhost:11434`) to **Chroma** (ingest mode; name the collection and note the persist directory).
 > 2. **Query path:** **Chat Input** to **Retriever** over the same Chroma collection (with **Ollama Embeddings** wired in for query embedding; set top-k to match your config) to **Prompt** node with your grounding-and-citation instructions and a `{context}` variable, to **Ollama** chat model (`llama3.2`, temperature 0.1, Base URL `http://localhost:11434`) to **Chat Output**.
@@ -874,6 +1007,8 @@ ollama pull nomic-embed-text
 > **You should see.** An in-corpus question comes back answered with context in the playground before you move on.  Component names vary slightly across Langflow versions; the dataflow is what matters, and Part IV of the visual agents activity walks through the same wiring.
 
 ### Step C: Compare Two Flow Configurations by recall@k
+
+**Goal:** six recall fractions, three per flow, and a numeric defense of the configuration you ship.
 
 This is the core lab's empirical chunking requirement, on canvas.  Recall@k here is the count, reported as a fraction, of queries whose relevant document appears among the top k retrieved chunks.
 
@@ -891,6 +1026,8 @@ This is the core lab's empirical chunking requirement, on canvas.  Recall@k here
 > **You should see.** Six fractions and a one-sentence defense that names numbers.
 
 ### Step D: Force Grounding and Abstention
+
+**Goal:** five saved transcripts showing cited answers to in-corpus questions and clean abstentions on out-of-corpus ones.
 
 > **Do this.**
 > 1. Write the Prompt node so the model **must** cite the retrieved chunks and **must** abstain otherwise.  Start from the template below and tighten it for your corpus.
@@ -912,9 +1049,13 @@ Context:
 
 ### Step E: Audit Citations and Write Up
 
+**Goal:** the core Part 4 audit done on your flow's answers, plus the writeup.
+
 > **Do this.**
 > 1. Complete core Part 4 unchanged: audit every citation in a sample of at least ten answers from your shipped flow by hand, report a faithfulness rate, and classify failures with the hallucination taxonomy.  The playground's node-inspection view shows exactly which chunk text the model was given; check each bracketed citation against its source chunk there.
 > 2. Write the readme, datasheet, learning log, and (if you paired) pair log to the core lab's requirements, and add one paragraph on what the canvas made easier and what it hid from you compared with the code your classmates wrote.
+
+> **You should see.** In your readme: the Part 4 audit table and faithfulness rate built from your flow's answers, and the canvas-versus-code paragraph.
 
 ### Direction 0 Deliverables
 
@@ -936,7 +1077,7 @@ Fold these into the standard submission ZIP:
 
 ## Direction 1: Hands-On Fine-Tuning with LoRA and QLoRA
 
-Your RAG system kept knowledge *outside* the model and retrieved it at query time.  Here you take the opposite approach: you adapt a local model by **baking** domain knowledge into a small set of trainable weights using **LoRA** (Low-Rank Adaptation, which adds a tiny number of trainable parameters to a frozen base model so fine-tuning fits on consumer hardware).  You train on a real domain dataset, instrument the run with loss tracking, evaluate before and after, document the result with a model card, export the model to GGUF so it runs in Ollama, and then decide whether fine-tuning earned its keep against the RAG pipeline from the core lab.
+Your RAG system kept knowledge *outside* the model and retrieved it at query time.  Every question paid for a search, and the model only knew what the search found.  What if, instead, we taught the model the domain ahead of time?  Here you take the opposite approach: you adapt a local model by **baking** domain knowledge into a small set of trainable weights using **LoRA** (Low-Rank Adaptation, which adds a tiny number of trainable parameters to a frozen base model so fine-tuning fits on consumer hardware).  You train on a real domain dataset, instrument the run with loss tracking, evaluate before and after, document the result with a model card, export the model to GGUF so it runs in Ollama, and then decide whether fine-tuning earned its keep against the RAG pipeline from the core lab.
 
 > **What this direction requires.**
 > - **Accounts:** a free Hugging Face account.  If you use a gated Llama base model, accept the model license on its Hugging Face page and log in with `huggingface-cli`; the non-gated bases in the table below need no license step.  A Google account if you take the free Colab path.
@@ -957,6 +1098,10 @@ Your RAG system kept knowledge *outside* the model and retrieved it at query tim
     The model card (Step F) is still required.  Document the adapter's provenance, dataset, and license in place of your own training details.  The loss-curve deliverable is waived.
 
 ### Step A: Set Up Your Toolchain
+
+**Goal:** a Python environment with a GPU visible and Hugging Face downloads working, and a base model chosen.
+
+A few tools appear here for the first time.  **Hugging Face** is a site that hosts models and datasets; the `transformers` and `datasets` libraries download from it by ID, and `huggingface-cli login` stores your access token so gated models (ones that require accepting a license) can download.  **Google Colab** is a free hosted notebook that can lend you a GPU.  **CUDA** is NVIDIA's GPU computing platform; `torch.cuda.is_available()` reports whether PyTorch can see a GPU.  `peft` adds LoRA adapters to a model, `trl` provides the `SFTTrainer` training loop, and `bitsandbytes` handles 4-bit quantization.
 
 Prerequisites: GPU access confirmed (your own GPU, Colab's free T4, a cloud VM, or the provided-artifact variant chosen); Python 3.10 or later (`python --version`); for a Llama model, the license accepted at `meta-llama/Meta-Llama-3-8B-Instruct` and `huggingface-cli login` completed.
 
@@ -991,6 +1136,8 @@ print("Tokenizer OK:", AutoTokenizer.from_pretrained("microsoft/phi-3-mini-4k-in
 | `mistralai/Mistral-7B-Instruct-v0.3` | 7B | 8 GB with QLoRA | Good quality, open weights |
 
 ### Step B: Choose and Format a Domain Dataset
+
+**Goal:** a training split and a validation split, each example formatted as one instruction-and-response string.
 
 The dataset determines what your model learns, what biases it might amplify, and how you can measure success.  A natural choice is the *same domain as your corpus*, so your before/after comparison speaks directly to the RAG-versus-fine-tuning question.
 
@@ -1040,7 +1187,13 @@ print(f"Train examples: {len(train_data)} | Validation examples: {len(val_data)}
 
 ### Step C: Fine-Tune with LoRA or QLoRA
 
+**Goal:** a saved LoRA adapter and a loss curve showing that training made progress.
+
 LoRA leaves the original weights untouched and learns two small matrices (A and B, with rank `r`) that approximate the weight update, so a 7B model trains on 8-16 GB of VRAM.  **QLoRA** adds 4-bit quantization on top, cutting VRAM roughly in half again.  You own every hyperparameter and must justify `r`, `learning_rate`, and `target_modules` in your writeup; the toolchain speeds the run, it does not make the choices.
+
+In plainer terms: the base model stays frozen, and we train only a small add-on.  The rank `r` sets how big that add-on is, and `target_modules` says which layers of the model it attaches to.
+
+> **Predict:** if you double `r` from 8 to 16, what happens to the number of trainable parameters that `print_trainable_parameters()` reports?
 
 > **Do this.**
 > 1. Create `train_unsloth.py` (Toolchain A) from the skeleton below, fill every `# TODO`, and reuse your `format_example`.  On Toolchain B, create `train.py` instead: load the base model with `BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4")` for QLoRA, set `tokenizer.pad_token = tokenizer.eos_token`, wrap it with `get_peft_model(model, LoraConfig(r=8, lora_alpha=16, lora_dropout=0.05, target_modules=[...], task_type=TaskType.CAUSAL_LM))`, call `model.print_trainable_parameters()`, and pass `eval_dataset=val_data` with `eval_strategy="steps", eval_steps=50` to the same `SFTTrainer`.
@@ -1084,6 +1237,8 @@ model.save_pretrained("./lora-finetuned")     # LoRA adapters; GGUF export happe
 > - `target_modules` raises `ValueError`: print `[name for name, _ in model.named_modules()]` to see the real module names.
 
 ### Step D: Evaluate Before and After
+
+**Goal:** a side-by-side comparison of the base and fine-tuned models on prompts neither saw in training, with at least one quantitative metric.
 
 Without systematic evaluation, fine-tuning is a black box: hours of training and no idea whether the model improved.  This is the same habit as recall@k and the citation audit in the core lab.
 
@@ -1146,7 +1301,9 @@ print(f"Base model perplexity: {base_ppl:.2f} | Fine-tuned model perplexity: {ft
 
 ### Step E: Export to GGUF and Run Your Model in Ollama
 
-A fine-tuned model that only runs inside a notebook is not yet part of your stack, so you convert it to **GGUF** (the quantized file format Ollama loads) and run *your own model* locally, exactly like the stock models.
+**Goal:** your fine-tuned model answering a prompt from `ollama run`, just like the stock models.
+
+A fine-tuned model that only runs inside a notebook is not yet part of your stack, so you convert it to **GGUF** (the quantized file format Ollama loads) and run *your own model* locally, exactly like the stock models.  A `Modelfile` is a short text file that tells Ollama which weights to load and which default settings and system prompt to use; `ollama create` reads it and registers the model under a name.  On Toolchain B, `git clone` downloads a copy of the `llama.cpp` repository, which includes the conversion script.
 
 > **Do this.**
 > 1. Merge the adapter into the base weights and write a quantized GGUF.  Toolchain A does it in one call: `model.save_pretrained_gguf("my-finetuned-gguf", tokenizer, quantization_method="q4_k_m")`.  Toolchain B merges the `PeftModel` into the base model, saves to `./merged-model`, and converts with `llama.cpp` as below.
@@ -1176,6 +1333,8 @@ ollama run my-finetuned "Ask a question from your domain here"
 > - The model loads but answers in gibberish: the chat template does not match the instruction format you trained on; add a `TEMPLATE` block to the `Modelfile` matching your `### Instruction / ### Response` format.
 
 ### Step F: Write the Model Card and Reflection
+
+**Goal:** a complete eight-section `model_card.md` and your reflection answers.
 
 A model without documentation is a liability.  The model card (Mitchell et al. 2019) is the industry standard on Hugging Face, and writing one forces you to say what your model does, what it does not do, and what could go wrong, the same discipline as the corpus datasheet.
 
@@ -1266,7 +1425,11 @@ The ground-truth-versus-AI-claim audit is the citation audit applied to pixels i
 
 Complete these before writing code: [Sampling, Temperature, and Generation]({{ site.baseurl }}/Tutorials/SamplingAndTemperature) (stochastic sampling and output distributions), the [Evaluating Agent Outputs Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-evaluatingoutputs.md) (assessing AI-generated content critically), and [Multimodal Agents]({{ site.baseurl }}/Tutorials/MultimodalAgents) (sending images to local vision models).
 
-> **Do this.** Install the libraries, pull the vision model, and confirm the API answers.  `ollama list` prints every model on your machine; `curl` fetches the same list from the server.
+### Step 0: Install the Libraries and Pull the Vision Model
+
+**Goal:** `numpy` (fast numerical arrays and random draws), `matplotlib` (plotting), and `requests` installed, and a vision model available in Ollama.
+
+> **Do this.** Install the libraries, pull the vision model, and confirm the API answers.  `ollama pull` downloads a model; `ollama list` prints every model on your machine; `curl` (a command-line tool that fetches a URL) fetches the same list from the server.
 
 ```bash
 pip install numpy matplotlib requests
@@ -1279,6 +1442,8 @@ ollama list
 > **Time budget.** Step A, simulation engine: 50-70 minutes.  Step B, multimodal integration: 40-60 minutes.  Step C, parameter sensitivity: 25-35 minutes.  Step D, critical analysis: 20-30 minutes.  Readme and reflection: 30-45 minutes.
 
 ### Step A: Build the Simulation Engine
+
+**Goal:** a two-panel chart and a statistics file from 1,000 simulated savings paths.  The statistics file is your ground truth for the rest of this direction.
 
 `montecarlo.py` simulates 1,000 possible futures for a person who starts saving at 25 and retires at 65.  Each simulated year draws a random annual return from a normal distribution, applies it to the portfolio, and records the balance.  The output is a two-panel chart on disk.  Keep the config-file discipline from the core lab; it makes Step C a one-file edit.
 
@@ -1369,6 +1534,12 @@ if __name__ == "__main__":
 
 ### Step B: Send the Chart to a Multimodal Model
 
+**Goal:** two saved turns of a conversation in which a vision model analyzes your chart.
+
+A text API cannot carry an image directly, so `plot_simulation` already returned the PNG as a base64 string (the image's bytes rewritten as plain text characters), and that string goes in the request's `images` list.
+
+> **Predict:** before you run it, write down what percentage of simulations you expect the model to report as ending above \$1 million, and whether you expect it to match `simulation_stats.txt`.
+
 You send the PNG to a local multimodal model through the Ollama API and hold a two-turn conversation about it.  The first turn is a structured prompt that sets the model's role, what to look at, the response format, and the audience; the second presses it on a specific quantitative claim.
 
 > **Do this.**
@@ -1425,6 +1596,10 @@ def run_analysis_conversation(image_b64, cfg):
 
 ### Step C: Measure Parameter Sensitivity
 
+**Goal:** a three-scenario table that shows how much the outcome depends on the return assumptions.
+
+> **Predict:** before you run the three scenarios, which do you expect to move the median more: raising the mean return, or lowering the volatility?
+
 > **Do this.**
 > 1. Add `run_sensitivity_analysis` to `montecarlo.py`, call it from the main block, and run.  (Editing `config.json` between three runs also works.)
 > 2. Record the four statistics for each scenario in your writeup and save the table as `sensitivity_results.txt` or equivalent.
@@ -1457,6 +1632,8 @@ def run_sensitivity_analysis(base_cfg):
 
 ### Step D: Audit the Model Against Ground Truth
 
+**Goal:** three documented differences between your reading of the chart and the model's, one tested prompt change, and a guardrail statement.
+
 This is the most important step: the core lab's audit discipline moved from retrieved text to a rendered chart.
 
 > **Do this.**
@@ -1468,6 +1645,8 @@ This is the most important step: the core lab's audit discipline moved from retr
 > **Checkpoint.** You have succeeded at this direction when your simulation produces a labeled two-panel PNG and a statistics file; the multimodal model gives a four-section analysis with at least one follow-up exchange; you have identified at least one specific numerical error with an exact AI excerpt; you have proposed and tested a prompt change; and your sensitivity table covers all three configurations with four statistics each.
 
 ### Step E: Wrap the Simulation as a Tool (Function-Calling Extension)
+
+**Goal:** a transcript in which a model chooses the simulation's parameters through a tool call, your code runs it, and a vision model interprets the result, plus your critique of both choices.
 
 In Steps A through D the model only *interpreted* an experiment you designed.  This extension inverts the relationship and bridges to the **Tool Use and Function Calling** session.  You wrap the simulation as a tool with a JSON schema, and the model **chooses the parameters**, asks your code to invoke the tool, and then interprets the chart the tool produced.
 
