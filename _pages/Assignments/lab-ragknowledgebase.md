@@ -1419,7 +1419,7 @@ The ground-truth-versus-AI-claim audit is the citation audit applied to pixels i
 > **What this direction requires.**
 > - **Accounts:** none.
 > - **API costs:** none; the vision model runs locally in Ollama.
-> - **Installs / disk:** `numpy`, `matplotlib`, and `requests`, plus the `llava` multimodal model (about a 4.7 GB pull; smaller alternatives such as `moondream`, `bakllava`, or `llava-phi3` also work).
+> - **Installs / disk:** `numpy`, `matplotlib`, and `requests`, plus the `llava` multimodal model (about a 4.7 GB pull; smaller alternatives such as `moondream`, `bakllava`, or `llava-phi3` also work), and a tool-capable model for Step E (`llama3.1` or `qwen2.5`), because `llava` cannot call tools.
 > - **Hardware:** any machine that runs the core lab; the 4.7 GB model is happiest with 8 GB of RAM or more.  Pull it before the day you need it.
 > - **No-cost fallback:** not needed; fully local and free.
 
@@ -1642,13 +1642,13 @@ This is the most important step: the core lab's audit discipline moved from retr
 > 3. **Propose a prompt improvement.** For the numerical error you found, make one change to `initial_prompt` that would have reduced it, re-run Step B, and record whether the response improved.  Strategies worth trying: an explicit disclaimer ("If you cannot read a precise number from the chart, say 'approximately' and give a range"); reasoning before numbers ("Before giving a percentage, describe what you see in the histogram bin by bin"); or restricting scope ("Only comment on what is visually unambiguous.  Flag anything that requires precise numerical reading as uncertain").
 > 4. **Write the guardrail.** In 2-3 sentences, write the **guardrail statement** a financial planning tool would show users before the AI's chart analysis, protecting against over-reliance on numerical claims the AI cannot read precisely.
 
-> **Checkpoint.** You have succeeded at this direction when your simulation produces a labeled two-panel PNG and a statistics file; the multimodal model gives a four-section analysis with at least one follow-up exchange; you have identified at least one specific numerical error with an exact AI excerpt; you have proposed and tested a prompt change; and your sensitivity table covers all three configurations with four statistics each.
+> **Checkpoint.** You have succeeded at this direction when your simulation produces a labeled two-panel PNG and a statistics file; the multimodal model gives a four-section analysis with at least one follow-up exchange; you have identified at least one specific numerical error with an exact AI excerpt; you have proposed and tested a prompt change; and your sensitivity table covers all three configurations with four statistics each; and Step E's checkpoint below is also met.
 
-### Step E: Wrap the Simulation as a Tool (Function-Calling Extension)
+### Step E: Wrap the Simulation as a Tool (Required)
 
 **Goal:** a transcript in which a model chooses the simulation's parameters through a tool call, your code runs it, and a vision model interprets the result, plus your critique of both choices.
 
-In Steps A through D the model only *interpreted* an experiment you designed.  This extension inverts the relationship and bridges to the **Tool Use and Function Calling** session.  You wrap the simulation as a tool with a JSON schema, and the model **chooses the parameters**, asks your code to invoke the tool, and then interprets the chart the tool produced.
+In Steps A through D the model only *interpreted* an experiment you designed.  This step inverts the relationship and bridges to the **Tool Use and Function Calling** session.  You wrap the simulation as a tool with a JSON schema, and the model **chooses the parameters**, asks your code to invoke the tool, and then interprets the chart the tool produced.
 
 The model never executes anything.  It can only request, and your code runs the simulation.
 
@@ -1714,7 +1714,7 @@ Fold these into the submission ZIP and readme:
 
 - **The simulation** is configurable from a JSON file, handles edge cases, and its visualization includes the median, the 10th and 90th percentile bands, and the final-balance histogram, with a text summary saved alongside.
 - **The multimodal integration** sends a valid base64 PNG in the `images` array to `/api/generate`, parses `response.json()["response"]`, runs a structured Turn 1 (role, four numbered sections, audience) plus a Turn 2 that presses a specific quantitative claim, and saves both turns.
-- **The comparative analysis** names three AI-versus-human differences, at least one of them a wrong or imprecise number backed by a verbatim excerpt alongside the true value from `simulation_stats.txt`.  It tests one prompt change and reports whether it helped.  If you attempted the tool-calling extension, it audits both the agent's parameter choices and its interpretation.
+- **The comparative analysis** names three AI-versus-human differences, at least one of them a wrong or imprecise number backed by a verbatim excerpt alongside the true value from `simulation_stats.txt`.  It tests one prompt change and reports whether it helped.  It also audits both the agent's parameter choices and its interpretation from Step E.
 - **The writeup** tabulates the four statistics for all three scenarios, states which parameter change moved the median more, judges AI interpretation quality with a verbatim excerpt, and delivers a 2-3 sentence plain-language user-facing guardrail.
 
 ### Direction 2 Reflection Prompts
