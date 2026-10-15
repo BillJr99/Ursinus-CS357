@@ -1086,7 +1086,7 @@ Reflection prompts:
 
 Ask three copies of the same model "What is 15% of 240?" and you may get two that say 36 and one that says 34.  Now show each one what the other two said and ask again.  Does the odd one out fix its arithmetic, does it talk the others into its answer, or does nobody move?  That second round is a debate, and Part B.1 builds it so you can watch what happens instead of guessing.
 
-> **No-code path.** Open two Open WebUI chats with different system prompts (for example, an advocate and a skeptic), give both the same question, then paste each one's answer to the other for a rebuttal round.  Two rounds is enough to see the dynamic.  In Langflow, the same thing is two Agent nodes and a loop.  Your exported transcripts take the place of the smoke-test output.
+> **No-code path.** Open two Open WebUI chats with different system prompts (for example, an advocate and a skeptic), give both the same question, then paste each one's answer to the other for a rebuttal round.  Two rounds is enough to see the dynamic.  Then open a third **Judge** chat, paste in both final answers with their reasoning, and ask it to choose the best-supported answer and say why; that is your judge-agent aggregation, alongside the majority vote you take by hand.  In Langflow, the same thing is two Agent nodes and a loop, followed by a judge prompt node.  Your exported transcripts take the place of the smoke-test output.
 
 Build a debate in which the number of agents, the number of rounds, and the temperature schedule all live in the JSON configuration file.  Round one is independent: each agent answers alone.  Later rounds are peer-informed: each agent sees the other agents' previous answers and may revise or hold its position.  Aggregate the final round two ways, by majority vote and by an optional judge agent.  Answer extraction must tolerate formatting drift: anchor on a required `ANSWER:` line, and when that line is missing, print a located error message instead of failing silently.
 
@@ -1172,7 +1172,7 @@ def agent_respond(question, agent_id, round_num, peer_answers, config):
 
 Notice the `except` block: a located message (the `[lab4:agent_respond:...]` tag says where it failed), a traceback, then a re-raise.  The Code Quality row checks for this on every model and embedding call.
 
-> **You should see.** `python3 lab4.py` exits silently; the file only defines functions so far.  The same is true after each of Steps B.1.3 to B.1.5, and a silent run after each paste is your check that the file still parses.
+> **You should see.** `python3 lab4.py` exits silently; the file only defines functions so far.  The same is true after each of Steps B.1.3 to B.1.6, and a silent run after each paste is your check that the file still parses.
 
 **Predict:** with the `config.json` from Step A.1, what temperature and seed does agent 2 get in round 2?  Work it out from the two lines at the top of `agent_respond`.
 
@@ -1273,15 +1273,67 @@ def majority_vote(final_answers):
     return counts.most_common(1)[0][0]
 ```
 
-The proficient column asks for a judge-agent option alongside majority vote.  Challenge B1 at the end of this page describes the judge, and the handoff route in Part B.3 uses one as its tie rule.  So although Challenge B1 sits with the optional challenges, the judge-agent option is part of what the Debate row's proficient column looks for.
+Majority vote is one of two required aggregation methods.  The other, a judge agent, is the next step.
 
 > **You should see.** `python3 lab4.py` still exits silently.
 
 **Predict:** if the three final answers are `36`, `36.0`, and `$36`, what does `majority_vote` return, and is that the answer you wanted?
 
-### Step B.1.6: Run a smoke test
+### Step B.1.6: Aggregate with a judge agent (required)
 
-**Goal:** one complete 3-agent, 2-round debate with a vote, saved as your transcript.
+**Goal:** a second way to turn the final round into one answer, in which a separate model call weighs the agents' reasoning instead of counting their votes.
+
+Majority vote only counts.  If two agents repeat the same mistake and the third works the problem correctly, the vote goes to the mistake.  A **judge agent** is one more model call that reads every agent's final answer and reasoning and chooses the answer it finds best supported, even if only one agent gave it.  The Debate row's proficient column asks for both methods, so this step is required, not optional.
+
+> **Do this.**
+> 1. Add `judge_aggregate` below `majority_vote` in `lab4.py`.  It reuses `critic_temp` and `critic_seed` from `config.json`, so the judge is as repeatable as your Part A critic, and it reuses `extract_answer` from Step B.1.3 to read the judge's own `ANSWER:` line.
+
+```python
+def judge_aggregate(question, round_answers, config):
+    """
+    Send every agent's final-round response to a separate judge call.
+    Returns (chosen_answer, judge_response_text); chosen_answer is None if the judge gave no ANSWER: line.
+    """
+    num_rounds = config["debate"]["num_rounds"]
+    candidates = "\n\n".join(
+        f"Agent {agent_id} (ANSWER: {answer or '(no answer)'}):\n{response}"
+        for agent_id, (response, answer) in round_answers[num_rounds].items()
+    )
+    user_content = (
+        f"Question: {question}\n\n"
+        f"Several agents debated this question. Here is each agent's final response:\n\n"
+        f"{candidates}\n\n"
+        f"You are the judge. Do not count votes. Choose the answer that is best supported by correct reasoning, "
+        f"even if only one agent gave it. Explain your choice in one or two sentences, then end with a line "
+        f"in exactly this format:\n"
+        f"ANSWER: <the answer you choose>"
+    )
+    payload = {
+        "model": config["model"],
+        "messages": [{"role": "user", "content": user_content}],
+        "stream": False,
+        "options": {"temperature": config["critic_temp"], "seed": config["critic_seed"]}
+    }
+
+    try:
+        response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=60)
+        response.raise_for_status()
+        judge_text = response.json()["message"]["content"]
+    except Exception as e:
+        print(f"[lab4:judge_aggregate:network] {e}")
+        traceback.print_exc()
+        raise
+
+    return extract_answer(judge_text, "judge", num_rounds), judge_text
+```
+
+> **You should see.** `python3 lab4.py` still exits silently.
+
+**Predict:** in a debate where two agents answer `34` and one answers `36` with the correct working, which answer will `majority_vote` return, and which do you expect `judge_aggregate` to return?  Keep your prediction and check it against what your judge actually does.
+
+### Step B.1.7: Run a smoke test
+
+**Goal:** one complete 3-agent, 2-round debate aggregated both ways, saved as your transcript.
 
 > **Do this.**
 > 1. Add this block at the bottom of `lab4.py`.
@@ -1297,12 +1349,14 @@ if __name__ == "__main__":
     question = "What is 15% of 240?"
     final_answers, transcripts, calls = run_debate(question, config)
     winner = majority_vote(final_answers)
+    judge_choice, judge_text = judge_aggregate(question, transcripts, config)
     print(f"\nFinal answers: {final_answers}")
     print(f"Majority vote: {winner}")
-    print(f"Total model calls: {calls}")
+    print(f"Judge agent: {judge_choice}")
+    print(f"Total model calls: {calls + 1}")
 ```
 
-> **You should see.** Two rounds of three agents, then a vote.  Your answers will differ, but the call count should equal agents times rounds.
+> **You should see.** Two rounds of three agents, then the majority vote and the judge's choice.  Your answers will differ, but the call count should equal agents times rounds, plus one for the judge.
 
 ```text
 === Debate Round 1 ===
@@ -1317,7 +1371,8 @@ if __name__ == "__main__":
 
 Final answers: {0: '36', 1: '36', 2: '36'}
 Majority vote: 36
-Total model calls: 6
+Judge agent: 36
+Total model calls: 7
 ```
 
 > **If it fails.** An `ANSWER = None` line comes with a `[lab4:extract_answer] WARNING` naming the agent and round; see the first item in Troubleshooting, Part B.1.  A connection error tagged `[lab4:agent_respond:...]` means Ollama is not answering; go back to Step 0.2.
@@ -2038,7 +2093,7 @@ These are optional and carry no extra credit.
 
 **Challenge A3 (hardest): Self-referential calibration.**  Use your loop to generate and refine its own rubric: start with a vague rubric, ask the critic "is this rubric's criterion C1 observable enough to detect without ambiguity?", and refine criterion descriptors until the critic accepts the rubric as well-specified.  Then run Step A.6's calibration on the auto-refined rubric and compare its detection rates to your manually-refined rubric.
 
-**Challenge B1 (moderate): Implement a judge agent.**  Instead of majority vote, add an aggregation option that sends all final-round debate answers to a judge agent (a separate model call) that chooses the best answer and explains why.  Compare the judge's accuracy to majority vote on your task set.  Does the judge ever pick the minority answer, and when it does, is it usually right or wrong?
+**Challenge B1 (moderate): Compare the judge with the vote.**  You built `judge_aggregate` in Step B.1.6.  Run both aggregation methods over your full task set and compare the judge's accuracy to majority vote.  Does the judge ever pick the minority answer, and when it does, is it usually right or wrong?
 
 **Challenge B2 (harder): Adaptive sampling.**  In the consensus pipeline, start with 3 samples.  If all 3 land in one cluster, you are done.  If they span more than 2 clusters, sample 3 more.  Continue until either a clear majority cluster exists or you hit a call budget of 9.  Measure whether adaptive sampling reduces average cost while maintaining accuracy compared to always sampling 6.
 
