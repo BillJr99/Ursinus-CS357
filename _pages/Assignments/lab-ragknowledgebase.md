@@ -629,7 +629,7 @@ For at least ten answered questions, read the chunk each citation points to and 
 | Q# | Answer excerpt and citation | Chunk cited | Faithful? | Failure type |
 |----|-----------------------------|-------------|-----------|--------------|
 | Q01 | "Gradient descent is ..." [1] | "lecture03: Gradient descent is a method..." | Yes | - |
-| Q02 | ... | ... | No | Fabrication |
+| Q02 | ... | ... | No | Extrapolation |
 
 > **You should see.** A table in your readme with at least ten rows, every **No** row labeled with one of the four categories, and the answer excerpt copied verbatim rather than paraphrased.
 
@@ -760,7 +760,7 @@ Complete `checkup.md` against your in-progress pipeline, with your Part 5 route 
 |---|---|---|---|
 | "What is the late policy for a three-day extension?" | c14, c15 | c14, c22, c31, c07, c19; 1/2 = 0.50 | c14, c15, c22, c31, c07; 2/2 = 1.00 |
 
-In the worked row, Config A retrieved `c14` and stopped; the policy spanned two chunks, and the 512-token chunking put the second half of the sentence in a chunk that scored just below the cut.  That is a *chunking* failure that looks like a *retrieval* failure, and it is the single most common thing this checkup finds.
+In the worked row, Config A retrieved `c14` and stopped; the policy spanned two chunks, and the 512-character chunking put the second half of the sentence in a chunk that scored just below the cut.  That is a *chunking* failure that looks like a *retrieval* failure, and it is the single most common thing this checkup finds.
 
 > **You should see.** Five rows in your own version of this table, the same `k` in both configuration columns, and a named winner.
 

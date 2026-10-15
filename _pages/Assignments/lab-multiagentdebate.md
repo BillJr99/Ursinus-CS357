@@ -415,7 +415,7 @@ def critique_draft(draft, rubric, config):
     # Try to parse JSON; fail closed on malformed output
     try:
         # Strip markdown code fences if present
-        clean = raw.strip().lstrip("```json").lstrip("```").rstrip("```").strip()
+        clean = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
         critique = json.loads(clean)
         assert "verdict" in critique and "issues" in critique
         return critique
@@ -585,7 +585,7 @@ def run_calibration(calibration_file, config, rubric):
 
 **Goal:** a detection rate and a false positive rate per criterion, and one documented case where the critic was wrong.
 
-For each criterion, the code counts four cases: true positives (planted defect, critic flagged it), false negatives (planted defect, critic missed it), false positives (no defect, critic flagged it), and true negatives (no defect, critic stayed quiet).  A missed defect or a phantom defect is a case where the critic was wrong, and you can tell because you planted the truth.  That case, with how you could tell, is what the Part A row's proficient column asks for.
+For each criterion, the code counts four cases: true positives (planted defect, critic flagged it), false negatives (planted defect, critic missed it), false positives (no defect in this criterion, critic flagged it), and true negatives (no defect in this criterion, critic stayed quiet).  A draft whose planted defect is in a different criterion counts as a negative for this one.  A missed defect or a phantom defect is a case where the critic was wrong, and you can tell because you planted the truth.  That case, with how you could tell, is what the Part A row's proficient column asks for.
 
 > **Do this.**
 > 1. Add `compute_rates` below to `calibrate.py`.
@@ -595,33 +595,36 @@ For each criterion, the code counts four cases: true positives (planted defect, 
 > 5. Rewrite the weakest criterion's descriptor in `rubric.json` so that a reader can check it without interpretation, as in the example below, re-run `python3 calibrate.py`, and show the original descriptor next to the new one with the detection rate before and after.  Report both numbers even if the rewrite did not help; that is a result too.
 
 ```python
+import re
+
 def compute_rates(results, rubric):
     criteria_ids = [c["id"] for c in rubric["criteria"]]
     rates = {}
 
     for cid in criteria_ids:
-        # True positives: draft has this defect AND critic mentioned it
-        # False negatives: draft has this defect AND critic missed it
-        # False positives: draft has NO defect AND critic flagged this criterion
+        # A draft counts as positive for THIS criterion only if its planted defect names it
+        # (for example "missing_C4" is positive for C4 and negative for C1, C2, and C3).
+        # True positives: this criterion has a planted defect AND the critic flagged it
+        # False negatives: this criterion has a planted defect AND the critic missed it
+        # False positives: this criterion has NO planted defect AND the critic flagged it
+        # True negatives: this criterion has NO planted defect AND the critic stayed quiet
         tp = fp = fn = tn = 0
 
         for r in results:
-            has_defect = cid.lower() in r["planted_defect"].lower() or "none" not in r["planted_defect"].lower()
-            # Simplification: check if any issue string mentions the criterion ID or name
+            has_defect = re.search(rf"\b{cid}\b", r["planted_defect"].replace("_", " "), re.IGNORECASE) is not None
+            # Simplification: check if any issue string mentions the criterion ID
             critic_flagged = any(cid in issue for issue in r["critic_issues"])
 
-            if r["planted_defect"] == "none":
-                # Defect-free draft
-                if critic_flagged:
-                    fp += 1
-                else:
-                    tn += 1
-            else:
-                # Draft has planted defect
+            if has_defect:
                 if critic_flagged:
                     tp += 1
                 else:
                     fn += 1
+            else:
+                if critic_flagged:
+                    fp += 1
+                else:
+                    tn += 1
 
         detection_rate = tp / (tp + fn) if (tp + fn) > 0 else float("nan")
         fp_rate = fp / (fp + tn) if (fp + tn) > 0 else float("nan")
@@ -728,7 +731,9 @@ print(f"Patched rubric on good draft: {critique_good['verdict']}")  # Expected: 
 
 **Goal:** a score and a call count for both conditions on the same eight or more tasks.
 
-Single-shot generation is one generator call with no critique.  On a fixed set of at least eight tasks, compare single-shot generation against your full critique-and-refine loop.  Score both conditions with the same instrument: your calibrated critic on a held-out rubric, or a blind human ranking between you and your partner.  The comparison is only fair when both conditions use the same tasks and the same scorer.  For each task, condition A makes one generator call and one scoring call; condition B runs the full loop and then makes one scoring call.
+Single-shot generation is one generator call with no critique.  On a fixed set of at least eight tasks, compare single-shot generation against your full critique-and-refine loop.  Score both conditions with the same instrument: your calibrated critic (the `score_draft` function below, which scores against the same `rubric.json` the loop refines toward), or a blind human ranking between you and your partner.  The comparison is only fair when both conditions use the same tasks and the same scorer.  For each task, condition A makes one generator call and one scoring call; condition B runs the full loop and then makes one scoring call.
+
+> **Watch out.** A critic that shares the loop's rubric can favor the loop, because the loop spent its rounds fixing exactly what that critic checks.  The blind human ranking does not have this problem, which makes it the fairer of the two scorers.
 
 > **No-code path.** Run each task once through the generator preset alone and once through the full loop, score both drafts with the critic preset, and count the calls by hand.  Time one pass versus three by the clock, and answer Step A.10's question with your own measurements.
 
