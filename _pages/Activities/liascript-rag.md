@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # RAG Knowledge Base: Code and No-Code Routes
 
-**Retrieval-augmented generation (RAG)** hands the model the right evidence at the moment it needs it.  The evaluation harness from the *Hallucinations and Evaluating Agent Outputs* activity showed that local models hallucinate (confidently make up facts) where their training data is thin.  The [*Tokens, Embeddings, and Attention*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/TokensEmbeddingsAttention) tutorial gave you semantic search.  RAG combines the two.  Today you build the pipeline twice: once in about fifty lines of Python with Chroma and Ollama, and once as three nodes on a Langflow canvas, because the RAG Knowledge Base lab lets you take either route for the same credit.  We move from **the open-book insight → the RAG pipeline → a working pipeline in code → the same pipeline without code → grounded answers with citations**.
+**Retrieval-augmented generation (RAG)** hands the model the right evidence at the moment it needs it.  The evaluation harness from the *Hallucinations and Evaluating Agent Outputs* activity showed that local models hallucinate (confidently make up facts) where their training data is thin.  The [*Tokens, Embeddings, and Attention*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/TokensEmbeddingsAttention) tutorial gave you semantic search.  RAG combines the two.  Today you build the pipeline in about fifty lines of Python with Chroma and Ollama, again on a Langflow canvas with no code at all, and once more as a Pydantic AI agent with a search tool.  The RAG Knowledge Base lab offers the same choice for the same credit: the code route uses Pydantic AI, and you can take the no-code route in Langflow if you prefer.  We move from **the open-book insight → the RAG pipeline → a working pipeline in code → the same pipeline without code → grounded answers with citations**.
 
 The *Skill Design Study* written assignment is [due today](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/SkillDesignStudy).
 
@@ -170,7 +170,7 @@ print("\nRETRIEVED:\n", ctx, "\n\nANSWER:\n", answer)
 
 ## Model 2: Grounding in Action
 
-**Why this matters:** The second query ("What time does the bookstore close?") tests a critical design decision: what should the system do when the right answer is not in the index?  A bare language model will often invent a plausible answer ("The bookstore closes at 5pm on weekdays").  A well-designed RAG system says it does not know.  That difference, between confident invention and abstention, is what makes RAG trustworthy for high-stakes uses like medical information, legal research, or campus policy.
+**Why this matters:** The second query ("What time does the bookstore close?") tests an important design decision: what should the system do when the right answer is not in the index?  A bare language model will often invent a plausible answer ("The bookstore closes at 5pm on weekdays").  A well-designed RAG system says it does not know.  That difference, between confident invention and abstention, is what makes RAG trustworthy for high-stakes uses like medical information, legal research, or campus policy.
 
 ### Critical Thinking Questions
 
@@ -186,7 +186,7 @@ print("\nRETRIEVED:\n", ctx, "\n\nANSWER:\n", answer)
 
    > *Hint: Create a question like "Can I get food after working out at the gym?"; the answer involves both the dining hours doc and the athletics doc.  With `k=1`, only one chunk fits in the prompt.  What does the model say?*
 
-> **Common Misconception:** RAG does not teach the model new facts, and it does not fine-tune or update the model in any way.  The model's weights are unchanged.  RAG places text in the prompt that the model then reads and summarizes, the same way you could hand a book to someone who has never seen it and ask them questions from it.  The intelligence is in the language model; the facts come from your documents.  So RAG is only as accurate as your documents, and if your documents contain errors, the model will faithfully repeat them.
+> **Common Misconception:** RAG does not teach the model new facts, and it does not fine-tune or update the model in any way.  The model's weights are unchanged.  RAG places text in the prompt for the model to read and summarize, the same way you could hand a book to someone who has never seen it and ask them questions from it.  The intelligence is in the language model; the facts come from your documents.  So RAG is only as accurate as your documents, and if your documents contain errors, the model will faithfully repeat them.
 
 **Three ways to change an answer.**  Keep these apart, because people often blur them:
 
@@ -212,7 +212,7 @@ The single most important reason RAG reduces factual hallucination is that it:
 
 # Part IIb: The Same Pipeline Without Code
 
-The same pipeline can also be built on a Langflow canvas instead of in Python.  The RAG Knowledge Base lab uses Python with Pydantic AI, but it is worth seeing the canvas version of what you just ran.
+The same pipeline can be built on a Langflow canvas instead of in Python.  The RAG Knowledge Base lab's code route uses Pydantic AI, and its no-code route is this canvas, for the same credit, so build it here once on the five campus documents before you choose.
 
 Langflow is a visual editor for language-model pipelines: each step is a node you configure in a side panel and wire to the next by dragging a connection.  The [*Visual Agents*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/VisualAgents) tutorial walks through the install and a first flow; that tutorial carries the exact node names for its version of Langflow.  On the canvas, the code cell above becomes three nodes:
 
@@ -222,7 +222,64 @@ Langflow is a visual editor for language-model pipelines: each step is a node yo
 | **Retrieve** | Embeds the incoming question and pulls the nearest chunks from the same Chroma collection | `col.query(query_embeddings=..., n_results=k)` | Top-k, the same number as `k=2` in `rag_answer` |
 | **Generate** | Fills a prompt template with the retrieved chunks and the question, then sends it to `llama3.2` on your local Ollama | The prompt string and `chat()` | The grounding instruction ("answer using ONLY the context") and the abstention phrase |
 
-Nothing about the pipeline changes.  The chunk size, the top-k, the model name, and the prompt are the same decisions; they live in node settings instead of variables.  The canvas makes the retrieval step visible (the playground shows which chunks the Retrieve node handed forward, which is exactly what you print as `ctx` in code), and it hides the error handling that `embed()` and `chat()` wrap around every network call.  Whichever route you take in the lab, the graded work is the same: two chunking configurations compared, recall@k reported, citations checked by hand, and clean abstention on out-of-corpus questions.
+Nothing about the pipeline changes.  The chunk size, the top-k, the model name, and the prompt are the same decisions; they live in node settings instead of variables.  The canvas makes the retrieval step visible (the playground shows which chunks the Retrieve node handed forward, which is what you print as `ctx` in code), and it hides the error handling that `embed()` and `chat()` wrap around every network call.  Whichever route you take in the lab, the graded work is the same: an index over documents you chose, answers that name their sources, an abstention when the answer is not there, and one question asked with retrieval switched off.
+
+
+## Build It on the Canvas
+
+The four steps below rebuild Part II's cell on the canvas.  Node names shift a little between Langflow versions; the dataflow is what matters, and the [*Visual Agents*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/VisualAgents) tutorial shows the same wiring with screenshots.  If time runs short in class, finish Steps C and D on your own before the lab.
+
+### Step A: Install and Launch Langflow
+
+Langflow runs as a local web server: `langflow run` starts it, and you work in it through your browser.  The first install pulls a couple of gigabytes of dependencies, so start it before class if you can.
+
+```bash
+pip install langflow
+langflow run
+ollama pull nomic-embed-text
+```
+
+> **You should see.** A "Langflow is running" banner in the terminal, the canvas at `http://localhost:7860`, and `nomic-embed-text` and `llama3.2` in the output of `ollama list`.
+
+> **If it fails.** A dependency-resolver error from `pip install langflow` usually means your Python is too new or too old; create a fresh virtual environment on Python 3.11 or 3.12 and install there.  If `localhost:7860` refuses to connect, the server is still starting, so wait for the banner.
+
+### Step B: The Index Path
+
+Create a **New Flow** from a **Blank Canvas**.  Save the five campus sentences from Part II in a file named `campus.txt`, one per paragraph, and wire:
+
+1.  **File**: upload `campus.txt`.
+2.  **Text Splitter** (the recursive character splitter): chunk size 200, overlap 0, so each sentence stays one chunk, as in Part II.
+3.  **Ollama Embeddings**: model `nomic-embed-text`, Base URL `http://localhost:11434`.
+4.  **Chroma**: name the collection `campus`, with the File and Ollama Embeddings outputs wired in.
+
+> **You should see.** Running the Chroma node finishes without an error, and its inspection view lists five stored chunks.
+
+### Step C: The Query Path
+
+On the same canvas, wire the per-question path:
+
+1.  **Chat Input** to the **Chroma** node's search input (the same collection, with the same **Ollama Embeddings** node wired in for the question), with the number of results set to 2, our `k`.
+2.  **Prompt**: paste the template below.  Wire the search results into `{context}` and the Chat Input into `{question}`.
+3.  **Ollama**: model `llama3.2`, temperature 0, Base URL `http://localhost:11434`.
+4.  **Chat Output**.
+
+```text
+Answer using ONLY the context below. Cite the bracketed source number.
+If the context does not contain the answer, say 'not in my documents'.
+
+Context:
+{context}
+
+Question: {question}
+```
+
+> **If it fails.** A connection refusal at run time means a node's Base URL is wrong or Ollama is not running.  An answer with no context in it means the search results are not wired into `{context}`.
+
+### Step D: Ask the Same Two Questions
+
+Open the **Playground** and ask Part II's two questions: "Can a first-year student keep a car on campus?" and "What time does the bookstore close?"
+
+> **You should see.** The car question answered from the parking chunk, and "not in my documents" for the bookstore.  Open the inspection view on the search step to see which chunks it handed forward: that is the canvas version of printing `ctx`.
 
 ### Critical Thinking Questions
 
@@ -238,7 +295,7 @@ Nothing about the pipeline changes.  The chunk size, the top-k, the model name, 
 
 # Part IIc: The Same Pipeline as a Pydantic AI Agent
 
-Part II decided, in our code, that every question gets a retrieval step.  An agent can make that decision itself.  We give it the search as a **tool**, exactly like the tools in the *Tool Use* session, and the instructions tell it to search before it answers.  This is the shape the RAG Knowledge Base lab uses, so it is worth seeing here on the five campus documents first.
+Part II decided, in our code, that every question gets a retrieval step.  An agent can make that decision itself.  We give it the search as a **tool**, exactly like the tools in the *Tool Use* session, and the instructions tell it to search before it answers.  This is the shape the RAG Knowledge Base lab uses, so we try it here on the five campus documents first.
 
 Pydantic AI is the agent framework from [*Pydantic AI From the Loop Up*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI).  Install it with `pip install "pydantic-ai-slim[openai]==2.54.0"` and pull a model that calls tools reliably with `ollama pull qwen2.5:3b`.
 
@@ -312,7 +369,7 @@ Two things moved.  The prompt-building in `rag_answer` is gone: the agent receiv
 
 ## 3.  Exercises
 
-In this Part you apply the RAG pipeline to real documents you choose, stress-test it for citation quality and failure cases, and connect the results back to the evaluation framework from the *Hallucinations and Evaluating Agent Outputs* activity.  These exercises build directly toward the RAG Knowledge Base lab, on either route.
+In this Part you apply the RAG pipeline to real documents you choose, stress-test it for citation quality and failure cases, and connect the results back to the evaluation framework from the *Hallucinations and Evaluating Agent Outputs* activity.  These exercises build directly toward the RAG Knowledge Base lab, on either route: run them in Python, or in the Langflow flow from Part IIb by uploading your sentences to the File node.
 
 1.  *Your own corpus.*  Replace the five documents with ten sentences from a syllabus, club constitution, or campus page of your choosing.  Demonstrate one question answered correctly with a citation and one abstention.
 
@@ -371,7 +428,7 @@ Optional, and not assumed by anything above.  Chroma made retrieval look like on
 
 ## Why Brute Force Fails
 
-In this part, you will see why checking every vector in a million-document database is too slow to use, and how two approximate nearest-neighbor algorithms (HNSW and IVF) solve the problem with clever indexing.
+In this part, you will see why checking every vector in a million-document database is too slow to use, and how two approximate nearest-neighbor algorithms (HNSW and IVF) solve the problem with indexing.
 
 ### The Scale Problem
 
@@ -388,7 +445,7 @@ An embedding vector for a single sentence is a point in $\mathbb{R}^{1536}$.  At
 
 ### Distance Metrics
 
-Not all distance functions measure the same thing.  Choose the wrong one and semantically similar documents rank below dissimilar ones.  It is like choosing the right ruler: a protractor measures angles, a tape measure measures length; both are "distance" tools that answer different questions.
+Distance functions do not all measure the same thing.  Choose the wrong one and semantically similar documents rank below dissimilar ones.  It is like choosing a ruler: a protractor measures angles, a tape measure measures length; both are "distance" tools that answer different questions.
 
 | Scenario | Best Metric | Why | When to Use |
 |---|---|---|---|
@@ -415,11 +472,11 @@ Not all distance functions measure the same thing.  Choose the wrong one and sem
 
 ## The Retrieval Pipeline
 
-In this part, you will trace a complete RAG query through six pipeline steps (embedding, ANN search, metadata filtering, and LLM generation) and learn to diagnose which step is responsible when the answer comes out wrong.
+In this part, you will trace a complete RAG query through six pipeline steps (including embedding, ANN search, metadata filtering, and LLM generation) and learn to diagnose which step is responsible when the answer comes out wrong.
 
 ### From Query to Answer
 
-Every RAG query passes through a fixed sequence of steps, like an assembly line where each station transforms the work piece and hands it to the next.  Knowing who owns each step is essential for debugging: when the answer is wrong, you need to pinpoint whether to blame the embedding model, the ANN index, the metadata filter, or the language model.
+Every RAG query passes through a fixed sequence of steps, like an assembly line where each station transforms the work piece and hands it to the next.  Knowing who owns each step is what makes debugging possible: when the answer is wrong, you need to find out whether to blame the embedding model, the ANN index, the metadata filter, or the language model.
 
 ### Pipeline Tracing
 

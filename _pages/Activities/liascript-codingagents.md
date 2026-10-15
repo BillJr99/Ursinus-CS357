@@ -309,7 +309,7 @@ Agent (plan mode, read-only):
 Agent: Understood. Leaving plan mode and implementing steps 1 to 3.
 ```
 
-For one extra turn you learned that the agent intends to call the embedding server (a network dependency the spec never mentioned) and to add a file you did not ask for, and you said no to the second before it existed.  That is the entire value of the mode, and it is only value if you read the plan.
+For one extra turn you learned that the agent intends to call the embedding server (a network dependency the spec never mentioned) and to add a file you did not ask for, and you said no to the second before it existed.  That is the entire value of the mode, and it is only valuable if you read the plan.
 
 When is plan mode worth its extra turn, and when is it theater?  Give one example of each from a task you could give opencode today.
 
@@ -634,7 +634,7 @@ Where does a `PreToolUse` hook run?
 
 # Part III: Reading the Log
 
-In this part you do the thing that no model and no hook does for you.  Your tests are green.  That is necessary and it is not sufficient, and the gap between those two words is where this part lives.
+In this part you do the thing that no model and no hook does for you.  Your tests are green, which is necessary but not sufficient, and this part is about the gap between the two.
 
 ## 5.  What to Look For
 
@@ -645,7 +645,7 @@ Tests are not a complete specification of correct behavior; they are a sample of
 3.  **Security.**  Does it use `eval()`, build a shell command out of user input, write outside the working directory, or otherwise let external input become executable?
 4.  **Resources.**  Does it leave files open, build unbounded data structures, or loop with no exit condition?
 
-Read the action log, not the summary the agent gives you.  the action log records what it did; the agent's prose describes what it *believes* it changed, and those are different documents.
+Read the action log, not the summary the agent gives you.  The action log records what it did; the agent's prose describes what it *believes* it changed, and those are different documents.
 
 ## Model 3: A Planted-Bug Change
 
@@ -848,7 +848,7 @@ Nothing below is assumed by Parts I through IV, and none of it is required to fi
 
 ## A.  A Comparison of Coding Agent Architectures
 
-Three open or widely-used coding agents take different architectural approaches to the same problem: how does an agent read a codebase, plan changes, and execute them safely?  Study the table the way you would compare three contractors before hiring one, and focus on the Safety Model column, because that column determines how much damage a wrong decision can cause.  One contractor starts work immediately with full access to your house.  One writes a detailed blueprint you must approve before picking up a hammer.  One can only use tools you have explicitly handed them.  Each approach has advantages and risks.
+Three open or widely-used coding agents take different architectural approaches to the same problem: how does an agent read a codebase, plan changes, and execute them safely?  Study the table the way you would compare three contractors before hiring one, and focus on the Safety Model column, because that column determines how much damage a wrong decision can cause.  One contractor starts work immediately with full access to your house.  One writes a detailed blueprint you must approve before picking up a hammer.  One can only use tools you have explicitly handed them.
 
 | Agent | Architecture | How It Plans | File Access Method | How It Executes | Safety Model |
 |---|---|---|---|---|---|
@@ -1256,7 +1256,7 @@ export const ConfirmWrites = async ({ directory }) => ({
 | E.7 audit line | After the tool | Everything | Yes |
 | E.8 human before a write | Before the tool | The tool's name | Yes; the decision is a person's |
 
-One more distinction belongs in this table.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model and ask it to decide.  Those are useful for judgment ("does this change touch billing code?") and they are not gates in the sense of this section: a model asked to judge can be argued with, the same as the model it is judging.  Use a `command` hook for what must hold every time and a `prompt` hook for what needs an opinion.
+One more distinction belongs in this table.  Claude Code hooks also come in `prompt` and `agent` types, which hand the event to a model and ask it to decide.  Those are useful for judgment ("does this change touch billing code?"), but they are not gates in the sense of this section: a model asked to judge can be argued with, the same as the model it is judging.  Use a `command` hook for what must hold every time and a `prompt` hook for what needs an opinion.
 
 ### Critical Thinking Questions
 

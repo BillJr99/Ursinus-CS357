@@ -121,7 +121,7 @@ The last column is the one today cares about.  Working memory is the only kind t
 
 ## 3.  Logs, Metrics, and Traces
 
-Observability is built from three data types.  No one of them is enough alone.
+Observability is built from three data types, and no one of them is enough alone.
 
 | Pillar | What it captures | Best for | In our course |
 |---|---|---|---|
@@ -482,7 +482,7 @@ The *Design Your Agent System* assignment asks for this protocol, and this is th
 
 2.  *The mid-session swap.*
 
-   - *What to do*: An agent has been refactoring a parser for 40 minutes.  Its quota window expires in about 10 minutes.  Tests currently fail on 2 of 14 cases.  Put these scrambled steps in order: (A) commit one logical change containing the passing subset of the work, with documentation updates; (B) append a `SESSION.md` entry with scope, what was completed (with the test command output), what remains, the two failing cases by name, and a Next Safe Action; (C) stop starting new work the moment the limit is recognized as near; (D) update `CURRENT_TASK.md` so the Reality Check shows 12/14 passing with the verifying command and the next immediate action names the first failing case; (E) a new agent from a different vendor is started with the kickoff prompt, reads the project files in read-order funnel order (`START_HERE.md`, `CHARTER.md`, `docs/ROADMAP.md`, `.ai/CURRENT_TASK.md`, `.ai/SESSION.md`, then the latest commits; see the [Agent Governance tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentGovernance)), and states the mission, active task, and Next Safe Action before proceeding.
+   - *What to do*: An agent has been refactoring a parser for 40 minutes.  Its quota window expires in about 10 minutes.  Tests currently fail on 2 of 14 cases.  Put these scrambled steps in order: (A) commit one logical change containing the passing subset of the work, with documentation updates; (B) append a `SESSION.md` entry with scope, what was completed (with the test command output), what remains, the two failing cases by name, and a Next Safe Action; (C) stop starting new work the moment the limit is recognized as near; (D) update `CURRENT_TASK.md` so the Reality Check shows 12/14 passing with the verifying command and the next immediate action names the first failing case; (E) a new agent from a different vendor is started with the kickoff prompt, reads the project files in the read-order funnel (`START_HERE.md`, `CHARTER.md`, `docs/ROADMAP.md`, `.ai/CURRENT_TASK.md`, `.ai/SESSION.md`, then the latest commits; see the [Agent Governance tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentGovernance)), and states the mission, active task, and Next Safe Action before proceeding.
    - *Starter hint*: Ask which document is the only one that distinguishes "12 passing because fixed" from "12 passing because the last two were never run."
    - *You've succeeded when*: Your order is defended, and you have named the single step that, if skipped, would most likely make the next agent duplicate or destroy work.
 

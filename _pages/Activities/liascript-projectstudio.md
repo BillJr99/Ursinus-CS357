@@ -58,7 +58,7 @@ The second session is a rehearsal, not a work session.  The rehearsal rule: if y
 
 Stand-ups exist to surface the truth quickly.  In this first section, each team answers four fixed questions in two minutes, no more.  You use the stand-up to put the current state of your project in the room: real metrics, real blockers, and the single riskiest unfinished piece.  Getting this right before the gallery walk helps you point visitors at the things that most need feedback.
 
-The instinct to say "it's going pretty well" instead of "the evaluation harness reports 41%" is understandable and counterproductive.  The point of a stand-up is to get the real number into the room so the team and the instructor can help.  Think of it as a 120-second system health check: inputs (what you did), outputs (what the numbers say), and blockers (what is in the way).
+The instinct to say "it's going pretty well" instead of "the evaluation harness reports 41%" is understandable but counterproductive.  The point of a stand-up is to get the real number into the room so the team and the instructor can help.  Think of it as a 120-second system health check: inputs (what you did), outputs (what the numbers say), and blockers (what is in the way).
 
 ### 1.  Stand-Up (10 minutes)
 

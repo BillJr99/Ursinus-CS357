@@ -66,7 +66,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 ## 1.  Stand-Up (10 minutes)
 
-Stand-ups exist to surface the truth quickly.  The instinct to say "it's going pretty well" instead of "the harness passed 11 of 14" is understandable but counterproductive; the whole point is to get the real number into the room so the team and instructor can help.  Each team answers, in two minutes at the board, exactly four questions: What works end-to-end today?  What is the riskiest unfinished piece?  What did your evaluation harness report this week (a number, not an adjective)?  What do you need from the instructor or another team?  Stand-ups are status synchronization, not performance; the discipline is *saying the number*.
+Stand-ups exist to surface the truth quickly.  The instinct to say "it's going pretty well" instead of "the harness passed 11 of 14" is understandable but counterproductive; the point is to get the real number into the room so the team and instructor can help.  Each team answers, in two minutes at the board, exactly four questions: What works end-to-end today?  What is the riskiest unfinished piece?  What did your evaluation harness report this week (a number, not an adjective)?  What do you need from the instructor or another team?  Stand-ups are status synchronization, not performance; the discipline is *saying the number*.
 
 Between class sessions, your team channel carries the shorter version from the Project Thread:
 

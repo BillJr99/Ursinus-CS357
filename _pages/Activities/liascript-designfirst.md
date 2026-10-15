@@ -16,7 +16,7 @@ Today you plan a whole agent system on paper before any of it runs.  In *How I A
 
 The reason is cost.  In traditional software engineering, the cost of a mistake rises with how late you find it: a bug caught in code review is cheaper than one caught in production.  Agentic systems make that curve steeper.  An agent that sends email, writes to a database, or calls an external API can produce an **irreversible side effect** seconds after it starts, and if the design was wrong you may not be able to undo what it did.
 
-The design-first practice says: before you write code or deploy an agent, produce a written artifact that answers four questions.  What is each agent trying to do?  What can it touch?  How will we know it succeeded?  How will we know it failed?  This is not paperwork for its own sake.  It is the smallest protection there is against an agent that is confidently wrong at scale.
+The design-first practice says: before you write code or deploy an agent, produce a written artifact that answers four questions.  What is each agent trying to do?  What can it touch?  How will we know it succeeded?  How will we know it failed?  This is the smallest protection there is against an agent that is confidently wrong at scale, and not paperwork for its own sake.
 
 The same discipline is older than software.  Electricians draw the wiring diagram before they pull wire through conduit, because once the walls are closed, changing the circuit is expensive.  Plan your ports, your identity directories, and your data flows on paper before any agent sends its first request.
 
@@ -153,7 +153,7 @@ Below are six steps drawn from real student projects.  For each, decide which of
 
 1.  Your teammate proposes an agent whose job is to validate that a form's fields are all present and correctly typed, arguing that the model will be more flexible about odd input than a validator would be.  Give the strongest version of their argument, then say what you would build instead and why.
 
-    > *Hint: The strong version is real: a validator rejects `"Jan 3rd, 2027"` where a model would understand it, and rigid validators generate support tickets. The answer is not to pick a side; it is to notice there are two jobs. Interpretation of messy input is a model job. Deciding whether a value is acceptable is a rule you can state, so it is a code job. Normalize with the model, validate with code, and log every case where the model's normalization was rejected, because that log is your list of validator bugs.*
+    > *Hint: The strong version is real: a validator rejects `"Jan 3rd, 2027"` where a model would understand it, and rigid validators generate support tickets. The answer is to notice there are two jobs rather than to pick a side. Interpretation of messy input is a model job. Deciding whether a value is acceptable is a rule you can state, so it is a code job. Normalize with the model, validate with code, and log every case where the model's normalization was rejected, because that log is your list of validator bugs.*
 
 2.  A team has 8,000 labeled tickets and picks an LLM anyway, because "we already have the API set up and we don't know how to train a classifier."  That is an honest reason.  Name two costs they are accepting, and one condition under which their choice is genuinely the right call.
 
@@ -303,7 +303,7 @@ The pre-mortem identified what could go wrong.  The next model shows, week by we
 
 In this model you compare two student teams building the same pipeline on parallel tracks and trace exactly when, and why, the time the code-first team saved early is spent back, with interest.
 
-**Why this matters:** The design-first approach is sometimes dismissed as "slowing down" development.  This timeline shows that the total time spent is similar, but *where* the work happens differs.  Design-first front-loads effort into cheap, reversible planning.  Code-first back-loads the same effort into expensive, disruptive rework.  The question is not whether to do the hard thinking; it is whether to do it on paper or in production.
+**Why this matters:** The design-first approach is sometimes dismissed as "slowing down" development.  This timeline shows that the total time spent is similar, but *where* the work happens differs.  Design-first front-loads effort into cheap, reversible planning.  Code-first back-loads the same effort into expensive, disruptive rework.  The hard thinking happens either way; the question is whether you do it on paper or in production.
 
 Two student teams build the same 3-agent research pipeline.  Team A starts coding immediately.  Team B spends the first three days writing a one-page design document (agent table, pre-mortem, data flow diagram, evaluation rubric).
 

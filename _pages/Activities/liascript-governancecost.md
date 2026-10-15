@@ -164,7 +164,7 @@ The consequence for your policy: training gives you the model's intent, not its 
 | **Sandboxed execution** | High: requires container orchestration and security engineering | High: the agent literally cannot affect things outside the sandbox | Code and tool misuse that could affect external systems | Run all agent-invoked Python code in an isolated container with no network access |
 | **Human review queue** | Very high: requires staffing and workflow design | Near-impossible: a human sees the output before it reaches the user | All high-risk outputs; highest coverage, highest cost | Route any query containing mental health keywords to a counselor before responding |
 
-These controls are complementary, not alternatives; a production system layers several (defense in depth).  For your one-pager, the rule is simple: a clause that relies only on a system-prompt sentence fails the third-party test, because nothing checks it.  Name the control that does.
+These controls are complementary, not alternatives; a production system layers several (defense in depth).  For your one-pager, the rule is: a clause that relies only on a system-prompt sentence fails the third-party test, because nothing checks it.  Name the control that does.
 
 ---
 
@@ -242,7 +242,7 @@ Finally, each team identifies its largest gap, the quantity (energy or water) wh
 
 ## 5.  Right-Sizing and the Local-First Principle
 
-The design decision that most reduces AI environmental cost is not caching, scheduling, or offsets.  It is choosing the smallest model that does the job adequately in the first place.  A frontier model applied to a task a smaller model handles equally well is waste in energy, latency, and cost.  Most developers never learn right-sizing as a skill, because it requires deliberate evaluation rather than defaulting to the most capable option.
+The design decision that most reduces AI environmental cost is choosing the smallest model that does the job adequately in the first place, ahead of caching, scheduling, or offsets.  A frontier model applied to a task a smaller model handles equally well is waste in energy, latency, and cost.  Most developers never learn right-sizing as a skill, because it requires deliberate evaluation rather than defaulting to the most capable option.
 
 **Model right-sizing** matches model capability to task requirements.  Using a 100B-parameter frontier model to classify whether an email is spam, when a fine-tuned 100M-parameter model reaches the same accuracy, is waste.  The principle sounds obvious and is routinely violated: frontier APIs are convenient, benchmarks reward capability, and the marginal cost of a larger model is invisible to the developer while the capability gain is visible.
 
@@ -254,7 +254,7 @@ Grid carbon intensity varies by region and time of day.  The same computation in
 
 ## 6.  Jevons Paradox: Why Efficiency Gains May Not Reduce Impact
 
-Individually good decisions (use a smaller model, cache more queries, choose renewable energy) can add up to a collective outcome worse than if no one had tried to be efficient.  Efficiency enables expansion.  This is one of the most durable structural patterns in the history of technology, and there is no strong reason to expect AI to be exempt.  Knowing the paradox exists lets you design interventions that guard against it.
+Individually good decisions (use a smaller model, cache more queries, choose renewable energy) can add up to a collective outcome worse than if no one had tried to be efficient.  Efficiency enables expansion.  This is one of the most durable patterns in the history of technology, and there is no strong reason to expect AI to be exempt.  Knowing the paradox exists lets you design interventions that guard against it.
 
 **Jevons paradox** is named for economist William Stanley Jevons, who documented in *The Coal Question* (1865) that more efficient steam engines in Victorian England did not reduce coal consumption; they increased it, because efficiency lowered the cost per unit of work, expanding the range of economically viable uses and the scale of deployment.  The pattern recurs across energy history: fuel-efficient cars increase vehicle miles traveled; LED lighting increases total light-hours consumed; efficient appliances are bought in larger numbers.
 
@@ -303,7 +303,7 @@ According to Jevons paradox, a 10x improvement in model inference efficiency wil
 
 ## 7.  What You Can Do About It
 
-The audit tells you what a week costs.  This section is the response: the moves that cut both the bill and the footprint, so you can argue for them on either ground.  Each one is also something a policy can require, which is why Part III asks you for a cost and routing section.
+The audit tells you what a week costs.  This section covers the moves that cut both the bill and the footprint, so you can argue for them on either ground.  Each one is also something a policy can require, which is why Part III asks you for a cost and routing section.
 
 **Tokens.**  Hosted APIs charge by the token, and output tokens cost two to four times more than input tokens because the model generates them one at a time and cannot parallelize the work.  Every turn of a conversation resends the whole history as input, so long conversations cost far more than their length suggests.  Set `max_tokens` (and `budget_tokens` where the API offers it) before an agent runs, so a stuck loop cannot spend the month's budget on one task.  A budget you set in code is a clause an auditor can check.
 
@@ -321,7 +321,7 @@ The user sees the same 150-word reply in every row.  Running locally does not ma
 
 **Routing.**  Right-sizing has two dials: which model, and how much thinking.  They are independent, and a small model asked to think at length can cost more than a large one answering directly.  A routing function therefore emits two decisions.  Three common shapes: classifier-first (a tiny model or rule labels the query `trivial`, `medium`, `complex`, or `sensitive`, and each label maps to a tier), confidence-based (a small model answers and escalates when its confidence is low, which is unreliable because models are poorly calibrated), and cost-capped (every query goes to the small model first and escalates only if the answer fails a quality check such as a property test or a judge score).
 
-**Batching and streaming.**  Batching submits requests together, usually at half price, with minutes-to-hours latency; it fits nightly document processing, bulk embedding, and offline evaluation, not a user at a screen.  Streaming returns tokens as they are generated; it improves perceived responsiveness and changes the cost not at all.
+**Batching and streaming.**  Batching submits requests together, usually at half price, with minutes-to-hours latency; it fits nightly document processing, bulk embedding, and offline evaluation, not a user at a screen.  Streaming returns tokens as they are generated; it improves perceived responsiveness and does not change the cost at all.
 
 ### Right-Sizing Decision Matrix
 

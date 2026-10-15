@@ -176,7 +176,7 @@ Each part does one job, and naming them is what lets you carry the shape from on
 
 Read the **Check** row across.  A test answers yes or no, a rubric answers one question per criterion, and a metric answers with a number, but all three name something that existed **before** the turn started and that the agent may not edit.  That is the whole design.  When Model 2 rewrote a failing test to match its own code, it did not break a rule about diligence; it broke the Check part, and every other part of that run was worthless afterward.
 
-Three of the six parts never change between turns, which is exactly why the next section puts them in a file.  **Gate**, **Stopping rule**, and **Report** are properties of the loop, so they belong in `AGENTS.md` and you write them once.  **Scope**, **Source of truth**, and **Check** are properties of this turn, so you retype them each time, and they are short enough that retyping is the cheap part of the loop.
+Three of the six parts never change between turns, which is why the next section puts them in a file.  **Gate**, **Stopping rule**, and **Report** are properties of the loop, so they belong in `AGENTS.md` and you write them once.  **Scope**, **Source of truth**, and **Check** are properties of this turn, so you retype them each time, and they are short enough that retyping is the cheap part of the loop.
 
 Model 2's opening prompt was "Implement spec.md end to end.  Run the tests.  Commit when they pass.  I'll be back in an hour."  Which parts of the anatomy does it supply?
 

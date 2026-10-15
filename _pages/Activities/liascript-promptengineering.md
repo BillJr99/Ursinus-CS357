@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models
 
-In *The Agent Loop: Perceive, Plan, Act*, two-thirds of our calculator agent's design lived in one string: its system prompt.  A prompt is not a question.  It is a **program written in natural language**, and it configures the agent's behavior.  Today moves from the anatomy of a prompt, to the core patterns, to personas and system prompts, to the policy of your own agent, and then to a fair comparison of two models on the same prompt.  In an agentic system the system prompt *is* the agent's job description.  It is also the frame that the OpenCode Studio lab's Part 2 (the agent contract and the system prompt) has been waiting for: that part starts after today, and your Signed Team Charter is due today as well.
+In *The Agent Loop: Perceive, Plan, Act*, two-thirds of our calculator agent's design lived in one string: its system prompt.  A prompt is a **program written in natural language**, and it configures the agent's behavior.  Today moves from the anatomy of a prompt, to the core patterns, to personas and system prompts, to the policy of your own agent, and then to a fair comparison of two models on the same prompt.  In an agentic system the system prompt *is* the agent's job description.  It is also the frame that the OpenCode Studio lab's Part 2 (the agent contract and the system prompt) has been waiting for: that part starts after today, and your Signed Team Charter is due today as well.
 
 ---
 
@@ -147,7 +147,7 @@ Showing work buys computation, not carefulness.  A model produces one distributi
 
 The prompt stops being enough at checking.  You can ask a standard model to check its work, and it usually will, in form.  It will also, quite often, confirm its original mistake in a fluent paragraph, because it is imitating what checking looks like rather than being rewarded for catching anything.  A **reasoning model** is trained differently: reinforcement learning against problems that can be checked automatically, where the reward lands on runs that *end correct*.  That training is what makes backtracking, noticing a contradiction, and abandoning an approach reliable instead of merely requestable.
 
-The honest summary of the pattern is two lines, and the second is the one that gets forgotten:
+The pattern sums up in two lines, and the second is the one that gets forgotten:
 
 > **Prompting can request a behavior.  Training is what makes it dependable.**
 
@@ -251,7 +251,7 @@ Run the cell (or examine the projected outputs) and compare the three responses 
 
 ## 5.  Eval-Driven Prompt Development
 
-Model 1 argued that Prompt B is easier to *evaluate* than Prompt A.  Now we make that concrete.  We **measure** a prompt against a small set of known-answer examples, change the prompt, and watch the number move.  This is how prompts are improved in practice: not by taste, but against a golden test set, a fixed list of `input -> expected-output` pairs you score automatically.
+Model 1 argued that Prompt B is easier to *evaluate* than Prompt A.  Now we make that concrete.  We **measure** a prompt against a small set of known-answer examples, change the prompt, and watch the number move.  This is how prompts are improved in practice: against a golden test set, a fixed list of `input -> expected-output` pairs you score automatically, rather than by taste.
 
 The cell below defines five `(country, expected capital)` pairs, then runs the *same* test set through two system prompts: a vague one and a specific, format-constrained one.  Because the score uses exact match, the vague prompt's full-sentence answers fail while the specific prompt's one-word answers pass.  That accuracy gap is the *evidence* that one prompt is better for this task.
 
@@ -341,7 +341,7 @@ The loop is the whole point: **write the test set once, then let it referee ever
 
 # Part IIb: Designing a Persona That Holds Up
 
-A system prompt that works on the first try and falls apart on the fifth is not a system prompt.  It is a lucky sample.  This part takes the craft further: what a persona actually constrains, where personas leak, and how to write one that survives a hostile user and a long session.
+A system prompt that works on the first try and falls apart on the fifth was a lucky sample.  This part takes the craft further: what a persona actually constrains, where personas leak, and how to write one that survives a hostile user and a long session.
 
 ## The Three Layers of a Persona
 
@@ -705,7 +705,7 @@ Each row below is one call to one model.  Read the `sees` column first, because 
 
 The personas are the Part IIb material applied four times.  The temperatures are the Part IIc dial set per role rather than per run.  The interviewer sits high, at 0.7, because a question you did not expect is the whole product of that step.  The author and the reviser sit at 0.4, loose enough that the artifact is not one fixed phrasing and tight enough that two runs are comparable.  The red team sits highest of all, at 0.9, because three attacks that resemble one another have tested one thing three times.  The skill is Route 3 from the skills activity, a body pasted into a system prompt on the two steps that name it and absent everywhere else.
 
-The `sees` column is the new idea.  A step's user message is assembled from the keys in its own list and from nothing else, so the red team receives the candidate prompt and no brief, no design rationale, and no interview.  That is not a request made of the model.  It is a property of the function that builds the message, and the model has no opportunity to decline it.
+The `sees` column is the new idea.  A step's user message is assembled from the keys in its own list and from nothing else, so the red team receives the candidate prompt and no brief, no design rationale, and no interview.  That isolation is a property of the function that builds the message rather than a request made of the model, so the model has no opportunity to decline it.
 
 ## Model 6: Two Ways to Isolate a Critic
 

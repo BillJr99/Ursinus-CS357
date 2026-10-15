@@ -253,7 +253,7 @@ You already have three places to set it, and they are all the same setting:
 | Where | How to set it |
 |-------|---------------|
 | **OpenWebUI**, per conversation | Open a chat, click the **controls** icon at the top right, expand **Advanced Params**, and drag **Temperature**. It applies to that chat from that point on. |
-| **OpenWebUI**, per model | **Workspace &rarr; Models &rarr;** (your model) **&rarr; Advanced Params**. This becomes the default for every new chat with that model, which is how you build a "always answers the same way" assistant. |
+| **OpenWebUI**, per model | **Workspace &rarr; Models &rarr;** (your model) **&rarr; Advanced Params**. This becomes the default for every new chat with that model, which is how you build an "always answers the same way" assistant. |
 | **The Ollama CLI** | Inside an `ollama run llama3.2` session, type `/set parameter temperature 0` and press Enter, then keep chatting. |
 | **Your Python code** | The `"options": {"temperature": ...}` block you already sent in the code cell above. |
 
@@ -316,7 +316,7 @@ The block that registers the server you just started:
 }
 ```
 
-Three things to notice, because they answer the three questions this block always raises.  `npm` names the adapter that speaks the endpoint's dialect, and Ollama serves an OpenAI-compatible API, which is why the generic adapter works.  `baseURL` is `localhost` when opencode runs on this machine and `http://host.docker.internal:11434/v1` when it runs inside the course container, for the reason you met in the Docker session.  And there is **no API key**, because Ollama takes none; this is the same point section 3b makes from the other direction.
+Three things to notice, because they answer the three questions this block always raises.  `npm` names the adapter that speaks the endpoint's dialect, and Ollama serves an OpenAI-compatible API, which is why the generic adapter works.  `baseURL` is `localhost` when opencode runs on this machine and `http://host.docker.internal:11434/v1` when it runs inside the course container, for the reason you met in the Docker session.  And there is **no API key**, because Ollama takes none; this is the same point Section 3b makes from the other direction.
 
 A provider key and a model key join with a slash, so the block above defines `ollama/llama3.2`, which is the identifier `/model` lists and `--model` accepts.
 
@@ -843,7 +843,7 @@ When we tested this with `llama3.2`, the model's first proposal was `ls | grep p
 
 # Part III: Synthesis and Practice
 
-In this part, you will probe your local model across five different task types to build a concrete capability map, a table showing where it succeeds and where it fails.  This map will serve as your baseline for the rest of the semester as you add tools, retrieval, and multi-agent techniques.
+In this part, you will probe your local model across five different task types to build a concrete capability map, a table showing where it succeeds and where it fails.  This map is your baseline for the rest of the semester as you add tools, retrieval, and multi-agent techniques.
 
 ## 5.  Exercises
 
@@ -869,7 +869,7 @@ In this part, you will probe your local model across five different task types t
 
 ## Reflection Prompt
 
-*Personal*: You now own a working AI stack that costs nothing per query and shares nothing with anyone outside your machine.  Did anything about the installation process surprise you, was it harder or easier than expected?  What mental model did you have before about "where AI lives," and how has that changed?
+*Personal*: You now own a working AI stack that costs nothing per query and shares nothing with anyone outside your machine.  Did anything about the installation process surprise you?  Was it harder or easier than expected?  What mental model did you have before about "where AI lives," and how has that changed?
 
 *Technical*: You now have a tool that can run privately on your laptop.  Identify one project (academic, personal, or professional) that becomes newly possible for you because privacy and cost are no longer barriers.  Describe what you would build and what the remaining obstacle is.
 
@@ -947,7 +947,7 @@ OLLAMA_HOST=0.0.0.0 and OLLAMA_CONTEXT_LENGTH=8192.  Tell me first whether an
 ollama process is already running, because the old one has to stop first.
 ```
 
-The second setting is the familiar one from Section 3a.  The first is new, and it is the one that will stop you cold: the agent setup below refuses to start if the model has less than 8192 tokens of working memory, and Ollama hands out 4096 by default.  That refusal is deliberate, and the reason it is deliberate is worth reading.
+The second setting is the familiar one from Section 3a.  The first is new, and it is the one that will stop you cold: the agent setup below refuses to start if the model has less than 8192 tokens of working memory, and Ollama hands out 4096 by default.  That refusal is deliberate, and the reason is worth reading.
 
 ## The other thing it insists on
 

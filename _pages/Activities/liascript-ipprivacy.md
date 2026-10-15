@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Intellectual Property, Privacy, and the Case for Local AI
 
-Today we ask two questions: who owns the material a model learned from, and who gets watched when people use it.  The *Training Data, Bias, and Explainability* activity showed what models absorb from their training distributions.  Generative models are trained on creative work and prompted with personal information.  That puts two bodies of law and ethics, intellectual property and privacy, at the center of agentic practice.  We map both *as engineers*.  The goal is not to play lawyer.  It is to recognize the decisions that carry legal and ethical weight and to design for them, with our local-first stack as a recurring answer.  The path today: the IP questions, then the privacy questions, then the regulations, then design responses you already know how to build.
+Today we ask two questions: who owns the material a model learned from, and who gets watched when people use it.  The *Training Data, Bias, and Explainability* activity showed what models absorb from their training distributions.  Generative models are trained on creative work and prompted with personal information.  That puts two bodies of law and ethics, intellectual property and privacy, at the center of agentic practice.  We map both *as engineers*, without playing lawyer: the goal is to recognize the decisions that carry legal and ethical weight and to design for them, with our local-first stack as a recurring answer.  The path today: the IP questions, then the privacy questions, then the regulations, then design responses you already know how to build.
 
 ---
 
@@ -54,7 +54,7 @@ In this part, you learn to separate three legally distinct questions about AI an
 
 ## 1.  Three Distinct Questions
 
-Three separate questions arise where AI meets intellectual property.  Mixing them up produces confused reasoning.  Keep them apart whenever you read news coverage, policy proposals, or vendor terms of service.
+Three separate questions arise where AI meets intellectual property, and mixing them up produces confused reasoning.  Keep them apart whenever you read news coverage, policy proposals, or vendor terms of service.
 
 Question 1, input: was training a lawful use of copyrighted work?  Training corpora include books, code, journalism, and art whose creators largely did not consent.  Lawsuits by authors, artists, and news organizations against model vendors turn largely on *fair use*, a four-factor balancing test in US law: the purpose and character of the use, the nature of the work, the amount used, and the market effect.  Courts are dividing on these questions right now.  Engineers should track the outcomes, not assume them.
 
@@ -92,13 +92,13 @@ In this part, you trace what happens to a prompt when you press enter, both lega
 
 ## 2.  Where Prompts Go, and the Special Status of Student Data
 
-Privacy is more than a personal preference.  In educational and research settings, it is a legal obligation.  Knowing which laws apply to which data, and what "sending a prompt" means for data handling, turns you from a user who hopes for the best into an engineer who designs for compliance.
+In educational and research settings, privacy is a legal obligation as well as a personal preference.  Knowing which laws apply to which data, and what "sending a prompt" means for data handling, turns you from a user who hopes for the best into an engineer who designs for compliance.
 
 A prompt is a disclosure.  Text sent to a hosted service travels through, and rests on, third-party infrastructure under that provider's terms.  Those terms may permit retention, human review, or training on your inputs.  The engineering questions are always the same: what data leaves, where it is stored, for how long, who can see it, and whether you can delete it.
 
 Some data is regulated as well as sensitive.  In our own setting: **FERPA** (Family Educational Rights and Privacy Act) protects student education records such as grades, submissions, and advising notes.  IRB (Institutional Review Board) protocols govern human-subjects research data.  HIPAA (Health Insurance Portability and Accountability Act) governs health information.  Pasting a class roster into a consumer chatbot is bad practice, and it is plausibly a compliance violation.  GDPR (the EU's General Data Protection Regulation) and a growing patchwork of US state laws add rights of access and deletion, and limits on automated decision-making.
 
-Credentials are the sharp case of that, and the one where the asymmetry runs the other way.  An essay you paste into a chatbot cannot be un-disclosed: the words are out, and no action of yours recalls them.  A *token* you paste can be, because a credential is not information about you, it is an authorization, and an authorization can be cancelled.  Revoke it, issue a new one, and the disclosed text becomes worthless.  That is why the rule for credentials is revoke rather than panic, while the rule for the roster in the paragraph above is that there is no undo at all.  Knowing which kind of thing you have just disclosed tells you whether there is anything left to do about it.
+Credentials are the sharp case of that, and the one where the asymmetry runs the other way.  An essay you paste into a chatbot cannot be un-disclosed: the words are out, and no action of yours recalls them.  A *token* you paste can be, because a credential is an authorization rather than information about you, and an authorization can be cancelled.  Revoke it, issue a new one, and the disclosed text becomes worthless.  That is why the rule for credentials is revoke rather than panic, while the rule for the roster in the paragraph above is that there is no undo at all.  Knowing which kind of thing you have just disclosed tells you whether there is anything left to do about it.
 
 Agents raise the stakes mechanically.  A chatbot leaks what you paste.  An *agent with tools* can leak what it can *reach*: files, calendars, email.  The tool-permission taxonomy you built (read-only, reversible, irreversible) is privacy infrastructure.  The local stack you have run all semester is the strongest single control, because data that never leaves the machine cannot be retained by anyone else.
 
@@ -156,7 +156,7 @@ Carlini et al. (2021) showed this concretely.  By prompting GPT-2 with prefixes 
 - SSH private keys
 - Unique identifiers from internal documents
 
-This is not a bug.  It is a consequence of training on private data at scale.
+This is not a bug but a consequence of training on private data at scale.
 
 ### A Concrete Before/After Scrubbing Example
 
@@ -208,7 +208,7 @@ You now know how and why private information leaks from AI systems.  Next come t
 
 ## Privacy-Preserving Techniques
 
-The previous section described the threat.  This section describes the defenses.  None of them is complete on its own.  Differential privacy reduces statistical leakage but costs model accuracy.  Federated learning keeps raw data local but is vulnerable to gradient inversion.  PII scrubbing catches obvious identifiers but misses contextual ones.  Privacy protection in practice combines all three layers, the way a bank uses locked vaults, security cameras, and access logs together rather than relying on any one alone.
+The previous section described the threat; this one describes the defenses, and none of them is complete on its own.  Differential privacy reduces statistical leakage but costs model accuracy.  Federated learning keeps raw data local but is vulnerable to gradient inversion.  PII scrubbing catches obvious identifiers but misses contextual ones.  Privacy protection in practice combines all three layers, the way a bank uses locked vaults, security cameras, and access logs together rather than relying on any one alone.
 
 ### Differential Privacy (DP)
 
@@ -316,7 +316,7 @@ When an AI agent processes user inputs and produces outputs, PII can enter and l
 
 ### The Right to Be Forgotten and Model Weights
 
-GDPR Article 17 grants individuals the right to erasure: the right to have their personal data deleted.  For most databases this is straightforward: delete the row and cascade the deletion to backup tables.  For AI models, it is deeply problematic:
+GDPR Article 17 grants individuals the right to erasure: the right to have their personal data deleted.  For most databases this is straightforward: delete the row and cascade the deletion to backup tables.  For AI models, it is far harder:
 
 - If a person's data was included in training, their information is encoded into billions of parameters spread across the entire model, not stored as a retrievable record
 - There is no "delete" button on a weight matrix
@@ -430,7 +430,7 @@ Optional, and separate from the parts above.  Today's session argued the propert
 
 ### What Makes Something Creative?
 
-Ask someone whether an AI can be creative and you will get a confident "yes" or a confident "no."  The two confident people are probably thinking about different things when they say "creative."  Cognitive scientist Margaret Boden gave the field a more useful tool: not a yes/no question about creativity, but a taxonomy of three *types* of creativity that do different things and can be evaluated separately.  AI systems clearly do some of these types well; others remain debated.  By the end of this activity, you should be able to say something more precise than "AI is/isn't creative."  You should be able to say *which type* of creativity is at issue in any specific claim.
+Ask someone whether an AI can be creative and you will get a confident "yes" or a confident "no."  The two people are probably thinking about different things when they say "creative."  Cognitive scientist Margaret Boden gave the field a more useful tool: not a yes/no question about creativity, but a taxonomy of three *types* of creativity that do different things and can be evaluated separately.  AI systems clearly do some of these types well; others remain debated.  By the end of this activity, you should be able to say something more precise than "AI is/isn't creative."  You should be able to say *which type* of creativity is at issue in any specific claim.
 
 #### Boden's Three Types of Creativity
 
@@ -536,7 +536,7 @@ The legal debates around training data and style mimicry set up the last topic: 
 
 ### Human-AI Creative Collaboration
 
-Generative AI does more than replace human creativity.  Increasingly it collaborates with it, along a wide spectrum.  Where a particular human-AI creative relationship sits on that spectrum decides questions of authorship, attribution, copyright, and how to judge the work's quality.
+Generative AI can replace human creative work, and increasingly it also collaborates with it, along a wide spectrum.  Where a particular human-AI creative relationship sits on that spectrum decides questions of authorship, attribution, copyright, and how to judge the work's quality.
 
 #### The Collaboration Spectrum
 

@@ -116,7 +116,7 @@ A design heuristic follows from all of this: **choose the least dynamic pattern 
 
 ## 2.  Small Agents, Explicit Seams
 
-**Why this matters:** The code below shows the key property of well-designed orchestration: each agent's system prompt is one sentence long.  This is not laziness; it is the point.  A one-sentence context cannot distract the model with competing concerns.  Each agent does exactly one thing and returns a result.  The pipeline orchestrator then passes that result, unchanged, to the next agent.  The seams between agents are where the data flows, and they are the most important thing to get right, because a small error at a seam (wrong JSON key, missing field, unexpected format) propagates silently through the rest of the pipeline.
+**Why this matters:** The code below shows the key property of well-designed orchestration: each agent's system prompt is one sentence long.  The brevity is deliberate: a one-sentence context cannot distract the model with competing concerns.  Each agent does exactly one thing and returns a result.  The pipeline orchestrator then passes that result, unchanged, to the next agent.  The seams between agents are where the data flows, and they are the most important thing to get right, because a small error at a seam (wrong JSON key, missing field, unexpected format) propagates silently through the rest of the pipeline.
 
 You can run this code locally.  Start the model server with `ollama run llama3.2`, then run the script in a separate terminal:
 
@@ -259,7 +259,7 @@ Orchestration decides who runs next.  This part decides what happens when one of
 
 ## Four Loop Architectures
 
-**Why this matters:** Self-correction makes agents far more reliable on real tasks.  A surgeon checks the patient's vital signs after each incision before proceeding; that feedback loop catches problems before they cascade.  ReAct gives agents the same property: by writing out reasoning before each action, the agent can catch its own mistakes mid-task rather than only at the end.  Reflexion goes further and lets agents learn from entire failed attempts.  These patterns turn agents from one-shot guessers into iterative problem-solvers.
+**Why this matters:** Self-correction makes agents far more reliable on real tasks.  A surgeon checks the patient's vital signs after each incision before proceeding; that feedback loop catches problems before they cascade.  ReAct gives agents the same property: by writing out reasoning before each action, the agent can catch its own mistakes mid-task rather than only at the end.  Reflexion goes further and lets agents learn from entire failed attempts.  With these patterns, an agent iterates on a problem instead of guessing once.
 
 These patterns are not mutually exclusive.  Production systems often layer them: an outer ReAct loop with periodic Reflexion passes and Tree-of-Thought for particularly ambiguous steps.
 
@@ -326,7 +326,7 @@ Now that you have seen what a ReAct loop looks like step by step, the next secti
 
 ## Loop Safety Controls
 
-In this section you examine six concrete engineering controls that keep agent loops safe in production.  They matter because even a loop that works perfectly in testing can spin out of control when deployed on real, messy inputs.
+This section covers six engineering controls that keep agent loops safe in production.  They matter because a loop that works perfectly in testing can still spin out of control on real, messy inputs.
 
 **Why this matters:** Even a well-designed ReAct loop can fail in ways that are expensive, embarrassing, or harmful.  Safety controls are the engineering equivalent of a circuit breaker in an electrical system: they do not prevent all failures, but they prevent a small failure from cascading into a catastrophic one.  Circuit breakers are not optional in buildings, and these controls are not optional in production agent systems.  Every agent that runs unsupervised in the real world needs at least a step limit and a human escalation gate.
 
@@ -361,7 +361,7 @@ In this section you examine six concrete engineering controls that keep agent lo
 
 ## Termination: How Does an Agent Know It Is Done?
 
-In this section you compare three ways of defining "done" for an agent, and you practice revising task specifications to make termination more reliable.  This connects directly back to the loop safety controls above: a clear stopping rule is what makes the max-iterations control meaningful.
+In this section you compare three ways of defining "done" for an agent, and you practice revising task specifications to make termination more reliable.  This connects back to the loop safety controls above: a clear stopping rule is what makes the max-iterations control meaningful.
 
 **Why this matters:** "Being done" sounds obvious, but for an AI agent it is hard to define.  A traditional program returns when a function exits.  An agent is generating text in a loop and must decide for itself when to stop.  Get this wrong in one direction and the agent quits too early with incomplete work; get it wrong in the other direction and you get the "perfectionism spiral", an agent that keeps polishing indefinitely.  Knowing the three approaches to termination lets you choose the right one for your task.
 
@@ -371,7 +371,7 @@ This is one of the hardest problems in agent design.  There are three approaches
 
 **Self-assessed completion:** The agent generates a `DONE` token or calls a `finish()` tool when it believes the task is complete.  This is the approach used in the ReAct trace above.  Risk: the agent may declare completion prematurely (hallucinating that it answered the question) or never (the perfectionism spiral, where it keeps improving the answer without stopping).
 
-**Budget exhaustion:** The outer loop simply ends when a budget (steps, tokens, dollars, or wall-clock time) is consumed and returns whatever partial result exists at that point.  This approach is reliable and predictable, but may return incomplete work on complex tasks.
+**Budget exhaustion:** The outer loop ends when a budget (steps, tokens, dollars, or wall-clock time) is consumed and returns whatever partial result exists at that point.  This approach is reliable and predictable, but may return incomplete work on complex tasks.
 
 Production systems typically combine all three: an explicit criterion when possible, self-assessment as the primary signal, and budget exhaustion as a hard fallback.  The point to hold onto is that **"done" is a property of the task specification, not of the agent's internal state**.
 
@@ -701,7 +701,7 @@ Everything below is at-home material.  Nothing in this section is needed for tod
 
 ## 4.  Fixed Pipelines, Explained Separately
 
-Fixed orchestration is not one shape but a small family of reusable ones.  Below is each shape as its own "slide": a one-line *when to use*, a tiny flow sketch, and a pointer to where you have already met it.  In all five, notice the common property: **the wiring is authored by you and does not change based on what the agents produce.**
+Fixed orchestration is a small family of reusable shapes.  Below is each one as its own "slide": a one-line *when to use*, a tiny flow sketch, and a pointer to where you have already met it.  In all five, notice the common property: **the wiring is authored by you and does not change based on what the agents produce.**
 
 ### 4a.  Sequential Pipeline (A -> B -> C)
 
