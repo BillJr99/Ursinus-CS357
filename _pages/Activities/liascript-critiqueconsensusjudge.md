@@ -611,11 +611,11 @@ Optional, and not assumed by the parts above.  Critique and refine puts a second
 
 ---
 
-In this first model, you will map out the space between fully manual and fully autonomous agent operation, and you will learn to apply five specific trigger conditions that determine when a human checkpoint is warranted.  The design decisions that follow build on it.
+In this first model, you will map out the space between fully manual and fully autonomous agent operation and apply five trigger conditions that determine when a human checkpoint is warranted.  The design decisions that follow build on it.
 
 ### The Autonomy Spectrum and Checkpoint Criteria
 
-Agent deployment exists on a spectrum from fully manual (the human does every step) to fully autonomous (the agent acts without any checkpoints).  Between these extremes are two important operating modes:
+Agent deployment exists on a spectrum from fully manual (the human does every step) to fully autonomous (the agent acts without any checkpoints).  Between these extremes are two operating modes:
 
 - **Human-on-the-loop**: The agent acts immediately but a human monitors and can intervene.  Used for low-stakes, reversible, high-volume tasks where errors are catchable before they cause harm.
 - **Human-in-the-loop**: The agent *pauses before acting* on specific trigger conditions and waits for explicit human approval.  Used for high-stakes, irreversible, or ambiguous situations where a mistake before intervention could cause lasting harm.
@@ -751,7 +751,7 @@ Compare two designs for an agent that processes 50 incoming support tickets per 
 | Total human time per day | ~5 minutes total, but low quality and low attention | ~6 minutes total, but high quality and high attention |
 | Agent latency per ticket | High: every ticket blocks multiple times waiting for human clicks | Low: 84% of tickets flow through without any pause |
 
-**Trust calibration** is the practice of periodically reviewing autonomous decisions in shadow mode (where the agent acts but a human also reviews the same cases after the fact) to detect systematic errors and adjust thresholds.  As the agent proves reliable in a domain, checkpoint frequency decreases.  If error rates climb, thresholds tighten automatically.  This is not a one-time setup but an ongoing measurement process.
+**Trust calibration** is the practice of periodically reviewing autonomous decisions in shadow mode (where the agent acts but a human also reviews the same cases after the fact) to detect systematic errors and adjust thresholds.  As the agent proves reliable in a domain, checkpoint frequency decreases.  If error rates climb, thresholds tighten automatically.  Calibration is an ongoing measurement process rather than a one-time setup.
 
 #### Questions to Work Through
 

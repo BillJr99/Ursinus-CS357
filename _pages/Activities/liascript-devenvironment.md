@@ -23,7 +23,7 @@ One deliberate exception: **Ollama stays on your host.**  Model inference is the
 Two ideas carry the whole design:
 
 1.  **The image is the environment.**  One course Dockerfile, built once, gives everyone a byte-for-byte identical lab environment.  No more "works on my machine."
-2.  **The mount is the only door.**  The container can see exactly one directory of your machine: the workspace you mount into it.  For a course where you *run agent code that takes actions*, that boundary is not a nicety; it is the blast-radius principle, enforced by architecture.
+2.  **The mount is the only door.**  The container can see exactly one directory of your machine: the workspace you mount into it.  For a course where you *run agent code that takes actions*, that boundary is the blast-radius principle, enforced by architecture.
 
 Work through the steps in order.  Each practice step shows the command *and* the output you should expect.  If Docker cannot run on your machine, Step 10 (the native fallback) is a complete, fully supported route.
 
@@ -141,7 +141,7 @@ What does it actually do?
 [( )] Nothing; the space makes it invalid
 [( )] Asks for confirmation before deleting anything
 
-> **Why this answer?**  There is a space after the tilde.  That splits one path into two arguments, and the first one is your home directory.  This is not a trick question; it is a real and well documented way people have lost their work, and it is exactly the class of mistake you are being asked to catch in a command a machine hands you.
+> **Why this answer?**  There is a space after the tilde.  That splits one path into two arguments, and the first one is your home directory.  This is not a trick question; it is a real and well documented way people have lost their work, and it is the class of mistake you are being asked to catch in a command a machine hands you.
 
 > **Going deeper on the shell.**  Pipes, redirection into and out of files, background jobs, signals, and the `PATH` mechanics behind "command not found" are worked in full in the shell tutorial linked from today's schedule entry.  You do not need it to finish this page.
 
@@ -302,7 +302,7 @@ The first build downloads the ML libraries and takes a while; start it and go re
 student@a1b2c3d4e5f6:/workspace$
 ```
 
-You are the non-root user `student`, in `/workspace`, which *is* your `cs357-work` clone (`ls -la` shows `.git`, `.devcontainer`, `README.md`).  Exit anytime with `exit` or Ctrl-D; `--rm` deletes the container but never your files; they live in the mounted repo on your disk.
+You are the non-root user `student`, in `/workspace`, which *is* your `cs357-work` clone (`ls -la` shows `.git`, `.devcontainer`, `README.md`).  Exit anytime with `exit` or Ctrl-D.  `--rm` deletes the container but never your files, which live in the mounted repo on your disk.
 
 ---
 
@@ -435,7 +435,7 @@ Two things not to do here, and the reason is the same one this whole step is abo
 
 `:ro` makes the mount read-only (the container can use the keys, not modify them), and you would use the `git@github.com:...` remote form.
 
-> **Security note: think like this course.**  Mounting `~/.ssh` deliberately widens the container's view of your machine: you are handing everything that runs inside (including, later, *agent code*) a credential that can push to **every** repository your key reaches.  The fine-grained PAT is the tighter default inside the container because its blast radius is one repository, `cs357-work`, and nothing else.  Least privilege is not just a lecture topic here; it is a configuration choice you are making right now.
+> **Security note: think like this course.**  Mounting `~/.ssh` deliberately widens the container's view of your machine: you are handing everything that runs inside (including, later, *agent code*) a credential that can push to **every** repository your key reaches.  The fine-grained PAT is the tighter default inside the container because its blast radius is one repository, `cs357-work`, and nothing else.  Least privilege is more than a lecture topic here: it is a configuration choice you are making right now.
 >
 > **And that is why the two environments differ.**  The question "which credential should I use?" has two different right answers here, and the difference is not the tool, it is the **blast radius**.  On your own machine, the SSH key is the correct credential and the passphrase is what protects it.  Inside a container that will shortly be running an agent, the correct credential is the narrowest one that still works.  If you find yourself wanting a single rule for both, notice that the rule *is* single: give each environment the least authority that lets it do its job.
 
@@ -523,7 +523,7 @@ To https://github.com/YOURUSERNAME/cs357-work.git
 
 Everything so far has been you typing commands.  Now you hand the same bench to an agent and watch it type them instead.
 
-A **coding agent** is the agent loop from the *Agent Loop* activity, wired to your file system and your terminal instead of a calculator.  You state a goal in plain English; it reads your files, proposes edits and commands, asks permission at the gates you leave open, runs what you approve, reads the result, and loops.  Same perceive-plan-act cycle, much larger blast radius, which is exactly why we are doing this *inside* the container and *inside* a git repository.  If it makes a mess, `git checkout .` undoes the mess.
+A **coding agent** is the agent loop from the *Agent Loop* activity, wired to your file system and your terminal instead of a calculator.  You state a goal in plain English; it reads your files, proposes edits and commands, asks permission at the gates you leave open, runs what you approve, reads the result, and loops.  Same perceive-plan-act cycle, much larger blast radius, which is why we are doing this *inside* the container and *inside* a git repository.  If it makes a mess, `git checkout .` undoes the mess.
 
 We use **opencode** because it is the most provider-flexible of the family: it speaks to any OpenAI-compatible backend, so it will talk to the Ollama server already running on your host without an account, an API key, or a bill.
 
@@ -545,7 +545,7 @@ curl -fsSL https://opencode.ai/install | bash
 
 (If Node.js is your preference, `npm i -g opencode-ai` does the same job, and it is what the course Dockerfile uses.)
 
-That first command pipes a script off the internet into a shell, which is precisely the thing Step 0 told you to think twice about.  Two reasons it is defensible: the URL is the project's own documented installer, and on the container route you are not running it at all.  Notice that both halves of that sentence had to be true.
+That first command pipes a script off the internet into a shell, which is the thing Step 0 told you to think twice about.  Two reasons it is defensible: the URL is the project's own documented installer, and on the container route you are not running it at all.  Notice that both halves of that sentence had to be true.
 
 Verify either way:
 
@@ -850,7 +850,7 @@ The entries are in step order.  Find the step you are on, and work down its entr
 
 **Step 5: connection refused to `host.docker.internal:11434` (the 5.1 failure).**  Diagnose with the ladder from Docker from Zero Model 2: (1) from the *host*, `curl http://localhost:11434/api/tags`; if this fails, Ollama is not running; start it.  (2) If the host works but the container does not, and you are **on Linux**, the container was probably started without the host-gateway mapping; `host.docker.internal` is automatic on Docker Desktop (macOS/Windows) but must be opted into on Docker Engine.  The course `docker-compose.yml` includes `extra_hosts: ["host.docker.internal:host-gateway"]` and `devcontainer.json` includes the matching `--add-host` run argument, so this bites only when running the image by hand: add `--add-host=host.docker.internal:host-gateway` to your `docker run`.  (3) Some Ollama installs bind only to `127.0.0.1`, which the host gateway cannot reach; setting the environment variable `OLLAMA_HOST=0.0.0.0` where Ollama starts (see Ollama's docs for your OS) makes it listen on all interfaces.
 
-**Step 5: model responses are slow inside the container.**  They should be exactly as fast as from the host; inference runs *on the host*; the container only sends HTTP requests.  If host-side `ollama run llama3.2 "hi"` is also slow, that is your hardware and a small model like `llama3.2` is the right call; if only the containerized call is slow, something is off in your networking; ask in the course channel with your Step 5.1 transcript.
+**Step 5: model responses are slow inside the container.**  They should be exactly as fast as from the host, because inference runs *on the host* and the container only sends HTTP requests.  If host-side `ollama run llama3.2 "hi"` is also slow, that is your hardware and a small model like `llama3.2` is the right call; if only the containerized call is slow, something is off in your networking, so ask in the course channel with your Step 5.1 transcript.
 
 **Step 7: `git push` rejected: `Authentication failed` / `Support for password authentication was removed`.**  GitHub does not accept account passwords over HTTPS; paste a **personal access token** at the password prompt.  If a token is rejected, check its scope: it must list `cs357-work` under *Only select repositories* with **Contents: Read and write**, and it must not be expired.
 

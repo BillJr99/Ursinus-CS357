@@ -141,7 +141,7 @@ r = requests.post("http://localhost:3000/api/chat/completions",
 reply = r.json()["choices"][0]["message"]   # OpenWebUI nests under choices[0]
 ```
 
-**Now the question that matters.**  Same instructions, same model, three routes.  What is actually different?
+Now the question: same instructions, same model, three routes.  What is actually different?
 
 Only Route 1 has a **trigger**.  In opencode the `description` decides whether the body is loaded at all, so the instructions are absent from every request that does not match.  In Routes 2 and 3 the body is pasted into the system prompt, which means it is present on *every* turn whether or not it is relevant.  **Routes 2 and 3 do not install a skill; they turn a skill into a system prompt.**  Look back at the table in Section 1: you have moved the instructions from the "Skill" row into the "System prompt" row, and given up the "No" in the always-active column.
 
@@ -655,7 +655,7 @@ The third one is the problem this skill exists for.  The sentence at the heart o
 
 ## How it works, without the jargon
 
-The skill is essentially a checklist discipline, of the same kind that surgical teams and flight crews adopted for the same reason: not because anyone involved is incompetent, but because competent people under load skip steps and do not notice they skipped them.
+The skill is a checklist discipline, of the same kind that surgical teams and flight crews adopted for the same reason: not because anyone involved is incompetent, but because competent people under load skip steps and do not notice they skipped them.
 
 Before the habits, the story that produced them.  The authors watched a small model fail, and wrote down what they saw:
 

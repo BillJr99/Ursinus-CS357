@@ -97,7 +97,7 @@ print("Environment ready.")
 
 # Part I: The Sense-Think-Act Cycle
 
-In this part, you will build a mental model of how agents perceive their environment, reason about it, and act, and why this cycle repeats rather than stopping after one exchange.  Understanding this cycle is what separates a bare chatbot from a true agent.
+In this part, you will build a mental model of how agents perceive their environment, reason about it, and act, and why this cycle repeats rather than stopping after one exchange.  This cycle is what separates a bare chatbot from an agent.
 
 ## 1.  From Reaction to Agency
 
@@ -230,7 +230,7 @@ print(run_agent("A 4-credit course meets 100 minutes twice weekly for 14 weeks. 
 
 ## Model: Trace Analysis
 
-Run (or examine the projected run of) the agent above as a team.  Pay attention not just to the final answer but to the full printed trace: the agent's thoughts, its tool calls, and the observations that come back.
+Run (or examine the projected run of) the agent above as a team.  Read the full printed trace, not only the final answer: the agent's thoughts, its tool calls, and the observations that come back.
 
 ### Critical Thinking Questions
 
@@ -252,7 +252,7 @@ Run (or examine the projected run of) the agent above as a team.  Pay attention 
 
    > *Hint: Language models can only read a fixed amount of text at once, their "context window."  What happens when `memory` grows beyond that limit?*
 
-> **Common Misconception:** It is tempting to think the language model is "running" the calculator or browsing the web.  It is not.  The model only produces text that looks like a tool call (for example, `calc(2 + 2)`).  The surrounding Python code detects that text, runs the real operation, and feeds the result back as an Observation.  The model never executes code directly; it just asks, and the program does.  This distinction matters enormously for security and for understanding what agents can and cannot do on their own.
+> **Common Misconception:** It is tempting to think the language model is "running" the calculator or browsing the web.  It is not.  The model only produces text that looks like a tool call (for example, `calc(2 + 2)`).  The surrounding Python code detects that text, runs the real operation, and feeds the result back as an Observation.  The model never executes code directly; it asks, and the program does.  This distinction matters a great deal for security and for understanding what agents can and cannot do on their own.
 
 ---
 
@@ -264,7 +264,7 @@ Doing it twice in one session was the crunch; doing it once here and once for re
 
 # Part III: Synthesis and Practice
 
-In this part, you will extend and stress-test the agent you just built (changing its budget, designing new tools, and deliberately breaking it), so that you understand not just how it works when it succeeds, but why it fails when it does.
+In this part, you will extend and stress-test the agent you just built (changing its budget, designing new tools, and deliberately breaking it), so that you understand why it fails when it does, as well as how it works when it succeeds.
 
 ## 4.  Exercises
 

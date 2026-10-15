@@ -170,7 +170,7 @@ print("\nRETRIEVED:\n", ctx, "\n\nANSWER:\n", answer)
 
 ## Model 2: Grounding in Action
 
-**Why this matters:** The second query ("What time does the bookstore close?") tests a critical design decision: what should the system do when the right answer is not in the index?  A bare language model will often invent a plausible answer ("The bookstore closes at 5pm on weekdays").  A well-designed RAG system says it does not know.  That difference, between confident invention and abstention, is what makes RAG trustworthy for high-stakes uses like medical information, legal research, or campus policy.
+**Why this matters:** The second query ("What time does the bookstore close?") tests an important design decision: what should the system do when the right answer is not in the index?  A bare language model will often invent a plausible answer ("The bookstore closes at 5pm on weekdays").  A well-designed RAG system says it does not know.  That difference, between confident invention and abstention, is what makes RAG trustworthy for high-stakes uses like medical information, legal research, or campus policy.
 
 ### Critical Thinking Questions
 
@@ -186,7 +186,7 @@ print("\nRETRIEVED:\n", ctx, "\n\nANSWER:\n", answer)
 
    > *Hint: Create a question like "Can I get food after working out at the gym?"; the answer involves both the dining hours doc and the athletics doc.  With `k=1`, only one chunk fits in the prompt.  What does the model say?*
 
-> **Common Misconception:** RAG does not teach the model new facts, and it does not fine-tune or update the model in any way.  The model's weights are unchanged.  RAG places text in the prompt that the model then reads and summarizes, the same way you could hand a book to someone who has never seen it and ask them questions from it.  The intelligence is in the language model; the facts come from your documents.  So RAG is only as accurate as your documents, and if your documents contain errors, the model will faithfully repeat them.
+> **Common Misconception:** RAG does not teach the model new facts, and it does not fine-tune or update the model in any way.  The model's weights are unchanged.  RAG places text in the prompt for the model to read and summarize, the same way you could hand a book to someone who has never seen it and ask them questions from it.  The intelligence is in the language model; the facts come from your documents.  So RAG is only as accurate as your documents, and if your documents contain errors, the model will faithfully repeat them.
 
 **Three ways to change an answer.**  Keep these apart, because people often blur them:
 
@@ -222,7 +222,7 @@ Langflow is a visual editor for language-model pipelines: each step is a node yo
 | **Retrieve** | Embeds the incoming question and pulls the nearest chunks from the same Chroma collection | `col.query(query_embeddings=..., n_results=k)` | Top-k, the same number as `k=2` in `rag_answer` |
 | **Generate** | Fills a prompt template with the retrieved chunks and the question, then sends it to `llama3.2` on your local Ollama | The prompt string and `chat()` | The grounding instruction ("answer using ONLY the context") and the abstention phrase |
 
-Nothing about the pipeline changes.  The chunk size, the top-k, the model name, and the prompt are the same decisions; they live in node settings instead of variables.  The canvas makes the retrieval step visible (the playground shows which chunks the Retrieve node handed forward, which is exactly what you print as `ctx` in code), and it hides the error handling that `embed()` and `chat()` wrap around every network call.  Whichever route you take in the lab, the graded work is the same: an index over documents you chose, answers that name their sources, an abstention when the answer is not there, and one question asked with retrieval switched off.
+Nothing about the pipeline changes.  The chunk size, the top-k, the model name, and the prompt are the same decisions; they live in node settings instead of variables.  The canvas makes the retrieval step visible (the playground shows which chunks the Retrieve node handed forward, which is what you print as `ctx` in code), and it hides the error handling that `embed()` and `chat()` wrap around every network call.  Whichever route you take in the lab, the graded work is the same: an index over documents you chose, answers that name their sources, an abstention when the answer is not there, and one question asked with retrieval switched off.
 
 
 ## Build It on the Canvas
@@ -295,7 +295,7 @@ Open the **Playground** and ask Part II's two questions: "Can a first-year stude
 
 # Part IIc: The Same Pipeline as a Pydantic AI Agent
 
-Part II decided, in our code, that every question gets a retrieval step.  An agent can make that decision itself.  We give it the search as a **tool**, exactly like the tools in the *Tool Use* session, and the instructions tell it to search before it answers.  This is the shape the RAG Knowledge Base lab uses, so it is worth seeing here on the five campus documents first.
+Part II decided, in our code, that every question gets a retrieval step.  An agent can make that decision itself.  We give it the search as a **tool**, exactly like the tools in the *Tool Use* session, and the instructions tell it to search before it answers.  This is the shape the RAG Knowledge Base lab uses, so we try it here on the five campus documents first.
 
 Pydantic AI is the agent framework from [*Pydantic AI From the Loop Up*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI).  Install it with `pip install "pydantic-ai-slim[openai]==2.54.0"` and pull a model that calls tools reliably with `ollama pull qwen2.5:3b`.
 
@@ -428,7 +428,7 @@ Optional, and not assumed by anything above.  Chroma made retrieval look like on
 
 ## Why Brute Force Fails
 
-In this part, you will see why checking every vector in a million-document database is too slow to use, and how two approximate nearest-neighbor algorithms (HNSW and IVF) solve the problem with clever indexing.
+In this part, you will see why checking every vector in a million-document database is too slow to use, and how two approximate nearest-neighbor algorithms (HNSW and IVF) solve the problem with indexing.
 
 ### The Scale Problem
 
@@ -445,7 +445,7 @@ An embedding vector for a single sentence is a point in $\mathbb{R}^{1536}$.  At
 
 ### Distance Metrics
 
-Not all distance functions measure the same thing.  Choose the wrong one and semantically similar documents rank below dissimilar ones.  It is like choosing the right ruler: a protractor measures angles, a tape measure measures length; both are "distance" tools that answer different questions.
+Distance functions do not all measure the same thing.  Choose the wrong one and semantically similar documents rank below dissimilar ones.  It is like choosing a ruler: a protractor measures angles, a tape measure measures length; both are "distance" tools that answer different questions.
 
 | Scenario | Best Metric | Why | When to Use |
 |---|---|---|---|
@@ -472,11 +472,11 @@ Not all distance functions measure the same thing.  Choose the wrong one and sem
 
 ## The Retrieval Pipeline
 
-In this part, you will trace a complete RAG query through six pipeline steps (embedding, ANN search, metadata filtering, and LLM generation) and learn to diagnose which step is responsible when the answer comes out wrong.
+In this part, you will trace a complete RAG query through six pipeline steps (including embedding, ANN search, metadata filtering, and LLM generation) and learn to diagnose which step is responsible when the answer comes out wrong.
 
 ### From Query to Answer
 
-Every RAG query passes through a fixed sequence of steps, like an assembly line where each station transforms the work piece and hands it to the next.  Knowing who owns each step is essential for debugging: when the answer is wrong, you need to pinpoint whether to blame the embedding model, the ANN index, the metadata filter, or the language model.
+Every RAG query passes through a fixed sequence of steps, like an assembly line where each station transforms the work piece and hands it to the next.  Knowing who owns each step is what makes debugging possible: when the answer is wrong, you need to find out whether to blame the embedding model, the ANN index, the metadata filter, or the language model.
 
 ### Pipeline Tracing
 

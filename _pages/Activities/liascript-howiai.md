@@ -16,10 +16,10 @@ You have spent seven weeks learning how agents work.  Today is about how a perso
 
 Here is the problem this session solves.  Every AI tool you use keeps its own private memory of you.  Your coding agent knows the files you opened this morning.  Your chat window knows this conversation and forgets it tomorrow.  None of them know what the others know, and none of them survive a closed tab.  So you re-explain yourself, constantly, to tools that could already know, and every session starts from zero.
 
-The fix is not a better tool.  It is a **place**: a folder of plain Markdown files that you own, that any agent can read, that lives under version control, and that agents write back into under rules you wrote down.  Two moves make it work, and they are the first two parts of today.
+The fix is a **place**, not a better tool: a folder of plain Markdown files that you own, that any agent can read, that lives under version control, and that agents write back into under rules you wrote down.  Two moves make it work, and they are the first two parts of today.
 
 1.  **Your notes become memory agents can read.**  A vault of plain files, organized into zones, with a contract at the root saying what may be touched.
-2.  **Your repository becomes the channel agents talk through, and the record of why.**  Not a chat window: a charter that states what the project is for, plans written before work starts, issues and pull requests as the medium, and a small set of handoff documents that let one agent stop and another pick the work up without either of them sharing a thought.  When a repository is the wrong fit, a shared folder carries the same handoff, and Section 3d shows how.
+2.  **Your repository becomes the channel agents talk through, and the record of why.**  In place of a chat window, you get a charter that states what the project is for, plans written before work starts, issues and pull requests as the medium, and a small set of handoff documents that let one agent stop and another pick the work up without either of them sharing a thought.  When a repository is the wrong fit, a shared folder carries the same handoff, and Section 3d shows how.
 
 Then the room is yours for the rest of the session: bring what is stuck.
 
@@ -216,7 +216,7 @@ The `:ro` is the whole difference between a rule the agent is asked to follow an
 
    > *Hint: Credentials are the easy one.  What about information that is not yours to store, such as someone else's messages?  What about categories that carry breach-notification duties regardless of who saw them?*
 
-4.  The vault is a retrieval problem, and you built the machinery for it in the *RAG Knowledge Base* session, and the RAG Knowledge Base lab builds it out later this term.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
+4.  The vault is a retrieval problem; you built the machinery for it in the *RAG Knowledge Base* session, and the RAG Knowledge Base lab builds it out later this term.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
 
    > *Hint: You do not need a number to answer this; you need the reason.  A model can only read a fixed amount of text at once.  What happens to the oldest part of what you handed it when the folder outgrows that limit, and how would you notice?  Next session, *Observability, Traceability, and Handoff Protocols*, and its reading, *Memory and the Small Context Window Principle*, give that limit its name and its arithmetic.*
 
@@ -248,7 +248,7 @@ Two design choices deserve naming because they are not obvious.
 
 **`SESSION.md` is append-only.**  Old entries are never deleted, only annotated ("superseded by the entry below").  A journal you can rewrite is a journal that cannot tell you what you used to believe, and *what you used to believe* is exactly what you need when a decision turns out wrong.
 
-Every session entry ends with a Next Safe Action.  Not "next steps," which is a wish list.  One concrete action that is safe to take with no further context.  It is the handoff, written before it is needed.
+Every session entry ends with a Next Safe Action: not "next steps," which is a wish list, but one concrete action that is safe to take with no further context.  It is the handoff, written before it is needed.
 
 ---
 
@@ -258,7 +258,7 @@ Every session entry ends with a Next Safe Action.  Not "next steps," which is a 
 
 Watch the difference.  Halfway through a task an agent notices that making the tests pass quickly would mean loosening an assertion.  Nothing in `AGENTS.md` forbids editing a test.  So it either stops and asks you (interrupting, and it will ask again tomorrow) or it guesses.  A charter that ranks **correctness above speed** answers the question without either.
 
-That is the whole trick: a charter is where you make a decision **once**, in writing, so that neither you nor any agent has to relitigate it at three in the afternoon.
+A charter is where you make a decision **once**, in writing, so that neither you nor any agent has to relitigate it at three in the afternoon.
 
 The course template at [`files/agent-templates/CHARTER.md`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/CHARTER.md) has six sections that earn their place:
 
@@ -351,7 +351,7 @@ Notice which one is most often missing in practice.  Isolation is the one people
 
 ## 3d.  The Second Channel: A Shared Folder
 
-Everything in Model 2 below travels through a repository.  The same handoff also works through a folder that a sync service keeps identical on two machines: a Dropbox folder, or the vault from Part I with its sync turned on.  No GitHub account, no pull request, no network beyond what the sync client already uses.  The folder version is worth learning even if you never use it, because it shows you which rules the repository was enforcing for you.
+Everything in Model 2 below travels through a repository.  The same handoff also works through a folder that a sync service keeps identical on two machines: a Dropbox folder, or the vault from Part I with its sync turned on.  It needs no GitHub account, no pull request, and no network beyond what the sync client already uses.  The folder version is worth learning even if you never use it, because it shows you which rules the repository was enforcing for you.
 
 The layout is three directories and a naming convention:
 

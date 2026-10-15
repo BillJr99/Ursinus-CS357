@@ -52,7 +52,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 ---
 # Part I: Why Models Hallucinate
 
-Hallucination is not a bug that someone can patch.  It is a predictable result of how language models are trained.  In this part you learn the mechanism, then sort hallucinations into three types.  Each type calls for a different fix.
+Hallucination is a predictable result of how language models are trained, rather than a bug that someone can patch.  In this part you learn the mechanism, then sort hallucinations into three types.  Each type calls for a different fix.
 
 ## 1.  Fluency Is the Objective, Truth Is Not
 

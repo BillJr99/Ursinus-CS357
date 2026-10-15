@@ -53,7 +53,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 ## 1.  The Goldilocks Problem
 
-In this Part you will see why the size of text chunks matters so much for retrieval quality, examine three splitting strategies, and write a hybrid policy you can apply to your own documents in the RAG Knowledge Base lab.
+In this Part you will see why the size of text chunks matters for retrieval quality, examine three splitting strategies, and write a hybrid policy you can apply to your own documents in the RAG Knowledge Base lab.
 
 **Why this matters:** Compare searching a book by its table of contents (chapters as chunks) with searching it sentence by sentence (sentences as chunks).  A chapter might run 50 pages; one embedding has to summarize all 50 into a single vector, which blurs the meaning across dozens of topics.  A sentence is precise but often meaningless alone: "He approved the request" tells you nothing about *who*, *what*, or *why*.  Good chunking finds the passage-length sweet spot: self-contained enough to stand alone and focused enough to embed well.  It is the highest-value tuning knob in any real RAG system.
 
@@ -231,7 +231,7 @@ In this Part you apply Parts I and II to real documents: run a chunking shootout
 
 *Personal:* Think about a time someone summarized or quoted something you wrote or said, and the summary changed the meaning.  How does that experience connect to what happens when a large chunk is embedded into a single vector?
 
-*Technical:* In your notebook: chunking is an editorial act: someone (or some algorithm) decides where meaning begins and ends.  When you index a document written by someone else, what obligations do you have to preserve its meaning, and how would you check whether your pipeline honored them?
+*Technical:* In your notebook: chunking is an editorial act, in which someone (or some algorithm) decides where meaning begins and ends.  When you index a document written by someone else, what obligations do you have to preserve its meaning, and how would you check whether your pipeline honored them?
 
 *Societal:* A law firm deploys RAG over a corpus of 10,000 legal documents to help paralegals find relevant precedents.  The chunking strategy splits some court opinions mid-sentence, occasionally separating the holding (the decision) from its reasoning.  Who is harmed if the system retrieves the holding without the reasoning?  What audit process would you require before deploying such a system?
 
@@ -338,7 +338,7 @@ The "low cost per call after training" for fine-tuning is deceptive: the inferen
 
 ### Same Task, Three Approaches
 
-Consider a concrete deployment: **an HR policy assistant that answers questions about a company's internal policy document**.  This is exactly the kind of task where the choice of approach has real, measurable consequences.
+Consider a concrete deployment: **an HR policy assistant that answers questions about a company's internal policy document**.  This is the kind of task where the choice of approach has measurable consequences.
 
 | Dimension | Prompting: Paste Full Doc in Context | RAG: Chunk, Embed, Retrieve | Fine-Tuning: Train on Q&A Pairs |
 |---|---|---|---|
@@ -500,7 +500,7 @@ Optional, and independent of the parts above.  Once you start evaluating a retri
 
 ### Why Synthetic Data?
 
-The key insight behind synthetic data is that data labeling is often the bottleneck, not compute.  A radiologist who can label 20 chest X-rays per day costs ~$300,000 per year and produces roughly 5,000 labeled examples annually.  A single GPU running a generative model can produce thousands of synthetic medical descriptions per hour.  The question is not whether this is useful (it obviously is), but whether synthetic data is a complete substitute for real data, a dangerous shortcut, or something in between.  As you will see in this section, the answer depends entirely on what you are generating, how carefully you filter it, and whether you have any real data to validate against.
+Data labeling, not compute, is often the bottleneck.  A radiologist who can label 20 chest X-rays per day costs ~$300,000 per year and produces roughly 5,000 labeled examples annually.  A single GPU running a generative model can produce thousands of synthetic medical descriptions per hour.  That this is useful is obvious; the open question is whether synthetic data is a complete substitute for real data, a dangerous shortcut, or something in between.  As you will see in this section, the answer depends entirely on what you are generating, how carefully you filter it, and whether you have any real data to validate against.
 
 #### The Data Scarcity Problem
 
@@ -557,7 +557,7 @@ Self-Instruct is the pipeline behind several influential open-source instruction
 5.  Add the surviving instances to the growing dataset.
 6.  Return to step 2, now sampling from the full (and growing) dataset rather than just the original seeds.
 
-Stanford's **Alpaca** model (2023) applied this pipeline: it used GPT-3.5 to generate 52,000 instruction-response pairs from 175 human-written seeds, at a cost of approximately $500 in API fees.  The resulting model was competitive with early GPT-3.5 on many tasks despite being 10× smaller, a striking demonstration of how efficient synthetic instruction tuning can be.
+Stanford's **Alpaca** model (2023) applied this pipeline: it used GPT-3.5 to generate 52,000 instruction-response pairs from 175 human-written seeds, at a cost of approximately $500 in API fees.  The resulting model was competitive with early GPT-3.5 on many tasks despite being 10× smaller, a demonstration of how efficient synthetic instruction tuning can be.
 
 #### Evol-Instruct (WizardLM, Xu et al., 2023)
 
@@ -583,7 +583,7 @@ seed_instructions
     -> loop
 ```
 
-**Quality filter criteria, each generated pair must pass all of these:**
+**Quality filter criteria (each generated pair must pass all of these):**
 
 - **Length check:** The response is not trivially short (one word) or obviously padded with filler content.
 - **Coherence check:** The response addresses the instruction rather than drifting to an unrelated topic.
@@ -633,7 +633,7 @@ Instruction-response pairs are the simplest form of synthetic data for LLMs, but
 
 An agent trajectory is a sequence of tuples: `(observation₁, action₁, result₁, observation₂, action₂, result₂, ...)` continuing until the task is complete or abandoned.
 
-Generating synthetic trajectories lets agent training scale beyond what human demonstration collection alone can support:
+Synthetic trajectories let agent training scale beyond what human demonstration collection alone can support:
 
 - **Verified code problems:** Generate a programming problem, generate a candidate solution, execute the solution in a sandboxed environment, and use pass/fail against test cases as ground-truth labels.  OpenAI's Codex training pipeline included synthetic problems with verified solutions generated this way, at a scale impossible to achieve with human demonstrators.
 - **Customer service dialogues:** Generate a synthetic customer persona, a synthetic initial complaint or question, and a range of synthetic agent responses.  Have a judge model rate each response on helpfulness and policy compliance.  This provides training signal without accessing real user data that might contain PII.
@@ -647,7 +647,7 @@ A practical technique for rapidly building evaluation benchmarks for new domains
 2.  Filter the generated pairs for quality, accuracy, and non-duplication.
 3.  Use the resulting pairs as a benchmark to evaluate a fine-tuned model on that domain.
 
-**Critical pitfall, self-evaluation inflation:** A model performs systematically better on questions it generated than on questions generated by humans or by a different model.  The model "knows" the style and framing of its own questions and can answer them more easily.  This inflates apparent capability on the synthetic benchmark compared to real-world performance.  Always validate a synthetic evaluation set against a sample of real human-written questions in the same domain before relying on it for deployment decisions.
+**Critical pitfall: self-evaluation inflation.** A model performs systematically better on questions it generated than on questions generated by humans or by a different model.  The model "knows" the style and framing of its own questions and can answer them more easily.  This inflates apparent capability on the synthetic benchmark compared to real-world performance.  Always validate a synthetic evaluation set against a sample of real human-written questions in the same domain before relying on it for deployment decisions.
 
 #### Questions to Work Through
 
