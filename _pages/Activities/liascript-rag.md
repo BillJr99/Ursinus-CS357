@@ -46,7 +46,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 |---|---|
 | 0-10 | Part I, the open-book exam insight |
 | 10-40 | Part II, build it in code: chunk, embed, store, retrieve, generate |
-| 40-55 | Part IIb, the same pipeline without code, on the Langflow canvas |
+| 40-55 | Part IIb and IIc, the same pipeline on the Langflow canvas and as a Pydantic AI agent with a search tool |
 | 55-70 | Part III, start the exercises: your own corpus, one citation and one abstention |
 | 70-75 | Reflection prompt.  The Extension on how the search finds anything is self-paced |
 
@@ -233,6 +233,78 @@ Nothing about the pipeline changes.  The chunk size, the top-k, the model name, 
 8.  Question 6 asked you to set `k=1`.  Name the node and the setting that corresponds to `k`, and explain why changing it does not require re-indexing the documents.
 
    > *Hint: Top-k is read at query time, after the index exists.  Which phase from Part I does the Index node belong to, and which phase does the Retrieve node belong to?*
+
+---
+
+# Part IIc: The Same Pipeline as a Pydantic AI Agent
+
+Part II decided, in our code, that every question gets a retrieval step.  An agent can make that decision itself.  We give it the search as a **tool**, exactly like the tools in the *Tool Use* session, and the instructions tell it to search before it answers.  This is the shape the RAG Knowledge Base lab uses, so it is worth seeing here on the five campus documents first.
+
+Pydantic AI is the agent framework from [*Pydantic AI From the Loop Up*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI).  Install it with `pip install "pydantic-ai-slim[openai]==2.54.0"` and pull a model that calls tools reliably with `ollama pull qwen2.5:3b`.
+
+## Code Cell: RAG as a Tool
+
+> **Runs on your machine, not here.**  Run it in the same session as the Part II cell: it reuses `embed()` and the `col` collection you built there.
+
+```python
+import os
+import traceback
+
+os.environ.setdefault("PYDANTIC_AI_NO_BANNER", "1")
+
+from pydantic_ai import Agent, UsageLimits
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.ollama import OllamaProvider
+
+model = OpenAIChatModel("qwen2.5:3b", provider=OllamaProvider(base_url="http://localhost:11434/v1"))
+
+agent = Agent(
+    model,
+    instructions=("Answer questions about campus. Always call search_documents first, answer only from "
+                  "what it returns, and cite the bracketed document id. If the passages do not contain "
+                  "the answer, say 'not in my documents'."),
+    model_settings={"temperature": 0.0, "seed": 42},
+)
+
+
+@agent.tool_plain
+def search_documents(query: str) -> str:
+    """Searches the campus documents and returns the two most relevant passages with their ids.
+
+    Args:
+        query: What to search for, in plain words.
+    """
+    try:
+        hits = col.query(query_embeddings=[embed(query)], n_results=2)   # the Part II collection
+    except Exception as e:
+        print(f"[rag:search_documents] {e}")
+        traceback.print_exc()
+        raise
+    return "\n".join(f"[{i}] {d}" for i, d in zip(hits["ids"][0], hits["documents"][0]))
+
+
+for question in ["Can a first-year student keep a car on campus?", "What time does the bookstore close?"]:
+    try:
+        result = agent.run_sync(question, usage_limits=UsageLimits(request_limit=4))
+    except Exception as e:
+        print(f"[rag:agent] {e}")
+        traceback.print_exc()
+        continue
+    calls = [p for m in result.all_messages() for p in m.parts if p.part_kind == "tool-call"]
+    print(f"Q: {question}\n  tool calls: {[c.args for c in calls]}\n  A: {result.output}\n")
+```
+
+Two things moved.  The prompt-building in `rag_answer` is gone: the agent receives the passages as the tool's result instead of as text we pasted into its prompt.  And the retrieval step is now the model's choice, which is why the code prints the tool calls.  An agent that answers without calling `search_documents` is answering from memory, and the printout is how you would catch it.
+
+### Critical Thinking Questions
+
+9.  Run the cell and read the `tool calls` line for each question.  Did the agent search before answering both times?  If it skipped the search on one, what in the instructions or the docstring would you change?
+
+   > *Hint: The model chooses tools from their descriptions.  A docstring that says when to use the tool is part of the prompt.*
+
+10.  In Part II, our code always retrieved.  Here the model decides.  Name one question where letting the model decide is better, and one where it is worse.
+
+   > *Hint: Think about a greeting, and about a question that sounds general but has a campus-specific answer.*
 
 ---
 
