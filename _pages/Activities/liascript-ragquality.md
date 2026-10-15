@@ -353,7 +353,7 @@ Consider a concrete deployment: **an HR policy assistant that answers questions 
 
 #### Questions to Work Through
 
-4.  The HR policy document is 50 pages.  Prompting is eliminated by context window limits.  Between RAG and fine-tuning, which approach provides better freshness when a policy changes, and why does the answer matter operationally for an HR department?
+4.  The HR policy document is 50 pages, about 25,000 tokens.  That fits in many current context windows, but resending it with every query is costly and slow, and a clause buried in the middle of a long context is easy for the model to miss, so set prompting aside.  Between RAG and fine-tuning, which approach provides better freshness when a policy changes, and why does the answer matter operationally for an HR department?
 
    *Hint:* When a policy changes, which approach requires re-indexing (minutes) versus retraining (hours or days)?  Think about the HR team's perspective: if the maternity leave policy changes tomorrow, how quickly can each approach reflect that change?
 
@@ -587,10 +587,10 @@ seed_instructions
 
 - **Length check:** The response is not trivially short (one word) or obviously padded with filler content.
 - **Coherence check:** The response addresses the instruction rather than drifting to an unrelated topic.
-- **Non-duplication check:** Cosine similarity (a number between 0 and 1 measuring how semantically similar two pieces of text are; values above 0.9 mean the texts are nearly identical in meaning) to existing dataset items is below a threshold (typically 0.7-0.8) so the dataset remains diverse.
+- **Non-duplication check:** Cosine similarity (a number between -1 and 1 measuring how semantically similar two pieces of text are; for typical text embeddings the observed values are usually positive, and values above 0.9 mean the texts are nearly identical in meaning) to existing dataset items is below a threshold (typically 0.7-0.8) so the dataset remains diverse.
 - **Safety check:** The instruction and response do not contain toxic, harmful, or inappropriate content.
 
-> **Common Misconception:** Generating more synthetic data is not the same as generating *better* synthetic data.  A common error is to generate enormous quantities of synthetic instruction data and assume that more is always better.  In practice, quality filters matter more than quantity: a dataset of 10,000 high-quality, diverse, well-filtered examples typically produces better fine-tuning results than 100,000 low-quality or highly redundant examples.  The Alpaca model demonstrated this: 52,000 carefully generated examples from a seed of 175 produced a capable model.  Running the generation loop for 10 more hours to produce 500,000 examples would not have produced a model 10× better, and might have introduced more mode collapse.
+> **Common Misconception:** Generating more synthetic data is not the same as generating *better* synthetic data.  A common error is to generate enormous quantities of synthetic instruction data and assume that more is always better.  In practice, quality filters matter more than quantity: a dataset of 10,000 high-quality, diverse, well-filtered examples typically produces better fine-tuning results than 100,000 low-quality or highly redundant examples.  The Alpaca model demonstrated this: 52,000 carefully generated examples from a seed of 175 produced a capable model.  Running the generation loop for 10 more hours to produce 500,000 examples would not have produced a model 10× better, and might have introduced more mode collapse (repetitive, low-diversity outputs, as distinct from the multi-generation *model collapse* defined above).
 
 #### Questions to Work Through
 

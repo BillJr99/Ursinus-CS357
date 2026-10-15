@@ -377,7 +377,7 @@ A handoff to your own next session has one writer.  Real systems have two: a wor
 | Medium | The channel is | A claim looks like | Done looks like |
 |---|---|---|---|
 | **GitHub** | Issues carry the task, pull requests carry the attempt, review comments carry the correction | The agent assigns itself the issue and opens a draft pull request (PR) that references it | The PR is merged and the issue is closed with a comment naming the merge commit |
-| **Shared folder (Dropbox-style, or `vault/handoff/` under the zone rules from *How I AI*)** | `handoff/inbox/` holds pending items, `handoff/done/` holds finished ones; no Git, no accounts, no network | The agent writes `claimed_by` and `claimed_at` into the item, or renames it to mark the claim | The item moves to `handoff/done/` with a result section appended |
+| **Shared folder (Dropbox-style, or `vault/handoff/` under the zone rules from *How I AI*)** | `handoff/inbox/` holds pending items, `handoff/done/` holds finished ones; no Git, no accounts, no network beyond the sync client | The agent writes `claimed_by` and `claimed_at` into the item, or renames it to mark the claim | The item moves to `handoff/done/` with a result section appended |
 
 The plain folder is not the lesser option.  Strip away the tooling and every medium is the same thing: a place to put work, a place to put finished work, and a rule about who may move what between them.  If your protocol only works because GitHub happens to serialize writes for you, you have not written a protocol.
 
@@ -528,8 +528,8 @@ The *Design Your Agent System* assignment asks for this protocol, and this is th
 
 - Liu et al.  "Lost in the Middle: How Language Models Use Long Contexts."  *TACL* (2024).  The attention-quality force from Part I.
 - OpenTelemetry Documentation: https://opentelemetry.io/docs/ and the OpenTelemetry Semantic Conventions for LLMs (GenAI): https://opentelemetry.io/docs/specs/semconv/gen-ai/.  The vendor-neutral standard for the spans in Section 3.
-- Honeycomb.  *Observability Engineering.*  O'Reilly Media, 2022.
-- Charity Majors.  "Observability: the Big Picture." https://charity.wtf/2020/03/03/observability-is-a-many-splendored-thing/
+- Charity Majors, Liz Fong-Jones, and George Miranda.  *Observability Engineering.*  O'Reilly Media, 2022.
+- Charity Majors.  "Observability is a Many-Splendored Thing." https://charity.wtf/2020/03/03/observability-is-a-many-splendored-thing/
 - Jaeger Distributed Tracing: https://www.jaegertracing.io/
 - This course: [Agent Observability and Tracing](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/Observability), the full three-pillars tutorial with the OpenTelemetry example and the token accounting code for OpenCode and Ollama; [Governing Coding Agents](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentGovernance), the case study the `.ai/` directory comes from; and the [agent templates](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/README.md), including [`AGENT_HANDOFF_KICKOFF.md`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/ai/AGENT_HANDOFF_KICKOFF.md) and [`SESSION.md`](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/agent-templates/ai/SESSION.md).
 - This course: [Agent Skills and Plugins](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentSkills), whose claim-protocol section is the handoff skill that exercise 4 borrows from.

@@ -176,7 +176,7 @@ The eight sections govern what an agent may do.  This part is about something th
 
 Most people who use AI daily know that large models need a lot of computation and have no intuition for what that means in carbon.  Rough proportions are enough to ground design decisions in something other than dismissiveness ("it's just electricity") or paralysis ("AI is destroying the planet").  The skill is proportional reasoning: knowing which choices matter and which are noise.
 
-**Training** a large language model is a one-time but enormous expenditure.  Estimates for GPT-3 (175B parameters) place training energy at approximately 1,287 MWh and carbon emissions at roughly 500 tonnes of CO$_2$ equivalent, comparable to the lifetime emissions of five average American cars or about 125 transatlantic flights.  GPT-4-scale models need substantially more, though developers do not publish precise figures.  The actual figure depends heavily on the grid carbon intensity (the grams of CO$_2$ emitted per kilowatt-hour, which swings from near-zero on Iceland's geothermal grid to several hundred grams in coal-heavy regions) where training runs.
+**Training** a large language model is a one-time but enormous expenditure.  Estimates for GPT-3 (175B parameters) place training energy at approximately 1,287 MWh and carbon emissions at roughly 500 tonnes of CO$_2$ equivalent, about 125 transatlantic flights.  (The often-quoted "five cars over their lifetimes" comparison is a different estimate: Strubell, Ganesh, and McCallum (ACL 2019), for training a large Transformer with neural architecture search.)  GPT-4-scale models need substantially more, though developers do not publish precise figures.  The actual figure depends heavily on the grid carbon intensity (the grams of CO$_2$ emitted per kilowatt-hour, which swings from near-zero on Iceland's geothermal grid to several hundred grams in coal-heavy regions) where training runs.
 
 Inference at scale often exceeds training in total impact because it recurs with every query.  A single ChatGPT prompt is estimated to consume roughly ten times the energy of a Google search; with hundreds of millions of queries per day, inference becomes the dominant term.  Water compounds this: a widely cited 2023 estimate from UC Riverside researchers (Li et al., "Making AI Less 'Thirsty'") put the water cost of a GPT-3-era model at roughly a 500 mL bottle per 20-50 prompts, depending on when and where the model runs.  Water stress in regions hosting large data centers is a real externality.
 
@@ -260,7 +260,7 @@ Individually good decisions (use a smaller model, cache more queries, choose ren
 
 Applied to AI: as models become more capable and cheaper to run, the range of tasks they are applied to expands.  A 10x efficiency improvement met with a 20x increase in use produces a net doubling of total consumption.  Strong economic incentives push toward exactly this.
 
-The Green AI movement (Schwartz et al., 2019) proposed reporting efficiency metrics alongside accuracy: energy per FLOP (floating-point operation), accuracy per watt, CO$_2$ per benchmark point, so that efficiency is visible in the research community's incentive structure.  Adoption has been partial.
+The Green AI movement (Schwartz et al., 2019 preprint; *Communications of the ACM*, 2020) proposed reporting efficiency metrics alongside accuracy: energy per FLOP (floating-point operation), accuracy per watt, CO$_2$ per benchmark point, so that efficiency is visible in the research community's incentive structure.  Adoption has been partial.
 
 ---
 
@@ -305,7 +305,7 @@ According to Jevons paradox, a 10x improvement in model inference efficiency wil
 
 The audit tells you what a week costs.  This section covers the moves that cut both the bill and the footprint, so you can argue for them on either ground.  Each one is also something a policy can require, which is why Part III asks you for a cost and routing section.
 
-**Tokens.**  Hosted APIs charge by the token, and output tokens cost two to four times more than input tokens because the model generates them one at a time and cannot parallelize the work.  Every turn of a conversation resends the whole history as input, so long conversations cost far more than their length suggests.  Set `max_tokens` (and `budget_tokens` where the API offers it) before an agent runs, so a stuck loop cannot spend the month's budget on one task.  A budget you set in code is a clause an auditor can check.
+**Tokens.**  Hosted APIs charge by the token, and output tokens can cost up to four times more than input tokens (the cost model below uses 4x) because the model generates them one at a time and cannot parallelize the work.  Every turn of a conversation resends the whole history as input, so long conversations cost far more than their length suggests.  Set `max_tokens` (and `budget_tokens` where the API offers it) before an agent runs, so a stuck loop cannot spend the month's budget on one task.  A budget you set in code is a clause an auditor can check.
 
 **Thinking tokens.**  A reasoning model buys more computation only by emitting more tokens before the answer, and those tokens are billed and burned at the output rate.  Take a 150-word reply, about 200 output tokens, and let the model think first:
 

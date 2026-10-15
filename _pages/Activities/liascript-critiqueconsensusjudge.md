@@ -38,7 +38,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | Minutes | What we do |
 |---|---|
 | 0-10 | Part I, one loop, and why the evaluator is a separate call (Model 1) |
-| 10-30 | Part II, the critic: the forty-line loop, Model 2, and three failure modes |
+| 10-30 | Part II, the critic: the eighty-line loop, Model 2, and three failure modes |
 | 30-50 | Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5) |
 | 50-65 | Part IV, the judge: Model 6 and auditing the judge |
 | 65-70 | Part V, the lab handout and the reflection prompt.  The Human-in-the-Loop Extension is self-paced |
@@ -101,7 +101,7 @@ The point that holds for both kinds of deliberation: an extra round only helps i
 
 Read the full working loop, run it, and connect it back to Part I.  Then study the three ways the loop fails, because the Multi-Agent Patterns lab asks you to measure each one; the specification for that part of the lab lives at [Part A: Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-20-points).
 
-## 3.  The Loop in Forty Lines
+## 3.  The Loop in Eighty Lines
 
 The code below is the entire critique-refine loop.  Three design decisions implement Part I directly: (1) the generator and critic are separate `llm` calls with different system prompts, (2) the critic receives the RUBRIC but the generator does not, since the generator sees only the issues list from the critic's output, and (3) the loop has a hard maximum of `rounds` iterations so it cannot run forever.  The temperatures encode a choice: the generator runs warm (0.8 to explore the first draft, then 0.3 for disciplined revision) and the critic runs cold (0.0 for deterministic evaluation).
 
@@ -296,7 +296,7 @@ The row that matters is the second.  A reasoning model lifts the cap on how many
 
 ## 6.  Three Agents, Two Rounds, One Vote
 
-The code below runs the full Du et al. (2023) protocol (independent answers, then peer review, then a vote) in about 30 lines.  The most important design choice is the temperature schedule: round 1 uses temperature 0.9 (high diversity, because we want agents to explore different reasoning paths) and round 2 uses 0.5 (lower, because agents are now refining rather than exploring).  The seed is intentionally absent, so each agent's round 1 run is random and independent.  That is the opposite of our usual practice of seeding for reproducibility, and it is deliberate: without diversity in round 1, there is nothing to debate in round 2.
+The code below runs the full Du et al. (2023) protocol (independent answers, then peer review, then a vote) in about 70 lines.  The most important design choice is the temperature schedule: round 1 uses temperature 0.9 (high diversity, because we want agents to explore different reasoning paths) and round 2 uses 0.5 (lower, because agents are now refining rather than exploring).  The seed is intentionally absent, so each agent's round 1 run is random and independent.  That is the opposite of our usual practice of seeding for reproducibility, and it is deliberate: without diversity in round 1, there is nothing to debate in round 2.
 
 Run this locally with:
 
@@ -655,7 +655,7 @@ The **minimal footprint principle** is a design heuristic that says: when multip
 
 ---
 
-*Model 1 defined when to escalate.  Model 2 shows how: specifically, how to pause the agent's execution, save everything it needs to resume, and communicate with the human in a format that supports a real decision rather than a rubber-stamp click.*
+*The Autonomy Spectrum and Checkpoint Criteria defined when to escalate.  The Escalation Protocol shows how: specifically, how to pause the agent's execution, save everything it needs to resume, and communicate with the human in a format that supports a real decision rather than a rubber-stamp click.*
 
 ### The Escalation Protocol
 
@@ -731,7 +731,7 @@ In **asynchronous HITL**, the agent saves a complete state snapshot before raisi
 
 ---
 
-*Model 2 showed how to build escalation infrastructure.  Model 3 addresses a paradox: too much escalation is as dangerous as too little, because humans who see too many checkpoints stop reading them.  This section asks you to design for quality of oversight, not quantity.*
+*The Escalation Protocol showed how to build escalation infrastructure.  Approval Fatigue and Trust Calibration addresses a paradox: too much escalation is as dangerous as too little, because humans who see too many checkpoints stop reading them.  This section asks you to design for quality of oversight, not quantity.*
 
 ### Approval Fatigue and Trust Calibration
 
@@ -840,7 +840,5 @@ An agent is given a task that runs overnight as a batch job: process 1,000 custo
 *Technical:* Based on today's models, write a specific escalation policy for one of the following agent types: (a) a coding agent that can write files and run tests, (b) a customer service agent that can read and respond to support tickets, or (c) a research agent that can search the web and save documents.  Your policy should include specific trigger conditions with thresholds, a trust calibration schedule, and a minimum checkpoint frequency that cannot be reduced regardless of performance.
 
 *Societal:* Human-in-the-loop is sometimes described as the solution to AI safety problems.  But this activity shows that HITL has real costs: latency, reviewer attention limits, approval fatigue, and the need for humans to be available at arbitrary times.  As AI agents become more capable and are deployed in higher-stakes domains (medical diagnosis, legal advice, financial planning), is HITL a sustainable long-term solution, or does it need to evolve into something else?  What would that something else look like?
-
----
 
 ---

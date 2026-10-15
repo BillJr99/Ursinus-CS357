@@ -116,7 +116,7 @@ Three things to notice.  The worker's first comment does two jobs at once: it is
 
 ### Critical Thinking Questions
 
-1.  Label each of the six entries in the thread as a message (addressed to a specific next reader), a blackboard write (state anyone can read), or an event (something a subscriber would react to).  Several entries are more than one.  Which entry is the inter-agent message that the second session consumed?  And if a second worker polled the repository after "Claiming this" was posted but before the `in-progress` label was applied, which one is the real claim?
+1.  Label each of the five entries in the thread as a message (addressed to a specific next reader), a blackboard write (state anyone can read), or an event (something a subscriber would react to).  Several entries are more than one.  Which entry is the inter-agent message that the second session consumed?  And if a second worker polled the repository after "Claiming this" was posted but before the `in-progress` label was applied, which one is the real claim?
 
 2.  FIPA ACL messages carry a **performative** that names the intent: `inform`, `request`, `propose`, `agree`, `refuse`, `query-if`.  Rewrite the reviewer's comment and the worker's reply as `{"performative": ..., "content": ...}` pairs.  What does the performative add over the raw text?  Give one case where the receiving agent should act differently on `inform: task complete` than on `request: task complete`.
 

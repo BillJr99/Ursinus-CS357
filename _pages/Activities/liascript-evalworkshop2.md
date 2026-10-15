@@ -152,7 +152,7 @@ With three files, each disagreement moves a criterion's number by 33 points, so 
 
 *Hint:* The criterion that agreed least in the workshop is the first suspect.  The second is any criterion whose descriptor uses a word like "clear," "adequate," or "thoughtful," because two people can read the same artifact and reach different levels without either being wrong.
 
-**Question 2.**  On a row marked with an asterisk (the humans disagree with each other by 2), what does the judge's gap on that row tell you?  Can the judge be "right" on a row where the humans cannot agree what right is?
+**Question 2.**  On a row marked with an asterisk (the humans disagree with each other by 2 or more), what does the judge's gap on that row tell you?  Can the judge be "right" on a row where the humans cannot agree what right is?
 
 [[___ Your answer here ___]]
 

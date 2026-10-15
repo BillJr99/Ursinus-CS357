@@ -306,5 +306,5 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 - [Agent Case Studies](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCaseStudies), the article behind Model 2, with the full incident simulation and the prompt-injection extension.
 - The [Structured Peer Review activity](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PeerReview), for the SQR card and the four repair moves for receiving a hard card.
 - The [Project Thread](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread), for the stand-up, decision log, and check-in protocols used today.
-- The OWASP LLM Top 10 (2023, v1.1), the source of the LLM01 and LLM08 labels in Model 2.
+- The [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/) (2023, v1.1), the source of the LLM01 and LLM08 labels in Model 2.
 - Amershi et al. "Guidelines for Human-AI Interaction."  *CHI* (2019), for last-mile demo polish.
