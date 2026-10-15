@@ -248,6 +248,42 @@ In PowerShell, `if ($env:ACME_API_KEY) { "set" }`.
 Whichever group you are in, the file you commit holds a reference and never a value.  That rule is what lets a classmate clone your repository, get your whole provider setup, and get none of your credentials.
 {: .tb-key data-title="Why this matters"}
 
+### OpenCode v2: a custom provider through an AI gateway
+
+Everything above uses the configuration format of the current stable opencode.  If you are running **OpenCode v2**, the provider block is spelled differently: it is `providers` (plural), the adapter is named under `package`, the address sits under `settings`, and the credential is named in an `env` list.  Here is a v2 configuration for an OpenAI-compatible endpoint such as an AI gateway, written to your global config file, `~/.config/opencode/opencode.jsonc` (on Windows, `~\.config\opencode\opencode.jsonc`):
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "providers": {
+    "custom": {
+      "name": "Custom AI",
+      "env": ["MY_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "YOUR URL HERE"
+      },
+      "models": {
+        "cloudflare_ai_gateway.anthropic/claude-sonnet-5": {
+          "name": "Claude Sonnet 5 (Custom AI)"
+        }
+      }
+    }
+  },
+  "model": "custom/cloudflare_ai_gateway.anthropic/claude-sonnet-5"
+}
+```
+
+Then give the opencode service the key and start it, from your terminal:
+
+```bash
+opencode service set env MY_API_KEY "PASTE_YOUR_API_KEY_HERE"
+opencode service start
+```
+
+The same rule holds as in the stable format: the file names the variable (`MY_API_KEY`) and never holds its value, so the file is still safe to commit.  Replace `YOUR URL HERE` with the address your gateway gives you.  This route is optional, as with any external provider in this course.  If your `opencode --version` is not v2, use the `provider` block from earlier in this section instead.
+{: .tb-note data-title="Which version?"}
+
 
 **Never paste a key, token, or password into a chat with an agent**, including this one.  Text you send to a hosted model rests in that provider's logs, and unlike your terminal scrollback you cannot clear it.  If it happens, treat the credential as compromised: revoke it, issue a new one, update the variable.  That takes two minutes and is not a crisis.  *MCP, REST, and OAuth 2.0 Together* shows how a token in a context window gets extracted, and the *Coding Agents* session has a hook that rejects such a message before the model ever sees it.
 {: .tb-warning data-title="Watch out"}

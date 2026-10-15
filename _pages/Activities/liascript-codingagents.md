@@ -125,6 +125,8 @@ Outside the container, use `http://localhost:11434/v1`.  There is no API key any
 
 > **Other tools in this family** (Claude Code, Codex CLI, Gemini CLI, Aider, pi) install differently and mostly want a provider key.  The [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs) tutorial compares them.  Today we all drive the same one, so that when something breaks the person next to you can help.
 
+> **On OpenCode v2 with an AI gateway?**  v2 spells the provider block differently (`providers`, `package`, `settings`, and an `env` list for the key) and sets the key with `opencode service set env`.  The full configuration is in [OpenCode v2: a custom provider through an AI gateway](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup#opencode-v2-a-custom-provider-through-an-ai-gateway) in the OpenCode setup tutorial.
+
 ### The habits that make this work
 
 Three habits, and they matter more than the tool:

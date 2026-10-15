@@ -635,6 +635,8 @@ Port 3000 is the OpenWebUI default this course uses.  One more thing if you are 
 
 > **Tired of editing the `models` map?**  Each model you pull from here on means another entry in these blocks by hand.  §7 of the [OpenCode setup tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup) names an optional plugin that queries each provider and fills the map for you.
 
+> **On OpenCode v2 with an AI gateway?**  v2 spells the provider block differently (`providers`, `package`, `settings`, and an `env` list for the key) and sets the key with `opencode service set env`.  The full configuration is in [OpenCode v2: a custom provider through an AI gateway](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup#opencode-v2-a-custom-provider-through-an-ai-gateway) in the OpenCode setup tutorial.
+
 > **A candid expectation.** `llama3.2` is a 3-billion-parameter model running on your laptop.  It is a fine model to *learn the loop with* and a weak one to build with.  Expect it to be slow, to sometimes ignore your instructions, and to occasionally propose an edit that makes no sense.  That is not your setup failing; that is the honest capability of a small local model, and noticing where the ceiling sits is part of today's learning.  Later labs let you point the same tool at a larger model.
 
 
