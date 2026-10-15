@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 In *Hallucinations and Evaluating Agent Outputs*, you matched tool use to the hallucinations it fixes: facts the model should look up rather than recall.  Today you build that tool use.  Our agent from *The Agent Loop: Perceive, Plan, Act* activity pulled `calc(...)` out of free text with a regular expression, and that worked until it did not.  Today we upgrade to **structured function calling**, also called tool use.  The model emits a machine-readable request to run a function, and your program runs it.  We cover why structure beats parsing, how to write a tool schema, native function calling with Ollama, and safety boundaries for tools that change the world.
 
-The OpenCode Studio lab is due today, and the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) goes out today as well.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is handed out after the MCP session and builds on today.  Today's session covers the protocol and what it costs; the lab is where you write the full build.
+The OpenCode Studio lab is due today, and the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) goes out today as well.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is handed out after the MCP session and builds on today.  Today's session covers the protocol and what it costs; the full build below is yours to run for practice.
 
 ---
 
@@ -149,7 +149,7 @@ Notice the column that does not exist: none of the four guarantees that the answ
 
    > *Hint: There is a difference between rejecting the call and telling the model why you rejected it.  Only one of those lets the loop recover.*
 
-The Tools and MCP lab goes further, into schema design and a full validation pipeline.  What you need today is the habit of asking, of any structured output, "what is enforcing this?"
+The sections below go further, into schema design and a full validation pipeline.  What you need today is the habit of asking, of any structured output, "what is enforcing this?"
 
 # Part II: Native Function Calling
 
@@ -399,9 +399,9 @@ With the protocol understood from Parts I and II, this hands-on section has you 
 
 ## Hands-On: Build and Call a Tool
 
-The full 30-minute build (three tool definitions in OpenAI function-calling schema, the executor pattern, and the agent loop that ties them together) lives in the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP), where you do it.  Today's session covers the *protocol* and its costs; the lab is where you write the code.
+The full 30-minute build (three tool definitions in OpenAI function-calling schema, the executor pattern, and the agent loop that ties them together) is practice to do on your own after class, with [Local Agent From Scratch](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/LocalAgentFromScratch) and [Pydantic AI From the Loop Up](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI) as worked references.  Today's session covers the *protocol* and its costs.
 
-If your team finishes the Models early, open the lab and start the walkthrough.
+If your team finishes the Models early, start the build above on your own machine.
 
 ## 3.  Exercises
 

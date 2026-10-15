@@ -5,57 +5,48 @@ title: "CS357: Foundations of Artificial Intelligence - Lab: Tools and MCP"
 
 info:
   coursenum: CS357
+  purpose: "To connect an agent to a tool server someone else wrote, over the protocol the field is standardizing on, and to do it without ever handing the model, the chat, or a configuration file a password or key."
+  tilt:
+    task: "Pick an existing MCP server, connect to it either from a short Python client (code route) or by prompting opencode to configure it for you (no-code route), and show the client discovering the server's tools and then calling one.  Sign in, where the server needs it, outside the chat, find where the credential landed, and narrow what the server is allowed to do."
+    criteria: "I assess a working discover-then-invoke round trip, a clear account of where your credential lives and how you narrowed the server's reach, and a short writeup on what MCP standardizes and what you are trusting when you run someone else's tool definitions.  The full breakdown is in the rubric below."
   points: 100
   goals:
-    - To give an agent real tools using native function calling, and to know which side of the boundary your code owns
-    - To make an agent reason explicitly, and to measure whether the reasoning paid for itself
-    - To both author and consume an MCP server, and to articulate what the protocol standardizes
-    - To constrain model output so that downstream code can parse it reliably rather than hopefully
-    - To run a tool server inside a container whose blast radius you sized on purpose, and to show the boundary holding when a call reaches past it
+    - To connect a client to an existing MCP server and show tool discovery followed by a successful invocation
+    - To say precisely what MCP standardizes that a hand-rolled tools list does not
+    - To keep credentials out of the model's reach and out of the chat, and to name the trust question raised by running someone else's tool definitions
   rubric:
+    - weight: 40
+      description: "MCP Round Trip"
+      preemerging: "No MCP server is connected, or the connection is configured but never used."
+      beginning: "A server is connected and some output is shown, but the transcript does not show discovery and invocation as separate steps."
+      progressing: "A transcript shows the client listing the server's tools and then one successful call with its result."
+      proficient: "As progressing, plus one input or question that should not need the tool, with evidence that the tool was not called for it.  On the code route the evidence is the client's own output; on the no-code route it is the exported opencode session, where each tool call appears as its own entry."
+    - weight: 20
+      description: "Credentials and Scope"
+      preemerging: "A password, key, or token appears in the chat, the configuration file, the code, or the submission."
+      beginning: "No secret is exposed, but the writeup does not say where sign-in happened or where the credential is stored."
+      progressing: "The writeup says where sign-in happened (browser, device code, or not at all) and where the resulting credential is stored, and shows that it is absent from the configuration and the chat."
+      proficient: "As progressing, plus one deliberate narrowing of the server's reach (read-only mode, a tool preset or allowlist, or a project-level rather than global configuration) with the tool list before and after.  A server that needs no sign-in earns this row by explaining why no credential exists and what a public endpoint implies, plus the same narrowing."
     - weight: 25
-      description: "Tool Use"
-      preemerging: "No working tool call, or the model is asked for a tool but nothing executes."
-      beginning: "A tool is called, but the schema is untyped or the result is not fed back to the model as a tool-role message."
-      progressing: "A typed tool is registered and invoked end to end, with a transcript showing the round trip."
-      proficient: "A typed tool is registered and invoked end to end, the transcript shows request and execution and the fed-back result, and the writeup names precisely what your code is responsible for that the model is not. On the no-code and low-code routes, the exported chat transcript or Langflow run showing the tool firing stands in for the code transcript; the requirement to name the boundary precisely is unchanged and carries the row."
-    - weight: 20
-      description: "Structured Output"
-      preemerging: "Output is parsed ad hoc from prose; no technique demonstrated."
-      beginning: "A structured-output technique is used but no failure case is shown, so the reliability claim is untested."
-      progressing: "One technique is demonstrated with a before-and-after: naive parsing breaks on a real response, the constrained version does not."
-      proficient: "As progressing, and the writeup distinguishes which techniques guarantee validity by construction from those that merely encourage it, with the evidence to back the distinction."
-    - weight: 20
-      description: "Reasoning, Measured"
-      preemerging: "No reasoning variant, or no comparison."
-      beginning: "A reasoning variant exists but is compared informally, without a fixed task set or a fixed seed."
-      progressing: "Plain and reasoning versions run over at least eight fixed tasks at a fixed seed, with an accuracy delta reported."
-      proficient: "As progressing, plus the token and latency cost of the reasoning, and a defensible sentence on when that cost was earned and when it was not. On a no-code route, wall-clock time and response length are acceptable stand-ins for latency and token counts, provided the measurement method is stated."
-    - weight: 20
-      description: "MCP"
-      preemerging: "No MCP work."
-      beginning: "An MCP server or client is configured but no discover-and-invoke round trip is shown."
-      progressing: "A transcript shows tool discovery followed by a successful invocation. For the Obsidian vault option, the transcript shows discovery, one read, and one gated append that was refused and then confirmed."
-      proficient: "As progressing, and the writeup states what MCP standardizes that a hand-rolled tools list does not, and, for the consume option or a community vault server, names the trust question raised by running someone else's tool definitions. Consuming a server through a client's configuration file earns this row on the same terms as consuming it from code, and the Obsidian vault option, whether written or configured, earns this row on the same terms as the create and use options."
-    - weight: 5
+      description: "Understanding"
+      preemerging: "No writeup questions answered."
+      beginning: "The questions are answered in general terms that could describe any API."
+      progressing: "The writeup says what MCP standardizes, names the trust question, and explains why the tool fired when it did."
+      proficient: "As progressing, and each answer points at something in your own transcript or configuration rather than at the protocol in the abstract."
+    - weight: 15
       description: "Writeup and Reproducibility"
       preemerging: "No writeup, or one that cannot be followed."
-      beginning: "A writeup exists but a reader could not reproduce the runs from it."
-      progressing: "Model, parameters, and commands are recorded well enough to reproduce."
-      proficient: "Fully reproducible."
-    - weight: 10
-      description: "Containment and Blast Radius"
-      preemerging: "No containerized run, or the server runs in a container with default settings and no restriction is shown."
-      beginning: "The server runs in a container and some restrictions are applied, but no probe shows an out-of-scope action refused, or the blast-radius table is missing."
-      progressing: "The server runs as a non-root user with a read-only root filesystem, narrowly scoped mounts, no secret in the image, network limited to what the tools need, and memory, CPU, and process limits; `docker inspect` output confirms each setting; a tool call succeeds inside the box and at least one out-of-scope action is refused."
-      proficient: "As progressing, and the blast-radius statement says what the server can touch, what it cannot, and which setting enforces each, distinguishes a refusal the kernel enforced from one the tool's own code enforced, and names one residual risk that was accepted and why.  The low-code route (the given flags around the course image, `docker inspect`, and the filled table) earns this row on the same terms as a custom image."
+      beginning: "A writeup exists, but a reader could not repeat the connection from it."
+      progressing: "The route, the server, the client or configuration, and the commands are recorded well enough to repeat."
+      proficient: "Fully reproducible, with the route named at the top and an AI-use disclosure."
   readings:
-    - rtitle: "MCP, REST, and OAuth 2.0 Together (Option 4D)"
-      rlink: "../Tutorials/MCPOAuth"
+    - rtitle: "MCP: Connecting Agents to Tools and Your Obsidian Vault"
+      rlink: "Activities/liascript-mcp.md"
+      liapage: true
     - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients"
       rlink: "https://huggingface.co/learn/mcp-course/"
-    - rtitle: "What a Container Isolates: Sizing an Agent's Blast Radius (Part 5)"
-      rlink: "../Tutorials/ContainerIsolation"
+    - rtitle: "Optional background: MCP, REST, and OAuth 2.0 Together, for what happens behind the sign-in page"
+      rlink: "../Tutorials/MCPOAuth"
 
 tags:
   - lab
@@ -64,1240 +55,272 @@ tags:
 
 # Lab: Tools and MCP
 
-The Local Agent Lab built an agent that perceives, plans, and acts in a loop, but the only action it could take was producing text.  In this lab you give that agent hands.  You register a typed tool the model can call, you constrain the model's output so your code can parse it reliably, you measure whether making the agent reason paid for itself, and you connect the agent to tools over MCP (the Model Context Protocol, the standard the rest of the ecosystem is settling on).  Then you put the tool server in a container and decide, before anything goes wrong, how far a mistake could reach.  You leave with an agent that can act on the world and with evidence, in transcripts and tables, of when it chose to act and what that cost.
+In the *Tool Use and Function Calling* session you watched a model ask for a tool and your code run it.  In the *MCP* session you saw the same idea standardized: a **server** advertises its tools, and any MCP-aware **client** can discover them at runtime and call them without anyone writing glue code for that pairing.  This lab is one small, complete step with that idea.  You connect to an MCP server that someone else already wrote, you watch your client discover what it offers, and you make one call.  Along the way you sign in to the server, where it needs it, without ever typing a password or key into a chat window or a configuration file.
 
-The three capabilities here used to be part of the Local Agent Lab, where they were due before the sessions that teach them.  They now stand on their own, so every part of this lab is something you have already seen in class: the *Tool Use and Function Calling* session, the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session, and the structured-output reading attached to both.  The containment part draws on the container material from the *Your AI Workbench* session.
+You leave with a working connection to a real service, a transcript that shows the protocol doing its job, and a clear answer to two questions that every agent you build from here on will raise: where does my credential live, and what am I trusting when I run someone else's tools?
 
 ---
 
 ## Choose Your Path
 
-The three capabilities, the containment part, and the writeup are the same on every route.  What differs is whether you build the wiring or configure it.
+The rubric, the evidence, and the writeup questions are the same on both routes.  What differs is whether you write the client or let an agent configure one for you.
 
-| Route | What you build | What you need | Pick this if |
-|-------|----------------|---------------|--------------|
-| **Code** | A typed tool registered with the model, with an executor loop you own; two runners over a fixed task set at a fixed seed; a small MCP server you author, or an existing server you consume from code; a five-line image for that server, run with the restricting flags | Ollama with a model that supports tool calling, Python 3 with `requests`, Docker on your host with the course image built | You are heading for Option 4D, the OAuth-gated server, or you want the clearest view of the boundary between what your code owns and what the model owns |
-| **No-code** | In **Open WebUI**: enable a built-in or community tool on a model and observe the invocation inline; compare a plain model against a reasoning-prompted one across your eight fixed tasks, both in the chat interface; add an MCP server to Open WebUI's tool settings and show discovery, then invocation.  Low-code variant in **Langflow**: a **Tool** node wired to an **Agent** node; the same reasoning comparison as two flows; an MCP server configured in a client's config file, with discovery and invocation shown.  For containment on either variant: the course image run with the flags given in Part 5, checked with `docker inspect`, and a filled blast-radius table | Open WebUI alone for the no-code variant; Open WebUI or Langflow for the low-code variant; Docker on your host with the course image built | You want your attention on *when the model chooses to call a tool*, which is the hard part, rather than on the plumbing; or you think better in a diagram and want the visual trace of which path executed |
+| Route | What you do | What you need | Pick this if |
+|-------|-------------|---------------|--------------|
+| **Code** | Write a short Python client (about 30 lines) that connects to a server, lists its tools, and calls one | Python 3 and the `mcp` package; `uvx` or `npx` only if you pick a local server | You want to see the protocol's two steps, discovery and invocation, as lines of code you own |
+| **No-code** | Prompt opencode to add an MCP server to your project's configuration, review what it wrote, sign in outside the chat, and use the server's tools from a conversation | opencode, and for the OneNote example, Node.js (for `npx`) and a Microsoft account | You want your attention on *when the agent chooses to call a tool* and on where the credential goes, rather than on the plumbing |
 
-The rubric is the same on every path.  Every route must show structured output (Part 2) and containment (Part 5), and every route needs a transcript.  On the no-code route, export the chat rather than pasting a screenshot of the answer: the tool invocation record is the evidence, not the reply.
-
-> **Watch out.** Do not read the No-code row as "the version without the hard part."  The hard part of this lab is explaining why the model called the tool when it did and not when it did not, and that question is identical on every route.  The code route buys you a clearer view of the boundary between what your code owns and what the model owns.  The no-code route buys you more time looking at the decision itself.
+> **Watch out.** Do not read the No-code row as "the version without the hard part."  The hard part of this lab is explaining where your credential lives and why the agent called the tool when it did, and those questions are identical on both routes.
 
 ---
 
 ## Before You Start
 
-This lab builds on:
+- **Code route:** install the official Python SDK and confirm that it imports.  The examples below were tested with version 2.2 of the SDK.
 
-- the *Tool Use and Function Calling* session
-- the *MCP: Connecting Agents to Tools and Your Obsidian Vault* session
-- the structured-output reading attached to both
-- the agent loop you built in the Local Agent Lab (this lab gives that agent hands)
-- for Part 5, [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker) (Section 9 above all) and [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation), the container readings from the *Your AI Workbench* session
+  ```bash
+  pip install "mcp>=2"
+  python3 -c "import mcp.client.streamable_http; print('mcp ok')"
+  ```
 
-You also need, by route:
+- **No-code route:** opencode installed and working (the [OpenCode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) covers this), and a fresh, empty project folder to run it in.  For the OneNote example, also Node.js, so that `npx --version` prints a version.
 
-- **Code route:** Ollama running with a model that supports tool calling, and Python 3 with the `requests` library.
-- **No-code route:** Open WebUI running.  For the Langflow low-code variant, Langflow running as well.
-- **Obsidian vault option (any route):** a vault folder (a folder of Markdown notes) that your server or tool can reach.
-- **Part 5 (every route):** Docker on your host, and the course image built from the [course development container]({{ site.baseurl }}/files/devcontainer/Dockerfile) as in the Overview assignment.  Run the Part 5 commands on your host, not inside the course container, which has no `docker` command in it.
-
-On the code route, install what the walkthrough uses and pull a tool-calling model.  `pip` installs a Python package; `ollama pull` downloads a model so Ollama can serve it locally.
-
-```bash
-pip install requests                                  # the HTTP client the walkthrough uses
-python3 -c "import requests; print('requests ok')"   # confirm Python can import it
-ollama pull llama3.2                                  # a model that supports tool calling
-```
-
-> **Recommended for tool calling.**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  Any tool-capable model is accepted for this lab; if your tools do not fire reliably with `llama3.2`, switch the `model` setting to `qwen2.5:3b` and say so in your writeup.
-
-Then confirm Ollama is answering.  `curl -s` fetches a URL quietly, and `head -c 120` keeps only the first 120 characters so the model list does not flood your terminal.
-
-```bash
-curl -s http://localhost:11434/api/tags | head -c 120
-```
-
-> **You should see.** The start of a JSON object listing your installed models, including `llama3.2`.  The exact names and dates will differ:
-
-```text
-{"models":[{"name":"llama3.2:latest","model":"llama3.2:latest","modified_at":"2026-09-01T10:14:22
-```
-
-> **If it fails.** An empty response or `Connection refused` means the Ollama server is not running; start it and retry.  A list that does not include `llama3.2` means the pull did not finish.
-
-> **Watch out.** Check this now rather than at hour four: not every local model does native function calling well.  A model that does not will produce prose describing a tool call instead of emitting one.  Test with a trivial tool before you build anything real.  If your model will not emit tool calls, say so in your writeup, switch models, and note what you observed.  That observation is worth more than a clean run on a model you did not choose deliberately.
-
-> **Time budget.** Roughly 7 to 9 hours: about 2 hours for tool use plus structured output, 2 to 3 for the reasoning comparison (most of it waiting on runs), 2 to 3 for MCP, and about 1 for containment, which reuses the server you already have.  The reasoning comparison is the one to start early, because eight tasks times two conditions is a lot of wall-clock time if you leave it to the last night.
-
-**What you will have at the end:** an agent that can act on the world, a demonstrated technique for making its output parseable, a measured answer to "did making it reason pay for itself," working experience with the protocol the rest of the field is standardizing on, and a tool server whose worst case you can state in one sentence because you drew its boundary yourself.
+> **Time budget.** About two hours: thirty minutes to pick a server and connect, thirty to get the transcript you want, and an hour for the writeup.
 
 ---
 
-## The Three Capabilities: Pick at Least One of Each
+## Step 1: Pick a Server
 
-Every submission must show that you can make an agent use a tool, make an agent reason, and work with MCP.  Each capability comes in more than one flavor: build it from scratch (you own the wiring) or drive it from a framework, a served model, or an existing server (you own the configuration).  You may do more than one flavor of a capability if it interests you, but one of each capability is the floor.  Fold your chosen options into your writeup with the transcript evidence each one asks for.
+Every server below is one you can use **without creating an OAuth app, registering anything in a developer portal, or pasting a key**.  They fall into three groups by how you sign in.
 
-> **Do this.** Complete, at minimum:
-> 1. **At least one** Tool Use option (Part 1: Option 1A or 1B).
-> 2. **At least one** Reasoning option (Part 3: Option 3A or 3B).
-> 3. **At least one** MCP option (Part 4: Option 4A, 4B, 4C, or 4D).
-> 4. **The structured-output demonstration, required for everyone** (Part 2).  It is part of your Tool Use work, and it carries its own rubric row.
-> 5. **The containment part, required for everyone** (Part 5).  It puts your Part 4 server in a container, and it carries its own rubric row.
+| Server | What it reaches | How you sign in | Address or command | Route |
+|--------|-----------------|-----------------|--------------------|-------|
+| **Microsoft Learn** | Search and read Microsoft's documentation | None | `https://learn.microsoft.com/api/mcp` | Either |
+| **DeepWiki** | Ask questions about any public GitHub repository | None | `https://mcp.deepwiki.com/mcp` | Either |
+| **Grep by Vercel** | Search code across public GitHub repositories | None | `https://mcp.grep.app` | Either |
+| **Context7** | Up-to-date library and framework documentation | None | `https://mcp.context7.com/mcp` | Either |
+| **Time** (local) | Current time and time-zone conversion | None; runs on your machine | `uvx mcp-server-time` | Either |
+| **Filesystem** (local) | Read files in one folder you name | None; runs on your machine | `npx -y @modelcontextprotocol/server-filesystem <folder>` | Either |
+| **Notion** | Your Notion pages and databases | Browser sign-in, handled by opencode | `https://mcp.notion.com/mcp` | No-code |
+| **Linear** | Issues and projects in Linear | Browser sign-in, handled by opencode | `https://mcp.linear.app/mcp` | No-code |
+| **Asana** | Your Asana tasks and projects | Browser sign-in, handled by opencode | `https://mcp.asana.com/sse` | No-code |
+| **Atlassian** | Jira and Confluence | Browser sign-in, handled by opencode | `https://mcp.atlassian.com/v1/sse` | No-code |
+| **OneNote** (community server) | Your OneNote notebooks, sections, and pages | Device code, in a terminal | `npx -y @softeria/ms-365-mcp-server --preset onenote` | No-code |
 
-| Capability | Options | Rubric row |
-|------------|---------|------------|
-| Tool Use | 1A From Scratch, 1B From a Framework | Tool Use (25) |
-| Structured Output | One technique, before and after (required) | Structured Output (20) |
-| Reasoning | 3A From Scratch, 3B Use a Reasoning Model | Reasoning, Measured (20) |
-| MCP | 4A Create, 4B Use, 4C Obsidian Vault, 4D OAuth-gated server | MCP (20) |
-| Containment | Your Part 4 server in a restricted container, or the course image around the vault server (required) | Containment and Blast Radius (10) |
+The no-sign-in servers are the quickest path and are a fine choice on either route.  The browser sign-in servers are only worth picking if you already use that service.  The point is to reach your own data, not to create an account for a lab.
+
+> **Why no app registration?**  The browser sign-in servers support *dynamic client registration*.  When opencode first gets a 401 from one of them, it registers itself with the server, opens your browser to the service's own sign-in page, and stores the token it gets back.  The OneNote server ships with its own public client ID and uses the *device code* flow: it prints a short code, you enter that code at Microsoft's sign-in page in your browser, and the server stores the token.  In neither case do you create anything in a developer portal, and in neither case does a secret pass through the chat.  The [MCP, REST, and OAuth 2.0 tutorial]({{ site.baseurl }}/Tutorials/MCPOAuth) explains what is happening behind that sign-in page, if you are curious.
+
+> **OneNote, specifically.**  Microsoft does not publish an official OneNote MCP server.  The example uses `@softeria/ms-365-mcp-server`, an open-source community server, which makes it a good case for the trust question in Part C.  Sign in with a **personal** Microsoft account, and set `MS365_MCP_TENANT_ID=consumers` so the sign-in survives its first refresh.  A college account may be blocked by an administrator-consent screen.  If you see one, switch to a personal account or pick another server; do not ask IT to approve it for a lab.
+
+> **Avoid for this lab.**  Any server whose instructions start with "register an application," "create an OAuth client," or "paste your personal access token into the config."  Those servers work, but they put a long-lived secret in a place you then have to protect, and that is a different lesson.
 
 ---
 
-## Part 1: Tool Use (25 points)
+## Part A: Code Route
 
-Give your agent a real, typed tool using **native function calling** (not the week-1 regex parse).  A tool call is a structured request the model emits, naming a function and its arguments, that your code executes and feeds back to the model.  Pick at least one of the two options below, then follow the walkthrough steps, which build Option 1A end to end on the code route.  If you choose Option 1B, do Steps 1.1 through 1.3 and then hand the same tools to the framework instead of writing the loop in Step 1.4.  Part 2 explains why a tool call is only as reliable as the schema behind it; read Steps 2.1 and 2.2 first if you want that context before you build.
+### Step A.1: Write the Client
 
-### Option 1A: From Scratch, Expose a Function to the Model
+An MCP session always follows the same three moves:
 
-Define a Python function, describe it as a JSON schema in a `tools` list, and let the model emit a structured `tool_calls` request that your code executes and feeds back as a `tool`-role message.  Do this against Ollama's `/api/chat` *or* Open WebUI's OpenAI-compatible `/api/chat/completions`; the schema is identical across both (see the [Tool Use and Function Calling activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-tooluse.md), Parts II-2b).
+1. **Initialize.**  The client and server agree on a protocol version.
+2. **Discover.**  The client asks `tools/list` and receives each tool's name, description, and input schema.
+3. **Invoke.**  The client sends `tools/call` with a tool name and arguments, and receives a result.
 
-> **Paste into your submission.** Your tool schema, a transcript showing the model requesting the tool and your program executing it, and one sentence on what your code (not the model) is responsible for.
-
-### Option 1B: From a Framework, Give an Agent Tools You Did Not Wire
-
-Hand the same tool to an agent through a framework so the framework owns the tool-calling loop.  Register a Python function as a tool with **Pydantic AI**, **smolagents** (Hugging Face's lightweight agent library), LangChain/DeepAgents, or Agno, and let it drive invocation (see the [Agent Frameworks activity]({{ site.baseurl }}/Tutorials/AgentFrameworks), including how to point the framework at your local Ollama/Open WebUI model).  If you are new to frameworks, choose a thin one, so less of the loop is hidden and the code you write stays close to the from-scratch version.  Pydantic AI is the recommended guided route: [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) walks the Tool Use activity's own `get_today` and `days_until` tools from the raw loop into the framework, step by step.  smolagents is an equally thin choice if you prefer it, and every framework listed here earns the same credit.
-
-> **Validation is not authorization.** A framework checks that the model's arguments have the right types.  It does not check that the call is allowed.  If your tool writes, deletes, or sends anything, the permission check still belongs in your code, inside the tool.  The Pydantic AI tutorial's Part 3 shows one way to write it.
-
-> **Paste into your submission.** The tool registration, a run transcript, and two things the framework hid from you that you had to do by hand in the from-scratch version.
-
-### Step 1.1: Create the Folder and Plan the Three Files
-
-In the walkthrough you define three tools in the OpenAI function-calling JSON schema format (the standard way to describe a tool's name, purpose, and parameters as a JSON object) and call them from your local model through Ollama's `/api/chat` endpoint.  Everything runs locally; you need no external API keys or cloud services.
-
-> **Do this.**
-> 1. Create a folder named `tools-lab/` and do all of the following work inside it.
-> 2. Plan on three files, built in this order:
-
-| File | Holds | Step |
-|------|-------|------|
-| `tool_definitions.py` | The `TOOLS` list: each tool's name, description, and JSON Schema | Step 1.2 |
-| `tool_impl.py` | The Python functions themselves plus the `REGISTRY` that maps a name to a function | Step 1.3 |
-| `agent.py` | The loop that calls the model, dispatches tool calls, and feeds results back | Step 1.4 |
-
-> **Why this matters.** Splitting the files this way is the point of the exercise, not bookkeeping.  The model only ever sees `tool_definitions.py`, never the code in `tool_impl.py`.  Separate files make that boundary visible.  If you would rather work in a single file or a notebook, that is fine; keep the three parts in clearly separated, labeled sections.
-
-### Step 1.2: Define the Tools in `tool_definitions.py`
-
-Each tool is a JSON object with a `name`, a `description` (the only thing the model reads to decide whether to use this tool), and a `parameters` block written in JSON Schema.
-
-> **Do this.**
-> 1. Create `tool_definitions.py` in `tools-lab/`.
-> 2. Paste the `TOOLS` list below into it.
-> 3. Confirm Python can load it.  This one-line command imports the list and prints how many tools it holds:
->
-> ```bash
-> python3 -c "from tool_definitions import TOOLS; print(len(TOOLS))"
-> ```
+The SDK wraps each move in one method call.  Save the following as `mcp_client.py`.  It connects to the Microsoft Learn server, which needs no sign-in.
 
 ```python
-TOOLS = [
-    {
-        "type": "function",
-        "function": {
-            "name": "calculator",
-            "description": (
-                "Evaluates a simple arithmetic expression and returns the numeric result. "
-                "Use this whenever the user asks for a calculation, not for counting words."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "expression": {
-                        "type": "string",
-                        "description": (
-                            "A valid Python arithmetic expression using only numbers and "
-                            "operators +, -, *, /, **, and parentheses. "
-                            "Example: '(3 + 4) * 2' or '2 ** 10'."
-                        )
-                    }
-                },
-                "required": ["expression"]
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_current_time",
-            "description": (
-                "Returns the current local date and time as a string. "
-                "Call this whenever the user asks what time or date it is."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {},
-                "required": []
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "word_count",
-            "description": (
-                "Counts the number of words in the provided text and returns the integer count. "
-                "Use this when the user asks how many words are in a passage or sentence."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "text": {
-                        "type": "string",
-                        "description": "The text whose words should be counted."
-                    }
-                },
-                "required": ["text"]
-            }
-        }
-    },
-]
-```
-
-> **You should see.** The number `3`.  A `SyntaxError` means a bracket or comma went missing in the paste.
-
-### Step 1.3: Implement the Tools and the Registry in `tool_impl.py`
-
-The executor pattern keeps a **registry** (a plain Python dictionary mapping tool names to their implementations).  Your agent loop never calls a tool directly from the model's request; it looks the name up in the registry first.  This is the security boundary: only tools you explicitly register can ever run.
-
-> **Do this.**
-> 1. Create `tool_impl.py` in `tools-lab/`.
-> 2. Paste the code below into it.
-> 3. Call one tool through the registry by hand, the same way the agent loop will:
->
-> ```bash
-> python3 -c "from tool_impl import REGISTRY; print(REGISTRY['calculator']('(3 + 4) * 2'))"
-> ```
-
-```python
-import ast
-import operator
-import datetime
-
-# Safe arithmetic evaluator - no eval() of arbitrary code
-_SAFE_OPS = {
-    ast.Add: operator.add,
-    ast.Sub: operator.sub,
-    ast.Mult: operator.mul,
-    ast.Div: operator.truediv,
-    ast.Pow: operator.pow,
-    ast.USub: operator.neg,
-}
-
-def _safe_eval(node):
-    if isinstance(node, ast.Constant):
-        return node.value
-    if isinstance(node, ast.BinOp):
-        return _SAFE_OPS[type(node.op)](_safe_eval(node.left), _safe_eval(node.right))
-    if isinstance(node, ast.UnaryOp):
-        return _SAFE_OPS[type(node.op)](_safe_eval(node.operand))
-    raise ValueError(f"Unsupported node type: {type(node)}")
-
-def calculator(expression: str) -> str:
-    try:
-        tree = ast.parse(expression, mode="eval")
-        result = _safe_eval(tree.body)
-        return str(result)
-    except Exception as e:
-        return f"error: {e}"
-
-def get_current_time() -> str:
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-def word_count(text: str) -> str:
-    return str(len(text.split()))
-
-REGISTRY = {
-    "calculator": calculator,
-    "get_current_time": get_current_time,
-    "word_count": word_count,
-}
-```
-
-> **You should see.** The string `14`.  Every tool returns a string, because the result goes back to the model as message text.
-
-> **Watch out.** `calculator` parses the expression with Python's `ast` module (a library that safely parses code into a tree of operations) rather than calling `eval()`.  This is intentional: `eval()` on a model-supplied string is an arbitrary code execution vulnerability.  The `_safe_eval` function only handles numeric literals and the arithmetic operators, so the model cannot inject `import os; os.system(...)` or any other dangerous expression.
-
-### Step 1.4: Write the Agent Loop in `agent.py`
-
-The loop sends the conversation and the `TOOLS` list to the model.  When the model answers with `tool_calls`, the loop looks each name up in `REGISTRY`, runs it, and appends the result as a `tool`-role message so the model can read it on the next turn.  When the model answers with plain content, the loop returns it.
-
-> **Do this.**
-> 1. Create `agent.py` in `tools-lab/`.
-> 2. Paste the code below into it.  The first two lines import `TOOLS` from `tool_definitions.py` and `REGISTRY` from `tool_impl.py`.
-> 3. Make sure Ollama is running (the health check in Before You Start) before you go to Step 1.5.
-
-```python
-from tool_definitions import TOOLS   # what the model sees
-from tool_impl import REGISTRY       # what your code runs
+import asyncio
 import json
-import requests
+import traceback
 
-def agent(question: str, max_steps: int = 5) -> str:
-    msgs = [{"role": "user", "content": question}]
+from mcp import ClientSession
+from mcp.client.streamable_http import streamable_http_client
 
-    for step in range(max_steps):
-        try:
-            response = requests.post(
-                "http://localhost:11434/api/chat",
-                json={
-                    "model": "llama3.2",
-                    "stream": False,
-                    "tools": TOOLS,
-                    "options": {"temperature": 0.0, "seed": 42},
-                    "messages": msgs,
-                },
-                timeout=120,
-            ).json()["message"]
-        except Exception as e:
-            import traceback; traceback.print_exc()
-            return f"request error: {e}"
+SERVER_URL = "https://learn.microsoft.com/api/mcp"
 
-        msgs.append(response)
-        calls = response.get("tool_calls") or []
 
-        if not calls:
-            # Model chose to answer directly - no tool needed
-            return response.get("content", "")
+async def main():
+    # Open an HTTP connection to the server.  The connection hands back two streams:
+    # one we read the server's messages from, and one we write ours to.
+    async with streamable_http_client(SERVER_URL) as (read, write, *_):
+        async with ClientSession(read, write) as session:
+            await session.initialize()                       # move 1: agree on a protocol version
 
-        for call in calls:
-            name = call["function"]["name"]
-            args = call["function"].get("arguments") or {}
-            if name in REGISTRY:
-                result = REGISTRY[name](**args)
-            else:
-                result = f"unknown tool: {name}"
-            print(f"[tool] {name}({args}) -> {result}")
-            # Tool result goes back as a 'tool' role message
-            msgs.append({"role": "tool", "content": result})
+            listing = await session.list_tools()             # move 2: tools/list
+            print(f"Discovered {len(listing.tools)} tools:")
+            for tool in listing.tools:
+                print(f"- {tool.name}: {(tool.description or '').splitlines()[0][:80]}")
+                print(f"  arguments: {json.dumps(tool.input_schema.get('properties', {}))[:160]}")
 
-    return "step budget exceeded"
+            result = await session.call_tool(                # move 3: tools/call
+                "microsoft_docs_search", {"query": "What is the Model Context Protocol?"}
+            )
+            print("\nResult (first 400 characters):")
+            print(result.content[0].text[:400])
 
-# Test all three tools
-print(agent("What is (144 / 12) ** 2?"))
-print(agent("What time is it right now?"))
-print(agent("How many words are in the sentence: 'The quick brown fox jumps over the lazy dog'?"))
-```
 
-### Step 1.5: Run It and Read the Transcript
-
-This is the part most people find satisfying: the model asks for a tool, your code runs it, and the model uses the answer.
-
-> **Do this.**
-> 1. From inside `tools-lab/`, run the agent.  `python3 agent.py` executes the file, which fires the three test questions at the bottom:
->
->    ```bash
->    python3 agent.py
->    ```
->
-> 2. Save the full terminal output.  This is the transcript Option 1A asks for, and it must show all three parts of the round trip: the request, the execution, and the result fed back.
-
-> **You should see.** One `[tool]` line per question, printed by your loop when it executes the call, followed by the model's final answer in prose.  The arithmetic and word-count results are exact; the time and the model's wording will differ:
-
-```text
-[tool] calculator({'expression': '(144 / 12) ** 2'}) -> 144.0
-(144 / 12) ** 2 is 144.
-[tool] get_current_time({}) -> 2026-09-10 14:03:51
-It is currently 2:03 PM on September 10, 2026.
-[tool] word_count({'text': 'The quick brown fox jumps over the lazy dog'}) -> 9
-There are 9 words in that sentence.
-```
-
-> **If it fails.**
-> - No `[tool]` line and an answer that *describes* calling a calculator: the model is not emitting native tool calls.  Confirm the model supports tool calling (see Before You Start) and switch if it does not.
-> - `request error: ...` with a connection message: Ollama is not running on port 11434.
-> - `unknown tool: ...`: the name the model asked for is not a key in `REGISTRY`.  Check that the `name` in `tool_definitions.py` matches the key in `tool_impl.py` exactly.
-
-> **No-code path.** You may complete the tool-use capability **without writing tool-calling code**, by wiring the same tool in Open WebUI or Langflow.  The learning goal is identical (understand what a tool call is, when the model chooses one, and how it fails) and so is the credit.
-> 1. **Give the model a tool without code.** In Open WebUI, enable a built-in tool (web search, or the code interpreter) for one model, or import a community tool.  In Langflow, drag a **Tool** node onto the canvas and connect it to an **Agent** node.
-> 2. **Watch the decision, not the output.** Ask three questions: one the model can answer from memory, one that clearly needs the tool, and one that is ambiguous.  For each, capture *whether the tool fired*: Open WebUI shows the tool invocation inline; Langflow highlights the executed path.
-> 3. **Break it on purpose.** Disconnect the tool (or revoke its permission) and re-ask the question that needed it.  Record what the model does when the capability disappears: does it say so, or does it invent an answer?
->
-> What you submit instead of code: screenshots of the flow or tool configuration, an exported chat or Langflow run showing the tool firing, a table of your three questions with *tool fired: yes/no* and the answer given, and the same written analysis the code route requires.  The analysis is where the grade lives, and it is unchanged: you still have to explain *why* the model called the tool when it did, which is the hard part either way.
-
-### Step 1.6: Work Through the Critical Thinking Questions
-
-Answer these in your writeup.  Question 11 needs a second run of `agent.py`; the others need only the code in front of you.
-
-11. The model decides whether to call a tool based on the tool's **description**, not its name.  Change the `calculator` tool's description to `"counts the words in text"` and re-run the word-count question.  What does the model do?  What does this tell you about where the real "logic" of tool selection lives?
-
-    *Hint: The model never sees your Python function bodies; it only sees the JSON schema.  Swapping the description effectively swaps the tool's identity from the model's perspective.  Run `agent("How many words are in 'hello world'?")` with the swapped description and observe which tool fires.*
-
-12. When the agent loop appends a tool result back into the conversation, what `role` value must that message use?
-
-    - `"user"`
-    - `"assistant"`
-    - `"tool"`
-    - `"system"`
-
-    *Hint: Look at the line `msgs.append({"role": "tool", "content": result})` in the agent loop.  The OpenAI-compatible API (which Ollama follows) requires the role `"tool"` so the model knows this message is a function result rather than a user turn or its own prior response.*
-{: start="11"}
-
-> **Answer.** `"tool"`.
-
-13. Consider a fourth tool: `read_file(path: str) -> str` that opens a file path supplied by the user and returns its contents.  What security risk does this create, and what would you do to mitigate it?
-
-    *Hint: Think about what happens when the model (prompted by a malicious user) supplies the path `/etc/passwd`, `~/.ssh/id_rsa`, or `../../config/secrets.json`.  The mitigation involves restricting which directories the tool is allowed to read from: for example, only allowing paths that begin with an approved prefix such as `/home/user/documents/`.  You might also check that the resolved absolute path (after following symlinks with `os.path.realpath`) still begins with that prefix, to prevent path traversal attacks.*
-{: start="13"}
-
-> **Watch out.** Students often assume that passing `tools` means the model will always call a tool.  It means the model *may* call a tool if it decides one is needed; it can also answer from memory without calling any tool at all.  OpenAI's API lets you force a call with `tool_choice={"type": "function", "function": {"name": "tool_name"}}`, but Ollama's `/api/chat`, the endpoint our loop posts to, has no `tool_choice` field, and its OpenAI-compatible endpoint lists `tool_choice` as unsupported.  With Ollama, if you need a specific tool invoked for every request (for safety, auditing, or consistency), have your code call it directly rather than asking the model to, or check the reply for a `tool_calls` entry and re-prompt when it is missing.  The difference matters for tools like `log_query` that you want called every time regardless of the model's judgment.
-
----
-
-## Part 2: Get Structured Output You Can Parse (20 points)
-
-Before your tool-use option can be trusted, the model has to return data your code can parse reliably, not free-form prose that happens to contain JSON.  Steps 2.1 through 2.4 used to live in a separate Structured Outputs activity.  They are here because the required demonstration in Step 2.5 depends on them, and because a tool call is only as reliable as the schema you constrain it with.  The four output modes in Step 2.2 in particular decide how much error handling your executor needs.
-
-> **Do this.** **Required for everyone: structured output.**  As part of your Tool Use work, demonstrate **one** structured-output technique and show it recovering from a case where naive parsing fails.  Pick one:
-> - **Ollama's `format` parameter**: pass a JSON Schema (or `"json"`) in the request so the server constrains the response to valid JSON.  See the [Ollama structured outputs docs](https://docs.ollama.com/capabilities/structured-outputs).
-> - **[Instructor](https://python.useinstructor.com/integrations/ollama/)**: define a Pydantic model (a typed schema much like the dataclasses you already write) and let Instructor validate and auto-retry until the response conforms.
-> - **[Outlines](https://github.com/dottxt-ai/outlines)**: constrain decoding to a grammar, regex, or JSON schema so invalid tokens are *impossible*, not merely discouraged.
->
-> Deliver: a two-or-three-sentence note in your writeup showing a before (free-form parse breaks on a real model response) and after (constrained output parses every time), and one sentence on which of the three guarantees validity versus merely encourages it.  This is the reliability glue the rest of your agent's tool calling depends on.
-
-### Step 2.1: Learn the Vocabulary
-
-These six terms carry the rest of Part 2.  Read the table once now and come back to it when a question uses a term.
-
-| Term | Plain-English Definition | Example You'll See Today |
-|------|--------------------------|--------------------------|
-| **Structured Output** | An LLM response that conforms to a predefined format (like a JSON object with specific fields) rather than free-form prose | `{"sentiment": "negative", "confidence": 0.87}` instead of "This article seems pretty negative, maybe around 87% confident" |
-| **JSON Schema** | A standard language for describing the shape of a JSON object: what fields exist, what types they must be, which are required, and what values are valid | `{"type": "object", "required": ["sentiment"], "properties": {"sentiment": {"type": "string", "enum": ["positive","negative","neutral"]}}}` |
-| **Syntactic Validity** | Whether the output can be parsed as valid JSON (or another format); it opens and closes brackets correctly and uses proper quoting | `{"key": "value"}` is syntactically valid; `{"key": value}` is not (missing quotes around `value`) |
-| **Schema Validity** | Whether the output conforms to the specific schema: required fields are present, types are correct, enum values are within the allowed set | `{"sentiment": "very bad"}` is syntactically valid JSON but schema-invalid because "very bad" is not in the allowed enum |
-| **Semantic Validity** | Whether the output means what was intended: the values are not just correctly formatted but actually accurate and calibrated | `{"sentiment": "positive", "confidence": 0.99}` for an article that is clearly negative is schema-valid but semantically wrong |
-| **Pydantic** | A Python library that defines data models with type annotations and validates that incoming data conforms to the model, raising a `ValidationError` with a detailed message if it does not | `class BiasAnalysis(BaseModel): confidence: float = Field(ge=0.0, le=1.0)` rejects `confidence: 1.5` automatically |
-
-### Step 2.2: Compare the Four Output Modes
-
-There is no single "structured output" approach.  There is a spectrum of mechanisms with different guarantees and different failure modes, and what each mode actually does (not what its marketing says) decides which one to reach for.
-
-> **Do this.**
-> 1. Read the before-and-after below, then the table.
-> 2. For each mode, write down in one line which validity level (syntactic, schema, semantic) it guarantees.  You will need that list in Step 2.5.
-> 3. Answer Questions 1 through 3 in your writeup.
-
-> **You should see.** The same prompt produces output like this in each mode:
-
-```text
-SAME PROMPT: "Classify the sentiment of: 'The product broke after one day.'"
-
-Plain text output:   "The sentiment of this review is clearly negative. The customer
-                      is unhappy because the product failed quickly."
-                      -> Cannot parse; requires fragile regex; breaks if phrasing changes
-
-JSON mode output:    {"sentiment": "negative", "reasoning": "Product failure = negative"}
-                      -> Usually works, but model might also output prose on a bad day
-
-Tool/function call:  tool_calls=[{"name":"classify","args":{"sentiment":"negative"}}]
-                      -> Structural format guaranteed; values still up to the model
-
-Grammar-constrained: {"sentiment": "negative"}
-                      -> Guaranteed to match the schema's structure; the value is still the model's choice
-```
-
-| Mode | How It Works | Guarantee Provided | Typical Failure Mode |
-|------|-------------|-------------------|---------------------|
-| **Plain text** | The model generates tokens with no format constraint at all; it produces whatever prose seems most natural | None: output may be anything; format varies based on phrasing of the question | Cannot be parsed programmatically; format changes unpredictably when the prompt is reworded or the model version changes |
-| **JSON mode** (instruction-based) | The system prompt instructs the model to output JSON; the model is free to comply or not; it is just a strong suggestion | Soft: the model usually produces valid JSON but may produce prose, truncated JSON, or JSON with extra unexpected fields on a bad day | Model ignores the instruction when the context is long, when it is uncertain, or when the question triggers a refusal; no enforcement mechanism catches this |
-| **Function calling / tool use** | The API wraps the model's output in a structured function-call schema; the model generates a `tool_calls` field rather than prose | The format of the function call is guaranteed to be structurally valid; argument types match the declared schema | Model may call the wrong tool when multiple tools are available, omit required arguments, or pass arguments with the right type but wrong semantic content (a valid-format but wrong value) |
-| **Grammar-constrained decoding** (Outlines, LMQL, llama.cpp grammars) | At each decoding step, the token sampler masks out any token that would violate the grammar; only valid-next-token candidates can be sampled | Syntactic validity is guaranteed at the token level, and when the grammar is compiled from a JSON Schema (as Ollama's `format` does), so is the schema's structure: required fields, types, and enum values.  Values are not checked for correctness | Model may produce syntactically valid but semantically wrong output (correct format, wrong meaning); very complex required outputs can degrade overall response quality |
-
-Keep three properties separate.  They are the levels of correctness:
-
-- **Syntactic validity**: Is the output parseable as JSON (or another format)?  Does it have matching brackets and correct quoting?
-- **Schema validity**: Does the output conform to the specific schema: required fields present, types correct, enum values within the allowed set?
-- **Semantic validity**: Does the output mean what was intended: is the confidence score actually calibrated, does the citation actually exist, is the sentiment label actually accurate?
-
-Grammar-constrained decoding guarantees syntactic validity, and when the grammar comes from a JSON Schema (Ollama's `format` with a schema, Outlines with a Pydantic model), it also constrains the reply to the schema's structure.  Function calling guarantees a structurally valid call, but whether the arguments are schema-valid depends on whether the provider constrains decoding, so validate them anyway.  Nothing guarantees semantic validity; that takes evaluation, human oversight, or both.
-
-#### Questions to Work Through
-
-1.  A developer uses JSON mode (instruction-based) for a production system and never validates the output, arguing "the model always produces valid JSON in my testing."  Describe a specific production scenario where this assumption breaks, explain exactly what class of failure it causes in the downstream system, and estimate how long it might go undetected.
-
-    *Hint: Testing typically uses short, clean inputs.  What happens when a user submits an unusually long article, an article in a foreign language, or a prompt that contains characters the model tries to escape in JSON?  What does the downstream code do when it receives `None` where it expected a dict?*
-
-2.  Grammar-constrained decoding masks out tokens that would violate the grammar.  Consider a schema that requires `"country": {"enum": ["US", "CA", "MX"]}`.  The model is generating a response about a user who is in Germany.  What does the constrained decoder do when it reaches the `country` field, and is the output it produces correct in any meaningful sense?
-
-    *Hint: The decoder cannot output "DE" because it is not in the enum.  It must output one of "US", "CA", or "MX".  How does the decoder choose, and what does that choice mean for the accuracy of the output?  Is a structural guarantee the same as accuracy?*
-
-3.  The model produces output at all three validity levels: syntactic, schema, and semantic.  For a medical triage agent that outputs `{"urgency": "high" | "medium" | "low", "rationale": string}`, which validity level matters most for patient safety, and why are the lower levels (syntactic, schema) necessary but not sufficient?
-
-    *Hint: A schema-valid output like `{"urgency": "low", "rationale": "Patient reports mild discomfort"}` might describe a patient who is actually in critical condition.  Which validity level catches the difference between "correctly formatted" and "actually right"?*
-
-Knowing what each output mode guarantees raises the next question: how should you design the schema itself so that it elicits better model behavior, and not only a valid format?
-
-### Step 2.3: Design the Schema as a Prompt
-
-The schema you write for a structured output is a prompt as well as a type annotation.  The field names, descriptions, and constraints tell the model what you want in the same way natural-language instructions do.  A poorly designed schema produces valid-but-useless outputs; a well-designed schema elicits better reasoning.
-
-> **Do this.**
-> 1. Take the task "analyze a news article for potential bias."  Before you read Version B, list what a thoughtful human analyst would record:
->    - What is the article's overall sentiment toward the subject?
->    - What is the apparent political lean, if any?
->    - How strong is the evidence provided?
->    - What perspectives are not represented?
->    - What sources are cited, and are they independently checkable?
->    - How confident are you in your overall assessment?
-> 2. Compare Version A and Version B below, field by field.
-> 3. Answer Questions 4 through 6 in your writeup.
-
-**Version A, poorly designed schema:**
-
-```json
-{
-  "sentiment": "string",
-  "bias": "string",
-  "score": "number",
-  "notes": "string"
-}
-```
-
-Problems with Version A: `bias` is a free-form string, so 10,000 articles might produce 10,000 different bias descriptions, impossible to aggregate.  `score` has no minimum, maximum, or meaning.  `notes` is a catch-all that will absorb anything the model wanted to say but had no proper field for.
-
-**Version B, schema designed to elicit structured reasoning:**
-
-```json
-{
-  "type": "object",
-  "required": ["sentiment", "political_lean", "evidence_quality", "missing_perspectives", "citations", "confidence"],
-  "properties": {
-    "sentiment": {
-      "type": "string",
-      "enum": ["strongly_positive", "positive", "neutral", "negative", "strongly_negative"],
-      "description": "Overall sentiment of the article toward its primary subject; use the closest enum value"
-    },
-    "political_lean": {
-      "type": "string",
-      "enum": ["far_left", "left", "center_left", "center", "center_right", "right", "far_right", "not_applicable"],
-      "description": "Apparent political orientation of the article's framing; assess the framing, not the subject matter"
-    },
-    "evidence_quality": {
-      "type": "number",
-      "minimum": 0.0,
-      "maximum": 1.0,
-      "description": "Score from 0.0 (pure assertion with no evidence) to 1.0 (strong primary sources with verifiable claims)"
-    },
-    "missing_perspectives": {
-      "type": "array",
-      "items": {"type": "string"},
-      "description": "List of viewpoints or stakeholders relevant to the story that are absent from the article; each item is one missing perspective"
-    },
-    "citations": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["text", "verifiable"],
-        "properties": {
-          "text": {"type": "string", "description": "The text of the source as it appears in the article"},
-          "verifiable": {"type": "boolean", "description": "True if the citation can be independently checked; false if it is vague or unnamed"}
-        }
-      },
-      "description": "Sources cited in the article with a judgment about whether each is checkable"
-    },
-    "confidence": {
-      "type": "number",
-      "minimum": 0.0,
-      "maximum": 1.0,
-      "description": "Model's confidence in the overall bias assessment; use lower values when the article is ambiguous or mixed"
-    }
-  }
-}
-```
-
-> **You should see.** For the same article, the two schemas pull different work out of the model:
-
-```text
-ARTICLE: "Officials respond to criticism of new highway project."
-
-Version A output:
-{"sentiment": "mixed", "bias": "somewhat political", "score": 5.2, "notes": "hard to tell"}
--> Useless for aggregation; "score" has no unit; "somewhat political" cannot be compared across articles
-
-Version B output:
-{"sentiment": "neutral", "political_lean": "center_right", "evidence_quality": 0.4,
- "missing_perspectives": ["environmental groups", "local residents displaced by construction"],
- "citations": [{"text": "city council report", "verifiable": false},
-               {"text": "state transportation department study", "verifiable": true}],
- "confidence": 0.72}
--> Every field is comparable across articles; missing_perspectives reveals editorial gaps;
-  citations are individually assessable; confidence signals where to apply extra scrutiny
-```
-
-#### Questions to Work Through
-
-4.  Version A has a `"bias": "string"` field.  Version B replaces it with `"political_lean"` as an enum.  Explain two specific problems that arise when analyzing 10,000 articles using Version A's free-form bias string, and how the enum in Version B solves each problem.
-
-    *Hint: Problem 1 is about aggregation: if one article is labeled "left-leaning" and another "progressive bias" and a third "liberal slant," how do you count how many articles have a left-leaning bias?  Problem 2 is about consistency across time: if the same model labels the same article as "somewhat biased" in January and "moderately biased" in March (because the model updated), how do you detect this inconsistency?*
-
-5.  The `confidence` field asks the model to report its own uncertainty.  Research on chain-of-thought prompting suggests that requiring a model to explain its reasoning improves the quality of its primary answer.  Propose a mechanism by which requiring a `confidence` field might cause the model to reason more carefully about the `political_lean` field that comes before it.
-
-    *Hint: Token generation is sequential: the model generates the `political_lean` value before it generates the `confidence` value.  If the model "knows" it will need to report a confidence score, how might that shape what it pays attention to while choosing the `political_lean` value?  This is a design hypothesis; reason from what you know about sequential generation.*
-
-6.  The `missing_perspectives` field is an array of strings.  It can always be syntactically valid (any list of strings passes) and always be schema-valid (the schema only requires the items to be strings).  But what makes this field particularly hard to validate *semantically*, even when it is perfectly formatted?  What would a realistic post-hoc validation step for this field look like?
-
-    *Hint: To validate that "environmental groups" is a missing perspective for a highway article, you need to know what perspectives actually exist for highway projects and which ones the article addressed.  You cannot determine this from the JSON alone.  What external resource or process would you need?*
-{: start="4"}
-
-Even the best-designed schema cannot guarantee that the model produces valid output every time.  That is why every production system needs a validation pipeline with a repair loop.
-
-### Step 2.4: Validate, Repair, and Fail Loudly
-
-Never trust raw LLM output, even in JSON mode or with a schema.  Always parse and validate before your code uses the data.  When validation fails, you have two options: surface the error to the caller, or attempt a **repair loop**, which re-prompts the model with the specific validation error and asks it to fix only that problem.
-
-> **Do this.**
-> 1. Read the repair loop below, comment by comment.  Pay particular attention to the `max_repair_attempts` limit and the "fail loudly" behavior; they prevent the two most dangerous failure modes, infinite API cost and silent bad data flowing downstream.
-> 2. Trace the before-and-after run that follows it against the code, line by line.
-> 3. Answer Questions 7 through 10 in your writeup.
-
-```python
-# Pydantic data model; defines the expected structure and validates incoming data
-from pydantic import BaseModel, Field, ValidationError
-from typing import Literal
-import json
-
-class BiasAnalysis(BaseModel):
-    # Literal["a","b","c"] means the value MUST be exactly one of these strings
-    sentiment: Literal["strongly_positive", "positive", "neutral", "negative", "strongly_negative"]
-    political_lean: Literal["far_left", "left", "center_left", "center",
-                            "center_right", "right", "far_right", "not_applicable"]
-    # Field(ge=0.0, le=1.0) means: greater-than-or-equal-to 0.0 AND less-than-or-equal-to 1.0
-    # Pydantic raises ValidationError if the model outputs 1.5 or -0.1
-    evidence_quality: float = Field(ge=0.0, le=1.0)
-    missing_perspectives: list[str]    # List of strings; any content is schema-valid
-    confidence: float = Field(ge=0.0, le=1.0)
-
-def analyze_article(article_text: str, llm, max_repair_attempts: int = 2) -> BiasAnalysis:
-    prompt = build_analysis_prompt(article_text)    # Build the initial prompt
-
-    # Try up to max_repair_attempts + 1 times (first attempt + repairs)
-    for attempt in range(max_repair_attempts + 1):
-        raw = llm.generate(prompt, response_format=BiasAnalysis)
-        # raw is a string containing JSON; we have not validated it yet
-
-        try:
-            # model_validate_json parses the JSON AND validates against the schema
-            # If both succeed, we return the validated object immediately
-            return BiasAnalysis.model_validate_json(raw)
-
-        except ValidationError as e:
-            # Validation failed; either JSON is malformed or values violate the schema
-            if attempt == max_repair_attempts:
-                # We've used all our repair attempts; fail loudly, do not silently return garbage
-                raise RuntimeError(
-                    f"Schema validation failed after {max_repair_attempts} repair attempts. "
-                    f"Last error: {e}"
-                ) from e
-
-            # Build a TARGETED repair prompt that gives the model the specific error message
-            # "Fix only the specific errors" prevents the model from changing valid fields
-            prompt = f"""Your previous response did not conform to the required schema.
-
-Previous response:
-{raw}
-
-Validation errors:
-{e}
-
-Please output only corrected JSON that fixes these specific errors.
-Do not change any values that were already valid."""
-            # Loop continues; next iteration will try again with the repair prompt
-
-    raise RuntimeError("Unreachable")    # Should never get here (loop always returns or raises)
-```
-
-> **You should see.** When the first response overshoots the allowed range, the loop repairs it in one extra call:
-
-```text
-First attempt output (invalid):
-{"sentiment": "negative", "political_lean": "center_left",
- "evidence_quality": 1.5,   <- INVALID: exceeds maximum of 1.0
- "missing_perspectives": ["opposition parties"],
- "confidence": 0.8}
-
-ValidationError message Pydantic generates:
-1 validation error for BiasAnalysis
-evidence_quality
-  Input should be less than or equal to 1 [type=less_than_equal, input_value=1.5, ...]
-
-Repair prompt sent to the model:
-"Your previous response did not conform to the required schema.
- Previous response: {...}
- Validation errors: evidence_quality: Input should be less than or equal to 1 [input_value=1.5]
- Please output only corrected JSON that fixes these specific errors.
- Do not change any values that were already valid."
-
-Second attempt output (valid):
-{"sentiment": "negative", "political_lean": "center_left",
- "evidence_quality": 0.9,   <- Fixed: now within [0.0, 1.0]
- "missing_perspectives": ["opposition parties"],
- "confidence": 0.8}         <- Unchanged: was already valid
-```
-
-Key properties of this pipeline:
-
-- **Parse first, use second**: `model_validate_json` raises an exception before any downstream code touches potentially invalid data.
-- **Targeted repair**: The repair prompt includes the *specific* validation error with the actual bad value, not only "try again."  This tells the model exactly what to fix.
-- **Bounded retries**: The loop has a hard limit.  Without it, an unfixable validation error (like a model that consistently outputs the wrong type) becomes an infinite loop and unbounded API cost.
-- **Fail loudly**: When repair is exhausted, the exception propagates to the caller.  Silent failures (returning `None` or default values) hide the problem and let bad data flow downstream.
-
-> **Watch out.** Many students assume that using "JSON mode" or telling the model to "output JSON" in the system prompt provides the same guarantees as grammar-constrained decoding or function calling with a schema.  It does not.  JSON mode is a *suggestion*; the model can and sometimes will ignore it, especially under pressure (long context, unusual inputs, refusals).  The only way to get a guarantee that the output parses as valid JSON is grammar-constrained decoding at the token level, and when that grammar is compiled from a JSON Schema (as with Ollama's `format`), the reply also matches the schema's structure, though its values can still be wrong.  The only way to get schema validity without grammar constraints is to validate with a library like Pydantic *after* the model responds, and repair or reject on failure.
-
-#### Questions to Work Through
-
-7.  The repair prompt says "Do not change any values that were already valid."  Why is this specific constraint important?  Describe a concrete scenario where a repair prompt that just said "output the correct JSON" could accidentally make the response worse, not better.
-
-    *Hint: Consider a case where the model correctly identified `political_lean` as "center_right" but had an invalid `evidence_quality` of 1.5.  If the repair prompt just says "output correct JSON," the model might re-evaluate the article from scratch and now classify `political_lean` as "right", changing a valid field while fixing the invalid one.  What does the more constrained repair prompt do differently?*
-
-8.  Pydantic's `Field(ge=0.0, le=1.0)` on `evidence_quality` catches the case where the model outputs `1.5` (a range violation).  But it does not catch the case where the model outputs `0.9` for an article that cites zero sources and makes no verifiable claims; semantically, `0.9` is wildly wrong here, but it is structurally valid.  What layer of the system is responsible for catching semantic errors like this, and what would that layer concretely look like?
-
-    *Hint: One approach is a separate "quality check" LLM call that reads both the original article and the BiasAnalysis output and asks "is this analysis consistent with the article?"  Another approach is statistical: track the distribution of `evidence_quality` scores across thousands of articles and flag outliers.  Which approach is more scalable?*
-
-9.  The function raises `RuntimeError` after exhausting `max_repair_attempts`.  The caller must handle this exception.  Propose a **graceful degradation** strategy for a system that is analyzing news articles and must always return *something* to the user, even if validation fails after all repair attempts.  What should be returned, and what metadata should accompany the degraded response to make its limitations clear to downstream consumers?
-
-    *Starter hint: One option is to return a partially valid response (the fields that passed validation) alongside an explicit `is_degraded: True` flag and a `validation_errors` field listing what failed.  Another option is to return a "manual review required" placeholder.  Which is more useful to a downstream system?  What does a system that relies on this output need to know to handle both cases correctly?*
-
-10. You ask an LLM to output a JSON object with a field `"confidence": float` constrained to values between 0 and 1.  The model outputs `{"confidence": "high"}`.  What is the most likely root cause of this failure?
-{: start="7"}
-
-### Step 2.5: Demonstrate One Technique With a Before and After
-
-This is the required segment.  The point is evidence: a real parse failure on a real response, and the same request made reliable by one of the three techniques.
-
-> **Do this.**
-> 1. Pick one technique from the box at the top of Part 2: Ollama's `format` parameter, Instructor, or Outlines.
-> 2. **Before.** Send a prompt to your model that asks for JSON but does not constrain it (plain JSON mode, as in Step 2.2), then hand the raw response to `json.loads`.  Keep trying prompts until a real response breaks the parse; the model adding a sentence of prose before the object is the usual way it happens.  Save the response and the error.
-> 3. **After.** Send the same prompt through your chosen technique and parse the result the same way.  Run it several times; it should parse every time.
-> 4. Write the two-or-three-sentence note for your writeup: what broke, what fixed it, and which of the three techniques guarantees validity versus merely encourages it.
-
-> **You should see.** In the before, a traceback ending in a line like the one below, because `json.loads` hit prose where it expected an opening brace.  In the after, a Python dict printed with the fields you asked for, on every run.
-
-```text
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-```
-
-> **If it fails.**
-> - The before never breaks: your prompts are too easy.  Try a longer input, an ambiguous question, or a request the model is inclined to explain first.  Do not fake the failure; the broken parse is the evidence.
-> - The after still breaks with Ollama's `format`: confirm you passed the schema in the request's `format` field, not as prose in the prompt.
-> - Instructor or Outlines will not install or will not reach your model: switch to Ollama's `format` parameter, which needs nothing beyond `requests`, and note the switch in your writeup.
-
-> **No-code path.** The technique still has to be one of the three.  Capture the before as an exported chat whose reply is prose around JSON.  For the after, the constraint has to actually be applied, which on this route means either a technique your interface supports or a single request sent by hand to Ollama's `/api/chat` with the `format` parameter set; say which you used, show the reply that is only the JSON object, and write the same note.
-
----
-
-## Part 3: Reasoning, Measured (20 points)
-
-Make the agent reason explicitly, and then find out whether the reasoning was worth what it cost.  Both options below run a plain condition and a reasoning condition over the same fixed set of at least eight tasks at a fixed seed, so that any difference you see comes from the reasoning and not from the dice.  Pick at least one.
-
-### Option 3A: From Scratch, Make the Agent Think and Measure It
-
-Add explicit reasoning to your agent and test whether it helps.  Either (a) insert a scratchpad or chain-of-thought step where the model reasons before it answers, or (b) spend **test-time compute**: sample several reasoning paths at nonzero temperature and select the best (majority vote or a self-check).  Run both the plain and the reasoning version over a fixed set of at least eight tasks at a fixed seed, and report the accuracy delta *and* the extra tokens and latency it cost.  Concepts are in the [model-types lecture]({{ site.baseurl }}/Tutorials/ModelTypes).
-
-> **Paste into your submission.** Both versions, the paired results table, and a sentence on when the extra reasoning earned its cost.
-
-### Option 3B: From a Model Perspective, Use a Reasoning Model
-
-Drive reasoning by *choosing the model* rather than building the loop.  Run a reasoning-capable model (or toggle a "think step by step" or extended-thinking mode where your server supports it) and compare it against a direct-answer model on the same eight-task set.  Report accuracy, latency, and token cost for each, and identify a task type where the reasoning model clearly wins and one where it is wasteful.  See the [model-types lecture]({{ site.baseurl }}/Tutorials/ModelTypes) for what makes a model a "reasoning" model.
-
-> **Paste into your submission.** The comparison table and a short recommendation on which model you would ship for this workload and why.
-
-> **Checkpoint.** Before you run anything, confirm your task set will show a difference.  Pick tasks that need at least two steps; a ceiling at 8/8 in both conditions measures your task set, not the model.  Then start the runs and use the waiting time for Part 4.
-
-> **No-code path.** Run the comparison in the chat interface: a plain model against a reasoning-prompted one (Option 3A) or against a reasoning model (Option 3B), across the same eight fixed tasks.  In Langflow, build the two conditions as two flows.  Wall-clock time and response length are acceptable stand-ins for latency and token counts, provided you state how you measured them.
-
----
-
-## Part 4: MCP (20 points)
-
-MCP standardizes how a client discovers what tools a server offers and how it calls them, so a tool written once can be used by any MCP-aware client.  Every option below ends in the same evidence: a transcript showing discovery followed by invocation.  Pick at least one.  Option 4D is 4A with a token gate, for pairs who want the security half as well.
-
-### Option 4A: Create, Stand Up Your Own MCP Server
-
-Expose your tools over MCP so *any* MCP-aware client can discover and call them, not only your own loop.  Build a small MCP server, for example with the Python MCP SDK or FastMCP, that advertises one or two tools.  Then connect a client and show the discover to invoke round trip.  The MCP deck's Flask server follows the same list-then-call pattern over plain HTTP, but it does not speak the MCP protocol itself (JSON-RPC over stdio or HTTP).  For a complete, real FastMCP server with a client and a Pydantic AI agent connected over stdio, see Part 8 of [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI).
-
-If you take [Option 4D](#option-4d-secure-your-own-server-with-oauth-20), the same server with an OAuth 2.0 gate, that fully satisfies this option.
-
-For background, see the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md) and the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/), built with Anthropic, whose early units walk through building and connecting an MCP server step by step.
-
-> **Paste into your submission.** The server code, a transcript of a client listing the tools and calling one, and one sentence on what MCP standardizes that a hand-rolled `tools` list does not.
-
-### Option 4B: Use, Connect Your Agent to an Existing MCP Server
-
-Consume MCP instead of authoring it.  Point your agent (or a framework client) at an existing MCP server (for example a filesystem, fetch, or SQLite server) and let it discover the server's tools and call them to complete a task.  Background: the [MCP activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md).
-
-**A worked example, if you want one: GitHub over its own server.**  You already have a repository, `cs357-work`, and in the *Coding Agents* session you drove GitHub from the shell with `gh`.  Point your agent at [GitHub's hosted MCP server](https://api.githubcopilot.com/mcp/) instead and you reach the same operations as named tools, which is the comparison that session set up and deferred to this one.  The opencode and Claude Code configurations are in the MCP activity, and the course ships a ready copy at [`opencode-scratchpad.json`]({{ site.baseurl }}/files/agent-templates/opencode-scratchpad.json).  Three things make this a better answer than a filesystem server if you take it:
-
-- Put the configuration in that repository's own `opencode.json`, not the one in your home directory, and say in your writeup what that decides.  A tool server attached to the global config is advertised in every project you open afterwards, and every advertised tool costs context whether or not it is used.
-- Use a fine-grained token scoped to one repository, referenced as `{env:GITHUB_SCRATCH_PAT}` or `{file:~/.secrets/github-scratch-pat}`, never pasted into the file.
-- Set `GITHUB_TOOLSETS` and `GITHUB_READ_ONLY` on the local (container) variant and report what disappeared from the tool list.  A server that never advertises a write tool is an allowlist enforced before the model gets a turn, which is a stronger claim than a system prompt asking it not to write.
-
-> **If `gh` or the server returns 401 or 403.** A 401 is about identity and `gh auth login` fixes it; a 403 is about permissions, so the token authenticates but lacks the scope, and `gh auth refresh -s <scope>` or an edited fine-grained token fixes that one. Tokens expire, so expect this at least once this semester.
-
-> **Paste into your submission.** The connection or config, a transcript showing tool discovery and at least one successful invocation, and one sentence on the trust question this raises (you are now running someone else's tool definitions).
-
-### Option 4C: Obsidian Vault, Put Your Notes Behind MCP With a Gated Write
-
-Expose an Obsidian vault (a folder of Markdown notes) to an agent over MCP, with the write path gated so nothing lands in a note without your confirmation.  This option earns the same credit on the MCP rubric row as Create or Use, on whichever route you take.
-
-> **Code path.** Write a small FastMCP or plain-HTTP server over a vault folder that exposes three operations: search (find notes matching a query), read (return one note), and a gated append (add text to a note only after a confirmation step).  The `vault_server.py` from Part IIb, *A Vault Behind a Tool Server*, of the [MCP: Connecting Agents to Tools and Your Obsidian Vault deck](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-mcp.md) is the starting point; point it at your own vault folder and connect a client.
-
-> **No-code path.** Configure rather than write.  Either add a community Obsidian MCP server of your choice, cited in your readme, to your client's tool settings over your vault folder, or set up an Open WebUI tool over the vault folder.  The gate still has to exist: the write must not go through until you confirm it.
-
-> **Paste into your submission.** On either route: the server code or the configuration, a transcript that shows tool discovery, one read of a note, and one gated write that was refused first and then carried out once you confirmed it, and one sentence on what MCP standardizes that a hand-rolled `tools` list does not.  If you used a community server, also name the trust question that running someone else's tool definitions raises.
-
-### Option 4D: Secure Your Own Server with OAuth 2.0
-
-Option 4A with a lock on the door.  You build the MCP server, wrap it so every request must carry a valid OAuth 2.0 access token with the right scope, drive it from an agent, and document the full data flow from agent request, through token, to tool response.  This option satisfies the MCP row on the same terms as 4A; the token gate is the extra.  Read [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth) first; it covers the flows and the token security this recipe assumes.  If MCP itself is new to you, the free [Hugging Face MCP Course](https://huggingface.co/learn/mcp-course/) walks through building a server and connecting clients.
-
-**You need.**  Python packages (`mcp[cli]`, `fastapi`, `uvicorn`, `python-jose[cryptography]`, `requests`) and Docker **on your host** to run a local mock OAuth server (a few hundred MB).  Host, not the course container: that container has no Docker command in it, because it is itself a container rather than a machine that runs containers.  No accounts and no API costs: the authorization server, the tokens, and the tools are all local.  Three services run at once, so plan your ports.  Budget 3-4 hours.
-
-> **Do this.**  Install and verify.  The last line should print a version such as `1.x.x`.  Keycloak (`docker pull quay.io/keycloak/keycloak:latest`) is an acceptable substitute for the mock server; its token endpoint and realm differ, so adapt the `curl` commands from its quickstart.
->
-> ```bash
-> pip install "mcp[cli]<2" fastapi uvicorn "python-jose[cryptography]" requests
-> docker pull ghcr.io/navikt/mock-oauth2-server:latest
-> python -c "from importlib.metadata import version; print(version('mcp'))"
-> ```
-
-#### 4D.1: Design the tools, the flow, and the ports
-
-> **Do this.**
-> 1. **Choose a domain**: local file search, a calendar query over `.ics` or JSON files, a weather wrapper over a local JSON file, or a summary of a local git repo (or propose another to me first).  Write one paragraph for your README: what the two tools do, which one reads data and which one transforms it.
-> 2. **Write a JSON Schema for each tool before any code.**  `name` is what the agent calls, `description` is how it decides when to call it (make it specific), and `input_schema` lists every parameter, its type, and which are required.  Adapt the example below.
-> 3. **Sketch the OAuth flow** as an ASCII diagram (or photograph a hand-drawn one) with the three actors and numbered messages, following the pattern below.
-> 4. **Fill in a port table** for the MCP server (default 8000), the OAuth server (8090 below, because 8080 is often taken), and the agent, with a column for why you changed any of them.  Check a port with `lsof -i :<port>` (macOS/Linux) or `netstat -ano | findstr :<port>` (Windows).
-
-```json
-{
-  "name": "search_files",
-  "description": "Search for files in the local workspace matching a query string.",
-  "input_schema": {
-    "type": "object",
-    "properties": {
-      "query": {"type": "string", "description": "The search term to match against file names and contents."},
-      "max_results": {"type": "integer", "description": "Maximum number of results to return (default: 10).", "default": 10}
-    },
-    "required": ["query"]
-  }
-}
-```
-
-```text
-  AI Agent (MCP Client)
-       |  1. POST /token  grant_type=client_credentials  client_id=mcp-client
-       |     client_secret=secret  scope=mcp:read
-       v
-  OAuth Authorization Server (mock-oauth2-server or Keycloak)
-       |  2. Returns: { access_token, token_type, expires_in }
-       v
-  AI Agent (holds Bearer token)
-       |  3. POST /mcp (tool call)   Authorization: Bearer <access_token>
-       v
-  MCP Server (Resource Server)
-       |  4. Validate token (signature, expiry, scope)   5. Execute tool   6. Return result
-       v
-  AI Agent (receives tool response)
-```
-
-> **Watch out.**  In the client credentials flow, the agent is the *client* (it requests the token), the mock server is the *authorization server* (it issues tokens), and your MCP server is the *resource server* (it validates tokens and serves tools).  The MCP server never requests a token.  Also, JSON Schema's `required` is a top-level array inside the object schema, not a flag on each property; omit it and every field becomes optional.
-
-#### 4D.2: Implement the MCP server
-
-> **Do this.**
-> 1. Create the layout: `mkdir -p cs357-mcp-lab/tools cs357-mcp-lab/tests cs357-mcp-lab/data cs357-mcp-lab/logs && cd cs357-mcp-lab && touch tools/__init__.py && pip freeze > requirements.txt`.  Put each tool's implementation in `tools/tool_one.py` and `tools/tool_two.py`.
-> 2. Create `mcp_server.py` from the skeleton below and complete every `TODO`.  Keep the logging lines.
-> 3. `mcp_server.py` speaks MCP over stdio, not HTTP, so nothing listens on port 8000 yet.  Test it with the MCP Inspector: `npx @modelcontextprotocol/inspector python mcp_server.py` opens a browser page where you can list the tools and call `search_files` with `{"query": "README"}`.  Test your second tool the same way, then test the error case: omit a required argument and confirm the response contains an error.  Keep the `curl` request below; it is the test you run once `server_http.py` from 4D.3 is listening on port 8000.
-
-```python
-# mcp_server.py
-from mcp.server import Server
-from mcp.server.stdio import stdio_server
-from mcp import types
-import json, logging
-from datetime import datetime
-
-# Every log line is a valid JSON object so it can be parsed by log aggregators.
-logging.basicConfig(level=logging.INFO,
-    format='{"time": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}')
-logger = logging.getLogger(__name__)
-app = Server("cs357-mcp-server")
-
-@app.list_tools()
-async def list_tools() -> list[types.Tool]:
-    """Answer tools/list.  In 4D.3 you add scope enforcement: only mcp:admin may list."""
-    # TODO: return a list of types.Tool(name=..., description=..., inputSchema={...})
-    # built from your 4D.1 schemas.
-    pass
-
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
-    """Handle tools/call.  Log BEFORE executing so failures are still captured."""
-    logger.info(f"Tool invoked: {name}, arguments: {json.dumps(arguments)}, "
-                f"timestamp: {datetime.utcnow().isoformat()}Z")
-    # TODO: validate that required fields are present in `arguments`; if one is
-    # missing, raise ValueError naming it.  The SDK does NOT enforce inputSchema for you.
-    if name == "search_files":
-        # TODO: extract "query" and "max_results" (default 10), walk the workspace,
-        # log the result count, and return one TextContent with a JSON body:
-        # return [types.TextContent(type="text", text=json.dumps({"results": [...], "count": N}))]
-        pass
-    elif name == "your_second_tool_name":
-        # TODO: same pattern: validate, perform, log, return types.TextContent.
-        pass
-    else:
-        raise ValueError(f"Unknown tool: {name}")   # the SDK returns this as a structured error
-
-if __name__ == "__main__":
-    import asyncio
-    async def main():
-        async with stdio_server() as (read_stream, write_stream):
-            await app.run(read_stream, write_stream, app.create_initialization_options())
+try:
     asyncio.run(main())
+except Exception as e:
+    print("[mcp_client:main]", e)
+    traceback.print_exc()
 ```
+
+Notice what is **not** in this file.  There is no list of tools, no description of `microsoft_docs_search`, and no schema for its arguments.  The client learned all of that from the server at runtime.  That is the thing a hand-rolled `tools` list cannot do, and Part C asks you to say why it matters.
+
+Run it:
 
 ```bash
-curl -s -X POST http://localhost:8000/mcp -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-       "params": {"name": "search_files", "arguments": {"query": "README"}}}'
+python3 mcp_client.py
 ```
 
-> **You should see.**  A JSON response whose `result.content[0]` has `"type": "text"` and a `text` field holding your tool's output, for example `{"results": ["./README.md"], "count": 1}`.  In the server terminal, each invocation prints one log line that is itself valid JSON; verify by piping one through `python -m json.tool`.
+> **You should see.**  Three tools, then the opening of a search result.  The descriptions and the result text change as Microsoft updates its documentation:
 
-> **If it fails.**
-> - `ImportError: No module named 'mcp'`: the package is not in the active environment.  Check `which python`, activate your virtual environment, and re-run the install.
-> - The handler returns `None`: every branch of `call_tool` must `return` a list.  A `pass` left in place returns `None`, which the SDK cannot serialize.
-> - Missing fields are accepted silently: you have not written the validation `TODO` yet.
+```text
+Discovered 3 tools:
+- microsoft_docs_search: Search official Microsoft/Azure documentation to find the most relevant and trus
+  arguments: {"query": {"description": "a query or topic about Microsoft/Azure products, services, platforms, developer tools, frameworks, or APIs", "type": "string", "defau
+- microsoft_code_sample_search: Search for code snippets and examples in official Microsoft Learn documentation.
+  arguments: {"query": {"description": "a descriptive query, SDK name, method name or code snippet related to Microsoft/Azure products, services, platforms, developer tools,
+- microsoft_docs_fetch: Fetch and convert a Microsoft Learn documentation webpage to markdown format. Th
+  arguments: {"url": {"description": "URL of the Microsoft documentation page to read", "type": "string"}}
 
-#### 4D.3: Add OAuth 2.0
-
-> **Do this.**
-> 1. Start the mock OAuth server: `docker run -d --name oauth-server -p 8090:8080 ghcr.io/navikt/mock-oauth2-server:latest`.  `docker ps` should show `oauth-server` with `0.0.0.0:8090->8080/tcp`, and `curl http://localhost:8090/default/.well-known/openid-configuration` should return the discovery document.
-> 2. Obtain a token with the client credentials flow (the grant type for a machine, not a human) using the first command below.  Paste the `access_token` into [jwt.io](https://jwt.io) to see the `sub`, `scope`, `iat`, and `exp` claims.
-> 3. Create `oauth_middleware.py` from the skeleton below and complete the `TODO`s.  Validation has four steps: fetch the JWKS (the server's public keys) once and cache them; extract the `Authorization: Bearer <token>` header on every request; decode the JWT (JSON Web Token, the signed token format the server issues), verify its signature, and check `exp`; reject failures with HTTP 401.
-> 4. Create `server_http.py`, a thin FastAPI wrapper that validates the token and forwards the body to your MCP logic (the SDK's stdio transport has no HTTP header to read, so this wrapper is where the token arrives).  Complete its final `TODO` so it forwards to your tool logic instead of returning the placeholder.
-> 5. **Enforce scopes**: `mcp:read` for any `tools/call`, `mcp:admin` for `tools/list`.  Test with the scope commands below, then repeat the token request with `scope=mcp:read mcp:admin` and confirm `tools/list` succeeds with that token and is refused with the read-only one.
-> 6. **Demonstrate expiry**: request a token, wait for it to expire, re-send, and save the 401 response.  Do not edit the `exp` claim by hand: that breaks the signature, so the 401 you get is for a bad signature, not expiry.  To avoid waiting an hour, restart the mock server with a `JSON_CONFIG` environment variable whose token callback for the `default` issuer sets `tokenExpiry` to `60` (seconds; see *Token Customization via JSON_CONFIG* in the [mock-oauth2-server README](https://github.com/navikt/mock-oauth2-server#token-customization-via-json_config), and make sure the callback's claims still carry your `scope`), then mint a token, wait a minute, and re-send.
-
-```bash
-curl -s -X POST http://localhost:8090/default/token \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id=mcp-client&client_secret=secret&scope=mcp:read"
+Result (first 400 characters):
+{"results":[{"title":"Data agent as Model Context Protocol server","content":"# Data agent as Model Context Protocol server\nThe Model Context Protocol (MCP) is an emerging standard ...
 ```
 
-> **You should see.**  JSON with `access_token` (a long `eyJ...` string), `"token_type": "Bearer"`, `"expires_in": 3600`, and `"scope": "mcp:read"`.
+> **If it fails.**  `ModuleNotFoundError: No module named 'mcp'` means the install went to a different Python; run `python3 -m pip install "mcp>=2"`.  `ImportError: cannot import name 'streamable_http_client'` means you have the older 1.x SDK, where the function was spelled `streamablehttp_client`; upgrade, or use that spelling.  A connection error from inside the course container means that container cannot reach the internet; try it on your host.
+
+### Step A.2: Point It at Your Server
+
+If you picked a different **remote** server from the table, change `SERVER_URL`, run the client once to see the tool list, and then change the `call_tool` line to use one of the names and argument shapes you just discovered.
+
+If you picked a **local** server, the server runs as a process on your machine and talks over its standard input and output (*stdio*) instead of HTTP.  Replace the import and the first `async with` line.  The rest of the file does not change, and that is the point of the protocol:
 
 ```python
-# oauth_middleware.py
-import requests, logging
-from jose import jwt, JWTError
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
 
-logger = logging.getLogger(__name__)
-JWKS_URI = "http://localhost:8090/default/jwks"   # TODO: your server's JWKS endpoint
-ISSUER = "http://localhost:8090/default"          # TODO: the issuer from your discovery document
-_jwks_cache = None
+SERVER = StdioServerParameters(command="uvx", args=["mcp-server-time"])
 
-def get_jwks() -> dict:
-    """Fetch the JWKS from the authorization server (cached after first call)."""
-    global _jwks_cache
-    if _jwks_cache is None:
-        # TODO: requests.get(JWKS_URI) and store the parsed JSON in _jwks_cache;
-        # on a connection error, log it and raise.
-        pass
-    return _jwks_cache
-
-def validate_token(token: str, required_scope: str = None) -> dict:
-    """Return the claims of a valid Bearer token (no 'Bearer ' prefix), or raise
-    ValueError on expiry, bad signature, wrong issuer, or missing scope."""
-    jwks = get_jwks()
-    try:
-        # TODO: claims = jwt.decode(token, jwks, algorithms=["RS256"], issuer=ISSUER,
-        #                           options={"verify_aud": False})
-        claims = None  # replace with the actual decode call
-    except JWTError as e:   # expired token, bad signature, wrong issuer, ...
-        logger.warning(f"Token validation failed: {e}")
-        raise ValueError(f"Invalid token: {e}") from e
-    # TODO: if required_scope is given, check it appears in claims.get("scope", "")
-    # (a space-separated string); raise ValueError if absent.
-    return claims
+async def main():
+    async with stdio_client(SERVER) as (read, write):
+        async with ClientSession(read, write) as session:
+            ...  # initialize, list_tools, call_tool exactly as before
 ```
 
-```python
-# server_http.py: validates the OAuth token, then delegates to the MCP server
-from fastapi import FastAPI, Request, HTTPException
-from oauth_middleware import validate_token
-import uvicorn
+For the time server, a call such as `session.call_tool("get_current_time", {"timezone": "America/New_York"})` returns the current time in that zone.  Check the names and argument shapes against your own discovery output rather than trusting this page.
 
-fastapi_app = FastAPI()
+> **Paste into your submission.**  Your final `mcp_client.py` and its full output.
 
-@fastapi_app.post("/mcp")
-async def mcp_endpoint(request: Request):
-    auth_header = request.headers.get("Authorization", "")
-    if not auth_header.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or malformed Authorization header")
-    token = auth_header.removeprefix("Bearer ")
-    try:
-        claims = validate_token(token, required_scope="mcp:read")   # mcp:admin for tools/list
-    except ValueError as e:
-        raise HTTPException(status_code=401, detail=str(e))
-    # TODO: forward the request body to your MCP server logic and return its response.
-    return {"status": "token valid", "subject": claims.get("sub")}
+### Step A.3: Show When the Tool Should Not Fire
 
-if __name__ == "__main__":
-    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)
-```
+Your client calls the tool because you told it to.  An agent decides for itself.  Show both sides of that decision with the smallest possible experiment: write down two questions, one that the server's tools can answer and one that they cannot (for Microsoft Learn, "how do I create an Azure storage account?" against "what is 17 times 23?").  For each, say which tool, if any, an agent *should* call and with what arguments, and justify it from the tool descriptions your client printed.  That is the input the model would have to decide from.
 
-```bash
-# A read-only token, then a tools/call that should succeed
-READ_TOKEN=$(curl -s -X POST http://localhost:8090/default/token \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id=mcp-client&client_secret=secret&scope=mcp:read" \
-  | python -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
-curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search_files","arguments":{"query":"README"}}}'
-```
-
-> **You should see.**  The call succeeds with `READ_TOKEN`; `tools/list` succeeds only with the admin token.  After a token expires, a call returns HTTP `401 Unauthorized` with the body `{"detail": "Invalid token: Signature has expired."}`.  Save that output.
-
-> **If it fails.**
-> - 401 on a fresh token: your `ISSUER` does not exactly match the token's `iss` claim (a trailing slash or wrong realm is enough).  Inspect the token at jwt.io.
-> - No `scope` claim: the mock server includes only the scopes you requested; confirm `scope=mcp:read` is in the token request.
-> - `ConnectionRefusedError` fetching the JWKS: the container is still starting.  `docker logs oauth-server` until it reports listening, then retry.
-
-#### 4D.4: Drive it from an agent
-
-> **Do this.**
-> 1. Register the server with your agent.  For Claude Code, add the block below to `.claude/settings.json` in the project (or `~/.claude.json` globally), with the real absolute path.  For any other MCP-capable agent (an Ollama-backed agent with tool support, a LangChain agent, or opencode), consult its documentation for the equivalent registration: the server command, the environment variables for the OAuth credentials, and the transport (`stdio` for a local server).  Restart the agent; it should list your tools.
-> 2. Give the agent a natural-language task that needs **both** tools in sequence, and let it choose the tools and their order.  For the file-search domain: "Find all Python files in the cs357-mcp-lab directory that contain the word 'TODO', then summarize the first one you find so I know what still needs to be done."
-> 3. Capture the full invocation trace as `invocation_trace.txt` (Claude Code: run with `--debug`; any agent: `python mcp_server.py 2> logs/invocation.log`).  It must show the `tools/list` discovery, the token exchange or evidence the token was used, the `tools/call` with exact arguments, and the tool response.
-> 4. Error case 1: send the expired token from 4D.3 while the agent is running; save the request, the server log line, and the 401 as `error_expired_token.txt`.
-> 5. Error case 2: trigger a failure inside a tool with the command below (a path that does not exist); save the JSON-RPC error (not an HTTP 500) as `error_tool_failure.txt`, and note whether the agent retried, reported the failure, or did something else.
-
-```json
-{
-  "mcpServers": {
-    "cs357-lab": {
-      "command": "python",
-      "args": ["/absolute/path/to/cs357-mcp-lab/mcp_server.py"],
-      "env": {
-        "MCP_OAUTH_TOKEN_ENDPOINT": "http://localhost:8090/default/token",
-        "MCP_CLIENT_ID": "mcp-client",
-        "MCP_CLIENT_SECRET": "secret"
-      }
-    }
-  }
-}
-```
-
-```bash
-curl -s -X POST http://localhost:8000/mcp -H "Authorization: Bearer $READ_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"summarize_file","arguments":{"path":"/nonexistent/path.txt"}}}'
-```
-
-> **If it fails.**
-> - The agent says the server is unavailable: confirm it is running (`ps aux | grep mcp_server`), the configured path is absolute and correct, and the interpreter is the one with `mcp` installed.
-> - The agent discovers the tools but never calls them: your descriptions are too vague, or the task does not obviously need them.  Sharpen the descriptions in `list_tools()` and try "Use the search_files tool to find README files."
-> - The agent gets a response it cannot parse: `call_tool` must return `list[types.TextContent]`, never a bare string or dict.
-
-> **Paste into your submission.**
->
-> - The code: `mcp_server.py`, `oauth_middleware.py`, `server_http.py`, `tools/tool_one.py`, `tools/tool_two.py`, and `requirements.txt`.
-> - The OAuth server `docker` command and the agent's MCP configuration, both with secrets redacted.
-> - The traces: `invocation_trace.txt`, `error_expired_token.txt`, and `error_tool_failure.txt`.
-> - The data-flow diagram and the completed port table.
-> - A README with the domain paragraph, both tool schemas, the standardization sentence the MCP row asks for, and a paragraph naming what the OAuth scopes actually bound and what an attacker holding a valid token could still do.
->
-> In your writeup, also answer two questions.  What does the tool schema give you that a bare HTTP endpoint does not?  And suppose a malicious MCP server advertised a `search_files` tool that actually exfiltrates data: how could an agent be tricked into calling it, and what trust mechanisms would prevent that?
-
-> **No-code path.** For Options 4A and 4B without code: add an MCP server to Open WebUI's tool settings, or configure one in a client's config file (the Langflow low-code variant), and export the chat showing discovery and then invocation.  Consuming a server through a client's configuration file earns the MCP row on the same terms as consuming it from code.
+> **Go further (ungraded).**  Hand the discovered tools to a local model and let it choose.  Convert each discovered tool into the function-calling format from the *Tool Use* session (`name`, `description`, and `parameters` set to `tool.input_schema`), send both questions to Ollama with `qwen2.5:3b` and those tools attached, and when the model asks for a tool, run it with `session.call_tool` and feed the result back.  Did the model's choices match your predictions?
 
 ---
 
-## Part 5: Contain the Server and Size Its Blast Radius (10 points)
+## Part B: No-code Route
 
-Part 4 gave an agent tools that someone else, or a model you do not fully control, decides when to call.  Part 1's Question 13 asked what a `read_file` tool could reach; this part answers that question with infrastructure instead of a path check.  You run your MCP server inside a container, restrict it to what its tools actually need, and then show two things: a tool call still works, and a call that reaches past the boundary is refused.  You finish with a blast-radius statement, the list of what the server can touch and what it cannot, written before anything goes wrong rather than after.
+### Step B.1: Ask opencode to Configure the Server
 
-This part does not re-teach Docker.  [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker), Section 9, has every flag used below, with the ladder of configurations and the fence tests.  [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) has the four mechanisms that set a blast radius and the threat model behind them.  The image is the [course development container]({{ site.baseurl }}/files/devcontainer/Dockerfile) you built in the Overview, which already runs as the non-root user `student` and carries no credentials.
+Open a terminal in a fresh, empty project folder and start opencode there.  Give it a prompt that says which server, where the configuration goes, how narrow it should be, and what it must not ask you for.  Here is the OneNote version; adapt the server line for any other server in the table:
 
-> **Do this.** **Required for everyone: containment.**  Put one tool server in a container with all five boundaries below, confirm them with `docker inspect`, show one tool call succeeding and at least one out-of-scope action refused, and write the blast-radius table and statement from Step 5.4.  If you also run the agent itself in the course container, as the OpenCode Studio Lab does, add a second column to the table for it; the server alone is the floor.
-
-| Boundary | The flag or setting | What it answers |
-|---|---|---|
-| Non-root user | `--user student` (the course image's default, stated explicitly so `docker inspect` shows it) | Can a bad call rewrite the system the server runs on? |
-| Read-only root, narrow mounts | `--read-only`, a small `--tmpfs /tmp`, and one bind mount per folder the tools use, `:ro` unless a tool writes there | If a tool runs `rm -rf`, what actually gets deleted? |
-| No secrets in the image | Credentials passed at run time with `-e NAME` (the name only, never `NAME=value`), and none in the Dockerfile or the image's history | If someone copies the image, what do they walk away with? |
-| Network limited to the tools' needs | `--network none` for a stdio server; for an HTTP server, a port published on `127.0.0.1` only | What can the server reach, and who can reach it? |
-| Resource and privilege limits | `--memory`, `--cpus`, `--pids-limit`, plus `--cap-drop ALL` and `--security-opt no-new-privileges` | Can a runaway call take the rest of your machine down with it? |
-
-### Step 5.1: Choose What Goes in the Box
-
-Pick the route that matches what you built in Part 4.
-
-- **Code route, your own server (Options 4A, 4C code path, and 4D).**  Build a small image that is the course image plus your server and nothing else.  Save the file below as `Dockerfile.mcp` next to `mcp_server.py`, adjust the `COPY` lines to your files, and build it with `docker build -f Dockerfile.mcp -t cs357-mcp .`.  The server's code is owned by root and the root filesystem will be read-only, so the server cannot rewrite itself.
-- **Code route, someone else's server (Option 4B).**  Run that server's own image, or install it into an image built the same way, and put the same flags around it.  GitHub's local server already ships as an image; the flags are what you add.  Check its user with {% raw %}`docker image inspect <image> --format '{{.Config.User}}'`{% endraw %}: an empty answer means root, so add `--user 1000:1000` and confirm it still starts.
-- **Low-code route (any Part 4 option).**  Run the **vault server** (`vault_server.py`, from Part IIb, *A Vault Behind a Tool Server*) from the [MCP deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-mcp.md), copied into `vault_server.py` without edits, inside the unmodified course image, with the command in Step 5.2.  You write no Dockerfile and no code; your work is reading the flags, checking them, and filling the table.  The deck's server speaks the list-then-call pattern over plain HTTP rather than the MCP protocol itself, and that is fine here: this part grades the box, not the protocol, and Part 4 already graded the protocol.
-
-```dockerfile
-# Dockerfile.mcp: the course image plus your Part 4 server, nothing else
-FROM cs357-dev
-USER root
-RUN pip install --no-cache-dir "mcp[cli]<2"
-COPY mcp_server.py /app/
-COPY tools/ /app/tools/
-USER student
-WORKDIR /app
-CMD ["python", "mcp_server.py"]
+```text
+Add the OneNote MCP server to this project's opencode.json (not my global config).
+Use the community server @softeria/ms-365-mcp-server, run with npx, limited to the
+OneNote preset and in read-only mode, for a personal Microsoft account
+(MS365_MCP_TENANT_ID=consumers).
+Do not ask me for any password, key, client secret, or token, and do not put one in
+the file. I will sign in myself, outside this chat.
+Show me the file before you save it.
 ```
 
-> **Watch out.** Nothing secret goes in this file: no `ENV TOKEN=...`, no `COPY .env`, no `ARG` holding a key.  Every layer of an image, including a layer that later "deletes" a file, is readable by anyone who has the image.  A credential your server needs arrives at run time and lives only in the running container.
+For a remote server with browser sign-in, the prompt is shorter, because opencode handles the sign-in itself: *"Add the Notion MCP server at https://mcp.notion.com/mcp to this project's opencode.json as a remote server. Do not ask me for any key or token; I will run `opencode mcp auth` myself."*
 
-### Step 5.2: Run It With the Boundaries On
+### Step B.2: Read What It Wrote Before You Accept It
 
-> **Do this.**
-> 1. Run the server with the command for your route, from the folder that holds your server file.  These are Bash commands; on Windows, run them in Git Bash or WSL, or in PowerShell replace each trailing `\` with a backtick and `$PWD` with `${PWD}`.
-> 2. **Code route, stdio server.**  Your MCP client starts the container itself, so the flags go in the client's configuration.  The block below is the Claude Code form of the 4D.4 registration; opencode takes the same `command` and `args` in `opencode.json`.  Replace the mount with the folder your tools read, and add one `-e NAME` pair per credential your server needs.  Do not add `-t`: a terminal would corrupt the stdio stream.
-> 3. **Low-code route, or any HTTP server.**  Set `VAULT_DIR` to your vault folder (a folder of two or three `.md` files is enough) and start the server with the `docker run` command below.  The vault is mounted read-only, and only its `daily/` folder, the one place `append_daily_note` writes, is mounted writable on top of it.
-> 4. Make one tool call through the box and save the transcript.  On the stdio route, that is the same discover-then-invoke round trip Part 4 asked for, now with the server in the container.  On the HTTP route, use the two `curl` commands below, or connect your client to `http://127.0.0.1:8766`.
+An MCP configuration entry is a command that will run on your machine, or an address your agent will send data to.  Read it the way you would read a script someone emailed you.  For the OneNote prompt, a good result looks like this:
 
 ```json
 {
-  "mcpServers": {
-    "cs357-boxed": {
-      "command": "docker",
-      "args": ["run", "--rm", "-i", "--name", "mcp-box",
-               "--user", "student",
-               "--read-only", "--tmpfs", "/tmp:rw,size=64m",
-               "-v", "/absolute/path/to/data:/data:ro",
-               "--cap-drop", "ALL", "--security-opt", "no-new-privileges",
-               "--memory", "256m", "--cpus", "1", "--pids-limit", "64",
-               "--network", "none",
-               "cs357-mcp"]
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "onenote": {
+      "type": "local",
+      "command": ["npx", "-y", "@softeria/ms-365-mcp-server", "--preset", "onenote", "--read-only"],
+      "environment": { "MS365_MCP_TENANT_ID": "consumers" },
+      "enabled": true
     }
   }
 }
 ```
 
-```bash
-VAULT_DIR="$HOME/Documents/Obsidian/MyVault"   # your vault folder on the host
-mkdir -p "$VAULT_DIR/daily"                     # the one folder the server may write
-docker run -d --rm --name mcp-box \
-  --user student \
-  --read-only --tmpfs /tmp:rw,size=64m \
-  -v "$PWD/vault_server.py:/app/vault_server.py:ro" \
-  -v "$VAULT_DIR:/home/student/Documents/Obsidian/MyVault:ro" \
-  -v "$VAULT_DIR/daily:/home/student/Documents/Obsidian/MyVault/daily" \
-  -w /app \
-  --cap-drop ALL --security-opt no-new-privileges \
-  --memory 256m --cpus 1 --pids-limit 64 \
-  -p 127.0.0.1:8766:8766 \
-  cs357-dev \
-  flask --app vault_server run --host 0.0.0.0 --port 8766
-```
+Before you accept it, answer three questions in your notes:
+
+- What exact command or address will run?
+- Is there anything secret in the file?  There should not be.
+- Which flag or field limits what the server can do?
+
+If opencode put a placeholder such as `"YOUR_TOKEN_HERE"` in the file, or asked you to paste one, say no and repeat the constraint.
+
+### Step B.3: Sign In Outside the Chat
+
+Quit opencode, then sign in from a terminal.
+
+- **OneNote (device code):**
+
+  ```bash
+  MS365_MCP_TENANT_ID=consumers npx -y @softeria/ms-365-mcp-server --login
+  ```
+
+  It prints a web address and a short code.  Open the address in your browser, enter the code, and sign in with your personal Microsoft account.  The terminal reports success, and the server stores the token encrypted on your machine.
+
+- **Browser sign-in servers (Notion, Linear, Asana, Atlassian):**
+
+  ```bash
+  opencode mcp auth notion      # use the name from your opencode.json
+  ```
+
+  Your browser opens the service's own sign-in and consent page.  Read what it asks permission for before you click Allow.  The note in your writeup about what you granted is part of the Credentials row.
+
+- **No-sign-in servers:** skip this step, and say in your writeup why no credential was needed.
+
+### Step B.4: Discover, Then Use
+
+Confirm that opencode can see the server, then start it again:
 
 ```bash
-curl -s http://127.0.0.1:8766/tools/list
-curl -s -X POST http://127.0.0.1:8766/tools/call -H "Content-Type: application/json" \
-  -d '{"name": "append_daily_note", "arguments": {"text": "written from inside the box", "confirm": true}}'
+opencode mcp list
 ```
 
-> **You should see.** The three tool schemas from the first `curl`, then a result like the one below from the second, and a new line in today's note under `daily/` in your vault on the host.  The date will differ:
+In a new opencode session, ask:
 
-```text
-{"result":"appended to daily/2026-10-20.md"}
-```
+1. *"What tools does the onenote server give you?"*  This is discovery.
+2. A question that needs the server, such as *"List the sections in my notebook called Personal."*  This is invocation.
+3. A question that does not, such as *"What is 17 times 23?"*  The tool should not fire.
 
-> **Why this matters.** Two of those flags look odd until you read them as boundaries.  The server listens on `0.0.0.0` *inside* the container because the container's own `localhost` is unreachable from your machine, and `-p 127.0.0.1:8766:8766` then publishes it to your machine's loopback only, so nothing else on the campus network can call your tools.  The vault is mounted where the deck's `VAULT` line already points, `~/Documents/Obsidian/MyVault` for the user `student`, which is why the server file needs no edits.
+Export the session with `/export`, which opens the conversation as Markdown in your editor, and save it, so the tool calls appear as their own entries.  A screenshot of the final answer is not enough; the evidence is the record of the tool being called, or not called.
 
-> **Watch out.** Option 4D's HTTP server has to fetch the signing keys from the OAuth server on your host, so it cannot run with `--network none`.  Run it the HTTP way, add `--add-host host.docker.internal:host-gateway`, set `JWKS_URI` to `http://host.docker.internal:8090/default/jwks`, and leave `ISSUER` exactly as it appears in the token.  Pass the client secret with `-e MCP_CLIENT_SECRET`, and record the extra network reach in your table as a residual risk rather than leaving it out.
+### Step B.5: Find the Credential, Then Clean Up
 
-### Step 5.3: Confirm the Boundaries, Then Try to Cross Them
+Find out where the credential went.  opencode stores browser sign-in tokens in `~/.local/share/opencode/mcp-auth.json`; the OneNote server keeps its own in an encrypted file under `~/.config/ms-365-mcp-server/` on Linux, `~/Library/Application Support/ms-365-mcp-server/` on macOS, or `%APPDATA%\ms-365-mcp-server\` on Windows, with the encryption key held in your operating system's credential store.  **Do not open the file or paste its contents anywhere.**  It is enough to show that it exists (`ls -l` on the file) and that `opencode.json` contains no secret.
 
-A flag you typed is a claim.  `docker inspect` reads back what Docker actually applied, and a probe that fails is the evidence that the boundary holds.  Keep the container running (on the stdio route, keep your client session open) while you run these.
+When you are done, sign out: `opencode mcp logout <name>` for browser sign-in servers, or `npx -y @softeria/ms-365-mcp-server --logout` for OneNote.  Then revoke the app's access in the service's own account settings.
 
-> **Do this.**
-> 1. Read the settings back from the running container, and check the image for baked-in credentials, with the first block below.  {% raw %}The `{{...}}`{% endraw %} templates select single fields from `docker inspect`'s JSON so you do not have to read all of it.
-> 2. Try to cross the boundary with the second block.  Probe 1 goes through the tool, so the tool's own code refuses it.  The rest run as the server's own user through `docker exec`, standing in for a tool whose code has a bug or a prompt-injected agent that found a way around it, so any refusal comes from the container, not from the tool.  On the stdio route, replace probe 1 with a client request that asks your tool for a path outside its mount.
-> 3. Save all of the output for your submission.  Stop the HTTP container with `docker stop mcp-box` when you are done; `--rm` then deletes it.
+---
 
-{% raw %}
-```bash
-docker inspect mcp-box --format 'user={{.Config.User}} readonly={{.HostConfig.ReadonlyRootfs}} capdrop={{.HostConfig.CapDrop}} secopt={{.HostConfig.SecurityOpt}} net={{.HostConfig.NetworkMode}} ports={{json .HostConfig.PortBindings}} mem={{.HostConfig.Memory}} nanocpus={{.HostConfig.NanoCpus}} pids={{.HostConfig.PidsLimit}}'
-docker inspect mcp-box --format '{{range .Mounts}}{{.Destination}} rw={{.RW}}{{println}}{{end}}'
-docker image inspect cs357-dev --format '{{json .Config.Env}}'
-docker history --no-trunc cs357-dev | grep -i -E "token|secret|password" || echo "no credentials in the image history"
-```
-{% endraw %}
+## Part C: Both Routes, the Writeup
 
-```bash
-# 1. The tool's own check: a path that escapes the vault
-curl -s -X POST http://127.0.0.1:8766/tools/call -H "Content-Type: application/json" \
-  -d '{"name": "read_note", "arguments": {"path": "../../../../etc/hostname"}}'
-# 2. Write a note outside daily/, as the server's own user
-docker exec mcp-box sh -c 'echo x > /home/student/Documents/Obsidian/MyVault/escape.md || echo REFUSED'
-# 3. Rewrite the server's own code
-docker exec mcp-box sh -c 'echo x >> /app/vault_server.py || echo REFUSED'
-# 4. Reach for host paths that hold your credentials
-docker exec mcp-box sh -c 'ls -d ~/.ssh ~/.config/gh /Users /mnt/c 2>&1'
-# 5. Who the server runs as
-docker exec mcp-box id
-# 6. Reach the internet
-docker exec mcp-box sh -c 'curl -sS -m 5 -o /dev/null https://example.com && echo REACHABLE || echo BLOCKED'
-```
+Answer each question in a short paragraph, and point at your own transcript or configuration as you go.
 
-> **You should see.** From `docker inspect`, one line with every boundary on.  Your network mode is `none` on the stdio route, and the port binding is empty there:
-
-```text
-user=student readonly=true capdrop=[ALL] secopt=[no-new-privileges] net=bridge ports={"8766/tcp":[{"HostIp":"127.0.0.1","HostPort":"8766"}]} mem=268435456 nanocpus=1000000000 pids=64
-/app/vault_server.py rw=false
-/home/student/Documents/Obsidian/MyVault rw=false
-/home/student/Documents/Obsidian/MyVault/daily rw=true
-```
-
-> The image's environment lists `PATH`, the Python version, and `OLLAMA_HOST`, and no token.  A `GPG_KEY` entry, if present, is the public fingerprint of the key that signs Python releases, not a secret.  From the probes: probe 1 returns `refused: path is outside the vault`; probes 2 and 3 print `Read-only file system` and then `REFUSED`; probe 4 reports `No such file or directory` for every path; probe 5 prints a `uid` other than `0`.  Probe 6 prints `BLOCKED` on the stdio route and `REACHABLE` on the HTTP route.  That last one is not a failure of your setup: it is a residual risk, and it goes in your table.
-
-> **If it fails.**
-> - `Error: No such container: mcp-box`: on the stdio route the client has not started the server yet, or has already stopped it.  Make one tool call from the client, then run the probes while the session is still open.  On the HTTP route, `docker ps` will show whether it exited; `docker logs mcp-box` says why, if you drop `--rm` for one run.
-> - The server exits at once with `Read-only file system`: something in it writes at startup.  Point that write at `/tmp`, or give it one more `--tmpfs` for the directory it wants, and record the change.  Do not drop `--read-only` to make the error go away.
-> - Probe 2 succeeds: the vault was mounted without `:ro`, or you ran the probe with `docker exec -u root`.  The boundary is the mount and the user together.
-> - `curl` reports `Connection refused` on the HTTP route: the server listens on the container's `127.0.0.1` rather than `0.0.0.0`, or the `-p` flag is missing.
-
-### Step 5.4: Fill the Blast-Radius Table and Write the Statement
-
-> **Do this.**
-> 1. Copy the table below into your writeup and fill one row per boundary, with the evidence taken from Step 5.3, not from what you intended to type.  Give each mount its own row.
-> 2. Write a blast-radius statement of three to five sentences: what the server can touch, what it cannot, and which setting enforces each.  Say which of your refusals the kernel enforced and which the tool's own code enforced, and name one residual risk you accepted and why.  The model is the *Docker from Zero* sentence for trusted mode: "the agent may act without asking, and the worst it can do is damage one git-tracked folder."  If you cannot write the worst case in one sentence, your boundary is wider than you think.
-> 3. Answer the checkpoint questions below in your writeup.
-
-| Boundary | Setting you chose | Evidence (`docker inspect` field or probe number) | What it stops | What it does not stop |
-|---|---|---|---|---|
-| User | | | | |
-| Root filesystem | | | | |
-| Mount: (path) | | | | |
-| Secrets | | | | |
-| Network | | | | |
-| Resources and capabilities | | | | |
-
-> **Checkpoint.**
-> - If the path check in `read_note` (or your own tool's equivalent) had a bug, what would probe 1 have returned, and why does it matter that the answer comes from the container's `/etc` and not your machine's?
-> - A variable passed with `-e NAME` is kept out of the image, but `docker inspect` on the running container still shows its value.  Who on your machine can run `docker inspect`, and when would you move the credential into a Docker secret instead, as *What a Container Isolates* describes?
-> - Probe 6 on the HTTP route: what would you change to close it, and what would stop working if you did?
-
-> **No-code path.** The low-code route in Step 5.1 is the no-code route for this part as well: the command, the `curl` calls, and the probes are given, and your work is the reading, the table, and the statement, which is where this part's grade lives.  If Docker will not run on your machine at all, say so in your writeup and ask me before the due date about running the same commands on a lab machine; a filled table without the inspect output and the probes earns the beginning level at most.
-
-> **Paste into your submission.** The run command or the client configuration with any secrets redacted, the tool-call transcript through the box, the `docker inspect` output and the image-environment check, the output of every probe, the blast-radius table, the statement, and your answers to the checkpoint questions.
+1. **What MCP standardizes.**  Your client or agent learned the server's tool names, descriptions, and argument schemas at runtime.  What would you have had to write by hand without MCP, and what would break the next time the server added or renamed a tool?
+2. **Where the credential lives.**  Where did sign-in happen, where is the resulting token stored, and who can read it?  What would have been different if you had pasted a key into `opencode.json` or into the chat?  For a no-sign-in server: why is there no credential, and what does a public endpoint imply about what you should send it?
+3. **How you narrowed it.**  What did you do to limit the server's reach (read-only, a preset, project-level configuration, a single folder), and what disappeared from the tool list when you did?  Include the tool list before and after.
+4. **The trust question.**  You ran tool definitions that someone else wrote, and those descriptions go straight into your model's context.  What could a malicious or careless server do with that, and what in your setup limits it?
+5. **When the tool fired.**  For your two questions, why did the tool fire, or should it fire, for one and not the other?  Which words in the tool's description made the difference?
 
 ---
 
@@ -1305,18 +328,12 @@ user=student readonly=true capdrop=[ALL] secopt=[no-new-privileges] net=bridge p
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| The model describes a tool call in prose instead of emitting one | The model does not support native function calling, or the tools were passed in the prompt rather than in the `tools` field | Confirm your model supports tool calling; pass tools in the request's `tools` parameter, not as prose in the system prompt |
-| The model calls the tool, then ignores the result | The result was never fed back as a `tool`-role message, so the model never saw it | Append the execution result to the message list with `"role": "tool"` and call again. The round trip is the whole mechanism |
-| The tool fires on every question, including ones it should not | The tool description is too broad. The model chooses from the description alone | Rewrite the description to say when *not* to use it. Record the before and after; it is a good finding |
-| The tool never fires, even on questions that need it | Description too narrow or too abstract, or the parameter schema is missing required fields | Compare your schema against a working one field by field. `required` is the usual omission |
-| `json.loads` fails on the model's output | This is the failure the structured-output requirement exists to catch | Capture it. That broken parse *is* your "before"; do not fix it silently |
-| MCP client reports zero tools | The server process is not running, the command path in the client config is wrong, or the transport does not match | Run the server by hand first and confirm it responds. Most MCP misconfiguration is a wrong path in a config file |
-| The reasoning comparison shows no difference | Your eight tasks are too easy; both conditions get them all right | Pick tasks that need at least two steps. A ceiling at 8/8 measures your task set, not the model |
-| Runs take forever | Eight tasks times two conditions times retries | Start it early, run it in the background, and use the waiting time for the MCP part |
-| `docker: command not found` during Part 5 | You are inside the course container, which has no Docker in it | Run the Part 5 commands in a terminal on your host |
-| `Unable to find image 'cs357-dev:latest'` | The course image was never built on this machine, or was built under another name | Build it from your `.devcontainer/` folder with `docker compose build`, as in the Overview, then confirm with `docker image ls cs357-dev` |
-| The boxed server exits at once with `Read-only file system` or `Permission denied` | Something in the server writes outside `/tmp` at startup, or a mounted folder is not readable by the container user | Point the write at `/tmp` or add one `--tmpfs` for that directory; fix the folder's permissions on the host.  Do not remove `--read-only` or switch to root to make it start |
-| The MCP client lists zero tools once the server is in a container | `-i` is missing from the `docker run` arguments, or `-t` was added | A stdio server in a container needs `-i` and must not have `-t`; run the same `docker run` by hand to see the server's own error |
+| The client or opencode lists zero tools | The server is not running, the command in the configuration is wrong, or the address is mistyped | For a local server, run its command by hand first and check that it starts.  For a remote one, run `opencode mcp debug <name>` |
+| A 401, or a sign-in page that loops | You have not signed in yet, or the token expired | Run `opencode mcp auth <name>` again, or rerun the OneNote `--login` command |
+| "Need admin approval" at the Microsoft sign-in | A college account whose administrators restrict third-party apps | Use a personal Microsoft account, or pick another server |
+| `uvx: command not found` or `npx: command not found` | uv or Node.js is not installed | Install uv (`pip install uv`) or Node.js, or pick a remote server instead |
+| The agent answers from memory and never calls the tool | The question does not match the tool's description, or the model was not told the tools exist | Ask more specifically, or ask first what tools it has.  Note it in Part C, question 5: it is a finding, not a failure |
+| A local server works on your host but not from inside the course container | Inside a container, `localhost` and the installed programs are the container's own | Run the client, and the server it launches, on the same side of the container wall |
 
 ---
 
@@ -1324,30 +341,20 @@ user=student readonly=true capdrop=[ALL] secopt=[no-new-privileges] net=bridge p
 
 | File or artifact | What it shows | Rubric row |
 |------------------|---------------|------------|
-| Tool schema, round-trip transcript (or exported chat / Langflow run), and the boundary sentence; for Option 1B, the registration, run transcript, and the two things the framework hid | A typed tool invoked end to end and a precise statement of what your code owns | Tool Use (25) |
-| No-code tool-use evidence: screenshots of the flow or tool configuration and the three-question table with *tool fired: yes/no* | When the model chose the tool, and what it did when the tool was gone | Tool Use (25) |
-| Structured-output note: the before (broken parse on a real response), the after (constrained output parses), and the guarantee-versus-encourage sentence | One technique demonstrated on a real failure | Structured Output (20) |
-| Both runners (or both flows / model configurations) and the paired results table over at least eight fixed tasks at a fixed seed, with accuracy, tokens, and latency (or stated stand-ins), plus the sentence on when the cost was earned | Whether reasoning paid for itself | Reasoning, Measured (20) |
-| Server code or client configuration, and the discovery-then-invocation transcript (for the vault: discovery, one read, one gated write refused then confirmed), with the standardization sentence and, where applicable, the trust question | A working MCP round trip and an understanding of what the protocol buys | MCP (20) |
-| Option 4D only: the OAuth middleware and HTTP wrapper, the invocation trace, the two saved error responses, the data-flow diagram, and the port table | A token-gated MCP server driven end to end from an agent | MCP (20) |
-| The run command or client configuration (secrets redacted), the tool-call transcript through the box, the `docker inspect` output and image-environment check, the probe output, the blast-radius table and statement, and the checkpoint answers | The server contained on purpose, with the boundary shown holding | Containment and Blast Radius (10) |
-| Writeup with the route named at the top, model, parameters, and commands recorded, answers to the Questions to Work Through and Critical Thinking Questions, and an AI-use disclosure | A reader can reproduce your runs | Writeup and Reproducibility (5) |
+| Code: `mcp_client.py` and its full output.  No-code: the reviewed `opencode.json` and the exported session | Discovery, then a successful invocation, and a question where the tool did not fire | MCP Round Trip (40) |
+| How you signed in, where the credential is stored (a file listing, not its contents), and the tool list before and after your narrowing | The credential is outside the chat and the config, and the server's reach is deliberate | Credentials and Scope (20) |
+| Answers to the five Part C questions | What MCP standardizes, what you are trusting, and why the tool fired | Understanding (25) |
+| A writeup with the route and the server named at the top, the commands you ran, and an AI-use disclosure | A reader could repeat your connection | Writeup and Reproducibility (15) |
 
 ---
 
 ## Self-Check Before You Submit
 
-- [ ] **Tool use:** a transcript showing the request, the execution, and the result fed *back* to the model.
-- [ ] The writeup names precisely what your code is responsible for that the model is not.
-- [ ] **Structured output:** a real before (naive parse breaks on an actual response) and after (constrained output parses), plus one sentence on which techniques guarantee validity versus merely encourage it.
-- [ ] **Reasoning:** at least eight fixed tasks, at a fixed seed, run in both conditions, with an accuracy delta.
-- [ ] Cost reported alongside accuracy: tokens and latency, or a stated stand-in.
-- [ ] One defensible sentence on when the reasoning cost was earned and when it was not.
-- [ ] **MCP:** a transcript showing discovery followed by invocation (for the Obsidian vault option: discovery, one read, and one gated write refused and then confirmed).
-- [ ] The writeup says what MCP standardizes that a hand-rolled tools list does not; if you consumed someone else's server, including a community vault server, it names the trust question that raises.
-- [ ] Option 4D: the trace shows discovery, the token, the call, and the response; the expired-token 401 and the in-tool failure are saved; the README says what the scopes bound.
-- [ ] **Containment:** `docker inspect` output showing a non-root user, a read-only root filesystem, narrow mounts, dropped capabilities, the network setting, and memory, CPU, and process limits, plus the image-environment check showing no credential baked in.
-- [ ] A tool call that succeeded through the container, and at least one out-of-scope action refused, with the probe output saved.
-- [ ] The blast-radius table filled from evidence, and a statement that separates what the kernel refused from what the tool's own code refused and names one residual risk.
-- [ ] Model name and parameters recorded so a reader can reproduce your runs.
-- [ ] Route named at the top of the writeup.
+- [ ] The route and the server are named at the top of the writeup.
+- [ ] The transcript shows the tool list first, and then one successful call with its result.
+- [ ] One question where the tool did not fire, or should not, with the reason.
+- [ ] No password, key, or token appears anywhere in the submission, the configuration, or the chat.
+- [ ] The writeup says where you signed in and where the credential is stored, or why there is none.
+- [ ] One narrowing of the server's reach, with the tool list before and after.
+- [ ] All five Part C questions are answered, each pointing at your own evidence.
+- [ ] You signed out and revoked access when you were done (sign-in servers only).
