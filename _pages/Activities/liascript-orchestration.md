@@ -306,9 +306,9 @@ At step 1 the agent decides it needs two separate API calls rather than assuming
 
 ### Critical Thinking Questions
 
-10.  At step 3, the agent chose the third candidate by heuristic ("ULMFiT appeared in the top 10 results").  A more rigorous approach would fetch citation counts for all 10 papers from step 1 and sort them.  What is the tradeoff between the heuristic approach (fewer steps, less cost) and the exhaustive approach (guaranteed accuracy)?
+10.  At step 4, the agent chose the third candidate by heuristic ("ULMFiT appeared in the top 10 results").  A more rigorous approach would fetch citation counts for all 10 papers from step 1 and sort them.  What is the tradeoff between the heuristic approach (fewer steps, less cost) and the exhaustive approach (guaranteed accuracy)?
 
-    > *Hint: The heuristic gets to step 5 in 5 API calls.  The exhaustive approach requires 10 API calls for citation lookups plus 1 search call = 11 calls.  For this specific task, which would you choose, and what information would change your answer?*
+    > *Hint: The heuristic gets to step 5 in 4 API calls.  The exhaustive approach requires 10 API calls for citation lookups plus 1 search call = 11 calls.  For this specific task, which would you choose, and what information would change your answer?*
 
 11.  Rewrite step 4 assuming the API call fails with a timeout error (HTTP 408).  What should appear in the "Next Thought" column?  Write the full Thought entry the agent should produce to handle this gracefully without abandoning the task or repeating a call that already timed out.
 
@@ -402,7 +402,7 @@ A ReAct agent is on step 18 of a task.  Its context window shows 28,000 of 32,00
 
 Everything so far is *fixed* orchestration: the pipeline, the router, and even the recovery-and-reflection loop in Part IIb.  **You** authored the control flow before the run started, and no run can take a path you did not write.  This section asks what changes when that is no longer true.  It gives you a working supervisor loop in ten lines to read, run, and interrogate.
 
-## Model 4: Two Families of Orchestration
+## Model 3: Two Families of Orchestration
 
 **Why this matters:** A fixed pipeline is a scheduled commuter train: the same stops, in the same order, every single day; you can print the timetable a year in advance.  Dynamic orchestration is a taxi driver who decides the route while driving, rerouting around traffic you could not have predicted.  The train is boring, cheap, and easy to audit: if a passenger ends up in the wrong place, you know exactly which segment failed.  The taxi is flexible and handles trips no timetable anticipated, but you cannot promise, before the trip starts, exactly which streets it will use.  Neither is "better."  They answer different questions.
 
@@ -505,7 +505,7 @@ print(supervise("Write one tight paragraph on why local models matter, then have
 
 DeepAgents makes exactly these decisions (when to plan, when to spawn, when to finish) *inside* its built-in system prompt, which is why it is so concise to use and so much harder to debug when it misbehaves.  When you write the loop yourself, those decisions are visible in ten lines; when the framework writes it, they move into the framework's prompt.
 
-## Model 5: Who Decides Control Flow?
+## Model 4: Who Decides Control Flow?
 
 | Pattern | Who decides the control flow | Reach for it when | Main risk |
 |---|---|---|---|
@@ -544,7 +544,7 @@ Which single property most distinguishes a supervisor (dynamic) orchestrator fro
 
 In this part you first fold in two reliability upgrades (reflection and recovery, summarized here from *Part IIb: Loops That Recover*) and then extend and evaluate the pipeline and router you built in Part II, designing the message format for a planner.  These exercises connect directly to Lab work, so the design decisions you make here carry forward.
 
-## Model 3: Reflection and Recovery, Keeping Composed Loops Reliable
+## Model 5: Reflection and Recovery, Keeping Composed Loops Reliable
 
 *(A two-model summary of material from Part IIb: Loops That Recover; revisit that part if you want the full treatment.)*
 
@@ -691,7 +691,7 @@ Respond to all three levels in your notebook:
 
 # Going Deeper (at home): More Fixed Shapes, and Framework Pointers
 
-> **The full advanced-loops treatment:** Model 3 above compresses material from *Part IIb: Loops That Recover* earlier on this page; revisit that part for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
+> **The full advanced-loops treatment:** Model 5 above compresses material from *Part IIb: Loops That Recover* earlier on this page; revisit that part for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
 
 > **The supervisor loop moved in-class.**  The dynamic-orchestration material now lives in **Part IIc** above rather than here: Two Families, the Code Cell, and the who-decides-control-flow recap.  What remains below covers the two fan-out and consensus shapes class had no time for, plus a reference sheet for all six patterns.
 

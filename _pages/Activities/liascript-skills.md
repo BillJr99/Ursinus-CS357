@@ -35,7 +35,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Project instructions** | A file such as `AGENTS.md` in the project root, read once at startup: architecture, invariants, test commands, what not to touch | The `AGENTS.md` you wrote for `cs357-work` in Week 1 |
 | **Hook** | A command the harness runs automatically at a fixed point, such as before a commit or after a file edit.  Enforced by code, so the model cannot talk its way past it | The `SessionStart` and `Stop` hooks in Model 1b |
 | **Golden set** | A fixed list of inputs with known expected outputs, scored automatically, so a change to a prompt or skill gets a number instead of an opinion | The capitals harness from *Prompt Engineering as Agent Design*, reused in Part III |
-| **Rubric** | A short list of checkable criteria, each answered pass or fail, so two people scoring the same output get the same score | The five items in Model 2, scored by `score()` in Part III |
+| **Rubric** | A short list of checkable criteria, each answered pass or fail, so two people scoring the same output get the same score | The six items in Model 2, scored by `score()` in Part III |
 
 ---
 
@@ -577,7 +577,7 @@ Respond to all three levels in your notebook:
 
 ---
 
--> Coming Up Next: You now have a harness that scores one instruction change across two models.  Next session, *Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models*, turns that harness on the system prompt itself: what each of its five elements does to the output, how a persona changes the distribution of answers rather than the facts, and how to compare two models on the same prompt without fooling yourself.  Bring today's results table; the comparison method is the one you just used.
+-> Coming Up Next: You now have a harness that scores one instruction change across two models.  Next session, *Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models*, turns that harness on the system prompt itself: what each of its six principles does to the output, how a persona changes the distribution of answers rather than the facts, and how to compare two models on the same prompt without fooling yourself.  Bring today's results table; the comparison method is the one you just used.
 
 ---
 

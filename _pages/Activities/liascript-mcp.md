@@ -588,7 +588,7 @@ Most of the MCP servers your agent will use were written by someone else, and th
       "url": "https://api.githubcopilot.com/mcp/",
       "oauth": false,
       "headers": {
-        "Authorization": "Bearer {env:GITHUB_SCRATCH_PAT}"
+        "Authorization": "Bearer {env:GITHUB_PAT}"
       }
     }
   }
@@ -799,7 +799,7 @@ In your notebook, respond to all three levels:
 
 # Extension: Strict Tool Arguments With Pydantic (self-paced)
 
-## 7.  A Write Tool That Checks Its Own Arguments
+## 4.  A Write Tool That Checks Its Own Arguments
 
 In Model 3, the vault server's `append_daily_note` writes only when `confirm` is true.  That gate is only as strict as the type it checks: in Python, the *string* `"false"` is true, because it is not empty.  A strict Pydantic model (run `pip install pydantic` once) closes that gap, refuses keys the tool never declared, and generates the schema the server advertises.
 
