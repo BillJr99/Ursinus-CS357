@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # RAG and Fine-Tuning: Retrieval Quality and LoRA
 
-**How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out at the *Critique, Consensus, and the LLM Judge* session (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date), and Part III previews the lab's Part 5, the RAG Quality Checkup pathway, which turns today's metrics into a golden set, a worksheet, and a regression harness.
+**How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out at the *Critique, Consensus, and the LLM Judge* session (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date), and Part III walks through a RAG quality checkup, which turns today's metrics into a golden set, a worksheet, and a regression harness.
 
 Keep the [*Local Agent* lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) moving; it is due at the *Observability, Traceability, and Handoff Protocols* session.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP), which gives that agent hands, is handed out at the next session, *How I AI*.  The [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the dates.
 
@@ -191,17 +191,17 @@ Two cautions before you trust the map.  The clusters are an artifact of $k$ as m
 
 # Part III: Synthesis and Practice
 
-## Walkthrough: Part 5 of the RAG Knowledge Base Lab
+## Walkthrough: A RAG Quality Checkup
 
-The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out at the *Critique, Consensus, and the LLM Judge* session; see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date.  Its Part 5, the RAG Quality Checkup pathway, is where today's metrics get used on your own pipeline, and this walkthrough sets it up now so that your time on Part 5 goes to measuring rather than to reading the handout.  Part 5 has three steps, and each one is something you practiced today:
+The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out at the *Critique, Consensus, and the LLM Judge* session; see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date.  The lab itself does not ask you to measure retrieval quality, but this walkthrough shows how you would check the pipeline you build there, using today's metrics, if you want to go further.  Part 5 has three steps, and each one is something you practiced today:
 
-1.  **The golden set (step 5a).**  Ten questions with expected answers and a stated scoring rule: five your model should get right and five it should not.  For each item you write a prediction and a one-sentence rationale.  This is the labeled question set that recall@k needs, and it is paper-and-thinking work you can start tonight without a running pipeline.
-2.  **The checkup worksheet (step 5b).**  Three measurements from your own pipeline, in order: recall@k under your current chunking configuration and one alternative (change chunk size or overlap, not both), a five-row citation audit that marks each claim supported or unsupported with a chunk reference, and one observed failure with a hypothesis and a planned fix.  The winning configuration goes back into your lab config.
-3.  **The regression harness (step 5c).**  Pin the golden set and a fixed protocol (temperature 0.0, a fixed seed, the model named), run it twice, and show the two runs agree.  A spreadsheet run sheet, promptfoo YAML, or plain Python all count; the Judge Pipeline Workshop and Evaluation Workshop II build on this harness later in the term.
+1.  **The golden set.**  Ten questions with expected answers and a stated scoring rule: five your model should get right and five it should not.  For each item you write a prediction and a one-sentence rationale.  This is the labeled question set that recall@k needs, and it is paper-and-thinking work you can start tonight without a running pipeline.
+2.  **The checkup worksheet.**  Three measurements from your own pipeline, in order: recall@k under your current chunking configuration and one alternative (change chunk size or overlap, not both), a five-row citation audit that marks each claim supported or unsupported with a chunk reference, and one observed failure with a hypothesis and a planned fix.  The winning configuration goes back into your lab config.
+3.  **The regression harness.**  Pin the golden set and a fixed protocol (temperature 0.0, a fixed seed, the model named), run it twice, and show the two runs agree.  A spreadsheet run sheet, promptfoo YAML, or plain Python all count; the Judge Pipeline Workshop and Evaluation Workshop II build on this harness later in the term.
 
-The same three steps work on the Langflow route: query both flows by hand in the playground, record hits and misses in a spreadsheet, and the run sheet is your harness.  The judgment (which configuration wins, which citations are real, what the failure means) is identical on every route.
+The same three steps work on a Langflow build: query both flows by hand in the playground, record hits and misses in a spreadsheet, and the run sheet is your harness.  The judgment (which configuration wins, which citations are real, what the failure means) is identical on every route.
 
-Today we stay on the *judgment*: where a chunk boundary belongs, and what recall@k does and does not tell you.  The exercises below are rehearsals for steps 5b and 5c on a small scale.
+Today we stay on the *judgment*: where a chunk boundary belongs, and what recall@k does and does not tell you.  The exercises below are rehearsals for the worksheet and the harness on a small scale.
 
 ## 4.  Exercises
 
@@ -406,7 +406,7 @@ Training produces an **adapter**: a folder holding the A and B matrices and a sm
 - **Load it** on top of the base model (`PeftModel.from_pretrained(base, adapter_dir)`).  The base weights in memory stay unchanged, and you can switch the adapter off to compare (`with model.disable_adapter():`).
 - **Merge it** (`model.merge_and_unload()`), which adds $\frac{\alpha}{r}AB$ into $W$ once and produces an ordinary full-size model with no adapter at all.
 
-Neither result runs in Ollama directly.  Ollama runs GGUF files, so a fine-tuned model has to be converted, or imported as an adapter for a base architecture Ollama supports.  The RAG Knowledge Base lab's Direction 1 covers that export.  Until you have done it, treat a PEFT adapter as something only Transformers can load.
+Neither result runs in Ollama directly.  Ollama runs GGUF files, so a fine-tuned model has to be converted, or imported as an adapter for a base architecture Ollama supports.  The *Offline RAG and LoRA* tutorial covers that export.  Until you have done it, treat a PEFT adapter as something only Transformers can load.
 
 **Neither RAG nor LoRA makes a model truthful.**  RAG changes what the model reads, and the model can still misread a correct passage.  LoRA changes how the model writes, and it can learn a confident format faster than it learns facts.  A fine-tuned citation format attached to a wrong answer looks more trustworthy, not less.
 

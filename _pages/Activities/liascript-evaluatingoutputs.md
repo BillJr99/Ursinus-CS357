@@ -180,7 +180,7 @@ Read the PASS/FAIL output line by line.  Before you talk with your group, form y
 
 # Part IIb: Designing the Benchmark You Are About to Need
 
-Triaging bad answers one at a time does not scale.  A benchmark turns "it seems better" into a number you can defend, and you will need a real one soon.  The RAG Quality Checkup pathway of the *RAG Knowledge Base* lab opens by asking you for a ten-item golden set, with a prediction and a rationale per item, and every evaluation after that builds on it.  Sketch it here while today's failure modes are fresh.  Exercise 1 at the end of this session turns the sketch into the set you keep.
+Triaging bad answers one at a time does not scale.  A benchmark turns "it seems better" into a number you can defend, and you will need a real one soon.  A RAG quality checkup, like the one in the *RAG and Fine-Tuning* deck, opens with a ten-item golden set, with a prediction and a rationale per item, and every evaluation after that builds on it.  Sketch it here while today's failure modes are fresh.  Exercise 1 at the end of this session turns the sketch into the set you keep.
 
 ## What Makes a Good Benchmark?
 
@@ -342,7 +342,7 @@ In this part you build your own benchmark: a task set for a domain your team kno
 1.  *Benchmark sketch.*
 
    - *What to do*: Draft a 10-item task set for a domain your team knows well: a sport, a fandom, a local community, a scientific field.  Specify the 10 questions, the gold answers, the metric you will use (exact match, substring, or something else), and the full protocol (which model, what temperature, what seed).
-   - *Starter hint*: Choose a domain where you can verify the correct answers on your own (you know them from experience or can check a reliable source).  Make at least two questions "thin training data" questions where you expect the model to struggle.  Save this task set.  It is the seed of the ten-item golden set the RAG Quality Checkup pathway of the *RAG Knowledge Base* lab asks you to finish, and you will reuse it to evaluate retrieval-augmented generation in the *RAG Knowledge Base: Code and No-Code Routes* activity and your project agents at the end of the semester.
+   - *Starter hint*: Choose a domain where you can verify the correct answers on your own (you know them from experience or can check a reliable source).  Make at least two questions "thin training data" questions where you expect the model to struggle.  Save this task set.  It is the seed of a ten-item golden set like the one in the RAG quality checkup of the *RAG and Fine-Tuning* deck, and you will reuse it to evaluate retrieval-augmented generation in the *RAG Knowledge Base: Code and No-Code Routes* activity and your project agents at the end of the semester.
    - *You've succeeded when*: Your task set has 10 questions with verified gold answers, a written metric definition, and a written protocol, specific enough that a teammate could run it without asking you any questions.
 
 2.  *Calibration probe.*

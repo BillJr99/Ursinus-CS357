@@ -829,7 +829,7 @@ merged weights  : ANSWER: 9am to 5pm [hours-0]
 saved a full 1451 MB model to ./merged/makerspace-360m (the adapter alone was a few MB)
 ```
 
-Merging computes $$W + \frac{\alpha}{r}BA$$ once and saves an ordinary model: the same answers, no PEFT needed at inference, and 1.45 GB instead of 6.4 MB.  You cannot point Ollama at either folder and expect it to work.  Ollama runs GGUF files (the single-file model format used by llama.cpp), and importing a fine-tuned model means converting it to GGUF with llama.cpp's tools for that architecture, or using Ollama's own adapter import, which supports only some base architectures and requires the adapter to match the base exactly ([Ollama: importing a model](https://docs.ollama.com/import)).  The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase)'s Direction 1 walks through that export for a supported Llama base.  Until you have converted and tested a PEFT adapter, treat it as something only Hugging Face Transformers can load.
+Merging computes $$W + \frac{\alpha}{r}BA$$ once and saves an ordinary model: the same answers, no PEFT needed at inference, and 1.45 GB instead of 6.4 MB.  You cannot point Ollama at either folder and expect it to work.  Ollama runs GGUF files (the single-file model format used by llama.cpp), and importing a fine-tuned model means converting it to GGUF with llama.cpp's tools for that architecture, or using Ollama's own adapter import, which supports only some base architectures and requires the adapter to match the base exactly ([Ollama: importing a model](https://docs.ollama.com/import)).  Unsloth's [Fine-tune Llama 3 and Use in Ollama](https://unsloth.ai/docs/get-started/fine-tuning-llms-guide/tutorial-how-to-finetune-llama-3-and-use-in-ollama) guide walks through that export for a supported Llama base.  Until you have converted and tested a PEFT adapter, treat it as something only Hugging Face Transformers can load.
 
 ---
 
@@ -837,7 +837,7 @@ Merging computes $$W + \frac{\alpha}{r}BA$$ once and saves an ordinary model: th
 
 **CPU track, which is everything above.**  A laptop with 8 GB of RAM can run all of Sections A to D and F.  Our measurements came from 4 CPU cores and 15 GB of RAM with no GPU: training peaked at 3.8 GB of RAM, inference at 2.5 GB, and four epochs took about 95 seconds.  The smaller `HuggingFaceTB/SmolLM2-135M-Instruct` (revision `12fd25f77366fa6b3b4b768ec3050bf629380bac`, Apache-2.0, 260 MB) trains several times faster if your machine is slower; expect worse answers.
 
-**Suitable-hardware track.**  Useful LoRA training on a 0.5B to 3B instruction model (for example `Qwen/Qwen2.5-0.5B-Instruct` or `Qwen2.5-1.5B-Instruct`, Apache-2.0) wants a GPU with at least 8 GB of VRAM and a few hundred to a few thousand examples.  QLoRA loads the base in 4-bit through `bitsandbytes`, which needs an NVIDIA GPU with CUDA; it cuts the memory for the base weights to roughly a quarter, while the adapter still trains in 16-bit.  We did not test this track for this tutorial, so treat its numbers as starting points, and see the lab's Direction 1 and the [PEFT LoRA guide](https://huggingface.co/docs/peft/main/en/developer_guides/lora).
+**Suitable-hardware track.**  Useful LoRA training on a 0.5B to 3B instruction model (for example `Qwen/Qwen2.5-0.5B-Instruct` or `Qwen2.5-1.5B-Instruct`, Apache-2.0) wants a GPU with at least 8 GB of VRAM and a few hundred to a few thousand examples.  QLoRA loads the base in 4-bit through `bitsandbytes`, which needs an NVIDIA GPU with CUDA; it cuts the memory for the base weights to roughly a quarter, while the adapter still trains in 16-bit.  We did not test this track for this tutorial, so treat its numbers as starting points, and see the [PEFT LoRA guide](https://huggingface.co/docs/peft/main/en/developer_guides/lora).
 
 **What not to expect.**  A mini PC or a laptop CPU will not produce a useful fine-tune of a 7B or 8B model in an afternoon.  If you have no suitable hardware, the honest options are the tiny CPU demonstration above, or **loading** an adapter someone else trained for the exact base revision you have (the lab's "provided adapter" path).  Loading is not training: it shows what an adapter does, not that you can make one.  And a hosted notebook such as Colab is a perfectly good place to train, but it is a cloud service, so it is never the offline fallback.
 
@@ -953,7 +953,7 @@ Read the replies in `compare_report.json`, not just the totals.  Scoring here is
 - **Neither guarantees factuality.**  With the right sources in the prompt, the 360M model still said the laser cutter "may cut PVC," and both RAG conditions answered "yes" to the sauna question instead of abstaining.  The adapter-only condition abstained on both unanswerable questions, but it also abstained on three answerable ones, so its abstentions say more about caution than about knowledge.
 - **Resource use.**  Adding RAG roughly doubled the time per question (embedding the query, plus a longer prompt).  Training cost about 95 seconds once; inference with an adapter attached costs almost nothing extra.
 
-Eight questions on one small model are a demonstration, not an evaluation.  Before claiming that any condition is better, use the golden-set and regression-harness methods from the RAG Quality Checkup pathway: more questions, several seeds or models, and the same scoring for every condition.
+Eight questions on one small model are a demonstration, not an evaluation.  Before claiming that any condition is better, use the golden-set and regression-harness methods from the RAG quality checkup in the *RAG and Fine-Tuning* deck: more questions, several seeds or models, and the same scoring for every condition.
 
 ---
 
@@ -993,7 +993,7 @@ Eight questions on one small model are a demonstration, not an evaluation.  Befo
 
 ## Where This Goes Next
 
-The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase) asks for a pipeline, chunking evidence, and a citation audit on your own corpus, and its Direction 1 is the full LoRA or QLoRA route with export to Ollama.  This tutorial is preparation for both, not a replacement for either.  The [RAG and Fine-Tuning deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md) has the ladder of prompting, RAG, and fine-tuning that these measurements illustrate.
+The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase) asks you to index your own corpus and query it through a Pydantic AI agent with a retrieval tool.  This tutorial goes further, into a persistent offline index and the full LoRA route, for when you want more than the lab asks.  The [RAG and Fine-Tuning deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md) has the ladder of prompting, RAG, and fine-tuning that these measurements illustrate.
 
 ## Further Reading
 
