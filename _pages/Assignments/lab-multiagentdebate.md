@@ -1971,7 +1971,7 @@ Submit one ZIP containing both halves.  Fix random seeds where determinism is in
 | Pair log (if you worked in a pair) | At least two timestamped role swaps | Writeup, Reflection, and Submission (5) |
 | Readme writeup, about two pages | Route named at the top, versions and seeds, Step B.2.2 interpretation answers, Part B.4 table and ownership paragraph, Learning Log | Writeup, Reflection, and Submission (5) |
 
-> **No-code path.** What you submit instead of code: the exported flow or preset prompts and chat transcripts (including at least three refine rounds in place of the Part A log, your calibration table, and your successful reward hack and patch), the Producer and Judge transcripts with the per-round score spreadsheet in place of `judge_rounds.csv`, the spreadsheet of runs and clusters, and the identical written analysis, including the honest verdict on whether the extra rounds bought you anything.
+> **No-code path.** What you submit instead of code: the exported flow or preset prompts and chat transcripts (including at least two complete generate, critique, refine cycles in place of the Part A log, your calibration table, and your successful reward hack and patch), the Producer and Judge transcripts with the per-round score spreadsheet in place of `judge_rounds.csv`, the spreadsheet of runs and clusters, and the identical written analysis, including the honest verdict on whether the extra rounds bought you anything.
 
 ---
 
