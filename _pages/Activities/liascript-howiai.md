@@ -189,7 +189,7 @@ update the wiki page before you answer me.
 
 Look at what the last section buys you.  "Any claim you cannot ground in a file in this vault" is a hallucination guard written as a permission rule, and it is enforceable in a way "please be accurate" is not.
 
-### Belt and braces: make the boundary real
+### Make the boundary real: enforce it with a read-only mount
 
 A contract is an instruction, and instructions are advisory.  When you run an agent in a container, you can make `raw/` read-only by construction:
 
