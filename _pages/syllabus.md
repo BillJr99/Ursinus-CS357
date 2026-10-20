@@ -532,8 +532,8 @@ schedule:
     rlink: "Tutorials/ObsidianSync"
 - week: "8"
   date: "0"
-  title: "Observability, Traceability, and Handoff Protocols"
-  link: "Activities/liascript-observability.md"
+  title: "RAG Knowledge Base: Code and No-Code Routes"
+  link: "Activities/liascript-rag.md"
   liapage: true
   deliverables:
   - dtitle: "Lab: Local Agent Due"
@@ -545,45 +545,44 @@ schedule:
     points: "100"
     rubricpath: "_pages/Projects/proj-finalproject.md"
   readings:
-  - rtitle: "Reading Response / Discussion: post a short response before class.  What is the longest-running piece of work you have done with an AI tool, and where did it start losing the thread?"
-  - rtitle: "Memory and the Small Context Window Principle: why an agent that remembers everything gets worse, and the four kinds of memory today's protocols write down"
-    rlink: "Tutorials/MemoryAndContext"
-  - rtitle: "Agent Observability and Tracing: the three pillars and OpenTelemetry, which today's deck applies to your own agents"
-    rlink: "Tutorials/Observability"
+  - rtitle: "Mitchell, Chapter 4"
+  - rtitle: "Reading Response / Discussion: post a short response before class connecting RAG to a corpus of your own"
+  - rtitle: "LangChain RAG from Scratch (video)"
+    rlink: "https://www.youtube.com/watch?v=rz40ukZ3krQ&t=10s"
+  - rtitle: "Tokens, Embeddings, and Attention: Part II, semantic search in twenty lines, is the retrieval step of today's pipeline"
+    rlink: "Tutorials/TokensEmbeddingsAttention"
+  - rtitle: "Offline RAG and LoRA, End to End: Sections A to C rebuild today's pipeline with a persistent index that runs with the network unplugged"
+    rlink: "Tutorials/OfflineRAGFineTuning"
 - week: "8"
   date: "1"
-  title: "Design First: Plan Your Agent System Before You Build It"
-  link: "Activities/liascript-designfirst.md"
+  title: "RAG and Fine-Tuning: Retrieval Quality and LoRA"
+  link: "Activities/liascript-ragquality.md"
   liapage: true
-  deliverables:
-  - dtitle: "Written Assignment: Design Your Agent System Handed Out"
-    dlink: "Assignments/AgentSystemDesign"
-    points: "100"
-    rubricpath: "_pages/Assignments/asmt-agentsystemdesign.md"
   readings:
-  - rtitle: "The handoff skill's claim protocol, which your design document must specify"
-    rlink: "Tutorials/AgentSkills"
+  - rtitle: "Offline RAG and LoRA, End to End: Sections D to F train a LoRA adapter on a CPU and compare a base model, RAG, LoRA, and both on held-out questions"
+    rlink: "Tutorials/OfflineRAGFineTuning"
 - week: "9"
   date: "0"
-  title: "Orchestration and Multi-Agent Patterns"
-  link: "Activities/liascript-orchestration.md"
+  title: "No Class: Instructor Away"
+  readings:
+  - rtitle: "No class meeting today.  Use the time for the Tools and MCP lab (due Tuesday, November 3) and your team's Final Project Proposal (due Thursday, November 5)."
+    rlink: false
+- week: "9"
+  date: "1"
+  title: "No Class: Instructor Away"
+  readings:
+  - rtitle: "No class meeting today.  Read ahead for Tuesday: the Second Brain and Obsidian Sync tutorials listed there are the background for Tuesday's vault and charter work."
+    rlink: false
+- week: "10"
+  date: "0"
+  title: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox"
+  link: "Activities/liascript-howiai.md"
   liapage: true
   deliverables:
   - dtitle: "Project: Intra-Team Check-In (Norming into Performing) Due"
     dlink: "Projects/PBLThread"
     points: "3"
     rubricpath: "_pages/Projects/proj-pblthread.md"
-  readings:
-  - rtitle: "Pydantic AI From the Loop Up: read it before Agent Frameworks if you have not yet seen a framework take over the hand-written loop"
-    rlink: "Tutorials/PydanticAI"
-  - rtitle: "Agent Frameworks: LangChain, CrewAI, AutoGen, and Agno, and when a framework earns its weight"
-    rlink: "Tutorials/AgentFrameworks"
-- week: "9"
-  date: "1"
-  title: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
-  link: "Activities/liascript-critiqueconsensusjudge.md"
-  liapage: true
-  deliverables:
   - dtitle: "Lab: Tools and MCP Due"
     dlink: "Assignments/ToolsMCP"
     points: "100"
@@ -596,73 +595,51 @@ schedule:
     dlink: "Assignments/LitReview"
     points: "100"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
+  readings:
+  - rtitle: "Reading Response / Discussion: post a short response before class.  When does a multi-agent design help, and when does it just cost tokens?"
+  - rtitle: "The Second Brain in depth: Obsidian, gitless GitHub sync, and the metadata protocol that makes agent writes safe"
+    rlink: "Tutorials/SecondBrain"
+  - rtitle: "Syncing Obsidian to GitHub and wiring agents to your vault: the full read path and write path"
+    rlink: "Tutorials/ObsidianSync"
+  - rtitle: "Have your stuck points and your pipeline-in-progress ready.  The studio at the end of class is only as useful as the problems you work on in it."
+    rlink: false
+- week: "10"
+  date: "1"
+  title: "Observability, Traceability, and Handoff Protocols"
+  link: "Activities/liascript-observability.md"
+  liapage: true
+  deliverables:
   - dtitle: "Project: Final Project Proposal Due"
     dlink: "Projects/FinalProjectProposal"
     points: "25"
     rubricpath: "_pages/Projects/proj-finalprojectproposal.md"
   readings:
-  - rtitle: "From Second Brain to Chief of Staff: one personal agent followed into production"
-    rlink: "Tutorials/ProductionAssistant"
-- week: "10"
-  date: "0"
-  title: "Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling"
-  link: "Activities/liascript-agentcommunication.md"
-  liapage: true
-  readings:
-  - rtitle: "Reading Response / Discussion: post a short response before class.  When does a multi-agent design help, and when does it just cost tokens?"
-  - rtitle: "Agentic Case Studies: Migration, Browsing, and Research Agents.  Read the two cases and the threat-modeling part; today's second half runs the incident simulation on your own project"
-    rlink: "Tutorials/AgentCaseStudies"
-  - rtitle: "Benjamin, Race After Technology, Chapters 1-2: case studies in discriminatory design"
-- week: "10"
-  date: "1"
-  title: "Evaluating Agents With a Rubric: The Judge Pipeline Workshop"
-  link: "Activities/liascript-rubricworkshop.md"
-  liapage: true
-  deliverables:
-  - dtitle: "Written Assignment: Design Your Agent System Due"
-    dlink: "Assignments/AgentSystemDesign"
-    points: "100"
-    rubricpath: "_pages/Assignments/asmt-agentsystemdesign.md"
-  readings:
-  - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One way to run the judge you build in today's workshop, and it runs against Ollama"
-    rlink: "https://www.promptfoo.dev/docs/intro/"
-  - rtitle: "Hamel Husain, \"Your AI Product Needs Evals\": the error-analysis-first approach to evaluation"
-    rlink: "https://hamel.dev/blog/posts/evals/"
-  - rtitle: "Inspect AI (UK AI Security Institute): the Dataset, Solver, and Scorer framework, another harness for today's judge and for the Multi-Agent Patterns lab's judge-and-refine loop"
-    rlink: "https://inspect.aisi.org.uk/"
+  - rtitle: "Reading Response / Discussion: post a short response before class.  What is the longest-running piece of work you have done with an AI tool, and where did it start losing the thread?"
+  - rtitle: "Memory and the Small Context Window Principle: why an agent that remembers everything gets worse, and the four kinds of memory today's protocols write down"
+    rlink: "Tutorials/MemoryAndContext"
+  - rtitle: "Agent Observability and Tracing: the three pillars and OpenTelemetry, which today's deck applies to your own agents"
+    rlink: "Tutorials/Observability"
 - week: "11"
   date: "0"
-  title: "Training Data, Bias, and Explainability"
-  link: "Activities/liascript-biasdata.md"
+  title: "Design First: Plan Your Final Project's Agent System Before You Build It"
+  link: "Activities/liascript-designfirst.md"
+  liapage: true
+  readings:
+  - rtitle: "The handoff skill's claim protocol, which your final project's design must specify"
+    rlink: "Tutorials/AgentSkills"
+  - rtitle: "Benjamin, Race After Technology, Chapters 1-2: case studies in discriminatory design, to keep in view as you make today's design decisions"
+  - rtitle: "Pydantic AI From the Loop Up: read it before Thursday if you have not yet seen a framework take over the hand-written loop"
+    rlink: "Tutorials/PydanticAI"
+- week: "11"
+  date: "1"
+  title: "Orchestration and Multi-Agent Patterns"
+  link: "Activities/liascript-orchestration.md"
   liapage: true
   deliverables:
   - dtitle: "Project: Literature Review, Individual Annotated Bibliographies Due"
     dlink: "Assignments/LitReview"
     points: "3"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
-  readings:
-  - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
-  - rtitle: "Coded Bias (film), watch before class"
-    rlink: "https://www.codedbias.com/"
-  - rtitle: "O'Neil, Weapons of Math Destruction: the chapter on predictive models in education"
-  - rtitle: "Carr, The Glass Cage, Chapters 2-3: automation, deskilling, and automation bias"
-  - rtitle: "Gandalf (Lakera), a prompt-injection game you play in the browser.  Optional, a self-paced warm-up on how guardrails fail"
-    rlink: "https://gandalf.lakera.ai/"
-  - rtitle: "Tensor Trust, where you attack and defend against prompt injection.  Optional, the other self-paced warm-up"
-    rlink: "https://tensortrust.ai/"
-- week: "11"
-  date: "1"
-  title: "Intellectual Property, Privacy, and the Case for Local AI"
-  link: "Activities/liascript-ipprivacy.md"
-  liapage: true
-  readings:
-  - rtitle: "Crawford, Atlas of AI, Chapter 6: Affect / the politics of data"
-- week: "12"
-  date: "0"
-  title: "Governance, Policy, and the Cost of Inference"
-  link: "Activities/liascript-governancecost.md"
-  liapage: true
-  deliverables:
   - dtitle: "Lab: RAG Knowledge Base Due"
     dlink: "Assignments/RAGKnowledgeBase"
     points: "100"
@@ -672,6 +649,40 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
   readings:
+  - rtitle: "Agent Frameworks: LangChain, CrewAI, AutoGen, and Agno, and when a framework earns its weight"
+    rlink: "Tutorials/AgentFrameworks"
+  - rtitle: "From Second Brain to Chief of Staff: one personal agent followed into production"
+    rlink: "Tutorials/ProductionAssistant"
+- week: "12"
+  date: "0"
+  title: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses, and the Judge Pipeline Workshop"
+  link: "Activities/liascript-critiqueconsensusjudge.md"
+  liapage: true
+  readings:
+  - rtitle: "Hamel Husain, \"Your AI Product Needs Evals\": the error-analysis-first approach to evaluation"
+    rlink: "https://hamel.dev/blog/posts/evals/"
+  - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One way to run the judge you build in today's workshop, and it runs against Ollama"
+    rlink: "https://www.promptfoo.dev/docs/intro/"
+  - rtitle: "Inspect AI (UK AI Security Institute): the Dataset, Solver, and Scorer framework, another harness for today's judge and for the Multi-Agent Patterns lab's judge-and-refine loop"
+    rlink: "https://inspect.aisi.org.uk/"
+  - rtitle: "Carr, The Glass Cage, Chapters 2-3: automation, deskilling, and automation bias, the human side of trusting a judge"
+- week: "12"
+  date: "1"
+  title: "Training Data, Bias, Explainability, Intellectual Property, and Privacy"
+  link: "Activities/liascript-biasdata.md"
+  liapage: true
+  readings:
+  - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
+  - rtitle: "Coded Bias (film), watch before class"
+    rlink: "https://www.codedbias.com/"
+  - rtitle: "O'Neil, Weapons of Math Destruction: the chapter on predictive models in education"
+  - rtitle: "Crawford, Atlas of AI, Chapter 6: Affect / the politics of data"
+- week: "13"
+  date: "0"
+  title: "Governance, Policy, and the Cost of Inference"
+  link: "Activities/liascript-governancecost.md"
+  liapage: true
+  readings:
   - rtitle: "Crawford, Atlas of AI, Chapter 1, Earth: the mineral and energy costs of computation"
   - rtitle: "Alpine et al., \"AI-driven productivity gains enable more CO₂ emissions than they avoid in a global energy–economy model\""
     rlink: "https://www.nature.com/articles/s44168-026-00411-0"
@@ -679,10 +690,10 @@ schedule:
   - rtitle: "Christian, The Alignment Problem: any one chapter (for example, the section on reward and reinforcement)"
   - rtitle: "AI for Accessibility: Opportunity, Gaps, and Universal Design.  Optional; the accessibility audit is one of the policy sections you may draft today"
     rlink: "Tutorials/AIAccessibility"
-- week: "12"
-  date: "1"
-  title: "Evaluation Workshop II: Run Your Rubric Against Your Project"
-  link: "Activities/liascript-evalworkshop2.md"
+- week: "14"
+  date: "0"
+  title: "Project Sprint: Run Your Rubric Against Your Project, and Threat Model It"
+  link: "Activities/liascript-projectsprint.md"
   liapage: true
   deliverables:
   - dtitle: "Project: Literature Review, Team Synthesis Due"
@@ -690,27 +701,30 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
   readings:
-  - rtitle: "Bring the judge you built in the Judge Pipeline Workshop (the one the Multi-Agent Patterns lab's judge-and-refine loop reuses) and three artifacts from your final project for it to grade.  Today's workshop runs the judge against your own work and audits the disagreements."
+  - rtitle: "Have ready the judge you built in the Judge Pipeline Workshop (the one the Multi-Agent Patterns lab's judge-and-refine loop reuses), three artifacts from your final project for it to grade, and your integrated project and proposal.  Today's workshop runs the judge against your own work, audits the disagreements, and then threat-models the project."
     rlink: false
-- week: "13"
-  date: "0"
-  title: "Project Studio: Sprint and Threat Model"
-  link: "Activities/liascript-projectsprint.md"
-  liapage: true
-  readings:
-  - rtitle: "Bring your integrated project and your proposal.  The peer review of proposals and the threat-model checklist both run on what you bring."
-    rlink: false
+  - rtitle: "Agentic Case Studies: Migration, Browsing, and Research Agents.  Read the two cases and the threat-modeling part; today's second half runs the incident simulation on your own project"
+    rlink: "Tutorials/AgentCaseStudies"
+  - rtitle: "Gandalf (Lakera), a prompt-injection game you play in the browser.  Optional, a self-paced warm-up on how guardrails fail before you threat-model your own"
+    rlink: "https://gandalf.lakera.ai/"
+  - rtitle: "Tensor Trust, where you attack and defend against prompt injection.  Optional, the other self-paced warm-up"
+    rlink: "https://tensortrust.ai/"
 - week: "14"
-  date: "0"
+  date: "1"
   title: "Project Studio and Gallery Walk"
   link: "Activities/liascript-projectstudio.md"
   liapage: true
+  deliverables:
+  - dtitle: "Lab: Multi-Agent Patterns Due"
+    dlink: "Assignments/MultiAgentDebate"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
   readings:
-  - rtitle: "Bring your gallery-walk artifact ready to display, and your SQR cards."
+  - rtitle: "Have your gallery-walk artifact ready to display, and your SQR cards."
     rlink: false
-- week: "14"
-  date: "1"
-  title: "Project Studio: Final Integration and Demo Rehearsal"
+- week: "15"
+  date: "0"
+  title: "Project Studio: Final Integration and Demo Rehearsal (Class Switch Day: follows a Thursday schedule)"
   link: "Activities/liascript-projectstudio.md"
   liapage: true
   deliverables:
@@ -719,15 +733,10 @@ schedule:
     points: "3"
     rubricpath: "_pages/Projects/proj-pblthread.md"
   readings:
-  - rtitle: "Bring your integrated system and your demo script.  Today is a rehearsal rather than a work session.  If it does not run end to end at the start of class, that is the thing to fix."
-- week: "15"
-  date: "0"
-  title: "Demo Day: Final Project Presentations (Class Switch Day: follows a Thursday schedule)"
+  - rtitle: "Have your integrated system and your demo script ready.  Today is a rehearsal rather than a work session.  If it does not run end to end at the start of class, that is the thing to fix."
+- cdate: "2026/12/16"
+  title: "Demo Day: Final Project Presentations (Final Exam Period, 8:00-11:00 AM, Pfahler 107)"
   deliverables:
-  - dtitle: "Lab: Multi-Agent Patterns Due"
-    dlink: "Assignments/MultiAgentDebate"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
   - dtitle: "Project: Demo Day Presentations Due"
     dlink: "Projects/FinalProject"
     points: "75"
@@ -741,7 +750,7 @@ schedule:
     points: "10"
     rubricpath: "_pages/Participation/reading-responses.md"
   readings:
-  - rtitle: "Demo Day.  Bring the running system, the governance one-pager, and the contribution statements.  Nothing is due after today."
+  - rtitle: "Demo Day, held in our final exam period.  Bring the running system, the governance one-pager, and the contribution statements.  Nothing is due after today."
 ---
 
 This course is about building agents you understand and can run yourself.  The sections below explain how the course gives you real choice over your path, how to read an assignment, how to prepare for each hands-on session, and how I value and evaluate the day-to-day work of participating, including engaging with your classmates' work.  Please read them now, and come back to the participation and preparation guides throughout the term.
@@ -750,9 +759,9 @@ This course is about building agents you understand and can run yourself.  The s
 
 I have designed this course around deliberate choices, in the spirit of Universal Design for Learning.  There are many routes through it and several ways to demonstrate what you have learned, and none of them is the "remedial" path.  You have real authorship over your semester.
 
-- **Choose your direction.**  Everyone completes the same **labs**, the **written assignments**, and **one team final project** (nothing on the schedule is optional), and every one of them offers **directions** you choose inside the assignment, so you build the same core skill as your classmates, then extend it toward what interests you.  The Design Your Agent System assignment offers a design-document or agent-operating-system direction; the final project offers three (a Custom Agent Team, a Responsible AI Audit, or an Open-Source Agent).  The hands-on routes and the analytical routes are equally valid ways to earn your grade, so please build the balance that fits how you learn.
+- **Choose your direction.**  Everyone completes the same **labs**, the **written assignment**, and **one team final project** (nothing on the schedule is optional), and every one of them offers **directions** you choose inside the assignment, so you build the same core skill as your classmates, then extend it toward what interests you.  The final project, for example, offers three (a Custom Agent Team, a Responsible AI Audit, or an Open-Source Agent).  The hands-on routes and the analytical routes are equally valid ways to earn your grade, so please build the balance that fits how you learn.
 - **Every lab is within reach, on more than one road.**  Every lab has a programming pathway that asks for only intro-level Python, with starter code provided: you extend a working scaffold, never start from a blank page.  **Every lab also has a supported no-code or low-code pathway**, graded on the same rubric, for the same credit: OpenWebUI configuration for the Local Agent lab, opencode configuration for the Tools and MCP lab, a Langflow canvas for the RAG Knowledge Base lab, and chat windows and a spreadsheet for the Multi-Agent Patterns lab, its Critique and Refine part, and its rubric judge-and-refine loop.  Each lab opens with a **Choose Your Path** table so the decision is in front of you before you start rather than after, and each rubric row states how it is earned on each route, so "equal credit" is something you can check rather than something I assert.
-- **Analytical routes are real routes.**  The written assignments and Final Project Direction B (the Responsible AI Audit) are fully non-programming paths.  Taking one of them is a real choice about how you want to work, and I do not read it as avoidance.
+- **Analytical routes are real routes.**  The written assignment and Final Project Direction B (the Responsible AI Audit) are fully non-programming paths.  Taking one of them is a real choice about how you want to work, and I do not read it as avoidance.
 - **A shared spine.**  The semester-long **Project Thread** is the one path everyone walks together, so that individual choice never means working alone.  It carries the team milestones (charter, stakeholder brief, literature review, proposal, and demo) and the peer review that ties the section together.
 - **Depth inside every lab.**  Every lab opens with a shared core that everyone builds, then a menu of **directions**: instruction design and agent governance, handoffs between sessions, local model internals, containerization, MCP and OAuth, coding agents, fine-tuning, observability, prompt-injection defense, and more.  Pick the direction that pulls you; if the one you want is not on the menu, propose it.
 - **Scaffolding you can hold your own work against.**  Every lab and written assignment opens with **Before You Start**, which tells you what it builds on, what to install, and what order to do things in, and closes with a **Self-Check** drawn from its own rubric's *proficient* column, so you can grade your draft before I do.  The labs also carry worked examples and a **Troubleshooting** table, because the most common reason a lab takes twice as long as it should is a setup problem with a known fix.
@@ -768,7 +777,7 @@ We will seek to model best practices for using these systems through the lens of
 
 One way we will hold to that is by using AI systems to enhance and elevate our creative and critical capabilities rather than to substitute for them.  Pope Leo XIV takes up exactly this question in his encyclical letter [*Magnifica Humanitas: On Safeguarding the Human Person in the Time of Artificial Intelligence*](https://www.vatican.va/content/leo-xiv/en/encyclicals/documents/20260515-magnifica-humanitas.html) (15 May 2026), which argues that technology "should not be considered, in itself, as a force antagonistic to humanity," that human work is where people "bring their freedom, creativity and capacity for cooperation into play, contributing to the cultural and moral elevation of society" (&para;37), and that the splendor of human dignity is something "no machine can ever replace" (&para;15).  Read alongside the four Questions, that is a useful standard to hold our own work to.
 
-So, to avoid the risk of AI replacing the creative pursuits it should be extending, I ask that you **not use AI tools or systems to simply generate the work you do in this class**.  Use them instead to execute plans that you thoughtfully designed.  That distinction is most of what this course teaches.  The design-first discipline running through the written assignments, and the AI-use disclosure that every assignment asks for, both exist to keep the thinking yours.  We will discuss and debate these questions as a class throughout the semester, and you are not expected to arrive at my answer.
+So, to avoid the risk of AI replacing the creative pursuits it should be extending, I ask that you **not use AI tools or systems to simply generate the work you do in this class**.  Use them instead to execute plans that you thoughtfully designed.  That distinction is most of what this course teaches.  The design-first discipline running through the labs and the final project, and the AI-use disclosure that every assignment asks for, both exist to keep the thinking yours.  We will discuss and debate these questions as a class throughout the semester, and you are not expected to arrive at my answer.
 
 ## A Project-Based Course: Process, Teams, and Community Partners
 
@@ -788,7 +797,7 @@ This semester the section runs as **4 teams of 4 students**.  That is large enou
 
 I form the teams; you do not have to find each other.  I build project teams from the Team Formation Survey, balancing schedules, work styles, and deadline habits, and every team writes and signs a charter with rotating roles, psychological-safety ground rules, and a conflict repair process.  The intra-team check-ins are where we keep that charter honest.  If your team is struggling, please say so early, either in the confidential pulse of any check-in or in office hours, and we'll work through it together.
 
-There is no midterm or final exam.  Demo Day (Tuesday, December 8) and the registrar's final-exam slot host the final presentations; the project, labs, written assignments, and participation carry the grade.  Our four teams present for about fifteen minutes each during our class meeting; guests attending CS374's Demo Day (same day) are welcome at both.
+There is no midterm or final exam.  Demo Day is held in our final exam period (Wednesday, December 16, 8:00-11:00 AM, Pfahler 107) and hosts the final presentations; the project, labs, written assignment, and participation carry the grade.  Our four teams present for about fifteen minutes each.
 
 ## How Assignments Are Structured: Purpose, Task, and Criteria
 

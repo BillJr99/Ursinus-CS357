@@ -194,7 +194,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 ## Where This Goes Next
 
-The *Project Studio and Gallery Walk* sessions and Demo Day are next: dedicated build time, then the demos themselves.  The explainability sections you drafted today feed directly into your final governance document and into the demo your audience will interrogate.
+The *Project Sprint*, the *Project Studio* sessions, and Demo Day are next: an audit of your own judge and a threat model, dedicated build time, then the demos themselves.  The explainability sections you drafted today feed directly into your final governance document and into the demo your audience will interrogate.
 
 ## Further Reading
 

@@ -12,9 +12,9 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # RAG and Fine-Tuning: Retrieval Quality and LoRA
 
-**How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out at the *Critique, Consensus, and the LLM Judge* session (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date), and Part III walks through a RAG quality checkup, which turns today's metrics into a golden set, a worksheet, and a regression harness.
+**How you cut a document into chunks determines what you can find.**  The retrieval-augmented generation (RAG) pipeline from the *RAG Knowledge Base: Code and No-Code Routes* activity worked because our "documents" were single tidy sentences.  Real documents are messy.  Today you learn where chunk boundaries belong, how to measure whether retrieval found the right chunk (recall@k), how to see what a corpus contains, and what a reranker adds: **chunking strategies → measuring retrieval → semantic clustering of a corpus → reranking**.  These are the levers you will tune in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), handed out at the *How I AI* session on Tuesday, November 3, and Part III walks through a RAG quality checkup, which turns today's metrics into a golden set, a worksheet, and a regression harness.
 
-Keep the [*Local Agent* lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) moving; it is due at the *Observability, Traceability, and Handoff Protocols* session.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP), which gives that agent hands, is handed out at the next session, *How I AI*.  The [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the dates.
+There is no class on Tuesday, October 27, or Thursday, October 29.  Use that week for the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP), which gives your [*Local Agent*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) hands and is due at the next session, *How I AI*, on Tuesday, November 3, and for your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal), due Thursday, November 5.
 
 ---
 
@@ -193,11 +193,11 @@ Two cautions before you trust the map.  The clusters are an artifact of $k$ as m
 
 ## Walkthrough: A RAG Quality Checkup
 
-The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out at the *Critique, Consensus, and the LLM Judge* session; see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date.  The lab itself does not ask you to measure retrieval quality, but this walkthrough shows how you would check the pipeline you build there, using today's metrics, if you want to go further.  Part 5 has three steps, and each one is something you practiced today:
+The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out at the *How I AI* session on Tuesday, November 3, and is due Thursday, November 12.  The lab itself does not ask you to measure retrieval quality, but this walkthrough shows how you would check the pipeline you build there, using today's metrics, if you want to go further.  Part 5 has three steps, and each one is something you practiced today:
 
 1.  **The golden set.**  Ten questions with expected answers and a stated scoring rule: five your model should get right and five it should not.  For each item you write a prediction and a one-sentence rationale.  This is the labeled question set that recall@k needs, and it is paper-and-thinking work you can start tonight without a running pipeline.
 2.  **The checkup worksheet.**  Three measurements from your own pipeline, in order: recall@k under your current chunking configuration and one alternative (change chunk size or overlap, not both), a five-row citation audit that marks each claim supported or unsupported with a chunk reference, and one observed failure with a hypothesis and a planned fix.  The winning configuration goes back into your lab config.
-3.  **The regression harness.**  Pin the golden set and a fixed protocol (temperature 0.0, a fixed seed, the model named), run it twice, and show the two runs agree.  A spreadsheet run sheet, promptfoo YAML, or plain Python all count; the Judge Pipeline Workshop and Evaluation Workshop II build on this harness later in the term.
+3.  **The regression harness.**  Pin the golden set and a fixed protocol (temperature 0.0, a fixed seed, the model named), run it twice, and show the two runs agree.  A spreadsheet run sheet, promptfoo YAML, or plain Python all count; the Judge Pipeline Workshop in *Critique, Consensus, and the LLM Judge* and the *Project Sprint* session build on this harness later in the term.
 
 The same three steps work on a Langflow build: query both flows by hand in the playground, record hits and misses in a spreadsheet, and the run sheet is your harness.  The judgment (which configuration wins, which citations are real, what the failure means) is identical on every route.
 
@@ -239,7 +239,7 @@ In this Part you apply Parts I and II to real documents: run a chunking shootout
 
 ## -> Coming Up Next
 
-We now have a RAG system that can find and deliver relevant information, and a way to measure whether it did.  In *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox*, we turn that instinct on your own notes: a vault of plain files an agent can read, with the zone boundaries and contract that make it safe to let one write there.  Its Part III is an open studio, so bring your pipeline-in-progress, your golden set from step 5a, and your stuck points.  The theory behind all of it, why an agent needs external memory at all, follows the session after in *Memory and the Small Context Window Principle*.
+We now have a RAG system that can find and deliver relevant information, and a way to measure whether it did.  In *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox* (Tuesday, November 3, after a week with no class), we turn that instinct on your own notes: a vault of plain files an agent can read, with the zone boundaries and contract that make it safe to let one write there, and then put two agents on either end of a shared channel.  Its Part IV is an open studio, so have your pipeline-in-progress, your golden set from step 5a, and your stuck points ready.  The theory behind all of it, why an agent needs external memory at all, follows the session after, in *Observability, Traceability, and Handoff Protocols* and its reading, *Memory and the Small Context Window Principle*.
 
 ---
 
@@ -475,12 +475,6 @@ In this part, you will apply the decision framework and cost model to AI product
 
 ---
 
--> Coming Up Next: Now that you know when to fine-tune, the next module surveys the open-weight local models (Llama, Mistral, Phi, Gemma) and how to choose the right one for your hardware and task, including how quantization lets you run a 7B model on a laptop.
-
----
-
----
-
 # Extension: Synthetic Data (self-paced)
 
 Optional, and independent of the parts above.  Once you start evaluating a retrieval pipeline you run short of test data, and the obvious move is to have a model generate more.  That move is more dangerous than it looks, because the evaluation and the thing being evaluated end up sharing an author.  Read this before you generate a test set you intend to trust.
@@ -710,7 +704,3 @@ A practical technique for rapidly building evaluation benchmarks for new domains
 **Societal:** High-quality labeled data has historically been expensive, which meant that only well-resourced labs and companies could train capable AI systems.  Synthetic data generation is cheap, which could democratize AI training.  But synthetic data pipelines also require access to capable generator models (which are themselves owned by a small number of companies) and significant compute.  Does synthetic data democratize AI, or does it just shift the barrier from "who can label data" to "who can afford API access to generate data"?  What would democratized AI training require?
 
 Write at least 200 words addressing at least two of the three levels above.  Please have your Reflector ready to share your group's key idea during class discussion.
-
----
-
--> Coming Up Next: In the next activity, we examine what it means for AI to be "creative", and whether creativity requires something that generative models fundamentally cannot have.

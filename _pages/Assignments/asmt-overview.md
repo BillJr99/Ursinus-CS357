@@ -1082,7 +1082,7 @@ grep -n "localhost" notes.txt
 
 You will push to GitHub every week this semester, so set authentication up once, now.  GitHub stopped accepting your account password over HTTPS years ago, which leaves two credentials that work: an SSH key, and a token.  The fastest way to get either one is **`gh`, the GitHub CLI**, which creates the key, uploads it to your account, and hands git a credential, in one sign-in.
 
-Install it even if you already have a working key, and install it even if you prefer clicking.  Two days from now the *Coding Agents* session runs its entire loop through `gh`, an issue becomes the task and a pull request becomes the attempt, and the *Agents That Talk* session later uses the same commands as a message bus between two agents.  This is the step where you get it.
+Install it even if you already have a working key, and install it even if you prefer clicking.  Two days from now the *Coding Agents* session runs its entire loop through `gh`, an issue becomes the task and a pull request becomes the attempt, and the *How I AI* session later uses the same commands as a message bus between two agents.  This is the step where you get it.
 
 | Sub-step | What you do | Command | Paste it? |
 |---|---|---|---|

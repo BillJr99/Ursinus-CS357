@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Observability, Traceability, and Handoff Protocols
 
-In *How I AI*, you built a vault, a charter, and a `.ai/` directory so that one agent could stop and another could pick up the work.  Today you learn the three properties that make that safe, and then you write them down as a protocol: a skill an agent must follow when it starts, when it stops, when it restarts, and when it hands work to another agent through a repository or a shared folder.  You leave with a `SKILL.md` draft and a checklist.  The *Design Your Agent System* written assignment, introduced next session, requires exactly that protocol.
+In *How I AI*, you built a vault, a charter, and a `.ai/` directory so that one agent could stop and another could pick up the work.  Today you learn the three properties that make that safe, and then you write them down as a protocol: a skill an agent must follow when it starts, when it stops, when it restarts, and when it hands work to another agent through a repository or a shared folder.  You leave with a `SKILL.md` draft and a checklist.  Next session, *Design First*, puts exactly that protocol into your Final Project's design document.
 
 ---
 
@@ -46,7 +46,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 **You need:** your `cs357-work` repository from *How I AI*, with its `.ai/` directory, and the two course templates linked in Part III.  There is nothing to install today; the Code Cell runs in this page.
 
-**Coming due:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due at the *Critique, Consensus, and the LLM Judge* session (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date).  Nothing in today's session depends on it, so keep it out of Part I.
+**Due today:** your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal).  Nothing in today's session depends on it, so keep it out of Part I.
 
 ---
 
@@ -442,7 +442,7 @@ description: >
     run rules 5 through 7 before failure.
 ```
 
-The *Design Your Agent System* assignment asks for this protocol, and this is the checklist it is read against.  Every row must be true of your protocol, and every row must cite the rule number that makes it true.
+Your Final Project's design document, drafted in *Design First*, asks for this protocol, and this is the checklist it is read against.  Every row must be true of your protocol, and every row must cite the rule number that makes it true.
 
 | Check | Rule that makes it true |
 |---|---|
@@ -522,7 +522,7 @@ The *Design Your Agent System* assignment asks for this protocol, and this is th
 
 ---
 
--> Coming Up Next: In *Design First: Plan Your Agent System Before You Build It* we plan a whole agent system on paper before building it.  Its written assignment now requires an observability, traceability, and handoff protocol, and the `SKILL.md` you drafted today is that protocol.  Bring the draft and the checklist.
+-> Coming Up Next: In *Design First: Plan Your Final Project's Agent System Before You Build It* (Tuesday) we plan your team's Final Project agent system on paper before building more of it.  Its design document requires an observability, traceability, and handoff protocol, and the `SKILL.md` you drafted today is that protocol.  Have the draft, the checklist, and your proposal ready.
 
 ## Further Reading
 

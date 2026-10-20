@@ -71,7 +71,7 @@ RUN pip install --no-cache-dir \
 # image so it works offline.
 RUN python -m spacy download en_core_web_sm
 
-# Node.js -- runs promptfoo (Judge Pipeline Workshop, Evaluation Workshop II) and opencode (the coding
+# Node.js -- runs promptfoo (Judge Pipeline Workshop, Project Sprint) and opencode (the coding
 # agent). Debian's own `nodejs` package will not do: bookworm ships Node 18.x
 # and trixie ships 20.x, while promptfoo requires Node 22.22.0 or newer and
 # refuses to start below it. So we install an official Node.js release
@@ -106,7 +106,7 @@ RUN set -eux; \
         node --version; \
         npm --version
 
-# promptfoo -- Judge Pipeline Workshop and Evaluation Workshop II: prompt/agent evaluation harness.
+# promptfoo -- Judge Pipeline Workshop and Project Sprint: prompt/agent evaluation harness.
 RUN npm install -g promptfoo
 
 # opencode -- the course coding agent: OpenCode Studio Lab, the Coding Agents
@@ -126,7 +126,7 @@ RUN curl -fsSL https://herdr.dev/install.sh | HERDR_INSTALL_DIR=/usr/local/bin s
 
 # gh -- the GitHub CLI. The Coding Agents session drives its whole loop through
 # it (an issue becomes the task, a pull request becomes the attempt, a review
-# comment becomes the next agent's instruction), Agents That Talk reuses those
+# comment becomes the next agent's instruction), How I AI reuses those
 # same commands as a message bus between two agents that never share a context
 # window, and the Agent Skills tutorial assumes it is already on the PATH. It is
 # baked in for the same reason opencode is: `docker compose run --rm` deletes the

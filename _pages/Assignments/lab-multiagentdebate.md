@@ -59,14 +59,11 @@ info:
       progressing: The program is submitted according to the directions with a minor omission, with at least superficial responses to the reflection prompts
       proficient: The program is submitted according to the directions, including a readme writeup, a pair log with at least two timestamped role swaps (if you worked in a pair), and reflection answers that each cite a specific accuracy figure, transcript excerpt, or named failure mode from the lab rather than restating the prompt
   readings:
-    - rtitle: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
+    - rtitle: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses, and the Judge Pipeline Workshop (the judge you extend in Part A, Extended)"
       rlink: "Activities/liascript-critiqueconsensusjudge.md"
       liapage: true
-    - rtitle: "Evaluating Agents With a Rubric: The Judge Pipeline Workshop (the judge you extend in Part A, Extended)"
-      rlink: "Activities/liascript-rubricworkshop.md"
-      liapage: true
-    - rtitle: "Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling (the claim protocol behind the optional handoff route in Part B.3)"
-      rlink: "Activities/liascript-agentcommunication.md"
+    - rtitle: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox (the claim protocol behind the optional handoff route in Part B.3)"
+      rlink: "Activities/liascript-howiai.md"
       liapage: true
     - rtitle: "Orchestration Activity"
       rlink: "Activities/liascript-orchestration.md"
@@ -93,7 +90,7 @@ You leave with a loop you can read, a working debate, a working sample-cluster-s
 
 **How this page is organized.**  Every Part is broken into numbered steps (Step A.1, Step A.2, and so on).  Each step says what it is for, gives you one thing to do, and tells you what you should see when it worked.  Finish a step, check the result, and only then move to the next one.  If a step fails, fix it there; the later steps build on it.
 
-**Pair policy.**  You may do this lab in pairs: driver/navigator roles, a swap at least every 30 minutes, and a swap log.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.  This lab is handed out alongside the deck *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*.  See the course schedule for the assigned and due dates.
+**Pair policy.**  You may do this lab in pairs: driver/navigator roles, a swap at least every 30 minutes, and a swap log.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.  This lab is handed out at the *Orchestration and Multi-Agent Patterns* session, and the deck it builds on most, *Critique, Consensus, and the LLM Judge: One Loop, Three Uses, and the Judge Pipeline Workshop*, follows at the next session.  See the course schedule for the assigned and due dates.
 
 ---
 
@@ -133,8 +130,8 @@ Complete these activities before you write any code:
 
 - [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md): the generator/critic/refine loop and stopping rules; independent rounds, peer-informed revision, and majority vote (Sections 5 and 6); then sampling, embedding clustering, and synthesis (Section 7)
 - [Orchestration Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestration.md): chaining agents with structured outputs
-- [Evaluating Agents With a Rubric: The Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md): the leveled JSON rubric, quoted evidence, and the `_quote_found` check that Part A, Extended reuses; keep your workshop `judge.py` and disagreement table nearby
-- [Agents That Talk]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-agentcommunication.md): the claim protocol, needed only if you take the optional handoff route in Part B.3
+- [The Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md), in Part IV of *Critique, Consensus, and the LLM Judge*: the leveled JSON rubric, quoted evidence, and the `_quote_found` check that Part A, Extended reuses; keep your workshop `judge.py` and disagreement table nearby
+- [How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-howiai.md), Part III: the claim protocol, needed only if you take the optional handoff route in Part B.3
 
 ### Step 0.2: Install the packages and confirm Ollama is running
 
@@ -858,7 +855,7 @@ Report the cost next to the quality every time, because a loop that always wins 
 
 ## Part A, Extended: Rubric Judge-and-Refine Loop (5 points)
 
-Your Part A critic says one of two words, "accept" or "revise", and a list of issues.  A **judge** says more: for every criterion of an explicit rubric it picks a level, quotes the sentence of the draft that justifies the level, and writes one concrete revision instruction.  The producing agent (your Part A generator) revises from those instructions, the judge scores again, and the pair iterates until every criterion meets its bar or the round cap of three is reached.  This is the judge you built in the *Judge Pipeline Workshop* (*Evaluating Agents With a Rubric*, Week 10), with two additions: a one-line "meets" bar per criterion and a revision instruction per score.
+Your Part A critic says one of two words, "accept" or "revise", and a list of issues.  A **judge** says more: for every criterion of an explicit rubric it picks a level, quotes the sentence of the draft that justifies the level, and writes one concrete revision instruction.  The producing agent (your Part A generator) revises from those instructions, the judge scores again, and the pair iterates until every criterion meets its bar or the round cap of three is reached.  This is the judge you built in the *Judge Pipeline Workshop* (Part IV of *Critique, Consensus, and the LLM Judge*), with two additions: a one-line "meets" bar per criterion and a revision instruction per score.
 
 The point of this part is not a better docstring.  It is the per-round log.  A loop whose scores climb from round 1 to round 3 can mean three different things, and only the log plus your own reading can tell them apart:
 
@@ -1883,7 +1880,7 @@ Debate: accuracy=80.0%, avg_calls=6.0
 
 This route is optional.  Skip it unless you want to try it; the in-process debate from Part B.1 earns the same credit.  A GitHub issue thread is the list of comments under one issue in a GitHub repository, and everyone with access sees each comment with its time.
 
-You may run the debate condition of the shootout as two agents that exchange positions through a shared channel, instead of three agents inside one Python process.  The channel is a GitHub issue thread or a Dropbox-style shared folder, and the agents follow the claim protocol from the session *Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling*.
+You may run the debate condition of the shootout as two agents that exchange positions through a shared channel, instead of three agents inside one Python process.  The channel is a GitHub issue thread or a Dropbox-style shared folder, and the agents follow the claim protocol from the *How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox* session.
 
 This route earns the same credit on the same rubric rows, Debate Implementation and Comparative Evaluation.  Two substitutions make it equivalent.  The channel transcript takes the place of the in-process 3-agent, 2-round transcript.  And the written protocol, meaning how to claim, what a second agent does on seeing a claim, what makes a claim stale, and what "done" looks like, takes the place of the round loop in `run_debate`.
 

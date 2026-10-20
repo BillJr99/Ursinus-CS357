@@ -126,20 +126,20 @@ The rubric is the same on every direction.  These are directions within the one 
 
 ## Milestone Timeline
 
-The milestones run in the sequence below.  See the [course schedule]({{ site.baseurl }}/) for the dates.  **No work is accepted after the last class meeting.**
+The milestones run in the sequence below.  See the [course schedule]({{ site.baseurl }}/) for the dates.  **No work is accepted after Demo Day.**
 
 | Milestone | What is due | Points |
 |---|---|---|
 | Project handed out | Nothing yet.  Teams read all three directions and begin converging on one | - |
-| Intra-team check-in 2 | A private check-in to me, due at the *Orchestration and Multi-Agent Patterns* session, before the proposal; it precedes and informs the proposal | - |
+| Intra-team check-in 2 | A private check-in to me, due at the *How I AI* session, before the proposal; it precedes and informs the proposal | - |
 | Proposal | The proposal, with direction declared, stakeholder grounding, and an AI-use disclosure | **25 / 100** |
-| Literature Review handed out | Handed out the day the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
+| Literature Review handed out | Handed out at the *How I AI* session, two days before the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
 | Sprints 1, 2, and 3 | Rotating roles, a runnable increment (or evidenced stage checkpoint) at every sprint boundary, and a **partner feedback pass** during the final sprint | - |
-| Cross-team proposal critique | At the *Project Studio: Sprint and Threat Model* session, the boundary between Sprint 1 and Sprint 2 | - |
+| Cross-team design critique | At the *Design First* session, where each team's proposal grows into its design document, the boundary between Sprint 1 and Sprint 2 | - |
 | Gallery walk, peer review (SQR cards), and intra-team check-in 3 | The gallery walk at *Project Studio and Gallery Walk*; check-in 3 at the *Final Integration and Demo Rehearsal* studio that follows | - |
-| Demo Day and final submission | The presentation, the partner-facing artifact, your direction's deliverables, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all on the last class meeting | **75 / 100** |
+| Demo Day and final submission | The presentation, the partner-facing artifact, your direction's deliverables, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all at Demo Day, held in our final exam period (Wednesday, December 16, 8:00-11:00 AM, Pfahler 107) | **75 / 100** |
 
-The registrar's final-exam slot is reserved for Demo Day overflow only.  If all teams present at the last class meeting, it is not used.  Either way, the last class meeting is the submission deadline.
+Demo Day is held in the registrar's final-exam slot for this course, and it is the submission deadline.
 
 ---
 
@@ -218,13 +218,13 @@ Log every agent action, tool call, and handoff with a run identifier, so that a 
 
 ### Area 3: Auditing Outcomes for Correctness
 
-Score your outputs against a committed **golden set** (inputs with agreed correct answers or agreed human rubric levels) or with a **rubric judge**.  Check the judge against human scores before you trust it.  The [Evaluating Agents With a Rubric: The Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md) and [Evaluation Workshop II: Run Your Rubric Against Your Project]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-evalworkshop2.md) sessions build this harness; bring it into your project repository (or your evidence folder) and run it on your final outputs.
+Score your outputs against a committed **golden set** (inputs with agreed correct answers or agreed human rubric levels) or with a **rubric judge**.  Check the judge against human scores before you trust it.  The Judge Pipeline Workshop in [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md) and the [Project Sprint: Run Your Rubric Against Your Project, and Threat Model It]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-projectsprint.md) session build this harness; bring it into your project repository (or your evidence folder) and run it on your final outputs.
 
 **Evidence to submit:** the golden set or rubric, the one command that runs the harness and the pass rate it printed, the judge's agreement with human scores, and an explanation of every failure.
 
 ### Area 4: Auditing for Potential Bias
 
-Run a **counterfactual or perturbation probe**: send inputs that are identical except for one attribute (a name, a dialect, a neighborhood, a stated group membership) and compare the outputs.  The byline-swap probe from the [Training Data, Bias, and Explainability]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) session is the model: change one attribute, hold everything else fixed, sample enough times to support a claim, and disaggregate the results.  Choose attributes that matter to your partner's community.
+Run a **counterfactual or perturbation probe**: send inputs that are identical except for one attribute (a name, a dialect, a neighborhood, a stated group membership) and compare the outputs.  The byline-swap probe from the [Training Data, Bias, Explainability, Intellectual Property, and Privacy]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) session is the model: change one attribute, hold everything else fixed, sample enough times to support a claim, and disaggregate the results.  Choose attributes that matter to your partner's community.
 
 **Evidence to submit:** the probe design (which attribute, which values, how many samples), the disaggregated results table, and either an explanation of any gap or the mitigation you applied and its re-measured result.
 
@@ -252,7 +252,7 @@ Run a **counterfactual or perturbation probe**: send inputs that are identical e
 
 ## Phase 1: Converge on a Direction and Check In
 
-Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *Orchestration and Multi-Agent Patterns* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
+Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *How I AI* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
 
 > **Do this.**
 > 1. Read all three directions below, including the Direction C variant, and the [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal) page.
@@ -262,7 +262,7 @@ Between the hand-out and the proposal, your team reads all three directions, wei
 
 **Deliverables for this phase:**
 
-- [ ] Intra-team check-in 2, submitted at the *Orchestration and Multi-Agent Patterns* session, before the proposal
+- [ ] Intra-team check-in 2, submitted at the *How I AI* session, before the proposal
 - [ ] A decision-log entry naming the directions weighed and the one chosen
 
 ---
@@ -304,11 +304,11 @@ Build in three sprints between the proposal and Demo Day, aligned with in-class 
 
 | Sprint | Direction A milestone | Direction B milestone | Direction C milestone |
 |---|---|---|---|
-| Sprint 1 (proposal submitted -> cross-team proposal critique) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running minimum viable product (MVP: core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
-| Sprint 2 (proposal critique -> gallery walk; spans the Thanksgiving break) | All agents implemented and individually testable; at least 5 evaluation tasks run; GOVERNANCE.md first draft committed | Risk analysis report drafted (4-6 pages, 8+ citations, 3 mechanistic failure modes); governance document outlined | Non-trivial feature implemented; third property test added; README quickstart drafted and cold-tested by a classmate |
+| Sprint 1 (proposal submitted -> cross-team design critique) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running minimum viable product (MVP: core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
+| Sprint 2 (design critique -> gallery walk; spans the Thanksgiving break) | All agents implemented and individually testable; at least 5 evaluation tasks run; GOVERNANCE.md first draft committed | Risk analysis report drafted (4-6 pages, 8+ citations, 3 mechanistic failure modes); governance document outlined | Non-trivial feature implemented; third property test added; README quickstart drafted and cold-tested by a classmate |
 | Sprint 3 (gallery walk -> Demo Day) | Full evaluation with baseline comparison; 3+ failure modes documented with transcripts; one mitigation re-measured; gallery-walk prep | Governance document complete (monitoring plan, incident response, communication plan, appeal process); board presentation rehearsed | Published to a registry, tagged v1.0.0; community post made; CONTRIBUTING.md and GOVERNANCE.md complete |
 
-The cross-team proposal critique happens at the *Project Studio: Sprint and Threat Model* session, and the gallery walk at *Project Studio and Gallery Walk*.
+The cross-team design critique happens at the *Design First* session, and the gallery walk at *Project Studio and Gallery Walk*.
 
 The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) runs across Sprints 1 and 2.  It is graded on its own page, but its synthesis is a project document.  It states what the evidence confirms, complicates, or changes about your proposal, and any scope change that follows belongs in your decision log and your next check-in.
 
@@ -369,7 +369,7 @@ Every team, regardless of direction, delivers at Demo Day:
 > **Do this.**
 > 1. Rehearse the whole demo on the clock, on the machine you will use, on the network you will have, with every teammate able to cover any part.
 > 2. Assemble the final submission: your direction's deliverables below, the Responsible AI Report, individual contribution statements documenting the role rotation, individual reflections (see Reflection Prompts), and the **final AI-use disclosure**.
-> 3. Submit everything on the last class meeting.  Nothing is accepted after it.
+> 3. Submit everything at Demo Day.  Nothing is accepted after it.
 
 **Deliverables for this phase:**
 
@@ -685,7 +685,7 @@ Demo Day is already a multi-audience event: your community partner's world and y
 > 4. **The redirect.**  For questions you cannot answer: "I don't know, my teammate built that part, let me hand you to them," or "I don't know, but here's how I'd find out."  Both are strong answers.  Bluffing is the only weak one.  In this course, saying *I don't know* when the evidence is absent is literally what we graded your systems on.
 > 5. **The question back.**  Prepare two real questions to ask a guest, about their work, how AI is changing it, or their path.  Demo Day is a networking event wearing a final-exam costume; treat the conversation as two-way.
 
-### The Mock Technical Interview (Week 14 Project Studio)
+### The Mock Technical Interview (Final Integration and Demo Rehearsal Studio)
 
 During the *Final Integration and Demo Rehearsal* studio, you will pair **across teams** for interview rounds, credited as class participation.
 

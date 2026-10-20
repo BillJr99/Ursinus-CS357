@@ -10,9 +10,9 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 -->
 
-# Design First: Plan Your Agent System Before You Build It
+# Design First: Plan Your Final Project's Agent System Before You Build It
 
-Today you plan a whole agent system on paper before any of it runs.  In *How I AI* you wrote a charter and reviewed a plan before letting one agent act on one task.  Last session, in *Observability, Traceability, and Handoff Protocols*, you wrote the start, stop, restart, and handoff protocol as a `SKILL.md`.  Today we scale both of those to a system of several agents, and we do it in a design document.
+Today you plan your team's Final Project agent system on paper before any more of it runs.  In *How I AI* you wrote a charter and reviewed a plan before letting one agent act on one task.  Last session, in *Observability, Traceability, and Handoff Protocols*, you wrote the start, stop, restart, and handoff protocol as a `SKILL.md`.  Today we scale both of those to the system of several agents your team proposed, and we do it in a design document.
 
 The reason is cost.  In traditional software engineering, the cost of a mistake rises with how late you find it: a bug caught in code review is cheaper than one caught in production.  Agentic systems make that curve steeper.  An agent that sends email, writes to a database, or calls an external API can produce an **irreversible side effect** seconds after it starts, and if the design was wrong you may not be able to undo what it did.
 
@@ -20,13 +20,13 @@ The design-first practice says: before you write code or deploy an agent, produc
 
 The same discipline is older than software.  Electricians draw the wiring diagram before they pull wire through conduit, because once the walls are closed, changing the circuit is expensive.  Plan your ports, your identity directories, and your data flows on paper before any agent sends its first request.
 
-The written assignment [Design Your Agent System](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/AgentSystemDesign) is handed out today.  It asks for the agent table and pre-mortem you practice here, and it now requires an observability, traceability, and handoff protocol section: the `SKILL.md` you drafted last session, checked against that session's checklist.  Bring both to every model below.
+The design document you draft today is your team's [Final Project](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject) design.  It takes the agent design table, topology, and pre-mortem that your [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) sketched at proposal fidelity and develops them into a specification someone else could build from, with one section the proposal did not ask for: an observability, traceability, and handoff protocol, which is the `SKILL.md` you drafted last session, checked against that session's checklist.  Every direction has a system to design: a Direction A team designs its agent team, a Direction C team the agent it will publish, and a Direction B team the deployed system it audits, reconstructed as far as its evidence allows.  Have your proposal, the `SKILL.md` draft, and the checklist ready for every model below.  The document lives in your project repository beside your decision log, and its agent table and pre-mortem are the ones your Final Project's artifacts folder carries to Demo Day.
 
 ---
 
 ## Directions and Group Roles
 
-Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Read each model as a team before you start its questions.  The Manager keeps discussion moving.  The Reflector watches for assumptions the team makes without evidence.  The Recorder documents the team's answers.  The Presenter prepares to explain the team's pre-mortem (Model 2) to the class.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Read each model as a team before you start its questions.  The Manager keeps discussion moving.  The Reflector watches for assumptions the team makes without evidence.  The Recorder documents the team's answers and keeps the design draft current.  The Presenter prepares to walk the other team through your design, starting from the pre-mortem (Model 2), in the cross-team critique (Model 4).
 
 ---
 
@@ -46,6 +46,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 | **Handoff Protocol** | The start, stop, restart, and handoff rules an agent follows, written as a `SKILL.md` in *Observability, Traceability, and Handoff Protocols*: what it reads on start, what it logs while working, and what it writes before any stop | The "Logged, Traced, Handed Off" column in Model 1 and the handoff row in Model 2 |
 | **Right-sizing** | Choosing the cheapest tool that would still be correct for a step: stated-rule code, classical machine learning (ML), a model you trained, or a general LLM. Asked once per step, before that step gets a row in the agent table | Computing a monthly total in code and asking a model only to describe what is unusual about it |
 | **Classical ML** | Models trained on your own labeled examples for a narrow, fixed output (logistic regression, gradient-boosted trees). Deterministic once trained, milliseconds per call, free per call, and frequently more accurate than an LLM on the exact task it was trained for | Routing 8,000 already-labeled support tickets into three categories |
+| **SQR card** | A structured peer-review card with exactly three parts: one concrete Strength with evidence, one genuine Question, one Risk with a suggested mitigation | The card you write on another team's design in Model 4 |
 
 ---
 
@@ -57,9 +58,9 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 |---|---|
 | 0-10 | Why design first, and what a bad first prompt actually costs |
 | 10-22 | Right-sizing: which steps need a model at all, and which are cheaper and safer as code |
-| 22-45 | Draft your system design: components, contracts, and failure modes |
-| 45-65 | Trade drafts and review a teammate's design against the same checklist |
-| 65-75 | Revise your own draft with what the review surfaced |
+| 22-45 | Draft your Final Project design: the agent table (Model 1), the pre-mortem (Model 2), and the handoff protocol section |
+| 45-65 | Cross-team design critique: trade drafts with another team and exchange SQR cards (Model 4) |
+| 65-75 | Revise your own draft with what the critique surfaced, and log each change in your decision log |
 
 ---
 
@@ -196,7 +197,7 @@ The agent table is the core design artifact for a multi-agent system.  One row p
 >
 > Read the gap too.  `config.json` has no failure-mode column.  It handles exactly one failure, a missing skill file, and it handles that in code by raising.  Nobody filled in a cell for it.  Download [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip) and open `config.json` beside the table.
 
-The table below carries the original columns plus one that last session's protocol makes possible: for each agent, what is logged, which rule each action traces back to, and what the handoff file contains when the agent stops.  When you build your own table for *Design Your Agent System*, also add the three from the section above: **observed how**, **reaches what**, and **undone how**.
+The table below carries the original columns plus one that last session's protocol makes possible: for each agent, what is logged, which rule each action traces back to, and what the handoff file contains when the agent stops.  When you build your own table for your Final Project design, also add the three from the section above: **observed how**, **reaches what**, and **undone how**.
 
 | Agent Name | Role and Goal | System Prompt Skeleton | Inputs | Outputs | Temperature | Tools Available | Failure Mode | Logged, Traced, Handed Off |
 |---|---|---|---|---|---|---|---|---|
@@ -235,7 +236,7 @@ In the agent table, WriterAgent runs at temperature 0.7 while CriticAgent runs a
 
 Complete the design principle: an empty cell in the agent table is not a gap in the document; it is an unresolved [[risk]] waiting to become a bug.
 
-Two things to remember from this model.  A row is complete when every cell holds a decision, including what the agent logs and what it writes before it stops.  The FormatterAgent row you just wrote is the shape of every row in your assignment.
+Two things to remember from this model.  A row is complete when every cell holds a decision, including what the agent logs and what it writes before it stops.  The FormatterAgent row you just wrote is the shape of every row in your Final Project's table.
 
 ---
 
@@ -332,9 +333,47 @@ Two student teams build the same 3-agent research pipeline.  Team A starts codin
 
 ---
 
+## Model 4: Cross-Team Design Critique
+
+*Sprint 1 ran from the approved proposal to today.  Model 4 is the cross-team critique that closes it: twenty minutes, one card each way, while there is still time to change course.*
+
+Pair with the team I name.  Swap design drafts, with the proposals they grew from.  Each team reads the other's and writes one SQR card; the protocol is the card from the [Structured Peer Review activity](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PeerReview), compressed to fit the block.
+
+| Minutes | Step |
+|---|---|
+| 2 | Swap drafts; each team names the section it most wants read (the handoff row of the pre-mortem and the design decisions are the usual answers) |
+| 8 | Read silently.  Reviewers read for three things: whether every row of the agent table answers observed how, reaches what, and undone how; each design decision's rejected alternative; and what the team has decided *not* to do |
+| 5 | Write the card, one per team, with all three fields filled |
+| 3 | Exchange cards; the receiving team restates the card in its own words before responding to it |
+| 2 | Log what your team will change as a result: who, what, by when |
+
+The card has exactly three parts, each with a job:
+
+| Part | What It Must Contain | What It Must NOT Be |
+|------|----------------------|---------------------|
+| **Strength** | One concrete thing that works, **with evidence**: point to the row, section, or design choice and say what it accomplishes. | Generic praise ("well written!") with no location |
+| **Question** | One **genuine** question: something you actually wondered while reading, whose answer would improve the design. | Criticism disguised as a question |
+| **Risk** | One way this design could fail or mislead, **with a suggested mitigation**: you may not name a risk without offering a way out. | A complaint with no exit |
+
+The Recorder copies the card you receive verbatim into the team's notes.  Thank the reviewers before you triage it, even if you will reject it; the thanks pays for the next candid card.
+
+### Critical Thinking Questions
+
+17.  The card you received names a real Risk with a mitigation your team cannot afford.  Restate the card out loud before responding.  What does restating let you keep, and what does it let you decline?
+
+    > *Hint: Restating separates the diagnosis from the prescription.  "The risk you see is that the office will not share the spreadsheet" is valid on its own; the mitigation that assumes a budget you lack can be declined without losing the risk.  Teams that skip restating tend to reject the whole card because its weakest part was weak.*
+
+18.  Which part of the other team's design was hardest to review in eight minutes: the agent table, the pre-mortem, or the handoff protocol section?  What was missing from the document that made it hard, and is the same thing missing from yours?
+
+    > *Hint: A design decision that does not name its rejected alternative cannot be reviewed; the reviewer has nothing to compare it with.  If the card's Question was "why not X?", the design should already have answered it.*
+
+Two things to remember from this model.  A card is only as useful as the change it produces, so every Risk you accept becomes a decision-log row.  And the design that survives a stranger's eight-minute read is the one a fresh agent, or a teammate who missed today, can build from.
+
+---
+
 ## Exercises
 
-These exercises give you practice writing the artifacts yourself (agent table, pre-mortem, and a team debate) before you face a blank page on your final project.
+These exercises give you more practice with the artifacts (agent table, pre-mortem, and a team debate) on systems other than your own, which is the fastest way to see what your own design is missing.  The last one turns today's critique into decision-log rows.
 
 1.  **Write a one-page design document.**
 
@@ -362,6 +401,14 @@ These exercises give you practice writing the artifacts yourself (agent table, p
 
    *You've succeeded when:* Each of your two identified failure modes has a plausible detection mechanism that is not "run the system and see if it fails"; it should be something you could check proactively, before or during a run.
 
+4.  **Turn the SQR card you received into decision-log rows.**
+
+   *What to do:* The Risk becomes one row in your `DECISIONS.md`: the mitigation you chose (theirs or your own), the alternative considered (the other one), and a Revisit When.  The Question becomes a second row if answering it changed anything, or a one-line note in the design document if it did not.
+
+   *Starter hint:* A card that produces zero rows was either wrong or ignored; say which in the log, so the next check-in can tell.
+
+   *You've succeeded when:* A teammate who missed today can read the log and know what the critique changed.
+
 ---
 
 ## Reflection Prompt
@@ -376,7 +423,7 @@ Respond to all three levels in your notebook:
 
 ---
 
--> **Coming Up Next:** *Orchestration and Multi-Agent Patterns* takes this up: how the agents you designed on paper today get wired into pipelines, routers, and planner-led workflows, and the five shapes those wirings take.  Today's agent table, pre-mortem, and protocol section feed directly into *Design Your Agent System* and your Final Project's design document.
+-> **Coming Up Next:** *Orchestration and Multi-Agent Patterns* (Thursday) takes this up: how the agents you designed on paper today get wired into pipelines, routers, and planner-led workflows, and the five shapes those wirings take.  Today's agent table, pre-mortem, and protocol section are your Final Project's design document; commit them to your project repository with the decision-log rows from the critique.  The RAG Knowledge Base lab and your individual annotated bibliographies for the Literature Review are due at that session.
 
 ---
 
@@ -388,6 +435,6 @@ Respond to all three levels in your notebook:
 - Fred Brooks.  *The Mythical Man-Month* (1975/1995), Chapter 11.  "Plan to throw one away", still the most candid advice about first-system costs.
 - This course: [Observability, Traceability, and Handoff Protocols](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-observability.md), where the `SKILL.md` and checklist that today's protocol section relies on were written.
 
-The self-paced extension on `AGENTS.md`, global instructions, and skills that used to close this deck now lives in [Skills: Design One, Then Measure It](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-skills.md).  Read it there if you want the skill file layout and the measurement harness that go with the protocol you are designing today.
+The self-paced material on `AGENTS.md`, global instructions, and skills lives in [Skills: Design One, Then Measure It](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-skills.md).  Read it there if you want the skill file layout and the measurement harness that go with the protocol you are designing today.
 
 ---

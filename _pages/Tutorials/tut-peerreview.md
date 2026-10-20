@@ -209,7 +209,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 ## Where This Goes Next
 
-You will use SQR cards for real at the Stakeholder Brief exchange on the course schedule, and your first private check-in is due at the same milestone.  The cycle (artifact, review, revise, present) then repeats at the proposal critique and the gallery walk, all the way to Demo Day.
+You will use SQR cards for real at the Stakeholder Brief exchange on the course schedule, and your first private check-in is due at the same milestone.  The cycle (artifact, review, revise, present) then repeats at the design critique and the gallery walk, all the way to Demo Day.
 
 ---
 

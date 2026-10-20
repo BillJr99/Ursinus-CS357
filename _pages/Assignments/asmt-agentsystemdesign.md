@@ -83,7 +83,7 @@ tags:
 
 ---
 
-**See the course schedule for the assigned and due dates.**
+> **Not assigned in Fall 2026.**  This written assignment is not part of the course this term.  Its design work (the agent table, the pre-mortem, and the observability, traceability, and handoff protocol) is folded into the [Final Project]({{ site.baseurl }}/Projects/FinalProject): each team develops it into the project's design document in the *Design First* session.  The page remains available as a reference for that work.
 
 Picture this: you restart your agent with a clean slate, and the first thing it does is ask you which test command to run.  You know the answer, but nothing you wrote down says it.  The system you thought you had was partly in your head.
 

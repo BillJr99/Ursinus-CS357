@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 **Retrieval-augmented generation (RAG)** hands the model the right evidence at the moment it needs it.  The evaluation harness from the *Hallucinations and Evaluating Agent Outputs* activity showed that local models hallucinate (confidently make up facts) where their training data is thin.  The [*Tokens, Embeddings, and Attention*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/TokensEmbeddingsAttention) tutorial gave you semantic search.  RAG combines the two.  Today you build the pipeline in about fifty lines of Python with Chroma and Ollama, again on a Langflow canvas with no code at all, and once more as a Pydantic AI agent with a search tool.  The RAG Knowledge Base lab offers the same choice for the same credit: the code route uses Pydantic AI, and you can take the no-code route in Langflow if you prefer.  We move from **the open-book insight → the RAG pipeline → a working pipeline in code → the same pipeline without code → grounded answers with citations**.
 
-The *Skill Design Study* written assignment is [due today](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/SkillDesignStudy).
+The [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) is due today, and I hand out the [Final Project](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject).
 
 ---
 

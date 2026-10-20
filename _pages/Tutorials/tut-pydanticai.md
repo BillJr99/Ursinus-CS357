@@ -326,7 +326,7 @@ deps = Deps(today=date.today(), notes_dir=Path("notes"))
 deps.notes_dir.mkdir(exist_ok=True)
 limits = UsageLimits(request_limit=6, tool_calls_limit=4)
 
-result = agent.run_sync("Save my CS357 RAG lab deadline, 2026-11-17, titled 'RAG lab'.",
+result = agent.run_sync("Save my CS357 RAG lab deadline, 2026-11-12, titled 'RAG lab'.",
                         deps=deps, usage_limits=limits)
 for _ in range(2):                                  # bounded: at most two rounds of asking
     if not isinstance(result.output, DeferredToolRequests):
@@ -345,14 +345,14 @@ show_trace(result.all_messages())
 
 ```text
 $ python step3_run.py
-Approve save_deadline({"course":"CS357","due":"2026-11-17","title":"RAG lab"})? [y/N] y
-I have saved your CS357 RAG lab deadline, titled 'RAG lab', for the due date of 2026-11-17.
-  [user-prompt] "Save my CS357 RAG lab deadline, 2026-11-17, titled 'RAG lab'."
-  [tool-call] save_deadline({"course":"CS357","due":"2026-11-17","title":"RAG lab"})
+Approve save_deadline({"course":"CS357","due":"2026-11-12","title":"RAG lab"})? [y/N] y
+I have saved your CS357 RAG lab deadline, titled 'RAG lab', for the due date of 2026-11-12.
+  [user-prompt] "Save my CS357 RAG lab deadline, 2026-11-12, titled 'RAG lab'."
+  [tool-call] save_deadline({"course":"CS357","due":"2026-11-12","title":"RAG lab"})
   [tool-return] save_deadline -> 'saved to CS357.md'
-  [text] "I have saved your CS357 RAG lab deadline, titled 'RAG lab', for the due date of 2026-11-17."
+  [text] "I have saved your CS357 RAG lab deadline, titled 'RAG lab', for the due date of 2026-11-12."
 $ cat notes/CS357.md
-- 2026-11-17: RAG lab
+- 2026-11-12: RAG lab
 ```
 
 Answer `n` instead and the tool returns the denial message to the model, and the file is never created.  `qwen2.5:3b` then repeated the denial message as its answer.  We also saw two things while testing with `llama3.2`.  First, after a plain denial it sometimes asked for the same call again, which is why the loop above asks at most twice and why the denial message tells the model not to retry.  Second, after a successful save, its final sentence was muddled ("User question: Add a deadline...") even though the file was correct.  **The file is the truth, not the model's description of it.**  Check the side effect, not the sentence.
@@ -811,7 +811,7 @@ def test_valid_arguments_are_not_permission(tmp_path):
 
 
 def test_a_write_pauses_for_approval(tmp_path):
-    call = ("save_deadline", {"course": "CS357", "due": "2026-11-17", "title": "RAG lab"})
+    call = ("save_deadline", {"course": "CS357", "due": "2026-11-12", "title": "RAG lab"})
     with deadline_agent.override(model=scripted(call)):
         result = deadline_agent.run_sync("q", deps=deps(tmp_path))
     assert isinstance(result.output, DeferredToolRequests) and not list(tmp_path.iterdir())

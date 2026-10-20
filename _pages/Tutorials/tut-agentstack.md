@@ -332,7 +332,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 ## Where This Goes Next
 
-Now that the stack is running, the *Design First: Plan Before You Build* activity follows the studio: before wiring more services together, we learn to plan a multi-agent system on paper.  The stack knowledge from today is also the starting point for the container hardening that [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) walks through.
+Now that the stack is running, the *Design First: Plan Your Final Project's Agent System Before You Build It* activity comes two sessions after the studio: before wiring more services together, we learn to plan a multi-agent system on paper.  The stack knowledge from today is also the starting point for the container hardening that [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) walks through.
 
 ---
 

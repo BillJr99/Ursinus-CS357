@@ -1,8 +1,8 @@
 # Scratchpad rules for agents
 
 <!-- The shared-scratchpad contract.  Lives at the ROOT of a disposable repository
-     that two or more agents hand work through, the pattern the "How I AI" and
-     "Agents That Talk" sessions build.  Its job is to make concurrent writes by
+     that two or more agents hand work through, the pattern the "How I AI"
+     session builds.  Its job is to make concurrent writes by
      agents that never share a context window safe by convention: one writer per
      directory, new files rather than edited ones, and a credential rule that fails
      loudly instead of improvising. -->

@@ -16,7 +16,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 A policy section is only as good as the mechanism that enforces it.  You have built agents that retrieve, decide, judge, and act; governance is deciding in advance, in writing, what they may do, who answers when they err, and how anyone would know.  Today you learn to write policy that a stranger could check from the logs, and you put numbers behind the section most policies leave out: what the system costs to run, in energy, water, dollars, and tokens.  You leave with two enforceable sections of your final project's governance one-pager, one about data and one about cost and routing.
 
-Due today: the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase).  Handed out today: the Multi-Agent Patterns lab ([Multi-Agent Debate](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate)), due on Demo Day (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date).
+Coming due: the Multi-Agent Patterns lab ([Multi-Agent Debate](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate)) is due Thursday, December 3, and your team's Literature Review synthesis is due at the next session.
 
 ---
 
@@ -498,7 +498,7 @@ Your policy has a structure, your project is mapped onto real frameworks, and yo
 
 ---
 
--> Coming Up Next: *Evaluation Workshop II: Run Your Rubric Against Your Project* takes section 6 of your one-pager, the evaluation and monitoring section, and makes it real: you run your own rubric against your project's outputs and find out whether the harness your policy promises produces the evidence the policy needs.  Bring today's two sections; the workshop tests whether their measurements are ones you can actually take.
+-> Coming Up Next: *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) takes section 6 of your one-pager, the evaluation and monitoring section, and makes it real: you run your own rubric against your project's outputs and find out whether the harness your policy promises produces the evidence the policy needs, and then you threat-model the system the policy governs.  Have today's two sections ready; the session tests whether their measurements are ones you can actually take.
 
 ## Further Reading
 
