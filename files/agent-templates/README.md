@@ -33,7 +33,7 @@ Every file here exists so that an agent can be reset, swapped for a different ag
 | `LLMMEMORIES.md` | `/LLMMEMORIES.md` | Self-updating durable memory about you and how to work with you |
 | `RUNBOOK.md` | `/wiki/Technical/agent-setup.md` | Living runbook: the agent's memory of its own infrastructure |
 
-**Layer 3: A shared scratchpad** (for two or more agents handing work to each other through one disposable repository, the pattern the *How I AI* and *Agents That Talk* sessions build):
+**Layer 3: A shared scratchpad** (for two or more agents handing work to each other through one disposable repository, the pattern the *Agents That Talk, Observability, and Handoff Protocols* session builds):
 
 | Template | Deploy as | Role |
 |---|---|---|

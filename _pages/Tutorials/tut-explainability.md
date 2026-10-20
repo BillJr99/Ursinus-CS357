@@ -17,7 +17,7 @@ tags:
 
 ## About This Tutorial
 
-Fresh from the *Governance, Policy, and the Cost of Inference* session, the final design lecture asks the question your Demo Day audience will ask: *why should I trust this?*  **Explainability** is the engineering of justified trust: surfacing evidence, exposing reasoning, communicating uncertainty, and designing the human's role on purpose.  We move from **kinds of explanation → what agents can honestly show → calibration → human-centric design heuristics for your demos**.
+Fresh from the governance part of *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference*, this tutorial asks the question your Demo Day audience will ask: *why should I trust this?*  **Explainability** is the engineering of justified trust: surfacing evidence, exposing reasoning, communicating uncertainty, and designing the human's role on purpose.  We move from **kinds of explanation → what agents can honestly show → calibration → human-centric design heuristics for your demos**.
 {: .tb-lede}
 
 ### Key Concepts
@@ -194,7 +194,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 ## Where This Goes Next
 
-The *Project Studio and Gallery Walk* sessions and Demo Day are next: dedicated build time, then the demos themselves.  The explainability sections you drafted today feed directly into your final governance document and into the demo your audience will interrogate.
+The *Project Sprint*, the *Project Studio* sessions, and Demo Day are next: an audit of your own judge and a threat model, dedicated build time, then the demos themselves.  The explainability sections you drafted today feed directly into your final governance document and into the demo your audience will interrogate.
 
 ## Further Reading
 

@@ -18,7 +18,7 @@ tags:
 
 ## About This Tutorial
 
-The [RAG deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md) built retrieval in memory, and the [RAG and Fine-Tuning deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md) measured it and explained LoRA on paper.  This tutorial does both for real, on one machine, with no network after setup.  You will index a small handbook into a vector store that survives a restart, answer questions with citations or an honest abstention, put the same retrieval behind a [Pydantic AI]({{ site.baseurl }}/Tutorials/PydanticAI) agent, train a LoRA adapter on a CPU, reload it in a fresh process, and compare four systems on questions none of them trained on.
+The [RAG deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md) built retrieval in memory and measured it, and its self-paced fine-tuning extension explained LoRA on paper.  This tutorial does both for real, on one machine, with no network after setup.  You will index a small handbook into a vector store that survives a restart, answer questions with citations or an honest abstention, put the same retrieval behind a [Pydantic AI]({{ site.baseurl }}/Tutorials/PydanticAI) agent, train a LoRA adapter on a CPU, reload it in a fresh process, and compare four systems on questions none of them trained on.
 {: .tb-lede}
 
 Two sentences carry the whole tutorial.  **RAG changes what the model reads; it never changes the model.**  **LoRA changes the model; the change only exists while the adapter is loaded or merged.**  Everything below is a way of watching those two sentences hold, and of watching neither one make a small model truthful.
@@ -953,7 +953,7 @@ Read the replies in `compare_report.json`, not just the totals.  Scoring here is
 - **Neither guarantees factuality.**  With the right sources in the prompt, the 360M model still said the laser cutter "may cut PVC," and both RAG conditions answered "yes" to the sauna question instead of abstaining.  The adapter-only condition abstained on both unanswerable questions, but it also abstained on three answerable ones, so its abstentions say more about caution than about knowledge.
 - **Resource use.**  Adding RAG roughly doubled the time per question (embedding the query, plus a longer prompt).  Training cost about 95 seconds once; inference with an adapter attached costs almost nothing extra.
 
-Eight questions on one small model are a demonstration, not an evaluation.  Before claiming that any condition is better, use the golden-set and regression-harness methods from the RAG quality checkup in the *RAG and Fine-Tuning* deck: more questions, several seeds or models, and the same scoring for every condition.
+Eight questions on one small model are a demonstration, not an evaluation.  Before claiming that any condition is better, use a golden set written before any tuning, as in *RAG: Building and Measuring a Knowledge Base* and the *RAG Worked Example*: more questions, several seeds or models, and the same scoring for every condition.
 
 ---
 
@@ -993,7 +993,7 @@ Eight questions on one small model are a demonstration, not an evaluation.  Befo
 
 ## Where This Goes Next
 
-The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase) asks you to index your own corpus and query it through a Pydantic AI agent with a retrieval tool.  This tutorial goes further, into a persistent offline index and the full LoRA route, for when you want more than the lab asks.  The [RAG and Fine-Tuning deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-ragquality.md) has the ladder of prompting, RAG, and fine-tuning that these measurements illustrate.
+The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase) asks you to index your own corpus and query it through a Pydantic AI agent with a retrieval tool.  This tutorial goes further, into a persistent offline index and the full LoRA route, for when you want more than the lab asks.  The fine-tuning extension of the [RAG deck]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rag.md) has the ladder of prompting, RAG, and fine-tuning that these measurements illustrate.
 
 ## Further Reading
 

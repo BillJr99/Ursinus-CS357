@@ -518,7 +518,7 @@ These exercises quantify the memory savings from summarization, stress-test the 
 
 **Personal level:** In your notebook: the agent forgot your exact words but kept a summary it wrote about you.  Human memory works similarly; we remember the gist and reconstruct the details.  Describe one time your memory of a conversation differed from someone else's.  Who was "right"?
 
-**Technical level:** The `SummarizingMemory` class calls the model to compress its own history, so the summarizer can hallucinate facts or drop important constraints.  Design a summarization approach that checks the summary's faithfulness, drawing on what you learned in the *RAG and Fine-Tuning: Retrieval Quality and LoRA* activity.
+**Technical level:** The `SummarizingMemory` class calls the model to compress its own history, so the summarizer can hallucinate facts or drop important constraints.  Design a summarization approach that checks the summary's faithfulness, drawing on what you learned about grounding checks in *RAG: Building and Measuring a Knowledge Base* and the *RAG Worked Example*.
 
 **Societal level:** The agent kept a summary it wrote about you.  If an AI assistant used this pattern over months of conversations, it would build up an increasingly detailed (but potentially distorted) model of who you are.  Who should have the right to read, correct, or delete that summary?  Is it meaningfully different from a therapist's session notes?
 

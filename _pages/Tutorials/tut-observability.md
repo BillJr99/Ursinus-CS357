@@ -189,7 +189,7 @@ Logs; structured per-request logging of the input, model response, and finish re
 
 ## Token Accounting: Counting What Every Call Spends
 
-> Tokens are the one measurement that every cost you care about is built from.  A hosted API bills by the token, a local model spends seconds and watts per token, and the carbon estimate in *Governance, Policy, and the Cost of Inference* starts from a token count.  If you do not record tokens per call, you cannot say which agent in your system is expensive, you cannot catch a loop that is quietly spending ten times its budget, and you cannot write the token section of your final project's Responsible AI Report, which asks for counts measured on every evaluation run.
+> Tokens are the one measurement that every cost you care about is built from.  A hosted API bills by the token, a local model spends seconds and watts per token, and the carbon estimate in Part VII of *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* starts from a token count.  If you do not record tokens per call, you cannot say which agent in your system is expensive, you cannot catch a loop that is quietly spending ten times its budget, and you cannot write the token section of your final project's Responsible AI Report, which asks for counts measured on every evaluation run.
 {: .tb-key data-title="Why this matters"}
 
 A token count is both kinds of telemetry at once.  On a single call it is a **span attribute**: the `llm_generate` span above carries `prompt_tokens` and `completion_tokens`.  Added up over calls, agents, and days it is a **metric**: tokens per run, per agent, per hour.  You do not have to measure it yourself.  Both tools this course uses count every token the model reads and writes and hand you the number; your job is to read it, keep it, and add it up.
@@ -474,7 +474,7 @@ with tracer.start_as_current_span(f"chat {MODEL}") as span:
 
 These attributes are still marked *Development* in the specification, and the GenAI conventions have moved from the main semantic-conventions site to their [own repository](https://github.com/open-telemetry/semantic-conventions-genai), where the token *metrics* are also being reorganized.  Record the span attributes above, keep your CSV as the metric, and check the repository before you build a dashboard on a metric name.
 
-> "The dashboard said $0.00, so the run was free."  A local model has no invoice, but it still reads and writes every token, and each one costs seconds of your GPU and watts from the wall.  The count is the same whether or not anyone bills for it, which is why the Responsible AI Report asks for tokens rather than dollars, and converts them to energy, carbon, and cost using the method in *Governance, Policy, and the Cost of Inference*.
+> "The dashboard said $0.00, so the run was free."  A local model has no invoice, but it still reads and writes every token, and each one costs seconds of your GPU and watts from the wall.  The count is the same whether or not anyone bills for it, which is why the Responsible AI Report asks for tokens rather than dollars, and converts them to energy, carbon, and cost using the method in Part VII of *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference*.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ### Questions to Work Through

@@ -140,7 +140,7 @@ A normal, expected developmental stage that healthy teams pass through
 
 ## Charter Construction
 
-**Why this matters:** The WPI SWEET Center Team Contract Exercise, on which this tutorial is modeled, has teams write their contract in terms of *behaviors a third party could verify*, the same enforceability standard the *Governance, Policy, and the Cost of Inference* session will later apply to AI systems.  Here is the anatomy of a charter, shown two ways: as a checklist of required sections, and as a worked before/after example.
+**Why this matters:** The WPI SWEET Center Team Contract Exercise, on which this tutorial is modeled, has teams write their contract in terms of *behaviors a third party could verify*, the same enforceability standard that the governance part of *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* will later apply to AI systems.  Here is the anatomy of a charter, shown two ways: as a checklist of required sections, and as a worked before/after example.
 
 **Required sections (your charter must have all six):**
 

@@ -187,7 +187,7 @@ A **trust boundary** is a line in your system where the level of trust changes. 
 | **Network policy / ports** | The agent reaches only the services you exposed | "Can it call anything on the internet, or only my local Ollama?" |
 {: .tb-full}
 
-Together these set the agent's **blast radius**: the set of things that can possibly go wrong when the agent misbehaves.  A well-designed stack makes the blast radius *small and known in advance*.  You decide what the agent can destroy before you let it act, instead of discovering it afterward.  This is the same idea as the *Design First* activity's irreversible-actions table, implemented in infrastructure instead of in a prompt.
+Together these set the agent's **blast radius**: the set of things that can possibly go wrong when the agent misbehaves.  A well-designed stack makes the blast radius *small and known in advance*.  You decide what the agent can destroy before you let it act, instead of discovering it afterward.  This is the same idea as the read-only, reversible-write, and irreversible-write taxonomy from *Tool Use and Function Calling*, implemented in infrastructure instead of in a prompt.
 
 ### Questions to Work Through
 

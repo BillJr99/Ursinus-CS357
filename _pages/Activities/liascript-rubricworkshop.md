@@ -10,9 +10,9 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 -->
 
-# Evaluating Agents With a Rubric: The Judge Pipeline Workshop
+# Judge Pipeline Workshop: Build and Audit a Judge
 
-Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet, and then with the same judge expressed a second time as a promptfoo configuration with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries; today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list rather than re-reading them here.  The *Design Your Agent System* written assignment is due around this session; see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date.  Keep everything you build in the next seventy-five minutes: the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out with *Critique, Consensus, and the LLM Judge*, reuses this judge in the rubric judge-and-refine loop of its *Part A, Extended*, and Evaluation Workshop II points it at your own final project.
+Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet, and then with the same judge expressed a second time as a promptfoo configuration with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries; today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list rather than re-reading them here.  Keep everything you build in the next seventy-five minutes: the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), due Thursday, December 3, reuses this judge in the rubric judge-and-refine loop of its *Part A, Extended*, and the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session (Tuesday, December 1) points it at your own final project.
 
 ---
 
@@ -85,7 +85,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 ---
 # Part I: The Pipeline in One Pass
 
-The idea in one sentence: a rubric is data, so the same JSON object can be shown to the model, used to compute the weighted total, and used to name the CSV columns.  You will run the judge from last session unchanged, then wrap it in a loop over the `samples/` folder.
+The idea in one sentence: a rubric is data, so the same JSON object can be shown to the model, used to compute the weighted total, and used to name the CSV columns.  You will run the judge once on one essay, then wrap it in a loop over the `samples/` folder you made in Before You Start.
 
 ## 1.  Hand-Score First
 
@@ -193,7 +193,7 @@ Recap: the rubric is one JSON object that drives the prompt, the arithmetic, and
 ---
 # Part II: The Same Pipeline Without Code
 
-promptfoo lets you say the same thing in a configuration file: here are the outputs, here is the judge, here are the assertions, run them all.  Evaluation Workshop II grows this configuration into a regression check for your own project; today you take it far enough to see that the two routes measure the same thing.
+promptfoo lets you say the same thing in a configuration file: here are the outputs, here is the judge, here are the assertions, run them all.  The *Project Sprint* session grows this configuration into a regression check for your own project; today you take it far enough to see that the two routes measure the same thing.
 
 ## 3.  Wire promptfoo to Ollama
 
@@ -301,7 +301,7 @@ Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass 
 ---
 # Part III: Make It Trustworthy
 
-A judge that runs is not yet a judge you can use.  Two checks make it trustworthy enough to hand in: agreement with a human score, and a controlled probe for one known bias.  A judge you rely on needs both at larger scale (a calibration set, Cohen's kappa, which is an agreement score corrected for the agreement you would expect by chance, and a bias study); today you run each once so the shape is familiar, and Evaluation Workshop II runs them again on your own project's outputs.
+A judge that runs is not yet a judge you can use.  Two checks make it trustworthy enough to hand in: agreement with a human score, and a controlled probe for one known bias.  A judge you rely on needs both at larger scale (a calibration set, Cohen's kappa, which is an agreement score corrected for the agreement you would expect by chance, and a bias study); today you run each once so the shape is familiar, and the *Project Sprint* session runs them again on your own project's outputs.
 
 ## 4.  Agreement With Your Hand Scores
 
@@ -323,7 +323,7 @@ for c in RUBRIC["criteria"]:
           "->", detail_after["scores"][c["name"]]["level"])
 ```
 
-Record the delta per criterion.  Any criterion that moves up is verbosity bias, measured; the padded sentences even praise the author, so a move is also the judge reading tone instead of the text.  A delta of zero on three cells does not clear the judge; it is one sample, one padding string, one model, and Evaluation Workshop II runs the probe again with padded and unpadded versions of your own project's artifacts.
+Record the delta per criterion.  Any criterion that moves up is verbosity bias, measured; the padded sentences even praise the author, so a move is also the judge reading tone instead of the text.  A delta of zero on three cells does not clear the judge; it is one sample, one padding string, one model, and the *Project Sprint* session runs the probe again with padded and unpadded versions of your own project's artifacts.
 
 ## Model 3: The Disagreement Table
 
@@ -351,9 +351,9 @@ Only `s02` has a padded value today.  The row with the largest gap is the row yo
 
 5.  Take the worst row and rewrite that criterion's level descriptors so the disagreement could not happen: name the countable feature (a source in parentheses, an opposing view in a full sentence, a rebuttal that gives a reason).  Re-run `judge.py` with the revised `RUBRIC` and report agreement on that criterion before and after.
 
-   *Hint:* Revise the descriptor, not the sample.  The revise-and-remeasure step is the finding, not the first number, and Evaluation Workshop II asks you for one documented repair of exactly this kind.
+   *Hint:* Revise the descriptor, not the sample.  The revise-and-remeasure step is the finding, not the first number, and the *Project Sprint* session asks you for one documented repair of exactly this kind.
 
-Recap: agreement tells you whether the rubric wording means the same thing to you and the model; the padding probe tells you whether the model is reading the text or its length.  Both numbers, with the revision they prompted, are what you report at the stand-up in Evaluation Workshop II.
+Recap: agreement tells you whether the rubric wording means the same thing to you and the model; the padding probe tells you whether the model is reading the text or its length.  Both numbers, with the revision they prompted, are what you report at the stand-up in the *Project Sprint* session.
 
 ---
 
@@ -389,7 +389,7 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 
 ---
 
--> Coming Up Next: *Training Data, Bias, and Explainability* follows the judge's preferences back to where they came from: the corpus the model learned from, and what it means to deploy a scoring system trained on it.  Then *Evaluation Workshop II: Run Your Rubric Against Your Project* brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
+-> Coming Up Next: *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* (Tuesday, November 24) follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system, and then puts governance and cost behind what you build.  Its disaggregation drill points today's judge at essays that differ only in their byline.  After the Thanksgiving break, *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
 
 ---
 

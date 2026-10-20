@@ -86,7 +86,7 @@ The sprint window is short.  A team that arrives at Sprint 1 with a declared dir
 
 - **Read the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page in full**, including all three directions.  That page is the complete reference for the project.  This page describes the proposal deliverable and its rubric.
 - **Know where this sits in the Project Thread.**  The proposal comes before the [Literature Review]({{ site.baseurl }}/Assignments/LitReview), on purpose.  You commit to a plan first, then you read against it.  The review will confirm parts of this document, complicate others, and occasionally kill one, and your team synthesis has to say which.  So propose the plan you believe in, not the plan that will be easiest to defend later.
-- **Submit the second intra-team check-in.**  It is due at the *Orchestration and Multi-Agent Patterns* session, before this proposal (see the [course schedule]({{ site.baseurl }}/) for the date).  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
+- **Submit the second intra-team check-in.**  It is due at the *RAG Worked Example* session (Tuesday, November 3), before this proposal (see the [course schedule]({{ site.baseurl }}/) for the date).  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
 - **Length:** 2-3 pages, excluding the timeline, tables, and appendices.
 
 **Choose your direction slowly.**  All three directions are real, and they suit different teams:
@@ -183,7 +183,7 @@ This is Section 6 of your proposal; include only the block for your direction.  
 
 ### Direction A: Custom Agent Team
 
-The [Design Your Agent System]({{ site.baseurl }}/Assignments/AgentSystemDesign) written assignment is due after this proposal, at the *Evaluating Agents With a Rubric: The Judge Pipeline Workshop* session (see the [course schedule]({{ site.baseurl }}/)), and it develops these same artifacts in full depth.  Sketch them here at proposal fidelity: enough to defend the architecture and show the work is feasible.  The design assignment is where they become a specification someone else could build from.
+Sketch these artifacts here at proposal fidelity: enough to defend the architecture and show the work is feasible.  They are living documents.  Sprint 1 develops them into a specification someone else could build from, the *Agents That Talk, Observability, and Handoff Protocols* session (the day this proposal is due) adds the handoff protocol your agents' traces will follow, and another team reads the result in the cross-team proposal critique at the *Project Sprint* session.
 
 > **Paste into your submission.**
 > - An **agent design table**, one row per agent: role, system-prompt summary, inputs, outputs, temperature with justification, tools, and the isolated evaluation you will run on it.
@@ -203,7 +203,7 @@ The system you audit must be specific: not "AI in hiring" but a named tool as de
 > - **Preliminary hypothesis**: where you expect the highest risks to lie, written before the deep analysis.
 > - Evidence that enough public information exists: at least two independent sources from an initial search.
 
-> **Watch out.** Your framework choice may be provisional.  The *Governance, Policy, and the Cost of Inference* session comes after this proposal on the schedule, so declare the framework you expect to use and defend it as well as you can now.  You may revise that choice once, with a written justification, by the end of Sprint 1.  The other Direction B elements are not provisional.
+> **Watch out.** Your framework choice may be provisional.  The *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* session comes after this proposal on the schedule, so declare the framework you expect to use and defend it as well as you can now.  You may revise that choice once, with a written justification, by the end of Sprint 1.  The other Direction B elements are not provisional.
 
 ### Direction C: Build and Publish an Open-Source Agent
 
@@ -236,8 +236,8 @@ Only four of AAC&U's six problem-solving criteria appear here, on purpose.  *Imp
 
 - **Incomplete proposals are returned ungraded.**  Complete means every shared element and every direction-specific element is present.  It does not mean every one is perfect.
 - **Proposals whose scope is too generic, inaccessible, or infeasible in three sprints are redirected**, with specific guidance on what to cut or change.  A redirect is not a penalty.  It is much cheaper here than in week 14.
-- **Sprint 1 begins from the approved proposal** and runs to the cross-team proposal critique at the *Project Studio: Sprint and Threat Model* session.  Your Sprint 1 milestone depends on your direction; see the sprint table on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page.
-- **The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out the day this is due**, and it reads against the plan you have just committed to.  Its team synthesis must state what the evidence confirms, complicates, or changes about this proposal.  A synthesis that changes nothing is a warning sign, not a clean bill of health.
+- **Sprint 1 begins from the approved proposal** and runs to the cross-team proposal critique at the *Project Sprint* session (Tuesday, December 1).  Your Sprint 1 milestone depends on your direction; see the sprint table on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page.
+- **The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out at the *RAG Worked Example* session, two days before this is due**, and it reads against the plan you are committing to.  Its team synthesis must state what the evidence confirms, complicates, or changes about this proposal.  A synthesis that changes nothing is a warning sign, not a clean bill of health.
 - Some proposal artifacts are **living documents**.  The pre-mortem, the decision log, the timeline, and the Responsible AI measurement plan are maintained through the sprints and resubmitted with the final artifacts folder.  They are not frozen here.
 
 ---

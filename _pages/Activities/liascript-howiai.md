@@ -10,18 +10,19 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 -->
 
-# How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox
+# How I AI: A Vault, a Charter, and a Personal Agent Setup
 
-You have spent seven weeks learning how agents work.  Today is about how a person actually *lives* with them.
+You have spent eight weeks learning how agents work.  Today is about how a person actually *lives* with them.
 
 Here is the problem this session solves.  Every AI tool you use keeps its own private memory of you.  Your coding agent knows the files you opened this morning.  Your chat window knows this conversation and forgets it tomorrow.  None of them know what the others know, and none of them survive a closed tab.  So you re-explain yourself, constantly, to tools that could already know, and every session starts from zero.
 
-The fix is a **place**, not a better tool: a folder of plain Markdown files that you own, that any agent can read, that lives under version control, and that agents write back into under rules you wrote down.  Two moves make it work, and they are the first two parts of today.
+The fix is a **place**, not a better tool: a folder of plain Markdown files that you own, that any agent can read, that lives under version control, and that agents write back into under rules you wrote down.  Three moves make it work, and they are the first three things we do today.
 
 1.  **Your notes become memory agents can read.**  A vault of plain files, organized into zones, with a contract at the root saying what may be touched.
-2.  **Your repository becomes the channel agents talk through, and the record of why.**  In place of a chat window, you get a charter that states what the project is for, plans written before work starts, issues and pull requests as the medium, and a small set of handoff documents that let one agent stop and another pick the work up without either of them sharing a thought.  When a repository is the wrong fit, a shared folder carries the same handoff, and Section 3d shows how.
+2.  **A personal agent setup works the vault for you.**  One agent, in a container, reading the same contract, supervised alongside your coding agents and reachable from wherever you are.  Every piece of it is replaceable, and the vault does not notice.
+3.  **Your repository becomes durable memory, and the record of why.**  In place of a chat window, you get a charter that states what the project is for, plans written before work starts, and a small set of handoff documents that let one agent stop and a later one pick the work up from files alone.
 
-Then the room is yours for the rest of the session: bring what is stuck.
+Then the room is yours for the rest of the session: have what is stuck ready.
 
 ---
 
@@ -37,12 +38,12 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 |------|--------------------------|--------------------------|
 | **Vault** | A folder of plain Markdown files that is your notes. No database, no proprietary format, so any tool or agent can read it | The `vault/` tree in Model 1, edited in Obsidian and stored on GitHub |
 | **Zone** | A directory whose name tells every agent what it may do there: read only, write freely, never touch | `raw/` (never modified), `wiki/` (agents author here), `.obsidian/` (hands off) |
-| **Agent contract** | A file at the root of a repository or vault stating the rules any agent must follow inside it. The `AGENTS.md` you wrote for `cs357-work` in Week 1, grown up | Model 2: a contract with zone boundaries, a synthesis rule, and a stop rule |
+| **Agent contract** | A file at the root of a repository or vault stating the rules any agent must follow inside it. The `AGENTS.md` you wrote for `cs357-work` in Week 1, grown up | Section 2: a contract with zone boundaries, a synthesis rule, and a stop rule |
 | **Durable memory** | Project state that lives in files under version control rather than in a conversation, so it survives the session, the tool, and the model | `.ai/SESSION.md` and `.ai/CURRENT_TASK.md` in Part II |
-| **Handoff** | A deliberate stop in which an agent writes down enough state that a *different* agent can continue safely | The kickoff prompt in Model 4, pasted into a fresh session |
-| **Claim file** | A small file beside a task in a shared folder saying who owns the task and since when. The rename that moved the task into `claimed/` is the lock; the claim file is the record | `task-7.md.claim` in Section 3d, and the `.claim` beside the continuation file in Model 2 |
+| **Handoff** | A deliberate stop in which an agent writes down enough state that a *different* agent can continue safely | The continuation entry and kickoff prompt in Model 2, read by a fresh session |
+| **Agent multiplexer** | A terminal multiplexer that keeps several agents alive on a persistent server after you disconnect, and shows which one is blocked, working, or done | **herdr**, in Section 2b |
 | **Read-only mount** | Giving a program access to a directory it can read but not change, enforced by the operating system rather than by instructions | `-v "$HOME/vault:/reference:ro"` when you run an agent in a container |
-| **Charter** | The constitution of a project: mission, ranked values, definition of done, and the guardrails an agent may never cross. Written once, amended deliberately, reread at the start of every session | `CHARTER.md` in Model 3, and the ranked-values list that resolves conflicts without asking you |
+| **Charter** | The constitution of a project: mission, ranked values, definition of done, and the guardrails an agent may never cross. Written once, amended deliberately, reread at the start of every session | `CHARTER.md` in Section 3b, and the ranked-values list that resolves conflicts without asking you |
 | **Traceability** | Being able to answer, weeks later, *why* something is the way it is: which goal it served, what was decided, who or what did it, and what was rejected | A wiki page, a decision log entry, a session entry, and a commit that all point at each other |
 | **Observability, isolation, reversibility** | The three properties that make delegating safe: can I see what it did, can I bound what it reaches, can I undo it. Named in *Your AI Workbench*, Step 8.5, and applied to your own notes today | The session log, the `:ro` mount, and `git revert` |
 
@@ -52,23 +53,24 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 **You need:** your `cs357-work` repository, opencode (from *Your AI Workbench*), and a GitHub account.  Obsidian is a free download and takes about two minutes; start it now if you want to follow Part I on your own machine: [obsidian.md](https://obsidian.md).
 
-**You do not need** to have finished any particular lab.  If you are behind, Part III of today is for exactly that.
+**You do not need** to have finished any particular lab.  If you are behind, the studio in Part III is for exactly that.
 
-**Also today:** the Stakeholder Brief is due, and I hand out the Final Project and its Proposal.  Bring questions about either to the studio in Part III.
+**Also today:** the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) is due, and I hand out the [Final Project](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject).  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Thursday, November 5.  Questions about either belong in the studio in Part III.
 
-**What you will have at the end:** a vault with zone boundaries and a written agent contract, one repository configured with handoff documents, a folder layout that carries the same handoff without GitHub, and a plan for the thing you are currently stuck on.
+**What you will have at the end:** a vault with zone boundaries and a written agent contract, a sketch of your own personal agent setup, one repository configured with handoff documents, and a plan for the thing you are currently stuck on.
 
 ---
 
 ## Today's 75 Minutes
 
-We have seventy-five minutes together.  Here is how they are meant to go, so you can tell when a section is running long and say so.  Part II is ten minutes longer than it used to be, to make room for the shared folder in Section 3d; those ten minutes come out of the Part III studio.  Anything marked self-paced sits outside this budget and nothing graded assumes it.
+We have seventy-five minutes together.  Here is how they are meant to go, so you can tell when a section is running long and say so.  Sections 3b and 3c are reading that Part II summarizes in class and that you can finish at home.  Anything marked self-paced sits outside this budget and nothing graded assumes it.
 
 | Minutes | What we do |
 |---|---|
-| 0-15 | Part I, the vault as memory you own |
-| 15-55 | Part II, the repository as the channel agents talk through, and the shared folder as the second channel |
-| 55-70 | Part III, open studio: bring your stuck points and your pipeline-in-progress |
+| 0-12 | Part I, the vault as memory you own: Model 1 and the contract |
+| 12-22 | Part I, Section 2b: a personal agent setup, and how I run this myself |
+| 22-45 | Part II, the repository as durable memory: conversation is not project state, the charter, and a handoff (Model 2) |
+| 45-70 | Part III, open studio: your stuck points and your pipeline-in-progress, or Section 4 if nothing is stuck |
 | 70-75 | Report out one thing that moved and one thing that is still stuck |
 
 ---
@@ -88,10 +90,6 @@ The design has four pieces.  Each one can be replaced on its own, and that repla
 | **`AGENTS.md`** at the root | Configuring each tool separately | The contract travels *inside* the repository, so every agent reads it with zero per-tool setup | Consistency. Each tool behaves differently, and you find out when it matters |
 
 Note what is *not* in that table: any particular AI company.  The vault outlives whichever model you are using this year, and that is most of the argument for building it this way.
-
-**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN (virtual private network), which is the part the table above leaves implicit; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is the argument the table is making.
-
----
 
 ## Model 1: The Three-Zone Vault
 
@@ -150,7 +148,7 @@ And three operations, each of which is a prompt:
 2.  **Query.**  You ask a question.  The agent answers from `wiki/`, with citations, and an answer worth keeping becomes a page.
 3.  **Lint.**  Periodically, the agent audits its own wiki: contradictions between pages, claims that have gone stale, orphan pages nothing links to, gaps where a topic is named but never written.
 
-Notice what makes this different from RAG (retrieval-augmented generation), which you built in the *RAG Knowledge Base* session and will build out further in the RAG Knowledge Base lab.  RAG re-discovers the same context on every query and keeps nothing; the wiki pays the synthesis cost once and keeps the result.  Karpathy's argument for why this is newly practical is a labor argument rather than a technical one: wikis have always been good and have always died of maintenance, and maintenance is exactly the work a model will do for free, forever, without getting bored.  Your job shifts from writing to curating: choosing sources, asking good questions, and reviewing what the agent wrote before you trust it.
+Notice what makes this different from RAG (retrieval-augmented generation), which you build on Thursday in *RAG: Building and Measuring a Knowledge Base* and then in the RAG Knowledge Base lab.  RAG re-discovers the same context on every query and keeps nothing; the wiki pays the synthesis cost once and keeps the result.  Karpathy's argument for why this is newly practical is a labor argument rather than a technical one: wikis have always been good and have always died of maintenance, and maintenance is exactly the work a model will do for free, forever, without getting bored.  Your job shifts from writing to curating: choosing sources, asking good questions, and reviewing what the agent wrote before you trust it.
 
 > **Why Obsidian and GitHub, specifically.**  The gist is deliberately tool-agnostic, but the pattern asks for two things, and these two supply them.  Obsidian supplies the reading experience: `[[wikilinks]]` between entity pages, backlinks that show you what else cites a claim, and a graph view in which an orphan page is visible at a glance.  GitHub supplies the safety: every ingest is a commit, so a synthesis pass that went wrong is one `git revert` away, and a scoped token is what lets an agent running in a container do the writing at all.  The setup is stepwise and takes an evening: [The Second Brain](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SecondBrain) builds the vault and the contract, and [Syncing Obsidian to GitHub](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync) walks the wiring, including a section on standing up the LLM wiki itself.
 
@@ -216,15 +214,33 @@ The `:ro` is the whole difference between a rule the agent is asked to follow an
 
    > *Hint: Credentials are the easy one.  What about information that is not yours to store, such as someone else's messages?  What about categories that carry breach-notification duties regardless of who saw them?*
 
-4.  The vault is a retrieval problem; you built the machinery for it in the *RAG Knowledge Base* session, and the RAG Knowledge Base lab builds it out later this term.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
+4.  The vault is a retrieval problem.  Thursday's session, *RAG: Building and Measuring a Knowledge Base*, builds the machinery for it, and the RAG Knowledge Base lab builds it out.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
 
-   > *Hint: You do not need a number to answer this; you need the reason.  A model can only read a fixed amount of text at once.  What happens to the oldest part of what you handed it when the folder outgrows that limit, and how would you notice?  Next session, *Observability, Traceability, and Handoff Protocols*, and its reading, *Memory and the Small Context Window Principle*, give that limit its name and its arithmetic.*
+   > *Hint: You do not need a number to answer this; you need the reason.  A model can only read a fixed amount of text at once.  What happens to the oldest part of what you handed it when the folder outgrows that limit, and how would you notice?  *Agents That Talk, Observability, and Handoff Protocols*, and its reading, *Memory and the Small Context Window Principle*, give that limit its name and its arithmetic.*
 
 ---
 
-# Part II: The Repository as the Channel Agents Talk Through
+## 2b.  A Personal Agent Setup
 
-In this part you build the write side, and the collaboration side.  In *Coding Agents* you saw the basic pattern: an issue is the task, a pull request is one agent's attempt, and a review comment is an instruction a *second* agent can pick up without ever sharing the first one's context.  Today we make that survive a long project.  That takes three things a chat window cannot give you: a **charter** that decides the recurring questions once, **plans** reviewed before work starts, and a **written record** that lets anyone reconstruct why the project is the way it is.  Section 3d then runs the same handoff through a shared folder, for the cases where a repository is the wrong fit.
+A vault is only half of the system.  The other half is the agent that reads it and writes into it on your behalf, and the arrangement that keeps that agent running when you are not watching.  A personal agent setup has three layers, and each answers one question.
+
+| Layer | The question it answers | What I use | What the course gives you |
+|---|---|---|---|
+| **The agent** | Who does the reading and writing, and inside what boundary? | **hermes**, in a container, with the vault mounted and `AGENTS.md` as its contract | [The Second Brain](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SecondBrain), Part IV, wires hermes by prompting; [The Local Agent Stack](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentStack) has the container pattern |
+| **Supervision** | Which of my agents is working, which is done, and which is blocked waiting on me? | **herdr**, an agent-aware terminal multiplexer whose headless server keeps every agent alive after I disconnect | [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs), Sections 9 to 11 |
+| **Reach** | How do I get to that machine from somewhere else without exposing it to the internet? | A VPN (virtual private network); a Tailscale tailnet is one straightforward way to provide one | [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs), Section 9a |
+
+**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is the argument the table in Section 1 is making.
+
+The three properties from *Your AI Workbench*, Step 8.5, are what make that setup safe to leave running.  The container bounds what hermes can reach.  The vault's git history, and herdr's view of each agent's state, show what it did.  And every write it makes is a commit, so a bad one comes back out with `git revert`.  Section 3c returns to those three properties for your repositories.
+
+Sketch your own version of the table above before Part II: which agent you would put on your vault, how you would know when it is stuck, and how you would reach it from your phone.  Leave any cell blank that you have not decided yet; a blank cell is a decision you have not made, not a failure.
+
+---
+
+# Part II: The Repository as Durable Memory
+
+In this part you build the write side, and the collaboration side.  In *Coding Agents* you saw the basic pattern: an issue is the task, a pull request is one agent's attempt, and a review comment is an instruction a *second* agent can pick up without ever sharing the first one's context.  Today we make that survive a long project.  That takes three things a chat window cannot give you: a **charter** that decides the recurring questions once, **plans** reviewed before work starts, and a **written record** that lets anyone reconstruct why the project is the way it is.  *Agents That Talk, Observability, and Handoff Protocols* then puts a second agent on the other end of the same record.
 
 ## 3.  Conversation Is Not Project State
 
@@ -349,45 +365,6 @@ Notice which one is most often missing in practice.  Isolation is the one people
 
 ---
 
-## 3d.  The Second Channel: A Shared Folder
-
-Everything in Model 2 below travels through a repository.  The same handoff also works through a folder that a sync service keeps identical on two machines: a Dropbox folder, or the vault from Part I with its sync turned on.  It needs no GitHub account, no pull request, and no network beyond what the sync client already uses.  The folder version is worth learning even if you never use it, because it shows you which rules the repository was enforcing for you.
-
-The layout is three directories and a naming convention:
-
-```text
-handoff/
-|-- inbox/                    # unclaimed tasks. Whoever wrote one may not work it.
-|-- claimed/
-|   |-- task-7.md             # the task, moved here by the agent that owns it
-|   |-- task-7.md.claim       # who owns it and since when: claimed_by, claimed_at
-|   `-- task-7.md.notes       # the owner's plan and questions, appended, never rewritten
-`-- done/
-    |-- task-7.md
-    `-- task-7.result.md      # what happened, what did not, and the Next Safe Action
-```
-
-Four rules turn the layout into a protocol.
-
-1.  **The claim is a rename.**  An agent takes a task by moving `inbox/task-7.md` to `claimed/task-7.md`, then writing `task-7.md.claim` beside it with its name and a timestamp.  On one filesystem a rename is atomic: it either fully happens or does not happen at all.  If two agents race for the same file, exactly one rename succeeds; the loser sees "file not found" and moves on.  The rename is the lock.  The `.claim` file is the record of who holds it, written after the lock is already won.
-2.  **Only the claim holder writes.**  A second agent may read `task-7.md.notes` and may append a review to it.  It may not rewrite anything in `claimed/`.  This is the review comment from a pull request, without the pull request.
-3.  **A claim goes stale.**  A `.claim` older than a timeout you chose belongs to an agent that probably died.  The protocol says how old is too old and who may take the task over.
-4.  **Done has a shape.**  The holder moves `task-7.md` into `done/` and writes `task-7.result.md` beside it, in the same form as a `SESSION.md` entry: what changed, what did not, one Next Safe Action.  Anything in `done/` without a `.result.md` is not finished.
-
-Now the part a repository hides from you.  A sync service does not give you an atomic rename across machines.  Each machine's rename is atomic on its own disk, but the two machines do not share an operating system, so nothing orders one rename before the other.  When both changes reach the server, one wins, and the other machine receives a file named something like `task-7 (conflicted copy).md` next to the winner.  A **conflicted copy** is the service telling you that two writers changed the same path before either saw the other's change, and that it refuses to choose between them.  So the claim protocol is enforced on one filesystem and only advisory across a sync, and your contract has to say what an agent does when it finds a conflicted copy.  Stop and ask is the right default.
-
-When is the folder the right channel, and when is the repository?
-
-| Reach for the folder when | Reach for the repository when |
-|---|---|
-| The second agent has no GitHub account or token, or you do not want to issue one | You want a review gate: nothing lands until a person approves the pull request |
-| The artifacts are binary (audio, images, PDFs, model weights) and a change would show you nothing | You want an audit log: every change has an author, a time, and a change you can read |
-| A teammate who is not a developer needs to hand work in or read results, and a folder is the tool they already have | You want to reason about changes rather than files: what moved, why, and what it was rejected in favor of |
-
-Recap: the folder and the repository carry the same four-part handoff (claim, notes, stale rule, done), and the folder shows you that only the rename is enforced by the medium; everything else holds because both agents chose to follow it.  If your vault from Part I syncs, `raw/` is already a folder channel: a person drops a file in, and an agent picks it up.
-
----
-
 ## Model 2: A Handoff, Concretely
 
 An agent is at the end of its useful context.  Before it stops, it writes:
@@ -414,20 +391,6 @@ A new agent is then started cold with a kickoff prompt that says, in effect: *yo
 
 Nothing was remembered.  Everything was **read**.
 
-### The same handoff through the folder
-
-Now the repository is gone and the two agents share a synced folder.  The first agent's continuation entry is the same text, word for word.  It lands in `claimed/` as a task file with a `.claim` beside it, and the second agent's first move is to check whether that claim is still live:
-
-```text
-$ ls ~/Dropbox/project/handoff/claimed/
-retrieval-eval.md
-retrieval-eval.md.claim
-$ cat ~/Dropbox/project/handoff/claimed/retrieval-eval.md.claim
-{"claimed_by": "agent-A", "claimed_at": "2026-10-15T14:32:07"}
-```
-
-The second agent reads the claim, sees it is older than the timeout, and takes the task over by rewriting the `.claim` with its own name and a `taken_from` line.  It then reads `retrieval-eval.md`, which ends in the same Next Safe Action as above, and starts there.  The kickoff prompt is the same as the repository version with one line changed: *read `CHARTER.md`, then the task in `handoff/claimed/`, then its `.claim`, and do not begin work until you hold the claim.*
-
 ### Critical Thinking Questions
 
 5.  The entry above explicitly records what the agent did *not* do, and why items 4 and 9 depend on it.  Why is the not-done list often more valuable to the next agent than the done list?
@@ -442,13 +405,23 @@ The second agent reads the claim, sees it is older than the timeout, and takes t
 
 8.  Your Project Thread team has four people and probably several agents.  Name one specific failure this whole apparatus prevents that a group chat would not, and one failure it does *not* prevent.
 
-9.  Two agents on two machines notice `inbox/task-7.md` at the same moment.  Suppose each one checks that the file is still in `inbox/`, and then copies it into `claimed/`.  Walk through what breaks, first when both agents run on one machine, then when they share the folder through Dropbox.  Which of the two failures does replacing the check-and-copy with a single rename fix, and what does the folder still hand you in the other case?  *Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling*, runs this claim protocol in code, with two agents racing for one task and one of them dying mid-claim.  Write your prediction now so you can check it then.
-
-   > *Hint: "Check, then act" is two steps, and anything can happen between them.  A rename is one step.  Across a sync, even one step on each machine is still two steps on the server.*
-
 > **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude, and that does not remove the need, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to continuous integration (CI), unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
 
 ---
+
+# Part III: Studio
+
+The rest of the session is yours, and it is deliberately unstructured.  This is the catch-up point before the Final Project sprints begin, and the schedule assumes you will use it.
+
+Work on one of these:
+
+- **A lab that is not running.**  Have the error, the command that produced it, and what you already tried.  Teams that have solved it are the first line of help; I am the second.
+- **A design decision your team is stuck on.**  Proposal scope, project direction, which lab direction to take.  Fifteen minutes of arguing it out loud with someone outside your team is usually enough.
+- **Something you want to build that is not on any assignment.**  This is the best possible use of a studio day.
+- **The vault you started in Part I**, or the personal agent setup you sketched in Section 2b, if you want to keep going on it.
+- **Section 4 below**, if nothing is stuck.  It takes about thirty minutes, so start it here and finish it at home.
+
+For the visual-building route through a local agent stack (Langflow, wiring containers together into a system), the [Local Agent Stack](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentStack) tutorial remains the reference.
 
 ## 4.  Do This Now (about thirty minutes)
 
@@ -463,21 +436,6 @@ Pick **one** of your own repositories: `cs357-work`, or your Project Thread repo
 7.  **Read what it wrote.  Correct it.**  Then commit.
 
 > **You've succeeded when** your repository has a charter with ranked values, a session entry an agent wrote and you edited, and you can point to one sentence in that entry you had to fix.  That sentence is the reason step 7 exists.  Bonus, and it is the one that matters: if a plan got rejected in step 5, write down which ranked value did the rejecting.
-
----
-
-# Part III: Studio
-
-The rest of the session is yours, and it is deliberately unstructured.  This is the mid-semester catch-up point, and the schedule assumes you will use it.  It is fifteen minutes today instead of twenty-five, because Section 3d took the difference.
-
-Bring one of these:
-
-- **A lab that is not running.**  Bring the error, the command that produced it, and what you already tried.  Teams that have solved it are the first line of help; I am the second.
-- **A design decision your team is stuck on.**  Proposal scope, project direction, which lab direction to take.  Fifteen minutes of arguing it out loud with someone outside your team is usually enough.
-- **Something you want to build that is not on any assignment.**  This is the best possible use of a studio day.
-- **The vault you started in Part I**, if you want to keep going on it.
-
-For the visual-building route through a local agent stack (Langflow, wiring containers together into a system), the [Local Agent Stack](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentStack) tutorial remains the reference.
 
 ---
 
@@ -531,7 +489,7 @@ For the visual-building route through a local agent stack (Langflow, wiring cont
 
 ---
 
--> Coming Up Next: In *Observability, Traceability, and Handoff Protocols* we take the idea underneath today's vault and make it precise, and write the start, stop, restart, and handoff protocol as a skill.  You have just built external memory by hand; next session asks why an agent needs it, what the context window actually costs, and how to keep each agent's working set small enough to be reliable.
+-> Coming Up Next: In *RAG: Building and Measuring a Knowledge Base* (Thursday) we build the read side of today's vault at scale: a pipeline that chunks your documents, embeds them, retrieves the passages a question needs, and grounds the answer in them, and then a way to measure whether it found the right passage.  Question 4 asked when handing an agent the whole `wiki/` folder stops working; Thursday is the answer, and the RAG Knowledge Base lab builds it out.
 
 ## Further Reading
 

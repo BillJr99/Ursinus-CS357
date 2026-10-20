@@ -62,14 +62,17 @@ info:
     - rtitle: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
       rlink: "Activities/liascript-critiqueconsensusjudge.md"
       liapage: true
-    - rtitle: "Evaluating Agents With a Rubric: The Judge Pipeline Workshop (the judge you extend in Part A, Extended)"
+    - rtitle: "Judge Pipeline Workshop: Build and Audit a Judge (the judge you extend in Part A, Extended)"
       rlink: "Activities/liascript-rubricworkshop.md"
       liapage: true
-    - rtitle: "Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling (the claim protocol behind the optional handoff route in Part B.3)"
-      rlink: "Activities/liascript-agentcommunication.md"
+    - rtitle: "Agents That Talk, Observability, and Handoff Protocols (the claim protocol behind the optional handoff route in Part B.3)"
+      rlink: "Activities/liascript-observability.md"
       liapage: true
     - rtitle: "Orchestration Activity"
       rlink: "Activities/liascript-orchestration.md"
+      liapage: true
+    - rtitle: "Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor (round budgets, fail-closed parsing, and call counts on one task)"
+      rlink: "Activities/liascript-orchestrationworkshop.md"
       liapage: true
     - rtitle: "The Local Agent Stack"
       rlink: "../Tutorials/AgentStack"
@@ -93,7 +96,7 @@ You leave with a loop you can read, a working debate, a working sample-cluster-s
 
 **How this page is organized.**  Every Part is broken into numbered steps (Step A.1, Step A.2, and so on).  Each step says what it is for, gives you one thing to do, and tells you what you should see when it worked.  Finish a step, check the result, and only then move to the next one.  If a step fails, fix it there; the later steps build on it.
 
-**Pair policy.**  You may do this lab in pairs: driver/navigator roles, a swap at least every 30 minutes, and a swap log.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.  This lab is handed out alongside the deck *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*.  See the course schedule for the assigned and due dates.
+**Pair policy.**  You may do this lab in pairs: driver/navigator roles, a swap at least every 30 minutes, and a swap log.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone; if you do, skip the swap log and say so in your readme.  This lab is handed out at the *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* session, and the deck it builds on most, *Critique, Consensus, and the LLM Judge: One Loop, Three Uses*, follows at the next session, with the *Judge Pipeline Workshop* after it.  See the course schedule for the assigned and due dates.
 
 ---
 
@@ -118,7 +121,7 @@ The rubric is the same on both paths.  The judgment this lab grades (when the cr
 
 ## Before You Start
 
-> **Checkpoint.** This lab has two halves and one grade.  Critique-and-refine and debate-and-consensus used to be two separate 100-point labs due eight days apart.  They are one family of idea (use more than one model call to get a better answer), so they are now one lab, one page, and one rubric.
+> **Checkpoint.** This lab has two halves and one grade.  Critique-and-refine and debate-and-consensus are one family of idea (use more than one model call to get a better answer), so they are one lab, one page, and one rubric.
 > - **Part A: Critique and Refine.**  Build the generator/critic/refine loop, calibrate the critic, break and patch the rubric, and measure the loop against single-shot generation.
 > - **Part A, Extended: Rubric Judge-and-Refine Loop.**  Replace the critic with a per-criterion judge, run at most three judge-and-refine rounds, log the scores, and spot-check the final round yourselves.
 > - **Part B: Debate and Consensus.**  Build the debate, the consensus pipeline, the shootout, and the threshold sweep.
@@ -132,9 +135,9 @@ The rubric is the same on both paths.  The judgment this lab grades (when the cr
 Complete these activities before you write any code:
 
 - [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md): the generator/critic/refine loop and stopping rules; independent rounds, peer-informed revision, and majority vote (Sections 5 and 6); then sampling, embedding clustering, and synthesis (Section 7)
-- [Orchestration Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestration.md): chaining agents with structured outputs
-- [Evaluating Agents With a Rubric: The Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md): the leveled JSON rubric, quoted evidence, and the `_quote_found` check that Part A, Extended reuses; keep your workshop `judge.py` and disagreement table nearby
-- [Agents That Talk]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-agentcommunication.md): the claim protocol, needed only if you take the optional handoff route in Part B.3
+- [Orchestration Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestration.md): chaining agents with structured outputs, and the [Orchestration Worked Example]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestrationworkshop.md): a round budget kept in configuration, fail-closed parsing, a budget-exhausted return that says so, and model calls counted per pattern
+- [Judge Pipeline Workshop: Build and Audit a Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md): the leveled JSON rubric, quoted evidence, and the `_quote_found` check that Part A, Extended reuses; keep your workshop `judge.py` and disagreement table nearby
+- [Agents That Talk, Observability, and Handoff Protocols]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-observability.md), Part II: the claim protocol, needed only if you take the optional handoff route in Part B.3
 
 ### Step 0.2: Install the packages and confirm Ollama is running
 
@@ -858,7 +861,7 @@ Report the cost next to the quality every time, because a loop that always wins 
 
 ## Part A, Extended: Rubric Judge-and-Refine Loop (5 points)
 
-Your Part A critic says one of two words, "accept" or "revise", and a list of issues.  A **judge** says more: for every criterion of an explicit rubric it picks a level, quotes the sentence of the draft that justifies the level, and writes one concrete revision instruction.  The producing agent (your Part A generator) revises from those instructions, the judge scores again, and the pair iterates until every criterion meets its bar or the round cap of three is reached.  This is the judge you built in the *Judge Pipeline Workshop* (*Evaluating Agents With a Rubric*, Week 10), with two additions: a one-line "meets" bar per criterion and a revision instruction per score.
+Your Part A critic says one of two words, "accept" or "revise", and a list of issues.  A **judge** says more: for every criterion of an explicit rubric it picks a level, quotes the sentence of the draft that justifies the level, and writes one concrete revision instruction.  The producing agent (your Part A generator) revises from those instructions, the judge scores again, and the pair iterates until every criterion meets its bar or the round cap of three is reached.  This is the judge you built in the *Judge Pipeline Workshop: Build and Audit a Judge*, with two additions: a one-line "meets" bar per criterion and a revision instruction per score.
 
 The point of this part is not a better docstring.  It is the per-round log.  A loop whose scores climb from round 1 to round 3 can mean three different things, and only the log plus your own reading can tell them apart:
 
@@ -1883,7 +1886,7 @@ Debate: accuracy=80.0%, avg_calls=6.0
 
 This route is optional.  Skip it unless you want to try it; the in-process debate from Part B.1 earns the same credit.  A GitHub issue thread is the list of comments under one issue in a GitHub repository, and everyone with access sees each comment with its time.
 
-You may run the debate condition of the shootout as two agents that exchange positions through a shared channel, instead of three agents inside one Python process.  The channel is a GitHub issue thread or a Dropbox-style shared folder, and the agents follow the claim protocol from the session *Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling*.
+You may run the debate condition of the shootout as two agents that exchange positions through a shared channel, instead of three agents inside one Python process.  The channel is a GitHub issue thread or a Dropbox-style shared folder, and the agents follow the claim protocol from the *Agents That Talk, Observability, and Handoff Protocols* session.
 
 This route earns the same credit on the same rubric rows, Debate Implementation and Comparative Evaluation.  Two substitutions make it equivalent.  The channel transcript takes the place of the in-process 3-agent, 2-round transcript.  And the written protocol, meaning how to claim, what a second agent does on seeing a claim, what makes a claim stale, and what "done" looks like, takes the place of the round loop in `run_debate`.
 
@@ -2101,6 +2104,6 @@ These are optional and carry no extra credit.
 
 ---
 
-## The Coding-Agent Direction Moved to OpenCode Studio
+## The Coding-Agent Direction Lives in OpenCode Studio
 
-Earlier versions of the critique-and-refine half of this lab carried a "Coding Agents in Practice" direction, in which a coding agent stood in as the generator and you critiqued its change.  That material is now its own lab, [OpenCode Studio]({{ site.baseurl }}/Assignments/OpenCodeStudio), handed out in Week 2, so that it can be taught before you need it rather than after.  The discipline is the same one you build in Part A: read the output against a written specification, sort the findings into categories, and drive one precise refine turn from those categories.
+A coding agent standing in as the generator, with you critiquing its change, is its own lab, [OpenCode Studio]({{ site.baseurl }}/Assignments/OpenCodeStudio), handed out in Week 2, so that it is taught before you need it rather than after.  The discipline is the same one you build in Part A: read the output against a written specification, sort the findings into categories, and drive one precise refine turn from those categories.

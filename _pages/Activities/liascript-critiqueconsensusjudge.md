@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Critique, Consensus, and the LLM Judge: One Loop, Three Uses
 
-Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  You leave with two runnable loops and a catalog of the ways each use fails, both of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Governance, Policy, and the Cost of Inference* session (see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date), builds on.  Two labs change hands today: the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due, and the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out.
+Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  You leave with two runnable loops and a catalog of the ways each use fails, both of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration Worked Example* session and due Thursday, December 3, builds on.  In the worked example, the check that refused the supervisor's stop was a program; today asks what to do when the check has to be a model.
 
 ## Directions and Group Roles
 
@@ -41,7 +41,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 | 10-30 | Part II, the critic: the eighty-line loop, Model 2, and three failure modes |
 | 30-50 | Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5) |
 | 50-65 | Part IV, the judge: Model 6 and auditing the judge |
-| 65-70 | Part V, the lab handout and the reflection prompt.  The Human-in-the-Loop Extension is self-paced |
+| 65-70 | Part V, where today's loops sit in the Multi-Agent Patterns lab, and the reflection prompt.  The Human-in-the-Loop Extension is self-paced |
 | 70-75 | Report out: one place each use of the loop earned its cost, and one place it did not |
 
 ---
@@ -466,7 +466,7 @@ Independence is the load-bearing assumption here too.  Sampling helps only when 
 
 Debate and consensus both aggregate the model's distribution, so both amplify whatever that distribution over-represents: popular framings, mainstream defaults, training-data majorities.  For factual questions with a checkable answer, that is usually a feature, and it is why the vote in Section 6 works at all.
 
-For questions of taste, values, or contested policy, it is a hazard.  "The average of six samples" can quietly erase a legitimate minority position, and the erasure looks identical to a strong result: a big cluster, a confident synthesis, no visible dissent.  We take this up in *Training Data, Bias, and Explainability*, and it is the reason the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) requires your synthesizer to disclose close disagreement in one line rather than resolve it silently.
+For questions of taste, values, or contested policy, it is a hazard.  "The average of six samples" can quietly erase a legitimate minority position, and the erasure looks identical to a strong result: a big cluster, a confident synthesis, no visible dissent.  We take this up in *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference*, and it is the reason the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) requires your synthesizer to disclose close disagreement in one line rather than resolve it silently.
 
 Sit with the distinction before you move on, because your lab design depends on which side of it your question falls:
 
@@ -478,7 +478,7 @@ Sit with the distinction before you move on, because your lab design depends on 
 
 # Part IV: Use Three, an Evaluator That Scores Against a Rubric
 
-The third use turns the loop outward: the artifact already exists (an essay, a plan, a pull request) and the model's only job is to score it against a rubric and emit JSON.  You will take apart a bad rubric, then ask who audits the judge.  The judging pipeline, batch scoring, and bias measurements are the *Judge Pipeline Workshop*; today is the design work that comes first.
+The third use turns the loop outward: the artifact already exists (an essay, a plan, a pull request) and the model's only job is to score it against a rubric and emit JSON.  You will take apart a bad rubric, then ask who audits the judge.  The judging pipeline, batch scoring, and bias measurements are Thursday's *Judge Pipeline Workshop: Build and Audit a Judge*; today is the design work that comes first.
 
 ## 9.  Judgment at Scale
 
@@ -543,7 +543,7 @@ There is a second-order effect.  A long, fluent, confident trace is more persuas
 
 # Part V: Synthesis and Practice
 
-The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is handed out at the *Governance, Policy, and the Cost of Inference* session; see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date.  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-20-points); do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below are the measurements the lab expects you to be able to make.
+The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration Worked Example* session, is due Thursday, December 3.  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-20-points); do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below are the measurements the lab expects you to be able to make.
 
 ## 11.  Exercises
 
@@ -579,7 +579,7 @@ The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026
 
 ---
 
--> Coming Up Next: Every agent today talked through a shared transcript in one Python process, which works for three agents and two rounds and stops working the moment agents live on different machines.  Next session, *Agents That Talk: Multi-Agent Communication Through GitHub and Dropbox, and Threat Modeling* moves the conversation into repositories and shared folders, and asks what an attacker can do with a channel that agents trust.  The loop you built today is the core of the Multi-Agent Patterns lab; the judge you designed returns as code in the *Judge Pipeline Workshop*.
+-> Coming Up Next: *Judge Pipeline Workshop: Build and Audit a Judge* (Thursday) turns today's Part IV into code.  You hand-score three sample submissions first, then build a judge that reads the rubric as data, writes a `grades.csv`, and checks its own quoted evidence; you run the same judge a second time as a promptfoo configuration with no Python; and you measure the judge against your hand scores and against one bias, padding.  The loop you built today is the core of the Multi-Agent Patterns lab, and the judge you build Thursday is the one its *Part A, Extended* reuses.  Have Ollama running with `llama3.2`, Node.js installed for promptfoo, and your answers to the Model 6 rubric autopsy ready.
 
 ---
 
@@ -596,7 +596,7 @@ The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026
 
 # Extension: Human-in-the-Loop (self-paced)
 
-Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius (how much damage a mistake could do).  Your final project will make you answer that in writing, so read this before the proposal.
+Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius (how much damage a mistake could do).  Your final project will make you answer that in writing, in the human oversight section of its governance one-pager, so read this before your team drafts that section.
 
 ## Key Concepts
 

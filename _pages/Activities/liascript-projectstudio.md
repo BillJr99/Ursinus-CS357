@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Project Studio and Gallery Walk
 
-This deck covers two sessions: *Project Studio and Gallery Walk*, and *Project Studio: Final Integration and Demo Rehearsal* (see the Session Two section below).  Today the classroom becomes a studio.  The *Project Studio: Sprint and Threat Model* session gave you a sprint plan and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.
+This deck covers two sessions: *Project Studio and Gallery Walk*, and *Project Studio: Final Integration and Demo Rehearsal* (see the Session Two section below).  Today the classroom becomes a studio.  The *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session gave you an audited judge and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is due today.
 
 ---
 
@@ -50,7 +50,7 @@ We have seventy-five minutes together.  Here is how they are meant to go, so you
 
 ## Session Two: Final Integration and Demo Rehearsal
 
-The second session is a rehearsal, not a work session.  The rehearsal rule: if your system does not run end to end at the start of class, that is the thing to fix, before anything else on the backlog.  Skip the gallery walk (section 2) in this second session and run these numbered sections in order: the stand-up in section 1, with the current number from your harness; triage in section 3, applied to whatever your integration work surfaced since the gallery walk; the release readiness checklist in section 4, which the Evaluator signs off with evidence; and Exercise 3, the 90-second explainability story, repeated until every teammate can deliver it solo.  Your last Intra-Team Check-In (Performing into Adjourning) is also due at this session; see the [syllabus](https://www.billmongan.com/Ursinus-CS357-Fall2026/) for the date.
+The second session is a rehearsal, not a work session.  The rehearsal rule: if your system does not run end to end at the start of class, that is the thing to fix, before anything else on the backlog.  Skip the gallery walk (section 2) in this second session and run these numbered sections in order: the stand-up in section 1, with the current number from your harness; triage in section 3, applied to whatever your integration work surfaced since the gallery walk; the release readiness checklist in section 4, which the Evaluator signs off with evidence; and Exercise 3, the 90-second explainability story, repeated until every teammate can deliver it solo.  Your last Intra-Team Check-In (Performing into Adjourning) is also due at this session, on Tuesday, December 8.
 
 ---
 
@@ -217,7 +217,7 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 
 ---
 
--> Coming Up Next: Demo Day.  Work through the [Demo Day Guide](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject#demo-day-external-guests-and-technical-interview-practice) with your team.  It turns this week's triaged backlog and release-readiness checklist into your final presentation plan.
+-> Coming Up Next: Demo Day, in our final exam period: Wednesday, December 16, 8:00-11:00 AM, in Pfahler 107.  Work through the [Demo Day Guide](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject#demo-day-external-guests-and-technical-interview-practice) with your team.  It turns this week's triaged backlog and release-readiness checklist into your final presentation plan.
 
 ---
 

@@ -40,8 +40,11 @@ info:
       progressing: "The model, package versions, commands, and corpus are recorded well enough to rerun.  On the no-code path: the exported flow JSON, the Langflow version, and the node settings."
       proficient: "Fully reproducible, with the three writeup questions answered and an AI-use disclosure."
   readings:
-    - rtitle: "RAG Activity"
+    - rtitle: "RAG: Building and Measuring a Knowledge Base"
       rlink: "Activities/liascript-rag.md"
+      liapage: true
+    - rtitle: "RAG Worked Example: Build the Pipeline Together (this lab's steps, built end to end on both paths and measured)"
+      rlink: "Activities/liascript-ragworkshop.md"
       liapage: true
     - rtitle: "Pydantic AI From the Loop Up: the agent, tools, and Ollama setup this lab uses"
       rlink: "../Tutorials/PydanticAI"
@@ -49,9 +52,6 @@ info:
       rlink: "../Tutorials/VisualAgents"
     - rtitle: "Chroma Documentation"
       rlink: "https://docs.trychroma.com"
-    - rtitle: "Optional: RAG and Fine-Tuning: Retrieval Quality and LoRA, for measuring and improving retrieval beyond this lab"
-      rlink: "Activities/liascript-ragquality.md"
-      liapage: true
 
 tags:
   - lab
@@ -81,7 +81,7 @@ Steps 1 and 4, the writeup, and the deliverables apply to both paths.  On the no
 
 ## Before You Start
 
-This lab builds on the *RAG Knowledge Base* session.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need Ollama running with a model that calls tools reliably, and two Python packages.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
+This lab builds on the *RAG: Building and Measuring a Knowledge Base* session and the *RAG Worked Example* session, which builds these steps end to end on both paths.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need Ollama running with a model that calls tools reliably, and two Python packages.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -238,7 +238,7 @@ Run it with a question your notes answer, for example `python rag_agent.py "When
 
 ## No-code Path
 
-Take this section in place of Steps 2 and 3 if you chose the no-code path.  You build the same two phases on a Langflow canvas: an **index path** that chunks, embeds, and stores your `corpus` once, and a **query path** that runs for every question.  Part IIb of the RAG session built this flow on five sentences, and the [Visual Agents]({{ site.baseurl }}/Tutorials/VisualAgents) tutorial walks through the same wiring.  Node names shift a little between Langflow versions; the dataflow is what matters.
+Take this section in place of Steps 2 and 3 if you chose the no-code path.  You build the same two phases on a Langflow canvas: an **index path** that chunks, embeds, and stores your `corpus` once, and a **query path** that runs for every question.  The *RAG Worked Example* session built this flow on a four-file corpus, and the [Visual Agents]({{ site.baseurl }}/Tutorials/VisualAgents) tutorial walks through the same wiring.  Node names shift a little between Langflow versions; the dataflow is what matters.
 
 ### Step N1: Install and Launch Langflow
 

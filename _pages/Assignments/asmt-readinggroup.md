@@ -87,7 +87,6 @@ Leading a session always earns the **10-point base grade** (scaled by the rubric
 | Week 6 | 7 |
 | Week 7 | 6 |
 | Week 8 | 5 |
-| Week 9 | 4 |
 | Week 10 | 3 |
 | Week 11 | 2 |
 | Week 12 | 1 |

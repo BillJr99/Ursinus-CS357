@@ -12,7 +12,9 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Orchestration and Multi-Agent Patterns
 
-Unit 3 begins today.  You have the design artifacts from *Design First: Plan Your Agent System Before You Build It* in hand, and instead of making one agent smarter, we make several simple agents cooperate.  The reason this works comes straight from the small context window principle in *Memory and the Small Context Window Principle*: a model given one narrow job and a tiny prompt outperforms the same model juggling five jobs in a bloated prompt.  We move from **why decompose → the pipeline → the router → the planner → composing them in code → keeping the composed loop reliable**.
+Unit 3 begins today.  *Agents That Talk, Observability, and Handoff Protocols* passed work between two agents through a channel and traced what each one did.  Today, instead of making one agent smarter, we make several simple agents cooperate.  The reason this works comes straight from the small context window principle in *Memory and the Small Context Window Principle*: a model given one narrow job and a tiny prompt outperforms the same model juggling five jobs in a bloated prompt.  We move from **why decompose → the pipeline → the router → the planner → composing them in code → keeping the composed loop reliable**.
+
+Today is the concepts session.  Thursday's *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* builds the three patterns from today on one task, end to end, with the loop budgets and stop conditions the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) asks for, and the lab is handed out there.  Keep the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) and your Literature Review annotated bibliographies moving; both are due Thursday.
 
 ---
 
@@ -678,7 +680,7 @@ Respond to all three levels in your notebook:
 
 ---
 
--> **Coming Up Next:** *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* is next: one generate-evaluate-decide loop used three ways, a critic that feeds issues back, several generators compared by meaning, and a judge that scores against a rubric.
+-> **Coming Up Next:** *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* (Thursday) takes one task through all three patterns from today, end to end, printing every intermediate output: a fixed pipeline, a router in front of it, and a supervisor loop with a call budget, a closed roster, and stop conditions you can see firing.  The Multi-Agent Patterns lab is handed out at the end, and its round budget, fail-closed parsing, and budget-exhausted return are the same three controls.  Have today's Code Cells and your answers to Questions 19 and 21 ready.
 
 ---
 
@@ -693,7 +695,7 @@ Respond to all three levels in your notebook:
 
 > **The full advanced-loops treatment:** Model 5 above compresses material from *Part IIb: Loops That Recover* earlier on this page; revisit that part for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
 
-> **The supervisor loop moved in-class.**  The dynamic-orchestration material now lives in **Part IIc** above rather than here: Two Families, the Code Cell, and the who-decides-control-flow recap.  What remains below covers the two fan-out and consensus shapes class had no time for, plus a reference sheet for all six patterns.
+> **The supervisor loop is in class.**  The dynamic-orchestration material is in **Part IIc** above: Two Families, the Code Cell, and the who-decides-control-flow recap.  What follows covers the fan-out and consensus shapes, plus a reference sheet for all six patterns.
 
 Everything below is at-home material.  Nothing in this section is needed for today's in-class session, but all of it deepens what you built in class.  Parts I-III gave you the vocabulary (pipeline, router, planner) and two working orchestrators in code.  Part IIc gave you the supervisor.  This section rounds out the fixed family with two shapes you have not yet built by hand.
 
