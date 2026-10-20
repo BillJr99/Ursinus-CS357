@@ -10,13 +10,13 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 -->
 
-# Critique, Consensus, and the LLM Judge: One Loop, Three Uses, and the Judge Pipeline Workshop
+# Critique, Consensus, and the LLM Judge: One Loop, Three Uses
 
-Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  The last part of today is the Judge Pipeline Workshop: you build that judge as code, run it over three sample submissions, write a `grades.csv` you can open in a spreadsheet, and check the judge against your own hand scores and one measured bias.  You leave with runnable loops for all three uses and a catalog of the ways each use fails, all of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration and Multi-Agent Patterns* session and due Thursday, December 3, builds on.  Keep everything you build in the workshop: the lab reuses the judge in the rubric judge-and-refine loop of its *Part A, Extended*, and the *Project Sprint* session points it at your own final project.
+Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  You leave with two runnable loops and a catalog of the ways each use fails, both of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration Worked Example* session and due Thursday, December 3, builds on.  In the worked example, the check that refused the supervisor's stop was a program; today asks what to do when the check has to be a model.
 
 ## Directions and Group Roles
 
-Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Please think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board, and the Presenter reports out wherever you disagreed or found another approach.  After class, please respond to the reflective prompt on your own in your notebook.  In Part IV one laptop per team runs the judge; rotate who types at each section.
+Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Please think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board, and the Presenter reports out wherever you disagreed or found another approach.  After class, please respond to the reflective prompt on your own in your notebook.
 
 ## Key Concepts
 
@@ -30,57 +30,19 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Stochastic consensus** | Sample the same question many times at high temperature, group the drafts by meaning with embeddings, and let a low-temperature synthesizer write the majority position while disclosing close splits | Five salsa recipes that cluster into three positions with support 3, 2, 1 |
 | **Position and verbosity bias** | Two systematic errors of an LLM judge: rating the first answer in an A/B comparison higher regardless of quality, and rating longer answers higher even when the extra length adds nothing | The judge flips its answer when you swap two essays; two empty filler sentences raise an essay's score |
 | **Calibration set** | A small set of artifacts already scored by humans, used to check whether the judge agrees with people before you trust it on new work | Ten essays scored by your team and by the judge; a consistent gap on one criterion means that descriptor needs work |
-| **Judge** | A model prompted with a rubric and an artifact that returns a score per criterion, in a fixed structured format, instead of prose | The `judge()` function in Model 7 |
-| **Rubric as data** | The rubric written as a JSON object (criteria, weights, level descriptions) so the same file feeds the prompt, the scoring arithmetic, and the CSV header | `RUBRIC` at the top of the Model 7 code cell |
-| **Fail closed** | When an evaluator's output cannot be parsed, the pipeline treats it as a failure or flags it for a human instead of guessing a pass | The critic's `revise` fallback in Part II, and the `PARSE_ERROR` flag in the batch loop |
-| **Evidence check** | A mechanical test that the sentence the judge quoted actually appears in the submission | The `_quote_found` column in `grades.csv` |
-| **Percent agreement** | The share of (sample, criterion) cells where the judge's level matches the human's | Section 13, nine cells |
-
-### Before You Start
-
-**You need** Ollama running with `llama3.2` pulled and Python with `requests` installed (every lab so far).  Check both before class:
-
-```bash
-curl http://localhost:11434/api/tags
-python3 -c "import requests; print('requests ok')"
-```
-
-If you work inside the course container from *Your AI Workbench*, use `host.docker.internal:11434` wherever this deck says `localhost:11434`.  The model must return JSON: `llama3.2` does when the system prompt demands it, and if it wraps the JSON in a code fence, the cells strip the fence before parsing.
-
-**Create the three sample submissions.**  Make a folder `samples/` and save each block below as the named file.  All three argue about library hours; they are written to land at different rubric levels, and the differences are deliberate.
-
-`samples/s01.txt`:
-
-```text
-The library should stay open until 2 a.m. during finals week. Seventy-one percent of students surveyed last spring said they studied past midnight at least three times during finals (Student Life Survey, 2025). Late closing also cuts noise complaints in the residence halls, which rose 40 percent during finals last year (Residence Life Report, 2025). Some argue the added staffing costs too much, but two student workers for four extra hours cost less than one noise incident investigation. The extension is cheap, and it is what students already need.
-```
-
-`samples/s02.txt`:
-
-```text
-A lot of people study late during finals, and longer hours would help them. I think the library should probably stay open later. Some students have said they wish it was open longer. It might cost a bit more, but that is probably worth it.
-```
-
-`samples/s03.txt`:
-
-```text
-Finals week is stressful for everyone. There are many places to study on campus, and each has its own advantages. The library is a nice building with good lighting. Everyone should find the study spot that works best for them.
-```
-
-**What you will have at the end:** two runnable loops (critique and refine, and debate), a `grades.csv` from the judge, a nine-cell agreement score against your own hand grades, and one measured bias number.
 
 ## Today's 75 Minutes
 
-We have seventy-five minutes together.  Here is how they are meant to go, so you can tell when a section is running long and say so.  The two code cells in Parts II and III run on your own machine; if one is still running when its part ends, move on and finish it at home.  Anything marked self-paced sits outside this budget and nothing graded assumes it.
+We have seventy-five minutes together.  Here is how they are meant to go, so you can tell when a section is running long and say so.  Anything marked self-paced sits outside this budget and nothing graded assumes it.
 
 | Minutes | What we do |
 |---|---|
-| 0-8 | Part I, one loop, and why the evaluator is a separate call (Model 1) |
-| 8-22 | Part II, the critic: the eighty-line loop, Model 2, and three failure modes |
-| 22-37 | Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5) |
-| 37-45 | Part IV, the judge: the rubric autopsy (Model 6) and auditing the judge |
-| 45-70 | Part IV, the Judge Pipeline Workshop: hand-score, run the judge and read `grades.csv` (Model 7), then agreement, the padding probe, and the disagreement table (Model 8) |
-| 70-75 | Report out: your agreement number and your padding delta.  Part V's exercises and the Extensions are self-paced |
+| 0-10 | Part I, one loop, and why the evaluator is a separate call (Model 1) |
+| 10-30 | Part II, the critic: the eighty-line loop, Model 2, and three failure modes |
+| 30-50 | Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5) |
+| 50-65 | Part IV, the judge: Model 6 and auditing the judge |
+| 65-70 | Part V, where today's loops sit in the Multi-Agent Patterns lab, and the reflection prompt.  The Human-in-the-Loop Extension is self-paced |
+| 70-75 | Report out: one place each use of the loop earned its cost, and one place it did not |
 
 ---
 # Part I: One Loop
@@ -504,7 +466,7 @@ Independence is the load-bearing assumption here too.  Sampling helps only when 
 
 Debate and consensus both aggregate the model's distribution, so both amplify whatever that distribution over-represents: popular framings, mainstream defaults, training-data majorities.  For factual questions with a checkable answer, that is usually a feature, and it is why the vote in Section 6 works at all.
 
-For questions of taste, values, or contested policy, it is a hazard.  "The average of six samples" can quietly erase a legitimate minority position, and the erasure looks identical to a strong result: a big cluster, a confident synthesis, no visible dissent.  We take this up in *Training Data, Bias, Explainability, Intellectual Property, and Privacy*, and it is the reason the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) requires your synthesizer to disclose close disagreement in one line rather than resolve it silently.
+For questions of taste, values, or contested policy, it is a hazard.  "The average of six samples" can quietly erase a legitimate minority position, and the erasure looks identical to a strong result: a big cluster, a confident synthesis, no visible dissent.  We take this up in *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference*, and it is the reason the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) requires your synthesizer to disclose close disagreement in one line rather than resolve it silently.
 
 Sit with the distinction before you move on, because your lab design depends on which side of it your question falls:
 
@@ -516,7 +478,7 @@ Sit with the distinction before you move on, because your lab design depends on 
 
 # Part IV: Use Three, an Evaluator That Scores Against a Rubric
 
-The third use turns the loop outward: the artifact already exists (an essay, a plan, a pull request) and the model's only job is to score it against a rubric and emit JSON.  You will take apart a bad rubric, ask who audits the judge, and then build the judge in the Judge Pipeline Workshop: the rubric as data, a batch run that writes `grades.csv`, and two checks that make it trustworthy.
+The third use turns the loop outward: the artifact already exists (an essay, a plan, a pull request) and the model's only job is to score it against a rubric and emit JSON.  You will take apart a bad rubric, then ask who audits the judge.  The judging pipeline, batch scoring, and bias measurements are Thursday's *Judge Pipeline Workshop: Build and Audit a Judge*; today is the design work that comes first.
 
 ## 9.  Judgment at Scale
 
@@ -554,7 +516,7 @@ A draft rubric for short essays: (1) "Well written, 40 percent"; (2) "Good use o
 
 ## 10.  Auditing the Judge
 
-A judge is a model, so the loop needs one more evaluate step: someone has to score the judge.  The instrument is a calibration set, a small collection of artifacts already scored by people.  Run the judge on it and compare, criterion by criterion, before trusting it on new work.  Setting the temperature to 0 makes the judge consistent, and consistency is not accuracy: a judge that reliably over-scores verbose essays is worse than a slightly noisy but well-calibrated one, because the bias is systematic and invisible.  Sections 13 and 14 run this audit against your own hand scores and measure one bias, verbosity, directly.
+A judge is a model, so the loop needs one more evaluate step: someone has to score the judge.  The instrument is a calibration set, a small collection of artifacts already scored by people.  Run the judge on it and compare, criterion by criterion, before trusting it on new work.  Setting the temperature to 0 makes the judge consistent, and consistency is not accuracy: a judge that reliably over-scores verbose essays is worse than a slightly noisy but well-calibrated one, because the bias is systematic and invisible.  The *Judge Pipeline Workshop* builds the pipeline that runs this audit and measures position bias directly.
 
 The most important safeguard before trusting an LLM judge's scores on real student work is:
 
@@ -579,172 +541,11 @@ There is a second-order effect.  A long, fluent, confident trace is more persuas
 
 ---
 
-## The Judge Pipeline Workshop
-
-The idea in one sentence: a rubric is data, so the same JSON object can be shown to the model, used to compute the weighted total, and used to name the CSV columns.  You will run the judge once on one essay, then wrap it in a loop over the `samples/` folder you made in Before You Start.
-
-## 11.  Hand-Score First
-
-Before you run anything, each teammate writes down a level (1 to 4) for each sample on each of the three criteria below, using only the level descriptions in the rubric.  Do not discuss yet; you compare in Section 13.  This order matters because seeing the judge's score first anchors yours.
-
-## Model 7: The Rubric as a JSON Schema
-
-Read the `RUBRIC` object at the top of the code cell before you read the function.  Three criteria, weights summing to 100, and four levels each described by something you can see in the text (a citation, a stated position, a rebuttal).  The weighted total is $\text{total} = \sum_{c} w_c \cdot \ell_c / 4$, where $w_c$ is the weight and $\ell_c$ the level the judge awarded, the weighted sum from Section 9.  Every other piece of the pipeline reads from this object: the system prompt embeds it, the total loops over `rubric["criteria"]`, and the batch loop below builds column names from `c["name"]`.  Change the rubric and nothing else needs editing; that is the whole reason to write it as data rather than as sentences in a prompt.
-
-### Critical Thinking Questions
-
-21.  Predict before running: for each sample, which level will the judge award on `claims_cited`?  Write the three numbers down.  Then state which sample you expect the judge to get *wrong* and on which criterion.
-
-   *Hint:* `s02` says "some students have said" without naming a source.  Is that "some claims cite evidence" (level 2) or "no claims cite evidence" (level 1)?  The descriptor does not say what counts as evidence, and that gap is where you and the judge will diverge.
-
-22.  The system prompt asks for a quoted sentence per score.  Which column in the batch loop below checks that quote, and what does a `False` in that column tell you that a low score does not?
-
-   *Hint:* A low score says the essay is weak.  A quote that does not appear in the essay says the *judge* is unreliable on that row, whatever the score.
-
-## Code Cell
-
-> **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Save it as `judge.py` in the folder that contains `samples/`.
-
-```python
-import json
-import requests
-
-RUBRIC = {
-  "criteria": [
-    {"name": "claims_cited", "weight": 50,
-     "levels": {"1": "no claims cite evidence", "2": "some claims cite evidence",
-                "3": "most claims cite evidence", "4": "every claim cites evidence"}},
-    {"name": "directness", "weight": 30,
-     "levels": {"1": "never states a position", "2": "position implied",
-                "3": "position stated", "4": "position stated in the first sentence"}},
-    {"name": "counterargument", "weight": 20,
-     "levels": {"1": "absent", "2": "mentioned", "3": "engaged", "4": "engaged and rebutted"}},
-  ]
-}
-
-def judge(artifact, rubric=RUBRIC, model="llama3.2"):
-    system = ("You are a strict grader. Score the artifact on EACH criterion by choosing a level 1-4 "
-              "that matches the level descriptions. Quote the sentence that justifies each score. "
-              "Respond ONLY with JSON: "
-              '{"scores": {"<criterion>": {"level": int, "evidence": str}}}')
-    user = f"RUBRIC:\n{json.dumps(rubric, indent=1)}\n\nARTIFACT:\n{artifact}"
-    try:
-        r = requests.post("http://localhost:11434/api/chat", json={
-            "model": model, "stream": False,
-            "options": {"temperature": 0.0, "seed": 42},
-            "messages": [{"role": "system", "content": system},
-                         {"role": "user", "content": user}]}, timeout=180)
-        raw = r.json()["message"]["content"]
-        data = json.loads(raw.replace("```json", "").replace("```", ""))
-        total = sum(c["weight"] * data["scores"][c["name"]]["level"] / 4
-                    for c in rubric["criteria"])
-        return total, data
-    except Exception as e:
-        print(f"[judge:parse] {e}")
-        import traceback; traceback.print_exc()
-        return None, {"error": str(e)}
-
-essay = ("Campus dining should extend weekend hours. The biggest reason is that 64 percent of "
-         "surveyed students reported missing breakfast on Saturdays (Dining Survey, 2025). "
-         "Some argue costs would rise, but the survey shows staffing two extra hours costs less "
-         "than the lost meal-plan value. Therefore the change pays for itself.")
-
-total, detail = judge(essay)
-print(f"weighted score: {total}/100")
-print(json.dumps(detail, indent=1))
-```
-
-Run `python3 judge.py` once and confirm you get a weighted score and a JSON block for the dining essay.  Then append the batch loop below to the bottom of `judge.py` and run it again.  It walks `samples/`, calls `judge()` on each file, fails closed on a parse error, checks every quoted sentence against the source, and writes `grades.csv`.
-
-```python
-import csv
-import os
-
-rows = []
-for name in sorted(os.listdir("samples")):
-    text = open(os.path.join("samples", name)).read()
-    total, detail = judge(text)
-    row = {"filename": name, "total": total, "flag": ""}
-    if total is None:
-        row["flag"] = "PARSE_ERROR"   # fail closed: a human reads this row, nobody guesses
-    for c in RUBRIC["criteria"]:
-        s = detail.get("scores", {}).get(c["name"], {})
-        row[c["name"] + "_level"] = s.get("level", "")
-        row[c["name"] + "_evidence"] = s.get("evidence", "")
-        row[c["name"] + "_quote_found"] = s.get("evidence", "") in text
-    rows.append(row)
-
-with open("grades.csv", "w", newline="") as f:
-    w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
-    w.writeheader()
-    w.writerows(rows)
-```
-
-## 12.  Read grades.csv
-
-Open `grades.csv` in a spreadsheet or with `column -s, -t grades.csv`.  One row per sample; per criterion a level, the quoted evidence, and whether that quote was found verbatim in the file; a weighted total; and a flag column that is empty unless the judge's output failed to parse.  Check three things in this order: (1) no row is flagged, (2) every `_quote_found` is `True`, (3) the totals rank `s01` above `s02` above `s03`.  If any check fails, note which one; you diagnose it in Model 8.
-
-Recap: the rubric is one JSON object that drives the prompt, the arithmetic, and the CSV shape.  The batch loop adds only three behaviors of its own: walk a folder, fail closed, and verify quotes.
-
-## 13.  Agreement With Your Hand Scores
-
-Bring back the levels you wrote down in Section 11.  Where teammates disagree with each other, talk it through and record one consensus level, but keep the original marks; human-to-human disagreement is a finding.  Then compute percent agreement as the number of cells where the consensus level equals the judge's level, divided by 9, times 100, and report it overall and per criterion (three cells each).  A criterion at 1 of 3 is telling you its descriptor is ambiguous, not that the model is stupid.
-
-## 14.  One Bias Probe: Padding
-
-Append the two content-free sentences below to `judge.py` and run it.  They add no citation, no position, and no counterargument, so a rubric-faithful judge returns the same three levels before and after.
-
-```python
-PAD = ("This essay was written with great care and attention to detail.  "
-       "The author is deeply knowledgeable about campus issues.")
-text = open("samples/s02.txt").read()
-before, detail_before = judge(text)
-after, detail_after = judge(text + " " + PAD)
-print("s02 before padding:", before, " after padding:", after)
-for c in RUBRIC["criteria"]:
-    print(c["name"], detail_before["scores"][c["name"]]["level"],
-          "->", detail_after["scores"][c["name"]]["level"])
-```
-
-Record the delta per criterion.  Any criterion that moves up is verbosity bias, measured; the padded sentences even praise the author, so a move is also the judge reading tone instead of the text.  A delta of zero on three cells does not clear the judge; it is one sample, one padding string, one model, and the *Project Sprint* session's regression check reuses the padded and unpadded pair on your own project's artifacts.
-
-## Model 8: The Disagreement Table
-
-The human column holds the levels the three samples were written to land on; check them against your own consensus before you trust them.  Fill the judge columns from `grades.csv` and the padding run.  If you take the no-code route in the extension, add a column for the promptfoo verdict.
-
-| Sample | Criterion | Human level (as designed) | Judge level | Judge level, padded | Gap (human minus judge) |
-|---|---|---|---|---|---|
-| s01 | claims_cited | 4 | | | |
-| s01 | directness | 4 | | | |
-| s01 | counterargument | 4 | | | |
-| s02 | claims_cited | 2 | | | |
-| s02 | directness | 3 | | | |
-| s02 | counterargument | 2 | | | |
-| s03 | claims_cited | 1 | | | |
-| s03 | directness | 1 | | | |
-| s03 | counterargument | 1 | | | |
-
-Only `s02` has a padded value today.  The row with the largest gap is the row you revise.
-
-### Critical Thinking Questions
-
-23.  Predict before filling the table: which row will show the largest gap?  Defend the prediction with a quote from the sample and a quote from the level descriptor.
-
-   *Hint:* `s02` says "it might cost a bit more, but that is probably worth it."  Is that a counterargument "mentioned" (level 2) or "engaged" (level 3)?  The descriptor has one word to decide with.
-
-24.  Take the worst row and rewrite that criterion's level descriptors so the disagreement could not happen: name the countable feature (a source in parentheses, an opposing view in a full sentence, a rebuttal that gives a reason).  Re-run `judge.py` with the revised `RUBRIC` and report agreement on that criterion before and after.
-
-   *Hint:* Revise the descriptor, not the sample.  The revise-and-remeasure step is the finding, not the first number, and the *Project Sprint* session asks you for one documented repair of exactly this kind.
-
-Recap: agreement tells you whether the rubric wording means the same thing to you and the model; the padding probe tells you whether the model is reading the text or its length.  Both numbers, with the revision they prompted, are what you report at the stand-up in the *Project Sprint* session.
-
----
-
 # Part V: Synthesis and Practice
 
-The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is handed out at the *Orchestration and Multi-Agent Patterns* session and is due Thursday, December 3.  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-20-points); do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below are the measurements the lab expects you to be able to make, and the last three grow the workshop's judge.
+The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration Worked Example* session, is due Thursday, December 3.  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-20-points); do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below are the measurements the lab expects you to be able to make.
 
-## 15.  Exercises
+## 11.  Exercises
 
 1.  **Debate versus single-shot, with cost accounting.**
 
@@ -768,43 +569,17 @@ The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026
 
    *You've succeeded when:* You can show the hacked draft, the criterion that catches it, and a one-sentence patch to the essay descriptor that would have caught your essay.
 
-4.  **Twelve samples.**
-
-   *What to do:* Three samples are too few to trust a judge; grow the set to at least twelve synthetic submissions, including an empty file and an off-topic one.  Write nine more into `samples/`, re-run `judge.py`, and confirm the empty file produces a flagged row rather than a score.
-
-   *Starter hint:* An empty artifact gives the judge nothing to quote; watch whether it invents evidence or fails to parse.  Either is a finding.
-
-   *You've succeeded when:* `grades.csv` has twelve rows, every `_quote_found` on a non-empty file is `True`, and the empty file's row is flagged or scored all ones with a reason you can state.
-
-5.  **Four criteria.**
-
-   *What to do:* Add a fourth criterion to `RUBRIC` (a conclusion sentence is a good candidate) with weights that still sum to 100.  If you built the no-code route in the extension, add the matching `llm-rubric` block to its YAML.
-
-   *Starter hint:* Nothing else in `judge.py` changes; that is the payoff of the rubric as data.  Count how many lines the change took.
-
-   *You've succeeded when:* `grades.csv` grows by one criterion (and so does `grades_promptfoo.csv`, if you built it) and the weighted totals still fall between 0 and 100.
-
-6.  **Regression tripwire.**
-
-   *What to do:* Delete the sentence "Quote the sentence that justifies each score." from the system prompt, re-run, and look at the `_quote_found` column.  Then restore it.
-
-   *Starter hint:* This is a regression test in miniature: a deliberate degradation, a measurable drop, a recovery.
-
-   *You've succeeded when:* You can show the column before, during, and after, and say in one sentence what a versioned config would have caught.
-
----
-
 ## Reflection Prompt
 
-*Personal:* Think of the best piece of feedback you ever received on your own work.  Did it resemble Transcript A (vague, general) or Transcript B (specific, criterion-based)?  What rubric was your reviewer implicitly using?  Then look at today's hand scores: on which criterion did you and a teammate disagree, and did reading the judge's quoted evidence change your mind or dig you in?  Write two sentences on what that tells you about using a judge on your own work.
+*Personal:* Think of the best piece of feedback you ever received on your own work.  Did it resemble Transcript A (vague, general) or Transcript B (specific, criterion-based)?  What rubric was your reviewer implicitly using?  Would you hand that rubric to an AI critic or an AI judge reviewing your work today, and what would you need to add to make it machine-usable?
 
-*Technical:* Today's loop decides three ways: a critic's verdict, a majority vote, and a judge's score.  Design a hybrid for the debate: use majority vote as the primary signal, escalate to a judge agent only when the vote is not unanimous, and require the judge to quote evidence from the transcripts for its choice.  Write the decision logic in pseudocode, and state which pathology from Section 9 the evidence requirement is there to catch.  Then name the smallest set of numbers you would need to see before you let your workshop judge grade a class of forty, and state the threshold for each.
+*Technical:* Today's loop decides three ways: a critic's verdict, a majority vote, and a judge's score.  Design a hybrid for the debate: use majority vote as the primary signal, escalate to a judge agent only when the vote is not unanimous, and require the judge to quote evidence from the transcripts for its choice.  Write the decision logic in pseudocode, and state which pathology from Section 9 the evidence requirement is there to catch.
 
-*Societal:* Multi-agent debate has been proposed as a safety mechanism (one model checks another), and LLM judges are already used in hiring, admissions, and formative feedback on student drafts.  Based on what you learned about correlated errors and judge pathologies, what is the fundamental limitation of using AI models to check other AI models trained on the same data?  The judge you built runs on your laptop against text you wrote; what changes about the calibration step when the submissions come from real people who cannot see the rubric, and who should be required to run that audit and publish the agreement numbers before such a system touches a person's outcome?
+*Societal:* Multi-agent debate has been proposed as a safety mechanism (one model checks another), and LLM judges are already used in hiring, admissions, and formative feedback on student drafts.  Based on what you learned about correlated errors and judge pathologies, what is the fundamental limitation of using AI models to check other AI models trained on the same data, and who should be responsible for running the calibration audit before such a system touches a person's outcome?
 
 ---
 
--> Coming Up Next: *Training Data, Bias, Explainability, Intellectual Property, and Privacy* follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system.  Its disaggregation drill points today's judge at essays that differ only in their byline, and the *Project Sprint* session points it at your own project's outputs, so keep `judge.py`, your `samples/` folder, and your disagreement table where you can find them.
+-> Coming Up Next: *Judge Pipeline Workshop: Build and Audit a Judge* (Thursday) turns today's Part IV into code.  You hand-score three sample submissions first, then build a judge that reads the rubric as data, writes a `grades.csv`, and checks its own quoted evidence; you run the same judge a second time as a promptfoo configuration with no Python; and you measure the judge against your hand scores and against one bias, padding.  The loop you built today is the core of the Multi-Agent Patterns lab, and the judge you build Thursday is the one its *Part A, Extended* reuses.  Have Ollama running with `llama3.2`, Node.js installed for promptfoo, and your answers to the Model 6 rubric autopsy ready.
 
 ---
 
@@ -818,13 +593,10 @@ The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026
 - Liang et al. "Encouraging Divergent Thinking in LLMs through Multi-Agent Debate."  (2023).
 - Zheng et al. "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena."  *NeurIPS* (2023).  Pathologies and agreement rates.
 - Hashemi et al. "LLM-Rubric: A Multidimensional, Calibrated Approach to Automated Evaluation."  *ACL* (2024).
-- [promptfoo documentation](https://www.promptfoo.dev/docs/intro/): the harness in the no-code extension, including the full list of assertion types and the results viewer.
-- Hamel Husain, ["Your AI Product Needs Evals"](https://hamel.dev/blog/posts/evals/): the error-analysis-first approach to evaluation, which is the discipline behind the disagreement table.
-- [Inspect AI](https://inspect.aisi.org.uk/) (UK AI Security Institute): the Dataset, Solver, and Scorer framework, the Python-native alternative to promptfoo as a harness.
 
 # Extension: Human-in-the-Loop (self-paced)
 
-Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius (how much damage a mistake could do).  Your final project's governance document will make you answer that in writing.
+Optional, and not assumed by the parts above.  Critique and refine puts a second model in the loop.  The harder design question is where a *person* goes in the loop: what gets escalated, who approves what, and how much autonomy is appropriate for a given blast radius (how much damage a mistake could do).  Your final project will make you answer that in writing, in the human oversight section of its governance one-pager, so read this before your team drafts that section.
 
 ## Key Concepts
 
@@ -1070,116 +842,3 @@ An agent is given a task that runs overnight as a batch job: process 1,000 custo
 *Societal:* Human-in-the-loop is sometimes described as the solution to AI safety problems.  But this activity shows that HITL has real costs: latency, reviewer attention limits, approval fatigue, and the need for humans to be available at arbitrary times.  As AI agents become more capable and are deployed in higher-stakes domains (medical diagnosis, legal advice, financial planning), is HITL a sustainable long-term solution, or does it need to evolve into something else?  What would that something else look like?
 
 ---
-
-# Extension: The Judge Pipeline Without Code (self-paced)
-
-Optional, and not assumed by the parts above.  promptfoo lets you say what the Judge Pipeline Workshop said in Python in a configuration file instead: here are the outputs, here is the judge, here are the assertions, run them all.  The *Project Sprint* session's regression check grows this configuration for your own project; here you take it far enough to see that the two routes measure the same thing.
-
-You need Node.js in addition to the workshop's setup; promptfoo runs through `npx`, so there is nothing else to install.  Check it first:
-
-```bash
-npx promptfoo@latest --version
-```
-
-### Wire promptfoo to Ollama
-
-In the same folder, run a smoke test that asks the model one question and asserts on the answer.  Save this as `promptfooconfig.yaml`:
-
-```yaml
-# smoke-test promptfooconfig.yaml - verify Ollama connectivity
-description: "Judge Pipeline Workshop smoke test"
-
-prompts:
-  - "Reply with exactly one word: the capital of France."
-
-providers:
-  - ollama:chat:llama3.2
-
-tests:
-  - assert:
-      - type: contains
-        value: "Paris"
-```
-
-Run it:
-
-```bash
-npx promptfoo@latest eval
-npx promptfoo@latest view   # opens the results viewer in your browser
-```
-
-Expected: 1 test, 1 pass.  If promptfoo cannot reach Ollama, confirm `ollama serve` is running and that `curl http://localhost:11434/api/tags` responds; promptfoo reads the base URL from the `OLLAMA_BASE_URL` environment variable if your Ollama runs elsewhere.
-
-### The Rubric as promptfoo Assertions
-
-Two files replace the batch loop.  The first is `dataset.csv`, one row per sample with columns `id` and `answer`; build it from the same `samples/` folder so both routes grade identical text:
-
-```python
-import csv
-import os
-
-with open("dataset.csv", "w", newline="") as f:
-    w = csv.writer(f)
-    w.writerow(["id", "answer"])
-    for name in sorted(os.listdir("samples")):
-        w.writerow([name.removesuffix(".txt"),
-                    open(os.path.join("samples", name)).read().strip()])
-```
-
-The second is the config.  Its prompt is a template that echoes each stored answer straight through, so the judge grades your dataset rather than a freshly generated reply.  promptfoo's template syntax is the variable name inside two pairs of curly braces (the form promptfoo's documentation uses); create that one-line file with the command below rather than typing it, then save the YAML as `promptfooconfig-rubric.yaml`:
-
-```bash
-python3 -c "print('{' * 2 + 'answer' + '}' * 2)" > prompt.txt
-```
-
-```yaml
-# promptfooconfig-rubric.yaml
-# Judge: ollama llama3.2, temperature 0
-description: "Judge Pipeline Workshop: the three-criterion rubric as promptfoo assertions"
-
-prompts:
-  - file://prompt.txt
-
-providers:
-  - echo
-
-defaultTest:
-  options:
-    # The judge model that grades every llm-rubric assertion:
-    provider: ollama:chat:llama3.2
-  assert:
-    - type: llm-rubric
-      value: >
-        Criterion claims_cited: PASS only if most or every factual claim in the
-        answer cites evidence (a named source, survey, or report). FAIL otherwise.
-    - type: llm-rubric
-      value: >
-        Criterion directness: PASS only if the answer states its position outright,
-        anywhere in the text. FAIL if the position is only implied or never stated.
-    - type: llm-rubric
-      value: >
-        Criterion counterargument: PASS only if the answer engages an opposing view
-        in a full sentence, with or without a rebuttal. FAIL if the opposing view is
-        absent or mentioned only in passing.
-
-tests: file://dataset.csv
-```
-
-Read the three `value:` blocks against `RUBRIC`.  Each one collapses four levels to a single line: PASS means level 3 or 4, FAIL means level 1 or 2.  That is the only translation between the two routes, and it is lossy on purpose; promptfoo answers "good enough?" while the code route answers "how good?".
-
-Run it and write the results as a CSV:
-
-```bash
-npx promptfoo@latest eval -c promptfooconfig-rubric.yaml --output grades_promptfoo.csv
-npx promptfoo@latest view
-```
-
-Expected: 3 rows times 3 assertions, nine verdicts.
-
-#### Questions to Work Through
-
-1.  Predict before running: which of the nine verdicts will be PASS?  Derive your answer from `grades.csv` alone (level 3 or 4 means PASS), then run and count the cells where the promptfoo verdict disagrees with the level the code route awarded.
-
-   *Hint:* The same model read the same text under two different prompts.  Disagreement between the routes is not a bug in either one; it measures how much the *wording* of the rubric line moves the judge.
-
-Recap: the promptfoo YAML is the rubric with each criterion collapsed to a pass line, and both routes grade the same `samples/` with the same model.  A configuration file is not more accurate than a script; what it buys you is one file holding rubric, judge, and tests that you can change.  It is the same discipline as Step A.1 of the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), where `config.json` and `rubric.json` hold every setting and criterion so you can change them without editing code.

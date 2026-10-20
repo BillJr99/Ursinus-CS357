@@ -131,11 +131,11 @@ The milestones run in the sequence below.  See the [course schedule]({{ site.bas
 | Milestone | What is due | Points |
 |---|---|---|
 | Project handed out | Nothing yet.  Teams read all three directions and begin converging on one | - |
-| Intra-team check-in 2 | A private check-in to me, due at the *How I AI* session, before the proposal; it precedes and informs the proposal | - |
+| Intra-team check-in 2 | A private check-in to me, due at the *RAG Worked Example* session (Tuesday, November 3), before the proposal; it precedes and informs the proposal | - |
 | Proposal | The proposal, with direction declared, stakeholder grounding, and an AI-use disclosure | **25 / 100** |
-| Literature Review handed out | Handed out at the *How I AI* session, two days before the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
+| Literature Review handed out | Handed out at the *RAG Worked Example* session (Tuesday, November 3), two days before the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
 | Sprints 1, 2, and 3 | Rotating roles, a runnable increment (or evidenced stage checkpoint) at every sprint boundary, and a **partner feedback pass** during the final sprint | - |
-| Cross-team design critique | At the *Design First* session, where each team's proposal grows into its design document, the boundary between Sprint 1 and Sprint 2 | - |
+| Cross-team proposal critique | At the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session (Tuesday, December 1), the boundary between Sprint 1 and Sprint 2 | - |
 | Gallery walk, peer review (SQR cards), and intra-team check-in 3 | The gallery walk at *Project Studio and Gallery Walk*; check-in 3 at the *Final Integration and Demo Rehearsal* studio that follows | - |
 | Demo Day and final submission | The presentation, the partner-facing artifact, your direction's deliverables, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all at Demo Day, held in our final exam period (Wednesday, December 16, 8:00-11:00 AM, Pfahler 107) | **75 / 100** |
 
@@ -203,9 +203,9 @@ The report is a required section of your final submission: a section of the repo
 
 Record the input (prompt) and output (completion) token counts for every evaluation run, then estimate what those tokens cost in energy, carbon, and money.
 
-- **Count the tokens.**  In OpenCode, read the session's token display at the end of each run and record it.  Through Ollama's API, read `prompt_eval_count` (input tokens) and `eval_count` (output tokens) from each response, along with `eval_duration` and `total_duration` (in nanoseconds) for time.  The [Observability, Traceability, and Handoff Protocols]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-observability.md) session and the [Agent Observability and Tracing]({{ site.baseurl }}/Tutorials/Observability) tutorial show both methods.
+- **Count the tokens.**  In OpenCode, read the session's token display at the end of each run and record it.  Through Ollama's API, read `prompt_eval_count` (input tokens) and `eval_count` (output tokens) from each response, along with `eval_duration` and `total_duration` (in nanoseconds) for time.  The [Agents That Talk, Observability, and Handoff Protocols]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-observability.md) session and the [Agent Observability and Tracing]({{ site.baseurl }}/Tutorials/Observability) tutorial show both methods.
 - **Total and average them.**  Report tokens per run, per task, and per agent, so a reader can see which agent or step dominates the cost.
-- **Estimate energy, carbon, and cost.**  Use the method from the [Governance, Policy, and the Cost of Inference]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-governancecost.md) session.  Energy is measured generation time multiplied by your machine's power draw under load (or tokens multiplied by a published energy-per-token figure).  Carbon is that energy multiplied by your region's grid carbon intensity.  Cost is the token count priced at a comparable hosted model's published rate; for local runs, that is the bill you avoided, plus the electricity.  State and cite every assumption.  An order-of-magnitude estimate is acceptable.  A hidden assumption is not.
+- **Estimate energy, carbon, and cost.**  Use the method from Part VII of the [Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) session.  Energy is measured generation time multiplied by your machine's power draw under load (or tokens multiplied by a published energy-per-token figure).  Carbon is that energy multiplied by your region's grid carbon intensity.  Cost is the token count priced at a comparable hosted model's published rate; for local runs, that is the bill you avoided, plus the electricity.  State and cite every assumption.  An order-of-magnitude estimate is acceptable.  A hidden assumption is not.
 - **Compare one alternative.**  Put the numbers beside one cheaper option (a smaller model, fewer agents, a shorter context, or the monolith baseline) and say whether the difference in quality justifies the difference in cost.
 
 **Evidence to submit:** a token table (run, task, agent, model, input tokens, output tokens, time), the energy, carbon, and cost estimate with its assumptions and sources, and the comparison.
@@ -218,13 +218,13 @@ Log every agent action, tool call, and handoff with a run identifier, so that a 
 
 ### Area 3: Auditing Outcomes for Correctness
 
-Score your outputs against a committed **golden set** (inputs with agreed correct answers or agreed human rubric levels) or with a **rubric judge**.  Check the judge against human scores before you trust it.  The Judge Pipeline Workshop in [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md) and the [Project Sprint: Run Your Rubric Against Your Project, and Threat Model It]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-projectsprint.md) session build this harness; bring it into your project repository (or your evidence folder) and run it on your final outputs.
+Score your outputs against a committed **golden set** (inputs with agreed correct answers or agreed human rubric levels) or with a **rubric judge**.  Check the judge against human scores before you trust it.  The [Judge Pipeline Workshop: Build and Audit a Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md) and the [Project Sprint: Run Your Rubric Against Your Project, and Threat Model It]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-projectsprint.md) session build this harness; bring it into your project repository (or your evidence folder) and run it on your final outputs.
 
 **Evidence to submit:** the golden set or rubric, the one command that runs the harness and the pass rate it printed, the judge's agreement with human scores, and an explanation of every failure.
 
 ### Area 4: Auditing for Potential Bias
 
-Run a **counterfactual or perturbation probe**: send inputs that are identical except for one attribute (a name, a dialect, a neighborhood, a stated group membership) and compare the outputs.  The byline-swap probe from the [Training Data, Bias, Explainability, Intellectual Property, and Privacy]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) session is the model: change one attribute, hold everything else fixed, sample enough times to support a claim, and disaggregate the results.  Choose attributes that matter to your partner's community.
+Run a **counterfactual or perturbation probe**: send inputs that are identical except for one attribute (a name, a dialect, a neighborhood, a stated group membership) and compare the outputs.  The byline-swap probe from the [Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) session is the model: change one attribute, hold everything else fixed, sample enough times to support a claim, and disaggregate the results.  Choose attributes that matter to your partner's community.
 
 **Evidence to submit:** the probe design (which attribute, which values, how many samples), the disaggregated results table, and either an explanation of any gap or the mitigation you applied and its re-measured result.
 
@@ -252,7 +252,7 @@ Run a **counterfactual or perturbation probe**: send inputs that are identical e
 
 ## Phase 1: Converge on a Direction and Check In
 
-Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *How I AI* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
+Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *RAG Worked Example* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
 
 > **Do this.**
 > 1. Read all three directions below, including the Direction C variant, and the [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal) page.
@@ -262,7 +262,7 @@ Between the hand-out and the proposal, your team reads all three directions, wei
 
 **Deliverables for this phase:**
 
-- [ ] Intra-team check-in 2, submitted at the *How I AI* session, before the proposal
+- [ ] Intra-team check-in 2, submitted at the *RAG Worked Example* session, before the proposal
 - [ ] A decision-log entry naming the directions weighed and the one chosen
 
 ---
@@ -304,11 +304,11 @@ Build in three sprints between the proposal and Demo Day, aligned with in-class 
 
 | Sprint | Direction A milestone | Direction B milestone | Direction C milestone |
 |---|---|---|---|
-| Sprint 1 (proposal submitted -> cross-team design critique) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running minimum viable product (MVP: core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
-| Sprint 2 (design critique -> gallery walk; spans the Thanksgiving break) | All agents implemented and individually testable; at least 5 evaluation tasks run; GOVERNANCE.md first draft committed | Risk analysis report drafted (4-6 pages, 8+ citations, 3 mechanistic failure modes); governance document outlined | Non-trivial feature implemented; third property test added; README quickstart drafted and cold-tested by a classmate |
+| Sprint 1 (proposal submitted -> cross-team proposal critique; spans the Thanksgiving break) | Monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running minimum viable product (MVP: core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
+| Sprint 2 (proposal critique -> gallery walk) | All agents implemented and individually testable; at least 5 evaluation tasks run; GOVERNANCE.md first draft committed | Risk analysis report drafted (4-6 pages, 8+ citations, 3 mechanistic failure modes); governance document outlined | Non-trivial feature implemented; third property test added; README quickstart drafted and cold-tested by a classmate |
 | Sprint 3 (gallery walk -> Demo Day) | Full evaluation with baseline comparison; 3+ failure modes documented with transcripts; one mitigation re-measured; gallery-walk prep | Governance document complete (monitoring plan, incident response, communication plan, appeal process); board presentation rehearsed | Published to a registry, tagged v1.0.0; community post made; CONTRIBUTING.md and GOVERNANCE.md complete |
 
-The cross-team design critique happens at the *Design First* session, and the gallery walk at *Project Studio and Gallery Walk*.
+The cross-team proposal critique happens at the *Project Sprint* session, and the gallery walk at *Project Studio and Gallery Walk*.
 
 The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) runs across Sprints 1 and 2.  It is graded on its own page, but its synthesis is a project document.  It states what the evidence confirms, complicates, or changes about your proposal, and any scope change that follows belongs in your decision log and your next check-in.
 

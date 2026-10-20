@@ -16,7 +16,7 @@ tags:
 
 ## About This Tutorial
 
-A skill is a named, reusable instruction set that an agent loads and follows.  This tutorial is the reference for writing one.  It covers the spectrum from a prompt to a packaged skill, where opencode and pi look for skills on disk, the authoring principles your skills are graded against, how to publish a skill repository, and the claim protocol two agents need when they hand work to each other through a shared medium.  You use all of it in the [Skill Design Study]({{ site.baseurl }}/Assignments/SkillDesignStudy), where you author, install, run, and refine a skill of your own, and in the Local Agent Lab's optional extension, where an AI tool generates one for you and you find where it is wrong.  The claim-protocol section at the end is also the reading behind the handoff design document the syllabus assigns.
+A skill is a named, reusable instruction set that an agent loads and follows.  This tutorial is the reference for writing one.  It covers the spectrum from a prompt to a packaged skill, where opencode and pi look for skills on disk, the authoring principles your skills are graded against, how to publish a skill repository, and the claim protocol two agents need when they hand work to each other through a shared medium.  You use all of it in the [Skill Design Study]({{ site.baseurl }}/Assignments/SkillDesignStudy), where you author, install, run, and refine a skill of your own, and in the Local Agent Lab's optional extension, where an AI tool generates one for you and you find where it is wrong.  The claim-protocol section at the end is also the reading behind the handoff protocol in *Agents That Talk, Observability, and Handoff Protocols*, and behind the handoff traces your Final Project's Responsible AI Report asks for.
 {: .tb-lede}
 
 ---
@@ -362,7 +362,7 @@ The plain-folder route is not the lesser option.  Strip away the tooling and eve
 
 This is the part that does not exist in a single-writer skill, and the part where most designs fail.
 
-Two agents are looking at the same pending item.  Nothing stops both of them from starting it.  If both finish, you have paid twice for one task and you may have two contradictory results.  If both write to the same place, one of them silently loses.  The claim protocol is the set of rules that prevents this.  In *Observability, Traceability, and Handoff Protocols*, you wrote the start, stop, restart, and handoff protocol as a skill; the claim protocol here is the same one.  A handoff `SKILL.md` must specify, in enforceable terms:
+Two agents are looking at the same pending item.  Nothing stops both of them from starting it.  If both finish, you have paid twice for one task and you may have two contradictory results.  If both write to the same place, one of them silently loses.  The claim protocol is the set of rules that prevents this.  In *Agents That Talk, Observability, and Handoff Protocols*, you wrote the start, stop, restart, and handoff protocol as a skill; the claim protocol here is the same one.  A handoff `SKILL.md` must specify, in enforceable terms:
 
 1.  **How an agent claims an item** before working on it: moving or renaming the file, or writing a `claimed_by` and `claimed_at` field into it.  Whatever you choose, the claim must be visible to the *other* agent through the medium alone.
 2.  **What a second agent does when it sees a claimed item.**  Skip it, wait, or take it?

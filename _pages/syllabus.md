@@ -317,7 +317,7 @@ schedule:
     points: "10"
     rubricpath: "_pages/Assignments/asmt-teamsurvey.md"
   readings:
-  - rtitle: "Please bring a laptop with Docker Desktop already installed.  If Docker will not run on your machine, that is fine; come anyway and we will set up the native route together."
+  - rtitle: "Please have a laptop with Docker Desktop already installed.  If Docker will not run on your machine, that is fine; come anyway and we will set up the native route together."
     rlink: false
   - rtitle: "The Shell, in Full: pipes, redirection, background jobs, signals, and the PATH mechanics behind \"command not found\".  Step 0 of today's activity is the ten-minute version of this"
     rlink: "Tutorials/Shell"
@@ -330,7 +330,7 @@ schedule:
   liapage: true
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class.  Describe one time you accepted AI-generated code or text without really reading it.  What would you check now, and what would have caught the thing you missed?"
-  - rtitle: "Bring your cs357-work repository and the working opencode install from Week 1 (Step 8).  Today you drive the agent against a written specification, read its action log, and inspect the files it names."
+  - rtitle: "Have your cs357-work repository and the working opencode install from Week 1 (Step 8) ready.  Today you drive the agent against a written specification, read its action log, and inspect the files it names."
     rlink: false
   - rtitle: "Agentic CLI Tools: Claude Code, Codex, Gemini CLI, and pi, and how each one differs from the opencode you drive today"
     rlink: "Tutorials/AgentCLIs"
@@ -361,7 +361,7 @@ schedule:
   - rtitle: "Reading Response / Discussion: post a short response before class, what changed once the model ran on your own machine?"
   - rtitle: "The Local Model Landscape: Llama, Mistral, Phi, Gemma, and their relatives, for deciding what to pull next"
     rlink: "Tutorials/LocalModels"
-  - rtitle: "The Hardware Behind AI: GPUs, quantization, and running models at the edge.  Read this if today's speeds surprised you"
+  - rtitle: "The Hardware Behind AI: GPUs, quantization, and running models at the edge, which explains the inference speeds you see today"
     rlink: "Tutorials/Hardware"
   - rtitle: "End-to-End OpenCode Setup: install, opencode.json at both scopes, providers and authentication, AGENTS.md, permissions, a skill, a plugin, and GitHub by CLI and MCP, on every platform.  The reference for today's lab handout"
     rlink: "Tutorials/OpenCodeSetup"
@@ -381,7 +381,7 @@ schedule:
   - rtitle: "Mitchell, Chapter 3, part 2 of 4: what the model is doing when it takes in your prompt"
   - rtitle: "Writing, configuring, and publishing skills for opencode and pi.ai.  Today's deck builds the first skill with you; read this so the file layout is not new"
     rlink: "Tutorials/AgentSkills"
-  - rtitle: "Bring your working Ollama setup and your opencode install.  The second half of class runs the same task with and without a skill and compares the results."
+  - rtitle: "Have your working Ollama setup and your opencode install ready.  The second half of class runs the same task with and without a skill and compares the results."
     rlink: false
 - week: "3"
   date: "0"
@@ -399,7 +399,7 @@ schedule:
     rlink: "https://philarchive.org/rec/CHAWWT-8"
   - rtitle: "Why Different Answers Every Time?  Sampling, Temperature, and Generation.  Read Parts I and II before class; Part IIc of today's deck uses the temperature and seed settings it explains"
     rlink: "Tutorials/SamplingAndTemperature"
-  - rtitle: "Bring your working Ollama setup from Week 1 and the charter, contract, and skills you have written so far for the OpenCode Studio lab.  Today is that lab's mid-flight checkpoint, and the workshop edits system prompts against a live model."
+  - rtitle: "Have your working Ollama setup from Week 1 and the charter, contract, and skills you have written so far for the OpenCode Studio lab ready.  Today is that lab's mid-flight checkpoint, and the workshop edits system prompts against a live model."
     rlink: false
   - rtitle: "The Persona Pipeline: One Model, Four Personas, and a Rule About Who Sees What.  The full program behind Part IIe, with the five files it reads and four experiments to run against it"
     rlink: "Tutorials/PersonaPipeline"
@@ -417,7 +417,7 @@ schedule:
     rlink: "Tutorials/AgentGovernance"
   - rtitle: "Tokens, Embeddings, and Attention: How Models Represent Meaning, Part I"
     rlink: "Tutorials/TokensEmbeddingsAttention"
-  - rtitle: "Bring the OpenCode Studio artifact you have so far.  Today's second half runs it through one gauntlet round."
+  - rtitle: "Have the OpenCode Studio artifact you have so far ready.  Today's second half runs it through one gauntlet round."
     rlink: false
 - week: "4"
   date: "0"
@@ -433,7 +433,7 @@ schedule:
   - rtitle: "Mitchell, Chapter 3, part 4 of 4: finish the chapter, hallucination, evaluation, and what the model cannot check for itself"
   - rtitle: "AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass"
     rlink: "Tutorials/AIByHand"
-  - rtitle: "Please bring three prompts where a model gave you a confidently wrong answer.  We triage real examples here, not invented ones."
+  - rtitle: "Please have three prompts ready where a model gave you a confidently wrong answer.  We triage real examples here, not invented ones."
     rlink: false
 - week: "4"
   date: "1"
@@ -494,13 +494,13 @@ schedule:
 - week: "6"
   date: "0"
   title: "RAG and Fine-Tuning: Retrieval Quality and LoRA"
-  link: "Activities/liascript-ragquality.md"
+  link: "Activities/liascript-rag.md"
   liapage: true
   readings:
   - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Offline RAG and LoRA, End to End: Sections D to F train a LoRA adapter on a CPU and compare a base model, RAG, LoRA, and both on held-out questions"
     rlink: "Tutorials/OfflineRAGFineTuning"
-  - rtitle: "Please bring your team's Stakeholder Brief draft, because the peer review round works on real drafts."
+  - rtitle: "Please have your team's Stakeholder Brief draft ready, because the peer review round works on real drafts."
     rlink: false
 - week: "7"
   date: "1"
@@ -525,15 +525,15 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/lab-toolsmcp.md"
   readings:
-  - rtitle: "Bring your stuck points and your pipeline-in-progress.  Part III is an open studio and it is only as useful as the problems you bring to it."
+  - rtitle: "Have your stuck points and your pipeline-in-progress ready.  Part III is an open studio and it is only as useful as the problems you work on in it."
   - rtitle: "The Second Brain in depth: Obsidian, gitless GitHub sync, and the metadata protocol that makes agent writes safe"
     rlink: "Tutorials/SecondBrain"
   - rtitle: "Syncing Obsidian to GitHub and wiring agents to your vault: the full read path and write path"
     rlink: "Tutorials/ObsidianSync"
 - week: "8"
   date: "0"
-  title: "RAG Knowledge Base: Code and No-Code Routes"
-  link: "Activities/liascript-rag.md"
+  title: "How I AI: A Vault, a Charter, and a Personal Agent Setup"
+  link: "Activities/liascript-howiai.md"
   liapage: true
   deliverables:
   - dtitle: "Lab: Local Agent Due"
@@ -545,6 +545,16 @@ schedule:
     points: "100"
     rubricpath: "_pages/Projects/proj-finalproject.md"
   readings:
+  - rtitle: "The Second Brain in depth: Obsidian, gitless GitHub sync, and the metadata protocol that makes agent writes safe"
+    rlink: "Tutorials/SecondBrain"
+  - rtitle: "Syncing Obsidian to GitHub and wiring agents to your vault: the full read path and write path"
+    rlink: "Tutorials/ObsidianSync"
+- week: "8"
+  date: "1"
+  title: "RAG: Building and Measuring a Knowledge Base"
+  link: "Activities/liascript-rag.md"
+  liapage: true
+  readings:
   - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Reading Response / Discussion: post a short response before class connecting RAG to a corpus of your own"
   - rtitle: "LangChain RAG from Scratch (video)"
@@ -553,30 +563,10 @@ schedule:
     rlink: "Tutorials/TokensEmbeddingsAttention"
   - rtitle: "Offline RAG and LoRA, End to End: Sections A to C rebuild today's pipeline with a persistent index that runs with the network unplugged"
     rlink: "Tutorials/OfflineRAGFineTuning"
-- week: "8"
-  date: "1"
-  title: "RAG and Fine-Tuning: Retrieval Quality and LoRA"
-  link: "Activities/liascript-ragquality.md"
-  liapage: true
-  readings:
-  - rtitle: "Offline RAG and LoRA, End to End: Sections D to F train a LoRA adapter on a CPU and compare a base model, RAG, LoRA, and both on held-out questions"
-    rlink: "Tutorials/OfflineRAGFineTuning"
-- week: "9"
-  date: "0"
-  title: "No Class: Instructor Away"
-  readings:
-  - rtitle: "No class meeting today.  Use the time for the Tools and MCP lab (due Tuesday, November 3) and your team's Final Project Proposal (due Thursday, November 5)."
-    rlink: false
-- week: "9"
-  date: "1"
-  title: "No Class: Instructor Away"
-  readings:
-  - rtitle: "No class meeting today.  Read ahead for Tuesday: the Second Brain and Obsidian Sync tutorials listed there are the background for Tuesday's vault and charter work."
-    rlink: false
 - week: "10"
   date: "0"
-  title: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox"
-  link: "Activities/liascript-howiai.md"
+  title: "RAG Worked Example: Build the Pipeline Together"
+  link: "Activities/liascript-ragworkshop.md"
   liapage: true
   deliverables:
   - dtitle: "Project: Intra-Team Check-In (Norming into Performing) Due"
@@ -596,16 +586,11 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
   readings:
-  - rtitle: "Reading Response / Discussion: post a short response before class.  When does a multi-agent design help, and when does it just cost tokens?"
-  - rtitle: "The Second Brain in depth: Obsidian, gitless GitHub sync, and the metadata protocol that makes agent writes safe"
-    rlink: "Tutorials/SecondBrain"
-  - rtitle: "Syncing Obsidian to GitHub and wiring agents to your vault: the full read path and write path"
-    rlink: "Tutorials/ObsidianSync"
-  - rtitle: "Have your stuck points and your pipeline-in-progress ready.  The studio at the end of class is only as useful as the problems you work on in it."
-    rlink: false
+  - rtitle: "Offline RAG and LoRA, End to End: Sections D to F train a LoRA adapter on a CPU and compare a base model, RAG, LoRA, and both on held-out questions.  The comparison is optional; the measurement steps are the ones today's worked example uses"
+    rlink: "Tutorials/OfflineRAGFineTuning"
 - week: "10"
   date: "1"
-  title: "Observability, Traceability, and Handoff Protocols"
+  title: "Agents That Talk, Observability, and Handoff Protocols"
   link: "Activities/liascript-observability.md"
   liapage: true
   deliverables:
@@ -619,21 +604,23 @@ schedule:
     rlink: "Tutorials/MemoryAndContext"
   - rtitle: "Agent Observability and Tracing: the three pillars and OpenTelemetry, which today's deck applies to your own agents"
     rlink: "Tutorials/Observability"
-- week: "11"
-  date: "0"
-  title: "Design First: Plan Your Final Project's Agent System Before You Build It"
-  link: "Activities/liascript-designfirst.md"
-  liapage: true
-  readings:
   - rtitle: "The handoff skill's claim protocol, which your final project's design must specify"
     rlink: "Tutorials/AgentSkills"
-  - rtitle: "Benjamin, Race After Technology, Chapters 1-2: case studies in discriminatory design, to keep in view as you make today's design decisions"
-  - rtitle: "Pydantic AI From the Loop Up: read it before Thursday if you have not yet seen a framework take over the hand-written loop"
-    rlink: "Tutorials/PydanticAI"
 - week: "11"
-  date: "1"
+  date: "0"
   title: "Orchestration and Multi-Agent Patterns"
   link: "Activities/liascript-orchestration.md"
+  liapage: true
+  readings:
+  - rtitle: "Reading Response / Discussion: post a short response before class.  When does a multi-agent design help, and when does it just cost tokens?"
+  - rtitle: "Pydantic AI From the Loop Up: read it before Agent Frameworks if you have not yet seen a framework take over the hand-written loop"
+    rlink: "Tutorials/PydanticAI"
+  - rtitle: "Agent Frameworks: LangChain, CrewAI, AutoGen, and Agno, and when a framework earns its weight"
+    rlink: "Tutorials/AgentFrameworks"
+- week: "11"
+  date: "1"
+  title: "Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor"
+  link: "Activities/liascript-orchestrationworkshop.md"
   liapage: true
   deliverables:
   - dtitle: "Project: Literature Review, Individual Annotated Bibliographies Due"
@@ -649,44 +636,42 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
   readings:
-  - rtitle: "Agent Frameworks: LangChain, CrewAI, AutoGen, and Agno, and when a framework earns its weight"
-    rlink: "Tutorials/AgentFrameworks"
   - rtitle: "From Second Brain to Chief of Staff: one personal agent followed into production"
     rlink: "Tutorials/ProductionAssistant"
 - week: "12"
   date: "0"
-  title: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses, and the Judge Pipeline Workshop"
+  title: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
   link: "Activities/liascript-critiqueconsensusjudge.md"
   liapage: true
   readings:
   - rtitle: "Hamel Husain, \"Your AI Product Needs Evals\": the error-analysis-first approach to evaluation"
     rlink: "https://hamel.dev/blog/posts/evals/"
+  - rtitle: "Carr, The Glass Cage, Chapters 2-3: automation, deskilling, and automation bias, the human side of trusting a judge"
+  - rtitle: "Benjamin, Race After Technology, Chapters 1-2: case studies in discriminatory design, read with an eye to what an automated judge would miss"
+- week: "12"
+  date: "1"
+  title: "Judge Pipeline Workshop: Build and Audit a Judge"
+  link: "Activities/liascript-rubricworkshop.md"
+  liapage: true
+  readings:
   - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One way to run the judge you build in today's workshop, and it runs against Ollama"
     rlink: "https://www.promptfoo.dev/docs/intro/"
   - rtitle: "Inspect AI (UK AI Security Institute): the Dataset, Solver, and Scorer framework, another harness for today's judge and for the Multi-Agent Patterns lab's judge-and-refine loop"
     rlink: "https://inspect.aisi.org.uk/"
-  - rtitle: "Carr, The Glass Cage, Chapters 2-3: automation, deskilling, and automation bias, the human side of trusting a judge"
-- week: "12"
-  date: "1"
-  title: "Training Data, Bias, Explainability, Intellectual Property, and Privacy"
+  - rtitle: "Coded Bias (film): watch before Tuesday, November 24"
+    rlink: "https://www.codedbias.com/"
+  - rtitle: "O'Neil, Weapons of Math Destruction, the chapter on predictive models in education: read before Tuesday, November 24"
+- week: "13"
+  date: "0"
+  title: "Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference"
   link: "Activities/liascript-biasdata.md"
   liapage: true
   readings:
-  - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
-  - rtitle: "Coded Bias (film), watch before class"
-    rlink: "https://www.codedbias.com/"
-  - rtitle: "O'Neil, Weapons of Math Destruction: the chapter on predictive models in education"
-  - rtitle: "Crawford, Atlas of AI, Chapter 6: Affect / the politics of data"
-- week: "13"
-  date: "0"
-  title: "Governance, Policy, and the Cost of Inference"
-  link: "Activities/liascript-governancecost.md"
-  liapage: true
-  readings:
+  - rtitle: "Reading Response / Discussion: post a short response before class on the carbon and water cost of a deployment you would run"
   - rtitle: "Crawford, Atlas of AI, Chapter 1, Earth: the mineral and energy costs of computation"
+  - rtitle: "Crawford, Atlas of AI, Chapter 6: Affect / the politics of data"
   - rtitle: "Alpine et al., \"AI-driven productivity gains enable more CO₂ emissions than they avoid in a global energy–economy model\""
     rlink: "https://www.nature.com/articles/s44168-026-00411-0"
-  - rtitle: "Reading Response / Discussion: post a short response before class on the carbon and water cost of a deployment you would run"
   - rtitle: "Christian, The Alignment Problem: any one chapter (for example, the section on reward and reinforcement)"
   - rtitle: "AI for Accessibility: Opportunity, Gaps, and Universal Design.  Optional; the accessibility audit is one of the policy sections you may draft today"
     rlink: "Tutorials/AIAccessibility"
@@ -701,13 +686,14 @@ schedule:
     points: "100"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
   readings:
-  - rtitle: "Have ready the judge you built in the Judge Pipeline Workshop (the one the Multi-Agent Patterns lab's judge-and-refine loop reuses), three artifacts from your final project for it to grade, and your integrated project and proposal.  Today's workshop runs the judge against your own work, audits the disagreements, and then threat-models the project."
+  - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
+  - rtitle: "Have ready the judge you built in the Judge Pipeline Workshop (the one the Multi-Agent Patterns lab's judge-and-refine loop reuses), three artifacts from your final project for it to grade, and your integrated project and proposal.  Today's workshop runs the judge against your own work, audits the disagreements, critiques another team's proposal, and then threat-models the project."
     rlink: false
   - rtitle: "Agentic Case Studies: Migration, Browsing, and Research Agents.  Read the two cases and the threat-modeling part; today's second half runs the incident simulation on your own project"
     rlink: "Tutorials/AgentCaseStudies"
-  - rtitle: "Gandalf (Lakera), a prompt-injection game you play in the browser.  Optional, a self-paced warm-up on how guardrails fail before you threat-model your own"
+  - rtitle: "Gandalf (Lakera), a browser exercise in prompt injection.  Optional practice on how guardrails fail, before you threat-model your project"
     rlink: "https://gandalf.lakera.ai/"
-  - rtitle: "Tensor Trust, where you attack and defend against prompt injection.  Optional, the other self-paced warm-up"
+  - rtitle: "Tensor Trust, a browser exercise in attacking and defending against prompt injection.  Optional practice before you threat-model your project"
     rlink: "https://tensortrust.ai/"
 - week: "14"
   date: "1"
@@ -750,7 +736,7 @@ schedule:
     points: "10"
     rubricpath: "_pages/Participation/reading-responses.md"
   readings:
-  - rtitle: "Demo Day, held in our final exam period.  Bring the running system, the governance one-pager, and the contribution statements.  Nothing is due after today."
+  - rtitle: "Demo Day, held in our final exam period.  Have the running system, the governance one-pager, and the contribution statements ready.  Nothing is due after today."
 ---
 
 This course is about building agents you understand and can run yourself.  The sections below explain how the course gives you real choice over your path, how to read an assignment, how to prepare for each hands-on session, and how I value and evaluate the day-to-day work of participating, including engaging with your classmates' work.  Please read them now, and come back to the participation and preparation guides throughout the term.

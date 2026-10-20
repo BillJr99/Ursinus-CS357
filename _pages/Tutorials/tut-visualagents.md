@@ -297,7 +297,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 ## Where This Goes Next
 
-In the Judge Pipeline Workshop, part of the *Critique, Consensus, and the LLM Judge* activity, we measure agent output quality at scale, which requires recruiting a model to act as the judge of other models' outputs.
+In the *Judge Pipeline Workshop: Build and Audit a Judge*, we measure agent output quality at scale, which requires recruiting a model to act as the judge of other models' outputs.
 
 ## Further Reading
 

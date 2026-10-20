@@ -146,10 +146,10 @@ Here are two views of the same thread: a table for scanning, then a narrative fo
 | 9 | **Charter revisit** | Midpoint: the team re-reads its charter, discusses what held and what did not, and files a revision. | [Team Charter and Norms activity]({{ site.baseurl }}/Tutorials/GroupCharter) |
 | 10 | **Intra-team check-in 2** | Second signed progress report and confidential pulse, now with the peer-evaluation section (below). | [Check-Ins](#intra-team-check-ins-1-3) |
 | 11 | **Proposal due** | The proposal builds on the Stakeholder Brief; the Literature Review is handed out two days earlier, with check-in 2, and feeds the sprints. | Track pages |
-| 12 | **Peer review round 2** | Cross-team SQR critique of the design documents grown from the proposals, in class at the *Design First* session. | [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview) |
-| 13 | **Literature Review, Phase 1** (individual) | Each member builds an annotated bibliography of 2-3 sources, alone, before the team synthesizes anything. | [Literature Review]({{ site.baseurl }}/Assignments/LitReview) |
-| 14 | **Literature Review, Phase 2** (team) | One page connecting everyone's sources to the problem statement and naming the gap your project addresses. | [Literature Review]({{ site.baseurl }}/Assignments/LitReview) |
-| 15 | **Sprints 1-3** | Three sprints between the proposal and Demo Day, with rotating roles, runnable increments, evaluation updates, and Responsible AI measurements (token counts, traces, correctness audits, and bias probes) logged at every boundary. Sprint 2 spans the Thanksgiving break; plan for it in your charter's cadence. | Track pages |
+| 12 | **Literature Review, Phase 1** (individual) | Each member builds an annotated bibliography of 2-3 sources, alone, before the team synthesizes anything. | [Literature Review]({{ site.baseurl }}/Assignments/LitReview) |
+| 13 | **Literature Review, Phase 2** (team) | One page connecting everyone's sources to the problem statement and naming the gap your project addresses. | [Literature Review]({{ site.baseurl }}/Assignments/LitReview) |
+| 14 | **Peer review round 2** | Cross-team SQR critique of the proposals, in class at the *Project Sprint* session. | [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview) |
+| 15 | **Sprints 1-3** | Three sprints between the proposal and Demo Day, with rotating roles, runnable increments, evaluation updates, and Responsible AI measurements (token counts, traces, correctness audits, and bias probes) logged at every boundary. Sprint 1 spans the Thanksgiving break; plan for it in your charter's cadence. | Track pages |
 | 16 | **Gallery walk + peer review round 3** | Walk each other's work with SQR cards at the final studio. | Track pages |
 | 17 | **Intra-team check-in 3** | The third private check-in, reflecting on what the gallery walk surfaced. | [Check-Ins](#intra-team-check-ins-1-3) |
 | 18 | **Demo Day** | Technical demo, a non-technical stakeholder-facing segment, a disseminable artifact, and the Responsible AI Report on the team's own work. Demo Day is also the team's deliberate adjourning: the final reflection, contribution statements, and your professional portfolio artifact close the thread. | Track pages |
@@ -299,7 +299,7 @@ Rotation is not optional and not tradeable.  The point is that everyone practice
 
 ## Intra-Team Check-Ins 1-3
 
-> **Bring to class.**  Each review round runs on real artifacts: the Stakeholder Brief draft at the *RAG and Fine-Tuning: Retrieval Quality and LoRA* session, the proposal and the design document grown from it at *Design First*, and your gallery-walk artifact plus SQR cards at *Project Studio and Gallery Walk*.  A round with nothing to review is a round wasted.
+> **Have these ready.**  Each review round runs on real artifacts: the Stakeholder Brief draft at the first round, the proposal, as it stands that day, at the *Project Sprint* session, and your gallery-walk artifact plus SQR cards at *Project Studio and Gallery Walk*.  A round with nothing to review is a round wasted.
 
 The structured peer reviews at the brief, proposal, and gallery-walk stages all use the **SQR protocol**: one Strength with evidence, one genuine Question, one Risk with a mitigation.  The **[Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview)** carries the protocol card; bring it to each review round.
 

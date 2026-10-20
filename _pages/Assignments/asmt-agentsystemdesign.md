@@ -36,7 +36,7 @@ info:
       preemerging: No pre-mortem or confirmation gates are provided, or risks and gates are copied verbatim without reference to the specific system
       beginning: Risks or gates are present but justified by abstract danger ("this could be bad") rather than a named, concrete failure mode; fewer than the required six pre-mortem risks or ten classified actions are provided
       progressing: "The required coverage is met with mostly sound reasoning, but some detection signals, mitigations, or consequence descriptions remain generic (\"we would notice\", \"be more careful\"), or the forbidden lane conflates \"very risky\" with \"no approval can make this safe\"; or the Observability, Traceability, and Handoff Protocol is present but lists log fields without showing a decision tracing back to a named rule, or its start/restart handoff file skips rows of the eight-row checklist, or (Direction B) the skill exists but the run brief does not show it firing at start and stop"
-      proficient: "For Direction A: at least six concrete, system-specific risks each name the agent, input type, and output fault; detection names a specific observable signal and mitigation names an action the system or team could actually take; at least one row addresses contradictory outputs between two agents and at least one addresses user data or privacy. For Direction B: at least ten realistic domain actions are classified autorun/queue/forbidden with explicit reversibility reasoning; every gate is justified by a concrete failure scenario naming the action, the harm, and why after-the-fact recovery is impossible or expensive; and at least one forbidden item carries an argument for why no approval should ever make it safe. Both directions: the Observability, Traceability, and Handoff Protocol names the fields logged at each step, shows a decision tracing back to a rule by the rule's name in the trace, and specifies a start/restart handoff file that covers every row of the eight-row checklist from the Observability, Traceability, and Handoff Protocols session; in Direction B the protocol is a skill the agent invokes at start and at stop, and the run brief shows it fired"
+      proficient: "For Direction A: at least six concrete, system-specific risks each name the agent, input type, and output fault; detection names a specific observable signal and mitigation names an action the system or team could actually take; at least one row addresses contradictory outputs between two agents and at least one addresses user data or privacy. For Direction B: at least ten realistic domain actions are classified autorun/queue/forbidden with explicit reversibility reasoning; every gate is justified by a concrete failure scenario naming the action, the harm, and why after-the-fact recovery is impossible or expensive; and at least one forbidden item carries an argument for why no approval should ever make it safe. Both directions: the Observability, Traceability, and Handoff Protocol names the fields logged at each step, shows a decision tracing back to a rule by the rule's name in the trace, and specifies a start/restart handoff file that covers every row of the eight-row checklist from the Agents That Talk, Observability, and Handoff Protocols session; in Direction B the protocol is a skill the agent invokes at start and at stop, and the run brief shows it fired"
     - weight: 20
       description: Verifiability and Evidence
       preemerging: No success criteria or loop evidence is provided, or criteria are purely subjective, or no iteration was actually run
@@ -50,8 +50,8 @@ info:
       progressing: The reflection identifies at least one place the design changed or would break under real use, with a plausible revision, though the connection between evidence and revision is loose
       proficient: The reflection names a specific assumption that changed, a specific surprise or leak surfaced by the pre-mortem or the loop, and the concrete revision each motivates; the submission is professionally formatted, internally consistent, fully anonymized where the domain involves real people or data, and answers every reflection prompt with a specific observation from this assignment
   readings:
-    - rtitle: "Agent Design Activity"
-      rlink: "Activities/liascript-designfirst.md"
+    - rtitle: "Orchestration and Multi-Agent Patterns Activity"
+      rlink: "Activities/liascript-orchestration.md"
       liapage: true
     - rtitle: "Pre-mortem Technique (Klein, 2007)"
       rlink: "https://hbr.org/2007/09/performing-a-project-premortem"
@@ -70,7 +70,7 @@ info:
     - rtitle: "The Critique, Consensus, and the LLM Judge activity, whose extension covers human-in-the-loop oversight, escalation, and appropriate autonomy"
       rlink: "Activities/liascript-critiqueconsensusjudge.md"
       liapage: true
-    - rtitle: "Observability, Traceability, and Handoff Protocols, where the protocol checklist comes from"
+    - rtitle: "Agents That Talk, Observability, and Handoff Protocols, where the protocol checklist comes from"
       rlink: "Activities/liascript-observability.md"
       liapage: true
 
@@ -83,7 +83,7 @@ tags:
 
 ---
 
-> **Not assigned in Fall 2026.**  This written assignment is not part of the course this term.  Its design work (the agent table, the pre-mortem, and the observability, traceability, and handoff protocol) is folded into the [Final Project]({{ site.baseurl }}/Projects/FinalProject): each team develops it into the project's design document in the *Design First* session.  The page remains available as a reference for that work.
+> **Not assigned in Fall 2026.**  This written assignment is not part of the course this term.  Its design work (the agent table, the pre-mortem, and the observability, traceability, and handoff protocol) is folded into the [Final Project]({{ site.baseurl }}/Projects/FinalProject): each team sketches the agent table and pre-mortem in its [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal), and the protocol becomes the traces and handoff records its Responsible AI Report requires.  The page remains available as a reference for that work.
 
 Picture this: you restart your agent with a clean slate, and the first thing it does is ask you which test command to run.  You know the answer, but nothing you wrote down says it.  The system you thought you had was partly in your head.
 
@@ -101,10 +101,10 @@ Both directions include an Observability, Traceability, and Handoff Protocol: th
 
 **This builds on:**
 
-- the *Design First* session, whose agent table and pre-mortem are the backbone of Direction A;
+- the [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal), whose agent design table and pre-mortem are the backbone of Direction A;
 - *How I AI*, whose charter, contract, and handoff documents are the backbone of Direction B;
 - the overnight brief from *Coding Agents: OpenCode, Spec-First Development, Hooks, and Reading the Log* and the loops that run themselves from *The Karpathy Loop and the Gauntlet Loop: Iterating With an Agent*, which Direction B's loop draws on;
-- *Observability, Traceability, and Handoff Protocols*, where the protocol section in both directions comes from.
+- *Agents That Talk, Observability, and Handoff Protocols*, where the protocol section in both directions comes from.
 
 All are taught before this is due.
 
@@ -112,7 +112,7 @@ All are taught before this is due.
 
 > **Time budget.** Most of this assignment is thinking and writing.  The pre-mortem in Direction A and the governed loop in Direction B take the longest and carry the most points, so please do not leave either for the last evening.  Direction B's loop is wall-clock work you cannot compress, because the iterations have to actually run.
 
-**Carry three columns into your design.**  From the *Design First* session: for every agent and every action, be able to say **how it is observed**, **what it can reach**, and **how it is undone**.  Direction A's agent table and Direction B's action classification are both places those answers belong, and the protocol section is where "how it is observed" becomes concrete.  A design that cannot answer these questions for some component has found its own weakest point.
+**Carry three columns into your design.**  From Section 3c of *How I AI*: for every agent and every action, be able to say **how it is observed**, **what it can reach**, and **how it is undone**.  Direction A's agent table and Direction B's action classification are both places those answers belong, and the protocol section is where "how it is observed" becomes concrete.  A design that cannot answer these questions for some component has found its own weakest point.
 
 > **Watch out.** The single most common way this assignment loses points is writing constraints that sound like values.  "The system should handle sensitive data responsibly" cannot be checked by anyone.  "The agent may read `students.csv` and may never write to it or transmit it off the machine" can.  Apply the stranger test to every constraint and every rule before you submit: could someone who has never met you determine, from evidence, whether it held?
 
@@ -317,12 +317,12 @@ Criteria should cover distinct dimensions: functional correctness (does it do th
 
 ### Component 6: Observability, Traceability, and Handoff Protocol
 
-Specify how a stranger reading your system's logs could reconstruct what it did and why, and how a fresh process could pick up where the last one stopped.  This component follows the *Observability, Traceability, and Handoff Protocols* session.
+Specify how a stranger reading your system's logs could reconstruct what it did and why, and how a fresh process could pick up where the last one stopped.  This component follows the *Agents That Talk, Observability, and Handoff Protocols* session.
 
 > **Do this.** Write the three parts of the protocol:
 > 1. **What is logged at each step.**  For every agent call, tool call, and branch in your data-flow diagram, list the fields the log entry carries.  A table with one row per step type and one column listing its fields is enough.  Each field should be something a checker could read back, not a description of intent.
 > 2. **How a decision traces back to a rule.**  Give each constraint in your problem statement and each refusal condition in your agent table a short name.  Whenever the system refuses, escalates, or short-circuits, the trace must carry that rule name.  Show one worked trace: the input, the log entries it produced, the rule name that fired, and the branch taken.
-> 3. **What the start/restart handoff file contains.**  Specify the file a fresh process reads when it starts or restarts, covering every row of the eight-row checklist from the *Observability, Traceability, and Handoff Protocols* session.  List the file's fields and give one filled example for a plausible interruption.
+> 3. **What the start/restart handoff file contains.**  Specify the file a fresh process reads when it starts or restarts, covering every row of the eight-row checklist from the *Agents That Talk, Observability, and Handoff Protocols* session.  List the file's fields and give one filled example for a plausible interruption.
 
 A protocol that says "the agent logs its actions" earns nothing here.  The test is whether someone holding only the logs and the handoff file could say which rule produced a given decision and what the next safe action is.
 
@@ -374,7 +374,7 @@ Start from the [course templates]({{ site.baseurl }}/files/agent-templates/READM
 > 3. **A standing prompt** (`SYSTEMPROMPT.md` style): operating habits and, centrally, **confirmation gates rewritten for your domain's irreversible actions**, plus an escalation rule.
 > 4. **Handoff state files** (`.ai/` style): `CURRENT_TASK.md` with completion criteria and a reality-check table, and `SESSION.md` ready to receive entries that end with a next safe action.
 > 5. **An action classification**: at least **ten** realistic actions an agent would take in your domain, classified Autorun / Queue / Forbidden, each with one line of reversibility reasoning.
-> 6. **An Observability, Traceability, and Handoff Protocol skill**: a reusable instruction the agent must invoke at the start and at the stop of every iteration.  It states what is logged at each step (the fields of each entry), how a decision traces back to a rule (the trace carries the rule's name as written in your charter or standing prompt), and what the start/restart handoff file contains, covering every row of the eight-row checklist from the *Observability, Traceability, and Handoff Protocols* session.  At start, the skill reads the handoff state and logs what it found; at stop, it refuses to let the iteration end until the handoff state satisfies the checklist.
+> 6. **An Observability, Traceability, and Handoff Protocol skill**: a reusable instruction the agent must invoke at the start and at the stop of every iteration.  It states what is logged at each step (the fields of each entry), how a decision traces back to a rule (the trace carries the rule's name as written in your charter or standing prompt), and what the start/restart handoff file contains, covering every row of the eight-row checklist from the *Agents That Talk, Observability, and Handoff Protocols* session.  At start, the skill reads the handoff state and logs what it found; at stop, it refuses to let the iteration end until the handoff state satisfies the checklist.
 
 Delete every template section you cannot honestly enforce, and list what you deleted and why (a rule nobody enforces is worse than no rule).  Every gate must earn its place with a concrete failure scenario: the action, the harm, and why after-the-fact recovery is impossible or expensive.  At least one forbidden item should carry an argument for why no approval should ever make it safe.  Retain the batch-threshold and blanket-consent rules with a domain-specific example, or remove them with a defensible argument.
 
@@ -487,7 +487,7 @@ One page or less: where did the document set hold, where did it leak, which docu
 
 ## Required for Both Directions: Token Ledger Questions
 
-Whichever direction you choose, close your submission with this short worked-theory section: the by-hand budget math from the Tool Use session's token ledger and Model 1 of the Observability, Traceability, and Handoff Protocols session (the Memory and the Small Context Window Principle tutorial works the same arithmetic), applied to *your* designed system.  Show your arithmetic; I grade these within the **Verifiability and Evidence** rubric row, because a design whose costs you cannot compute is a design you cannot verify.
+Whichever direction you choose, close your submission with this short worked-theory section: the by-hand budget math from the Tool Use session's token ledger and Model 1 of the Agents That Talk, Observability, and Handoff Protocols session (the Memory and the Small Context Window Principle tutorial works the same arithmetic), applied to *your* designed system.  Show your arithmetic; I grade these within the **Verifiability and Evidence** rubric row, because a design whose costs you cannot compute is a design you cannot verify.
 
 1.  **Schema overhead.**  Your design advertises some number of tools.  Using ~80 tokens per schema, compute the per-turn token overhead of your tool menu, and the overhead per turn that is *wasted* on tools the turn does not use in your system's most common workflow.  State one design change (e.g., a sub-agent holding some tools, per the Small Context Window principle) and recompute.
 2.  **Conversation growth.**  Assume your system re-sends full history each turn and averages some tokens per exchange (state your estimate and justify it from your prompt skeletons).  Compute total tokens *sent* across a 10-turn session (show why the total grows roughly quadratically rather than linearly) and identify the turn at which your chosen model's context window overflows.
