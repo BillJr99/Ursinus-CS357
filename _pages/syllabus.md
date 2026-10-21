@@ -461,6 +461,11 @@ schedule:
   title: "MCP: Connecting Agents to Tools and Your Obsidian Vault"
   link: "Activities/liascript-mcp.md"
   liapage: true
+  deliverables:
+  - dtitle: "Project: Stakeholder Brief, Individual Unassisted Problem Statement Due"
+    dlink: "Assignments/StakeholderBrief"
+    points: "3"
+    rubricpath: "_pages/Assignments/asmt-stakeholderbrief.md"
   readings:
   - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients.  Supports the Tools and MCP Lab"
     rlink: "https://huggingface.co/learn/mcp-course/"
