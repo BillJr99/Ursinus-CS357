@@ -718,11 +718,6 @@ schedule:
     dlink: "Projects/PBLThread"
     points: "3"
     rubricpath: "_pages/Projects/proj-pblthread.md"
-  readings:
-  - rtitle: "Have your integrated system and your demo script ready.  Today is a rehearsal rather than a work session.  If it does not run end to end at the start of class, that is the thing to fix."
-- cdate: "2026/12/16"
-  title: "Demo Day: Final Project Presentations (Final Exam Period, 8:00-11:00 AM, Pfahler 107)"
-  deliverables:
   - dtitle: "Project: Demo Day Presentations Due"
     dlink: "Projects/FinalProject"
     points: "75"
@@ -735,6 +730,10 @@ schedule:
     dlink: "Participation/ReadingResponses"
     points: "10"
     rubricpath: "_pages/Participation/reading-responses.md"
+  readings:
+  - rtitle: "Have your integrated system and your demo script ready.  Today is a rehearsal rather than a work session.  If it does not run end to end at the start of class, that is the thing to fix."
+- cdate: "2026/12/16"
+  title: "Demo Day: Final Project Presentations (Final Exam Period, 8:00-11:00 AM, Pfahler 107)"
   readings:
   - rtitle: "Demo Day, held in our final exam period.  Have the running system, the governance one-pager, and the contribution statements ready.  Nothing is due after today."
 ---
