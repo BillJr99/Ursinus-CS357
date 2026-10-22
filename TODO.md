@@ -12,3 +12,5 @@
 - [ ] Have a separate dev docker container that runs as the root user and runs opencode in auto mode, but that is isolated to a workspace subdirectory of the current directory
 - [ ] Simplify software environment setup to OpenCode and a docker container with the required software including TUI OpencCode
 - [ ] Consider continued use of Jetstream2 (added 2026-10-19)
+- [ ] Make sure we talk about specific skills at the project level: name the skills (the SKILL.md files, how they are scoped and triggered) that each team's final project uses, and discuss them explicitly when the project is introduced and at its checkpoints, not only in the Skills unit. (added 2026-10-22)
+- [ ] Improve student accountability through firm deliverable schedules and clearer late policies: publish a deliverable calendar students can plan against, state the late penalty and any grace or extension mechanism in plain terms up front, and apply it consistently. (added 2026-10-22)
