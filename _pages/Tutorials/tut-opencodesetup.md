@@ -69,11 +69,11 @@ The two files are **merged, not replaced**.  A project file does not have to res
 | Route | What it does |
 |---|---|
 | **The configuration file** | **Defines** things: providers, permissions, MCP servers, plugins, extra instruction files.  Everything in this tutorial is defined here |
-| **The TUI** | `/connect` stores a **credential**; `/model` **selects** a model; **Tab** cycles agents.  There is no `opencode auth login` |
+| **The TUI** | `/connect` stores a **credential**; `/models` **selects** a model; **Tab** cycles agents; `/quit` (or `/exit`) leaves |
 | **The desktop application** | **Selects** a model, and **File > Settings > Show Agent** reveals the agent selector.  It reads the same configuration file |
 {: .tb-full}
 
-Adding a provider, a plugin, or an MCP server is a file edit on every platform and in both faces.  Neither the desktop application nor the TUI has a form for it.  Knowing that in advance saves you hunting through a settings pane for something that was never there.
+Adding a provider, a plugin, or an MCP server is a change to the configuration file on every platform and in both faces.  Neither the desktop application nor the TUI has a settings form for it, and `/connect` stores only the credential, never the address.  You can make the edit yourself or ask the agent to make it for you, as §3 does for a plugin, but either way the result is a line in `opencode.json`.  Knowing that in advance saves you hunting through a settings pane for something that was never there.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---
@@ -182,7 +182,7 @@ A provider key and a model key join with a slash to make the identifier the rest
 
 Every model you pull later needs another entry in this map, added by hand.  If that becomes tedious, §7 names an optional plugin that fills the map from the provider itself.
 
-**Confirm it.**  Start `opencode`, type `/model`, and look for your provider.  In the desktop application, the model dropdown in the message bar does the same job.
+**Confirm it.**  Start `opencode`, type `/models`, and look for your provider.  In the desktop application, the model dropdown in the message bar does the same job.
 
 An empty model list is almost always one of three things, in this order: the file is named `config.json`, the file is in neither of the two locations from the table at the top, or the JSON does not parse.  Check the name first; it is the most common and the least obvious.
 {: .tb-warning data-title="Watch out"}
@@ -219,7 +219,7 @@ Providers fall into three groups, and which group yours is in decides where the 
 |---|---|---|
 | **Ollama, and anything else local** | It does not.  There is no account and no key | Nowhere.  This is the whole point of running locally |
 | **A service with an API key** | An `apiKey` in `options`, written as a `{env:...}` or `{file:...}` reference | Your shell environment, or a file you `chmod 600`.  Never the config |
-| **A service with a sign-in** | `/connect` in the TUI, then pick the service, or **Other** for one not listed | opencode's own credential store, outside `opencode.json` |
+| **A service with a sign-in, or a key you would rather not keep in a variable** | `/connect` in the TUI, then pick the service, or **Other** for one not listed, including your own OpenAI-compatible endpoint | opencode's own credential store, outside `opencode.json` |
 {: .tb-full}
 
 **Local models need no authentication at all.**  If you are following this course as written, section 3 is already finished and you can skip to section 4.  An `apiKey` field is not required for Ollama, and adding a fake one to make the block "look complete" is a habit worth not forming.
@@ -243,10 +243,49 @@ Check that it is set **without printing it**, because a key you echo is a key in
 
 In PowerShell, `if ($env:ACME_API_KEY) { "set" }`.
 
-**For a sign-in service**, there is no `opencode auth login` command.  Start the TUI, run `/connect`, and choose the service from the list, or scroll to **Other** if it is not there.  opencode stores what it gets in its own credential file, `~/.local/share/opencode/auth.json` on macOS, Linux, and WSL2, and under your user profile on Windows.  The property that matters is not the exact path: it is that the credential is **not** in `opencode.json` and therefore not in your repository, which is what makes the configuration file safe to commit.
+**For a sign-in service, or to store a key through the TUI**, start the TUI, run `/connect`, and choose the service from the list, or scroll to **Other** if it is not there.  **Other** asks for a provider ID and then an API key, and nothing else: it does not ask for an address, so a provider you add this way still needs a `provider` block with its `baseURL` under the same ID.  The next subsection walks that route end to end.  opencode stores what it gets in its own credential file, `~/.local/share/opencode/auth.json` on macOS, Linux, and WSL2, and under your user profile on Windows.  The property that matters is not the exact path: it is that the credential is **not** in `opencode.json` and therefore not in your repository, which is what makes the configuration file safe to commit.
 
 Whichever group you are in, the file you commit holds a reference and never a value.  That rule is what lets a classmate clone your repository, get your whole provider setup, and get none of your credentials.
 {: .tb-key data-title="Why this matters"}
+
+### Connecting an OpenAI-compatible endpoint, step by step
+
+If you are given access to a hosted, OpenAI-compatible endpoint (an address ending in something like `/api/v1`, and an API key to go with it), this is the shortest correct route from nothing to picking its models in the TUI.  It combines the plugin from §7, a three-line provider block, and `/connect`, and each step is there for a reason the earlier parts of this section explain.
+
+1.  **Install the auto-models plugin by asking the agent.**  Start `opencode` in any folder.  Whatever model it starts with is enough for this, including the free default, so type this as a prompt:
+
+    ```text
+    install this opencode plugin https://github.com/BillJr99/opencode-auto-models
+    ```
+
+    The agent adds the plugin to the `plugin` array of your global `opencode.json`, exactly the entry shown in §7.  Read the change before you approve it, because it is your configuration file it is editing.  Then type `/quit` (an alias of `/exit`) and start `opencode` again: plugins load only at startup, so the running session will not see it.
+
+2.  **Name the endpoint in `opencode.json`.**  Add a provider block holding only the address, with no key and no `models` map.  The plugin fills the models in from the endpoint on the next start, and the key comes in the next step.  Pick a short provider ID; `myendpoint` below is a placeholder, and you will type the same word again in step 3.
+
+    ```json
+    {
+      "provider": {
+        "myendpoint": {
+          "npm": "@ai-sdk/openai-compatible",
+          "name": "My Endpoint",
+          "options": {
+            "baseURL": "https://YOUR-ENDPOINT/api/v1"
+          }
+        }
+      }
+    }
+    ```
+
+    Merge this into your existing `provider` map rather than pasting a second one, check it with `python3 -m json.tool`, and then `/quit` and restart once more.  You may ask the agent to make this edit, too; give it the address, never the key.
+
+3.  **Store the key with `/connect`.**  In the TUI, type `/connect`, scroll to **Other**, and enter the **same provider ID** from step 2 (`myendpoint`).  opencode then asks for your API key; paste it there.  It goes into opencode's credential file, not into `opencode.json`, so the configuration stays safe to commit.
+
+4.  **Pick a model.**  Type `/models` and choose from the list under your provider's name.  Every model the endpoint offers appears there without your having typed a single model name.
+
+The `/connect` key prompt is the one place in opencode where pasting a key is correct.  A key pasted into an ordinary prompt instead is sent to whatever model you are talking to, and the warning at the end of this section applies.
+{: .tb-warning data-title="Watch out"}
+
+If `/models` shows your provider with no models, or does not show it at all, check in this order: the ID you typed in `/connect` matches the key in the `provider` block exactly; the JSON parses; you restarted after both edits; and the plugin loaded, which the agent can confirm for you by reading opencode's log.  A mismatched ID is the most common cause, because nothing tells you the credential and the address went to two different providers.
 
 ### OpenCode v2: a custom provider through an AI gateway
 
@@ -292,7 +331,7 @@ The same rule holds as in the stable format: the file names the variable (`MY_AP
 
 ### Questions to Work Through
 
-1.  You put a provider in your global `opencode.json` and a different one in a project's `opencode.json`.  Which models does `/model` list when you open that project, and why is the answer not "only the project's"?
+1.  You put a provider in your global `opencode.json` and a different one in a project's `opencode.json`.  Which models does `/models` list when you open that project, and why is the answer not "only the project's"?
 
     *Hint:* The word in §2 is *merged*.  Ask what merging means when both files define the same key, and then when they define different ones.
 
@@ -486,7 +525,7 @@ Skills are read at startup, so restart opencode and ask it to list the skills it
 
 The simplest way to add one is the `plugin` array, which takes a package name or a Git URL.  The example below is **optional**, and it earns its place only once you have a provider whose model list keeps changing: it saves you the hand-editing that §3 would otherwise require every time you `ollama pull` something new.  If you registered one local model and intend to leave it that way, skip to the paragraph after the block and write your own plugin instead.
 
-**What `opencode-auto-models` does.**  On startup it runs opencode's `config` hook, calls `GET {baseURL}/models` on each eligible provider, and merges whatever that provider reports into your `models` map, leaving any entry you wrote by hand alone.  It works for any `@ai-sdk/openai-compatible` provider, so your Ollama block and your OpenWebUI block both qualify, and it caches the result on disk so later starts are fast.  It needs opencode **1.18.29 or newer on the v1 line**; the v2 line is unsupported, and on v2 it simply will not load.
+**What `opencode-auto-models` does.**  On startup it runs opencode's `config` hook, calls `GET {baseURL}/models` on each eligible provider, and merges whatever that provider reports into your `models` map, leaving any entry you wrote by hand alone.  It works for any `@ai-sdk/openai-compatible` provider, so your Ollama block and your OpenWebUI block both qualify, and it caches the result on disk so later starts are fast.  It needs opencode **1.18.29 or newer** on the v1 line, or **2.0.x** on the v2 line; check with `opencode --version`.  On v1 it is the `plugin` entry below.  On v2 the entry has a different home, and `opencode plugin add github:BillJr99/opencode-auto-models` writes it for you.  §3's step-by-step route installs it by asking the agent, which works on either line.
 
 ```json
 {
@@ -757,7 +796,7 @@ One command per section.  If every line produces output, your setup is complete.
 |---|---|---|
 | Install | `opencode --version` | The agent is on your `PATH` |
 | Configuration | `python3 -m json.tool <your opencode.json>` | The file parses |
-| Provider | `/model` in the TUI, or the dropdown in the desktop app | opencode found your models |
+| Provider | `/models` in the TUI, or the dropdown in the desktop app | opencode found your models |
 | Contract | Ask "what is this project?" | `AGENTS.md` was read |
 | Permissions | Ask for a scratch file, then for `git status` | The first stops, the second does not |
 | Skill | Restart, then ask what skills it can see | Discovery found your directory |
@@ -770,7 +809,7 @@ One command per section.  If every line produces output, your setup is complete.
 
 ## Exercises
 
-1.  **Two scopes, one provider.**  Put a provider in your global config and a second, differently named provider in a project's config.  Open that project, run `/model`, and record which models appear.  Then open a different project and run it again.  Write one sentence explaining the difference in terms of merging.
+1.  **Two scopes, one provider.**  Put a provider in your global config and a second, differently named provider in a project's config.  Open that project, run `/models`, and record which models appear.  Then open a different project and run it again.  Write one sentence explaining the difference in terms of merging.
 
 2.  **Break it on purpose, three ways.**  Starting from a working setup, cause each of these failures and record the symptom: rename `opencode.json` to `config.json`; delete a closing brace; put a skill directory under a name that does not match its `name:` field.  You now recognize all three on sight, which is the point.
 

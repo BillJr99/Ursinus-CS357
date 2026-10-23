@@ -338,7 +338,7 @@ opencode reads one global config file, and the file name matters: it is `opencod
 | macOS, Linux, or WSL | `~/.config/opencode/opencode.json` |
 | Windows, native shell | `%USERPROFILE%\.config\opencode\opencode.json` (Win+R, paste `%USERPROFILE%\.config\opencode`, Enter) |
 
-The `provider` block is a map, so listing two keys registers two providers, both live at once, and `/model` shows you the union:
+The `provider` block is a map, so listing two keys registers two providers, both live at once, and `/models` shows you the union:
 
 ```bash
 mkdir -p ~/.config/opencode
@@ -370,7 +370,7 @@ Two clarifications, because "API key" usually means "bill":
 - **The OpenWebUI key is yours, minted on your own server.**  Generate it under *Settings -> Account -> API Keys*.  It authenticates you to software running on your machine.  Ollama takes no key at all, which is why its block has none.
 - **Both routes are free** as long as the models behind them are the local ones you pulled.  You are adding a front door, not a bill.  Point the same config at a paid provider later and the cost follows the model, not the config.
 
-Now start opencode and run `/model`.  You should see both entries, distinguishable because the `name` fields say which is which.  Ask the same question through each; the difference you observe is exactly the value OpenWebUI's configuration is adding, measured rather than assumed.
+Now start opencode and run `/models`.  You should see both entries, distinguishable because the `name` fields say which is which.  Ask the same question through each; the difference you observe is exactly the value OpenWebUI's configuration is adding, measured rather than assumed.
 
 **Then set the agent, which the config file does not set for you.**  The provider block chooses a model; it does not choose the agent, meaning the named set of permissions and standing instructions the model runs under.  opencode's two primary agents are `build`, which may edit files and run commands, and `plan`, which may read and propose but may not change anything until you approve.  In the **desktop application**, open **File -> Settings** and turn on **Show Agent**, so the agent selector sits in the message bar beside the model dropdown; it is not shown by default in every build, which is why plan mode is so often reported missing when it is merely hidden.  In the **terminal**, **Tab** cycles the primary agents (`agent_cycle`), `shift+tab` cycles back (`agent_cycle_reverse`), and `<leader>a` lists them (`agent_list`); all three are rebindable in `tui.json` rather than in `opencode.json`, which no longer carries keybinds.  The current agent is displayed on the input line.  Read the agent and the model together before you send anything: they are two independent choices, and only one of them is in the file you just wrote.
 

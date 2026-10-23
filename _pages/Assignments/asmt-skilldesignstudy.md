@@ -77,7 +77,7 @@ You need opencode, configured against your local model as in Week 1, Step 8.2.  
 opencode --version
 ```
 
-Then start `opencode`, type `/model`, and confirm your provider appears.  The OpenCode desktop app is equally fine: pick your model from its model picker instead of typing `/model`.
+Then start `opencode`, type `/models`, and confirm your provider appears.  The OpenCode desktop app is equally fine: pick your model from its model picker instead of typing `/models`.
 
 > **Time budget.** The Stage 1 tutorial takes about fifteen minutes.  Writing the first version of your skill takes under an hour.  Budget most of your time for Stage 3, the run-and-refine loop, because that is where the skill gets good.
 

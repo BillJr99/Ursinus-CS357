@@ -318,9 +318,9 @@ The block that registers the server you just started:
 
 Three things to notice, because they answer the three questions this block always raises.  `npm` names the adapter that speaks the endpoint's dialect, and Ollama serves an OpenAI-compatible API, which is why the generic adapter works.  `baseURL` is `localhost` when opencode runs on this machine and `http://host.docker.internal:11434/v1` when it runs inside the course container, for the reason you met in the Docker session.  And there is **no API key**, because Ollama takes none; this is the same point Section 3b makes from the other direction.
 
-A provider key and a model key join with a slash, so the block above defines `ollama/llama3.2`, which is the identifier `/model` lists and `--model` accepts.
+A provider key and a model key join with a slash, so the block above defines `ollama/llama3.2`, which is the identifier `/models` lists and `--model` accepts.
 
-Adding a provider is a file edit in every case.  The desktop application and the TUI both read this file, and neither offers a form for adding one: the TUI's `/model` selects among providers already defined, and `/connect` stores a credential for a service that needs one, which Ollama does not.  Restart opencode after editing, then type `/model` and look for your provider.
+Adding a provider is a file edit in every case.  The desktop application and the TUI both read this file, and neither offers a form for adding one: the TUI's `/models` selects among providers already defined, and `/connect` stores a credential for a service that needs one, which Ollama does not.  Restart opencode after editing, then type `/models` and look for your provider.
 
 The full walkthrough, with every platform and the rest of the file, is End-to-End OpenCode Setup at https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup, which is today's reading for the lab being handed out.
 

@@ -166,7 +166,7 @@ The template it writes should look like this:
 }
 ```
 
-Then open that file in your own editor, at the path opencode reported, and replace the three placeholders.  Add the file to `.gitignore` *before* the key goes in, so the key never reaches a commit.  Restart `opencode`, type `/model`, and confirm the new provider is listed.
+Then open that file in your own editor, at the path opencode reported, and replace the three placeholders.  Add the file to `.gitignore` *before* the key goes in, so the key never reaches a commit.  Restart `opencode`, type `/models`, and confirm the new provider is listed.
 
 **Finding the model name.**  If your provider runs OpenWebUI, copy the name from there rather than typing it.  Open the model dropdown at the top of a chat, click the three dots next to the model, and copy its link.  The link looks like `https://provider.example/?model=openai%2Fgpt-4o-mini`.  Two changes turn it into the model name:
 

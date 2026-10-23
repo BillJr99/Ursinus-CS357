@@ -973,9 +973,9 @@ For today either choice works, since the only thing being configured is a model 
 opencode --version
 ```
 
-Then start `opencode`, type `/model`, and confirm your Ollama provider is listed.  Ask it one question ("what files are in this directory?" is enough).
+Then start `opencode`, type `/models`, and confirm your Ollama provider is listed.  Ask it one question ("what files are in this directory?" is enough).
 
-> **What you should see:** a version string, a `/model` list that names your Ollama provider, and an answer to your question.  A small local model answers slowly and sometimes oddly; that is the model, not your setup.
+> **What you should see:** a version string, a `/models` list that names your Ollama provider, and an answer to your question.  A small local model answers slowly and sometimes oddly; that is the model, not your setup.
 
 **Paste.**  The version string, and the question with the agent's answer.
 
@@ -986,7 +986,7 @@ Then start `opencode`, type `/model`, and confirm your Ollama provider is listed
 #### Part 1B Checklist
 
 - [ ] `opencode --version` returns a version string
-- [ ] `/model` lists your Ollama provider
+- [ ] `/models` lists your Ollama provider
 - [ ] The agent answered one prompt from your local model
 
 #### Optional: install herdr while you are here
