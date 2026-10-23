@@ -989,6 +989,27 @@ Then start `opencode`, type `/models`, and confirm your Ollama provider is liste
 - [ ] `/models` lists your Ollama provider
 - [ ] The agent answered one prompt from your local model
 
+#### Optional 5d: connect a hosted endpoint, if you are given one
+
+> **This is not graded and is not on the checklist above.**  It is here for when you are given access to a hosted, OpenAI-compatible endpoint (an address ending in something like `/api/v1`, plus an API key).  Your local Ollama provider stays exactly as 5b left it; this adds a second provider beside it.
+
+1.  **Install the auto-models plugin by asking the agent.**  In `opencode`, with any model selected (the free default is enough), type the prompt `install this opencode plugin https://github.com/BillJr99/opencode-auto-models`.  Read the change it proposes to `opencode.json` before you approve it.  Then type `/quit` and start `opencode` again, because plugins load only at startup.  The plugin asks each provider which models it serves, so you never type model names by hand.
+2.  **Name the endpoint in `opencode.json`.**  Add a second entry to the `provider` map you wrote in 5b, holding only the address: no key, and no `models` map, since the plugin fills that in.  `myendpoint` is a placeholder ID; you type the same word again in the next step.
+
+    ```json
+    "myendpoint": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "My Endpoint",
+      "options": { "baseURL": "https://YOUR-ENDPOINT/api/v1" }
+    }
+    ```
+
+    Check that the file still parses with `python3 -m json.tool opencode.json`, then `/quit` and restart.
+3.  **Store the key with `/connect`.**  Type `/connect`, scroll to **Other**, enter the same provider ID (`myendpoint`), and paste your API key at the key prompt.  `/connect` asks only for the ID and the key, never the address, which is why step 2 comes first.
+4.  **Pick a model.**  Type `/models` and choose from the list under your endpoint's name.
+
+> **Watch out.**  The `/connect` key prompt is the one place to paste the key.  Never paste it into an ordinary prompt, where it is sent to the model.  If `/models` shows your endpoint with no models, the ID you typed in `/connect` does not match the key in the `provider` block, or you have not restarted since installing the plugin.  The [End-to-End OpenCode Setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) walks the same route in more detail.
+
 #### Optional: install herdr while you are here
 
 > **This is not graded and is not on the checklist above.**  It is here because installing it now costs one command, and a later lab assumes it is on your bench.
