@@ -52,7 +52,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 git -C ~/cs357-work status
 ```
 
-**Working without a terminal.** Everything today can be done by prompting, in the opencode desktop application or in the terminal interface.  Each command comes with the prompt that does the same job.  Two settings make the prompt-only route work, and both are easy to miss: in the desktop application, turn on **File -> Settings -> Show Agent** so the agent selector appears beside the model dropdown, and in the terminal interface press **Tab** to cycle agents and type `/model` to pick the model.
+**Working without a terminal.** Everything today can be done by prompting, in the opencode desktop application or in the terminal interface.  Each command comes with the prompt that does the same job.  Two settings make the prompt-only route work, and both are easy to miss: in the desktop application, turn on **File -> Settings -> Show Agent** so the agent selector appears beside the model dropdown, and in the terminal interface press **Tab** to cycle agents and type `/models` to pick the model.
 
 ---
 

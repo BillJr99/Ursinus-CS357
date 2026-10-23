@@ -39,7 +39,7 @@ Most of what the Overview assignment asks you to paste comes out of this page.  
 | 4 | The `student@...:/workspace$` prompt | Route A evidence: include this prompt in every container transcript |
 | 5 | The five checks in 5.1 through 5.5 | The container verification lines the Overview's Route A asks for |
 | 7 | `python3 hello_agent.py`, then `git log --oneline` after the push | Part 1.5, Steps 1 and 2.  For Part 1A, Step 4, run the Overview's `ollama_check.py` from this same prompt; it prints the full JSON |
-| 8.1 through 8.3 | `opencode --version`, `/model`, and one answered prompt | Part 1B, Step 5 |
+| 8.1 through 8.3 | `opencode --version`, `/models`, and one answered prompt | Part 1B, Step 5 |
 | 10 | The `uv` commands | Part 1.5, Step 3, which runs on your host on both routes |
 
 ---
@@ -598,7 +598,7 @@ JSON
 
 That file is everything the Overview assignment needs, and everything Steps 8.3 and 8.4 need.
 
-**Optional: register OpenWebUI as a second provider.**  The `provider` block is a map, so you do not have to choose: name two keys and you get two providers, both live, both listed in `/model`.  OpenWebUI is not part of today's build; the optional OpenWebUI section of the [Overview assignment](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/Overview) installs it on your host.  Add this second entry once it is running there, because until then the entry appears in `/model` but cannot answer.  The two-provider version of the file looks like this, again written for the container route:
+**Optional: register OpenWebUI as a second provider.**  The `provider` block is a map, so you do not have to choose: name two keys and you get two providers, both live, both listed in `/models`.  OpenWebUI is not part of today's build; the optional OpenWebUI section of the [Overview assignment](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/Overview) installs it on your host.  Add this second entry once it is running there, because until then the entry appears in `/models` but cannot answer.  The two-provider version of the file looks like this, again written for the container route:
 
 ```bash
 cat > /workspace/opencode.json <<'JSON'
@@ -646,7 +646,7 @@ The file you just wrote settles the **model**: which weights answer you.  It doe
 
 **In the desktop application, first.**  Open **File -> Settings** and turn on **Show Agent**, which puts the agent selector in the message bar beside the model dropdown.  It is not always shown on a fresh install, and its absence is the most common reason a student concludes, wrongly, that the desktop app has no plan mode.  With the selector visible you are choosing two things before every run, and you can see both: the model on one side, the agent on the other.
 
-**In the terminal.**  `/model` lists the providers you registered above, so your Ollama entry, and your OpenWebUI entry if you added it, should appear there, distinguishable by the `name` fields you gave them.  **Tab** cycles the primary agents, `shift+tab` cycles back through them, and `<leader>a` lists them outright.  Those are the `agent_cycle`, `agent_cycle_reverse`, and `agent_list` keybinds, and you rebind them in `tui.json`; keybinds in `opencode.json` are deprecated and migrated for you.  The agent you are currently in is shown on the input line, so make a habit of reading it before you press Enter.
+**In the terminal.**  `/models` lists the providers you registered above, so your Ollama entry, and your OpenWebUI entry if you added it, should appear there, distinguishable by the `name` fields you gave them.  **Tab** cycles the primary agents, `shift+tab` cycles back through them, and `<leader>a` lists them outright.  Those are the `agent_cycle`, `agent_cycle_reverse`, and `agent_list` keybinds, and you rebind them in `tui.json`; keybinds in `opencode.json` are deprecated and migrated for you.  The agent you are currently in is shown on the input line, so make a habit of reading it before you press Enter.
 
 > **Why this is a setup step and not a detail.**  Every gate this course later asks you to build assumes you know which agent was running when it fired.  A rule that is obviously in force under `plan` is not in force under `build`, and the same prompt sent under each produces two very different transcripts.
 

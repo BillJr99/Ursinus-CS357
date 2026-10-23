@@ -104,7 +104,7 @@ Nothing here needs installing. You built all of it in *Your AI Workbench*, and t
 
 opencode has two faces, and this lab works entirely in either one. The **desktop application** runs on macOS, Windows, and Linux, and you can download it from [opencode.ai](https://opencode.ai/). The **terminal interface**, the TUI, is the same agent in a terminal window. Pick whichever you prefer and stay there; nothing in this lab requires you to switch.
 
-If you take the desktop route, do two things before Part 0. Pick your model from the dropdown in the message bar, and then open **File -> Settings** and turn on **Show Agent**, which puts the agent selector next to that dropdown. Part 4 needs that selector, and it is off on a fresh install, which is why students sometimes conclude that the desktop app has no plan mode when in fact it was there the whole time. If you take the terminal route, start `opencode` and type `/model` to do the same job.
+If you take the desktop route, do two things before Part 0. Pick your model from the dropdown in the message bar, and then open **File -> Settings** and turn on **Show Agent**, which puts the agent selector next to that dropdown. Part 4 needs that selector, and it is off on a fresh install, which is why students sometimes conclude that the desktop app has no plan mode when in fact it was there the whole time. If you take the terminal route, start `opencode` and type `/models` to do the same job.
 
 Every shell command in this lab comes with a prompt beside it that asks opencode to do the same thing. Use whichever you like, including mixing them, and where a step wants a saved transcript it says so and tells you how to get one from either face.
 
@@ -350,7 +350,7 @@ That file needs one more block, and this lab spells it out rather than pointing 
 
 Substitute `http://host.docker.internal:11434/v1` for `localhost` if opencode is running inside the course container, because inside a container `localhost` means the container rather than your machine.
 
-**Adding a second, hosted provider.**  `provider` is a map, so a second key gives you a second provider, both live and both listed by `/model`.  Any OpenAI-compatible service wires up identically; only the `baseURL`, the key, and the model names change.
+**Adding a second, hosted provider.**  `provider` is a map, so a second key gives you a second provider, both live and both listed by `/models`.  Any OpenAI-compatible service wires up identically; only the `baseURL`, the key, and the model names change.
 
 ```json
 {
@@ -1487,7 +1487,7 @@ What you learn is which of your instructions actually landed, and it is usually 
 
 **Challenge 3: The interrupted session.** Stop an agent mid-edit, deliberately, at an inconvenient moment: cancel it while it is partway through writing a file. Then look at what is actually on disk. Did anything reach `.ai/SESSION.md` or `.ai/MEMORY.md`? Run `git status` and `git log --oneline` to find out what state the working tree is in, and whether you can tell from the repository alone how far it got. Report what you find, and say what it implies about any instruction that only fires on a graceful exit. This is the failure mode that a well-written wrap-up rule does not cover, and knowing that changes where you put the rule.
 
-**Challenge 4: The instruction that did not survive the model.** Point opencode at a second model (add it to the `provider` block as in Part 0 Step 3, then pick it with `--model` on the command line, `/model` in the terminal interface, or the model dropdown in the desktop application), then run the same session against both, three runs each, with the same prompt and the same repository. Read the transcripts against your `AGENTS.md` line by line and find one instruction that one model honors and the other drops. Report the instruction, both behaviors, and your account of why that particular sentence was fragile. This is the hardest of the four and the one most worth doing, because it tells you which of your rules depend on a model you happen to be using rather than on anything you actually wrote down.
+**Challenge 4: The instruction that did not survive the model.** Point opencode at a second model (add it to the `provider` block as in Part 0 Step 3, then pick it with `--model` on the command line, `/models` in the terminal interface, or the model dropdown in the desktop application), then run the same session against both, three runs each, with the same prompt and the same repository. Read the transcripts against your `AGENTS.md` line by line and find one instruction that one model honors and the other drops. Report the instruction, both behaviors, and your account of why that particular sentence was fragile. This is the hardest of the four and the one most worth doing, because it tells you which of your rules depend on a model you happen to be using rather than on anything you actually wrote down.
 
 ---
 
