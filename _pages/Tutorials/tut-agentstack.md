@@ -240,7 +240,7 @@ The delegation takes three shapes, and what separates them is whether a terminal
 | A review of one pull request | `opencode pr 42`, which checks the branch out first | yes |
 {: .tb-full}
 
-The flags carry over unchanged from the *Agentic CLI Tools* tutorial: `--model provider/model` pins the model for that run, `-f` attaches a file, `-c` continues the last session.  One piece of trivia from the skill is worth repeating because it costs people a wedged container: `/exit` is not an opencode command, and you leave an interactive session with Ctrl+C or by killing the process.
+The flags carry over unchanged from the *Agentic CLI Tools* tutorial: `--model provider/model` pins the model for that run, `-f` attaches a file, `-c` continues the last session.  One piece of trivia is worth repeating because getting it wrong costs people a wedged container: you leave an interactive opencode session with `/quit` (its aliases are `/exit` and `/q`), and Ctrl+C or killing the process is the fallback only when the session no longer responds.
 
 **Which model writes the code?**  Not hermes's.  Students guess this wrong almost every time, so state it plainly.  opencode resolves its own model in a fixed order: an explicit `--model` flag first, then provider environment variables in its environment, then whatever its own `opencode.json` already configures.  The two agents keep separate model configurations, and hermes never lends opencode its own.  Putting them on the same backend is possible and often sensible, but you do it by pointing both configurations at the same OpenAI-compatible endpoint, which is a decision you make in two files rather than something the delegation performs for you.
 
