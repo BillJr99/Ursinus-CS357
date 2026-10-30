@@ -29,3 +29,5 @@
 - [ ] Investigate GitHub Codespaces as the course development environment (setup, devcontainer, cost and student quotas, fit with the OpenCode and Docker workflow). (added 2026-10-29)
 
 - [ ] Consider proficiency-based grading standards (for example, standards- or specifications-based grading) that reward on-time submissions and consistent, sustained effort across the term. (added 2026-10-29)
+
+- [ ] Consider LangChain Managed Deep Agents (LangSmith) for the course: https://docs.langchain.com/langsmith/python/managed-deep-agents-overview (added 2026-10-30)
