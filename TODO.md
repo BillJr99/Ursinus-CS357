@@ -31,3 +31,5 @@
 - [ ] Consider proficiency-based grading standards (for example, standards- or specifications-based grading) that reward on-time submissions and consistent, sustained effort across the term. (added 2026-10-29)
 
 - [ ] Consider LangChain Managed Deep Agents (LangSmith) for the course: https://docs.langchain.com/langsmith/python/managed-deep-agents-overview (added 2026-10-30)
+
+- [ ] Consider building a tutoring agent for the course, from the session "Building AI Agents for Teaching and Learning: Purpose, Design, and Human Judgment" by Sen and Khodarahmi (2026 AAC&U Conference on AI and Higher Education), slide "How do we ensure effective learning and guardrails?": a tutor (Claude Code in the assignment repo, following a tutor's-rules CLAUDE.md that I write) talks with a simulated student (Claude playing a student from a persona sheet of who they are and what they get wrong); a grader (Claude reading the transcript against a rubric of what the tutor must and must not do) produces a scorecard, and I revise the tutor's rules and repeat. (added 2026-10-30)
