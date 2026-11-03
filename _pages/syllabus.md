@@ -511,14 +511,18 @@ schedule:
     rlink: "https://www.youtube.com/watch?v=rz40ukZ3krQ&t=10s"
 - week: "10"
   date: "0"
-  title: "RAG Worked Example: Build the Pipeline Together"
-  link: "Activities/liascript-ragworkshop.md"
-  liapage: true
+  title: "Project Groups: Team Meetings and Proposal Planning"
   deliverables:
   - dtitle: "Project: Intra-Team Check-In (Norming into Performing) Due"
     dlink: "Projects/PBLThread"
     points: "3"
     rubricpath: "_pages/Projects/proj-pblthread.md"
+- week: "10"
+  date: "1"
+  title: "RAG Worked Example: Build the Pipeline Together"
+  link: "Activities/liascript-ragworkshop.md"
+  liapage: true
+  deliverables:
   - dtitle: "Lab: Tools and MCP Due"
     dlink: "Assignments/ToolsMCP"
     points: "100"
@@ -531,8 +535,8 @@ schedule:
     dlink: "Assignments/LitReview"
     points: "100"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
-- week: "10"
-  date: "1"
+- week: "11"
+  date: "0"
   title: "Agents That Talk, Observability, and Handoff Protocols"
   link: "Activities/liascript-observability.md"
   liapage: true
@@ -550,38 +554,32 @@ schedule:
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class.  What is the longest-running piece of work you have done with an AI tool, and where did it start losing the thread?"
 - week: "11"
-  date: "0"
-  title: "Orchestration and Multi-Agent Patterns"
-  link: "Activities/liascript-orchestration.md"
-  liapage: true
-  readings:
-  - rtitle: "Reading Response / Discussion: post a short response before class.  When does a multi-agent design help, and when does it just cost tokens?"
-- week: "11"
   date: "1"
   title: "Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor"
   link: "Activities/liascript-orchestrationworkshop.md"
   liapage: true
   deliverables:
-  - dtitle: "Project: Sprint Check 1 Due"
-    dlink: "Projects/PBLThread#sprint-checks"
-    points: "3"
-  - dtitle: "Project: Literature Review, Individual Annotated Bibliographies Due"
-    dlink: "Assignments/LitReview"
-    points: "3"
-    rubricpath: "_pages/Assignments/asmt-litreview.md"
-  - dtitle: "Lab: RAG Knowledge Base Due"
-    dlink: "Assignments/RAGKnowledgeBase"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
   - dtitle: "Lab: Multi-Agent Patterns Handed Out"
     dlink: "Assignments/MultiAgentDebate"
     points: "100"
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
+  readings:
+  - rtitle: "Reading Response / Discussion: post a short response before class.  When does a multi-agent design help, and when does it just cost tokens?"
+  - rtitle: "Orchestration and Multi-Agent Patterns: read this deck before class.  It names the patterns today's session builds."
+    rlink: "https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestration.md"
 - week: "12"
   date: "0"
   title: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
   link: "Activities/liascript-critiqueconsensusjudge.md"
   liapage: true
+  deliverables:
+  - dtitle: "Project: Sprint Check 1 Due"
+    dlink: "Projects/PBLThread#sprint-checks"
+    points: "3"
+  - dtitle: "Lab: RAG Knowledge Base Due"
+    dlink: "Assignments/RAGKnowledgeBase"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
   readings:
   - rtitle: "Hamel Husain, \"Your AI Product Needs Evals\": the error-analysis-first approach to evaluation"
     rlink: "https://hamel.dev/blog/posts/evals/"
@@ -593,9 +591,10 @@ schedule:
   link: "Activities/liascript-rubricworkshop.md"
   liapage: true
   deliverables:
-  - dtitle: "Project: Sprint Check 2 Due"
-    dlink: "Projects/PBLThread#sprint-checks"
+  - dtitle: "Project: Literature Review, Individual Annotated Bibliographies Due"
+    dlink: "Assignments/LitReview"
     points: "3"
+    rubricpath: "_pages/Assignments/asmt-litreview.md"
   readings:
   - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One way to run the judge you build in today's workshop, and it runs against Ollama"
     rlink: "https://www.promptfoo.dev/docs/intro/"
@@ -609,6 +608,10 @@ schedule:
   title: "Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference"
   link: "Activities/liascript-biasdata.md"
   liapage: true
+  deliverables:
+  - dtitle: "Project: Sprint Check 2 Due"
+    dlink: "Projects/PBLThread#sprint-checks"
+    points: "3"
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class on the carbon and water cost of a deployment you would run"
   - rtitle: "Crawford, Atlas of AI, Chapter 1, Earth: the mineral and energy costs of computation"
