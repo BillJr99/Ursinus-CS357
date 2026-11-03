@@ -16,7 +16,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 **Retrieval-augmented generation (RAG)** hands the model the right evidence at the moment it needs it.  The evaluation harness from the *Hallucinations and Evaluating Agent Outputs* activity showed that local models hallucinate (confidently make up facts) where their training data is thin.  The [*Tokens, Embeddings, and Attention*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/TokensEmbeddingsAttention) tutorial gave you semantic search.  RAG combines the two.  On Tuesday, *How I AI* asked when handing an agent your whole `wiki/` folder stops working; today is the answer.  You build the pipeline in about fifty lines of Python with Chroma and Ollama, and then you learn the two things that decide whether it works on real documents: where the chunk boundaries go, and how to measure whether retrieval found the right chunk (recall@k).  We move from **the open-book insight → a working pipeline in code → chunking → measuring retrieval**.
 
-The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out at the next session, *RAG Worked Example: Build the Pipeline Together* (Tuesday, November 3), which builds the lab's pipeline end to end on both of its routes, a Pydantic AI agent in code and a Langflow flow without code, and measures it.  The lab is due Thursday, November 12.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due at that same next session.
+The [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is handed out at *RAG Worked Example: Build the Pipeline Together* (Thursday, November 5), which builds the lab's pipeline end to end on both of its routes, a Pydantic AI agent in code and a Langflow flow without code, and measures it.  The lab is due Tuesday, November 17.  The [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due at that same session.
 
 ---
 
@@ -51,7 +51,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it.
 2. Part II, build it in code: chunk, embed, store, retrieve, generate, and the abstention test (Model 2)
 3. Part III, chunking: where the boundaries go and what they cost you (Model 3)
 4. Part IV, measuring retrieval: score a golden set by hand, then compute recall@k (Model 4), and what a reranker adds
-5. Reflection prompt.  The Langflow and Pydantic AI routes, which Tuesday's worked example builds in class, and the remaining Extensions are self-paced
+5. Reflection prompt.  The Langflow and Pydantic AI routes, which the worked example builds in class, and the remaining Extensions are self-paced
 
 ---
 # Part I: The Open-Book Exam Insight
@@ -327,7 +327,7 @@ A system has recall@20 of 0.95 but recall@3 of 0.50, and the prompt only fits 3 
 [(X)] A reranking stage between retrieval and prompt assembly
 [( )] Raising the temperature of the generator
 
-Recall@k measures the retriever.  The other half of the measurement is **grounding**: does each claim in the answer actually appear in the chunk it cites?  Tuesday's worked example measures both on one small corpus, recall@k with the function above and grounding with a citation check, and the lab's five-question transcript asks you to note, for every answer, whether its named source actually says it.
+Recall@k measures the retriever.  The other half of the measurement is **grounding**: does each claim in the answer actually appear in the chunk it cites?  The worked example measures both on one small corpus, recall@k with the function above and grounding with a citation check, and the lab's five-question transcript asks you to note, for every answer, whether its named source actually says it.
 
 ---
 
@@ -335,7 +335,7 @@ Recall@k measures the retriever.  The other half of the measurement is **groundi
 
 ## 5.  Exercises
 
-In this Part you apply the pipeline and the measurements to real documents you choose.  These exercises build directly toward the RAG Knowledge Base lab, on either route: run them in Python, or in a Langflow flow (the Extension below and Tuesday's worked example show the canvas).
+In this Part you apply the pipeline and the measurements to real documents you choose.  These exercises build directly toward the RAG Knowledge Base lab, on either route: run them in Python, or in a Langflow flow (the Extension below and the worked example show the canvas).
 
 1.  *Your own corpus.*  Replace the five documents with ten sentences from a syllabus, club constitution, or campus page of your choosing.  Demonstrate one question answered correctly with a citation and one abstention.
 
@@ -387,7 +387,7 @@ In this Part you apply the pipeline and the measurements to real documents you c
 
 ## -> Coming Up Next
 
-In *RAG Worked Example: Build the Pipeline Together* (Tuesday, November 3) we build one complete knowledge base end to end, exactly the way the RAG Knowledge Base lab asks: ingest a small folder of documents, chunk it, embed it, retrieve, generate a grounded answer that names its source, and then measure recall@k and grounding on that corpus, showing the intermediate output at every step.  We build it twice, as the lab's Pydantic AI agent and as its Langflow flow, and the lab is handed out at the end.  Have today's `recall_at_k` function and your hybrid chunking policy from Question 9 ready.
+After the *Project Groups* session on Tuesday, November 3, *RAG Worked Example: Build the Pipeline Together* (Thursday, November 5) is where we build one complete knowledge base end to end, exactly the way the RAG Knowledge Base lab asks: ingest a small folder of documents, chunk it, embed it, retrieve, generate a grounded answer that names its source, and then measure recall@k and grounding on that corpus, showing the intermediate output at every step.  We build it twice, as the lab's Pydantic AI agent and as its Langflow flow, and the lab is handed out at the end.  Have today's `recall_at_k` function and your hybrid chunking policy from Question 9 ready.
 
 ---
 
@@ -404,7 +404,7 @@ In *RAG Worked Example: Build the Pipeline Together* (Tuesday, November 3) we bu
 
 # Extension: The Same Pipeline Without Code (self-paced)
 
-The same pipeline can be built on a Langflow canvas instead of in Python.  The RAG Knowledge Base lab's code route uses Pydantic AI, and its no-code route is this canvas, for the same credit.  Tuesday's worked example builds the lab's flow in class; this Extension builds it once on the five campus documents from Part II, if you want to try the canvas before then.
+The same pipeline can be built on a Langflow canvas instead of in Python.  The RAG Knowledge Base lab's code route uses Pydantic AI, and its no-code route is this canvas, for the same credit.  The worked example builds the lab's flow in class; this Extension builds it once on the five campus documents from Part II, if you want to try the canvas before then.
 
 Langflow is a visual editor for language-model pipelines: each step is a node you configure in a side panel and wire to the next by dragging a connection.  The [*Visual Agents*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/VisualAgents) tutorial walks through the install and a first flow; that tutorial carries the exact node names for its version of Langflow.  On the canvas, the code cell above becomes three nodes:
 
@@ -487,7 +487,7 @@ Open the **Playground** and ask Part II's two questions: "Can a first-year stude
 
 # Extension: The Same Pipeline as a Pydantic AI Agent (self-paced)
 
-Part II decided, in our code, that every question gets a retrieval step.  An agent can make that decision itself.  We give it the search as a **tool**, exactly like the tools in the *Tool Use* session, and the instructions tell it to search before it answers.  This is the shape the RAG Knowledge Base lab's code route uses, and Tuesday's worked example builds the lab's version in class; here it runs on the five campus documents from Part II.
+Part II decided, in our code, that every question gets a retrieval step.  An agent can make that decision itself.  We give it the search as a **tool**, exactly like the tools in the *Tool Use* session, and the instructions tell it to search before it answers.  This is the shape the RAG Knowledge Base lab's code route uses, and the worked example builds the lab's version in class; here it runs on the five campus documents from Part II.
 
 Pydantic AI is the agent framework from [*Pydantic AI From the Loop Up*](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI).  Install it with `pip install "pydantic-ai-slim[openai]==2.54.0"` and pull a model that calls tools reliably with `ollama pull qwen2.5:3b`.
 

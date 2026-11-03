@@ -12,21 +12,21 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Orchestration and Multi-Agent Patterns
 
-Unit 3 begins today.  *Agents That Talk, Observability, and Handoff Protocols* passed work between two agents through a channel and traced what each one did.  Today, instead of making one agent smarter, we make several simple agents cooperate.  The reason this works comes straight from the small context window principle in *Memory and the Small Context Window Principle*: a model given one narrow job and a tiny prompt outperforms the same model juggling five jobs in a bloated prompt.  We move from **why decompose → the pipeline → the router → the planner → composing them in code → keeping the composed loop reliable**.
+Unit 3 begins with this deck, which you read before class.  *Agents That Talk, Observability, and Handoff Protocols* passed work between two agents through a channel and traced what each one did.  Here, instead of making one agent smarter, we make several simple agents cooperate.  The reason this works comes straight from the small context window principle in *Memory and the Small Context Window Principle*: a model given one narrow job and a tiny prompt outperforms the same model juggling five jobs in a bloated prompt.  We move from **why decompose → the pipeline → the router → the planner → composing them in code → keeping the composed loop reliable**.
 
-Today is the concepts session.  Thursday's *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* builds the three patterns from today on one task, end to end, with the loop budgets and stop conditions the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) asks for, and the lab is handed out there.  Keep the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) and your Literature Review annotated bibliographies moving; both are due Thursday.
+Read this deck before *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* (Thursday, November 12).  That session builds the three patterns from this deck on one task, end to end, with the loop budgets and stop conditions the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) asks for, and the lab is handed out there.  Keep the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) and your Literature Review annotated bibliographies moving; the lab is due Tuesday, November 17, and the bibliographies are due Thursday, November 19.
 
 ---
 
-## Directions and Group Roles
+## Directions
 
-Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board, and the Presenter reports out wherever you disagreed or found another approach.  After class, respond to the reflective prompt on your own in your notebook.
+This deck is reading, so you work through it on your own.  Think each model and question through and keep your answers, because your POGIL (Process Oriented Guided Inquiry Learning) team works from them at the session, with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Respond to the reflective prompt on your own in your notebook.
 
 ---
 
 ## Key Concepts
 
-| Term | Plain-English Definition | Example You'll See Today |
+| Term | Plain-English Definition | Example You'll See Here |
 |------|--------------------------|--------------------------|
 | **Orchestrator** | An agent (or piece of code) whose job is to coordinate other agents: deciding what task to assign to whom, in what order, and how to combine their outputs. The orchestrator does not do the actual work; it manages the process. | A campus event system where the orchestrator assigns announcements to an ExtractAgent, then a DraftAgent, then a PolishAgent in sequence. |
 | **Subagent** | A specialized agent that receives a narrow task from the orchestrator, completes it, and returns a result. The subagent typically knows nothing about the larger workflow; it just does its one job. | The PolishAgent, which only sees a draft announcement and returns a polished version; it does not know about the extraction or drafting steps. |
@@ -37,9 +37,9 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 ---
 
-## Today's Plan
+## Reading Plan
 
-Anything marked self-paced is for outside class, and nothing graded assumes it.  Part I is a review rather than a first introduction.  You already built and ran a fixed pipeline by hand in *Prompt Engineering as Agent Design*.  That review buys the room for the supervisor loop below.
+All of this is pre-class reading.  Going Deeper, at the end, is optional, and nothing graded assumes it.  Part I is a review rather than a first introduction.  You already built and ran a fixed pipeline by hand in *Prompt Engineering as Agent Design*.  That review buys the room for the supervisor loop below.
 
 1. Part I, decomposition: when one agent should become several
 2. Part II, a pipeline and a router in code
@@ -47,12 +47,14 @@ Anything marked self-paced is for outside class, and nothing graded assumes it. 
 4. Part IIc, the supervisor loop: what changes when a model, not you, decides the control flow
 5. Part III, synthesis and exercises
 
+**What to bring:** this deck's Code Cells and your answers to Questions 19 and 21.  The session builds these patterns on one task, and it uses the names this deck gives them.
+
 ---
 # Part I: Decomposition
 
 ## 1.  Three Foundational Patterns
 
-**Why this matters, briefly, because you have felt it once already:** narrow roles and clear handoffs kept the persona pipeline's four stages small and inspectable.  Today we name that pattern formally, add the router and the planner beside it, and then hand the control-flow decision itself to a model.
+**Why this matters, briefly, because you have felt it once already:** narrow roles and clear handoffs kept the persona pipeline's four stages small and inspectable.  Here we name that pattern formally, add the router and the planner beside it, and then hand the control-flow decision itself to a model.
 
 **Pipeline (fixed sequence).**  Stage outputs feed stage inputs: extract → draft → polish.  Each stage has its own small system prompt and sees *only* what it needs.  Pipelines are predictable, debuggable (you can inspect any intermediate output), and cheap.  They are the right default when the workflow is known in advance.
 
@@ -60,7 +62,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it. 
 
 **Planner (dynamic decomposition).**  When the workflow is *not* known in advance, a planner agent writes a step list, worker agents execute steps, and the planner revises on failures.  Planners buy flexibility at the cost of predictability, so we bound them with step budgets, a technique covered in depth in *Part IIb: Loops That Recover* below.
 
-Those three are the patterns we build today.  Two more fixed shapes belong in your vocabulary from day one, because your project designs will reach for them.  Here are all five, with where each one gets its full treatment:
+Those three are the patterns this deck builds.  Two more fixed shapes belong in your vocabulary from day one, because your project designs will reach for them.  Here are all five, with where each one gets its full treatment:
 
 | Shape | What it does | Who decides the control flow | Where you meet it |
 |---|---|---|---|
@@ -70,7 +72,7 @@ Those three are the patterns we build today.  Two more fixed shapes belong in yo
 | **Critique-refine** | A generator and a critic loop until the critic passes or a revision budget runs out | You; the loop is bounded | *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* |
 | **Debate / consensus** | Several agents answer independently, and a fixed rule (majority vote, clustering) picks the result | You; the aggregation rule is fixed | the same session |
 
-The planner is the one pattern missing from that table on purpose: a model, not you, decides its control flow.  Going Deeper takes that up as the supervisor loop.  Critique-refine and debate/consensus get their own session, so today you only need to recognize them and know that both are still fixed shapes you can draw on a whiteboard before running.
+The planner is the one pattern missing from that table on purpose: a model, not you, decides its control flow.  Going Deeper takes that up as the supervisor loop.  Critique-refine and debate/consensus get their own session, so for now you only need to recognize them and know that both are still fixed shapes you can draw on a whiteboard before running.
 
 A design heuristic follows from all of this: **choose the least dynamic pattern that solves the problem.**  Pipelines before routers, routers before planners, planners before free-roaming autonomy.
 
@@ -82,7 +84,7 @@ A design heuristic follows from all of this: **choose the least dynamic pattern 
 >
 > That chain is the pipeline row of the table above, and it earns what the row claims.  Every stage saw only what it needed.  The `sees` list in a config file enforced that isolation.  The code never asked the model to respect it.
 >
-> So today is not your first pipeline.  Carry one difference into it.  There, you wrote the order as a list before the run.  Here, and in the planner above all, something else decides the order.  Everything this session adds sits in that gap.
+> So this is not your first pipeline.  Carry one difference into it.  There, you wrote the order as a list before the run.  Here, and in the planner above all, something else decides the order.  Everything this deck adds sits in that gap.
 >
 > The program is in [persona-pipeline-starter.zip](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/persona-pipeline-starter.zip), and the reasoning behind every decision in it is in the [Persona Pipeline tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PersonaPipeline).
 
@@ -242,7 +244,7 @@ for ticket in [
 
 > **Common Misconception:** Many students assume that because a pipeline has multiple agents, it is more reliable than a single agent.  Not automatically.  A pipeline can fail at any seam, and because each agent works from the previous agent's output rather than the original input, errors can compound silently.  A pipeline is more *maintainable* and more *debuggable* than a mega-prompt, but only if you actually inspect the intermediate outputs.  Return all intermediates from your pipeline functions (as the code above does with `return facts, draft, final`) and check them.
 
-According to the design heuristic developed today, a team should reach for a planner agent only when:
+According to the design heuristic developed in this deck, a team should reach for a planner agent only when:
 
 [( )] The task involves more than two steps
 [( )] Maximum autonomy is a project goal
@@ -550,7 +552,7 @@ In this part you first fold in two reliability upgrades (reflection and recovery
 
 *(A two-model summary of material from Part IIb: Loops That Recover; revisit that part if you want the full treatment.)*
 
-**Why this matters:** Every orchestration you built today is still a loop, and loops fail in loop-shaped ways: they oscillate, overrun budgets, crash mid-task, and repeat the same mistake on every run.  Two upgrades address this.  The first is the **reflection loop** (Reflexion, Shinn et al., 2023).  After each *complete attempt* at a task, the agent critiques its own trajectory and stores a short "lesson" in memory ("for arXiv IDs, search arXiv directly rather than Google"), and the next attempt starts with those lessons loaded.  It shines on tasks with a clear success/failure signal that you expect to run many times.  Its failure mode is that a poor self-critique stores a *bad* lesson that actively hurts future runs, and every lesson spends context tokens.  The second is the **recovery/budget model**: even a well-architected loop needs circuit breakers, controls that keep a small failure from cascading:
+**Why this matters:** Every orchestration you built in this deck is still a loop, and loops fail in loop-shaped ways: they oscillate, overrun budgets, crash mid-task, and repeat the same mistake on every run.  Two upgrades address this.  The first is the **reflection loop** (Reflexion, Shinn et al., 2023).  After each *complete attempt* at a task, the agent critiques its own trajectory and stores a short "lesson" in memory ("for arXiv IDs, search arXiv directly rather than Google"), and the next attempt starts with those lessons loaded.  It shines on tasks with a clear success/failure signal that you expect to run many times.  Its failure mode is that a poor self-critique stores a *bad* lesson that actively hurts future runs, and every lesson spends context tokens.  The second is the **recovery/budget model**: even a well-architected loop needs circuit breakers, controls that keep a small failure from cascading:
 
 | Control | One-line implementation | What it prevents |
 |---------|------------------------|------------------|
@@ -674,13 +676,13 @@ Respond to all three levels in your notebook:
 
 **Personal:** Decomposing a big task into narrow roles is also how effective study groups, sports teams, and workplaces operate.  Think of a team project (in this class or any other context) where unclear roles caused confusion or duplicated effort.  How does the pipeline/router/planner framework map onto what went wrong, and what would the "seam" between two team members look like in practice?
 
-**Technical:** Describe one place in today's pipeline design where information lost at a seam could cause a poor outcome.  For example: if the polish stage changes a date while editing for concision, neither the extract stage nor the draft stage will catch it.  What is the technical mechanism (a validation step, a schema check, a logging requirement) that would detect this specific failure?
+**Technical:** Describe one place in this deck's pipeline design where information lost at a seam could cause a poor outcome.  For example: if the polish stage changes a date while editing for concision, neither the extract stage nor the draft stage will catch it.  What is the technical mechanism (a validation step, a schema check, a logging requirement) that would detect this specific failure?
 
 **Societal:** Decomposition into narrow roles is how both efficient organizations and surveillance systems work.  A pipeline of agents that each know only their own step can process sensitive data (a student's grades, a person's medical history) without any single agent "knowing" the full picture.  Is this a privacy protection or a way to obscure accountability?  Who is responsible when a pipeline of individually-compliant agents produces a harmful outcome?
 
 ---
 
--> **Coming Up Next:** *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* (Thursday) takes one task through all three patterns from today, end to end, printing every intermediate output: a fixed pipeline, a router in front of it, and a supervisor loop with a call budget, a closed roster, and stop conditions you can see firing.  The Multi-Agent Patterns lab is handed out at the end, and its round budget, fail-closed parsing, and budget-exhausted return are the same three controls.  Have today's Code Cells and your answers to Questions 19 and 21 ready.
+-> **Coming Up Next:** *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* (Thursday, November 12) takes one task through all three patterns from this deck, end to end, printing every intermediate output: a fixed pipeline, a router in front of it, and a supervisor loop with a call budget, a closed roster, and stop conditions you can see firing.  The Multi-Agent Patterns lab is handed out at the end, and its round budget, fail-closed parsing, and budget-exhausted return are the same three controls.  Have this deck's Code Cells and your answers to Questions 19 and 21 ready.
 
 ---
 
@@ -689,18 +691,18 @@ Respond to all three levels in your notebook:
 - [Pydantic AI From the Loop Up: read it before Agent Frameworks if you have not yet seen a framework take over the hand-written loop](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI)
 - [Orchestration Patterns: a pipeline, a router, and a supervisor, each on its own in Python and by hand with presets](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OrchestrationPatterns)
 - [Agent Teams: a monolith versus a team, topology and shared state, ending with a sketch of your own project's team](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentTeams)
-- Anthropic engineering blog.  "Building Effective Agents" (2024, online).  The workflow patterns formalized today.
+- Anthropic engineering blog.  "Building Effective Agents" (2024, online).  The workflow patterns formalized in this deck.
 - Wu et al. "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation."  (2023).
 
 ---
 
-# Going Deeper (at home): More Fixed Shapes, and Framework Pointers
+# Going Deeper (optional): More Fixed Shapes, and Framework Pointers
 
 > **The full advanced-loops treatment:** Model 5 above compresses material from *Part IIb: Loops That Recover* earlier on this page; revisit that part for the complete treatment: ReAct traces, Tree-of-Thought, checkpointing in depth, and termination design.
 
-> **The supervisor loop is in class.**  The dynamic-orchestration material is in **Part IIc** above: Two Families, the Code Cell, and the who-decides-control-flow recap.  What follows covers the fan-out and consensus shapes, plus a reference sheet for all six patterns.
+> **The supervisor loop is in the main reading.**  The dynamic-orchestration material is in **Part IIc** above: Two Families, the Code Cell, and the who-decides-control-flow recap.  What follows covers the fan-out and consensus shapes, plus a reference sheet for all six patterns.
 
-Everything below is at-home material.  Nothing in this section is needed for today's in-class session, but all of it deepens what you built in class.  Parts I-III gave you the vocabulary (pipeline, router, planner) and two working orchestrators in code.  Part IIc gave you the supervisor.  This section rounds out the fixed family with two shapes you have not yet built by hand.
+Everything below is optional.  Nothing in this section is needed for the *Orchestration Worked Example* session, but all of it deepens what you built in this deck.  Parts I-III gave you the vocabulary (pipeline, router, planner) and two working orchestrators in code.  Part IIc gave you the supervisor.  This section rounds out the fixed family with two shapes you have not yet built by hand.
 
 ---
 
@@ -765,7 +767,7 @@ input --> +--> [ Agent B ] --+--> [ Vote / Cluster ] --> consensus
 
 The agents argue or answer independently, and a fixed aggregation rule (majority vote, clustering of answers) produces the final result.  Two activities develop this shape: [Critique, Consensus, and the LLM Judge](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-critiqueconsensusjudge.md) and [Stochastic Consensus](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate).
 
-Every shape above is *fixed*.  Even the critique loop and the debate vote follow a control flow you authored and can whiteboard before running.  Part IIc in class covered who draws the diagram when it is not you.
+Every shape above is *fixed*.  Even the critique loop and the debate vote follow a control flow you authored and can whiteboard before running.  Part IIc above covered who draws the diagram when it is not you.
 
 ### Recap: All Six Patterns, One Table
 

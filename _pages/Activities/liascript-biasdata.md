@@ -16,6 +16,8 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Every model begins with data, and so does Unit 4.  *Critique, Consensus, and the LLM Judge* and the Judge Pipeline Workshop closed our study of how agents behave.  Today we turn to what they learn from, who owns that material, who gets watched when people use it, and what you commit to, in writing, when you deploy one.  You watched *Coded Bias* before class.  In it, Joy Buolamwini found that facial analysis systems failed on the darkest-skinned women at rates more than ten times their rates on the lightest-skinned men.  Today we connect that discovery to mechanics you already know: training distributions, sampling, consensus, and agents that act.  Generative models are also trained on creative work and prompted with personal information, which puts two bodies of law and ethics, intellectual property and privacy, at the center of agentic practice.  We map both *as engineers*, without playing lawyer: the goal is to recognize the decisions that carry legal and ethical weight and to design for them, with our local-first stack as a recurring answer.  Then we turn values into mechanisms: governance clauses a stranger could check from the logs, and the numbers behind the section most policies leave out, what the system costs to run in energy, water, dollars, and tokens.  We take today in this order: where bias enters, how to measure it, which mitigations help and where each one stops, whose work is in the model, where a prompt goes when you press enter, how to write a policy clause that binds, and what inference costs.
 
+**Today:** Sprint Check 2 is at the start of class.
+
 Coming due: your team's Literature Review synthesis is due at the *Project Sprint* session (Tuesday, December 1), and the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is due Thursday, December 3.
 
 ---
@@ -52,14 +54,19 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 Anything marked self-paced is for outside class, and nothing graded assumes it; that includes all three Extensions: governance frameworks and the drafting workshop, the techniques behind the privacy argument, and AI creativity.  The pronoun probe in Part II runs on your machine and takes a few minutes; start it, then read Part III while it runs.
 
-1. Part I, mechanism: how a training distribution becomes a behavior (Model 1)
-2. Part II, hands on the distribution: the pronoun probe (Model 2)
-3. Part III, mitigation without illusion (Model 3)
-4. Part IV, intellectual property: three distinct questions, and the student artist (Model 4)
-5. Part V, privacy: where prompts go, and the data-flow audit (Model 5)
-6. Part VI, governance: the third-party test on two clauses (Model 6), and the eight sections of your one-pager
-7. Part VII, the cost of inference: orders of magnitude (Model 7), and measured tokens turned into energy, carbon, and cost
-8. Report out: one disaggregated number, the first arrow in your data flow that crosses your laptop's boundary, and one clause of your own that passes the third-party test
+1. Sprint check: a member picked at random shows one thing running (Direction B: one cited finding), and each Coordinator says what is next and what is blocking
+2. Part I, mechanism: how a training distribution becomes a behavior (Model 1)
+3. Part II, hands on the distribution: the pronoun probe (Model 2)
+4. Part III, mitigation without illusion (Model 3)
+5. Part IV, intellectual property: three distinct questions, and the student artist (Model 4)
+6. Part V, privacy: where prompts go, and the data-flow audit (Model 5)
+7. Part VI, governance: the third-party test on two clauses (Model 6), and the eight sections of your one-pager
+8. Part VII, the cost of inference: orders of magnitude (Model 7), and measured tokens turned into energy, carbon, and cost
+9. Report out: one disaggregated number, the first arrow in your data flow that crosses your laptop's boundary, and one clause of your own that passes the third-party test
+
+## Sprint Check 2
+
+Sprint Check 2 opens today's session, with no slides.  I pick one member of each team at random.  That member has 90 seconds to show one thing running (Direction B: one cited finding), and your Coordinator says what is next and what is blocking.  Every member's evidence line (the linked first line of their latest standup) should already be in the team note.  Each member also submits the confidential peer pulse privately in Canvas today.  I mark each team as shown or not yet.  The full protocol is in [Sprint Checks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread#sprint-checks).
 
 ---
 # Part I: Mechanism

@@ -46,7 +46,7 @@ info:
     - rtitle: "Judge Pipeline Workshop: Build and Audit a Judge (the judge Part A's second critic reuses)"
       rlink: "Activities/liascript-rubricworkshop.md"
       liapage: true
-    - rtitle: "Orchestration Activity"
+    - rtitle: "Orchestration and Multi-Agent Patterns (the pre-class reading for the Orchestration Worked Example)"
       rlink: "Activities/liascript-orchestration.md"
       liapage: true
     - rtitle: "Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor (round budgets, fail-closed parsing, and call counts on one task)"

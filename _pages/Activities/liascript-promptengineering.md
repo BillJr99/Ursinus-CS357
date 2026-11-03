@@ -678,7 +678,7 @@ Two properties fall out of that design, and both are the point rather than side 
 
 ## 5e.  Where This Goes Next
 
-What you have here is the declarative half of orchestration.  The `agent` block lets you name workers and fix their boundaries.  It does not decide who runs when.  That question, covering pipelines, routers, and the supervisor loop that chooses the next worker each turn, belongs to *Orchestration and Multi-Agent Patterns*, and one observation is worth carrying into that session.  Every pattern you meet there is some arrangement of the three things you just declared: a role, a boundary, and a stop condition.  The file is where they live; the pattern is how they are sequenced.
+What you have here is the declarative half of orchestration.  The `agent` block lets you name workers and fix their boundaries.  It does not decide who runs when.  That question, covering pipelines, routers, and the supervisor loop that chooses the next worker each turn, belongs to *Orchestration and Multi-Agent Patterns*, and one observation is worth carrying into that reading.  Every pattern you meet there is some arrangement of the three things you just declared: a role, a boundary, and a stop condition.  The file is where they live; the pattern is how they are sequenced.
 
 If you want to see the arrangement outside a classroom, the hermes agent from the *Local Agent Stack* module delegates coding work to opencode through a bundled skill rather than a plugin.  hermes decides what needs doing, opencode decides how to change the code, and each of them keeps its own model and its own boundary.  That is the supervisor pattern arriving as two commands and a skill file.
 

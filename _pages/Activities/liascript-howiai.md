@@ -55,7 +55,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 **You do not need** to have finished any particular lab.  If you are behind, the studio in Part III is for exactly that.
 
-**Also today:** the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) is due, and I hand out the [Final Project](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject).  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Thursday, November 5.  Questions about either belong in the studio in Part III.
+**Also today:** the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) is due, and I hand out the [Final Project](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject).  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Tuesday, November 10.  Questions about either belong in the studio in Part III.
 
 **What you will have at the end:** a vault with zone boundaries and a written agent contract, a sketch of your own personal agent setup, one repository configured with handoff documents, and a plan for the thing you are currently stuck on.
 

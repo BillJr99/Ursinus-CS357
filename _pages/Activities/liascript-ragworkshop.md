@@ -14,11 +14,11 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # RAG Worked Example: Build the Pipeline Together
 
-*RAG: Building and Measuring a Knowledge Base* gave you the pieces: the open-book insight, a pipeline in fifty lines, chunking, and recall@k.  Today we put them together and build one small, complete knowledge base end to end, in the order the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) asks for it: **ingest → chunk → embed → retrieve → generate → measure**.  Every step prints its intermediate output, so you can see exactly what the next step receives.  The first half runs in this page.  Part II runs the same corpus through the lab's own code on your machine (or, on the no-code route, through the lab's Langflow flow) and measures both the same way.  In class we check that one route works, and you finish Part II on your own.  The last twenty minutes are a clinic for your Final Project Proposal.
+*RAG: Building and Measuring a Knowledge Base* gave you the pieces: the open-book insight, a pipeline in fifty lines, chunking, and recall@k.  Today we put them together and build one small, complete knowledge base end to end, in the order the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) asks for it: **ingest → chunk → embed → retrieve → generate → measure**.  Every step prints its intermediate output, so you can see exactly what the next step receives.  The first half runs in this page.  Part II runs the same corpus through the lab's own code on your machine (or, on the no-code route, through the lab's Langflow flow) and measures both the same way.  In class we check that one route works, and you finish Part II on your own.  The session ends with a clinic for your Final Project Proposal.
 
 The corpus is four short files about an invented bicycle co-op.  Every fact in them is synthetic, so you can change and test against them freely.  The measurement at the end is the habit the lab's Step 4 depends on: a golden set written before you tune anything, recall@k for the retriever, and a grounding check for the answer.
 
-**Today:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) and your team's Intra-Team Check-In (Norming into Performing) are due, and I hand out the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) (due Thursday, November 12) and the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview).  For the lab's corpus, you may use your team's stakeholder material (interview notes, your partner's public documents, your evidence folder), so that the lab also moves your project forward.  If you do, use only material your partner agreed to share, and leave out personal details about the people you interviewed.  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Thursday.
+**Today:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due, and I hand out the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) (due Tuesday, November 17) and the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview).  For the lab's corpus, you may use your team's stakeholder material (interview notes, your partner's public documents, your evidence folder), so that the lab also moves your project forward.  If you do, use only material your partner agreed to share, and leave out personal details about the people you interviewed.  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Tuesday, November 10.
 
 ---
 
@@ -59,7 +59,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 5. Part I, Step 6: measure recall@k and grounding, then fix the chunking and measure again (Checkpoint 4)
 6. Part II, the same corpus on your machine: one laptop per team confirms that the lab's code route or Langflow flow answers one golden-set question (Checkpoint 5).  The rest of Part II is self-paced lab work
 7. Proposal Clinic: one card per team, four lines
-8. The lab handout, and what to have ready for Thursday
+8. The lab handout, and what to have ready for Tuesday
 
 Part III, the exercise on a golden set for your own lab corpus, is self-paced.
 
@@ -502,7 +502,7 @@ This exercise does the lab's Step 1 and Step 4 in the right order.  Three of you
 
 # Proposal Clinic
 
-Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Thursday.  Use this time to settle what is still open while I am in the room to help.  Fill in one card per team, with four lines:
+Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Tuesday, November 10.  Use this time to settle what is still open while I am in the room to help.  Fill in one card per team, with four lines:
 
 1.  **Direction.**  The direction you are choosing, and the one you nearly chose instead.
 2.  **Blocker.**  The one open question that is blocking your proposal.
@@ -513,7 +513,7 @@ While you write, I circulate and answer line 2 on the spot.  Before you leave, p
 
 ---
 
--> Coming Up Next: *Agents That Talk, Observability, and Handoff Protocols* (Thursday) puts two agents on either end of a shared channel, a GitHub issue thread and a shared folder, and then asks how anyone can see what each one did: logs, traces, and a written handoff protocol.  Your team's Final Project Proposal is due at that session.  The trace you write there is the observability version of today's measurement: identifiers and numbers, kept for every run.
+-> Coming Up Next: *Agents That Talk, Observability, and Handoff Protocols* (Tuesday, November 10) puts two agents on either end of a shared channel, a GitHub issue thread and a shared folder, and then asks how anyone can see what each one did: logs, traces, and a written handoff protocol.  Your team's Final Project Proposal is due at that session.  The trace you write there is the observability version of today's measurement: identifiers and numbers, kept for every run.
 
 ## Further Reading
 

@@ -14,11 +14,11 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor
 
-*Orchestration and Multi-Agent Patterns* named the patterns: a fixed pipeline, a router, and a supervisor loop in which a model decides the next move, bounded by a roster, a budget, and a stop condition that stay yours.  Today we build all three on **one task**, end to end, and print every intermediate output.  The task is the nightly club digest from Tuesday's deck: five raw messages in, one short digest out, with every day and time intact.  The same task through all three patterns lets you compare them on the two things the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) grades: whether the loop stopped for a stated reason, and how many model calls it spent to get there.
+You read *Orchestration and Multi-Agent Patterns* before class.  It named the patterns: a fixed pipeline, a router, and a supervisor loop in which a model decides the next move, bounded by a roster, a budget, and a stop condition that stay yours.  Today we build all three on **one task**, end to end, and print every intermediate output.  The task is the nightly club digest from that deck: five raw messages in, one short digest out, with every day and time intact.  The same task through all three patterns lets you compare them on the two things the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) grades: whether the loop stopped for a stated reason, and how many model calls it spent to get there.
 
 The first half runs in this page with a scripted stand-in for the model, so every run is repeatable and every stop condition can be made to fire on purpose.  The second half swaps in Ollama with one function and runs the same code on your machine, or runs the same protocol by hand on the lab's no-code route.
 
-**Today:** the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) and your individual annotated bibliographies for the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview) are due.  I also hand out the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), due Thursday, December 3.  Sprint Check 1 is at the start of class.
+**Today:** I hand out the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), due Thursday, December 3.
 
 ---
 
@@ -53,30 +53,23 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 ## Today's Plan
 
-1. Sprint check: a member picked at random shows one thing running (Direction B: one cited finding), and each Coordinator says what is next and what is blocking
-2. The task, the settings you own, and the stand-in model
-3. Part I, Step 1: the fixed pipeline, and the check that catches the polish stage (Checkpoint 1)
-4. Part I, Step 2: a router in front of the pipeline, with a closed set that fails closed (Checkpoint 2)
-5. Part I, Step 3: the supervisor loop, a refused stop, the budget firing, and the other two stop conditions (Checkpoint 3)
-6. The cost table: model calls per pattern for the same digest (Checkpoint 4)
-7. Part II, the same code on a real model, or the same protocol by hand on the no-code route (Checkpoint 5)
+1. The task, the settings you own, and the stand-in model
+2. Part I, Step 1: the fixed pipeline, and the check that catches the polish stage (Checkpoint 1)
+3. Part I, Step 2: a router in front of the pipeline, with a closed set that fails closed (Checkpoint 2)
+4. Part I, Step 3: the supervisor loop, a refused stop, the budget firing, and the other two stop conditions (Checkpoint 3)
+5. The cost table: model calls per pattern for the same digest (Checkpoint 4)
+6. Part II, the same code on a real model, or the same protocol by hand on the no-code route (Checkpoint 5)
+7. Part III, the exercise: a supervisor that stops correctly
 8. The lab handout, and where today's controls appear in it
-
-Part III, the exercise on a supervisor that stops correctly, is self-paced.
-
-## Sprint Check 1
-
-Sprint Check 1 opens today's session, with no slides.  I pick one member of each team at random.  That member has 90 seconds to show one thing running (Direction B: one cited finding), and your Coordinator says what is next and what is blocking.  Every member's evidence line (the linked first line of their latest standup) should already be in the team note.  I mark each team as shown or not yet.  The full protocol is in [Sprint Checks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread#sprint-checks).
-
 
 ---
 # Part I: One Task Through Three Patterns
 
 ## Setup: The Task, the Settings You Own, and the Stand-In
 
-Five messages arrived today.  Three are events for the digest, one is a question that belongs in an FAQ queue, and one is something the categories did not anticipate.  `CONFIG` holds the settings you own, outside any prompt, the same way the lab keeps its round budget in `config.json`.  The four system prompts are each one sentence, the small-context discipline from Tuesday.  `llm()` is the one function every pattern calls, and every call is counted in `CALLS`.
+Five messages arrived today.  Three are events for the digest, one is a question that belongs in an FAQ queue, and one is something the categories did not anticipate.  `CONFIG` holds the settings you own, outside any prompt, the same way the lab keeps its round budget in `config.json`.  The four system prompts are each one sentence, the small-context discipline from the deck.  `llm()` is the one function every pattern calls, and every call is counted in `CALLS`.
 
-In this page, `llm()` calls `stand_in()`: fixed rules per role, not a language model.  It extracts events with a regular expression, writes one sentence per event, and, in the polish stage, makes on purpose the mistake Tuesday's Question 6 warned about: it changes "Thursday" to "Friday" while editing for concision.  It also returns a label outside the closed set for the pizza message.  Both mistakes are scripted so you can watch the controls catch them every time.
+In this page, `llm()` calls `stand_in()`: fixed rules per role, not a language model.  It extracts events with a regular expression, writes one sentence per event, and, in the polish stage, makes on purpose the mistake the deck's Question 6 warned about: it changes "Thursday" to "Friday" while editing for concision.  It also returns a label outside the closed set for the pizza message.  Both mistakes are scripted so you can watch the controls catch them every time.
 
 ```python
 # Setup: the task, the settings you own, and a scripted stand-in for the model.
@@ -203,7 +196,7 @@ model calls: 3
 
 ## Step 2: A Router in Front of the Pipeline
 
-**Goal:** one classification per message into a closed set, then a dispatch: events and changes go on to the digest pipeline, questions go to an FAQ queue, and anything outside the set goes to a person.  Tuesday's router fell back silently to "software."  This one fails closed and says so, which is the louder failure Tuesday's Question 5 asked for.
+**Goal:** one classification per message into a closed set, then a dispatch: events and changes go on to the digest pipeline, questions go to an FAQ queue, and anything outside the set goes to a person.  The deck's router fell back silently to "software."  This one fails closed and says so, which is the louder failure the deck's Question 5 asked for.
 
 ```python
 # Step 2: a router.  One classification per message, a closed set, and a loud failure.
@@ -238,16 +231,16 @@ announcement  -> needs_human              Free pizza in the lobby, first come fi
 model calls: 5; 3 of 5 messages go on to the pipeline
 ```
 
-> **Checkpoint 2.**  The stand-in invented a fifth label, `announcement`, exactly as Tuesday's Question 2 predicted a real router would.  Name the line that kept it out of the digest.  Then count: the router adds one model call per message, so routing these five cost five calls before the pipeline's three.  For which inputs is that cost worth paying?
+> **Checkpoint 2.**  The stand-in invented a fifth label, `announcement`, exactly as the deck's Question 2 predicted a real router would.  Name the line that kept it out of the digest.  Then count: the router adds one model call per message, so routing these five cost five calls before the pipeline's three.  For which inputs is that cost worth paying?
 
 ## Step 3: A Supervisor Loop With a Budget and Stop Conditions
 
-**Goal:** the same digest, but now a model decides each turn which sub-agent runs next, or whether to stop.  The supervisor's reply must be JSON, the same two shapes as Tuesday's Code Cell: `{"action": "call", "agent": ..., "input": ...}` or `{"action": "stop", "answer": ...}`.  Everything that keeps the loop safe is in `supervise`, not in the supervisor:
+**Goal:** the same digest, but now a model decides each turn which sub-agent runs next, or whether to stop.  The supervisor's reply must be JSON, the same two shapes as the deck's Code Cell: `{"action": "call", "agent": ..., "input": ...}` or `{"action": "stop", "answer": ...}`.  Everything that keeps the loop safe is in `supervise`, not in the supervisor:
 
 - **The roster.**  Only `extractor`, `writer`, and `polisher` exist.  Any other name is refused and logged.
 - **The budget.**  At most `CONFIG["spawn_budget"]` turns, and each turn's decision is itself a model call, so it is counted.
 - **Four stop conditions**, each a `return` with a named status: the answer passed the check (`done`); the decision was not valid JSON (fail closed); the same sub-agent was asked for the same input twice (a loop, caught by an idempotency check); or the budget ran out.  Every early stop returns the newest text that passed the check, flagged, never the newest text.
-- **A refused stop.**  The supervisor may say "stop," but the answer must pass `check_times` first, the explicit, machine-checkable stop condition from Tuesday's section on termination.
+- **A refused stop.**  The supervisor may say "stop," but the answer must pass `check_times` first, the explicit, machine-checkable stop condition from the deck's section on termination.
 
 The stand-in supervisor below is scripted to make a plausible mistake: it always stops with the newest text, whether or not that text passed the check.
 
@@ -365,7 +358,7 @@ turn 1: Sure! First I will extract the events, then write the digest.
 -> chatty: stopped: malformed decision (turns: 1, model calls: 1)
 ```
 
-> **Checkpoint 3.**  For each of the three runs, name the stop condition that fired and the line of `supervise` that fired it.  Then answer Tuesday's Question 19 with evidence from your screen: what happens at the moment the budget is hit, and why does the status say `stopped` rather than presenting the transcript as a finished answer?
+> **Checkpoint 3.**  For each of the three runs, name the stop condition that fired and the line of `supervise` that fired it.  Then answer the deck's Question 19 with evidence from your screen: what happens at the moment the budget is hit, and why does the status say `stopped` rather than presenting the transcript as a finished answer?
 
 ## The Cost Table
 
@@ -377,7 +370,7 @@ turn 1: Sure! First I will extract the events, then write the digest.
 | Router, then pipeline (Steps 2 and 1) | 5 + 3 | You; the model picks one label per message | | |
 | Supervisor (Step 3) | 9 | The model, each turn | | |
 
-The supervisor spent three times the pipeline's calls to reach the same checked draft, and it reached it only because your code refused its stop and capped its turns.  That is the "least dynamic pattern that solves the problem" heuristic from Tuesday, measured on one task.  The supervisor earns its cost only when you cannot write the order down in advance.
+The supervisor spent three times the pipeline's calls to reach the same checked draft, and it reached it only because your code refused its stop and capped its turns.  That is the "least dynamic pattern that solves the problem" heuristic from the deck, measured on one task.  The supervisor earns its cost only when you cannot write the order down in advance.
 
 ### Common Mistakes
 
@@ -395,7 +388,7 @@ The supervisor spent three times the pipeline's calls to reach the same checked 
 
 > **Runs on your machine, not here.**  This block talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.
 
-Copy the five cells from Part I into one file, `orchestrate.py`.  Paste the block below directly after the Setup cell's code.  Because every pattern calls `llm()` by name when it runs, redefining `llm()` here sends the pipeline, the router, and the sub-agents to Ollama with no other change.  Then change one argument in Step 3: pass `model_supervisor` instead of `naive_supervisor`.  The supervisor prompt is the one from Tuesday's Code Cell, and `"format": "json"` asks Ollama to constrain the reply to JSON, the structured-output setting from the *Tool Use* readings.  The fail-closed stop stays, because a constraint on the format is not a guarantee about the content.
+Copy the five cells from Part I into one file, `orchestrate.py`.  Paste the block below directly after the Setup cell's code.  Because every pattern calls `llm()` by name when it runs, redefining `llm()` here sends the pipeline, the router, and the sub-agents to Ollama with no other change.  Then change one argument in Step 3: pass `model_supervisor` instead of `naive_supervisor`.  The supervisor prompt is the one from the deck's Code Cell, and `"format": "json"` asks Ollama to constrain the reply to JSON, the structured-output setting from the *Tool Use* readings.  The fail-closed stop stays, because a constraint on the format is not a guarantee about the content.
 
 ```python
 import requests
@@ -471,7 +464,7 @@ The supervisor's writer, check, and refused stop are already a critique-and-refi
 ---
 # Part III: Exercise and Wrap-Up
 
-## Exercise: A Supervisor That Stops Correctly (self-paced)
+## Exercise: A Supervisor That Stops Correctly
 
 - *What to do*: Write `careful_supervisor(task, transcript)`, a stand-in like `naive_supervisor` that follows the same first three moves, but when it stops, stops with the newest text in the transcript whose `check` is `"ok"`.  Run `supervise` with it in this page.  Then, on the code route, add one sentence to the `SUPERVISOR` prompt that asks for the same behavior from the real model, and rerun.
 - *Starter hint*: The transcript entries for the writer and polisher carry a `check` field.  Filter on it before you choose the answer.  For the prompt, say what "done" means in terms the model can see in its transcript.
@@ -487,7 +480,7 @@ The supervisor's writer, check, and refused stop are already a critique-and-refi
 
 ---
 
--> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* (Tuesday) takes the check you wrote today and asks what happens when it cannot be a program: a critic model that feeds issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab you received today.  Have `supervise` and your cost table ready.
+-> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* (Tuesday, November 17) takes the check you wrote today and asks what happens when it cannot be a program: a critic model that feeds issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab you received today.  Have `supervise` and your cost table ready.  The RAG Knowledge Base lab is due at that session, and Sprint Check 1 is at the start of class.
 
 ## Further Reading
 

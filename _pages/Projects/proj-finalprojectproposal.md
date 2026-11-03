@@ -86,7 +86,7 @@ The sprint window is short.  A team that arrives at Sprint 1 with a declared dir
 
 - **Read the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page in full**, including all three directions.  That page is the complete reference for the project.  This page describes the proposal deliverable and its rubric.
 - **Know where this sits in the Project Thread.**  The proposal comes before the [Literature Review]({{ site.baseurl }}/Assignments/LitReview), on purpose.  You commit to a plan first, then you read against it.  The review will confirm parts of this document, complicate others, and occasionally kill one, and your team synthesis has to say which.  So propose the plan you believe in, not the plan that will be easiest to defend later.
-- **Submit the second intra-team check-in.**  It is due at the *RAG Worked Example* session (Tuesday, November 3), before this proposal (see the [course schedule]({{ site.baseurl }}/) for the date).  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
+- **Submit the second intra-team check-in.**  It is due at the *Project Groups* session (Tuesday, November 3), before this proposal (see the [course schedule]({{ site.baseurl }}/) for the date).  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
 - **Length:** 2-3 pages, excluding the timeline, tables, and appendices.
 
 **Choose your direction slowly.**  All three directions are real, and they suit different teams:
@@ -237,7 +237,7 @@ Only four of AAC&U's six problem-solving criteria appear here, on purpose.  *Imp
 - **Incomplete proposals are returned ungraded.**  Complete means every shared element and every direction-specific element is present.  It does not mean every one is perfect.
 - **Proposals whose scope is too generic, inaccessible, or infeasible in three sprints are redirected**, with specific guidance on what to cut or change.  A redirect is not a penalty.  It is much cheaper here than in week 14.
 - **Sprint 1 begins from the approved proposal** and runs to the cross-team proposal critique at the *Project Sprint* session (Tuesday, December 1).  Your Sprint 1 milestone depends on your direction; see the sprint table on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page.
-- **The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out at the *RAG Worked Example* session, two days before this is due**, and it reads against the plan you are committing to.  Its team synthesis must state what the evidence confirms, complicates, or changes about this proposal.  A synthesis that changes nothing is a warning sign, not a clean bill of health.
+- **The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out at the *RAG Worked Example* session, five days before this is due**, and it reads against the plan you are committing to.  Its team synthesis must state what the evidence confirms, complicates, or changes about this proposal.  A synthesis that changes nothing is a warning sign, not a clean bill of health.
 - Some proposal artifacts are **living documents**.  The pre-mortem, the decision log, the timeline, and the Responsible AI measurement plan are maintained through the sprints and resubmitted with the final artifacts folder.  They are not frozen here.
 
 ---

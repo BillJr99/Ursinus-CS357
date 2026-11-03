@@ -131,11 +131,11 @@ The milestones run in the sequence below.  See the [course schedule]({{ site.bas
 | Milestone | What is due | Points |
 |---|---|---|
 | Project handed out | Nothing yet.  Teams read all three directions and begin converging on one | - |
-| Intra-team check-in 2 | A private check-in to me, due at the *RAG Worked Example* session (Tuesday, November 3), before the proposal; it precedes and informs the proposal | - |
+| Intra-team check-in 2 | A private check-in to me, due at the *Project Groups* session (Tuesday, November 3), before the proposal; it precedes and informs the proposal | - |
 | Proposal | The proposal, with direction declared, stakeholder grounding, and an AI-use disclosure | **25 / 100** |
-| Literature Review handed out | Handed out at the *RAG Worked Example* session (Tuesday, November 3), two days before the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
+| Literature Review handed out | Handed out at the *RAG Worked Example* session (Thursday, November 5), five days before the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
 | Sprints 1, 2, and 3 | Rotating roles, a runnable increment (or evidenced stage checkpoint) at every sprint boundary, and a **partner feedback pass** during the final sprint | - |
-| Sprint checks 1 and 2 | At the start of class at the *Orchestration Worked Example* (Thursday, November 12) and *Judge Pipeline Workshop* (Thursday, November 19) sessions: a member I pick at random shows one thing running (Direction B: one cited finding), and I mark it shown or not yet.  See [Sprint Checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) | 3 points each, within Final Project and Project Thread Milestones |
+| Sprint checks 1 and 2 | At the start of class at the *Critique, Consensus, and the LLM Judge* (Tuesday, November 17) and *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* (Tuesday, November 24) sessions: a member I pick at random shows one thing running (Direction B: one cited finding), and I mark it shown or not yet.  See [Sprint Checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) | 3 points each, within Final Project and Project Thread Milestones |
 | Cross-team proposal critique | At the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session (Tuesday, December 1), the boundary between Sprint 1 and Sprint 2 | - |
 | Gallery walk, peer review (SQR cards), and intra-team check-in 3 | The gallery walk at *Project Studio and Gallery Walk*; check-in 3 at the *Final Integration and Demo Rehearsal* studio that follows | - |
 | Demo Day and final submission | The presentation, the partner-facing artifact, your direction's deliverables, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all at Demo Day, held in our final exam period (Wednesday, December 16, 8:00-11:00 AM, Pfahler 107) | **75 / 100** |
@@ -255,7 +255,7 @@ Run a **counterfactual or perturbation probe**: send inputs that are identical e
 
 ## Phase 1: Converge on a Direction and Check In
 
-Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *RAG Worked Example* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
+Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *Project Groups* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
 
 > **Do this.**
 > 1. Read all three directions below, including the Direction C variant, and the [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal) page.
@@ -265,7 +265,7 @@ Between the hand-out and the proposal, your team reads all three directions, wei
 
 **Deliverables for this phase:**
 
-- [ ] Intra-team check-in 2, submitted at the *RAG Worked Example* session, before the proposal
+- [ ] Intra-team check-in 2, submitted at the *Project Groups* session, before the proposal
 - [ ] A decision-log entry naming the directions weighed and the one chosen
 
 ---
@@ -303,9 +303,9 @@ The proposal is graded on its own rubric, not on this one: three course families
 
 ## Phase 3: Sprints
 
-Build in three sprints between the proposal and Demo Day.  See the [course schedule]({{ site.baseurl }}/) for the sprint boundaries.  These class sessions support the sprints: the two sprint checks (Thursdays, November 12 and 19), the *Project Sprint* session (Tuesday, December 1), and the two *Project Studio* sessions (Thursday, December 3, and Tuesday, December 8).  Each sprint produces three things: a **runnable increment or evidenced stage checkpoint** (per your direction's milestones below), an **updated evaluation or evidence table** (a number or a citation, not an adjective), and **Scribe notes** from the sprint retrospective.  Roles rotate at each boundary, so that every member holds every role.
+Build in three sprints between the proposal and Demo Day.  See the [course schedule]({{ site.baseurl }}/) for the sprint boundaries.  These class sessions support the sprints: the two sprint checks (Tuesdays, November 17 and 24), the *Project Sprint* session (Tuesday, December 1), and the two *Project Studio* sessions (Thursday, December 3, and Tuesday, December 8).  Each sprint produces three things: a **runnable increment or evidenced stage checkpoint** (per your direction's milestones below), an **updated evaluation or evidence table** (a number or a citation, not an adjective), and **Scribe notes** from the sprint retrospective.  Roles rotate at each boundary, so that every member holds every role.
 
-Sprint 1 is the longest sprint and spans the Thanksgiving break, so the [sprint checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) on Thursday, November 12, and Thursday, November 19, cut it into two short laps.  At the start of class each time, a member I pick at random shows one thing running (Direction B: one cited finding).
+Sprint 1 is the longest sprint and spans the Thanksgiving break, so the [sprint checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) on Tuesday, November 17, and Tuesday, November 24, both before the break, cut it into short laps.  At the start of class each time, a member I pick at random shows one thing running (Direction B: one cited finding).
 
 | Sprint | Direction A milestone | Direction B milestone | Direction C milestone |
 |---|---|---|---|

@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet.  You also leave with the same judge written a second time as a promptfoo configuration, with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries.  Today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list instead of rereading them here.  Keep everything you build today.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), due Thursday, December 3, may use this judge as its Part A critic, and the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session (Tuesday, December 1) points it at your own final project.
 
-**Today:** Sprint Check 2 is at the start of class.
+**Today:** your individual annotated bibliographies for the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview) are due.
 
 ---
 
@@ -74,19 +74,11 @@ Finals week is stressful for everyone. There are many places to study on campus,
 
 ## Today's Plan
 
-Anything marked self-paced is for outside class, and nothing graded assumes it.
-
-1. Sprint check: a member picked at random shows one thing running (Direction B: one cited finding), and each Coordinator says what is next and what is blocking
-2. Before You Start: checks pass, three sample files exist, hand-score the samples before any model sees them
-3. Part I, the pipeline in one pass: rubric, judge, batch loop, read `grades.csv`
-4. Part II, the same pipeline as a promptfoo config: one laptop per team runs the smoke test and the rubric config.  Comparing the two CSVs is self-paced
-5. Part III, make it trustworthy: agreement, the padding probe, the disagreement table
-6. Presenters report out: your agreement number and your padding delta
-
-## Sprint Check 2
-
-Sprint Check 2 opens today's session, with no slides.  I pick one member of each team at random.  That member has 90 seconds to show one thing running (Direction B: one cited finding), and your Coordinator says what is next and what is blocking.  Every member's evidence line (the linked first line of their latest standup) should already be in the team note.  Each member also submits the confidential peer pulse privately in Canvas today.  I mark each team as shown or not yet.  The full protocol is in [Sprint Checks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread#sprint-checks).
-
+1. Before You Start: checks pass, three sample files exist, hand-score the samples before any model sees them
+2. Part I, the pipeline in one pass: rubric, judge, batch loop, read `grades.csv`
+3. Part II, the same pipeline as a promptfoo config, then compare the two CSVs
+4. Part III, make it trustworthy: agreement, the padding probe, the disagreement table
+5. Presenters report out: your agreement number and your padding delta
 
 ---
 # Part I: The Pipeline in One Pass
@@ -198,8 +190,6 @@ Recap: the rubric is one JSON object that drives the prompt, the arithmetic, and
 
 ---
 # Part II: The Same Pipeline Without Code
-
-> **In class.**  One laptop per team runs the smoke test and the rubric config below.  Comparing the two CSVs, at the end of this part, is self-paced.
 
 promptfoo lets you say the same thing in a configuration file: here are the outputs, here is the judge, here are the assertions, run them all.  The *Project Sprint* session grows this configuration into a regression check for your own project; today you take it far enough to see that the two routes measure the same thing.
 
@@ -397,7 +387,7 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 
 ---
 
--> Coming Up Next: *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* (Tuesday, November 24) follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system, and then puts governance and cost behind what you build.  Its disaggregation drill points today's judge at essays that differ only in their byline.  After the Thanksgiving break, *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
+-> Coming Up Next: *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* (Tuesday, November 24) follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system, and then puts governance and cost behind what you build.  Its disaggregation drill points today's judge at essays that differ only in their byline, and Sprint Check 2 is at the start of that class.  After the Thanksgiving break, *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
 
 ---
 

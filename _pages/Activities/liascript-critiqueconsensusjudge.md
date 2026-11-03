@@ -14,6 +14,8 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  You leave with two runnable loops and a catalog of the ways each use fails, both of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration Worked Example* session and due Thursday, December 3, builds on.  In the worked example, the check that refused the supervisor's stop was a program; today asks what to do when the check has to be a model.
 
+**Today:** the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is due, and Sprint Check 1 is at the start of class.
+
 ## Directions and Group Roles
 
 Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Please think each model and question through on your own first, then talk it over with your group.  The Recorder posts your answers to the Class Activity Questions discussion board, and the Presenter reports out wherever you disagreed or found another approach.  After class, please respond to the reflective prompt on your own in your notebook.
@@ -35,12 +37,17 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 
 Anything marked self-paced is for outside class, and nothing graded assumes it.
 
-1. Part I, one loop, and why the evaluator is a separate call (Model 1)
-2. Part II, the critic: the eighty-line loop, Model 2, and three failure modes
-3. Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5)
-4. Part IV, the judge: Model 6 and auditing the judge
-5. Part V, where today's loops sit in the Multi-Agent Patterns lab, and the reflection prompt.  The Human-in-the-Loop Extension is self-paced
-6. Report out: one place each use of the loop earned its cost, and one place it did not
+1. Sprint check: a member picked at random shows one thing running (Direction B: one cited finding), and each Coordinator says what is next and what is blocking
+2. Part I, one loop, and why the evaluator is a separate call (Model 1)
+3. Part II, the critic: the eighty-line loop, Model 2, and three failure modes
+4. Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5)
+5. Part IV, the judge: Model 6 and auditing the judge
+6. Part V, where today's loops sit in the Multi-Agent Patterns lab, and the reflection prompt.  The Human-in-the-Loop Extension is self-paced
+7. Report out: one place each use of the loop earned its cost, and one place it did not
+
+## Sprint Check 1
+
+Sprint Check 1 opens today's session, with no slides.  I pick one member of each team at random.  That member has 90 seconds to show one thing running (Direction B: one cited finding), and your Coordinator says what is next and what is blocking.  Every member's evidence line (the linked first line of their latest standup) should already be in the team note.  I mark each team as shown or not yet.  The full protocol is in [Sprint Checks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread#sprint-checks).
 
 ---
 # Part I: One Loop
