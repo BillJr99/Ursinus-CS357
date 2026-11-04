@@ -635,7 +635,7 @@ schedule:
     rubricpath: "_pages/Participation/reading-responses.md"
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
-  - rtitle: "Have ready the judge you built in the Judge Pipeline Workshop (the one the Multi-Agent Patterns lab's Part A may use as its critic), three artifacts from your final project for it to grade, and your integrated project and proposal.  Today's workshop runs the judge against your own work, audits the disagreements, critiques another team's proposal, and then threat-models the project."
+  - rtitle: "Have ready the judge you built in the Judge Pipeline Workshop, three artifacts from your final project for it to grade, and your integrated project and proposal.  Today's workshop runs the judge against your own work, audits the disagreements, critiques another team's proposal, and then threat-models the project."
     rlink: false
   - rtitle: "Gandalf (Lakera), a browser exercise in prompt injection.  Optional practice on how guardrails fail, before you threat-model your project"
     rlink: "https://gandalf.lakera.ai/"
@@ -677,7 +677,7 @@ schedule:
 - cdate: "2026/12/16"
   title: "Demo Day: Final Project Presentations (Final Exam Period, 8:00-11:00 AM, Pfahler 107)"
   readings:
-  - rtitle: "Demo Day, held in our final exam period.  Have the running system, the governance one-pager, and the contribution statements ready.  Nothing is due after today."
+  - rtitle: "Demo Day, held in our final exam period.  Have the running system, your governance document, and the contribution statements ready.  Nothing is due after today."
 ---
 
 This course is about building agents you understand and can run yourself.  The sections below explain how the course gives you real choice over your path, how to read an assignment, how to prepare for each hands-on session, and how I value and evaluate the day-to-day work of participating, including engaging with your classmates' work.  Please read them now, and come back to the participation and preparation guides throughout the term.

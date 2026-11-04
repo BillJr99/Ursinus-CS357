@@ -387,7 +387,7 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 
 ---
 
--> Coming Up Next: *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* (Tuesday, November 24) follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system, and then puts governance and cost behind what you build.  Its disaggregation drill points today's judge at essays that differ only in their byline, and Sprint Check 2 is at the start of that class.  After the Thanksgiving break, *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
+-> Coming Up Next: *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system, and then puts governance and cost behind what you build.  Its disaggregation drill points today's judge at essays that differ only in their byline, and Sprint Check 2 is at the start of that class.  After the Thanksgiving break, *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
 
 ---
 

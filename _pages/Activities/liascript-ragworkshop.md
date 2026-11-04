@@ -141,7 +141,7 @@ Indexed 12 chunks from 4 files.
   tools-2       tools.md       'The parts washer uses citrus degreaser only. Never pour'
 ```
 
-> **Checkpoint 1.**  The lab's Step 2 asks you to predict what chunk a heading on its own line becomes.  Here is the answer: `hours-0`, `membership-0`, `safety-0`, and `tools-0` are each a bare heading.  Before Step 4, predict whether a bare heading will help or hurt a search for "How much does a membership cost for a student?"  Write the prediction down.
+> **Checkpoint 1.**  The lab's Step 2 warns that a heading on its own line becomes a chunk with no information in it.  Here they are: `hours-0`, `membership-0`, `safety-0`, and `tools-0` are each a bare heading.  Before Step 4, predict whether a bare heading will help or hurt a search for "How much does a membership cost for a student?"  Write the prediction down.
 
 ## Step 3 and Step 4: Embed and Retrieve
 

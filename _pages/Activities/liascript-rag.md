@@ -387,7 +387,7 @@ In this Part you apply the pipeline and the measurements to real documents you c
 
 ## -> Coming Up Next
 
-After the *Project Groups* session on Tuesday, November 3, *RAG Worked Example: Build the Pipeline Together* (Thursday, November 5) is where we build one complete knowledge base end to end, exactly the way the RAG Knowledge Base lab asks: ingest a small folder of documents, chunk it, embed it, retrieve, generate a grounded answer that names its source, and then measure recall@k and grounding on that corpus, showing the intermediate output at every step.  We build it twice, as the lab's Pydantic AI agent and as its Langflow flow, and the lab is handed out at the end.  Have today's `recall_at_k` function and your hybrid chunking policy from Question 9 ready.
+After the *Project Groups* session, *RAG Worked Example: Build the Pipeline Together* is where we build one complete knowledge base end to end, exactly the way the RAG Knowledge Base lab asks: ingest a small folder of documents, chunk it, embed it, retrieve, generate a grounded answer that names its source, and then measure recall@k and grounding on that corpus, showing the intermediate output at every step.  We build it twice, as the lab's Pydantic AI agent and as its Langflow flow, and the lab is handed out at the end.  Have today's `recall_at_k` function and your hybrid chunking policy from Question 9 ready.
 
 ---
 

@@ -345,7 +345,7 @@ Clause B: "The advising agent may draft degree-plan suggestions but may not subm
 
 ## The Eight Sections
 
-Your final project's governance one-pager uses this skeleton, each section earning its place by the third-party test.  If you cannot fill a section, that gap is itself a finding: something about your system is unspecified.
+Your final project's governance document (GOVERNANCE.md for Direction A, the governance document for Direction B) starts from this skeleton, each section earning its place by the third-party test.  If you cannot fill a section, that gap is itself a finding: something about your system is unspecified.
 
 1.  **Purpose and scope**: what the system does, for whom, and explicitly what is out of scope.
 2.  **System description**: agents, models, tools, data flows (your design table and the data-flow audit from Model 5, imported).
@@ -544,7 +544,7 @@ The first three exercises extend the bias measurements from Parts I to III; the 
 
 ---
 
--> Coming Up Next: *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) takes section 6 of your one-pager, the evaluation and monitoring section, and makes it real: you run your judge against your own project's outputs, audit the disagreements, critique another team's proposal, and then threat-model the system your policy governs.  Have your data-flow diagram, your Question 12 disclosure, and your Question 19 cost clause ready; the session tests whether their measurements are ones you can actually take.  The disaggregation drill you practiced today returns there too.
+-> Coming Up Next: *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* takes section 6 of your one-pager, the evaluation and monitoring section, and makes it real: you run your judge against your own project's outputs, audit the disagreements, critique another team's proposal, and then threat-model the system your policy governs.  Have your data-flow diagram, your Question 12 disclosure, and your Question 19 cost clause ready; the session tests whether their measurements are ones you can actually take.  The disaggregation drill you practiced today returns there too.
 
 ## Further Reading
 

@@ -682,7 +682,7 @@ Respond to all three levels in your notebook:
 
 ---
 
--> **Coming Up Next:** *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* (Thursday, November 12) takes one task through all three patterns from this deck, end to end, printing every intermediate output: a fixed pipeline, a router in front of it, and a supervisor loop with a call budget, a closed roster, and stop conditions you can see firing.  The Multi-Agent Patterns lab is handed out at the end, and its round budget, fail-closed parsing, and budget-exhausted return are the same three controls.  Have this deck's Code Cells and your answers to Questions 19 and 21 ready.
+-> **Coming Up Next:** *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* takes one task through all three patterns from this deck, end to end, printing every intermediate output: a fixed pipeline, a router in front of it, and a supervisor loop with a call budget, a closed roster, and stop conditions you can see firing.  The Multi-Agent Patterns lab is handed out at the end, and its round budget, fail-closed parsing, and budget-exhausted return are the same three controls.  Have this deck's Code Cells and your answers to Questions 19 and 21 ready.
 
 ---
 

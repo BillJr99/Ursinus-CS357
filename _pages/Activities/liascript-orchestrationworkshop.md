@@ -480,7 +480,7 @@ The supervisor's writer, check, and refused stop are already a critique-and-refi
 
 ---
 
--> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* (Tuesday, November 17) takes the check you wrote today and asks what happens when it cannot be a program: a critic model that feeds issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab you received today.  Have `supervise` and your cost table ready.  The RAG Knowledge Base lab is due at that session, and Sprint Check 1 is at the start of class.
+-> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* takes the check you wrote today and asks what happens when it cannot be a program: a critic model that feeds issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab you received today.  Have `supervise` and your cost table ready.  The RAG Knowledge Base lab is due at that session, and Sprint Check 1 is at the start of class.
 
 ## Further Reading
 

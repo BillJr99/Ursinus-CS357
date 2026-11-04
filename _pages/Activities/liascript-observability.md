@@ -22,7 +22,7 @@ You leave with four things: the vocabulary for how agents communicate through a 
 
 ## Directions and Group Roles
 
-Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Manager calls for a prediction before anyone runs a code cell.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol, writing every claim rule as a path and a condition rather than a sentiment.  At report-out, the Presenter says your team's Sprint 1 goal and the one thing you will show on November 17, and then, if time allows, reads one rule of the protocol aloud.  The Reflector watches for any moment when the team assumes GitHub does something for free that a folder would not.  The Reflector also notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Manager calls for a prediction before anyone runs a code cell.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol, writing every claim rule as a path and a condition rather than a sentiment.  At report-out, the Presenter says your team's Sprint 1 goal and the one thing you will show at Sprint Check 1, and then, if time allows, reads one rule of the protocol aloud.  The Reflector watches for any moment when the team assumes GitHub does something for free that a folder would not.  The Reflector also notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
 
 ---
 
@@ -61,7 +61,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it.
 2. Part II, agents that talk: an issue thread between two agents (Model 2), then the same handoff through a shared folder, with the claim race run in code (Model 3)
 3. Part III, observability and traceability: logs and traces, one loop step written as a trace, and reading one (Model 4)
 4. Part IV, handoff protocols: start, stop, restart, and your team's own `SKILL.md` for your project, written together (Model 5)
-5. Report out: each Presenter says your team's Sprint 1 goal and the one thing you will show at the start of class on Tuesday, November 17 (a running piece for Directions A and C, one cited finding for Direction B).  If time allows: one rule the medium enforces, and one rule that holds only because both agents chose to follow it
+5. Report out: each Presenter says your team's Sprint 1 goal and the one thing you will show at Sprint Check 1 (a running piece for Directions A and C, one cited finding for Direction B).  If time allows: one rule the medium enforces, and one rule that holds only because both agents chose to follow it
 
 ---
 # Part I: Why State Leaves the Context Window
@@ -611,7 +611,7 @@ Check your protocol against this checklist.  Every row must be true of your prot
 
 ---
 
--> Coming Up Next: In *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* (Thursday, November 12) we stop handing work between agents by hand and start composing them: pipelines, routers, and a supervisor loop in which a model decides which agent runs next.  Read *Orchestration and Multi-Agent Patterns* before class, because it names the patterns the session builds.  Every one of those compositions passes work across a seam, and today's trace and claim rules are how you will see what crossed it.  Have your `SKILL.md` draft and its checklist ready; the roster, budget, and stop condition you meet there are rules 8 through 12 in another form.
+-> Coming Up Next: In *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* we stop handing work between agents by hand and start composing them: pipelines, routers, and a supervisor loop in which a model decides which agent runs next.  Read *Orchestration and Multi-Agent Patterns* before class, because it names the patterns the session builds.  Every one of those compositions passes work across a seam, and today's trace and claim rules are how you will see what crossed it.  Have your `SKILL.md` draft and its checklist ready; the roster, budget, and stop condition you meet there are rules 8 through 12 in another form.
 
 ## Further Reading
 

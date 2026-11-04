@@ -42,7 +42,6 @@
 
 - [ ] Rebalance the sprint boundaries: Sprint 2 runs only from the Project Sprint session to the gallery walk (two class days), yet it carries all agents implemented (Direction A) and a 4-6 page risk analysis (Direction B). (added 2026-10-31)
 
-- [ ] Schedule the Direction A 10-minute class discussion on responsible use (Final Project, Direction A build requirements) into named sprint-week sessions; no session holds it this term. (added 2026-10-31)
 
 - [ ] Collapse the two role sets (Manager, Recorder, Presenter, Reflector in class; Coordinator, Builder, Evaluator, Scribe on the project) into one, and keep standups, decisions, and roles on one team board or PROJECT.md. (added 2026-10-31)
 
