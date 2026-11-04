@@ -97,16 +97,23 @@ On the no-code path you are the loop.  Every reply you paste is one model call, 
 
 Complete these first: [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md) (the loop, debate, and clustering ideas this lab runs) and the [Orchestration Worked Example]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestrationworkshop.md) (round budgets in configuration, fail-closed parsing, and counting calls).
 
-**Code path.**  `requests` is how your code talks to Ollama.  Activate your virtual environment first if you keep one, so the package lands in the Python you will use.
+**Code path.**  `requests` is how your code talks to Ollama.  A virtual environment gives this lab its own Python and packages.  Inside the course container, `requests` is already installed, so you can skip to the `curl` line.
 
 ```bash
-pip install requests
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python3 -m pip install requests
+python3 -c "import requests; print('requests ok')"
 curl http://localhost:11434/api/tags
 ```
 
-> **You should see.** The install finishes without an error, and `curl` prints a JSON list that includes `llama3.2`.
+> **You should see.** The install finishes without an error, the check prints `requests ok`, and `curl` prints a JSON list that includes `llama3.2`.
 >
-> **If it fails.** "Connection refused" means Ollama is not running; start it with `ollama serve` in a separate terminal.  If `llama3.2` is missing, run `ollama pull llama3.2`.
+> **If it fails.** "Connection refused" means Ollama is not running; start it with `ollama serve` in a separate terminal.  If `llama3.2` is missing, run `ollama pull llama3.2`.  Run the `source` line again in each new terminal.
+
+> **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python (common on Ubuntu, Debian, WSL, and Homebrew), so it refuses packages installed directly into it, because they could break the tools that depend on it.  Nothing is wrong with your machine, and the virtual environment is the fix: run the first two lines, and then install again.  Do not use `--break-system-packages`.
+
+> **If `python3 -m venv` says `ensurepip is not available`.**  On Ubuntu, Debian, and WSL, virtual environments come in a separate package.  Run `sudo apt install python3-venv`, delete the partial folder with `rm -rf .venv`, and then start again from the `venv` line.  If that package name is not found, use the version-specific name the error message gives you, such as `python3.14-venv`.
 
 **No-code path.**  Open Open WebUI, confirm `llama3.2` is in the model list, and send it one message.  Start a spreadsheet with one tab per Part.
 
@@ -664,10 +671,10 @@ for each cluster:
 For vectors of length 1, the dot product is the cosine similarity, so the largest dot product is the closest draft.
 
 > **Do this.**
-> 1. Install the packages, and check that they load.  The first run downloads the embedding model, so give it a minute.  You should see `(3, 384)`.  An import error means `pip install` went to a different Python than the one you ran.
+> 1. Install the packages, and check that they load.  The first run downloads the embedding model, so give it a minute.  You should see `(3, 384)`.  An import error means the install went to a different Python than the one you ran, so activate your virtual environment first.
 >
 >    ```bash
->    pip install sentence-transformers scikit-learn numpy
+>    python3 -m pip install sentence-transformers scikit-learn numpy
 >    python3 -c "from sentence_transformers import SentenceTransformer as S; print(S('all-MiniLM-L6-v2').encode(['a', 'b', 'c']).shape)"
 >    ```
 >

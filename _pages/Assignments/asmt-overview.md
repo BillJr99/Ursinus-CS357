@@ -888,12 +888,18 @@ docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway \
   ghcr.io/open-webui/open-webui:main
 ```
 
-Route 2, pip.  The first command downloads a large dependency set; expect several minutes.  The second starts the server in your terminal; leave that terminal open.  When the startup banner shows `Uvicorn running on http://0.0.0.0:8080`, the server is up.
+Route 2, pip.  The install downloads a large dependency set; expect several minutes.  The last command starts the server in your terminal; leave that terminal open.  When the startup banner shows `Uvicorn running on http://0.0.0.0:8080`, the server is up.
 
 ```bash
-pip install open-webui
+python3 -m venv owui
+source owui/bin/activate        # PowerShell: .\owui\Scripts\Activate.ps1
+python3 -m pip install open-webui
 open-webui serve
 ```
+
+> **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python (common on Ubuntu, Debian, WSL, and Homebrew), so it refuses packages installed directly into it, because they could break the tools that depend on it.  Nothing is wrong with your machine, and the virtual environment is the fix: run the first two lines, and then install again.  Do not use `--break-system-packages`.
+
+> **If `python3 -m venv` says `ensurepip is not available`.**  On Ubuntu, Debian, and WSL, virtual environments come in a separate package.  Run `sudo apt install python3-venv`, delete the partial folder with `rm -rf owui`, and then start again from the `venv` line.  If that package name is not found, use the version-specific name the error message gives you, such as `python3.14-venv`.
 
 **Then, in the browser** (`http://localhost:3000` for Docker, `http://localhost:8080` for pip):
 
@@ -906,7 +912,7 @@ open-webui serve
 >
 > - An empty model dropdown means OpenWebUI cannot reach Ollama.  On the Docker route, confirm the `--add-host` flag was present, then open **Admin Panel**, **Settings**, **Connections** and set the Ollama URL to `http://host.docker.internal:11434`.  Not `localhost`, which inside the container means the container itself; see *The address rule* above.  On the pip route the URL is `http://localhost:11434`, and `ollama serve` must be running.
 > - If `http://localhost:3000` refuses to connect on the Docker route, run `docker ps`.  When the container is missing, `docker logs open-webui` says why.  A port conflict means something else owns 3000, so re-run with `-p 3001:8080` and browse to 3001.
-> - If `pip install open-webui` fails with a resolver or build error, it is almost always a Python version issue.  Create a 3.11 environment with `python3.11 -m venv owui && source owui/bin/activate` and install inside it.
+> - If `pip install open-webui` fails with a resolver or build error, it is almost always a Python version issue.  Delete `owui`, create a 3.11 environment with `python3.11 -m venv owui && source owui/bin/activate`, and install inside it.
 
 **Next:** Step 5.
 

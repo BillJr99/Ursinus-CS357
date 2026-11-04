@@ -405,8 +405,20 @@ Answer each question in a short paragraph, and point at your own transcript or c
 | "Need admin approval" at the Microsoft sign-in | A college account whose administrators restrict third-party apps | Use a personal Microsoft account, or pick another server |
 | A local server fails on the first run with `Connection closed` | `uvx` or `npx` was still downloading the server when the client gave up waiting | Run the server's command once by hand (for example `uvx mcp-server-time --help`), then run the client again |
 | `uvx: command not found` or `npx: command not found` | uv or Node.js is not installed | Install uv (`python3 -m pip install uv`, with your virtual environment active) or Node.js, or pick a remote server instead |
+| `error: externally-managed-environment` from `pip install` | Your operating system manages its own Python and refuses packages installed directly into it, because they could break the tools that depend on it | Install inside a virtual environment, with the commands below this table |
 | The agent answers from memory and never calls the tool | The question does not match the tool's description, or the model was not told the tools exist | Ask more specifically, or ask first what tools it has.  Note it in Part C, question 5: it is a finding, not a failure |
 | A local server works on your host but not from inside the course container | Inside a container, `localhost` and the installed programs are the container's own | Run the client, and the server it launches, on the same side of the container wall |
+
+**Fixing `externally-managed-environment`.**  You ran `pip install` outside a virtual environment.  These commands give this lab its own Python and packages, and the last line checks that the SDK loads:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python3 -m pip install "mcp>=2"
+python3 -c "import mcp.client.streamable_http; print('mcp ok')"
+```
+
+You should see `mcp ok`.  Run the `source` line again in each new terminal, before you run your client.  Do not use `--break-system-packages`.
 
 ---
 

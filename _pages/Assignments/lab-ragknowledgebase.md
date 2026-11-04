@@ -84,12 +84,18 @@ Steps 1 and 4, the writeup, and the deliverables apply to both paths.  On the no
 The *RAG Worked Example* session builds these steps on a small corpus, on both paths.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need two Python packages and Ollama running with a model that calls tools reliably.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install "pydantic-ai-slim[openai]==2.54.0" "chromadb==1.5.9"
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python3 -m pip install "pydantic-ai-slim[openai]==2.54.0" "chromadb==1.5.9"
+python3 -c "import pydantic_ai, chromadb; print('packages ok')"
 ollama pull qwen2.5:3b
 ```
 
-> **You should see.** Both installs finish without an error.  `chromadb` is a vector database that runs on your own machine.  `pydantic-ai-slim` is the agent framework from the tutorial.  `qwen2.5:3b` is the course's recommended model for tool calling.
+> **You should see.** Both installs finish without an error, and the check prints `packages ok`.  `chromadb` is a vector database that runs on your own machine.  `pydantic-ai-slim` is the agent framework from the tutorial.  `qwen2.5:3b` is the course's recommended model for tool calling.  Run the `source` line again in each new terminal.
+
+> **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python (common on Ubuntu, Debian, WSL, and Homebrew), so it refuses packages installed directly into it, because they could break the tools that depend on it.  Nothing is wrong with your machine, and the virtual environment is the fix: run the first two lines, and then install again.  Do not use `--break-system-packages`.
+
+> **If `python3 -m venv` says `ensurepip is not available`.**  On Ubuntu, Debian, and WSL, virtual environments come in a separate package.  Run `sudo apt install python3-venv`, delete the partial folder with `rm -rf .venv`, and then start again from the `venv` line.  If that package name is not found, use the version-specific name the error message gives you, such as `python3.14-venv`.
 
 > **Time budget.** About two hours: thirty minutes to gather a corpus and write your questions, an hour to index it and build the agent, and the rest for the runs and the writeup.
 
@@ -298,13 +304,17 @@ query path:  Chat Input --> Chroma search --> Prompt --> Ollama --> Chat Output
 **Goal:** the Langflow canvas open in your browser, with both Ollama models available to it.
 
 ```bash
-pip install langflow
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python3 -m pip install langflow
 langflow run
 ollama pull llama3.2
 ollama pull nomic-embed-text
 ```
 
 > **You should see.** A "Langflow is running" banner in the terminal and the canvas at `http://localhost:7860`.  `ollama list` shows `llama3.2` and `nomic-embed-text`.
+
+> **If `pip` says `externally-managed-environment` or `python3 -m venv` says `ensurepip is not available`.**  The notes under *Before You Start* explain both errors and how to fix them.
 
 > **If it fails.** A dependency-resolver error from `pip install langflow` usually means your Python is too new or too old.  Create a fresh virtual environment on Python 3.11 or 3.12 and install there.  If `localhost:7860` refuses to connect, the server is still starting, so wait for the banner.
 

@@ -128,11 +128,20 @@ ollama pull llama3.2
 
 > **For the tool-calling parts.**  `qwen2.5:3b` (about 1.9 GB, `ollama pull qwen2.5:3b`) is the course's recommended model for tool calling.  It is the same size as `llama3.2` and calls tools far more reliably: in our tests, `llama3.2` sometimes wrote a tool call as plain text instead of making one, or ignored a tool's result in its answer.  `llama3.2` remains fine for plain chat.  Either model is accepted.  If your tools do not fire reliably, set `"model": "qwen2.5:3b"` in `config.json` and name the model in your writeup.
 
-*Code path.*  Python 3 and the `requests` library:
+*Code path.*  Python 3 and the `requests` library.  A virtual environment gives this lab its own Python and packages.  Inside the course container, `requests` is already installed, so you can skip these commands.
 
 ```bash
-pip install requests
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python3 -m pip install requests
+python3 -c "import requests; print('requests ok')"
 ```
+
+You should see `requests ok`.  Run the `source` line again in each new terminal.
+
+> **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python (common on Ubuntu, Debian, WSL, and Homebrew), so it refuses packages installed directly into it, because they could break the tools that depend on it.  Nothing is wrong with your machine, and the virtual environment is the fix: run the first two lines, and then install again.  Do not use `--break-system-packages`.
+
+> **If `python3 -m venv` says `ensurepip is not available`.**  On Ubuntu, Debian, and WSL, virtual environments come in a separate package.  Run `sudo apt install python3-venv`, delete the partial folder with `rm -rf .venv`, and then start again from the `venv` line.  If that package name is not found, use the version-specific name the error message gives you, such as `python3.14-venv`.
 
 *No-code path.*  OpenWebUI, the chat interface over Ollama.  The install (Docker or pip), the first login, and the API key are all in the optional OpenWebUI section of the [Overview assignment]({{ site.baseurl }}/Assignments/Overview).  Do that first if you skipped it.  The No-code Path section below starts by confirming it reaches your model.
 
