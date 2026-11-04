@@ -54,3 +54,5 @@
 - [ ] Consider issue and pull-request ownership for project teams: every task an issue assigned to one person, and every pull request reviewed by a named teammate, so the repository history shows who did what (fits Directions A and C better than B). (added 2026-10-31)
 
 - [ ] Align the lectures, tutorials, and activities with the assignments and labs, so that each one prepares students for the assignment it leads to.
+
+- [ ] Simplify the assignments, break the code and no-code paths into separate linked pages, and have the notes cover both the code and no-code approaches for each topic.
