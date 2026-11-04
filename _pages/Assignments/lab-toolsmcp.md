@@ -89,6 +89,8 @@ The rubric, the evidence, and the writeup questions are the same on both routes.
 
   > **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python (common on Ubuntu, Debian, WSL, and Homebrew), so it refuses packages installed directly into it, because they could break the tools that depend on it.  Nothing is wrong with your machine, and the virtual environment above is the fix: run the first two lines, and then install again.  Do not use `--break-system-packages`.  Run the `source` line again in each new terminal, before you run your client.
 
+  > **If `python3 -m venv` says `ensurepip is not available`.**  On Ubuntu, Debian, and WSL, virtual environments come in a separate package.  Run `sudo apt install python3-venv`, delete the partial folder with `rm -rf .venv`, and then start again from the first line.  If that package name is not found, use the version-specific name the error message gives you, such as `python3.14-venv`.
+
 - **No-code route:** opencode installed and working (the [OpenCode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) covers this), and a fresh, empty project folder to run it in.  For the OneNote example, also Node.js, so that `npx --version` prints a version.  (`npx` downloads a Node.js package and runs it in one step; `uvx`, from the uv tool, does the same for Python packages.  Several servers in the table below start this way.)
 
 > **Time budget.** About two hours: thirty minutes to pick a server and connect, thirty to get the transcript you want, and an hour for the writeup.
