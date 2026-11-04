@@ -55,3 +55,5 @@
 - [ ] Align the lectures, tutorials, and activities with the assignments and labs, so that each one prepares students for the assignment it leads to.
 
 - [ ] Simplify the assignments, break the code and no-code paths into separate linked pages, and have the notes cover both the code and no-code approaches for each topic.
+
+- [ ] Make the project more defined and project-based, and more practical for groups to execute: clearer coordination (who does what, by when) and a focus on group accountability.
