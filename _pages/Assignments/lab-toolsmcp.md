@@ -76,14 +76,18 @@ The rubric, the evidence, and the writeup questions are the same on both routes.
 
 ## Before You Start
 
-- **Code route:** install the official MCP Python SDK with `pip` (Python's package installer) and confirm that it imports.  The examples below were tested with version 2.2 of the SDK.
+- **Code route:** make a virtual environment, which gives this lab its own Python and packages.  Then install the official MCP Python SDK with `pip` (Python's package installer) and confirm that it imports.  The examples below were tested with version 2.2 of the SDK.
 
   ```bash
-  pip install "mcp>=2"
+  python3 -m venv .venv
+  source .venv/bin/activate        # Windows: .venv\Scripts\activate
+  python3 -m pip install "mcp>=2"
   python3 -c "import mcp.client.streamable_http; print('mcp ok')"
   ```
 
-  > **You should see.**  The line `mcp ok`.  If you see an error instead, the *If it fails* note under Step A.1 covers the common ones.
+  > **You should see.**  The line `mcp ok`.  If you see an error instead, the *If it fails* note under Step A.1 covers the common ones.  On Windows, if `python3` is not found, use `python` instead.
+
+  > **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python (common on Ubuntu, Debian, WSL, and Homebrew), so it refuses packages installed directly into it, because they could break the tools that depend on it.  Nothing is wrong with your machine, and the virtual environment above is the fix: run the first two lines, and then install again.  Do not use `--break-system-packages`.  Run the `source` line again in each new terminal, before you run your client.
 
 - **No-code route:** opencode installed and working (the [OpenCode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) covers this), and a fresh, empty project folder to run it in.  For the OneNote example, also Node.js, so that `npx --version` prints a version.  (`npx` downloads a Node.js package and runs it in one step; `uvx`, from the uv tool, does the same for Python packages.  Several servers in the table below start this way.)
 
@@ -398,7 +402,7 @@ Answer each question in a short paragraph, and point at your own transcript or c
 | A 401, or a sign-in page that loops | You have not signed in yet, or the token expired | Run `opencode mcp auth <name>` again, or rerun the OneNote `--login` command |
 | "Need admin approval" at the Microsoft sign-in | A college account whose administrators restrict third-party apps | Use a personal Microsoft account, or pick another server |
 | A local server fails on the first run with `Connection closed` | `uvx` or `npx` was still downloading the server when the client gave up waiting | Run the server's command once by hand (for example `uvx mcp-server-time --help`), then run the client again |
-| `uvx: command not found` or `npx: command not found` | uv or Node.js is not installed | Install uv (`pip install uv`) or Node.js, or pick a remote server instead |
+| `uvx: command not found` or `npx: command not found` | uv or Node.js is not installed | Install uv (`python3 -m pip install uv`, with your virtual environment active) or Node.js, or pick a remote server instead |
 | The agent answers from memory and never calls the tool | The question does not match the tool's description, or the model was not told the tools exist | Ask more specifically, or ask first what tools it has.  Note it in Part C, question 5: it is a finding, not a failure |
 | A local server works on your host but not from inside the course container | Inside a container, `localhost` and the installed programs are the container's own | Run the client, and the server it launches, on the same side of the container wall |
 
