@@ -77,22 +77,7 @@ The [Reading Responses]({{ site.baseurl }}/Participation/ReadingResponses) guide
 
 ## Extra Credit Scale
 
-Leading a session always earns the **10-point base grade** (scaled by the rubric).  On top of that base, you earn **extra credit** that is largest early in the term and decreases each week: up to **10 points** for the earliest available slot, graduating down to zero as shown.  Sessions begin in Week 3, after the reading-group and reading-response guides are handed out and the first assignments are underway:
-
-| Week | Extra Credit Points |
-|------|--------------------:|
-| Week 3 (first available slot) | 10 |
-| Week 4 | 9 |
-| Week 5 | 8 |
-| Week 6 | 7 |
-| Week 7 | 6 |
-| Week 8 | 5 |
-| Week 10 | 3 |
-| Week 11 | 2 |
-| Week 12 | 1 |
-| Week 13 | 0 |
-| Week 14 | 0 |
-| Week 15 | 0 |
+Leading a session always earns the **10-point base grade** (scaled by the rubric).  On top of that, your extra-credit maximum is **13 minus your week number, and never below 0**.  Sessions begin in Week 3, which is worth 10 points, so Week 4 is worth 9, and Week 13 and later are worth 0.
 
 Sign-up is first-come, first-served via the course sign-up sheet (link on the course learning management system, or LMS).  **Two students may sign up per class meeting.**  If a slot is full, choose the next available slot.
 
@@ -102,11 +87,9 @@ Sign-up is first-come, first-served via the course sign-up sheet (link on the co
 
 ## Before You Start
 
-This is a graded assignment for the presenter (a 10-point base grade plus an early-slot extra-credit bonus) and required participation for everyone else.  If you are reading this because you are thinking about leading a session, the section below is for you; if you are reading it because you are in the audience that day, read *For the Audience* above and the [reading response guide]({{ site.baseurl }}/Participation/ReadingResponses).
-
 **If you lead a session,** budget your time across three things: reading your source properly, preparing the questions, and putting together slides and logistics.  People underestimate the reading every time.  You cannot facilitate a discussion about a text you skimmed, because the whole job is fielding a question the text only half-answers.
 
-**Pick your source early, well before your slot**, and tell me what you picked by the deadline I post in the [syllabus]({{ site.baseurl }}/).  If it is not on the seed list, that is welcome; just check with me so we do not double up and so I can make sure the class has access to it.
+**Pick your source early,** and tell me what you picked before your slot.  If it is not on the seed list, that is welcome; just check with me so we do not double up and so I can make sure the class has access to it.
 
 **Plan backwards from the room rather than forwards from the text.**  The usual failure is a well-summarized paper and a silent room.  Decide first what you want the class arguing about, then work out how much of the source they need to get there.  Three minutes of setup and six of discussion beats the reverse, every time.
 
@@ -118,9 +101,9 @@ You may choose any of the following:
 
 **Option A: Current Event:** A news story, blog post, preprint, or policy announcement from the past 60 days that relates to AI. Examples: a new model release with notable capabilities or risks, a regulatory action, a high-profile AI failure or success, a research result.
 
-**Option B: Course-Adjacent Reading:** A book chapter, article, or essay from the seed list below, or another source you propose (check it with the instructor by that same deadline; see *Before You Start* below).
+**Option B: Course-Adjacent Reading:** A book chapter, article, or essay from the seed list below, or another source you propose (check it with me first; see *Before You Start* below).
 
-**Option C: Determinism / Automation Bias Focus:** A reading or event specifically about how humans interact with, over-trust, or mis-calibrate their trust in automated systems.  This option connects directly to the *Deterministic and Probabilistic Computing* activity and is particularly welcome in the early weeks.
+**Option C: Determinism / Automation Bias Focus:** A reading or event specifically about how humans interact with, over-trust, or mis-calibrate their trust in automated systems.  This option connects directly to the *Deterministic and Probabilistic Computing* extension in the [Sampling tutorial]({{ site.baseurl }}/Tutorials/SamplingAndTemperature) and is particularly welcome in the early weeks.
 
 ---
 
@@ -198,6 +181,11 @@ At least one question should connect to something specific from the course (a la
 
 If you chose the **Competing Texts Session** format, two of your questions must be the required probing questions, one per side.
 
+> **Example (constructed for this page).**  For Parasuraman and Manzey on complacency and bias in automation:
+> 1. *Comprehension:* How do the authors tell automation complacency apart from automation bias?
+> 2. *Analysis:* What do those findings assume about how people divide their attention, and does that assumption hold for someone reading an agent's answer?
+> 3. *Position:* In the agent you built for this course, which check would you never hand to the agent, even after it passed your golden set?  Defend your line.
+
 ---
 
 ## Reflection Write-Up
@@ -207,7 +195,8 @@ Submit a 300-500 word reflection within **one week** of your discussion date, vi
 1.  **What worked:** One specific moment in the discussion that you are proud of.
 2.  **What to improve:** One thing you would do differently if leading this discussion again.
 3.  **Course connection:** The main insight from the discussion and the specific course concept (by name) it connects to or complicates.
-4.  **Your position:** One sentence stating what you now believe about the topic that you did not believe (or had not thought about) before preparing.
+4.  **A real disagreement:** One moment where the room disagreed, the assumption that drove the disagreement, and what you now think about that assumption.
+5.  **Your position:** One sentence stating what you now believe about the topic that you did not believe (or had not thought about) before preparing.
 
 If you chose the **Competing Texts Session** format, your reflection must also include the closing reflection on which claims from each text survived contact with the other.
 
@@ -224,7 +213,7 @@ This assignment is scored on the rubric above.  Leading a session earns a **10-p
 ## Self-Check, for the Session Leader
 
 - [ ] I read the source in full, not a summary of it, and I could answer a question about a part I am not presenting.
-- [ ] I cleared my source with the instructor by the deadline posted in the syllabus.
+- [ ] I told the instructor my source before my slot.
 - [ ] The class can get to the source: it is free, linked, or I arranged access.
 - [ ] Setup is about three minutes or less.  The discussion is the session.
 - [ ] I prepared the required discussion questions, and at least one has no comfortable answer.

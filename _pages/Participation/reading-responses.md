@@ -55,6 +55,8 @@ Reading responses do two things.  They make you an active reader (turning a pass
 
 **When they are due:** the syllabus schedule marks each session with a reading response and its due date, and the timing is load-bearing: several sessions start from the positions people staked out beforehand, so a response posted afterwards cannot do its job.
 
+**How many, and how they count:** the schedule marks eight responses.  I score each one on the rubric below, and your 10 points are the average of those eight scores.
+
 **What earns credit:** engagement rather than agreement, and specificity rather than length.  A response that says "I did not follow the argument on page 40, and here is where I lost it" is worth more than one that summarizes the whole chapter competently.
 
 > **The most useful thing you can bring is a stuck point.**  Something you tried on your own machine that did not behave, or a claim in the reading you do not believe.  Both are better class discussions than a well-organized summary, and both are easier to write.
@@ -68,6 +70,8 @@ Keep it to three sentences, one for each move, posted to the discussion board be
 1.  **One takeaway.**  The single most important claim or result, in your own words, not a summary of the whole thing.
 2.  **One question.**  A real question the reading raised for you: something you doubt, something unresolved, or something you would test.
 3.  **One connection to your own system.**  This is the move that matters most in this course: tie the reading to something you run or could run yourself.  Does this change how you would configure your local model, chunk your retrieval-augmented generation (RAG) corpus, scope a Model Context Protocol (MCP) server's permissions, or evaluate an agent's output?  The goal of the course is fluency operating your own AI stack, and reading responses are where reading becomes that fluency.
+
+> **Example (constructed for this page).**  "The key claim is that a chunk split mid-thought can retrieve well and still answer poorly.  Does that hold when each chunk also carries its section heading?  My RAG corpus splits on paragraphs, so I would add the heading to each chunk and rerun my golden questions to see whether the pass rate moves."
 
 ## Reading Responses for Student-Led Reading Group Sessions
 

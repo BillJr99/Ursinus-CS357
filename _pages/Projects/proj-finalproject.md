@@ -88,6 +88,10 @@ info:
       liapage: true
     - rtitle: "Explainability"
       rlink: "../Tutorials/Explainability"
+    - rtitle: "ShipIt: Build, Test, CI, and Publish One Artifact"
+      rlink: "../Tutorials/ShipIt"
+    - rtitle: "Demo Day: External Guests and Technical Interview Practice"
+      rlink: "../Tutorials/DemoDay"
     - rtitle: "Problem Solving VALUE Rubric (AAC&U); the six problem-solving criteria in the rubric below are quoted from it"
       rlink: "https://www.lamar.edu/data-analytics-reporting-analysis/_files/documents/problem_solving.pdf"
 
@@ -106,7 +110,7 @@ You will carry one substantial, community-grounded project from a written propos
 
 This is the final stage of the semester-long [Project Thread]({{ site.baseurl }}/Projects/PBLThread).  Your proposal builds on your team's [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief).  The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) reads against that plan during the sprint window.  Your team operates under its signed charter and the [Team Playbook]({{ site.baseurl }}/Projects/PBLThread), and Demo Day addresses both technical and non-technical audiences.  See the Thread hub for the semester map and assessment philosophy.
 
-There is no final exam in this course.  Demo Day (plus the registrar's final-exam slot, if needed for presentation overflow) is the terminal event of the semester.
+There is no final exam in this course.  The final project is due on the last day of class, and teams present it at Demo Day on final exam day.
 
 ---
 
@@ -126,21 +130,20 @@ The rubric is the same on every direction.  These are directions within the one 
 
 ## Milestone Timeline
 
-The milestones run in the sequence below.  See the [course schedule]({{ site.baseurl }}/) for the dates.  **No work is accepted after Demo Day.**
+The milestones run in the sequence below, and the [course schedule]({{ site.baseurl }}/) has the dates.  **The final project is due on the last day of class, and no work is accepted after that.  Teams present on final exam day.**
 
 | Milestone | What is due | Points |
 |---|---|---|
 | Project handed out | Nothing yet.  Teams read all three directions and begin converging on one | - |
-| Intra-team check-in 2 | A private check-in to me, due at the *Project Groups* session (Tuesday, November 3), before the proposal; it precedes and informs the proposal | - |
+| Intra-team check-in 2 | A private check-in to me, due at the *Project Groups* session, before the proposal | - |
 | Proposal | The proposal, with direction declared, stakeholder grounding, and an AI-use disclosure | **25 / 100** |
-| Literature Review handed out | Handed out at the *RAG Worked Example* session (Thursday, November 5), five days before the proposal is due; its annotated bibliographies and team synthesis read against the committed plan and state what the evidence changes | *graded on its own page* |
+| Literature Review handed out | Handed out at the *RAG Worked Example* session, before the proposal is due; it reads against the committed plan and states what the evidence changes | *graded on its own page* |
 | Sprints 1, 2, and 3 | Rotating roles, a runnable increment (or evidenced stage checkpoint) at every sprint boundary, and a **partner feedback pass** during the final sprint | - |
-| Sprint checks 1 and 2 | At the start of class at the *Critique, Consensus, and the LLM Judge* (Tuesday, November 17) and *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* (Tuesday, November 24) sessions: a member I pick at random shows one thing running (Direction B: one cited finding), and I mark it shown or not yet.  See [Sprint Checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) | 3 points each, within Final Project and Project Thread Milestones |
-| Cross-team proposal critique | At the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session (Tuesday, December 1), the boundary between Sprint 1 and Sprint 2 | - |
+| Sprint checks 1 and 2 | At the start of class at the *Critique, Consensus, and the LLM Judge* and *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* sessions.  See [Sprint Checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) | 3 points each, within Final Project and Project Thread Milestones |
+| Cross-team proposal critique | At the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session, the boundary between Sprint 1 and Sprint 2 | - |
 | Gallery walk, peer review (SQR cards), and intra-team check-in 3 | The gallery walk at *Project Studio and Gallery Walk*; check-in 3 at the *Final Integration and Demo Rehearsal* studio that follows | - |
-| Demo Day and final submission | The presentation, the partner-facing artifact, your direction's deliverables, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all at Demo Day, held in our final exam period (Wednesday, December 16, 8:00-11:00 AM, Pfahler 107) | **75 / 100** |
-
-Demo Day is held in the registrar's final-exam slot for this course, and it is the submission deadline.
+| Final submission | Your direction's deliverables, the partner-facing artifact, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all due on the last day of class | **75 / 100**, with Demo Day |
+| Demo Day | The presentation, on final exam day | *within the 75* |
 
 ---
 
@@ -148,11 +151,11 @@ Demo Day is held in the registrar's final-exam slot for this course, and it is t
 
 This is not a new assignment.  It is the point every Project Thread milestone has been building toward, and most of what it asks for already exists somewhere in your team's work: the stakeholder you interviewed, the agent systems you designed, the labs you built, and, during the sprints, the literature you review.  Read the timeline above as an assembly plan, not a fresh start.
 
-> **Time budget.** This is the largest single commitment of the term, spread across the back half of the semester.  The proposal is due well before Demo Day (see the [course schedule]({{ site.baseurl }}/) for exact dates), so the sprints are where the work lives.  A team that starts building in the last two weeks will demo something that does not run.
+> **Time budget.** This is the largest single commitment of the term, spread across the back half of the semester.  The proposal is due well before the last day of class, so the sprints are where the work lives.  A team that starts building in the last two weeks will submit something that does not run.
 
-> **Watch out.** The thing that most often goes wrong is almost never technical.  Teams build the system they find interesting and present it to an audience that includes the stakeholder they interviewed in week 5.  Demo Day is a **multi-audience** presentation.  Keep the stakeholder's problem visible in every sprint, or you will discover in week 14 that you built something impressive that answers a different question.
+> **Watch out.** The thing that most often goes wrong is almost never technical.  Teams build the system they find interesting and present it to an audience that includes the stakeholder they interviewed early in the term.  Demo Day is a **multi-audience** presentation.  Keep the stakeholder's problem visible in every sprint, or you will discover at the end of the term that you built something impressive that answers a different question.
 
-> **Watch out.** Whatever you build, it must run at the start of the *Final Integration and Demo Rehearsal* studio.  That studio is a rehearsal, not a work session.  That is not a scheduling preference.  It is the difference between a demo and an apology.
+> **Watch out.** Whatever you build, it must run at the start of the *Final Integration and Demo Rehearsal* studio.  That studio is a rehearsal, not a work session, and it falls on the last day of class, when the final project is due.
 
 ---
 
@@ -162,7 +165,7 @@ The project is how the learning happens; it is not the point in itself.  I grade
 
 Your final-project grade combines **team output**, **individual contribution**, and **individual understanding**:
 
-- **Team output** is the team's score on the rubric below, applied to the proposal (25 points) and the final submission and Demo Day (75 points).  The rubric has two halves: four **course families** (Approach, Process and Professionalism, Product, and the [Responsible AI Report](#the-responsible-ai-report-required-in-every-direction)) worth 60 points between them, and six **problem-solving criteria** worth 40, described next.
+- **Team output** is the team's score on the rubric below, applied to the proposal (25 points) and to the final submission and Demo Day together (75 points).  The rubric has two halves: four **course families** (Approach, Process and Professionalism, Product, and the [Responsible AI Report](#the-responsible-ai-report-required-in-every-direction)) worth 60 points between them, and six **problem-solving criteria** worth 40, described next.
 - **Individual contribution**: every student must be **primary author of at least one section or component** of every team deliverable, named in the document, and editable by teammates.  Your primary-author sections, check-in record, and role-rotation history are your contribution evidence.  Riding along is not a strategy, and neither is doing everything yourself.
 - **Individual understanding** is assessed through the **Demo Day question-and-answer** and your **individual reflection**: can you explain and defend any part of the work, including parts you did not primarily author?
 
@@ -200,18 +203,47 @@ Every team takes concrete responsible AI actions on its own work and reports the
 
 The report is a required section of your final submission: a section of the report in Directions A and C, and a section of the artifact package in Direction B.  Keep it to 2-3 pages plus tables, and put the raw evidence in the artifacts folder.  It is graded on the **Responsible AI Report** row of the rubric (10 points).
 
-> **Watch out.** Start measuring in Sprint 1.  Token counts, traces, and probe results cannot be rebuilt from memory in week 14.  A report assembled at the end from a single run cannot score above beginning.
+> **Watch out.** Start measuring in Sprint 1.  Token counts, traces, and probe results cannot be rebuilt from memory at the end of the term.  A report assembled at the end from a single run cannot score above beginning.
 
 ### Area 1: Environmental Tracking and Token Use
 
-Record the input (prompt) and output (completion) token counts for every evaluation run, then estimate what those tokens cost in energy, carbon, and money.
+Record the input (prompt) and output (completion) tokens for every evaluation run, and then estimate what they cost in energy, carbon, and money.  The [Tokens, Energy, and Cost tutorial]({{ site.baseurl }}/Tutorials/TokensEnergyCost) and the [cost section of the bias and governance session]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) explain the method.
 
-- **Count the tokens.**  In OpenCode, read the session's token display at the end of each run and record it.  Through Ollama's API, read `prompt_eval_count` (input tokens) and `eval_count` (output tokens) from each response, along with `eval_duration` and `total_duration` (in nanoseconds) for time.  The [Agents That Talk, Observability, and Handoff Protocols]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-observability.md) session and the [Agent Observability and Tracing]({{ site.baseurl }}/Tutorials/Observability) tutorial show both methods.
-- **Total and average them.**  Report tokens per run, per task, and per agent, so a reader can see which agent or step dominates the cost.
-- **Estimate energy, carbon, and cost.**  Use the method from Part VII of the [Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-biasdata.md) session.  Energy is measured generation time multiplied by your machine's power draw under load (or tokens multiplied by a published energy-per-token figure).  Carbon is that energy multiplied by your region's grid carbon intensity.  Cost is the token count priced at a comparable hosted model's published rate; for local runs, that is the bill you avoided, plus the electricity.  State and cite every assumption.  An order-of-magnitude estimate is acceptable.  A hidden assumption is not.
-- **Compare one alternative.**  Put the numbers beside one cheaper option (a smaller model, fewer agents, a shorter context, or the monolith baseline) and say whether the difference in quality justifies the difference in cost.
+**Count the tokens.**  Keep a `tokens.csv` with one row per model call.  In OpenCode, read the session's token display.  Through Ollama's API, read `prompt_eval_count` (input), `eval_count` (output), and `total_duration` (in nanoseconds, so divide by 1e9) from each response.  Here is the header and one worked row:
 
-**Evidence to submit:** a token table (run, task, agent, model, input tokens, output tokens, time), the energy, carbon, and cost estimate with its assumptions and sources, and the comparison.
+```text
+run,task,agent,model,input_tokens,output_tokens,total_s
+r1,t01,planner,llama3.2,812,146,9.4
+```
+
+**Estimate.**  Each conversion is one multiplication by an assumption, so every assumption gets a name and a source.  Save this as `estimate.py`, replace the constants with your own, and replace each `# TODO`:
+
+```python
+import csv
+
+WATTS = 30               # ASSUMPTION: measure your machine under load
+GRID_G_PER_KWH = 350     # SOURCE: EPA eGRID; look up your region
+PRICE_IN_PER_M = 15.00   # SOURCE: a comparable hosted model's price per million input tokens
+PRICE_OUT_PER_M = 60.00  # SOURCE: the same model's price per million output tokens
+
+with open("tokens.csv") as f:
+    rows = list(csv.DictReader(f))
+input_tokens = sum(int(r["input_tokens"]) for r in rows)
+# TODO: total output_tokens and seconds (the total_s column) the same way.  total_s holds a float.
+# TODO: kwh = WATTS * seconds / 3600 / 1000
+# TODO: grams = kwh * GRID_G_PER_KWH
+# TODO: dollars = input_tokens / 1e6 * PRICE_IN_PER_M + output_tokens / 1e6 * PRICE_OUT_PER_M
+print(f"{len(rows)} calls, {kwh:.6f} kWh, {grams:.4f} g CO2e, ${dollars:.4f} hosted")
+```
+
+> **You should see.** On the one worked row: `1 calls, 0.000078 kWh, 0.0274 g CO2e, $0.0209 hosted`
+
+Then put the numbers to use:
+
+- **Show where the cost goes.**  Report tokens per run, per task, and per agent, so a reader can see which agent or step dominates.
+- **Compare one alternative.**  Put the numbers beside one cheaper option (a smaller model, fewer agents, a shorter context, or the monolith baseline), and say whether the difference in quality justifies the difference in cost.
+
+**Evidence to submit:** `tokens.csv`, the estimate with its assumptions and sources, and the comparison.  An order-of-magnitude estimate is acceptable.  A hidden assumption is not.
 
 ### Area 2: Observability and Traceability
 
@@ -243,104 +275,49 @@ Run a **counterfactual or perturbation probe**: send inputs that are identical e
 - In the **stakeholder-facing segment**, give one plain-language sentence for each area: what the system costs to run, how you can see what it did, how you know it is right, and what you checked about fairness.
 - Be ready for a question on any of the four areas.  "We did not measure that" is an honest answer.  It is also a limitation to disclose.
 
-**Deliverables for the Responsible AI Report:**
-
-- [ ] The token table and the energy, carbon, and cost estimate, with assumptions, sources, and one cheaper alternative compared
-- [ ] Trace or log files for the evaluation runs, with one run walked end to end
-- [ ] The correctness audit: golden set or rubric, harness command, pass rate, judge-to-human agreement, and failures explained
-- [ ] The bias probe: design, disaggregated results, and your explanation or mitigation
-- [ ] For each area, at least one change the team made, or deliberately declined to make, because of what it measured
+For each of the four areas, also name at least one change your team made, or deliberately declined to make, because of what it measured.
 
 ---
 
 ## Phase 1: Converge on a Direction and Check In
 
-Between the hand-out and the proposal, your team reads all three directions, weighs them against the stakeholder problem, and surfaces disagreements before they become a proposal problem.  Intra-team check-in 2 is due at the *Project Groups* session, before the proposal (see the [course schedule]({{ site.baseurl }}/) for the date); use it to raise scope disagreements early.
+Between the hand-out and the proposal, your team weighs the three directions against the stakeholder problem and surfaces disagreements before they become a proposal problem.
 
 > **Do this.**
-> 1. Read all three directions below, including the Direction C variant, and the [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal) page.
-> 2. Reread your [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief) and name the problem in the partner's terms.
-> 3. Record in your decision log which directions you weighed and why you chose one (this is the *Identify Strategies* criterion).
-> 4. Submit intra-team check-in 2 privately to me.
-
-**Deliverables for this phase:**
-
-- [ ] Intra-team check-in 2, submitted at the *Project Groups* session, before the proposal
-- [ ] A decision-log entry naming the directions weighed and the one chosen
+> 1. Read all three directions below, and reread your [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief).
+> 2. Record in your decision log which directions you weighed and why you chose one (this is the *Identify Strategies* criterion).
+> 3. Submit intra-team check-in 2 privately to me at the *Project Groups* session.
 
 ---
 
 ## Phase 2: Proposal (25 points)
 
-The proposal has its own page and its own rubric: see [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal).  Read it before you start writing.  What follows here is a summary of where the proposal sits in the project.
-
-Every proposal is 2-3 pages, regardless of direction, and carries the shared elements below plus the direction-specific elements listed under your direction.
-
-The proposal is graded on its own rubric, not on this one: three course families (Approach, Process and Professionalism, and Plan Quality) worth 60 points between them, plus the four AAC&U problem-solving criteria a plan can demonstrate.  *Implement Solution* and *Evaluate Outcomes* are graded here, at Demo Day, because a plan cannot demonstrate them.
-
-> **Do this.**
-> 1. Declare the direction and defend the choice against the two you rejected.
-> 2. Ground the problem in the partner's stated needs, carried from your [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief).
-> 3. Argue each major design decision against the alternative you rejected.
-> 4. Sketch the implementation and assessment plan as a GANTT-style timeline with named owners and sprint boundaries.
-> 5. Add your direction's proposal elements (listed under Direction A, B, or C below).
-> 6. Add a Responsible AI measurement plan: how you will count tokens, what you will log, what golden set or rubric you will audit against, and which attribute your bias probe will vary (see [The Responsible AI Report](#the-responsible-ai-report-required-in-every-direction)).
-> 7. Add the AI-use disclosure and every member's signature, with each member named as primary author of at least one section.
-
-> **Watch out.** Incomplete proposals are returned ungraded.  Proposals whose scope is too generic, inaccessible, or infeasible in three sprints are redirected.
-
-**Deliverables for this phase:**
-
-- [ ] The 2-3 page proposal with direction declared and defended
-- [ ] Stakeholder grounding in the partner's terms
-- [ ] Design decisions argued against rejected alternatives
-- [ ] GANTT-style timeline with named owners
-- [ ] Your direction's proposal elements
-- [ ] A Responsible AI measurement plan
-- [ ] AI-use disclosure and all-member signatures
+The proposal has its own page and its own rubric: see [Final Project Proposal]({{ site.baseurl }}/Projects/FinalProjectProposal).  That page lists everything a proposal needs, including your direction's elements.  *Implement Solution* and *Evaluate Outcomes* are graded here on this page, because a plan cannot demonstrate them.
 
 ---
 
 ## Phase 3: Sprints
 
-Build in three sprints between the proposal and Demo Day.  See the [course schedule]({{ site.baseurl }}/) for the sprint boundaries.  These class sessions support the sprints: the two sprint checks (Tuesdays, November 17 and 24), the *Project Sprint* session (Tuesday, December 1), and the two *Project Studio* sessions (Thursday, December 3, and Tuesday, December 8).  Each sprint produces three things: a **runnable increment or evidenced stage checkpoint** (per your direction's milestones below), an **updated evaluation or evidence table** (a number or a citation, not an adjective), and **Scribe notes** from the sprint retrospective.  Roles rotate at each boundary, so that every member holds every role.
+Build in three sprints between the proposal and the last day of class.  The [course schedule]({{ site.baseurl }}/) has the sprint boundaries and the class sessions that support them: the two sprint checks, the *Project Sprint* session, and the two *Project Studio* sessions.  Your direction's section below lists what each sprint builds and how you know it is done.
 
-Sprint 1 is the longest sprint and spans the Thanksgiving break, so the [sprint checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) on Tuesday, November 17, and Tuesday, November 24, both before the break, cut it into short laps.  At the start of class each time, a member I pick at random shows one thing running (Direction B: one cited finding).
+Sprint 1 is the longest and spans the Thanksgiving break, so the two [sprint checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) cut it into short laps.
 
-| Sprint | Direction A milestone | Direction B milestone | Direction C milestone |
-|---|---|---|---|
-| Sprint 1 (proposal submitted -> cross-team proposal critique; spans the Thanksgiving break; encouraged, not graded: a short note to your partner, see Community Partner Engagement) | By Sprint Check 1, a walking skeleton: the monolith baseline answering one evaluation task end to end, with the evaluation set drafted.  By the end of Sprint 1: monolith baseline running; 10-task evaluation set finalized (frozen after this); agent design table drafted; repo + CI placeholder | Evidence folder with 5+ sources; framework mapping begun; first failure-mode candidates identified | Running minimum viable product (MVP: core feature only); at least 3 tests (1 unit + 2 property); CI green on the MVP |
-| Sprint 2 (proposal critique -> gallery walk) | All agents implemented and individually testable; at least 5 evaluation tasks run; GOVERNANCE.md first draft committed | Risk analysis report drafted (4-6 pages, 8+ citations, 3 mechanistic failure modes); governance document outlined | Non-trivial feature implemented; third property test added; README quickstart drafted and cold-tested by a classmate |
-| Sprint 3 (gallery walk -> Demo Day) | Full evaluation with baseline comparison; 3+ failure modes documented with transcripts; one mitigation re-measured; gallery-walk prep | Governance document complete (monitoring plan, incident response, communication plan, appeal process); board presentation rehearsed | Published to a registry, tagged v1.0.0; community post made; CONTRIBUTING.md and GOVERNANCE.md complete |
-
-The cross-team proposal critique happens at the *Project Sprint* session, and the gallery walk at *Project Studio and Gallery Walk*.
-
-The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) runs across Sprints 1 and 2.  It is graded on its own page, but its synthesis is a project document.  It states what the evidence confirms, complicates, or changes about your proposal, and any scope change that follows belongs in your decision log and your next check-in.
+The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) runs across Sprints 1 and 2.  Its synthesis states what the evidence confirms, complicates, or changes about your proposal, and any scope change that follows belongs in your decision log and your next check-in.
 
 > **Do this.** At every sprint boundary:
-> 1. Rotate roles and record the new assignments in the meeting notes.
-> 2. Post the sprint's agenda and notes with owners and dates, and update the decision log with alternatives and rationale.
-> 3. Ship the runnable increment or evidenced stage checkpoint your direction's row names above.
-> 4. Update the evaluation or evidence table with a number or a citation.
-> 5. Update the GANTT-style timeline, and log any scope change the Literature Review synthesis forced.
-> 6. Add the sprint's token counts, traces, audit results, and probe results to the Responsible AI evidence folder.
-> 7. Hold the sprint retrospective and file the Scribe notes in your team note.  Each member adds a short personal reflection of three to five sentences to those notes: what I built, what I learned, and what I would do differently, keyed to one of the Open Questions.
-> 8. During the final sprint, run the **partner feedback pass**: put your work in front of your community partner and document the exchange (see Community Partner Engagement above).
+> 1. Rotate roles, and record the new assignments in the meeting notes.
+> 2. Ship the sprint's step from your direction's section, and update your evaluation or evidence table with a number or a citation, not an adjective.
+> 3. Update the decision log and the GANTT-style timeline, including any scope change.
+> 4. Add the sprint's token counts, traces, audit results, and probe results to the Responsible AI evidence folder.
+> 5. Hold the sprint retrospective, and file the Scribe notes in your team note.  Each member adds three to five sentences: what I built, what I learned, and what I would do differently, keyed to one of the Open Questions.
 
-**Deliverables for this phase:**
-
-- [ ] A runnable increment or evidenced stage checkpoint at each of the three sprint boundaries
-- [ ] An updated evaluation or evidence table at each boundary
-- [ ] Responsible AI evidence (token counts, traces, audit and probe results) added at each boundary
-- [ ] Scribe notes from each retrospective, with each member's reflection in them, role rotation recorded, and the GANTT-style timeline kept current
-- [ ] The Literature Review synthesis, with any resulting scope change in the decision log
-- [ ] The partner feedback pass, documented with your triage (incorporate, disclose, or defer)
+During the final sprint, also run the **partner feedback pass**: put your work in front of your community partner, and document the exchange and your triage (incorporate, disclose, or defer).
 
 ---
 
 ## Phase 4: Gallery Walk, Peer Review, and Check-in 3
 
-The gallery walk and peer review happen during the final sprint.  They are mandatory and graded within the Process family.  Intra-team check-in 3 is due at the *Final Integration and Demo Rehearsal* studio that follows, and that studio also hosts the cross-team mock-interview rehearsal (see the [Demo Day Guide](#demo-day-external-guests-and-technical-interview-practice)).
+The gallery walk and peer review happen during the final sprint.  They are mandatory and graded within the Process family.  Intra-team check-in 3 is due at the *Final Integration and Demo Rehearsal* studio that follows, and that studio also hosts the cross-team mock-interview rehearsal (see the [Demo Day Guide]({{ site.baseurl }}/Tutorials/DemoDay)).
 
 > **Do this.**
 > 1. Host honestly: demonstrate your work, including at least one known failure or open finding.
@@ -349,17 +326,13 @@ The gallery walk and peer review happen during the final sprint.  They are manda
 > 4. Put your triage decisions in the artifacts folder.
 > 5. Submit intra-team check-in 3 at the *Final Integration and Demo Rehearsal* studio.
 
-**Deliverables for this phase:**
-
-- [ ] SQR cards given to every team you visited
-- [ ] SQR cards received, with your triage decisions, in the artifacts folder
-- [ ] Intra-team check-in 3, submitted on time
-
 ---
 
-## Phase 5: Demo Day and Final Submission (75 points)
+## Phase 5: Final Submission and Demo Day (75 points)
 
-**Demo Day logistics:** all teams present within the single class slot, splitting the time evenly, so each team's window is short and fixed: **15 minutes per team, including Q&A**, with the rest of the class meeting held for setup and changeovers.  Each direction's presentation length below is set to fit inside that window, and whatever your presentation does not use is Q&A.  Rehearse to time.  Demo Day is **external-facing**: alumni, industry guests, and faculty from other departments may join the audience and Q&A, as available; your grade never depends on who attends.
+The final submission is due on the last day of class, and teams present on final exam day.
+
+**Demo Day logistics:** all teams present in the final exam period, splitting the time evenly, so each team's window is short and fixed: **15 minutes per team, including Q&A**, with the rest of the period held for setup and changeovers.  Each direction's presentation length below is set to fit inside that window, and whatever your presentation does not use is Q&A.  Rehearse to time.  Demo Day is **external-facing**: alumni, industry guests, and faculty from other departments may join the audience and Q&A, as available; your grade never depends on who attends.
 
 Every team, regardless of direction, delivers at Demo Day:
 
@@ -367,20 +340,20 @@ Every team, regardless of direction, delivers at Demo Day:
 - A **non-technical, stakeholder-facing segment** in plain language: who this is for, the problem in their terms, what the work does for them, what it must not be used for, and a brief multidisciplinary reflection on how disciplines beyond CS shaped the work (Goal 14).
 - The **partner-facing artifact**, presented to the multi-audience and included in the submission.
 - The **Responsible AI Report** numbers: the token and cost table and one trace in the technical segment, and one plain-language sentence per area in the stakeholder-facing segment (see [The Responsible AI Report](#the-responsible-ai-report-required-in-every-direction)).
-- A **public portfolio artifact**: the public repository (Directions A and C) or public write-up/portfolio page (Direction B) described in the Product rubric; run the [ShipIt](#shipping-your-artifact-the-shipit-checklist) self-check against it before your publish gate.
+- A **public portfolio artifact**: the public repository (Directions A and C) or public write-up/portfolio page (Direction B) described in the Product rubric; pass the [publish gate](#publish-gate) before it goes public.
 - **Every teammate speaks substantively**, and every teammate must be prepared to present any part (see the absence policy above).
-- Q&A with the instructor, peers, and partners: this is where individual understanding is assessed.  I ask each member at least one question about a part of the work they did not build.  Prepare with the [Demo Day Guide](#demo-day-external-guests-and-technical-interview-practice); the final Project Studio includes a cross-team mock-interview rehearsal, credited as class participation.
+- Q&A with the instructor, peers, and partners: this is where individual understanding is assessed.  I ask each member at least one question about a part of the work they did not build.  Prepare with the [Demo Day Guide]({{ site.baseurl }}/Tutorials/DemoDay); the final Project Studio includes a cross-team mock-interview rehearsal, credited as class participation.
 
 > **Do this.**
-> 1. Rehearse the whole demo on the clock, on the machine you will use, on the network you will have, with every teammate able to cover any part.
-> 2. Assemble the final submission: your direction's deliverables below, the Responsible AI Report, individual contribution statements documenting the role rotation, individual reflections (see Reflection Prompts), and the **final AI-use disclosure**.
-> 3. Submit everything at Demo Day.  Nothing is accepted after it.
+> 1. Assemble the final submission: your direction's deliverables below, the Responsible AI Report, individual contribution statements documenting the role rotation, individual reflections (see Reflection Prompts), and the **final AI-use disclosure**.
+> 2. Submit everything on the last day of class.  Nothing is accepted after it.
+> 3. Rehearse the whole demo on the clock, on the machine you will use, on the network you will have, with every teammate able to cover any part.
 
 **Deliverables for this phase:**
 
 - [ ] The Demo Day presentation, with the technical segment, the stakeholder-facing segment, and the rehearsed limitation disclosure
 - [ ] The partner-facing artifact, presented and included in the submission
-- [ ] The public portfolio artifact (repository or write-up), checked against the ShipIt self-check
+- [ ] The public portfolio artifact (repository or write-up), past the publish gate
 - [ ] Your direction's final deliverables (below)
 - [ ] The Responsible AI Report, with its evidence in the artifacts folder
 - [ ] Individual contribution statements documenting the role rotation, and individual reflections
@@ -394,15 +367,11 @@ Every team, regardless of direction, delivers at Demo Day:
 
 Design, build, evaluate, and present a **custom agent team**: cooperating, specialized agents accomplishing a real goal-oriented task end to end on your local AI stack.  The agent loop, prompting, retrieval, memory, tools, orchestration, critique, judging, explainability, and governance all have a place here, and your report must show that each architectural choice was a *decision*, not a default.  Choose a task that matters to your partner's community.
 
-### Direction A proposal elements
+### Direction A sprints
 
-In addition to the shared elements:
-
-- An **agent design table**, one row per agent: role, system-prompt summary, inputs, outputs, temperature with justification, tools, and the isolated evaluation you will run on it
-- A **topology statement** (pipeline, router, planner, blackboard, or hybrid) with a 3-sentence defense
-- A **memory and context plan**: what each agent carries, summarizes, retrieves, and discards
-- A **pre-mortem table** with at least 5 predicted risks (your specification gap, irreversible action, global invariant, and two more), each with the deterministic checker or gate that owns it
-- An **evaluation plan**: the 10-task set sketch, numeric metrics (precision, recall, parse success rate, latency, or human rating), the protocol, and the **monolith baseline** description
+- **Sprint 1 (proposal to cross-team critique).**  Build the monolith baseline first: by Sprint Check 1 it answers one evaluation task end to end, with the evaluation set drafted.  By the end of the sprint, finalize and freeze the 10-task evaluation set, draft the agent design table, and set up the repository with a CI placeholder.  *You are done when* the baseline has a result for all 10 tasks.
+- **Sprint 2 (critique to gallery walk).**  Implement all the agents, and commit a first draft of GOVERNANCE.md.  *You are done when* each agent passes a test on its own, and at least 5 evaluation tasks have run.
+- **Sprint 3 (gallery walk to the last day of class).**  Run the full evaluation against the baseline, document at least 3 failure modes with transcripts, and re-measure one mitigation.  *You are done when* the baseline and multi-agent numbers sit side by side, and the mitigation has a before and an after.
 
 ### Direction A build requirements
 
@@ -410,7 +379,6 @@ In addition to the shared elements:
 - Document at least three failure modes with agent transcripts; implement and re-measure at least one mitigation with before-and-after numbers
 - Surface evidence to the user following the evidence hierarchy (direct retrieval citation over generated summary), with a **human confirmation gate** on every consequential action and a demonstrated **abstention behavior** (the system declines rather than hallucinating when evidence is absent)
 - Commit a **GOVERNANCE.md** that matches the deployed system's behavior (data handling, human gates, incident response), updated at each sprint boundary, not written at the end
-- Lead a **10-minute class discussion** (scheduled per team during the sprint weeks) on the responsible use of your system, grounded in your own measurements, with at least 4 minutes for class questions and two real questions you do not know the answer to
 
 ### Direction A final deliverables
 
@@ -427,15 +395,11 @@ In addition to the shared elements:
 
 Perform a structured **responsible AI audit** of a publicly available, deployed AI system.  This is the kind of analysis that regulatory frameworks such as the EU AI Act and the NIST AI RMF call for, and that the communities a system touches have reason to ask for.  The deliverable is not an opinion piece.  It is evidenced, structured, and written for people who will make decisions based on it.  Strong candidates: a hiring screening tool, a medical imaging AI, a content moderation system, a predictive risk tool in criminal justice or benefits eligibility, or an educational AI that grades or places students.  Avoid general-purpose chatbots unless scoped to a specific deployment context.
 
-### Direction B proposal elements
+### Direction B sprints
 
-In addition to the shared elements:
-
-- **System identification**: name, operator, what it does, where it is deployed
-- **Affected populations**: who is affected and how the system's decisions reach them
-- **Framework choice** (the NIST AI Risk Management Framework (AI RMF), EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives
-- **Preliminary hypothesis**: where you expect the highest risks to lie, written before the deep analysis
-- Evidence that enough public information exists (at least two independent sources from an initial search)
+- **Sprint 1 (proposal to cross-team critique).**  Build an evidence folder with at least 5 sources, begin the framework mapping, and identify your first failure-mode candidates.  *You are done when* each candidate cites at least one source in the folder.
+- **Sprint 2 (critique to gallery walk).**  Draft the risk analysis (4-6 pages, at least 8 citations, 3 mechanistic failure modes), and outline the governance document.  *You are done when* every major framework step has a specific finding with a citation.
+- **Sprint 3 (gallery walk to the last day of class).**  Complete the governance document (monitoring plan, incident response, communication plan, appeal process), and rehearse the board presentation.  *You are done when* every recommendation traces to a specific risk finding.
 
 ### Direction B build requirements (the audit)
 
@@ -471,16 +435,11 @@ Instead of publishing a new artifact, your team may make substantive, reviewed c
 
 A contribution reviewed by the maintainers of a real project is a strong portfolio line, and one that many graduates do not have.
 
-### Direction C proposal elements
+### Direction C sprints
 
-In addition to the shared elements:
-
-- **What the artifact does**, in one paragraph a stranger can understand
-- **Who would use it**: two to three user personas with realistic, specific use cases
-- **How they would install it**: the exact command sequence from a clean machine to a working demo
-- **Gap verification**: the closest existing alternative, the specific gap it does not fill, and linked evidence the gap is real (a community post, GitHub issue, or unanswered Stack Overflow question where a real person asked for this)
-- **Minimum viable scope** in one sentence, plus two to three stretch goals
-- **Governance sketch**: who is responsible, what the artifact must never be used for, and what risk the instructor should know about before approving
+- **Sprint 1 (proposal to cross-team critique).**  Build a running minimum viable product (MVP) with the core feature only, and add at least 3 tests (1 unit and 2 property).  *You are done when* CI is green on the MVP.
+- **Sprint 2 (critique to gallery walk).**  Implement a non-trivial feature, add a third property test, and draft the README quickstart.  *You are done when* a classmate has cold-tested the quickstart and you have written down what they hit.
+- **Sprint 3 (gallery walk to the last day of class).**  Publish to a registry, tag v1.0.0, make your community post, and complete CONTRIBUTING.md and GOVERNANCE.md.  *You are done when* the package installs from the registry on a clean machine.
 
 ### Direction C build requirements
 
@@ -510,241 +469,19 @@ Answer individually in your final submission:
 
 ---
 
-## Shipping Your Artifact: The ShipIt Checklist
+## Publish Gate
 
-*To experience the maker's full arc on one small, real, public artifact, carrying it from a written specification through AI-assisted building, testing, and CI to responsible publication under your own name.*
+Publishing is effectively irreversible, so every team passes this gate before it publishes.  The [ShipIt guide]({{ site.baseurl }}/Tutorials/ShipIt) walks through each step.
 
-This guide is required reading for the Final Project.  It is not separately graded; its checklist is assessed within the Final Project rubric.  It walks you through carrying one artifact from a written specification through building with an AI agent, testing, continuous integration (CI, the automated checks that run on every push), and public publication under your own name.  That is the maker's full arc, compressed into one real, public, small artifact.  By the end, something you built will exist in the world, installable or reachable by anyone, with your name on it.  The self-check table at the end of this guide rewards discipline over scope.  A small, finished, well-tested, well-documented artifact demonstrates more than an ambitious one that does not run.  Use the self-check before your project's publish gate.  **Choose one track and one artifact**, and observe the standing course rule throughout: agents may prepare every step, but a human (you) runs every publish or deploy command.
+**Directions A and C.**
 
-### Goals
+1.  CI runs your real tests on every push, and you can show one red run and one green run.
+2.  You audited the package before it left your machine (`npm pack --dry-run`, `docker image inspect`, or the deploy directory listing), and it holds no credentials or private data.
+3.  Publishing requires a green CI run, and a person on your team, not an agent, runs the publish step.
+4.  A classmate installed or ran the artifact from your public README alone, and their confirmation is in your artifacts folder.
+5.  The README says what the artifact is, how to install it, and how to use it, and it names each member's contribution.
 
-- To carry one artifact from specification through testing and continuous integration to public publication
-- To practice the AI maker discipline in your chosen track, with the agent generating and the human specifying, verifying, and owning
-- To publish responsibly to a real registry or hosting platform (GHCR, Docker Hub, npm, or Cloudflare) with the human gate observed
-- To document the artifact for strangers with a readme and a disclosed AI contribution statement
-
-### Background Reading and References
-
-- [The AI Maker Activity]({{ site.baseurl }}/Tutorials/AIMaker)
-- [Publishing Your Work Activity]({{ site.baseurl }}/Tutorials/Publishing)
-- [Hosting with Cloudflare Activity]({{ site.baseurl }}/Tutorials/Cloudflare)
-
-### What Strong Work Looks Like
-
-- **The specification preceded the artifact, with a timestamp to prove it.**  The dated specification file is preserved in its original form, before any agent-generated code touches it.  The self-assessment values the original spec even if it was imperfect.  Discovering and documenting a spec gap is part of the discipline, not a failure.
-- **CI is wired to something real, not to a placeholder.**  The GitHub Actions workflow runs the project's actual tests (or actual accessibility/content checks for Track B), not `echo "tests pass"`.  The evidence portfolio includes links or screenshots of one red run and one green run.  The red run proves the CI was not trivially passing before the code worked.
-- **A classmate confirmed it works cold.**  The "stranger test" is documented: a classmate's GitHub username or name, what they installed or visited, and their one-line confirmation that it worked from the public record alone.  This is not optional.  It is what "published" means.
-- **The AI contribution statement is honest and specific.**  A weak statement says "I used AI to help build this."  A strong statement says: "The agent generated the initial `handler.js` function and all three test files.  I wrote the `config.json` schema and the README, and I rewrote the error handling in lines 44-62 of `handler.js` after the agent's version silently swallowed exceptions.  I verified every test manually before pushing."
-
-Weak work has CI that passes immediately with no red run, a readme that only an author could follow, and an AI contribution statement that could apply to any project.
-
-### Choose Your Track and Artifact
-
-| Track | What you build | What you need | Pick this if |
-|---|---|---|---|
-| **Track A (software engineering)** | One of: a container image published to GHCR (a small useful service such as a rubric-checking API or a markdown linter for course conventions); a scoped npm package with a working `bin` (a CLI utility you actually want to exist); or a Cloudflare Worker API (the gateway-facade pattern is a strong choice) | A GitHub account, plus GHCR or Docker Hub (container option) or an npm account (package option) | You have a software engineering background.  Your specification instrument is a **failing test suite written before implementation**; the agent's job is to make the tests pass without modifying them |
-| **Track B (maker)** | One of: a static site deployed to Cloudflare Pages (a project page, a resource hub, or an interactive explainer built with an agent); or a simple Cloudflare Worker built entirely through agent collaboration (a JSON API for something you care about) | A GitHub account and a Cloudflare free-tier account.  You use guided DevOps tooling (GitHub Actions and Cloudflare's wrangler), following step-by-step instructions | No programming background is assumed.  Your specification instruments are an **acceptance checklist written before generation** and the five-questions instruction to your agent (what it should do, what it must not do, who will use it, what counts as working, and what the edge cases are) |
-
-The self-check is the same on both tracks.  Artifacts must be original, must not include course-restricted materials or anyone's personal data, and must carry a license.  If your idea touches credentials, payments, or other people's private information, redesign or consult the instructor first.  Recognizing that boundary is part of the assignment.
-
-### Stage 1: Specify (before building)
-
-Write and date your specification before generation begins.  The timestamp is part of the discipline.  Commit it to the repository (or post it where your project lives) before any agent-generated code exists.
-
-> **Do this.**
-> 1. **Track A:** write your failing test suite.  Cover the happy path, at least one edge case (empty input, malformed input), and at least one deliberate misuse case (input designed to trigger an error or unexpected behavior).  Include a `spec.md` describing what the artifact should do in plain English, one paragraph per major feature.
-> 2. **Track B:** write your acceptance checklist.  Each item is a falsifiable statement: "The page loads in under 3 seconds on a standard wifi connection," not "The page is fast."  Also write a one-paragraph persona (who uses this, on what device, under what pressure) and explicit expected behavior for at least one misuse case (what happens when someone submits an empty form, clicks an unexpected button, or uses the artifact in an unintended way).
-> 3. **Both tracks:** state in your specification what "done" means: the specific condition under which you would consider this artifact ready to publish.  You will compare your shipped artifact against this standard in the writeup.
-
-### Stage 2: Build and Verify
-
-Work with your agent against the specification.
-
-> **Do this.**
-> 1. **Track A:** instruct your agent: "Make these tests pass without modifying the test files."  Keep the conversation log or session notes.  When the agent generates code, read it before running it.  Verify every test passes.  Run your misuse case.  If you modify any agent-generated code, note what you changed and why.
-> 2. **Track B:** iterate against your checklist.  For each failed checklist item, file a bug report in the agent conversation in what-I-did / what-I-expected / what-happened form.  When all items pass, conduct the **silent stranger test**: give a classmate the public URL and nothing else.  Watch (or ask them to document) what they do, where they get confused, and whether they complete the primary task without help.  Log their experience.
-> 3. **Both tracks:** document one specification gap you discovered during building: a criterion you forgot to specify, a behavior you assumed but did not state, or a constraint you discovered mid-build.  Show the original spec, the gap, and how you repaired the spec (not just the artifact).
-
-### Stage 3: Continuous Integration
-
-Add the automated check appropriate to your artifact.
-
-> **Do this.**
-> 1. **Track A:** add a GitHub Actions workflow (`.github/workflows/ci.yml`) that installs dependencies, runs your test suite, and reports pass/fail on every push to `main` and every pull request.
-> 2. **Track B:** add a preview-deployment-plus-checklist pipeline, or an Actions-driven build check that verifies the site builds without errors and key content is present.
-> 3. **Both tracks:** demonstrate one **red run**, a commit that intentionally fails at least one check, and one **green run**, the commit that makes all checks pass.  Include the link or screenshot of each.
-> 4. **Both tracks:** arrange the pipeline so that publication to the public registry requires CI green **plus** a deliberate human act (pushing a tag, merging to a release branch, or running a manual publish step).  In your writeup, state in exactly one sentence where the human gate lives.
-
-### Stage 4: Publish
-
-Before publishing, conduct the pre-publication audit.  Publication is irreversible, so this audit is the last point at which you can confirm that no secret, credential, or private file leaves your machine inside the artifact.
-
-> **Do this.**
-> 1. Audit the package before it leaves your machine, and save the output in your evidence portfolio:
->    - **npm:** run `npm pack --dry-run` and review the file listing.  Verify no secrets, no test fixtures, no node_modules are included.
->    - **Container image:** run `docker image inspect <image>` and review the layer listing.  Verify no credentials or private data are in any layer.
->    - **Cloudflare:** review the deploy directory listing before `wrangler deploy`.  Verify no `.env` files or private keys are staged.
-> 2. Publish, running the command yourself:
->    - `npm publish --access public` (npm)
->    - `docker push` and set visibility to public (GHCR)
->    - `wrangler deploy` or `wrangler pages deploy` (Cloudflare)
-> 3. Version it.  Start at `0.1.0`.  Ship at least one subsequent patch release (`0.1.1`) so the version walk is demonstrated.  Use semantic versioning: patch for bug fixes, minor for new features.
-> 4. Get the stranger confirmation.  A classmate must install or visit your artifact from the public record alone: no setup instructions from you, no personal help.  They should use only your README.  Their one-line confirmation ("I ran `npm install -g your-package` and `your-package --help` worked, [GitHub username]") goes in your evidence portfolio.
-
-### Evidence Portfolio
-
-Assemble the following evidence.  This is what you will check against the self-assessment checklist before your project's publish gate, and it is assessed within the Final Project rubric:
-
-1.  The dated specification (original form, before generation)
-2.  The build transcript or session log (conversation with the agent, or commit history)
-3.  Verification evidence for every specification criterion, including the misuse case
-4.  For Track B: the stranger-test log (what your classmate did, where they got confused, what you changed as a result)
-5.  The CI workflow file and links or screenshots of one red run and one green run
-6.  The pre-publication audit artifact (the dry-run output, layer listing, or deploy directory review)
-7.  The public URL or registry name with install instructions
-8.  The classmate confirmation (one line, with their name or username)
-9.  A README suitable for strangers (what, install, use; answerable in 30 seconds)
-10.  An **AI contribution statement** honestly delineating what the agent produced, what you wrote or changed, and what you verified
-11.  A **portfolio entry**: the repository pinned or linked from your GitHub profile or portfolio page with your 200-word project story, **plus a drafted LinkedIn-style post** (150-250 words: the problem, what you built, one concrete number, and what you learned).  Submitting the draft is required; **publishing it is always optional and never graded: your professional profiles are yours.**  The draft exists so that if you choose to post it, the post is already written while the evidence is fresh
-
-Ensure reproducibility by pinning dependency versions and listing software version information (Node version, npm version, Docker version, or Wrangler version as applicable).
-
-### Your Portfolio Entry and GitHub Profile
-
-Publication is only half of existing in the world.  The other half is being findable.  Once the artifact is live:
-
-- **Pin the repository** on your GitHub profile.  If you do not have a profile README, create one now.  It is a ten-minute job with an outsized payoff, and this artifact is its first entry.
-- **Write a project story of roughly 200 words**: the problem, what you built (and what the agent built, honestly delineated; your AI contribution statement is most of this already), and the evidence: the registry link, the CI badge, the classmate's stranger confirmation.  Name what *you* did explicitly, because that is the sentence a resume bullet and an interview answer are made from.
-- **Reuse the story.**  The same story is your opening move with guests at Demo Day (see the [Demo Day Guide](#demo-day-external-guests-and-technical-interview-practice)) and the public, recruiter-legible trace the Final Project's Product rubric asks for.  Update your resume and LinkedIn while the numbers are fresh.
-- **Draft the post.**  Turn the story into a **drafted LinkedIn-style post** (150-250 words: problem, what you built, one number, what you learned) and include the draft in your submission.  Publishing is always optional and never graded.  The draft means that if you want the post, it is already written at the moment the project is most impressive to describe.
-
-### Frequently Asked Questions
-
-**Q: My CI keeps failing because of a flaky network call in my tests.  What should I do?**
-A: Mock the network call in tests.  The specification discipline the course teaches requires tests that are deterministic.  If a test depends on an external service, mock it in the test suite and test against the real service only in a separate integration step that is clearly labeled as potentially flaky.  Document the decision in your writeup.
-
-**Q: What counts as a "deliberate misuse case"?**
-A: An input or user action that is wrong, adversarial, or outside the happy path.  Examples: an empty input field, an input that is 10,000 characters long, a file of the wrong type, a sequence of requests that tries to exhaust a rate limit.  The requirement is that your specification named the case and your testing shows what the artifact does when it happens.
-
-**Q: Do I really need to publish to a public registry?  Can I just push to a private GitHub repo?**
-A: No.  The "stranger confirmation" criterion requires a classmate to install or visit from the public record alone, which means the artifact must be publicly accessible.  A private repository does not satisfy this requirement.
-
-**Q: Can my classmate "confirm it works" by email instead of in the evidence portfolio?**
-A: Include the confirmation in your evidence portfolio, not only in email.  Quote their exact words and identify them by name or GitHub username.  The confirmation should describe what they did, not only say "it worked."
-
-**Q: My Track B artifact is a static site.  Do I still need to demonstrate CI?**
-A: Yes.  Even a static site can have automated checks: a build step that verifies the HTML is valid, a link checker, a content check that confirms key pages exist.  The CI requirement applies to both tracks.  Cloudflare Pages has built-in GitHub Actions integration that makes this straightforward.
-
-### ShipIt Reflection Prompts
-
-Answer these as part of your self-assessment before your project's publish gate:
-
-- Where in this project did the agent's output most need you, and what would have shipped if you had not been paying attention there?
-- Publication is effectively irreversible.  Describe the moment you ran the publish command: what had to be true for you to feel entitled to run it, and is that standard now portable to bigger things?
-
-### ShipIt Self-Check
-
-| Criterion | Pre-Emerging | Beginning | Progressing | Proficient |
-|---|---|---|---|---|
-| Self-Check: Specification and Verification Discipline | I let the agent generate code before I wrote any specification, and I have no systematic verification; I should revisit Stage 1 before applying this guide to my Final Project | I have a specification, but it is vague and my verification covers only the happy path | I wrote a concrete specification (failing tests in Track A; an acceptance checklist with a stranger test in Track B) before generation began, and I can point to verification evidence for most criteria | My specification preceded generation and is preserved in its original form, every criterion has verification evidence, at least one deliberate misuse case is covered, and I documented one specification gap I discovered mid-project along with how I repaired it |
-| Self-Check: Continuous Integration | I have no automated checking; my project cannot pass the Final Project's publish gate yet | I have a CI workflow, but it does not run my project's real checks | My CI runs the real checks on every push, and I can show one demonstrated red run and one demonstrated green run | My CI runs the real checks on every push with demonstrated red and green runs, publication is gated on green plus a deliberate human act (a tag or merge) that I perform myself, and I can state in one sentence exactly where the human gate lives in my pipeline |
-| Self-Check: Publication Quality | I have not published anything, or my publication is broken for strangers | My artifact is published, but a stranger cannot use it from the public record alone | My artifact is published, installable or reachable by a stranger, with versioning and a readme, though a minor gap remains such as a missing license or visibility friction | My artifact is published with semantic versioning, a license, and a readme answering what, install, and use in thirty seconds; I documented a pre-publication audit (dry run output or layer listing reviewed); a classmate verified a stranger installation or visit; and the artifact is pinned or linked from my GitHub profile or personal portfolio page with a short project story |
-| Self-Check: Writeup, AI Disclosure, and Evidence Portfolio | My evidence portfolio is incomplete | My evidence portfolio exists, but the AI contribution statement or human-centric design evidence is missing | My evidence portfolio is complete with an AI contribution statement and design evidence, and I gave at least superficial responses to the reflection prompts | My evidence portfolio is complete, my AI contribution statement honestly delineates agent work from my own work, my human-centric design evidence covers the persona and at least one failure path, and I answered the reflection prompts thoughtfully |
-
----
-
-## Demo Day: External Guests and Technical Interview Practice
-
-*To prepare you to present your project to people beyond the course (your community partner, invited alumni and industry guests, and eventually interviewers) by practicing the plain-language pitch, the limitation disclosure, and the interview-style close examination of a system you actually built.*
-
-This guide is not separately graded.  The presentation is assessed within the Final Project's **Product** dimension, and the mock-interview rehearsal is credited as **class participation**.
-
-Demo Day is already a multi-audience event: your community partner's world and your CS peers' world meet in one room.  This guide widens the circle one step further.  Alumni, industry guests, and faculty from other departments may join as audience members and Q&A panelists, invited **as available**; your grade never depends on who attends.  The guide prepares you for the skill all of those audiences share with a technical interviewer: explain a system you built, in plain language first and full depth on request, defend your decisions, and be honest about what does not work.  Nothing here is extra work.  It is rehearsal for work you already owe.
-
-### Goals
-
-- To open your project for a non-specialist in ninety seconds: the stakeholder problem, what the system does about it, and what working means, without jargon
-- To practice the interview form on your own work by explaining your agent architecture, defending a topology or scoping decision, and telling a real failure story with its mitigation
-- To handle questions honestly, including redirecting a question you cannot answer and disclosing a known limitation without being asked
-- To connect the project to what comes next, whether that is a portfolio story, a resume conversation, or venues for presenting student work beyond the course
-
-### Background Reading and References
-
-- [Project Studio Protocol]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-projectstudio.md)
-- [Final Project]({{ site.baseurl }}/Projects/FinalProject)
-- [ShipIt Guide: Build, Test, CI, and Publish One Artifact](#shipping-your-artifact-the-shipit-checklist)
-
-### What Strong Work Looks Like
-
-- **The opener lands with someone who has never heard of an agent loop.**  "Our partner's food pantry answers the same fifty questions by phone every week.  We built a system that answers them from the pantry's own documents, says *I don't know* when the documents don't say, and never sends anything without a human approving it.  I built the retrieval piece that finds the right document."  Ninety seconds, no jargon, ends with what *working* means, and what the system refuses to do.
-- **Depth is available on demand, not imposed up front.**  When a guest asks "how does it actually work?", the answer walks one request through the system (perceive, plan, act; what each agent sees, decides, and hands off) at whatever level the asker's follow-ups invite.
-- **Limitations are volunteered before anyone has to pull them out of you.**  Strong presenters disclose a rehearsed failure mode with its transcript evidence (or, for audit teams, a finding with its citations) before anyone asks.  It reads as command of the work, because it is.
-- **Questions come back.**  The best conversations at Demo Day are two-way.  Ask a guest what they build, how their team uses (or refuses) AI tools, and what they wish new graduates knew.
-
-### The One-Page Brief: Talking to Guests
-
-> **Do this.** Have these five moves rehearsed before Demo Day:
-> 1. **The ninety-second opener.**  The stakeholder problem in the partner's terms, what your project does about it, who it is for, and one sentence on what you personally built.  Write it, say it aloud, and cut every term a non-CS friend would stumble on.  (Your stakeholder-facing Demo Day segment is the long form of this; the opener is the version you give a guest standing in front of your table.)
-> 2. **The three-sentence architecture.**  The system in plain words: *a request comes in; specialist agents each handle their piece, one retrieves evidence, one drafts, one critiques; a human approves anything consequential before it happens.*  Then one sentence on where your part lives.  Audit teams give the framework in plain words instead: *we mapped who the system touches, measured where it fails, and wrote the rules a real organization could adopt.*
-> 3. **The limitation.**  One known failure mode or finding, stated plainly, with its evidence and why you triaged it as disclose-rather-than-fix.  Practice saying it without apologizing.
-> 4. **The redirect.**  For questions you cannot answer: "I don't know, but here's how I'd find out."  That is a strong answer, and bluffing is the only weak one.  In this course, saying *I don't know* when the evidence is absent is literally what we graded your systems on.  Speak to your own contributions in the first person.  When a question reaches a part a teammate built, answer for the team rather than passing the question along: how the team designed, tested, and decided on that part, and what it does in the product as a whole.
-> 5. **The question back.**  Prepare two real questions to ask a guest, about their work, how AI is changing it, or their path.  Demo Day is a networking event wearing a final-exam costume; treat the conversation as two-way.
-
-### The Mock Technical Interview (Final Integration and Demo Rehearsal Studio)
-
-During the *Final Integration and Demo Rehearsal* studio, you will pair **across teams** for interview rounds, credited as class participation.
-
-**Format.**  Ten minutes per round, then swap roles.  The interviewer asks from the question bank below (or invents better ones).  The interviewee answers **without slides**; a whiteboard or paper is allowed, your repository is not.  Close each round with an SQR-style feedback card: one **Strength** with evidence, one **Question** the interviewee should be ready for at Demo Day, and one **Risk** in how they explain the project, with a suggested fix.
-
-**Question bank** (interviewers: pick three or four, follow the answers, dig where they wobble):
-
-- Walk me through your agent architecture: what happens to one request, from arrival to answer, naming each agent and what it hands to the next.
-- Why this topology over a monolith?  What did the baseline comparison actually show, and what would make you go back to the monolith?
-- Tell me about a failure you found in your own system: how you caught it, what the transcript showed, and what changed after your mitigation.
-- Where does your system say "I don't know," and how do you know it actually does?
-- What would you do with two more weeks?  Two more months?
-- (For audit teams) Which of your findings would the operator dispute most vigorously, and what is your evidence when they do?
-- (For open-source teams) A stranger files an issue saying your quickstart fails on their machine.  Walk me through what you do.
-
-**Why cross-team pairs:** explaining your system to someone who has never seen it is the whole game.  Your own teammates know too much to be useful practice, and interviewing *them* about their project teaches you what good interviewer questions feel like from the inside.
-
-### Taking It Further
-
-The project does not have to end at Demo Day:
-
-- **[CCSC-Eastern](https://ccscne.org/)** and similar regional conferences run **student poster sessions**.  An evaluated multi-agent system, a regulator-ready audit, or a published open-source tool is exactly the kind of work they exist to present.  Talk to the instructor about submitting; your proposal and report are most of the abstract.
-- **Campus research and creative-work showcases** welcome course projects of this scope.  Presenting there is a low-stakes rehearsal for any external venue.
-- **Your profile.**  The [ShipIt guide](#shipping-your-artifact-the-shipit-checklist)'s portfolio entry (the pinned repository or public write-up and the 200-word project story) is the durable version of everything you rehearsed here.  Update your resume and LinkedIn while the numbers (evaluation results, test counts, the registry link) are fresh.
-
-### Frequently Asked Questions
-
-**Q: Will there definitely be external guests at Demo Day?**
-A: Guests are invited as available.  Some years the room is full; some years it is classmates, partners, and faculty.  Prepare the same either way: the Product rubric's multi-audience expectations do not change, and the mock-interview rehearsal happens regardless.
-
-**Q: Does talking to guests affect my grade?**
-A: The presentation is graded by the Final Project's existing rubric.  Guest attendance and guest reactions are never grading conditions.  The mock-interview rehearsal is credited as ordinary class participation for the studio session it happens in.
-
-**Q: I get nervous in interview settings.  Can I opt out of the mock interview?**
-A: Talk to the instructor beforehand; the format can be adjusted (a smaller room, a written walk-through, extra prep time).  The rehearsal exists because the tenth time explaining your architecture is calmer than the first.  We want you to spend the nervous repetitions here, where they are cheap.
-
-**Q: Our project is an audit with no running system.  What do we demo to a guest?**
-A: The evidence walkthrough is your demo: one failure mode, its mechanism, and the trail of citations behind it, shown rather than asserted.  Done well, an audit conversation can be among the most engaging in the room, for guests and classmates alike.
-
-### Demo Day Guide Reflection Prompts
-
-Answer individually after the mock-interview rehearsal, connecting to the course's Open Questions, especially *What will I do?*  (Goal 15):
-
-- Which question made you realize you understood something less well than you thought, and what did you do about it before Demo Day?
-- What did you learn from being the *interviewer* that you could not have learned as the interviewee?
-- You practiced telling the story of work you built with AI assistance, honestly disclosed.  How does that conversation change what you will claim (and disclose) about your work after this course?
-
-### Demo Day Guide Self-Check
-
-| Criterion | Pre-Emerging | Beginning | Progressing | Proficient |
-|---|---|---|---|---|
-| Self-Check: Guest-Facing Communication | I cannot explain the project without assuming the listener took this course | I can describe the project, but my opening runs long, leans on jargon, or hides what does not work | I can open the project in about ninety seconds in plain language and disclose a limitation when asked, though my answers to unexpected questions still wobble | I can open the project in ninety seconds in plain language, volunteer one rehearsed limitation or failure mode with its evidence, redirect a question I cannot answer honestly ("I don't know, but here is how I would find out"), and ask a guest a real question back |
-| Self-Check: Mock Technical Interview | I skipped the rehearsal or could not explain my own part of the system | I explained my component but not how it connects to the rest of the system, or I could not tell a single concrete failure story | I walked my partner through the architecture, defended one design decision, and told one failure story with its mitigation, though I leaned on notes or slides | Without slides, I explained the system end to end, defended a design decision by naming the alternative we rejected and why, told a failure story with its measured mitigation (or a finding with its evidence, for audit teams), and asked my partner at least one probing question about their project when roles reversed |
-| Self-Check: Portfolio Story | I have no way to show this project to anyone outside the course | I can point at the repository or write-up but cannot yet tell its story in a way a recruiter would follow | My 200-word project story exists and names my contribution, though it is not yet linked from anywhere or rehearsed aloud | My project story is written, linked from my profile or portfolio per the ShipIt guide, rehearsed aloud as a two-minute narrative, a drafted (publication-optional) LinkedIn-style post exists, and I can produce the evidence behind every claim in it on request |
+**Direction B.**  You have no CI or registry.  Before your write-up goes public, confirm that every claim has its citation, that it holds no private data, and that someone outside your team could say what you found after reading it.
 
 ---
 
@@ -771,10 +508,10 @@ Answer individually after the mock-interview rehearsal, connecting to the course
 
 **The paperwork**
 
-- [ ] Governance one-pager.
+- [ ] GOVERNANCE.md (Directions A and C) or the governance document (Direction B).
 - [ ] Contribution statements naming who did what.
 - [ ] AI-use disclosure for the team's work.
-- [ ] The ShipIt checklist completed.
+- [ ] The publish gate passed.
 - [ ] The Responsible AI Report, with its evidence in the artifacts folder.
 
 **The rehearsal**

@@ -215,7 +215,7 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 
 ---
 
--> Coming Up Next: Demo Day, in our final exam period: Wednesday, December 16, 8:00-11:00 AM, in Pfahler 107.  Work through the [Demo Day Guide](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject#demo-day-external-guests-and-technical-interview-practice) with your team.  It turns this week's triaged backlog and release-readiness checklist into your final presentation plan.
+-> Coming Up Next: Demo Day, on final exam day (the [course schedule](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the time and room).  Work through the [Demo Day Guide](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/DemoDay) with your team.  It turns this week's triaged backlog and release-readiness checklist into your final presentation plan.
 
 ---
 

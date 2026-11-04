@@ -111,7 +111,7 @@ The project is how the learning happens; it is not the point in itself.  What th
 
 ## How to Read This Page
 
-This is the longest page in the course, and you do not need all of it today.  It describes a semester-long structure, and the parts become relevant at different times.
+You do not need all of this page today.  It describes a semester-long structure, and the parts become relevant at different times.
 
 | Read now | Read when |
 |---|---|
@@ -132,7 +132,7 @@ This is the longest page in the course, and you do not need all of it today.  It
 
 ## The Semester Map
 
-Here are two views of the same thread: a table for scanning, then a narrative for reading.  Every artifact below has its own assignment or activity page.  The table is the authoritative *sequence*, and the [course schedule]({{ site.baseurl }}/) carries the dates.
+Every artifact below has its own assignment or activity page.  The table is the authoritative *sequence*, and the [course schedule]({{ site.baseurl }}/) carries the dates.
 
 | Step | Milestone | What Happens | Where |
 |---|---|---|---|
@@ -143,20 +143,18 @@ Here are two views of the same thread: a table for scanning, then a narrative fo
 | 5 | **Peer review round 1** | Brief drafts are exchanged across teams in class for SQR review. | [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview) |
 | 6 | **Stakeholder Brief due** | 2-3 page brief, revised after peer review: the issue in the stakeholder's own terms, the disciplines involved, a problem statement an agent system could address. The Final Project Proposal is handed out the same session, and the Final Project itself at the next class meeting. | [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief) |
 | 7 | **Intra-team check-in 1** | Signed team progress report, plus the first confidential individual pulse to the instructor. | [Check-Ins](#intra-team-check-ins-1-3) |
-| 8 | **Final project tracks handed out** | Choose one of three tracks: [Custom Agent Team]({{ site.baseurl }}/Projects/FinalProject), [Responsible AI Audit]({{ site.baseurl }}/Projects/FinalProject), or [Open-Source Agent]({{ site.baseurl }}/Projects/FinalProject). | Track pages |
+| 8 | **Final project directions handed out** | Choose one of three directions: [Custom Agent Team]({{ site.baseurl }}/Projects/FinalProject), [Responsible AI Audit]({{ site.baseurl }}/Projects/FinalProject), or [Open-Source Agent]({{ site.baseurl }}/Projects/FinalProject). | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 | 9 | **Charter revisit** | Midpoint: the team re-reads its charter, discusses what held and what did not, and files a revision. | [Team Charter and Norms activity]({{ site.baseurl }}/Tutorials/GroupCharter) |
 | 10 | **Intra-team check-in 2** | Second signed progress report and confidential pulse, now with the peer-evaluation section (below). | [Check-Ins](#intra-team-check-ins-1-3) |
-| 11 | **Proposal due** | The proposal builds on the Stakeholder Brief; the Literature Review is handed out five days earlier, after check-in 2, and feeds the sprints. | Track pages |
+| 11 | **Proposal due** | The proposal builds on the Stakeholder Brief; the Literature Review is handed out five days earlier, after check-in 2, and feeds the sprints. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 | 12 | **Literature Review, Phase 1** (individual) | Each member builds an annotated bibliography of 2-3 sources, alone, before the team synthesizes anything. | [Literature Review]({{ site.baseurl }}/Assignments/LitReview) |
 | 13 | **Literature Review, Phase 2** (team) | One page connecting everyone's sources to the problem statement and naming the gap your project addresses. | [Literature Review]({{ site.baseurl }}/Assignments/LitReview) |
 | 14 | **Peer review round 2** | Cross-team SQR critique of the proposals, in class at the *Project Sprint* session. | [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview) |
-| 15 | **Sprints 1-3** | Three sprints between the proposal and Demo Day, with rotating roles, runnable increments, evaluation updates, and Responsible AI measurements (token counts, traces, correctness audits, and bias probes) logged at every boundary. Sprint 1 spans the Thanksgiving break; plan for it in your charter's cadence. | Track pages |
-| 16 | **Sprint checks 1 and 2** | Ten minutes at the start of class, twice during Sprint 1 (Tuesday, November 17, and Tuesday, November 24): a member I pick at random shows one thing running (Direction B: one cited finding), and the Coordinator says what is next and what is blocking. Each is marked shown or not yet. Every member's linked standup line is their evidence line, and Sprint Check 2 includes the peer pulse. | [Sprint Checks](#sprint-checks) |
-| 17 | **Gallery walk + peer review round 3** | Walk each other's work with SQR cards at the final studio. | Track pages |
+| 15 | **Sprints 1-3** | Three sprints between the proposal and the last day of class, with rotating roles, runnable increments, evaluation updates, and Responsible AI measurements (token counts, traces, correctness audits, and bias probes) logged at every boundary. Sprint 1 spans the Thanksgiving break; plan for it in your charter's cadence. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
+| 16 | **Sprint checks 1 and 2** | Ten minutes at the start of class, twice during Sprint 1: a member I pick at random shows one thing running (Direction B: one cited finding), and the Coordinator says what is next and what is blocking. Each is marked shown or not yet. Every member's linked standup line is their evidence line, and Sprint Check 2 includes the peer pulse. | [Sprint Checks](#sprint-checks) |
+| 17 | **Gallery walk + peer review round 3** | Walk each other's work with SQR cards at the final studio. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 | 18 | **Intra-team check-in 3** | The third private check-in, reflecting on what the gallery walk surfaced. | [Check-Ins](#intra-team-check-ins-1-3) |
-| 19 | **Demo Day** | Technical demo, a non-technical stakeholder-facing segment, a disseminable artifact, and the Responsible AI Report on the team's own work. Demo Day is also the team's deliberate adjourning: the final reflection, contribution statements, and your professional portfolio artifact close the thread. | Track pages |
-
-**The same map, as a story.**  You open the semester by filling out a short survey, and within the first two weeks you have a team formed for compatibility of schedules and working styles.  Your first job as a team is not technical.  It is to write down, and sign, how you will treat each other.  Then you go find a real problem: not one invented for a class, but one a real stakeholder outside computer science will describe to you in their own words.  The [Final Project]({{ site.baseurl }}/Projects/FinalProject) is handed out at the class meeting after your Stakeholder Brief is due, and about two weeks later you choose a direction and commit to a [proposal]({{ site.baseurl }}/Projects/FinalProjectProposal).  Then you read against that plan: each of you annotates sources from at least two disciplines, and the team writes a one-page synthesis that says what the published evidence confirms, complicates, or changes about the proposal.  At the midpoint you stop and ask whether your charter still describes your actual team, and you fix it if it does not.  The last stretch is sprints, peer review, and rehearsal, ending at Demo Day, where you show your work three ways: to technical peers, to your stakeholder, and to the public.
+| 19 | **Final submission and Demo Day** | The final project is due on the last day of class, and teams present on final exam day: a technical demo, a non-technical stakeholder-facing segment, a disseminable artifact, and the Responsible AI Report on the team's own work. Demo Day is also the team's deliberate adjourning: the final reflection, contribution statements, and your professional portfolio artifact close the thread. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 
 ---
 
@@ -311,20 +309,24 @@ Rotation is not optional and not tradeable.  The point is that everyone practice
 
 The structured peer reviews at the brief, proposal, and gallery-walk stages all use the **SQR protocol**: one Strength with evidence, one genuine Question, one Risk with a mitigation.  The **[Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview)** carries the protocol card; bring it to each review round.
 
-Three times in the semester (with the Stakeholder Brief, between the project hand-out and the proposal, and after the gallery walk) your team pauses for a structured check-in.  Each check-in carries **3 points, assessed within Final Project and Project Thread Milestones**: enough to make it a real commitment, small enough that the check-in itself, not the score, is the point.  Every check-in has the same two parts:
+Three times in the semester (with the Stakeholder Brief, between the project hand-out and the proposal, and after the gallery walk) your team pauses for a structured check-in, timed to the Tuckman map above.  Each check-in carries **3 points, assessed within Final Project and Project Thread Milestones**, and Check-In 3 is scored on the [check-in rubric]({{ site.baseurl }}/Projects/CheckIn).  Two things are due:
 
-1.  **A short team progress report, signed by all members**: what shipped since the last milestone, what is next, and the current risks.  Three sections, half a page, honest.  The signatures matter.  Signing a report you know is rosy is the small version of every engineering-ethics case study you will ever read.
+1.  **A team progress report, signed by all members.**  Half a page, using this form.  The signatures matter.  Signing a report you know is rosy is the small version of every engineering-ethics case study you will ever read.
+
+    ```text
+    Check-In N, team name
+    Shipped since the last milestone:
+    Next:
+    Current risks:
+    Prompt (a):
+    Prompt (b):
+    Prompt (c):
+    Signed by:
+    ```
+
 2.  **A confidential individual team-health pulse to the instructor**: a few private sentences on how the team is working *for you*.  This is not a report on your teammates; it is a report on your experience.  Is your voice landing?  Is your workload fair?  Is there anything you cannot raise in the room?  This channel exists for the things psychological safety has not yet made sayable.  Only I read it, and I never quote it back.
 
-The three check-ins are timed to the Tuckman map above, and each has a stage-specific focus:
-
-| Check-In | Where On The Thread | Tuckman Transition | Team Focus |
-|---|---|---|---|
-| **1** | With the Stakeholder Brief | Storming -> Norming | Surface the differing values and work styles the first real disagreements have exposed, and set (or reset) ground rules. Re-read the charter: which norm has been hardest to keep? |
-| **2** | Between the tracks and the proposal | Norming -> Performing | Audit the mechanics: are roles *actually* rotating, or has the team quietly specialized? Is anyone under-loaded or over-loaded? Fix it now, before the sprints amplify it. |
-| **3** | After the gallery walk | Performing -> Adjourning | Look back deliberately and capture what this team learned about collaboration: the norms that worked, the repair that succeeded, the thing you would put in your next team's charter on day one. |
-
-Each team progress report answers three stage-specific prompts alongside the standard shipped/next/risks sections:
+The prompts change with the stage your team is in:
 
 - **Check-In 1 (storming into norming):** (a) Name one place where two members' working styles or standards differed; what ground rule did you set or reset in response?  (b) Which charter norm has been hardest to keep, and what will you change?  (c) Name one thing a teammate did that made it safer to speak up.
 - **Check-In 2 (norming into performing):** (a) Role-rotation audit: list who has held each role so far; where has the team quietly specialized?  (b) Workload audit: where is effort unbalanced, and what is the rebalancing plan for the sprints?  (c) What shorthand or rhythm has this team developed that should be codified in the charter revision?
@@ -338,7 +340,7 @@ At every check-in, the team re-reads its charter against its actual behavior.  T
 
 ## Sprint Checks
 
-> **Handed out** at the *Agents That Talk, Observability, and Handoff Protocols* session, and **held** at the start of class at the *Critique, Consensus, and the LLM Judge* session (Tuesday, November 17) and the *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* session (Tuesday, November 24).  See the [course schedule]({{ site.baseurl }}/).
+> **Handed out** at the *Agents That Talk, Observability, and Handoff Protocols* session, and **held** at the start of class at the *Critique, Consensus, and the LLM Judge* session and the *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* session.  See the [course schedule]({{ site.baseurl }}/).
 
 Sprint 1 is long and spans the Thanksgiving break, so two sprint checks before the break cut it into short laps.  Each check takes ten minutes at the start of class, with no slides:
 
@@ -347,7 +349,11 @@ Sprint 1 is long and spans the Thanksgiving break, so two sprint checks before t
 
 Before each check, every member's latest standup in the team note includes their **evidence line**: the "Since last time I" line, with a link to the commit, issue, or document that shows the work.  Sprint Check 2 also carries the confidential peer pulse described under the check-ins below, submitted privately by each member in Canvas.
 
-I mark each team **shown** or **not yet**, based on the running piece alone.  The evidence lines and the pulse are expected of every member, but they do not change the mark.  Each check carries **3 points, assessed within Final Project and Project Thread Milestones**, and the credit is all or nothing: shown earns all 3 points, and not yet earns none.  What you show can be small.  One piece that runs end to end is enough, but a slide about what you plan to build is not.
+I mark each team **shown** or **not yet**, based on the running piece alone.  The evidence lines and the pulse are expected of every member, but they do not change the mark.  Each check carries **3 points, assessed within Final Project and Project Thread Milestones**, and the credit is all or nothing: shown earns all 3 points, and not yet earns none.  What you show can be small.  One piece that runs end to end is enough, but a slide about what you plan to build is not.  For example:
+
+- **Direction A.**  Check 1: the monolith baseline answers one evaluation task end to end.  Check 2: the baseline prints a score on your drafted evaluation set.
+- **Direction B.**  Check 1: one cited finding from your evidence folder.  Check 2: one failure-mode candidate, with its source and the framework step it belongs to.
+- **Direction C.**  Check 1: the core feature runs on one real input.  Check 2: one test passes in CI on that feature.
 
 ---
 
@@ -374,7 +380,7 @@ Your thread work is read at more than one level, and the mapping below is fixed 
 | **Approach**, problem framing, stakeholder grounding, alternatives considered | Goals 11, 12 (identify and research an issue; multi-disciplinary understanding) | *Inquiry and Analysis*, topic selection, existing knowledge, analysis; *Integrative Learning*, connections to discipline |
 | **Approach**, literature synthesis and source quality | Goal 12 | *Information Literacy*, access, evaluate, and use information ethically |
 | **Professionalism and Process**, charter, role rotation, decision log, standups, check-ins, signatures | Goal 13 (collaborate to develop a strategic intervention) | *Teamwork*, contributes to team meetings, facilitates the contributions of others, individual contributions outside meetings, fosters constructive climate, responds to conflict |
-| **Product**, written milestones (brief, review, proposal, governance one-pager) | Goal 14 (communicate across audiences and modalities) | *Written Communication*, context and purpose, content development, sources and evidence, control of syntax |
+| **Product**, written milestones (brief, review, proposal, governance document) | Goal 14 (communicate across audiences and modalities) | *Written Communication*, context and purpose, content development, sources and evidence, control of syntax |
 | **Product**, Demo Day technical segment, stakeholder segment, partner-facing artifact | Goal 14 | *Oral Communication*, organization, language, delivery, supporting material, central message |
 | **Reflection**, Open Questions responses at every milestone | Goal 15 (use the Open Questions to assess the learning process) | *Integrative Learning*, reflection and self-assessment; *Civic Engagement*, analysis of knowledge, civic identity and commitment |
 

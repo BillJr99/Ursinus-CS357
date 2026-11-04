@@ -659,7 +659,7 @@ schedule:
   - dtitle: "Project: Intra-Team Check-In (Performing into Adjourning) Due"
     dlink: "Projects/PBLThread"
     points: "3"
-    rubricpath: "_pages/Projects/proj-pblthread.md"
+    rubricpath: "_pages/Projects/proj-checkin.md"
   - dtitle: "Project: Demo Day Presentations Due"
     dlink: "Projects/FinalProject"
     points: "75"
@@ -760,6 +760,8 @@ Every tool and technique in this course has a tutorial you can work through at y
 - [Model Types and the Model Lifecycle]({{ site.baseurl }}/Tutorials/ModelTypes)
 - [Multimodal Agents]({{ site.baseurl }}/Tutorials/MultimodalAgents)
 - [Publishing Your Work]({{ site.baseurl }}/Tutorials/Publishing)
+- [ShipIt: Build, Test, CI, and Publish One Artifact]({{ site.baseurl }}/Tutorials/ShipIt)
+- [Demo Day: External Guests and Technical Interview Practice]({{ site.baseurl }}/Tutorials/DemoDay)
 - [RESTful LLM Access]({{ site.baseurl }}/Tutorials/RESTLLMAPI)
 - [Serving LLMs in Production]({{ site.baseurl }}/Tutorials/LLMServing)
 - [Structured Peer Review]({{ site.baseurl }}/Tutorials/PeerReview)

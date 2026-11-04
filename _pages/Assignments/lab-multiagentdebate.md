@@ -7,7 +7,7 @@ info:
   coursenum: CS357
   purpose: "To practice the three multi-agent patterns your final project can draw on (critique and refine, debate, and consensus), so that you know how each one runs, what it costs in model calls, and whether it beats a single call on a task you care about."
   tilt:
-    task: "For each pattern (critique and refine, debate, and consensus), run the provided code (or the provided presets and a spreadsheet), change one setting, and record what changed.  Then run the pattern once on a task of your own choosing beside a single model call, and write one sentence on whether it helped and what it cost."
+    task: "For each pattern (critique and refine, debate, and consensus), finish and run the provided code (or use the provided presets and a spreadsheet), change one setting, and record what changed.  Then run the pattern once on a task of your own choosing beside a single model call, and write one sentence on whether it helped and what it cost."
     criteria: "I assess each pattern on its Practice run, its changed setting, and its Try It comparison, plus a readme that lets me rerun what you did.  The rubric below breaks it down in full."
   points: 100
   goals:
@@ -19,7 +19,7 @@ info:
       description: "Part A: Critique and Refine"
       preemerging: "No critique-and-refine run, or the critic's issues never reach the next draft."
       beginning: "The loop runs, but no setting was changed and recorded, or the Try It run is missing.  On the no-code path: the presets exist, but the critic's issues are not pasted back to the Reviser, or the rounds are not in the spreadsheet."
-      progressing: "The Practice loop (with either critic) runs until it prints a stopping reason (accepted or budget exhausted), and a saved transcript of at least two rounds shows a draft changing in response to a critique.  One setting was changed, with a line on what changed.  The Try It task of your choosing was run once beside a single call.  On the no-code path: the same runs through the Generator, Critic, and Reviser presets, with one spreadsheet row per round."
+      progressing: "The Practice loop runs until it prints a stopping reason (accepted or budget exhausted), and a saved transcript of at least two rounds shows a draft changing in response to a critique.  One setting was changed, with a line on what changed.  The Try It task of your choosing was run once beside a single call.  On the no-code path: the same runs through the Generator, Critic, and Reviser presets, with one spreadsheet row per round."
       proficient: "As progressing, and the Try It sentence points at the two drafts and says whether the loop helped and what it cost in model calls (two per round, against one).  Every model call in your code, including any you added, is wrapped in an exception handler that prints a located message and a traceback.  On the no-code path, the same Try It sentence earns this row on equal terms, with every preset setting (base model, system prompt, temperature, seed) and the round budget you enforced recorded in the readme in place of the exception handlers."
     - weight: 25
       description: "Part B: Debate"
@@ -43,9 +43,6 @@ info:
     - rtitle: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
       rlink: "Activities/liascript-critiqueconsensusjudge.md"
       liapage: true
-    - rtitle: "Judge Pipeline Workshop: Build and Audit a Judge (the judge Part A's second critic reuses)"
-      rlink: "Activities/liascript-rubricworkshop.md"
-      liapage: true
     - rtitle: "Orchestration and Multi-Agent Patterns (the pre-class reading for the Orchestration Worked Example)"
       rlink: "Activities/liascript-orchestration.md"
       liapage: true
@@ -64,7 +61,7 @@ tags:
 
 ---
 
-Ask a model for a docstring, and the first draft often looks fine until you read it against a checklist and notice that the usage example is missing.  You could point that out and ask again.  You could also ask three copies of the model and let them argue, or ask six times and keep what most of them agree on.  Each of those spends extra model calls in the hope of a better answer.  This lab gives you all three, ready to run, so that you can see what each one does before you decide whether your final project needs one.
+Ask a model for a docstring, and the first draft often looks fine until you read it against a checklist and notice that the usage example is missing.  You could point that out and ask again.  You could also ask three copies of the model and let them argue, or ask six times and keep what most of them agree on.  Each of those spends extra model calls in the hope of a better answer.  In this lab you finish and run all three, so that you can see what each one does before you decide whether your final project needs one.
 
 There are three Parts, one per pattern:
 
@@ -72,9 +69,9 @@ There are three Parts, one per pattern:
 - **Part B: Debate.**  Three agents answer a question alone, then each reads the others' answers and answers again.  You combine the final answers by majority vote and by a judge agent.
 - **Part C: Consensus.**  One model answers the same question six times, the answers are grouped by meaning, and a synthesizer writes one answer from the groups.
 
-Each Part has two pieces.  **Practice** gives you complete code (or ready presets) to run as-is.  You change one setting and record what changed.  **Try It** runs the same code once on a task you choose, beside a single model call, and asks for one sentence: did it help, and what did it cost in model calls?  Your task can come from anywhere: another course, a club, a hobby, or your team's [final project]({{ site.baseurl }}/Projects/FinalProject) if that is useful to you.
+Each Part has two pieces.  **Practice** gives you most of the code (or ready presets).  You write the core of each pattern from the `# TODO`s, run it, change one setting, and record what changed.  **Try It** runs the same code once on a task you choose, beside a single model call, and asks for one sentence: did it help, and what did it cost in model calls?  Your task can come from anywhere: another course, a club, a hobby, or your team's [final project]({{ site.baseurl }}/Projects/FinalProject) if that is useful to you.
 
-This lab does not include calibrating the critic, breaking its rubric, the judge-and-refine loop, the matched-budget shootout, or the threshold sweep.  Those are in the optional [Measuring Multi-Agent Patterns]({{ site.baseurl }}/Tutorials/MultiAgentMeasurement) tutorial, which runs on the code you build here.
+The optional [Measuring Multi-Agent Patterns]({{ site.baseurl }}/Tutorials/MultiAgentMeasurement) tutorial runs on the code you build here.  It calibrates the critic and adds a rubric judge, a shootout, and a threshold sweep.
 
 **Pair policy.**  You may do this lab in pairs: driver and navigator roles, a swap at least every 30 minutes, and a swap log.  You each submit the same files, name each other in them, and earn the same grade.  You may also work alone.  If you do, skip the swap log and say so in your readme.  See the course schedule for the assigned and due dates.
 
@@ -89,7 +86,7 @@ Both paths run the same three patterns and earn the same rubric.  Pick one befor
 
 | Path | What you run | What you need | Pick this if |
 |------|--------------|---------------|--------------|
-| **Code** | `critique_refine.py` (with `judge_critic.py` as a second critic), `lab4.py`, and one short run script per Part, all reading one `config.json` | Python 3, Ollama with `llama3.2`, and the packages below | You want the round budget, the answer parsing, and the call counts in code you can rerun |
+| **Code** | `critique_refine.py`, `lab4.py`, and one short run script per Part, all reading one `config.json` | Python 3, Ollama with `llama3.2`, and the packages below | You want the round budget, the answer parsing, and the call counts in code you can rerun |
 | **No-code** | The same three patterns as Open WebUI presets, with you moving text between chats and a spreadsheet keeping the record | Open WebUI pointed at your local Ollama, and a spreadsheet | You would rather see each seam (where the critic's words become the reviser's instructions, where you decide which answers say the same thing) than write the code that crosses it |
 
 On the no-code path you are the loop.  Every reply you paste is one model call, and every call gets a row in your spreadsheet.  To make a preset in Open WebUI, choose **Workspace**, **Models**, **+ Create a model**.  Use `llama3.2` as the base model, and put the prompt (if there is one) in **System Prompt**.  Set temperature and seed under **Advanced Params**.  If your version has no seed field, say so in your readme.
@@ -98,49 +95,22 @@ On the no-code path you are the loop.  Every reply you paste is one model call, 
 
 ## Before You Start
 
-Complete these first: [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md) (the loop, debate, and clustering ideas this lab runs) and the [Orchestration Worked Example]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestrationworkshop.md) (round budgets in configuration, fail-closed parsing, and counting calls).  If you want the judge option in Part A, keep your work from the [Judge Pipeline Workshop]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-rubricworkshop.md) nearby.
+Complete these first: [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md) (the loop, debate, and clustering ideas this lab runs) and the [Orchestration Worked Example]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestrationworkshop.md) (round budgets in configuration, fail-closed parsing, and counting calls).
 
-**Code path.**  `requests` is how your code talks to Ollama.  `sentence-transformers`, `scikit-learn`, and `numpy` do the embedding and clustering in Part C.  Activate your virtual environment first if you keep one, so the packages land in the Python you will use.
+**Code path.**  `requests` is how your code talks to Ollama.  Activate your virtual environment first if you keep one, so the package lands in the Python you will use.
 
 ```bash
 pip install requests
-pip install sentence-transformers scikit-learn numpy
 curl http://localhost:11434/api/tags
 ```
 
-> **You should see.** Each install finishes without an error, and `curl` prints a JSON list that includes `llama3.2`.
+> **You should see.** The install finishes without an error, and `curl` prints a JSON list that includes `llama3.2`.
 >
 > **If it fails.** "Connection refused" means Ollama is not running; start it with `ollama serve` in a separate terminal.  If `llama3.2` is missing, run `ollama pull llama3.2`.
 
-Then run this health check.  It sends one chat request and prints the reply, so you know the model answers and can produce the small piece of JSON the critic needs.  It then embeds three sentences, normalizes the vectors, and prints how similar the first two are.  The first run downloads the embedding model, so give it a minute.
-
-```bash
-python -c "
-import requests, json
-r = requests.post('http://localhost:11434/api/chat', json={
-    'model': 'llama3.2',
-    'messages': [{'role': 'user', 'content': 'Reply with exactly: {\"verdict\": \"accept\", \"issues\": []}'}],
-    'stream': False
-})
-print(r.json()['message']['content'])
-from sentence_transformers import SentenceTransformer
-import numpy as np
-model = SentenceTransformer('all-MiniLM-L6-v2')
-vecs = model.encode(['hello world', 'hi there', 'the sky is blue'])
-# Normalize
-norms = np.linalg.norm(vecs, axis=1, keepdims=True)
-normed = vecs / norms
-print('Embedding shape:', vecs.shape)
-print('Cosine similarity (should be ~0.7 for similar sentences):')
-print(normed[0] @ normed[1])
-"
-```
-
-> **You should see.** The JSON line (the model may add text around it; what matters is that the JSON is there), then a shape of `(3, 384)` and a similarity near 0.7.  An import error means `pip install` went to a different Python than the one you ran.
-
 **No-code path.**  Open Open WebUI, confirm `llama3.2` is in the model list, and send it one message.  Start a spreadsheet with one tab per Part.
 
-**Both paths.**  Make a folder for this lab (for example `cs357-multiagent`) and create `config.json` in it.  Every setting in all three Parts lives here, so you can change a temperature, the round budget, or the number of agents without editing code.  The top-level keys are Part A's, the `debate` block is Part B's, and the `consensus` block is Part C's.  On the no-code path, this file is your record of the settings your presets use.
+**Both paths.**  Make a folder for this lab (for example `cs357-multiagent`) and create `config.json` in it.  Every setting lives here, so you can change a temperature or the round budget without editing code.  You start with Part A's settings, and Parts B and C each add a block.  On the no-code path, this file is your record of the settings your presets use.
 
 ```json
 {
@@ -152,10 +122,7 @@ print(normed[0] @ normed[1])
   "critic_temp": 0.0,
   "critic_seed": 42,
   "round_budget": 5,
-  "rubric_file": "rubric.json",
-  "debate": {"num_agents": 3, "num_rounds": 2, "temperature_schedule": [0.7, 0.4], "seed_base": 100},
-  "consensus": {"num_samples": 6, "sample_temperature": 0.8, "synthesizer_temperature": 0.1,
-                "distance_threshold": 0.3, "embed_model": "all-MiniLM-L6-v2"}
+  "rubric_file": "rubric.json"
 }
 ```
 
@@ -171,13 +138,26 @@ Leave `api_key` as `null` for local Ollama.  If your computer cannot run the mod
 
 One call writes, a second call checks the draft against a written rubric, and a loop hands the second call's complaints back to the first.  Three rules keep the loop honest.  The critic runs at temperature 0 with a fixed seed, so the same draft gets the same verdict every time.  A critic reply that is not valid JSON **fails closed**: the loop treats it as "revise" and logs it, so it never accepts something it could not read.  When the round budget runs out, the loop returns the last draft with the outstanding critique attached, so whoever called it knows it did not finish.
 
-You may use either of two critics.  `critique_draft` is the accept-or-revise critic below.  `judge_critic` reuses the rubric judge from the *Judge Pipeline Workshop*: it scores each criterion from 1 to 4 with a quoted sentence, and anything below 4 becomes an issue.  Using one is enough; trying both is optional.
+`generate_draft` and `critique_draft` below are complete, so read them first.  You write the loop that connects them.  Here is what it does:
+
+```text
+loop(task):
+    draft = nothing, critique = nothing
+    for each round, up to the round budget:
+        draft = generate(task, draft, critique)    # the first round writes; later rounds revise
+        critique = critic(draft)
+        if the verdict is accept:
+            return the draft, marked accepted
+    return the last draft with its outstanding critique, marked budget exhausted
+```
+
+The budget is what guarantees the loop ends.  A critic can keep finding issues forever, and every round costs two model calls.
 
 ### Practice
 
 > **Code path: do this.**
 > 1. Create `rubric.json` with the four docstring criteria below.
-> 2. Create `critique_refine.py` and `run_a.py` with the code below.
+> 2. Create `critique_refine.py` and `run_a.py` with the code below, and replace each `# TODO` in `critique_refine_loop`.
 > 3. Run `python3 run_a.py | tee practice_a.txt`.  `tee` shows the output and saves it to the file.  You need at least two loop rounds; if it accepts in round 1, run it again.
 
 ```json
@@ -288,16 +268,14 @@ def critique_refine_loop(task_description, config, rubric, critic=critique_draft
     critique = None
     for round_num in range(1, config["round_budget"] + 1):
         print(f"\n=== Round {round_num} ===")
-        # Generate
-        draft = generate_draft(task_description, previous_draft=draft, critique=critique, config=config)
+        # TODO: set draft with generate_draft.  Pass previous_draft=draft and critique=critique,
+        #       which are both None on round 1, so that later rounds revise the last draft.
         print(f"[Generator] Draft (first 200 chars): {draft[:200]}...")
-        # Critique
-        critique = critic(draft, rubric, config)
+        # TODO: set critique by calling critic with the draft, the rubric, and config.
         print(f"[Critic] Verdict: {critique['verdict']}")
         if critique["issues"]:
             print(f"[Critic] Issues: {critique['issues']}")
-        if critique["verdict"] == "accept":
-            return (draft, critique, round_num, "accepted")
+        # TODO: if the verdict is "accept", return (draft, critique, round_num, "accepted").
     # Budget exhausted: return the last draft with the critique attached
     final_output = f"{draft}\n\n--- OUTSTANDING CRITIQUE (budget exhausted after {config['round_budget']} rounds) ---\n{json.dumps(critique, indent=2)}"
     return (final_output, critique, config["round_budget"], "budget_exhausted")
@@ -305,23 +283,18 @@ def critique_refine_loop(task_description, config, rubric, critic=critique_draft
 
 ```python
 # run_a.py: one single call, then the critique-and-refine loop, on the same task
-from critique_refine import load_config, load_rubric, generate_draft, critique_draft, critique_refine_loop
+from critique_refine import load_config, load_rubric, generate_draft, critique_refine_loop
 
 TASK = "Write a Python docstring for a function called `merge_sorted_lists` that takes two sorted lists of integers and returns a single sorted list."
 RUBRIC_FILE = "rubric.json"
-USE_JUDGE = False  # True uses judge_critic and JUDGE_RUBRIC from judge_critic.py
 
 config = load_config()
-if USE_JUDGE:
-    from judge_critic import judge_critic, JUDGE_RUBRIC
-    critic, rubric = judge_critic, JUDGE_RUBRIC
-else:
-    critic, rubric = critique_draft, load_rubric({**config, "rubric_file": RUBRIC_FILE})
+rubric = load_rubric({**config, "rubric_file": RUBRIC_FILE})
 
 single = generate_draft(TASK, config=config)
 print(f"=== SINGLE CALL (1 model call) ===\n{single}")
 
-draft, critique, rounds, reason = critique_refine_loop(TASK, config, rubric, critic=critic)
+draft, critique, rounds, reason = critique_refine_loop(TASK, config, rubric)
 print(f"\n=== LOOP: {reason} after {rounds} rounds ({2 * rounds} model calls) ===\n{draft}")
 ```
 
@@ -343,68 +316,6 @@ The `[lab3:generate_draft]` tag in each `except` block is a **located message**:
 ```
 
 **Predict:** if the critic wraps its JSON in a sentence such as "Here is my evaluation:", which branch of `critique_draft` runs, and what verdict does the loop receive?
-
-**The judge as critic (optional).**  To use the workshop's judge instead, create `judge_critic.py` below, set `USE_JUDGE = True` in `run_a.py`, and run it again.  It keeps the workshop's prompt and its 1-to-4 levels, rewritten for the docstring task with the same ids C1 to C4.  It reads `critic_temp` and `critic_seed` (0 and 42, the workshop's settings) from `config.json`.  The code, not the model, decides the verdict: it returns "accept" only when every criterion is at level 4.
-
-```python
-import json
-import traceback
-import requests
-
-# The workshop's leveled rubric shape, written for the docstring task.
-JUDGE_RUBRIC = {
-  "criteria": [
-    {"id": "C1", "name": "Purpose",
-     "levels": {"1": "no summary", "2": "a summary of how the function works, not what it does",
-                "3": "a summary of what it does, longer than one sentence", "4": "a one-sentence summary of what it does"}},
-    {"id": "C2", "name": "Parameters",
-     "levels": {"1": "no parameters listed", "2": "some parameters listed",
-                "3": "every parameter listed, but a type or description is missing", "4": "every parameter listed with name, type, and description"}},
-    {"id": "C3", "name": "Return value",
-     "levels": {"1": "return value not mentioned", "2": "return value mentioned without its type",
-                "3": "type given but meaning vague", "4": "type and meaning both stated"}},
-    {"id": "C4", "name": "Example",
-     "levels": {"1": "no example", "2": "an example that is not in doctest format",
-                "3": "a doctest with no expected output", "4": "a doctest (>>> call) with its expected output"}},
-  ]
-}
-
-def judge_critic(draft, rubric, config):
-    """
-    Score the draft 1-4 on each criterion with the workshop judge's prompt.
-    Returns {"verdict": "accept"|"revise", "issues": [...]}; every criterion below 4 is an issue.
-    Fails closed: an unparseable reply is a "revise".
-    """
-    system = ("You are a strict grader. Score the artifact on EACH criterion by choosing a level 1-4 "
-              "that matches the level descriptions. Quote the sentence that justifies each score. "
-              "Respond ONLY with JSON: "
-              '{"scores": {"<criterion id>": {"level": int, "evidence": str}}}')
-    user = f"RUBRIC:\n{json.dumps(rubric, indent=1)}\n\nARTIFACT:\n{draft}"
-    payload = {"model": config["model"], "stream": False,
-               "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-               "options": {"temperature": config["critic_temp"], "seed": config["critic_seed"]}}
-    try:
-        response = requests.post(config["provider_url"], json=payload, headers=({"Authorization": f"Bearer {config['api_key']}"} if config.get("api_key") else {}), timeout=180)
-        response.raise_for_status()
-        raw = response.json()["message"]["content"]
-    except Exception as e:
-        print(f"[lab3:judge_critic:network] {e}")
-        traceback.print_exc()
-        raise
-    try:
-        data = json.loads(raw.replace("```json", "").replace("```", ""))
-        issues = []
-        for c in rubric["criteria"]:
-            s = data["scores"][c["id"]]
-            level = int(s["level"])
-            if level < 4:
-                issues.append(f"{c['id']} ({c['name']}): level {level} of 4, evidence {s.get('evidence', '')!r}. "
-                              f"Level 4 needs: {c['levels']['4']}.")
-        return {"verdict": "accept" if not issues else "revise", "issues": issues}
-    except Exception as e:
-        print(f"[lab3:judge_critic:json_parse] Malformed judge output, failing closed. Raw: {raw!r}")
-        return {"verdict": "revise", "issues": [f"[JSON parse failure] Raw output: {raw[:200]}"]}
-```
 
 **No-code path.**  Make three presets.  The Generator and Reviser have no system prompt.  Their instructions travel in the message you paste, exactly as in the code.
 
@@ -431,8 +342,6 @@ CRITERIA:
 ACCEPT THRESHOLD: All four criteria must be met for a verdict of 'accept'.
 ```
 
-If you would rather use the workshop's judge as your critic, put its grader prompt and a leveled version of these four criteria in the Critic preset instead, and treat any criterion below level 4 as an issue.
-
 > **Do this.**
 > 1. In a Generator chat, send: `Generate a draft for the following task:` followed by a blank line and the `merge_sorted_lists` task from the code above.
 > 2. In a fresh Critic chat, send `DRAFT TO EVALUATE:`, a blank line, and the draft.
@@ -456,7 +365,6 @@ If you would rather use the workshop's judge as your critic, put its grader prom
 - `round_budget` from 5 to 1
 - `generator_temp_first` from 0.8 to 0.1
 - delete criterion C4 from `rubric.json` (no-code: from the Critic's system prompt)
-- switch critics, `critique_draft` to `judge_critic` or the other way
 
 ### Try It
 
@@ -464,22 +372,29 @@ Pick one task of your own with criteria a reader can check by looking at the res
 
 > **Do this.**
 > 1. Copy `rubric.json` to `rubric_mytask.json` and rewrite the four descriptors for your task.  Keep the ids C1 to C4 and the `accept_threshold` line.  (No-code: make a second Critic preset with your criteria.)
-> 2. Code path: in `run_a.py`, set `TASK` to your task and `RUBRIC_FILE` to `"rubric_mytask.json"`, then run `python3 run_a.py | tee tryit_a.txt`.  (With `USE_JUDGE = True`, rewrite the levels in `JUDGE_RUBRIC` for your task instead.)  No-code: send your task to a Generator chat once and keep that draft as the single call, then run the Practice loop on the same task.
+> 2. Code path: in `run_a.py`, set `TASK` to your task and `RUBRIC_FILE` to `"rubric_mytask.json"`, then run `python3 run_a.py | tee tryit_a.txt`.   No-code: send your task to a Generator chat once and keep that draft as the single call, then run the Practice loop on the same task.
 > 3. Read the two drafts against your own rubric and write one sentence in your readme: did the loop help, and what did it cost in model calls?  The single call is one model call; the loop is two per round.
 
 ---
 
 ## Part B: Debate (25 points)
 
-Ask three copies of the same model "What is 15% of 240?" and you may get two that say 36 and one that says 34.  Now show each one what the other two said and ask again.  Does the odd one out fix its arithmetic, does it talk the others into its answer, or does nobody move?
+Ask three copies of the same model "A backpack costs 10 dollars more than a water bottle.  Together they cost 30 dollars.  What does the water bottle cost?" and you may get two that say 15 and one that says 10.  (The answer is 10, since 10 + 20 = 30.)  Now show each one what the other two wrote and ask again.  Does the odd one out fix its arithmetic, does it talk the others into its answer, or does nobody move?
 
-Round one is independent: each agent answers alone.  Later rounds are peer-informed: each agent sees the *other* agents' previous answers and may revise or hold its position.  Every response must end with an `ANSWER:` line, and the code reads the answer from that line only.  When the line is missing, the code prints a located warning and records no answer instead of guessing.  The final round is combined two ways: **majority vote**, which counts the answers, and a **judge agent**, which is one more model call that reads every agent's reasoning and picks the best-supported answer, even if only one agent gave it.
+Round one is independent: each agent answers alone.  Later rounds are peer-informed: each agent reads the *other* agents' previous responses and may revise or hold its position.  Every response must end with an `ANSWER:` line, and the code reads the answer from that line only.  When the line is missing, the code prints a located warning and records no answer instead of guessing.  The final round is combined two ways: **majority vote**, which counts the answers, and a **judge agent**, which is one more model call that reads every agent's reasoning and picks the best-supported answer, even if only one agent gave it.
 
 ### Practice
 
 > **Code path: do this.**
-> 1. Create `lab4.py` with the code below.  Part C adds to this same file.
-> 2. Create `run_b.py` below and run `python3 run_b.py | tee practice_b.txt`.  The saved output is your debate transcript.
+> 1. Add the `debate` block below to `config.json`, after `"rubric_file"`.  Add a comma after the `rubric_file` line.
+> 2. Create `lab4.py` with the code below, and replace each `# TODO` in `extract_answer` and `majority_vote`.  Part C adds to this same file.
+> 3. Create `run_b.py` below and run `python3 run_b.py | tee practice_b.txt`.  The saved output is your debate transcript.
+
+```json
+"debate": {"num_agents": 3, "num_rounds": 2, "temperature_schedule": [0.7, 0.4], "seed_base": 100}
+```
+
+Two pieces decide what the debate reports, and you write both.  `extract_answer` reads the final answer from a response.  It takes the last `ANSWER:` line, because a model sometimes repeats the template line earlier in its reply, and it warns when there is no such line.  A guess here would turn into a silent wrong vote.  `majority_vote` counts the answers exactly as written.
 
 ```python
 import requests
@@ -496,7 +411,7 @@ def agent_respond(question, agent_id, round_num, peer_answers, config):
     """
     Generate one agent's response for the given round.
     round_num: 1-indexed
-    peer_answers: list of (agent_id, answer_text) from the previous round (empty for round 1)
+    peer_answers: list of (agent_id, full_response) from the previous round (empty for round 1)
     Returns the full response text.
     """
     schedule = config["debate"]["temperature_schedule"]
@@ -541,12 +456,10 @@ def extract_answer(response_text, agent_id, round_num):
     Extract the ANSWER: line from a response.
     Returns the answer string, or None if not found (with a located warning).
     """
-    matches = re.findall(r"ANSWER:\s*(.+)", response_text, re.IGNORECASE)
-    if matches:
-        return matches[-1].strip()       # the last ANSWER: line, so an echoed template line is not counted
-    else:
-        print(f"[lab4:extract_answer] WARNING: Agent {agent_id}, round {round_num}: no ANSWER: line found. Full response: {response_text[:200]!r}")
-        return None
+    # TODO: find every ANSWER: line with re.findall(r"ANSWER:\s*(.+)", response_text, re.IGNORECASE).
+    # TODO: if there is at least one, return the last one with .strip().
+    # TODO: otherwise, print this warning and return None:
+    #       [lab4:extract_answer] WARNING: Agent 2, round 1: no ANSWER: line found.
 
 def run_debate(question, config):
     """
@@ -562,12 +475,12 @@ def run_debate(question, config):
         print(f"\n=== Debate Round {round_num} ===")
         round_answers[round_num] = {}
         for agent_id in range(num_agents):
-            # Peer answers: all agents from previous round except self
+            # Peer responses: all agents from the previous round except self
             if round_num == 1:
                 peer_answers = []
             else:
                 peer_answers = [
-                    (pid, extract_answer(data[0], pid, round_num - 1) or "(no answer)")
+                    (pid, data[0])
                     for pid, data in round_answers[round_num - 1].items()
                     if pid != agent_id
                 ]
@@ -591,8 +504,8 @@ def majority_vote(final_answers):
     """
     if not final_answers:
         return None
-    counts = Counter(final_answers.values())
-    return counts.most_common(1)[0][0]
+    # TODO: count the answers with Counter(final_answers.values()), and return the most common
+    #       one.  most_common(1) gives a list holding one (answer, count) pair.
 
 def judge_aggregate(question, round_answers, config):
     """
@@ -630,7 +543,7 @@ def judge_aggregate(question, round_answers, config):
 # run_b.py: one single call, then a full debate combined both ways, on the same question
 from lab4 import load_config, agent_respond, extract_answer, run_debate, majority_vote, judge_aggregate
 
-QUESTION = "What is 15% of 240?"
+QUESTION = "A backpack costs 10 dollars more than a water bottle. Together they cost 30 dollars. What does the water bottle cost?"
 
 config = load_config()
 single = extract_answer(agent_respond(QUESTION, 0, 1, [], config), "single", 1)
@@ -650,24 +563,22 @@ The single call is agent 0's round-1 call made on its own, so the comparison ask
 
 ```text
 === SINGLE CALL (1 model call) ===
-ANSWER = 36
+ANSWER = 15 dollars
 === Debate Round 1 ===
-  Agent 0: ANSWER = 36
-  Agent 1: ANSWER = 36
-  Agent 2: ANSWER = 34
+  Agent 0: ANSWER = 15 dollars
+  Agent 1: ANSWER = 10 dollars
+  Agent 2: ANSWER = 15 dollars
 === Debate Round 2 ===
-  Agent 0: ANSWER = 36
-  Agent 1: ANSWER = 36
-  Agent 2: ANSWER = 36
-Final answers: {0: '36', 1: '36', 2: '36'}
-Majority vote: 36
-Judge agent: 36
+  Agent 0: ANSWER = 10 dollars
+  Agent 1: ANSWER = 10 dollars
+  Agent 2: ANSWER = 15 dollars
+Final answers: {0: '10 dollars', 1: '10 dollars', 2: '15 dollars'}
+Majority vote: 10 dollars
+Judge agent: 10 dollars
 Debate model calls: 7
 ```
 
-**Predict:** with the `config.json` above, what temperature and seed does agent 2 get in round 2?  Work it out from the first three lines of `agent_respond`.
-
-**Predict:** if the three final answers are `36`, `36.0`, and `$36`, what does `majority_vote` return, and is that the answer you wanted?
+**Predict:** if the three final answers are `10`, `10.0`, and `$10`, what does `majority_vote` return, and is that the answer you wanted?
 
 **No-code path.**  Make two presets, Debater R1 (temperature 0.7) and Debater R2 (temperature 0.4), with no system prompt and **no seed**, so three chats on the same preset can give different answers.  Make a third, Debate Judge, with temperature 0 and seed 42.
 
@@ -675,23 +586,23 @@ Debate model calls: 7
 > 1. Round 1: open three Debater R1 chats (agents 0, 1, and 2) and send each the same message:
 >
 >    ```text
->    Question: What is 15% of 240?
+>    Question: A backpack costs 10 dollars more than a water bottle. Together they cost 30 dollars. What does the water bottle cost?
 >
 >    Think through this carefully and provide your answer. End your response with a line in exactly this format:
 >    ANSWER: <your answer here>
 >    ```
 >
-> 2. Round 2: open three Debater R2 chats.  Send each agent the message below, filled in with the *other two* agents' numbers and the answers from their round-1 `ANSWER:` lines (agent 0 sees agents 1 and 2, agent 1 sees 0 and 2, and so on):
+> 2. Round 2: open three Debater R2 chats.  Send each agent the message below, filled in with the *other two* agents' numbers and their full round-1 responses (agent 0 sees agents 1 and 2, agent 1 sees 0 and 2, and so on):
 >
 >    ```text
->    Question: What is 15% of 240?
+>    Question: A backpack costs 10 dollars more than a water bottle. Together they cost 30 dollars. What does the water bottle cost?
 >
 >    Here are the answers from the other agents in the previous round:
 >
 >    Agent <id> said:
->    <that agent's answer>
+>    <that agent's full response>
 >    Agent <id> said:
->    <that agent's answer>
+>    <that agent's full response>
 >
 >    Review their reasoning. You may revise your answer if you find their arguments convincing, or maintain your position with a rebuttal. End your response with a line in exactly this format:
 >    ANSWER: <your answer here>
@@ -700,7 +611,7 @@ Debate model calls: 7
 > 3. Take the majority vote of the round-2 answers by hand.  Then open a Debate Judge chat and send this, with each agent's full round-2 response filled in:
 >
 >    ```text
->    Question: What is 15% of 240?
+>    Question: A backpack costs 10 dollars more than a water bottle. Together they cost 30 dollars. What does the water bottle cost?
 >
 >    Several agents debated this question. Here is each agent's final response:
 >
@@ -728,7 +639,7 @@ Pick one question of your own with a short answer you can check: a calculation f
 > 1. Code path: set `QUESTION` in `run_b.py` to your question and run `python3 run_b.py | tee tryit_b.txt`.  No-code: send your question to one Debater R1 chat as the single call, then run the Practice debate on it.
 > 2. Check the answers yourself and write one sentence in your readme: did the debate help, and what did it cost in model calls?
 
-**Predict:** in a debate where two agents answer `34` and one answers `36` with correct working, which answer will `majority_vote` return, and which do you expect `judge_aggregate` to return?
+**Predict:** in a debate where two agents answer `15` and one answers `10` with correct working, which answer will `majority_vote` return, and which do you expect `judge_aggregate` to return?
 
 ---
 
@@ -742,11 +653,32 @@ Ask the model "What makes a great study group, and what are the biggest pitfalls
 
 ### Practice
 
-**Code path.**  The embedding and clustering code is provided complete.  `sentence-transformers` and scikit-learn's `AgglomerativeClustering` do the work.  Your job is to run it and read what it returns.
+**Code path.**  `sentence-transformers` and scikit-learn's `AgglomerativeClustering` do the embedding and the grouping.  Sampling and synthesis are provided.  You write one piece: choosing which draft speaks for each group.  The synthesizer sees only that draft, so a poor choice misrepresents the group.  We use the draft closest to the group's center:
+
+```text
+for each cluster:
+    centroid = the average of the cluster's normalized vectors, scaled back to length 1
+    representative = the draft whose vector has the largest dot product with the centroid
+```
+
+For vectors of length 1, the dot product is the cosine similarity, so the largest dot product is the closest draft.
 
 > **Do this.**
-> 1. Add the code below to the end of `lab4.py`.
-> 2. Create `run_c.py` below and run `python3 run_c.py | tee practice_c.txt`.  The saved output is your consensus transcript.
+> 1. Install the packages, and check that they load.  The first run downloads the embedding model, so give it a minute.  You should see `(3, 384)`.  An import error means `pip install` went to a different Python than the one you ran.
+>
+>    ```bash
+>    pip install sentence-transformers scikit-learn numpy
+>    python3 -c "from sentence_transformers import SentenceTransformer as S; print(S('all-MiniLM-L6-v2').encode(['a', 'b', 'c']).shape)"
+>    ```
+>
+> 2. Add the `consensus` block below to `config.json`, with a comma after the `debate` block.
+> 3. Add the code below to the end of `lab4.py`, and replace each `# TODO` in `cluster_drafts`.
+> 4. Create `run_c.py` below and run `python3 run_c.py | tee practice_c.txt`.  The saved output is your consensus transcript.
+
+```json
+"consensus": {"num_samples": 6, "sample_temperature": 0.8, "synthesizer_temperature": 0.1,
+              "distance_threshold": 0.3, "embed_model": "all-MiniLM-L6-v2"}
+```
 
 ```python
 import numpy as np
@@ -805,18 +737,16 @@ def cluster_drafts(drafts, config):
         linkage="average"
     )
     labels = clustering.fit_predict(normed)
-    # Find representative (draft closest to cluster centroid) and support count
+    # For each cluster: the representative (the draft closest to its centroid) and its support count
     cluster_ids = set(labels)
     representatives = {}
     for cid in cluster_ids:
         indices = [i for i, l in enumerate(labels) if l == cid]
         support = len(indices)
-        # Centroid of normalized vectors
-        centroid = normed[indices].mean(axis=0)
-        centroid /= np.linalg.norm(centroid)
-        # Draft closest to centroid
-        similarities = [normed[i] @ centroid for i in indices]
-        best_idx = indices[int(np.argmax(similarities))]
+        # TODO: set centroid to normed[indices].mean(axis=0), then divide it by np.linalg.norm(centroid).
+        # TODO: make a list of normed[i] @ centroid for each i in indices.
+        # TODO: set best_idx to the entry of indices at the position of the largest
+        #       similarity.  int(np.argmax(similarities)) gives that position.
         representatives[cid] = (drafts[best_idx], support)
     print(f"\nClustering: {len(drafts)} drafts -> {len(cluster_ids)} clusters (threshold={threshold})")
     for cid, (rep, support) in sorted(representatives.items()):
@@ -939,8 +869,6 @@ Pick one open-ended question of your own, one with several reasonable answers: h
 > 1. Code path: set `QUESTION` in `run_c.py` to your question and run `python3 run_c.py | tee tryit_c.txt`.  No-code: one Sampler chat is the single call.  Then run the Practice pipeline on your question.
 > 2. Read the single answer and the synthesis side by side, and write one sentence in your readme: did consensus help, and what did it cost in model calls?
 
-**Predict:** the single call uses the same prompt, temperature, and seed as Sample 1 of the consensus run.  How will the two compare, and what would it tell you about your model server if they differ?
-
 ---
 
 ## Troubleshooting
@@ -963,7 +891,7 @@ Submit one ZIP.  The readme names your path at the top.
 
 | File or artifact | What it shows | Rubric row |
 |---|---|---|
-| `config.json`, `rubric.json`, `rubric_mytask.json`, `critique_refine.py` (and `judge_critic.py` if you used it), `run_a.py`, `practice_a.txt`, and `tryit_a.txt` (no-code: the Generator, Reviser, and Critic presets and the Part A spreadsheet tab) | The loop running to a stop, a draft changing in response to a critique, your changed setting, and the Try It comparison | Part A: Critique and Refine (30) |
+| `config.json`, `rubric.json`, `rubric_mytask.json`, `critique_refine.py`, `run_a.py`, `practice_a.txt`, and `tryit_a.txt` (no-code: the Generator, Reviser, and Critic presets and the Part A spreadsheet tab) | The loop running to a stop, a draft changing in response to a critique, your changed setting, and the Try It comparison | Part A: Critique and Refine (30) |
 | `lab4.py`, `run_b.py`, `practice_b.txt`, and `tryit_b.txt` (no-code: the Debater and Debate Judge presets, the chats, and the Part B tab) | A three-agent, two-round debate combined by vote and by judge, your changed setting, and the Try It comparison | Part B: Debate (25) |
 | `lab4.py`, `run_c.py`, `practice_c.txt`, and `tryit_c.txt` (no-code: the Sampler and Synthesizer presets, the chats, and the Part C tab with your clusters) | Six samples, their clusters, the synthesis, your reading of the clusters, your changed setting, and the Try It comparison | Part C: Consensus (25) |
 | A readme with your path, model and package versions (`pip show requests sentence-transformers scikit-learn numpy`), the commands you ran, the three changed-setting lines, the three Try It sentences side by side with their call counts, the Learning Log, a pair log if you worked in a pair, and an AI-use disclosure (no-code: the Open WebUI version and every preset setting) | A reader could rerun everything | Writeup and Reproducibility (20) |
