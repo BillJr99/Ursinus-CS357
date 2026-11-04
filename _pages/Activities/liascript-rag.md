@@ -426,14 +426,18 @@ The four steps below rebuild Part II's cell on the canvas.  Node names shift a l
 Langflow runs as a local web server: `langflow run` starts it, and you work in it through your browser.  The first install pulls a couple of gigabytes of dependencies, so start it before class if you can.
 
 ```bash
-pip install langflow
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install langflow
 langflow run
 ollama pull nomic-embed-text
 ```
 
 > **You should see.** A "Langflow is running" banner in the terminal, the canvas at `http://localhost:7860`, and `nomic-embed-text` and `llama3.2` in the output of `ollama list`.
 
-> **If it fails.** A dependency-resolver error from `pip install langflow` usually means your Python is too new or too old; create a fresh virtual environment on Python 3.11 or 3.12 and install there.  If `localhost:7860` refuses to connect, the server is still starting, so wait for the banner.
+> **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python and refuses packages installed directly into it, so use the virtual environment above.  The MCP lab's [Troubleshooting](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP#troubleshooting) section explains this error and the `ensurepip` error.
+
+> **If it fails.** A dependency-resolver error from `python3 -m pip install langflow` usually means your Python is too new or too old; create a fresh virtual environment on Python 3.11 or 3.12 and install there.  If `localhost:7860` refuses to connect, the server is still starting, so wait for the banner.
 
 ### Step B: The Index Path
 

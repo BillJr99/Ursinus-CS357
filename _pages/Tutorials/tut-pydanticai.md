@@ -49,11 +49,14 @@ Read this after the hand-written versions, not instead of them.  A framework is 
 Everything here runs against the Ollama server on your own machine.  Nothing calls a hosted model, and nothing sends traces anywhere: Pydantic AI only reports to Logfire if you install and configure Logfire, which this tutorial does not do.
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install "pydantic-ai-slim[openai,mcp]==2.54.0" "fastmcp==4.0.11" "pytest==8.*"
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install "pydantic-ai-slim[openai,mcp]==2.54.0" "fastmcp==4.0.11" "pytest==8.*"
 ollama pull qwen2.5:3b     # this tutorial's default: a reliable tool caller (3B, about 1.9 GB)
 ollama pull llama3.2       # the course's general chat model, for the comparisons (3B, about 2 GB)
 ```
+
+> **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python and refuses packages installed directly into it, so use the virtual environment above.  The MCP lab's [Troubleshooting]({{ site.baseurl }}/Assignments/ToolsMCP#troubleshooting) section explains this error and the `ensurepip` error.
 
 > **Tested versions:** `pydantic-ai-slim` 2.54.0, `fastmcp` 4.0.11 (which brings `mcp` 2.3.0), `pydantic` 2.13.5, Python 3.13, and Ollama 0.40.0, on a 4-core CPU with no GPU.  Each model call in this tutorial took between 5 and 45 seconds on that machine.  Pydantic AI moves quickly, so if an import fails, check [ai.pydantic.dev](https://ai.pydantic.dev) before fighting the error.
 {: .tb-warning data-title="Versions"}

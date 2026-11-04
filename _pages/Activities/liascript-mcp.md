@@ -127,13 +127,17 @@ Full MCP runs over JSON-RPC, and every request carries its protocol version and 
 You can run the server with:
 
 ```bash
-# In a terminal: start the server
-pip install flask requests
-python server.py
+# In a terminal: make a virtual environment, install, and start the server
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install flask requests
+python3 server.py
 
 # In a second terminal: test that it's alive
 curl http://localhost:8765/tools/list
 ```
+
+> **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python and refuses packages installed directly into it, so use the virtual environment above.  The MCP lab's [Troubleshooting](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP#troubleshooting) section explains this error and the `ensurepip` error.
 
 ---
 
