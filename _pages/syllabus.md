@@ -629,6 +629,10 @@ schedule:
     dlink: "Assignments/LitReview"
     points: "100"
     rubricpath: "_pages/Assignments/asmt-litreview.md"
+  - dtitle: "Participation: Reading Responses Due"
+    dlink: "Participation/ReadingResponses"
+    points: "10"
+    rubricpath: "_pages/Participation/reading-responses.md"
   readings:
   - rtitle: "Reading Response / Discussion: post a short response before class, one design choice you would make differently in a system you deploy"
   - rtitle: "Have ready the judge you built in the Judge Pipeline Workshop (the one the Multi-Agent Patterns lab's Part A may use as its critic), three artifacts from your final project for it to grade, and your integrated project and proposal.  Today's workshop runs the judge against your own work, audits the disagreements, critiques another team's proposal, and then threat-models the project."
@@ -647,6 +651,10 @@ schedule:
     dlink: "Assignments/MultiAgentDebate"
     points: "100"
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
+  - dtitle: "Project: Intra-Team Check-In (Performing into Adjourning) Due"
+    dlink: "Projects/PBLThread"
+    points: "3"
+    rubricpath: "_pages/Projects/proj-checkin.md"
   readings:
   - rtitle: "Have your gallery-walk artifact ready to display, and your SQR cards."
     rlink: false
@@ -656,10 +664,6 @@ schedule:
   link: "Activities/liascript-projectstudio.md"
   liapage: true
   deliverables:
-  - dtitle: "Project: Intra-Team Check-In (Performing into Adjourning) Due"
-    dlink: "Projects/PBLThread"
-    points: "3"
-    rubricpath: "_pages/Projects/proj-checkin.md"
   - dtitle: "Project: Demo Day Presentations Due"
     dlink: "Projects/FinalProject"
     points: "75"
@@ -668,10 +672,6 @@ schedule:
     dlink: "Assignments/ReadingGroup"
     points: "10"
     rubricpath: "_pages/Assignments/asmt-readinggroup.md"
-  - dtitle: "Participation: Reading Responses Due"
-    dlink: "Participation/ReadingResponses"
-    points: "10"
-    rubricpath: "_pages/Participation/reading-responses.md"
   readings:
   - rtitle: "Have your integrated system and your demo script ready.  Today is a rehearsal rather than a work session.  If it does not run end to end at the start of class, that is the thing to fix."
 - cdate: "2026/12/16"
