@@ -594,7 +594,7 @@ schedule:
   - dtitle: "Project: Literature Review, Individual Annotated Bibliographies Due"
     dlink: "Assignments/LitReview"
     points: "3"
-    rubricpath: "_pages/Assignments/asmt-litreview.md"
+    rubricpath: "_pages/Assignments/asmt-litreview-phase1.md"
   readings:
   - rtitle: "promptfoo, for declarative LLM and agent evaluation.  One way to run the judge you build in today's workshop, and it runs against Ollama"
     rlink: "https://www.promptfoo.dev/docs/intro/"

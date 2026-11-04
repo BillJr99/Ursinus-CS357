@@ -76,7 +76,7 @@ tags:
   - governance
 ---
 
-With your standing team, you will write a 2-3 page proposal that commits you to one Final Project plan: a declared direction (A, B, or C), a problem stated in your stakeholder's terms, argued design decisions, and a sprint timeline with named owners.  It is the first graded stage of the [Final Project]({{ site.baseurl }}/Projects/FinalProject), which is itself the last stage of the semester-long [Project Thread]({{ site.baseurl }}/Projects/PBLThread), and it is worth **25 of the Final Project's 100 points**.  The other 75 come from Demo Day and the final submission, and I grade those against the [Final Project rubric]({{ site.baseurl }}/Projects/FinalProject) rather than this one.  Your proposal builds on your team's [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief).  The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out the day this proposal is due, and it reads against the plan you commit to here.  You write the proposal under your signed charter and the [Team Playbook]({{ site.baseurl }}/Projects/PBLThread).
+With your standing team, you will write a 2-3 page proposal that commits you to one Final Project plan: a declared direction (A, B, or C), a problem stated in your stakeholder's terms, argued design decisions, and a sprint timeline with named owners.  It is the first graded stage of the [Final Project]({{ site.baseurl }}/Projects/FinalProject), which is itself the last stage of the semester-long [Project Thread]({{ site.baseurl }}/Projects/PBLThread), and it is worth **25 of the Final Project's 100 points**.  The other 75 come from Demo Day and the final submission, and I grade those against the [Final Project rubric]({{ site.baseurl }}/Projects/FinalProject) rather than this one.  Your proposal builds on your team's [Stakeholder Brief]({{ site.baseurl }}/Assignments/StakeholderBrief).  The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out before this proposal is due, and it reads against the plan you commit to here.  You write the proposal under your signed charter and the [Team Playbook]({{ site.baseurl }}/Projects/PBLThread).
 
 The sprint window is short.  A team that arrives at Sprint 1 with a declared direction, an argued architecture, named owners, and a written list of what could go wrong spends the sprints building.  A team that arrives still deciding spends the sprints deciding, and demos an apology.  Most of what the proposal asks for already exists in your team's work: the stakeholder you interviewed, the agent systems you designed in the labs, and the check-ins you have filed.  Read this page as an assembly plan, not a new assignment.
 
@@ -86,7 +86,7 @@ The sprint window is short.  A team that arrives at Sprint 1 with a declared dir
 
 - **Read the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page in full**, including all three directions.  That page is the complete reference for the project.  This page describes the proposal deliverable and its rubric.
 - **Know where this sits in the Project Thread.**  The proposal comes before the [Literature Review]({{ site.baseurl }}/Assignments/LitReview), on purpose.  You commit to a plan first, then you read against it.  The review will confirm parts of this document, complicate others, and occasionally kill one, and your team synthesis has to say which.  So propose the plan you believe in, not the plan that will be easiest to defend later.
-- **Submit the second intra-team check-in.**  It is due at the *Project Groups* session (Tuesday, November 3), before this proposal (see the [course schedule]({{ site.baseurl }}/) for the date).  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
+- **Submit the second intra-team check-in.**  It is due before this proposal (see the [course schedule]({{ site.baseurl }}/) for the date).  It is private, it goes to me, and it exists so that scope disagreements surface now rather than in week 14.  A check-in that says "everything is fine" from a team that is not fine wastes the instrument.
 - **Length:** 2-3 pages, excluding the timeline, tables, and appendices.
 
 **Choose your direction slowly.**  All three directions are real, and they suit different teams:
@@ -101,7 +101,7 @@ The sprint window is short.  A team that arrives at Sprint 1 with a declared dir
 
 ## What Every Proposal Must Include
 
-Write these sections in this order.  Sections 1 through 5, 7, and 8 appear in every proposal.  Section 6 is the one direction-specific block that matches your declared direction; the three blocks are spelled out further down.
+Write these sections in this order.  Section 6 is the one block that matches your declared direction.
 
 > **Do this.**
 > 1. Direction declaration and problem statement
@@ -147,7 +147,14 @@ Size the work honestly against three sprints (Goal 13).  Each sprint should end 
 > - Who holds which role in which sprint: a role-rotation plan that assigns Coordinator, Builder, Evaluator, and Scribe across sprint boundaries so every member holds every role.
 > - How progress will be assessed at each sprint boundary.
 > - A shared **GANTT-style timeline** mapping tasks to the three sprints, with a named owner and an honest duration on every task.
-> - A **Responsible AI measurement plan**, one or two sentences per area, for the Responsible AI Report your final submission must include: how you will count tokens (OpenCode's session token display or Ollama's `prompt_eval_count` and `eval_count`) and turn them into an energy, carbon, and cost estimate; what you will log so each run can be traced; what golden set or rubric judge you will audit correctness against; and which attribute your counterfactual bias probe will vary.  Name an owner for each area, and start measuring in Sprint 1.  See [The Responsible AI Report]({{ site.baseurl }}/Projects/FinalProject#the-responsible-ai-report-required-in-every-direction) on the Final Project page; Direction B teams apply it to their own AI use and probing, not to the audited system.
+> - A **Responsible AI measurement plan** for the Responsible AI Report your final submission must include.  Fill in this form, and start measuring in Sprint 1:
+>   ```text
+>   Tokens: how we count them (OpenCode's session token display, or Ollama's prompt_eval_count and eval_count), and how we turn them into energy, carbon, and cost.  Owner:
+>   Trace: what we log so that each run can be traced.  Owner:
+>   Audit: the golden set or rubric judge we audit correctness against.  Owner:
+>   Probe: the attribute our counterfactual bias probe will vary.  Owner:
+>   ```
+>   See [The Responsible AI Report]({{ site.baseurl }}/Projects/FinalProject#the-responsible-ai-report-required-in-every-direction) on the Final Project page; Direction B teams apply it to their own AI use and probing, not to the audited system.
 
 ### Section 5: Design Decisions
 
@@ -156,6 +163,55 @@ This is the section that most distinguishes a proposal from a summary.  A decisi
 > **Paste into your submission.**
 > - Each major design decision.
 > - For each one: the alternative you rejected, and the course pattern, principle, or evidence that motivated the choice.
+
+Here is one entry, constructed for this page:
+
+```text
+Decision: A router sends each question to one specialist agent.
+Rejected: A pipeline that runs every agent on every question.
+Why: Our partner's questions fall into three kinds that need different tools, and the
+course's measurements show that a pipeline pays for every agent on every question.
+```
+
+### Section 6: Direction-Specific Elements
+
+Include only the block for your direction.  The elements match those listed under each direction on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page, which carries the full build requirements and final deliverables.
+
+#### Direction A: Custom Agent Team
+
+Sketch these artifacts here at proposal fidelity: enough to defend the architecture and show the work is feasible.  They are living documents.  Sprint 1 develops them into a specification someone else could build from, the *Agents That Talk, Observability, and Handoff Protocols* session (the day this proposal is due) adds the handoff protocol your agents' traces will follow, and another team reads the result in the cross-team proposal critique at the *Project Sprint* session.
+
+> **Paste into your submission.**
+> - An **agent design table**, one row per agent: role, system-prompt summary, inputs, outputs, temperature with justification, tools, and the isolated evaluation you will run on it.
+> - A **topology statement** (pipeline, router, planner, blackboard, or hybrid) with a 3-sentence defense.
+> - A **memory and context plan**: what each agent carries, summarizes, retrieves, and discards.
+> - A **pre-mortem table** with at least 5 predicted risks (your specification gap, irreversible action, global invariant, and two more; the pre-mortem exercise in [Agent Case Studies]({{ site.baseurl }}/Tutorials/AgentCaseStudies) defines these), each with the deterministic checker or gate that owns it.
+> - An **evaluation plan**: the 10-task set sketch, numeric metrics (precision, recall, parse success rate, latency, or human rating), the protocol, and the **monolith baseline** description.
+
+#### Direction B: Responsible AI Audit
+
+The system you audit must be specific: not "AI in hiring" but a named tool as deployed by a named operator.
+
+> **Paste into your submission.**
+> - **System identification**: name, operator, what it does, where it is deployed.
+> - **Affected populations**: who is affected and how the system's decisions reach them.
+> - **Framework choice** (the NIST AI Risk Management Framework (AI RMF), EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives.
+> - **Preliminary hypothesis**: where you expect the highest risks to lie, written before the deep analysis.
+> - Evidence that enough public information exists: at least two independent sources from an initial search.
+
+> **Watch out.** Your framework choice may be provisional.  The *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* session comes after this proposal on the schedule, so declare the framework you expect to use and defend it as well as you can now.  You may revise that choice once, with a written justification, by the end of Sprint 1.  The other Direction B elements are not provisional.
+
+#### Direction C: Build and Publish an Open-Source Agent
+
+> **Paste into your submission.**
+> - **What the artifact does**, in one paragraph a stranger can understand.
+> - **Who would use it**: two to three user personas with realistic, specific use cases.
+> - **How they would install it**: the exact command sequence from a clean machine to a working demo.
+> - **Gap verification**: the closest existing alternative, the specific gap it does not fill, and linked evidence the gap is real (a community post, GitHub issue, or unanswered Stack Overflow question where a real person asked for this).
+> - **Minimum viable scope** in one sentence, plus two to three stretch goals.
+> - **Governance sketch**: who is responsible, what the artifact must never be used for, and what risk the instructor should know about before approving.
+
+> **Watch out.** If you are taking the **Direction C variant** (contributing to an existing open-source project rather than publishing a new one), the "what the artifact does / who would use it / how they would install it" elements describe the upstream feature you are adding.  Gap verification becomes issue selection, with linked evidence that a maintainer or real user wants it.  Scope must be approved here, in the proposal.
 
 ### Section 7: AI-Use Disclosure
 
@@ -177,48 +233,6 @@ Every member signs, and every member is primary author of at least one section, 
 
 ---
 
-## Direction-Specific Proposal Elements
-
-This is Section 6 of your proposal; include only the block for your direction.  The elements match those listed under each direction on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page, which carries the full build requirements and final deliverables.
-
-### Direction A: Custom Agent Team
-
-Sketch these artifacts here at proposal fidelity: enough to defend the architecture and show the work is feasible.  They are living documents.  Sprint 1 develops them into a specification someone else could build from, the *Agents That Talk, Observability, and Handoff Protocols* session (the day this proposal is due) adds the handoff protocol your agents' traces will follow, and another team reads the result in the cross-team proposal critique at the *Project Sprint* session.
-
-> **Paste into your submission.**
-> - An **agent design table**, one row per agent: role, system-prompt summary, inputs, outputs, temperature with justification, tools, and the isolated evaluation you will run on it.
-> - A **topology statement** (pipeline, router, planner, blackboard, or hybrid) with a 3-sentence defense.
-> - A **memory and context plan**: what each agent carries, summarizes, retrieves, and discards.
-> - A **pre-mortem table** with at least 5 predicted risks (your specification gap, irreversible action, global invariant, and two more), each with the deterministic checker or gate that owns it.
-> - An **evaluation plan**: the 10-task set sketch, numeric metrics (precision, recall, parse success rate, latency, or human rating), the protocol, and the **monolith baseline** description.
-
-### Direction B: Responsible AI Audit
-
-The system you audit must be specific: not "AI in hiring" but a named tool as deployed by a named operator.
-
-> **Paste into your submission.**
-> - **System identification**: name, operator, what it does, where it is deployed.
-> - **Affected populations**: who is affected and how the system's decisions reach them.
-> - **Framework choice** (the NIST AI Risk Management Framework (AI RMF), EU AI Act, or Montreal Declaration) with a 3-sentence justification for why it fits this system better than the alternatives.
-> - **Preliminary hypothesis**: where you expect the highest risks to lie, written before the deep analysis.
-> - Evidence that enough public information exists: at least two independent sources from an initial search.
-
-> **Watch out.** Your framework choice may be provisional.  The *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* session comes after this proposal on the schedule, so declare the framework you expect to use and defend it as well as you can now.  You may revise that choice once, with a written justification, by the end of Sprint 1.  The other Direction B elements are not provisional.
-
-### Direction C: Build and Publish an Open-Source Agent
-
-> **Paste into your submission.**
-> - **What the artifact does**, in one paragraph a stranger can understand.
-> - **Who would use it**: two to three user personas with realistic, specific use cases.
-> - **How they would install it**: the exact command sequence from a clean machine to a working demo.
-> - **Gap verification**: the closest existing alternative, the specific gap it does not fill, and linked evidence the gap is real (a community post, GitHub issue, or unanswered Stack Overflow question where a real person asked for this).
-> - **Minimum viable scope** in one sentence, plus two to three stretch goals.
-> - **Governance sketch**: who is responsible, what the artifact must never be used for, and what risk the instructor should know about before approving.
-
-> **Watch out.** If you are taking the **Direction C variant** (contributing to an existing open-source project rather than publishing a new one), the "what the artifact does / who would use it / how they would install it" elements describe the upstream feature you are adding.  Gap verification becomes issue selection, with linked evidence that a maintainer or real user wants it.  Scope must be approved here, in the proposal.
-
----
-
 ## How This Is Graded
 
 The rubric has two halves, like the Final Project's:
@@ -236,8 +250,8 @@ Only four of AAC&U's six problem-solving criteria appear here, on purpose.  *Imp
 
 - **Incomplete proposals are returned ungraded.**  Complete means every shared element and every direction-specific element is present.  It does not mean every one is perfect.
 - **Proposals whose scope is too generic, inaccessible, or infeasible in three sprints are redirected**, with specific guidance on what to cut or change.  A redirect is not a penalty.  It is much cheaper here than in week 14.
-- **Sprint 1 begins from the approved proposal** and runs to the cross-team proposal critique at the *Project Sprint* session (Tuesday, December 1).  Your Sprint 1 milestone depends on your direction; see the sprint table on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page.
-- **The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out at the *RAG Worked Example* session, five days before this is due**, and it reads against the plan you are committing to.  Its team synthesis must state what the evidence confirms, complicates, or changes about this proposal.  A synthesis that changes nothing is a warning sign, not a clean bill of health.
+- **Sprint 1 begins from the approved proposal** and runs to the cross-team proposal critique at the *Project Sprint* session.  Your Sprint 1 milestone depends on your direction; see the sprint table on the [Final Project]({{ site.baseurl }}/Projects/FinalProject) page.
+- **The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) is handed out at the *RAG Worked Example* session, before this is due**, and it reads against the plan you are committing to.  Its team synthesis must state what the evidence confirms, complicates, or changes about this proposal.  A synthesis that changes nothing is a warning sign, not a clean bill of health.
 - Some proposal artifacts are **living documents**.  The pre-mortem, the decision log, the timeline, and the Responsible AI measurement plan are maintained through the sprints and resubmitted with the final artifacts folder.  They are not frozen here.
 
 ---

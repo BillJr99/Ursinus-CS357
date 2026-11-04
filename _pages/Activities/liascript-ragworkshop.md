@@ -18,13 +18,13 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 The corpus is four short files about an invented bicycle co-op.  Every fact in them is synthetic, so you can change and test against them freely.  The measurement at the end is the habit the lab's Step 4 depends on: a golden set written before you tune anything, recall@k for the retriever, and a grounding check for the answer.
 
-**Today:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due, and I hand out the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) (due Tuesday, November 17) and the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview).  For the lab's corpus, you may use your team's stakeholder material (interview notes, your partner's public documents, your evidence folder), so that the lab also moves your project forward.  If you do, use only material your partner agreed to share, and leave out personal details about the people you interviewed.  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Tuesday, November 10.
+**Today:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due, and I hand out the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) and the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview).  For the lab's corpus, you may use your team's stakeholder material (interview notes, your partner's public documents, your evidence folder), so that the lab also moves your project forward.  If you do, use only material your partner agreed to share, and leave out personal details about the people you interviewed.  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due soon: the [course schedule](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the date.
 
 ---
 
 ## Directions and Group Roles
 
-Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  This is a build-along session.  One laptop per team runs the cells in this page.  In Part II, one laptop runs the same corpus on the lab's route and compares its answer with Part I's.  The Manager calls each checkpoint and asks for a prediction before the cell runs.  The Recorder keeps the team's golden set and the two results tables.  The Presenter reports the one number that changed most between the two chunkings.  The Reflector notes every place where the stand-in in this page and the real model on the machine disagreed.  In the Proposal Clinic, the Manager keeps time and takes the card's lines in order.  The Recorder writes the card and puts it in your weekly team note as its first entry.  The Presenter brings line 2 to me, and the Reflector checks line 4 against your charter's meeting cadence.  After class, answer the reflective prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  This is a build-along session.  One laptop per team runs the cells in this page.  In Part II, we run the same corpus on the lab's route and compare its answer with Part I's.  The Manager calls each checkpoint and asks for a prediction before the cell runs.  The Recorder keeps the team's golden set and the two results tables.  The Presenter reports the one number that changed most between the two chunkings.  The Reflector notes every place where the stand-in in this page and the real model on the machine disagreed.  In the Proposal Clinic, the Manager keeps time and takes the card's lines in order.  The Recorder writes the card and puts it in your weekly team note as its first entry.  The Presenter brings line 2 to me, and the Reflector checks line 4 against your charter's meeting cadence.  After class, answer the reflective prompt on your own in your notebook.
 
 ---
 
@@ -44,7 +44,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 ### Before You Start
 
-**Have ready:** the lab's code-route setup from its *Before You Start* section (a virtual environment with `pydantic-ai-slim[openai]==2.54.0` and `chromadb==1.5.9`, and `ollama pull qwen2.5:3b`), or, for the no-code route, Langflow with `llama3.2` and `nomic-embed-text` pulled.  Part I needs nothing; its cells run in this page.  Part II needs one of the two routes on one laptop per team.
+**Have ready:** the lab's code-route setup from its *Before You Start* section (a virtual environment with `pydantic-ai-slim[openai]==2.54.0` and `chromadb==1.5.9`, and `ollama pull qwen2.5:3b`), or, for the no-code route, Langflow with `llama3.2` and `nomic-embed-text` pulled.  Part I needs nothing; its cells run in this page.  In Part II, I run the code route for the room, and the no-code route needs Langflow on one laptop per team.
 
 **Run the cells in order.**  Each cell uses what the cell before it built.  If a cell reports a `NameError`, run the cells above it first.
 
@@ -57,7 +57,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 3. Part I, Steps 3 and 4: embed and retrieve (Checkpoint 2)
 4. Part I, Step 5: the grounded prompt and the answer (Checkpoint 3)
 5. Part I, Step 6: measure recall@k and grounding, then fix the chunking and measure again (Checkpoint 4)
-6. Part II, the same corpus on your machine: one laptop per team confirms that the lab's code route or Langflow flow answers one golden-set question (Checkpoint 5).  The rest of Part II is self-paced lab work
+6. Part II, the same corpus on a real model: I run the lab's finished code route on the projector, teams that chose the no-code route confirm their Langflow flow on one laptop, and everyone records one golden-set answer (Checkpoint 5).  The rest of Part II is self-paced lab work
 7. Proposal Clinic: one card per team, four lines
 8. The lab handout, and what to have ready for Tuesday
 
@@ -386,7 +386,7 @@ Recall@1 rose from 0.60 to 0.80 with no change to the retriever: `membership-0` 
 ---
 # Part II: The Same Corpus on Your Machine
 
-> **In class.**  One laptop per team saves the corpus, runs the route you chose, and asks one golden-set question.  If the answer names its source file, you have the first row of Checkpoint 5.  The rest of this part is self-paced lab work.
+> **In class.**  I run the finished code route on the projector, and a team on the no-code route saves the corpus and runs its flow on one laptop.  We ask one golden-set question.  If the answer names its source file, you have the first row of Checkpoint 5.  The rest of this part is self-paced lab work.
 
 Now replace both stand-ins.  Save the four co-op files as a `corpus/` folder, then follow the lab on the route you chose.  The measurement is the same on both routes: the golden set from Part I, recall@3, and a right-and-grounded check on every answer.
 
@@ -404,8 +404,8 @@ print(sorted(p.name for p in Path("corpus").iterdir()))
 
 > **Runs on your machine, not here.**  These scripts talk to Chroma on disk and to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.
 
-1.  **Ingest, chunk, and embed.**  Save the lab's `index.py` from its Step 2 next to `corpus/` and run `python index.py`.  You should see `Indexed 12 chunks from 4 files.`, the same twelve paragraph chunks as Step 2 above, now embedded by Chroma's own embedding model.
-2.  **Retrieve and generate.**  Save the lab's `rag_agent.py` from its Step 3 and run `python rag_agent.py "How much does a membership cost for a student?"`.  You should see a `[tool call] search_notes(...)` line, a `[tool result]` line that begins with a file name in brackets, and an answer that names a file.
+1.  **Ingest, chunk, and embed.**  Finish the lab's `index.py` from its Step 2, save it next to `corpus/`, and run `python index.py`.  You should see `Indexed 12 chunks from 4 files.`, the same twelve paragraph chunks as Step 2 above, now embedded by Chroma's own embedding model.
+2.  **Retrieve and generate.**  Finish the lab's `rag_agent.py` from its Step 3 and run `python rag_agent.py "How much does a membership cost for a student?"`.  You should see a `[tool call] search_notes(...)` line, a `[tool result]` line that begins with a file name in brackets, and an answer that names a file.
 3.  **Measure.**  Save the script below as `measure.py` in the same folder and run `python measure.py`.  It imports `collection` and `agent` from `rag_agent.py` (the file's `__main__` guard keeps the import from asking a question), computes recall@1 and recall@3 against Chroma, then asks the agent each golden question and checks the answer.
 
 ```python
@@ -502,7 +502,7 @@ This exercise does the lab's Step 1 and Step 4 in the right order.  Three of you
 
 # Proposal Clinic
 
-Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Tuesday, November 10.  Use this time to settle what is still open while I am in the room to help.  Fill in one card per team, with four lines:
+Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due soon: the [course schedule](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the date.  Use this time to settle what is still open while I am in the room to help.  Fill in one card per team, with four lines:
 
 1.  **Direction.**  The direction you are choosing, and the one you nearly chose instead.
 2.  **Blocker.**  The one open question that is blocking your proposal.
@@ -513,7 +513,7 @@ While you write, I circulate and answer line 2 on the spot.  Before you leave, p
 
 ---
 
--> Coming Up Next: *Agents That Talk, Observability, and Handoff Protocols* (Tuesday, November 10) puts two agents on either end of a shared channel, a GitHub issue thread and a shared folder, and then asks how anyone can see what each one did: logs, traces, and a written handoff protocol.  Your team's Final Project Proposal is due at that session.  The trace you write there is the observability version of today's measurement: identifiers and numbers, kept for every run.
+-> Coming Up Next: *Agents That Talk, Observability, and Handoff Protocols* puts two agents on either end of a shared channel, a GitHub issue thread and a shared folder, and then asks how anyone can see what each one did: logs, traces, and a written handoff protocol.  Your team's Final Project Proposal is due at that session.  The trace you write there is the observability version of today's measurement: identifiers and numbers, kept for every run.
 
 ## Further Reading
 

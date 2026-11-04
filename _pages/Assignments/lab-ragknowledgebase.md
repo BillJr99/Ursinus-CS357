@@ -81,7 +81,7 @@ Steps 1 and 4, the writeup, and the deliverables apply to both paths.  On the no
 
 ## Before You Start
 
-This lab builds on the *RAG: Building and Measuring a Knowledge Base* session and the *RAG Worked Example* session, which builds these steps end to end on both paths.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need two Python packages and Ollama running with a model that calls tools reliably.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
+The *RAG Worked Example* session builds these steps on a small corpus, on both paths.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need two Python packages and Ollama running with a model that calls tools reliably.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -113,7 +113,25 @@ Before you index anything, write three **golden questions** in your readme: two 
 
 **Goal:** every document split into chunks and stored where the agent can search them by meaning.
 
-A model cannot read your whole folder for every question.  Instead, we cut each document into **chunks** (here, one paragraph each) and store them in **Chroma**.  When you add a chunk, Chroma turns it into an **embedding**: a list of numbers that places text with similar meaning close together.  As a result, a later search for "when can I meet the professor" can find a paragraph about "office hours" even though the words differ.  Save this as `index.py`:
+A model cannot read your whole folder for every question, so you cut each document into **chunks** (here, one paragraph each) and store them in **Chroma**.  When you add a chunk, Chroma turns it into an **embedding**: a list of numbers that places text with similar meaning close together.  As a result, a search for "when can I meet the professor" can find a paragraph about "office hours," even though the words differ.
+
+Each chunk needs three things: an ID, its text, and the file it came from, because the agent has to name that file later.  Suppose `hours.md` holds this:
+
+```text
+Office Hours
+
+I hold office hours on Mondays in Room 204.
+```
+
+The blank line separates two paragraphs, so this file becomes two chunks:
+
+```text
+id          text                                            source
+hours-0     Office Hours                                    hours.md
+hours-1     I hold office hours on Mondays in Room 204.     hours.md
+```
+
+The ID is the file's stem and the paragraph's number, so it stays the same every time you run the script.  That matters because `upsert` replaces a chunk that has the same ID, so rerunning the script does not store everything twice.  Save this as `index.py`, and fill in the `TODO`s:
 
 ```python
 # index.py: split every document in corpus/ into paragraphs and store them in a local Chroma collection.
@@ -130,16 +148,19 @@ def build_index():
     collection = client.get_or_create_collection("notes")
     ids, chunks, sources = [], [], []
     for doc in sorted(CORPUS.glob("*.md")) + sorted(CORPUS.glob("*.txt")):
-        paragraphs = [p.strip() for p in doc.read_text(encoding="utf-8").split("\n\n") if p.strip()]
+        # TODO: make paragraphs, a list of this file's paragraphs.  doc.read_text(encoding="utf-8")
+        #       reads the file, .split("\n\n") cuts it at blank lines, and .strip() trims a
+        #       paragraph.  Leave out any paragraph that is empty after trimming.
         for i, paragraph in enumerate(paragraphs):
-            ids.append(f"{doc.stem}-{i}")
-            chunks.append(paragraph)
-            sources.append({"source": doc.name})
+            # TODO: append one entry to each list, as in the table above:
+            #       ids gets f"{doc.stem}-{i}", chunks gets the paragraph, and
+            #       sources gets a dictionary, {"source": doc.name}.
     if not chunks:
         print("Indexed 0 chunks: no .md or .txt files in corpus/.")
         return
     try:
-        collection.upsert(ids=ids, documents=chunks, metadatas=sources)   # Chroma embeds each chunk for us
+        # TODO: store everything with collection.upsert(ids=..., documents=..., metadatas=...).
+        #       documents is your chunks list, and metadatas is your sources list.
     except Exception as e:
         print("[index:build_index]", e)
         traceback.print_exc()
@@ -153,11 +174,26 @@ if __name__ == "__main__":
 
 Run it with `python index.py`.
 
-> **You should see.** The first run downloads Chroma's small embedding model (about 80 MB) once.  Then the script prints one line reporting what it stored; on a two-file test corpus, it printed `Indexed 5 chunks from 2 files.`  Your count will be larger.  A new `chroma_db` folder appears next to the script.
+> **You should see.** The first run downloads Chroma's small embedding model (about 80 MB) once.  Then the script prints one line, such as `Indexed 5 chunks from 2 files.`, with your own counts, and a new `chroma_db` folder appears next to the script.
 
-> **If it fails.** `0 chunks` means the script found no `.md` or `.txt` files; check that `corpus` is in the folder you ran the script from.
+> **If it fails.** `0 chunks` means the script found no `.md` or `.txt` files, so check that `corpus` is in the folder you ran the script from.
 
-**Predict:** some of your files have a heading on its own line, separated from the text below by a blank line.  What chunk will that heading become, and will it help or hurt a search?
+**Now check the retrieval by itself.**  Later, a wrong answer could come from the search or from the model.  If you test the search now, you will know which one to fix.  Save this as `check_retrieval.py`, a scratch file you do not submit, with one of your golden questions in it:
+
+```python
+import chromadb
+
+collection = chromadb.PersistentClient(path="chroma_db").get_or_create_collection("notes")
+question = "When are office hours?"     # use one of your golden questions
+
+hits = collection.query(query_texts=[question], n_results=3)
+for text, meta in zip(hits["documents"][0], hits["metadatas"][0]):
+    print(f"[{meta['source']}] {text[:70]}")
+```
+
+> **You should see.** Three lines, and the file your readme expects for that question is among them.  If it is not, no model can give the right answer from these passages, so fix this first.  Reword the question, or look at how that file split into paragraphs.
+
+A heading on its own line becomes a chunk with no information in it, and it can crowd out the paragraph you wanted.  If that happens in your index, fold each heading into the paragraphs under it, as Step 6 of the [RAG Worked Example](https://liascript.github.io/course/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-ragworkshop.md#11) does, and say in your readme what changed.
 
 ---
 
@@ -165,7 +201,15 @@ Run it with `python index.py`.
 
 **Goal:** an agent that looks up passages before it answers, and names where each fact came from.
 
-The search is a **tool**, just like the tools in the *Tool Use* session: a Python function the model can ask your code to run.  The docstring tells the model what the tool does and when to use it.  The instructions tell it to search first, answer only from what comes back, name the file, and say so when the answer is not there.  Save this as `rag_agent.py`:
+The search is a **tool**, as in the *Tool Use* session: a Python function the model can ask your code to run.  So the flow on each question is:
+
+```text
+question --> model --> asks for search_notes(query) --> your code queries Chroma
+                                                              |
+answer that names the file <-- model <-- passages with their file names
+```
+
+Two pieces of text steer the model.  The docstring tells it what the tool does.  The instructions tell it how to behave, and they are where you prevent made-up answers.  Save this as `rag_agent.py`, and fill in the `TODO`s:
 
 ```python
 # rag_agent.py: a Pydantic AI agent that answers only from your notes, using a search tool over Chroma.
@@ -189,11 +233,11 @@ model = OpenAIChatModel(
 
 agent = Agent(
     model,
-    instructions=(
-        "Answer questions about the user's notes. Always call search_notes first. "
-        "Answer only from the passages it returns, and name the source file for each fact. "
-        "If the passages do not contain the answer, say: I could not find that in your notes."
-    ),
+    # TODO: write the instructions as one string.  Tell the model to answer questions about the
+    #       user's notes, to always call search_notes first, to answer only from the passages it
+    #       returns, and to name the source file for each fact.  End with this exact rule:
+    #       If the passages do not contain the answer, say: I could not find that in your notes.
+    instructions="",
     model_settings={"temperature": 0.0, "seed": 42},
 )
 
@@ -206,14 +250,13 @@ def search_notes(query: str) -> str:
         query: What to search for, in plain words.
     """
     try:
-        hits = collection.query(query_texts=[query], n_results=3)
+        # TODO: set hits to the same query your check_retrieval.py runs, using this query.
     except Exception as e:
         print("[rag_agent:search_notes]", e)
         traceback.print_exc()
         raise
-    return "\n\n".join(
-        f"[{meta['source']}] {text}" for text, meta in zip(hits["documents"][0], hits["metadatas"][0])
-    )
+    # TODO: return one string holding each passage as "[source file] text", with a blank line
+    #       between passages.  The bracketed file name is what lets the model name its source.
 
 
 if __name__ == "__main__":
@@ -235,15 +278,20 @@ if __name__ == "__main__":
 
 Run it with a question your notes answer, for example `python rag_agent.py "When are office hours?"`.
 
-> **You should see.** A `[tool call] search_notes(...)` line, a `[tool result]` line beginning with a source file in brackets, and then an answer that names that file.  The exact wording depends on your model and your notes.
+> **You should see.** A `[tool call] search_notes(...)` line, a `[tool result]` line beginning with a source file in brackets, and an answer that names that file.  The wording depends on your model and your notes.
 
-> **If it fails.** A connection error means Ollama is not running; start it and retry.  If there is no `[tool call]` line, the model answered without searching: confirm `MODEL` is `qwen2.5:3b`, since smaller or older models often skip the tool.
+> **If it fails.** A connection error means Ollama is not running, so start it and retry.  If there is no `[tool call]` line, the model answered without searching, so confirm `MODEL` is `qwen2.5:3b`, since smaller or older models often skip the tool.
 
 ---
 
 ## No-code Path
 
-If you chose the no-code path, follow this section in place of Steps 2 and 3.  You build the same two phases on a Langflow canvas: an **index path** that chunks, embeds, and stores your `corpus` once, and a **query path** that runs for every question.  The *RAG Worked Example* session built this flow on a four-file corpus, and the [Visual Agents]({{ site.baseurl }}/Tutorials/VisualAgents) tutorial walks through the same wiring.  Node names change a little between Langflow versions, but what matters is the dataflow.
+If you chose the no-code path, follow this section in place of Steps 2 and 3.  You build the same two phases on a Langflow canvas: an **index path** that chunks, embeds, and stores your `corpus` once, and a **query path** that runs for every question.  The [Visual Agents]({{ site.baseurl }}/Tutorials/VisualAgents) tutorial walks through the same wiring.  Node names change a little between Langflow versions, but the dataflow stays the same:
+
+```text
+index path:  File --> Text Splitter --> Chroma (with Ollama Embeddings)
+query path:  Chat Input --> Chroma search --> Prompt --> Ollama --> Chat Output
+```
 
 ### Step N1: Install and Launch Langflow
 
@@ -260,17 +308,21 @@ ollama pull nomic-embed-text
 
 > **If it fails.** A dependency-resolver error from `pip install langflow` usually means your Python is too new or too old.  Create a fresh virtual environment on Python 3.11 or 3.12 and install there.  If `localhost:7860` refuses to connect, the server is still starting, so wait for the banner.
 
-### Step N2: Build the Index and Query Paths
+### Step N2: Build the Index Path, and Check the Search
 
-**Goal:** one flow that indexes your `corpus` and answers an in-corpus question in the Playground.
+**Goal:** your `corpus` stored in Chroma, and a search that finds the right file before any model is involved.
 
-Create a **New Flow** from a **Blank Canvas** and wire:
+Create a **New Flow** from a **Blank Canvas**, and wire the index path:
 
-1.  **Index path:** **File** (upload every file in your `corpus` folder) to **Text Splitter** (the recursive character splitter; start with a chunk size of 1000 and an overlap of 100) to **Chroma** (collection name `notes`), with an **Ollama Embeddings** node (model `nomic-embed-text`, Base URL `http://localhost:11434`) wired into Chroma's embedding input.
-2.  **Query path:** **Chat Input** to the same **Chroma** node's search input, with the number of results set to 3, then the search results to a **Prompt** node (the template in Step N3), to **Ollama** (model `llama3.2`, temperature 0, Base URL `http://localhost:11434`), to **Chat Output**.
-3.  Write every node setting in your readme as you go: the models, the Base URL, chunk size, overlap, number of results, and temperature.  On this path, that list takes the place of the code.
+1.  **File** (upload every file in your `corpus` folder) to **Text Splitter** (the recursive character splitter; start with a chunk size of 1000 and an overlap of 100) to **Chroma** (collection name `notes`).
+2.  Wire an **Ollama Embeddings** node (model `nomic-embed-text`, Base URL `http://localhost:11434`) into Chroma's embedding input.  Chroma uses it to turn each chunk into numbers that place similar meanings close together.
+3.  Write every node setting in your readme as you go: the model, the Base URL, chunk size, and overlap.  On this path, that list takes the place of the code.
 
-> **You should see.** The Chroma node's inspection view lists the chunks it stored; write that count in your readme, as `index.py` would have printed it.
+> **You should see.** The Chroma node's inspection view lists the chunks it stored.  Write that count in your readme, as `index.py` would have printed it.
+
+Now check the search by itself.  Later, a wrong answer could come from the search or from the model, and if you test the search now, you will know which one to fix.  Wire **Chat Input** to the same **Chroma** node's search input, with the number of results set to 3, and type one of your golden questions.
+
+> **You should see.** In the Chroma node's inspection view, three chunks, including one from the file your readme expects for that question.  If it is not there, no model can give the right answer from these chunks, so change the chunk size or reword the question first, and record what you changed.
 
 > **If it fails.** A connection refusal at run time means a node's Base URL is wrong or Ollama is not running.  If old documents still show up after you change the corpus, give the Chroma collection a new name and run the index path again.
 
@@ -278,7 +330,7 @@ Create a **New Flow** from a **Blank Canvas** and wire:
 
 **Goal:** answers that come only from your notes, name the file each fact came from, and say so when the notes do not have the answer.
 
-Paste this into the Prompt node, then wire the search results into `{context}` and the Chat Input into `{question}`:
+Finish the query path.  Wire the search results to a **Prompt** node, then to **Ollama** (model `llama3.2`, temperature 0, Base URL `http://localhost:11434`), then to **Chat Output**, and add these settings to your readme.  Paste this into the Prompt node, then wire the search results into `{context}` and the Chat Input into `{question}`:
 
 ```text
 Answer questions about the user's notes, using ONLY the passages below.
@@ -291,11 +343,11 @@ Passages:
 Question: {question}
 ```
 
-Ask one in-corpus question in the **Playground**.
+The first line is what stops the model from using what it remembers, and the last rule gives it something to say when the search comes up empty.  Ask one in-corpus question in the **Playground**.
 
 > **You should see.** An answer that names a file from your `corpus`, and, in the search step's inspection view, the chunks that file came from.
 
-> **If it fails.** If the answer never names a file, check that the search results carry the file name; the File node usually stores it with each chunk, and the inspection view shows whether it is there.
+> **If it fails.** If the answer never names a file, check that the search results carry the file name.  The File node usually stores it with each chunk, and the inspection view shows whether it is there.
 
 Then go on to Step 4.  When you are done, export the flow (the flow menu's **Export**) and save the JSON file next to your readme.
 
@@ -328,10 +380,8 @@ Answer each in a short paragraph, pointing at your own runs:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `Indexed 0 chunks` | No `.md` or `.txt` files in `corpus`, or the script ran from another folder | Run it from the folder that contains `corpus` |
 | The answer ignores the passages | The model is not following the instructions, or never called the tool | Check for a `[tool call]` line; use `qwen2.5:3b` |
 | Old documents still show up after you edit the corpus | The `chroma_db` folder still holds the previous chunks | Delete `chroma_db` and rerun `index.py` |
-| Connection refused | Ollama is not running | Start Ollama and retry |
 | (No-code) The answer ignores your notes | The search results are not wired into the Prompt's `{context}` | Open the Prompt node's inspection view and check that the passages arrived |
 | (No-code) The answer names no source file | The chunks do not carry their file name | Check the search step's inspection view; re-upload through the File node rather than pasting text |
 
