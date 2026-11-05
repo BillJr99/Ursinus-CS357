@@ -674,10 +674,6 @@ schedule:
     rubricpath: "_pages/Assignments/asmt-readinggroup.md"
   readings:
   - rtitle: "Have your integrated system and your demo script ready.  Today is a rehearsal rather than a work session.  If it does not run end to end at the start of class, that is the thing to fix."
-- cdate: "2026/12/16"
-  title: "Demo Day: Final Project Presentations (Final Exam Period, 8:00-11:00 AM, Pfahler 107)"
-  readings:
-  - rtitle: "Demo Day, held in our final exam period.  Have the running system, your governance document, and the contribution statements ready.  Nothing is due after today."
 ---
 
 This course is about building agents you understand and can run yourself.  The sections below explain how the course gives you real choice over your path, how to read an assignment, how to prepare for each hands-on session, and how I value and evaluate the day-to-day work of participating, including engaging with your classmates' work.  Please read them now, and come back to the participation and preparation guides throughout the term.
