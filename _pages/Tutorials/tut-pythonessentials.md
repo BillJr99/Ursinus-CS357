@@ -254,7 +254,7 @@ You should see:
 1
 ```
 
-`@` multiplies matching entries and adds them up.  When both vectors have length 1, that number is their **cosine similarity**: near 1 means they point the same way.  `np.argmax` gives the position of the largest value.  The [Tokens and Embeddings tutorial]({{ site.baseurl }}/Tutorials/TokensEmbeddings) explains why this measures meaning.
+`@` multiplies matching entries and adds them up.  When both vectors have length 1, that number is their **cosine similarity**: near 1 means they point the same way.  `np.argmax` gives the position of the largest value.  The [Tokens and Embeddings tutorial]({{ site.baseurl }}/Tutorials/TokensEmbeddingsAttention) explains why this measures meaning.
 
 ## `async` and `await`
 
