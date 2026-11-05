@@ -113,7 +113,9 @@ Trigger (fires):        "Use at the start of any session, or whenever the user a
 
 > **Common misconception:** a skill on disk is not followed automatically on every turn the way a system prompt is. Being on disk *surfaces* a skill. The agent *invokes* it by recognizing the situation, or because you name it. For always-on behavior, `AGENTS.md` is the right instrument. For composable behavior you invoke selectively, a skill is correct.
 
-## Stage 1: Install and Invoke a Skill I Wrote (Tutorial, Ungraded)
+## Stage 1: Install and Invoke a Skill I Wrote
+
+This stage is a tutorial, and it is not graded.
 
 Run this once, end to end, before you write anything of your own. It takes about fifteen minutes, none of it is submitted, and it exists so that the mechanics are behind you before any of your work is being graded on them.
 
