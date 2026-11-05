@@ -57,3 +57,5 @@
 - [ ] Simplify the assignments, break the code and no-code paths into separate linked pages, and have the notes cover both the code and no-code approaches for each topic.
 
 - [ ] Make the project more defined and project-based, and more practical for groups to execute: clearer coordination (who does what, by when) and a focus on group accountability.
+
+- [ ] Simplify the Overview assignment and streamline its software setup. Leave the Warmup syllabus survey assignment unchanged.
