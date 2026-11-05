@@ -95,6 +95,8 @@ On the no-code path you are the loop.  Every reply you paste is one model call, 
 
 ## Before You Start
 
+> **Python you will use.**  Dictionaries, `re.findall`, `Counter`, and NumPy arrays are all in [Python Essentials]({{ site.baseurl }}/Tutorials/PythonEssentials).
+
 Complete these first: [Critique, Consensus, and the LLM Judge]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-critiqueconsensusjudge.md) (the loop, debate, and clustering ideas this lab runs) and the [Orchestration Worked Example]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-orchestrationworkshop.md) (round budgets in configuration, fail-closed parsing, and counting calls).
 
 **Code path.**  `requests` is how your code talks to Ollama.  A virtual environment gives this lab its own Python and packages.  Inside the course container, `requests` is already installed, so you can skip to the `curl` line.

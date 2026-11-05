@@ -298,6 +298,8 @@ The proposal has its own page and its own rubric: see [Final Project Proposal]({
 
 ## Phase 3: Sprints
 
+> **Reference.**  Each sprint ends with a retrospective, and [Coordinating a Team Project]({{ site.baseurl }}/Tutorials/ProjectCoordination#a-retrospective) shows a short one.
+
 Build in three sprints between the proposal and the last day of class.  The [course schedule]({{ site.baseurl }}/) has the sprint boundaries and the class sessions that support them: the two sprint checks, the *Project Sprint* session, and the two *Project Studio* sessions.  Your direction's section below lists what each sprint builds and how you know it is done.
 
 Sprint 1 is the longest and spans the Thanksgiving break, so the two [sprint checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) cut it into short laps.

@@ -146,7 +146,7 @@ Size the work honestly against three sprints (Goal 13).  Each sprint should end 
 > **Paste into your submission.**
 > - Who holds which role in which sprint: a role-rotation plan that assigns Coordinator, Builder, Evaluator, and Scribe across sprint boundaries so every member holds every role.
 > - How progress will be assessed at each sprint boundary.
-> - A shared **GANTT-style timeline** mapping tasks to the three sprints, with a named owner and an honest duration on every task.
+> - A shared **GANTT-style timeline** mapping tasks to the three sprints, with a named owner and an honest duration on every task.  [Coordinating a Team Project]({{ site.baseurl }}/Tutorials/ProjectCoordination#a-gantt-style-timeline) shows one.
 > - A **Responsible AI measurement plan** for the Responsible AI Report your final submission must include.  Fill in this form, and start measuring in Sprint 1:
 >   ```text
 >   Tokens: how we count them (OpenCode's session token display, or Ollama's prompt_eval_count and eval_count), and how we turn them into energy, carbon, and cost.  Owner:

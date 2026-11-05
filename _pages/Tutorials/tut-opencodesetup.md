@@ -807,6 +807,45 @@ One command per section.  If every line produces output, your setup is complete.
 | The boundary | `ls ~` at the container prompt | It is the container's home, not yours.  Your files are not there |
 {: .tb-full}
 
+## Adding a Provider
+
+**Adding a provider to opencode.**  If you drive the code path with opencode on a model other than your local Ollama, such as a hosted or campus server, opencode needs that provider in its own configuration file, `opencode.json`.  The [Overview assignment]({{ site.baseurl }}/Assignments/Overview) (step 5b) says where that file lives; the name matters, because opencode ignores a file called `config.json`.  A hosted provider needs three things: its URL, your key, and the model's name.
+
+**Never type or paste a key into an opencode prompt.**  Everything you type into a prompt goes to the model provider and stays in the session history, so a key typed there is a key you have shared.  Have opencode write the file with placeholders instead, and fill in the real values yourself:
+
+```text
+Add an OpenAI-compatible provider named "campus" to opencode.json, with the
+placeholder values PASTE-PROVIDER-URL for baseURL, PASTE-YOUR-KEY for apiKey,
+and PASTE-MODEL-NAME for one model.  Do not ask me for the key.  When you are
+done, tell me the full path of the file you edited.
+```
+
+The template it writes should look like this:
+
+```json
+{
+  "provider": {
+    "campus": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "PASTE-PROVIDER-URL",
+        "apiKey": "PASTE-YOUR-KEY"
+      },
+      "models": { "PASTE-MODEL-NAME": { "name": "campus model" } }
+    }
+  }
+}
+```
+
+Then open that file in your own editor, at the path opencode reported, and replace the three placeholders.  Add the file to `.gitignore` *before* the key goes in, so the key never reaches a commit.  Restart `opencode`, type `/models`, and confirm the new provider is listed.
+
+**Finding the model name.**  If your provider runs OpenWebUI, copy the name from there rather than typing it.  Open the model dropdown at the top of a chat, click the three dots next to the model, and copy its link.  The link looks like `https://provider.example/?model=openai%2Fgpt-4o-mini`.  Two changes turn it into the model name:
+
+1. Remove everything up to and including `?model=` (here, `https://provider.example/?model=`).
+2. Change each `%2F` to a `/`.
+
+The name in this example is `openai/gpt-4o-mini`.  The `%2F` is how a web address spells a slash, and the provider expects the slash.
+
 ## Exercises
 
 1.  **Two scopes, one provider.**  Put a provider in your global config and a second, differently named provider in a project's config.  Open that project, run `/models`, and record which models appear.  Then open a different project and run it again.  Write one sentence explaining the difference in terms of merging.

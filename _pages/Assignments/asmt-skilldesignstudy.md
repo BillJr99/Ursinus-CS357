@@ -85,33 +85,7 @@ Then start `opencode`, type `/models`, and confirm your provider appears.  The O
 
 ## What a Skill Is
 
-A skill is a directory containing a `SKILL.md` file, and that really is the whole mechanism: there is no registry and no install command, because the tool simply walks the filesystem, finds the directory, reads the front matter, and offers the skill to the model. One happy consequence is that you can read exactly what you installed before you ever run it, which is not true of most things you install.
-
-Both opencode and pi walk up from your working directory to the repository root, then fall back to your home directory:
-
-| | Project-level | User-level |
-|---|---|---|
-| **opencode** | `.opencode/skills/`, `.claude/skills/`, `.agents/skills/` | `~/.config/opencode/skills/`, `~/.claude/skills/`, `~/.agents/skills/` |
-| **pi** | `.pi/skills/`, `.agents/skills/` | `~/.pi/agent/skills/`, `~/.agents/skills/` |
-
-**On Windows.**  The same paths, with backslashes and `%USERPROFILE%` in place of `~`: `.opencode\skills\`, `.claude\skills\`, and `.agents\skills\` inside a project, and `%USERPROFILE%\.config\opencode\skills\`, `%USERPROFILE%\.claude\skills\`, and `%USERPROFILE%\.agents\skills\` globally.  Win+R and pasting a folder path opens any of them.  Because a skill is a directory rather than a registry entry, copying the folder there in File Explorer is a complete installation.
-
-Use `.agents/skills/`, which both read, so your skills are not welded to one tool.  Put it in the **project** path, at the root of the repository you are working in, which is what this assignment asks for and what the deliverable links to.  opencode also reads `~/.config/opencode/skills/` globally, and that is the right home for a skill you want in every project later; it is not what you submit here, because a project path is the one a reviewer can clone and check.
-
-Two rules about the front matter account for almost every failure you are likely to hit.
-
-1. **The directory name must match the `name:` field**, so `.agents/skills/commit-tidy/SKILL.md` goes with `name: commit-tidy`. When they disagree the skill never loads, and nothing tells you so.
-2. **The `description` is the matching surface rather than documentation.** The model reads it to decide *when* to invoke the skill, which means it has to state a trigger in the words a user would actually type instead of naming a topic.
-
-That second rule decides whether a skill ever runs at all, and it is worth seeing the difference side by side:
-
-```text
-Topic   (never fires):  "Session setup helper."
-Trigger (fires):        "Use at the start of any session, or whenever the user asks to
-                         start, resume, continue, or pick up work on this project."
-```
-
-> **Common misconception:** a skill on disk is not followed automatically on every turn the way a system prompt is. Being on disk *surfaces* a skill. The agent *invokes* it by recognizing the situation, or because you name it. For always-on behavior, `AGENTS.md` is the right instrument. For composable behavior you invoke selectively, a skill is correct.
+A skill is a directory containing a `SKILL.md` file.  Use the project path `.agents/skills/<name>/SKILL.md`, which both opencode and pi read.  Two rules account for almost every failure: the directory name must match the `name:` field, and the `description` must state a trigger in the words a user would type, not a topic.  [Where skills live and how they load]({{ site.baseurl }}/Tutorials/AgentSkills#where-skills-live-and-how-they-load) explains both, with the paths for each tool.
 
 ## Stage 1: Install and Invoke a Skill I Wrote
 
@@ -273,75 +247,7 @@ Changes that make things worse belong in the log too.  A persona that made the s
 
 ---
 
-## Optional: Run Your Skill from Python Against Ollama
-
-opencode is not the only way to use a skill.  Because a skill is just text, you can load it yourself and hand it to a model directly.  This is optional and carries no points, but it shows you what the agent is doing under the hood: the body of `SKILL.md` becomes the system message.
-
-With Ollama running and your model pulled (`ollama pull llama3.2`), save this as `run_skill.py` in the project root and run `python3 run_skill.py .agents/skills/study-planner/SKILL.md`:
-
-```python
-import sys
-import traceback
-
-import requests
-
-OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "llama3.2"
-
-
-def load_skill(path):
-    """Read SKILL.md and return its body, without the front matter."""
-    with open(path, "r", encoding="utf-8") as f:
-        text = f.read()
-    if text.startswith("---"):
-        # The front matter sits between the first two --- lines.
-        text = text.split("---", 2)[2]
-    return text.strip()
-
-
-def chat(messages):
-    """Send the conversation so far to Ollama and return the reply text."""
-    response = requests.post(
-        OLLAMA_URL,
-        json={"model": MODEL, "messages": messages, "stream": False},
-        timeout=300,
-    )
-    response.raise_for_status()
-    return response.json()["message"]["content"]
-
-
-def main():
-    try:
-        skill = load_skill(sys.argv[1])
-    except Exception as e:
-        print(f"[run_skill:load_skill] {e}")
-        traceback.print_exc()
-        return
-
-    messages = [{"role": "system", "content": skill}]
-    print("Type your request.  Type 'quit' to stop.")
-    while True:
-        user = input("> ").strip()
-        if user.lower() == "quit":
-            break
-        messages.append({"role": "user", "content": user})
-        try:
-            reply = chat(messages)
-        except Exception as e:
-            print(f"[run_skill:chat] {e}")
-            traceback.print_exc()
-            break
-        messages.append({"role": "assistant", "content": reply})
-        print(reply)
-
-
-if __name__ == "__main__":
-    main()
-```
-
-The `messages` list is the whole conversation, sent again on every turn; that is how the model "remembers" your earlier answers to its interview.  Notice what this script does *not* do: it never decides whether the skill should fire, because you loaded it by hand.  That trigger decision is the part opencode adds.  If you try this, include a short transcript and one sentence on whether the skill behaved the same as it did in opencode.
-
----
+> **Optional.**  You can also [run your skill from Python against Ollama]({{ site.baseurl }}/Tutorials/AgentSkills#run-a-skill-from-python-against-ollama).  It carries no credit.
 
 ### Troubleshooting: The Skill Never Fires
 

@@ -76,6 +76,8 @@ The rubric, the evidence, and the writeup questions are the same on both routes.
 
 ## Before You Start
 
+> **Python you will use.**  The client uses `async` and `await`, which [Python Essentials]({{ site.baseurl }}/Tutorials/PythonEssentials#async-and-await) explains in a few lines.
+
 - **Code route:** make a virtual environment, which gives this lab its own Python and packages.  Then install the official MCP Python SDK with `pip` (Python's package installer) and confirm that it imports.  The examples below were tested with version 2.2 of the SDK.
 
   ```bash

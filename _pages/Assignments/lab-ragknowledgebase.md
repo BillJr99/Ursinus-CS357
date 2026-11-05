@@ -81,6 +81,8 @@ Steps 1 and 4, the writeup, and the deliverables apply to both paths.  On the no
 
 ## Before You Start
 
+> **Python you will use.**  Lists and dictionaries, `pathlib`, `split` and `strip`, and virtual environments are all in [Python Essentials]({{ site.baseurl }}/Tutorials/PythonEssentials).
+
 The *RAG Worked Example* session builds these steps on a small corpus, on both paths.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need two Python packages and Ollama running with a model that calls tools reliably.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
 
 ```bash

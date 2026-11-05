@@ -112,6 +112,7 @@ On the no-code path, read "log" as "exported chat transcript" and "code" as "con
 - [Running Your Own AI]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-localai.md): Ollama, OpenWebUI, and the REST API.  If you set up your stack in that session, you are most of the way through this section.
 - [Agent Loop Activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-agentloop.md): the perceive, plan, act, remember cycle.
 - [Prompt Engineering as Agent Design]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-promptengineering.md): ROLE, GOAL, TOOLS, FORMAT, GUARDRAILS.
+- [Python Essentials]({{ site.baseurl }}/Tutorials/PythonEssentials): dictionaries, JSON, `try`, and `requests`, if you want a refresher.
 - [RESTful LLM Access]({{ site.baseurl }}/Tutorials/RESTLLMAPI): the HTTP call behind every step of Part 1, if you want it explained before you use it.
 
 **Tools to install.**
@@ -147,42 +148,7 @@ You should see `requests ok`.  Run the `source` line again in each new terminal.
 
 The installation commands above are the one part of this lab that stays in a terminal.  An agent cannot install a server or pull a model onto your machine for you, and the Windows installer is a download either way.
 
-**Adding a provider to opencode.**  If you drive the code path with opencode on a model other than your local Ollama, such as a hosted or campus server, opencode needs that provider in its own configuration file, `opencode.json`.  The [Overview assignment]({{ site.baseurl }}/Assignments/Overview) (step 5b) says where that file lives; the name matters, because opencode ignores a file called `config.json`.  A hosted provider needs three things: its URL, your key, and the model's name.
-
-**Never type or paste a key into an opencode prompt.**  Everything you type into a prompt goes to the model provider and stays in the session history, so a key typed there is a key you have shared.  Have opencode write the file with placeholders instead, and fill in the real values yourself:
-
-```text
-Add an OpenAI-compatible provider named "campus" to opencode.json, with the
-placeholder values PASTE-PROVIDER-URL for baseURL, PASTE-YOUR-KEY for apiKey,
-and PASTE-MODEL-NAME for one model.  Do not ask me for the key.  When you are
-done, tell me the full path of the file you edited.
-```
-
-The template it writes should look like this:
-
-```json
-{
-  "provider": {
-    "campus": {
-      "npm": "@ai-sdk/openai-compatible",
-      "options": {
-        "baseURL": "PASTE-PROVIDER-URL",
-        "apiKey": "PASTE-YOUR-KEY"
-      },
-      "models": { "PASTE-MODEL-NAME": { "name": "campus model" } }
-    }
-  }
-}
-```
-
-Then open that file in your own editor, at the path opencode reported, and replace the three placeholders.  Add the file to `.gitignore` *before* the key goes in, so the key never reaches a commit.  Restart `opencode`, type `/models`, and confirm the new provider is listed.
-
-**Finding the model name.**  If your provider runs OpenWebUI, copy the name from there rather than typing it.  Open the model dropdown at the top of a chat, click the three dots next to the model, and copy its link.  The link looks like `https://provider.example/?model=openai%2Fgpt-4o-mini`.  Two changes turn it into the model name:
-
-1. Remove everything up to and including `?model=` (here, `https://provider.example/?model=`).
-2. Change each `%2F` to a `/`.
-
-The name in this example is `openai/gpt-4o-mini`.  The `%2F` is how a web address spells a slash, and the provider expects the slash.
+**Using a model other than your local Ollama?**  Follow [Adding a provider]({{ site.baseurl }}/Tutorials/OpenCodeSetup#adding-a-provider), and never type or paste a key into an opencode prompt.
 
 **Health check.**  Run this before you do anything else.  It asks the Ollama server which models it has on disk:
 

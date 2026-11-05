@@ -340,6 +340,8 @@ At every check-in, the team re-reads its charter against its actual behavior.  T
 
 ## Sprint Checks
 
+> **Reference.**  [Coordinating a Team Project]({{ site.baseurl }}/Tutorials/ProjectCoordination) has short examples of a standup, a decision log, a pre-mortem, and a retrospective.
+
 > **Handed out** at the *Agents That Talk, Observability, and Handoff Protocols* session, and **held** at the start of class at the *Critique, Consensus, and the LLM Judge* session and the *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* session.  See the [course schedule]({{ site.baseurl }}/).
 
 Sprint 1 is long and spans the Thanksgiving break, so two sprint checks before the break cut it into short laps.  Each check takes ten minutes at the start of class, with no slides:
