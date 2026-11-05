@@ -39,7 +39,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it.
 
 1. Sprint check: a member picked at random shows one thing running (Direction B: one cited finding), and each Coordinator says what is next and what is blocking
 2. Part I, one loop, and why the evaluator is a separate call (Model 1)
-3. Part II, the critic: the eighty-line loop, Model 2, and three failure modes
+3. Part II, the critic: one round by hand, Model 2, and three failure modes
 4. Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5)
 5. Part IV, the judge: Model 6 and auditing the judge
 6. Part V, where today's loops sit in the Multi-Agent Patterns lab, and the reflection prompt.  The Human-in-the-Loop Extension is self-paced
@@ -104,17 +104,27 @@ The point that holds for both kinds of deliberation: an extra round only helps i
 
 # Part II: Use One, a Critic That Feeds Issues Back
 
-Read the full working loop, run it, and connect it back to Part I.  Then study the three ways the loop fails.  The [Measuring Multi-Agent Patterns](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MultiAgentMeasurement) tutorial shows how to measure each one.  The specification for that part of the lab is at [Part A: Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-30-points).
+Run one round of the loop by hand, and connect it back to Part I.  Then study the three ways the loop fails.  The [Measuring Multi-Agent Patterns](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MultiAgentMeasurement) tutorial shows how to measure each one.  The specification for that part of the lab is at [Part A: Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-30-points).
 
-## 3.  The Loop in Eighty Lines
+## 3.  One Round of the Loop, by Hand
 
-The code below is the entire critique-refine loop.  Three design decisions implement Part I directly: (1) the generator and critic are separate `llm` calls with different system prompts, (2) the critic receives the RUBRIC but the generator does not, since the generator sees only the issues list from the critic's output, and (3) the loop has a hard maximum of `rounds` iterations so it cannot run forever.  The temperatures encode a choice: the generator runs warm (0.8 to explore the first draft, then 0.3 for disciplined revision) and the critic runs cold (0.0 for deterministic evaluation).
+The critique-refine loop repeats one round until the critic accepts or the budget runs out:
+
+```text
+draft = generate(task)
+repeat at most max_rounds times:
+    verdict = critique(draft)
+    if the verdict is accept, stop
+    draft = revise(draft, verdict's issues)
+```
+
+You write that loop in the lab.  The code below runs one round of it by hand, one step at a time, on a class announcement, so you can watch what each call receives and returns.  Three design decisions implement Part I directly: (1) the generator and critic are separate `llm` calls with different system prompts, (2) the critic receives the RUBRIC but the generator does not, since the generator sees only the issues list from the critic's output, and (3) the budget in the pseudocode sets a hard maximum on rounds, so the loop cannot run forever.  The temperatures encode a choice: the generator runs warm (0.8 to explore the first draft, then 0.3 for disciplined revision) and the critic runs cold (0.0 for deterministic evaluation).
 
 Run it locally with `ollama run llama3.2` in one terminal and the script in another:
 
 ```bash
 ollama run llama3.2
-python critique_refine.py
+python critique_round.py
 ```
 
 ## Code Cell
@@ -164,42 +174,28 @@ def critique(draft):
         # This is safer than failing open (assuming "accept") for most use cases
         return {"verdict": "revise", "issues": ["critic output was not valid JSON; treating as revise"]}
 
-def critique_refine(task, rounds=3):
-    """
-    Run the critique-refine loop.
-    Returns: (final_draft, final_verdict_dict, rounds_used)
-    """
-    # Round 0: generate the initial draft (warm temperature for creative exploration)
-    draft = llm(
-        "You draft short announcements for a college class.",
-        task,
-        temperature=0.8  # warm: explore different phrasings
-    )
-    print(f"--- initial draft ---\n{draft}\n")
+TASK = "Announce that Critique and Refine is due next Friday and office hours moved to Wednesday."
 
-    for r in range(rounds):
-        verdict = critique(draft)
-        print(f"--- round {r}: {verdict['verdict']} | issues: {verdict['issues']}")
+# Step 1: generate the first draft (warm temperature for creative exploration)
+draft = llm("You draft short announcements for a college class.", TASK, temperature=0.8)
+print(f"--- first draft ---\n{draft}\n")
 
-        if verdict["verdict"] == "accept":
-            return draft, verdict, r  # success: return before budget is exhausted
+# Step 2: the critic checks it against the rubric
+verdict = critique(draft)
+print(f"--- critic: {verdict['verdict']} | issues: {verdict['issues']}\n")
 
-        # Pass only the issues list to the generator, not the rubric itself
-        draft = llm(
-            "Revise the draft to fix EXACTLY the listed issues, changing nothing else.",
-            f"Draft:\n{draft}\n\nIssues to fix:\n{json.dumps(verdict['issues'], indent=2)}",
-            temperature=0.3  # cooler: disciplined revision rather than free exploration
-        )
-
-    # Budget exhausted: return the best draft we have, with outstanding issues attached
-    return draft, verdict, rounds
-
-final, verdict, used = critique_refine(
-    "Announce that Critique and Refine is due next Friday and office hours moved to Wednesday."
-)
-print(f"\n=== FINAL DRAFT (after {used} revision rounds) ===\n{final}")
+# Step 3: revise, passing only the issues list and not the rubric
 if verdict["verdict"] != "accept":
-    print(f"\n[Note: budget exhausted; outstanding issues: {verdict['issues']}]")
+    draft = llm(
+        "Revise the draft to fix EXACTLY the listed issues, changing nothing else.",
+        f"Draft:\n{draft}\n\nIssues to fix:\n{json.dumps(verdict['issues'], indent=2)}",
+        temperature=0.3  # cooler: disciplined revision rather than free exploration
+    )
+    print(f"--- revised draft ---\n{draft}\n")
+
+    # Step 4: the critic checks the revision, which is where the next round would begin
+    verdict = critique(draft)
+    print(f"--- critic: {verdict['verdict']} | issues: {verdict['issues']}")
 ```
 
 ## Model 2: Instrumenting the Loop
@@ -214,7 +210,7 @@ if verdict["verdict"] != "accept":
 
    > *Hint: Failing closed means "when uncertain, reject and retry."  Failing open means "when uncertain, pass."  For a class announcement, what is the cost of a false rejection?  For a medical summary, what is the cost of a false approval?*
 
-6.  Before you run it, predict the rounds-to-accept for the announcement task in the code.  Then run the loop three times on the same task and record the rounds-to-accept for each run.  Is the variance coming from the generator (different drafts), the critic (different verdicts on the same draft), or both?  Design a one-variable experiment (changing exactly one thing) that would let you tell which source of variance is larger.
+6.  Before you run it, predict how many rounds the announcement task in the code will need before the critic accepts.  Then run the cell three times on the same task, repeating Steps 3 and 4 by hand until it accepts, and record the rounds for each run.  Is the variance coming from the generator (different drafts), the critic (different verdicts on the same draft), or both?  Design a one-variable experiment (changing exactly one thing) that would let you tell which source of variance is larger.
 
    > *Hint: To isolate generator variance, fix the seed of the critic and vary the generator's seed.  To isolate critic variance, fix the draft (use the same input every time) and run the critic multiple times.  Which experiment is easier to set up with the code above?*
 

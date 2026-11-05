@@ -13,7 +13,7 @@ tags:
 ---
 *The Python this course's code routes use, one small example at a time.*
 
-You do not need to read this from top to bottom.  Each section stands alone, and a lab links to the one it uses.  If you have taken an introductory programming course, most of it will look familiar.  What may be new is how often a model's answer arrives as text that you have to turn into data, and that is where these pieces come together.
+You do not need to read this from top to bottom.  Each section stands alone, and a lab links to the one it uses.  If you have taken an introductory programming course, most of it will look familiar.  What may be new is how often a model's answer arrives as text that you have to turn into data, which is what most of these pieces are for.
 
 Run the examples with `python3`.  Type them into the interactive prompt, or save them in a file.
 

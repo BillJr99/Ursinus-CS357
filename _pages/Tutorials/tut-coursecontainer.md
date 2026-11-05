@@ -29,7 +29,7 @@ If Docker is already on your machine from another course or project, skip to the
 
 > **Disk note.**  Docker Desktop plus the course image (the ML libraries are hefty) needs roughly **8-10 GB** free, on top of Ollama's models.  Clear space now, not mid-download.
 
-> **Windows only: install Ubuntu on WSL2 first.**  Docker Desktop on Windows does not run containers on Windows itself; it runs them inside **WSL2**, the Windows Subsystem for Linux.  Installing the Linux side first prevents most of the Windows trouble on this page.  Open **PowerShell as Administrator** and run:
+> **Windows only: install Ubuntu on WSL2 first.**  Docker Desktop on Windows does not run containers on Windows itself; it runs them inside **WSL2**, the Windows Subsystem for Linux.  Installing the Linux side first prevents most of the Windows trouble in this setup.  Open **PowerShell as Administrator** and run:
 >
 > ```powershell
 > wsl --install -d Ubuntu
@@ -64,7 +64,7 @@ docker run hello-world
 
 **Paste.**  The `Hello from Docker!` line.
 
-> **Troubleshooting:** `Cannot connect to the Docker daemon` means Docker Desktop is installed but not running; start the application and wait for the whale icon to settle.  `docker: command not found` inside Ubuntu, while Docker Desktop is plainly running, is the WSL Integration setting in the table above.  See the Stage A rows in Troubleshooting.
+> **Troubleshooting:** `Cannot connect to the Docker daemon` means Docker Desktop is installed but not running; start the application and wait for the whale icon to settle.  `docker: command not found` inside Ubuntu, while Docker Desktop is plainly running, is the WSL Integration setting in the table above.  See the Stage A rows in the Overview assignment's Troubleshooting section.
 
 **Next:** A2.
 
@@ -202,9 +202,9 @@ docker compose run --rm cs357
 >
 > You are the non-root user `student`, in `/workspace`, which *is* your `cs357-work` clone (`ls -la` shows `.git`, `.devcontainer`, and `README.md`).  Exit anytime with `exit` or Ctrl-D; `--rm` deletes the container but never your files, which live in the mounted repo on your disk.
 
-**Paste.**  The container prompt.  Include it in every container transcript on this page, so it is visible where each command ran.
+**Paste.**  The container prompt.  Include it in every container transcript in the Overview, so it is visible where each command ran.
 
-> **Troubleshooting:** a build that cannot find the Dockerfile is the `Dockerfile.txt` problem from A3, or you ran `docker compose` from somewhere other than `.devcontainer/`.  An empty `/workspace` on Windows means the clone lives somewhere Docker Desktop does not share; see the Stage A rows in Troubleshooting.  A build that dies with a network error resumes from the failed step when you rerun `docker compose build`.
+> **Troubleshooting:** a build that cannot find the Dockerfile is the `Dockerfile.txt` problem from A3, or you ran `docker compose` from somewhere other than `.devcontainer/`.  An empty `/workspace` on Windows means the clone lives somewhere Docker Desktop does not share; see the Stage A rows in the Overview assignment's Troubleshooting section.  A build that dies with a network error resumes from the failed step when you rerun `docker compose build`.
 
 **Next:** A5.
 
@@ -285,7 +285,7 @@ git config user.email "you@example.com"
 git config credential.helper 'cache --timeout=7200'
 ```
 
-> **The token you just made is now something you can leak.**  Keep it out of any message you send to a model, including the agent you are about to run in this container.  *Making a token, and putting it in your environment*, in the Part 1 orientation, says what to do if it gets out.
+> **The token you just made is now something you can leak.**  Keep it out of any message you send to a model, including the agent you are about to run in this container.  [Making a token, and putting it in your environment]({{ site.baseurl }}/Tutorials/SetupBasics#making-a-token-and-putting-it-in-your-environment) says what to do if it gets out.
 
 **Do, `gh`.**  The image also carries `gh`, and it knows even less about you than git does.  Give it the token you just made, as an environment variable, from the host shell you start the container in:
 
@@ -293,7 +293,7 @@ git config credential.helper 'cache --timeout=7200'
 export GH_TOKEN=github_pat_yourtokenhere      # on your host, before docker compose run
 ```
 
-The `environment:` block in `docker-compose.yml` passes `GH_TOKEN` through by name, so the value stays in your shell and never enters a file.  *Making a token, and putting it in your environment*, back in the Part 1 orientation, is where the variable and its platform spellings live.  Confirm inside the container with `gh auth status`.
+The `environment:` block in `docker-compose.yml` passes `GH_TOKEN` through by name, so the value stays in your shell and never enters a file.  [Making a token, and putting it in your environment]({{ site.baseurl }}/Tutorials/SetupBasics#making-a-token-and-putting-it-in-your-environment) is where the variable and its platform spellings live.  Confirm inside the container with `gh auth status`.
 
 > **Do not run `gh auth login` in the container, and do not mount `~/.config/gh` into it.**  Both work, and both are the wrong shape here.  `gh auth login` stores a credential with whatever reach your account has, inside a filesystem that is about to run agent code; mounting your host `gh` configuration hands that same code the token that can push to every repository you own.  The variable above carries exactly one repository-scoped token and disappears when the container does, which is the A6 argument in one more place.
 
@@ -323,12 +323,12 @@ The two credentials you could use inside the container, side by side:
 
 **Next:** the Route A checklist, then Step 1.
 
-> **You've succeeded when** every box below is checked.  Then go to Step 1; on Route A, Steps 1 through 3 run on your host, not in the container.
+Return to the Overview's Route A checklist.  On Route A, Steps 1 through 3 run on your host, not in the container.
 
 
 ## Appendix: Updating Your Container
 
-One of the quieter advantages of working in a container is that your environment is a file rather than a machine.  When a tool the course depends on changes underneath us, and sooner or later one always does, nobody has to reinstall anything by hand or compare laptops to work out whose setup drifted.  The Dockerfile in your repository *is* the environment, so a corrected Dockerfile plus a rebuild puts the whole class back on an identical, working stack.  When an update is announced, fetch the current file and rebuild:
+Working in a container means your environment is a file rather than a machine.  When a tool the course depends on changes underneath us, and sooner or later one always does, nobody has to reinstall anything by hand or compare laptops to work out whose setup drifted.  The Dockerfile in your repository *is* the environment, so a corrected Dockerfile plus a rebuild puts the whole class back on an identical, working stack.  When an update is announced, fetch the current file and rebuild:
 
 ```bash
 cd ~/cs357-work/.devcontainer
@@ -338,7 +338,7 @@ docker compose build
 docker compose run --rm cs357
 ```
 
-That first `curl` matters more than it looks.  The Dockerfile lives in *your* repository, not in a registry somewhere, so rebuilding without fetching the new one just rebuilds the image you already have.
+You need that first `curl` because the Dockerfile lives in *your* repository, not in a registry somewhere, so rebuilding without fetching the new one just rebuilds the image you already have.
 
 Expect the rebuild to take roughly as long as your original build did.  A change near the top of the file invalidates every layer beneath it, so the large library downloads run again.
 

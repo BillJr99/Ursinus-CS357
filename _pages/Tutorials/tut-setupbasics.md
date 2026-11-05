@@ -18,7 +18,7 @@ The Overview assignment links here at each point you need one of these.  Words l
 
 ## Opening a terminal, moving around, and saving a file
 
-Every step on this page happens at a terminal, and several ask you to save a file.  Here is how, on every system this course supports.  Come back to this section whenever a step says "open a terminal," "`cd`," or "save it."
+Every setup step happens at a terminal, and several ask you to save a file.  Here is how, on every system this course supports.  Come back to this section whenever a step says "open a terminal," "`cd`," or "save it."
 
 **1. Open a terminal.**
 
@@ -47,7 +47,7 @@ cd ..             # go up one level
 > - `C:\Users\you` in PowerShell
 > - `/home/you` in WSL2 Ubuntu; from WSL2, your Windows files are under `/mnt/c/Users/you`
 >
-> Do all of this course's work in `~/cs357`, or in the `cs357-work` clone from A2 on Route A, so that every `cd ~/cs357` on this page lands in the same place.  Press **Tab** to complete a name you have started typing, and the up arrow to recall the previous command.
+> Do all of this course's work in `~/cs357`, or in the `cs357-work` clone from A2 on Route A, so that every `cd ~/cs357` in the setup lands in the same place.  Press **Tab** to complete a name you have started typing, and the up arrow to recall the previous command.
 
 **3. Save a file.**  When a step says "save this as `ollama_check.py`," first `cd` into the folder the file belongs in, then use one of these:
 
@@ -64,7 +64,7 @@ For a one-line file in PowerShell, `Set-Content notes.txt "model: llama3.2"` wri
 
 ## Where am I typing?
 
-Most setup failures on this page come from running a command in the wrong place.  Before every command, read your prompt.
+Most setup failures come from running a command in the wrong place.  Before every command, read your prompt.
 
 | Your prompt looks like | You are on | What `localhost` means there |
 |---|---|---|
@@ -73,7 +73,7 @@ Most setup failures on this page come from running a command in the wrong place.
 
 > **The address rule.**  Every command on this page that names Ollama's address is written as `localhost:11434`.  On your host, leave it as written.  Inside the container, replace `localhost` with `host.docker.internal`, because `localhost` inside a container means the container.  That is the only substitution on this page, and it applies only inside the container.  Running Ollama itself as a Docker container does not change the rule: with its port published (`-p 11434:11434`), `localhost:11434` on your host still reaches it.
 
-> **Windows.**  Use PowerShell (Windows 10 and 11 include it; open it from the Start menu) or WSL2 Ubuntu, not the old Command Prompt.  Every command on this page and in the labs is written for PowerShell or a Unix shell.  In PowerShell, `python3` is spelled `python`.  When a transcript from inside the container is what you have, include the container prompt in your copy-paste so it is visible where each command ran.
+> **Windows.**  Use PowerShell (Windows 10 and 11 include it; open it from the Start menu) or WSL2 Ubuntu, not the old Command Prompt.  Every command in the setup and in the labs is written for PowerShell or a Unix shell.  In PowerShell, `python3` is spelled `python`.  When a transcript from inside the container is what you have, include the container prompt in your copy-paste so it is visible where each command ran.
 
 ## Installing Python and pip
 
@@ -91,7 +91,7 @@ python3 --version
 python3 -m pip --version
 ```
 
-In PowerShell, spell them `python --version` and `python -m pip --version`.  If both print a version, and the first is 3.11 or later, you are done; skip to *Where am I typing?*.  Otherwise, install Python for your system from the row below; every row brings pip with it.
+In PowerShell, spell them `python --version` and `python -m pip --version`.  If both print a version, and the first is 3.11 or later, you are done with this section.  Otherwise, install Python for your system from the row below; every row brings pip with it.
 
 | System | How to install Python (pip comes with it) | Then |
 |---|---|---|
@@ -123,7 +123,7 @@ In PowerShell, spell them `python --version` and `python -m pip --version`.  If 
 > - If Homebrew says your macOS version is unsupported or a pre-release, run `brew update` first and retry.
 > - `error: externally-managed-environment` on Ubuntu or Debian is handled under Step 4.
 >
-> See the Stage 0 rows in Troubleshooting.
+> See the Stage 0 rows in the Overview assignment's Troubleshooting section.
 
 > **Note.**  `uv`, which Part 1.5 installs, can also fetch a Python of its own (`uv python install 3.12`) and run scripts with it (`uv run python ollama_check.py`).  Install a system Python first anyway, so that `python3` works in every terminal and every editor, and so that the `python -m venv` fallback has something to run.
 
@@ -188,11 +188,6 @@ Make it with `mkdir -p ~/.secrets`, put the token in `~/.secrets/github-scratch-
 
 **Where the configuration file goes.**  opencode reads `opencode.json` from the project directory as well as from `~/.config/opencode/`, and the choice is about scope rather than convenience.  A configuration that belongs to one repository belongs in that repository, where its tools load when you are working there and nowhere else; a configuration you want everywhere goes in the home-directory copy.  Step 5b comes back to this, and the MCP session leans on it hard.
 
----
-
----
-
-
 ## Optional: Install OpenWebUI, the chat interface over Ollama
 
 OpenWebUI is a self-hosted web front end that sits in front of your Ollama server: a private chat window over the model you pulled in Step 1, with tools, knowledge bases, and an API of its own.  Nothing in this assignment needs it.  The Local Agent lab's no-code path and several later tutorials assume it is installed, so doing it now, while the model is fresh, saves you the first fifteen minutes of that lab.
@@ -239,14 +234,10 @@ open-webui serve
 > - If `http://localhost:3000` refuses to connect on the Docker route, run `docker ps`.  When the container is missing, `docker logs open-webui` says why.  A port conflict means something else owns 3000, so re-run with `-p 3001:8080` and browse to 3001.
 > - If `pip install open-webui` fails with a resolver or build error, it is almost always a Python version issue.  Delete `owui`, create a 3.11 environment with `python3.11 -m venv owui && source owui/bin/activate`, and install inside it.
 
-**Next:** Step 5.
-
----
-
 
 ## Optional 5d: connect a hosted endpoint, if you are given one
 
-> **This is not graded and is not on the checklist above.**  It is here for when you are given access to a hosted, OpenAI-compatible endpoint (an address ending in something like `/api/v1`, plus an API key).  Your local Ollama provider stays exactly as 5b left it; this adds a second provider beside it.
+> **This is not graded and is not on the Overview checklist.**  It is here for when you are given access to a hosted, OpenAI-compatible endpoint (an address ending in something like `/api/v1`, plus an API key).  Your local Ollama provider stays exactly as 5b left it; this adds a second provider beside it.
 
 1.  **Install the auto-models plugin by asking the agent.**  In `opencode`, with any model selected (the free default is enough), type the prompt `install this opencode plugin https://github.com/BillJr99/opencode-auto-models`.  Read the change it proposes to `opencode.json` before you approve it.  Then type `/quit` and start `opencode` again, because plugins load only at startup.  The plugin asks each provider which models it serves, so you never type model names by hand.
 2.  **Name the endpoint in `opencode.json`.**  Add a second entry to the `provider` map you wrote in 5b, holding only the address: no key, and no `models` map, since the plugin fills that in.  `myendpoint` is a placeholder ID; you type the same word again in the next step.
@@ -268,7 +259,7 @@ open-webui serve
 
 ## Optional: install herdr while you are here
 
-> **This is not graded and is not on the checklist above.**  It is here because installing it now costs one command, and a later lab assumes it is on your bench.
+> **This is not graded and is not on the Overview checklist.**  It is here because installing it now costs one command, and a later lab assumes it is on your bench.
 
 **herdr** is an agent-aware terminal multiplexer.  It keeps agents running after you close your laptop or drop an SSH connection, and it shows you which agent is blocked, working, or done, so you are not cycling through terminal panes to find the one waiting on you.
 
@@ -280,10 +271,6 @@ open-webui serve
 | **Route B: native Windows** | `powershell -ExecutionPolicy Bypass -c "irm https://herdr.dev/install.ps1 \| iex"` |
 
 The installer downloads one binary, checks its SHA-256, and puts it in `~/.local/bin`.  If you include `herdr --version` in your transcript, I will read it, but its absence costs you nothing.
-
-**Next:** *Capturing Part 1*, then Part 1.5.
-
----
 
 
 ## Alternative: do it by hand, with `ssh-keygen`
@@ -354,10 +341,6 @@ The Ubuntu or WSL2 route gives you the standard Unix tooling instead, and every 
 
 > **Route A and credentials inside the container.**  The credential you just made lives on your host, which is where it belongs.  Inside the course container, A6 recommends a fine-grained personal access token scoped to `cs357-work` instead, because that container will soon be running agent code, and a credential placed inside it is a credential that code can use.  That is why A2 clones `cs357-work` over HTTPS: the token authenticates HTTPS pushes.  Step 6 of the [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_pages_url }}Activities/liascript-devenvironment.md) goes deeper, and A6 shows the read-only `~/.ssh` mount if you would rather use your key there.
 
-**Next:** Step 3.
-
----
-
 
 ## Command-Line Survival: reference (use as needed, not required reading cover-to-cover)
 
@@ -369,4 +352,3 @@ The Ubuntu or WSL2 route gives you the standard Unix tooling instead, and every 
 | [ShellCheck](https://www.shellcheck.net/) | Catches bugs in shell scripts before they bite |
 | `curl` and [HTTPie](https://httpie.io/) plus [jq](https://jqlang.github.io/jq/) | You will hit JSON APIs (Ollama, MCP) all semester; `curl ... \| jq` is your friend |
 
-> **You've succeeded when** the four boxes below are checked.  That is Part 1.5.

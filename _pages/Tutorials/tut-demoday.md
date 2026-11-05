@@ -35,7 +35,7 @@ Demo Day is already a multi-audience event: your community partner's world and y
 
 - **The opener lands with someone who has never heard of an agent loop.**  "Our partner's food pantry answers the same fifty questions by phone every week.  We built a system that answers them from the pantry's own documents, says *I don't know* when the documents don't say, and never sends anything without a human approving it.  I built the retrieval piece that finds the right document."  Ninety seconds, no jargon, ends with what *working* means, and what the system refuses to do.
 - **Depth is available on demand, not imposed up front.**  When a guest asks "how does it actually work?", the answer walks one request through the system (perceive, plan, act; what each agent sees, decides, and hands off) at whatever level the asker's follow-ups invite.
-- **Limitations are volunteered before anyone has to pull them out of you.**  Strong presenters disclose a rehearsed failure mode with its transcript evidence (or, for audit teams, a finding with its citations) before anyone asks.  It reads as command of the work, because it is.
+- **Limitations are volunteered before anyone has to pull them out of you.**  Strong presenters disclose a rehearsed failure mode with its transcript evidence (or, for audit teams, a finding with its citations) before anyone asks.  That shows you know the work, including where it falls short.
 - **Questions come back.**  The best conversations at Demo Day are two-way.  Ask a guest what they build, how their team uses (or refuses) AI tools, and what they wish new graduates knew.
 
 ## The One-Page Brief: Talking to Guests
@@ -44,8 +44,8 @@ Demo Day is already a multi-audience event: your community partner's world and y
 > 1. **The ninety-second opener.**  The stakeholder problem in the partner's terms, what your project does about it, who it is for, and one sentence on what you personally built.  Write it, say it aloud, and cut every term a non-CS friend would stumble on.  (Your stakeholder-facing Demo Day segment is the long form of this; the opener is the version you give a guest standing in front of your table.)
 > 2. **The three-sentence architecture.**  The system in plain words: *a request comes in; specialist agents each handle their piece, one retrieves evidence, one drafts, one critiques; a human approves anything consequential before it happens.*  Then one sentence on where your part lives.  Audit teams give the framework in plain words instead: *we mapped who the system touches, measured where it fails, and wrote the rules a real organization could adopt.*
 > 3. **The limitation.**  One known failure mode or finding, stated plainly, with its evidence and why you triaged it as disclose-rather-than-fix.  Practice saying it without apologizing.
-> 4. **The redirect.**  For questions you cannot answer: "I don't know, but here's how I'd find out."  That is a strong answer, and bluffing is the only weak one.  In this course, saying *I don't know* when the evidence is absent is literally what we graded your systems on.  Speak to your own contributions in the first person.  When a question reaches a part a teammate built, answer for the team rather than passing the question along: how the team designed, tested, and decided on that part, and what it does in the product as a whole.
-> 5. **The question back.**  Prepare two real questions to ask a guest, about their work, how AI is changing it, or their path.  Demo Day is a networking event wearing a final-exam costume; treat the conversation as two-way.
+> 4. **The redirect.**  For questions you cannot answer: "I don't know, but here's how I'd find out."  That is a strong answer, and bluffing is the only weak one.  In this course, we graded your systems on saying *I don't know* when the evidence is absent.  Speak to your own contributions in the first person.  When a question reaches a part a teammate built, answer for the team rather than passing the question along: how the team designed, tested, and decided on that part, and what it does in the product as a whole.
+> 5. **The question back.**  Prepare two real questions to ask a guest, about their work, how AI is changing it, or their path.  Guests are also people you may want to know after this course, so treat the conversation as two-way.
 
 ## The Mock Technical Interview (Final Integration and Demo Rehearsal Studio)
 
@@ -63,14 +63,14 @@ During the *Final Integration and Demo Rehearsal* studio, you will pair **across
 - (For audit teams) Which of your findings would the operator dispute most vigorously, and what is your evidence when they do?
 - (For open-source teams) A stranger files an issue saying your quickstart fails on their machine.  Walk me through what you do.
 
-**Why cross-team pairs:** explaining your system to someone who has never seen it is the whole game.  Your own teammates know too much to be useful practice, and interviewing *them* about their project teaches you what good interviewer questions feel like from the inside.
+**Why cross-team pairs:** the skill you are practicing is explaining your system to someone who has never seen it.  Your own teammates know too much to be useful practice, and interviewing *them* about their project teaches you what good interviewer questions feel like from the inside.
 
 ## Taking It Further
 
 The project does not have to end at Demo Day:
 
 - **[CCSC-Eastern](https://ccscne.org/)** and similar regional conferences run **student poster sessions**.  An evaluated multi-agent system, a regulator-ready audit, or a published open-source tool is exactly the kind of work they exist to present.  Talk to the instructor about submitting; your proposal and report are most of the abstract.
-- **Campus research and creative-work showcases** welcome course projects of this scope.  Presenting there is a low-stakes rehearsal for any external venue.
+- **Campus research and creative-work showcases** welcome course projects of this scope.  Presenting there is a low-stakes rehearsal for an outside venue.
 - **Your profile.**  The [ShipIt guide]({{ site.baseurl }}/Tutorials/ShipIt)'s portfolio entry (the pinned repository or public write-up and the 200-word project story) is the durable version of everything you rehearsed here.  Update your resume and LinkedIn while the numbers (evaluation results, test counts, the registry link) are fresh.
 
 ## Frequently Asked Questions
@@ -85,7 +85,7 @@ A: The presentation is graded by the Final Project's existing rubric.  Guest att
 A: Talk to the instructor beforehand; the format can be adjusted (a smaller room, a written walk-through, extra prep time).  The rehearsal exists because the tenth time explaining your architecture is calmer than the first.  We want you to spend the nervous repetitions here, where they are cheap.
 
 **Q: Our project is an audit with no running system.  What do we demo to a guest?**
-A: The evidence walkthrough is your demo: one failure mode, its mechanism, and the trail of citations behind it, shown rather than asserted.  Done well, an audit conversation can be among the most engaging in the room, for guests and classmates alike.
+A: The evidence walkthrough is your demo: one failure mode, its mechanism, and the trail of citations behind it, shown rather than asserted.
 
 ## Demo Day Guide Reflection Prompts
 

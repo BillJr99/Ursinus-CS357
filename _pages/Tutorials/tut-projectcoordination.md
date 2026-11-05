@@ -38,7 +38,7 @@ To build one:
 3. Write what each task needs before it can start.  This shows you the chain of tasks that cannot slip.
 4. Estimate honestly, then add slack.  Things take longer than you think, and a sprint with no slack has already failed.
 
-Update it at each sprint boundary.  A timeline that never changes is one that nobody is reading.
+Update it at each sprint boundary, because the plan will change as you learn what the work takes.
 
 ## A Pre-Mortem
 
@@ -73,7 +73,7 @@ Date   Decision                Rejected           Why                          W
        Use Chroma for search   A hosted service   No key to manage; runs local  Team
 ```
 
-The "rejected" column earns its keep.  Six weeks from now, someone will suggest the hosted service again, and this line says why you did not choose it.
+Six weeks from now, someone may suggest the hosted service again, and the "rejected" column says why you did not choose it.
 
 ## A Retrospective
 
@@ -85,4 +85,4 @@ Did not:    We merged on the last night, and the demo broke.
 Will change: Merge by the day before.  Ana owns the check.
 ```
 
-The last line is the one that matters, and it needs an owner.  Start the next retrospective by asking whether you made that change.
+Give the last line an owner, and start the next retrospective by asking whether you made that change.

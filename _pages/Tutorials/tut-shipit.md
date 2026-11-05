@@ -33,7 +33,7 @@ This guide is for Final Project Directions A and C, and it is not separately gra
 
 - **The specification preceded the artifact, with a timestamp to prove it.**  The dated specification file is preserved in its original form, before any agent-generated code touches it.  The self-assessment values the original spec even if it was imperfect.  Discovering and documenting a spec gap is part of the discipline, not a failure.
 - **CI is wired to something real, not to a placeholder.**  The GitHub Actions workflow runs the project's actual tests (or actual accessibility/content checks for Track B), not `echo "tests pass"`.  The evidence portfolio includes links or screenshots of one red run and one green run.  The red run proves the CI was not trivially passing before the code worked.
-- **A classmate confirmed it works cold.**  The "stranger test" is documented: a classmate's GitHub username or name, what they installed or visited, and their one-line confirmation that it worked from the public record alone.  This is not optional.  It is what "published" means.
+- **A classmate confirmed it works cold.**  The "stranger test" is documented: a classmate's GitHub username or name, what they installed or visited, and their one-line confirmation that it worked from the public record alone.  This is required, because a stranger being able to use it is what "published" means.
 - **The AI contribution statement is honest and specific.**  A weak statement says "I used AI to help build this."  A strong statement says: "The agent generated the initial `handler.js` function and all three test files.  I wrote the `config.json` schema and the README, and I rewrote the error handling in lines 44-62 of `handler.js` after the agent's version silently swallowed exceptions.  I verified every test manually before pushing."
 
 Weak work has CI that passes immediately with no red run, a readme that only an author could follow, and an AI contribution statement that could apply to any project.
@@ -111,12 +111,12 @@ Ensure reproducibility by pinning dependency versions and listing software versi
 
 ## Your Portfolio Entry and GitHub Profile
 
-Publication is only half of existing in the world.  The other half is being findable.  Once the artifact is live:
+Once the artifact is live, make it easy to find:
 
-- **Pin the repository** on your GitHub profile.  If you do not have a profile README, create one now.  It is a ten-minute job with an outsized payoff, and this artifact is its first entry.
+- **Pin the repository** on your GitHub profile.  If you do not have a profile README, create one now.  It takes about ten minutes, and this artifact is its first entry.
 - **Write a project story of roughly 200 words**: the problem, what you built (and what the agent built, honestly delineated; your AI contribution statement is most of this already), and the evidence: the registry link, the CI badge, the classmate's stranger confirmation.  Name what *you* did explicitly, because that is the sentence a resume bullet and an interview answer are made from.
 - **Reuse the story.**  The same story is your opening move with guests at Demo Day (see the [Demo Day Guide]({{ site.baseurl }}/Tutorials/DemoDay)) and the public, recruiter-legible trace the Final Project's Product rubric asks for.  Update your resume and LinkedIn while the numbers are fresh.
-- **Draft the post.**  Turn the story into a **drafted LinkedIn-style post** (150-250 words: problem, what you built, one number, what you learned) and include the draft in your submission.  Publishing is always optional and never graded.  The draft means that if you want the post, it is already written at the moment the project is most impressive to describe.
+- **Draft the post.**  Turn the story into a **drafted LinkedIn-style post** (150-250 words: problem, what you built, one number, what you learned) and include the draft in your submission.  Publishing is always optional and never graded.  If you want to post it later, it is already written while the details are fresh.
 
 ## Frequently Asked Questions
 

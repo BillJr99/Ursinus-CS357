@@ -35,7 +35,7 @@ The repository is the durable memory for the project.  Conversation history only
 
 Watch the difference.  Halfway through a task, an agent notices that making the tests pass quickly would mean loosening an assertion.  Nothing in `AGENTS.md` forbids editing a test.  So the agent either stops and asks you, interrupting, and it will ask again tomorrow, or it guesses.  A charter that ranks **correctness above speed** answers the question without either.
 
-That is the whole trick.  A charter is where you make a decision **once**, in writing, so that neither you nor any agent has to relitigate it at three in the afternoon.  The [course template]({{ site.baseurl }}/files/agent-templates/CHARTER.md) has six sections that earn their place:
+A charter is where you make a decision **once**, in writing, so that neither you nor any agent has to relitigate it at three in the afternoon.  The [course template]({{ site.baseurl }}/files/agent-templates/CHARTER.md) has six sections:
 
 | Section | What it decides |
 |---|---|
@@ -46,13 +46,13 @@ That is the whole trick.  A charter is where you make a decision **once**, in wr
 | **Git policy** | When to commit, what never gets committed |
 | **Documentation authority** | Which wins when documents and memory disagree |
 
-The ranking takes the longest and earns the most.  A list of five values in no particular order resolves nothing.  A ranked list resolves cases its author never anticipated, which is precisely the situation an agent will put you in.  Keep this rule from the template verbatim:
+The ranking takes the longest, and it does the most good.  A list of five values in no particular order resolves nothing.  A ranked list resolves cases its author never anticipated, which is precisely the situation an agent will put you in.  Keep this rule from the template verbatim:
 
 > The agent shall never work from memory when project documentation exists.  Before every session, reread the charter, the current task, and the session log.  If project documentation conflicts with remembered context, prior chat context, or assumptions, **the documentation wins.**  If the documentation is incomplete, update it rather than relying on memory.
 
 ## Observability, isolation, reversibility
 
-Step 8.5 of *Your AI Workbench* named the three properties that make delegating to an agent safe.  They bear restating here because the lab makes you responsible for two of them:
+Step 8.5 of *Your AI Workbench* named the three properties that make delegating to an agent safe.  The OpenCode Studio lab makes you responsible for two of them:
 
 | Property | The question it answers | How you buy it |
 |---|---|---|
@@ -85,13 +85,13 @@ The test in Part 6 is blunt: close everything, start a session that has never se
 
 ## Menu-driven questions: the grill-me pattern
 
-This is the idea that makes everything above legible, and it is the one students tell me they carry furthest past this course.
+Students tell me they carry this idea furthest past this course.
 
 An agent handed an underspecified request has two bad options.  It can guess, which produces work you did not want, or it can ask open-ended questions, which you answer carelessly because open-ended questions are expensive to answer.  The first half of the fix is a bounded question set: ask me up to five questions that would change how you approach this, then stop.  (The Coding Agents session showed you this shape in Section 4, and *Prompt Engineering as Agent Design* names it the plan-first protocol.)  A **menu** is the second half.  Each question comes with lettered options and a stated default, so answering takes three keystrokes rather than three paragraphs.
 
 This pattern has a name in practice: the grill-me or interview-me style.  The agent asks a short list of numbered multiple-choice questions, each with a recommended default, before it builds anything, and your answers become part of the spec instead of assumptions buried in the code.  In Part 4 you ask for it directly, in a prompt you type.  In the *Skill Design Study* you package that same request as a skill and measure whether packaging it changed the result.
 
-Three things follow from the menu form, and they are the reasons it earns its place with a small local model:
+The menu form helps with a small local model for three reasons:
 
 1. **The question set is bounded**, so the session does not turn into an interview that you abandon halfway.
 2. **The answers are cheap enough that you actually give them**, which is the difference between a clarification protocol that runs and one that exists only in the system prompt.
@@ -110,14 +110,12 @@ The OpenCode Studio lab is organized around one distinction, and it is worth sta
 
 Read the third column down. Only the last row changes kind. The first three are all requests, differing in how much typing they save you and how reliably they arrive; the fourth is a refusal that happens whatever the model decided. Most of this lab is spent finding out, empirically, which of your own rules belong in which row.
 
-What the lab deliberately leaves out: a second human writer and a second simultaneous agent.  Both arrive later, and the closing section names exactly where.  Enforcement in code is not left out entirely: Part 3 builds exactly one gate, and the closing section names where the rest arrives.
-
----
+The lab leaves out a second human writer and a second simultaneous agent, which arrive later.  It builds exactly one gate, in Part 3, and its closing section names where the rest arrive.
 
 
 ## Yolo mode, and the one place it belongs
 
-You have now used `--auto` twice, so it is worth naming what you were using.  **Yolo mode** is what people call running an agent with its permission gates switched off, approving its own actions and never stopping to ask.  opencode has no flag by that name.  It spells the idea two ways, and the two differ in how long they last.
+By Part 3 of the lab, you will have used `--auto` twice.  **Yolo mode** is what people call running an agent with its permission gates switched off, approving its own actions and never stopping to ask.  opencode has no flag by that name.  It spells the idea two ways, and the two differ in how long they last.
 
 The flag is `--auto`, which auto-approves every permission that is not explicitly denied, for that one command:
 
@@ -139,7 +137,7 @@ The configuration-file equivalent is a permissive `permission` block, which appl
 
 That block is a file edit in both faces: you can make it in an editor, or ask opencode to make it, and in the desktop application it takes effect once you reopen the folder.  The flag is the safer of the two, because it expires when the command does.  A permissive block is a decision you will forget you made, which is the failure the charter exists to prevent.
 
-Neither belongs on work you care about.  The rule the lab teaches is that yolo mode is legitimate in exactly one situation: inside a scoped container, on a clean git tree, when you are deliberately measuring what an ungated agent does, which is what you just did in Part 3.  Remove any of those three conditions and the properties from the Background section fail together.  You lose observability, because nothing pauses to show you a command before it runs.  You lose reversibility, unless the tree was clean and `git checkout --` can take you back.  You lose isolation, unless a container is drawing the boundary the permission block has stopped drawing.
+Neither belongs on work you care about.  The rule the lab teaches is that yolo mode is legitimate in exactly one situation: inside a scoped container, on a clean git tree, when you are deliberately measuring what an ungated agent does, which is what you do in Part 3.  Remove any of those three conditions and the properties above fail together.  You lose observability, because nothing pauses to show you a command before it runs.  You lose reversibility, unless the tree was clean and `git checkout --` can take you back.  You lose isolation, unless a container is drawing the boundary the permission block has stopped drawing.
 
 One asymmetry is worth keeping in mind.  A `deny` rule still holds under `--auto`, because the flag approves only what is not explicitly denied.  If there is an operation you never want attempted, write it as `deny` rather than trusting `ask` to save you, since `--auto` silences `ask` and leaves `deny` standing.
 
@@ -163,4 +161,4 @@ opencode run --attach http://100.92.14.7:4096 --agent builder "Implement spec.md
 
 `opencode web` starts the same API together with a browser interface, so a second laptop or a phone browser at that address picks up the session instead of a terminal.  That browser is also the no-code way to drive a remote run: once the server is up, everything you would have passed to `opencode run --attach`, including the choice of `builder`, is a message and a selector in the page.  Starting the server itself has no desktop equivalent, because it is a long-running process on the machine that holds the repository, so that one command needs a terminal there.  The address in the example is a tailnet address; *Agentic CLI Tools* Section 9a covers how a machine behind a home router or the campus network gets one, and why a port forward is the wrong way to arrange it.
 
-Two cautions carry straight over from Part 3.  The password is not optional, because an unauthenticated agent server is an open shell on whatever its working directory contains.  And a long run you started from a phone is an unattended run, which means the `permission` block and the container are doing the supervising rather than you.
+Two cautions from Part 3 apply here too.  The password is not optional, because an unauthenticated agent server is an open shell on whatever its working directory contains.  And a long run you started from a phone is an unattended run, which means the `permission` block and the container are doing the supervising rather than you.
