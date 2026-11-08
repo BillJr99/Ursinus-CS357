@@ -383,6 +383,17 @@ Recall@1 rose from 0.60 to 0.80 with no change to the retriever: `membership-0` 
 - **Tuning two things at once.**  Change the chunking or the number of results, not both, and rerun the same golden set after each change.
 - **Leaving bare headings in the index.**  They win searches on one shared word and carry no answer.  Fold them into the paragraphs below them, or drop them.
 
+### What a Real Embedding Changes
+
+The bag-of-words stand-in shares a weakness with any keyword search: "Who do I tell if I get hurt?" scores zero against the injury passage, which never says "hurt."  With a real embedding model (`nomic-embed-text:v1.5` through Ollama, on the same four files), that question finds the right passage first:
+
+| Question | Top passage | Score |
+|---|---|---|
+| Who do I tell if I get hurt? | `safety-1`, "Report any injury to the shift volunteer..." | 0.625 |
+| Does the co-op sell new bikes? | `hours-0`, the opening hours, which do not answer it | 0.642 |
+
+No file answers the bikes question, and it scored higher than the right answer did.  So no score threshold separates them: any cutoff that rejects bikes also rejects the injury passage.  The grounding instruction has to catch it, and your golden set is how you find out whether it did.
+
 ---
 # Part II: The Same Corpus on Your Machine
 

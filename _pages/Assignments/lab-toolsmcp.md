@@ -403,6 +403,7 @@ Answer each question in a short paragraph, and point at your own transcript or c
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | The client or opencode lists zero tools | The server is not running, the command in the configuration is wrong, or the address is mistyped | For a local server, run its command by hand first and check that it starts.  For a remote one, run `opencode mcp debug <name>` |
+| `opencode mcp list` says `No MCP servers configured`, and your `opencode.json` is in this folder | The first listing in a folder opencode has not opened before can come back empty | Run the same command again.  On a second run it lists your server |
 | A 401, or a sign-in page that loops | You have not signed in yet, or the token expired | Run `opencode mcp auth <name>` again, or rerun the OneNote `--login` command |
 | "Need admin approval" at the Microsoft sign-in | A college account whose administrators restrict third-party apps | Use a personal Microsoft account, or pick another server |
 | A local server fails on the first run with `Connection closed` | `uvx` or `npx` was still downloading the server when the client gave up waiting | Run the server's command once by hand (for example `uvx mcp-server-time --help`), then run the client again |

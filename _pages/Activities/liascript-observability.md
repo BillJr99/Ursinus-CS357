@@ -57,13 +57,129 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 Anything marked self-paced is for outside class, and nothing graded assumes it.
 
-1. Part I, why the small context principle pushes state out of the window (Model 1)
-2. Part II, agents that talk: an issue thread between two agents (Model 2), then the same handoff through a shared folder, with the claim race run in code (Model 3)
-3. Part III, observability and traceability: logs and traces, one loop step written as a trace, and reading one (Model 4)
-4. Part IV, handoff protocols: start, stop, restart, and your team's own `SKILL.md` for your project, written together (Model 5)
-5. Report out: each Presenter says your team's Sprint 1 goal and the one thing you will show at Sprint Check 1 (a running piece for Directions A and C, one cited finding for Direction B).  If time allows: one rule the medium enforces, and one rule that holds only because both agents chose to follow it
+1. Opening demos: RAG with a real embedding, the same retriever as an MCP tool, and an agent that can see one folder
+2. Part I, why the small context principle pushes state out of the window (Model 1)
+3. Part II, agents that talk: the handoff through a shared folder, with the claim race run in code (Model 3); the issue thread between two agents (Model 2) is self-paced
+4. Part III, observability and traceability: logs and traces, one loop step written as a trace, and reading one (Model 4)
+5. Part IV, handoff protocols: start, stop, restart, and your team's own `SKILL.md` for your project, written together (Model 5)
+6. Report out: each Presenter says your team's Sprint 1 goal and the one thing you will show at Sprint Check 1 (a running piece for Directions A and C, one cited finding for Direction B).  If time allows: one rule the medium enforces, and one rule that holds only because both agents chose to follow it
 
 ---
+# Opening Demos: What an Agent Can See, Reach, and Leave Behind
+
+> An agent is only as good as what it can see, what it can reach, and what it leaves behind.  RAG and MCP decide what enters the window, a container decides what the agent can touch, and the rest of today is what survives.  I run these on the projector.  To run them yourself, you need Ollama, `ollama pull nomic-embed-text:v1.5`, and `python3 -m pip install 'mcp[cli]<2'`.
+
+## Demo 1: RAG With a Real Embedding
+
+Save as `rag_demo.py`:
+
+```python
+# rag_demo.py: the co-op corpus from Thursday, with a real embedding model.
+# Needs Ollama running and `ollama pull nomic-embed-text:v1.5`. Standard library only.
+import json, math, sys, urllib.request
+
+CORPUS = {
+    "hours.md": "The co-op workshop is open Tuesday and Thursday from 4pm to 8pm, and Saturday from 10am to 2pm.\n\nThe workshop is closed on college holidays. Volunteers post closures on the front door.",
+    "membership.md": "A semester membership costs $15 and includes unlimited stand time. Students with a college ID pay $10.\n\nEvery member completes a 30-minute orientation before using a repair stand.",
+    "tools.md": "Truing stands and wheel tools stay in the workshop. Members may borrow a pump or a tire lever overnight for a $5 deposit.\n\nThe parts washer uses citrus degreaser only. Never pour solvent into the parts washer.",
+    "safety.md": "Safety glasses are required whenever anyone is cutting a cable or a chain.\n\nReport any injury to the shift volunteer, who records it in the incident binder before the shift ends.",
+}
+
+def embed(texts):
+    body = json.dumps({"model": "nomic-embed-text:v1.5", "input": texts}).encode()
+    req = urllib.request.Request("http://localhost:11434/api/embed", body,
+                                 {"Content-Type": "application/json"})
+    return json.load(urllib.request.urlopen(req, timeout=120))["embeddings"]
+
+def cosine(u, v):
+    return sum(a * b for a, b in zip(u, v)) / (math.sqrt(sum(a * a for a in u)) * math.sqrt(sum(b * b for b in v)))
+
+CHUNKS = [(f"{name[:-3]}-{i}", name, p) for name in sorted(CORPUS)
+          for i, p in enumerate(CORPUS[name].split("\n\n"))]
+VECTORS = embed([c[2] for c in CHUNKS])
+
+def search(question, k=3):
+    q = embed([question])[0]
+    scored = sorted(((cosine(q, v), c) for v, c in zip(VECTORS, CHUNKS)), key=lambda x: -x[0])
+    return scored[:k]
+
+if __name__ == "__main__":
+    question = sys.argv[1]
+    hits = search(question)
+    for score, (cid, name, text) in hits:
+        print(f"# {score:.3f} {cid:<13} {text[:60]}", file=sys.stderr)
+    context = "\n\n".join(f"[{name}] {text}" for _, (_, name, text) in hits)
+    print("Answer using ONLY the passages below. Name the source file for each fact.\n"
+          "If the passages do not contain the answer, say: I could not find that in your notes.\n\n"
+          f"Passages:\n{context}\n\nQuestion: {question}")
+```
+
+Run `python3 rag_demo.py "Who do I tell if I get hurt?"`, then `python3 rag_demo.py "Does the co-op sell new bikes?"`.
+
+> **You should see.**  The injury passage ranks first at about 0.625, although it shares no key word with the question.  The bikes question has no answer in the corpus, and its top score is about 0.642, which is higher.
+
+**Question.**  Could a score threshold catch the bikes question?
+
+> **Answer.**  No threshold separates these two, because any cutoff that rejects bikes also rejects a right answer.  The grounding instruction has to catch it, and a golden set is how you find out whether it did.
+
+## Demo 2: The Same Retriever as an MCP Tool
+
+Save as `notes_server.py`, next to `rag_demo.py`:
+
+```python
+# notes_server.py: Thursday's retriever, served as a real MCP tool over stdio.
+from mcp.server.fastmcp import FastMCP
+from rag_demo import search
+
+mcp = FastMCP("coop-notes")
+
+@mcp.tool()
+def search_notes(question: str, k: int = 3) -> list[dict]:
+    """Search the bike co-op notes. Returns the k closest passages, each with its source file."""
+    return [{"score": round(s, 3), "id": cid, "source": name, "text": text}
+            for s, (cid, name, text) in search(question, k)]
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+Save as `mcp_raw.py`, and run `python3 mcp_raw.py` to see the three messages by hand:
+
+```python
+# mcp_raw.py: speak MCP by hand, so the three messages are visible.
+import json, subprocess, sys
+
+server = subprocess.Popen([sys.executable, "notes_server.py"], text=True,
+                          stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+def send(msg):
+    server.stdin.write(json.dumps(msg) + "\n")
+    server.stdin.flush()
+
+def rpc(id_, method, params):
+    send({"jsonrpc": "2.0", "id": id_, "method": method, "params": params})
+    reply = json.loads(server.stdout.readline())
+    print(f"--> {method}\n<-- {json.dumps(reply['result'])[:420]}\n")
+
+rpc(1, "initialize", {"protocolVersion": "2025-06-18", "capabilities": {},
+                      "clientInfo": {"name": "by-hand", "version": "0"}})
+send({"jsonrpc": "2.0", "method": "notifications/initialized"})
+rpc(2, "tools/list", {})
+rpc(3, "tools/call", {"name": "search_notes",
+                      "arguments": {"question": "Who do I tell if I get hurt?", "k": 1}})
+server.terminate()
+```
+
+**Question.**  Who decides to call `search_notes`?
+
+> **Answer.**  The model chooses, the client executes, and the server is where the checks live.  The docstring became the tool's description, so that sentence is part of your prompt, and it rides in the window on every call.
+
+## Demo 3: An Agent That Can See One Folder
+
+Follow *Try It: An Agent That Can See One Folder* in [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).  The mount is the boundary, and it opens both ways.
+
+---
+
 # Part I: Why State Leaves the Context Window
 
 ## 1.  Three Forces Against Long Contexts
@@ -111,7 +227,7 @@ The moment two agents read from and write to the same thing, the classic coordin
 
 > **Common Misconception:** "Each agent has its own context window and its own prompt, so they cannot interfere with each other."  That is true only if agents never share state.  The problem is not in the agents' "minds"; it is in the shared resource they both touch.
 
-## Model 2: A GitHub Issue Thread Between Two Agents
+## Model 2: A GitHub Issue Thread Between Two Agents (self-paced)
 
 Below is issue #42 in a course project repository, from the moment I opened it to the moment a second agent's work was merged.  The two agents ran in separate containers, hours apart, with different models.  Neither saw the other's transcript.  Read it as the Recorder marks each entry as a message (addressed to a specific next reader), a blackboard write (state anyone can read), or both.
 

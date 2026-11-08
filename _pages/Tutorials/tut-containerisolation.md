@@ -206,6 +206,105 @@ Together these set the agent's **blast radius**: the set of things that can poss
 
 ---
 
+## Try It: An Agent That Can See One Folder
+
+Everything above is easier to believe once you have watched it.  This demo puts a coding agent, [Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent), in a container that can reach exactly one host folder.  Build it once before you need it, because the base image alone is about 350 MB.
+
+Make a folder with a `workspace/` directory inside it, and a decoy file beside that directory:
+
+```bash
+mkdir -p iso/workspace && cd iso
+echo "Hello from the one host directory this container is allowed to see." > workspace/README.txt
+echo "decoy: grades.csv would be here" > decoy-secret.txt
+```
+
+Save this as `Dockerfile`:
+
+```dockerfile
+# Debian + Bun 1.4.4, pinned by digest so a re-tag upstream cannot change this demo.
+FROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e
+USER root
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates curl \
+ && rm -rf /var/lib/apt/lists/*
+RUN BUN_INSTALL=/opt/omp bun install -g "@oh-my-pi/pi-coding-agent@18.18.1" \
+ && ln -sfn /opt/omp/install/global/node_modules/@oh-my-pi/pi-coding-agent/dist/cli.js /usr/local/bin/omp \
+ && chmod -R a+rX /opt/omp \
+ && /usr/local/bin/omp --version
+RUN chmod 711 /home && mkdir -p /workspace && chown bun:bun /workspace
+USER bun
+ENV HOME=/home/bun
+WORKDIR /workspace
+CMD ["bash"]
+```
+
+Save this as `run.sh`:
+
+```bash
+#!/usr/bin/env bash
+# run.sh: an agent that can see one folder. Usage: ./run.sh bash   or   ./run.sh omp
+set -euo pipefail
+cd "$(dirname "$0")"
+net=()
+if [ "${NET:-}" = "none" ]; then net=(--network none); fi
+exec docker run --rm -it --read-only \
+  --tmpfs /tmp \
+  --tmpfs /home/bun:exec,mode=1777 \
+  --cap-drop=ALL --security-opt no-new-privileges \
+  --pids-limit 256 --memory 1g \
+  --user "$(id -u):$(id -g)" -e HOME=/home/bun -e OPENROUTER_API_KEY \
+  "${net[@]}" \
+  -v "$PWD/workspace:/workspace" -w /workspace \
+  cs357-isolation-demo "$@"
+```
+
+Then build it and open a shell inside it:
+
+```bash
+docker build -t cs357-isolation-demo . && chmod +x run.sh
+./run.sh bash
+```
+
+Predict each line before you press Enter:
+
+```bash
+id
+ls /home
+cat /etc/shadow
+touch /etc/x
+find / -name decoy-secret.txt 2>/dev/null
+cat /workspace/README.txt
+echo "written from inside the container" > /workspace/from-container.txt
+omp --version
+exit
+```
+
+> **You should see.**  A non-root user, `Permission denied` for `/home` and `/etc/shadow`, `Read-only file system` for `/etc/x`, nothing at all from `find`, and the README's text.  Back on the host, `cat workspace/from-container.txt` shows the line you wrote, because the mount works in both directions.
+
+That stops the disk.  It does not stop two other routes out:
+
+```bash
+./run.sh bash -c 'curl -sS -m 8 -o /dev/null -w "%{http_code}\n" https://example.com'
+NET=none ./run.sh bash -c 'curl -sS -m 8 -o /dev/null -w "%{http_code}\n" https://example.com'
+OPENROUTER_API_KEY=not-a-real-key ./run.sh bash -c 'env | grep -c OPENROUTER_API_KEY'
+```
+
+> **You should see.**  `200` with the network on; a failed lookup and `000` with `NET=none`; and `1`, because any key you hand the container is a key the agent can read.
+
+This demo stays non-root on purpose.  Root inside the container, even with its capabilities dropped, owns everything in the mount and leaves root-owned files on your disk.
+
+### Questions to Work Through
+
+1.  The mount is the boundary.  What should be true of the folder you mount before you let an agent write to it?
+
+> **Answer.**  It should hold nothing you would mind losing or leaking, and it should be a clean git tree, so that you can see and undo what the agent did.
+
+2.  With `NET=none`, why can this agent no longer use a hosted model, and what would you need instead?
+
+> **Answer.**  A hosted model is reached over the network.  You would need a model on hardware the container can reach, with only that route opened.
+
+---
+
 ## The Runbook: Procedures You Should Be Able to Write
 
 Hardening a container is a one-time act.  Operating it is ongoing, and the operating knowledge belongs in a **security runbook**: a short document that tells whoever is on duty exactly what to do when a routine or an incident comes up.  If you harden an agent of your own, for your final project or on your own time, write one for it.  The three procedures below are the minimum a runbook for a containerized agent should carry, and each one exercises a mechanism from earlier on this page.
