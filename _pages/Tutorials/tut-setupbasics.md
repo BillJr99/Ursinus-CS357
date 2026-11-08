@@ -11,7 +11,7 @@ tags:
 - setup
 - reference
 ---
-*Terminal basics, Python and pip, tokens, and the optional tools for your course setup.*
+*Terminal basics, Python and pip, tokens, using OpenCode and Oh My Pi, and the optional tools for your course setup.*
 
 The Overview assignment links here at each point you need one of these.  Words like "Step 4" and "Part 1.5" refer to that assignment, and A1 through A6 are in the [Course Container tutorial]({{ site.baseurl }}/Tutorials/CourseContainer).
 
@@ -187,6 +187,193 @@ Make it with `mkdir -p ~/.secrets`, put the token in `~/.secrets/github-scratch-
 **If you would rather do neither.**  Pasting the token straight into `opencode.json` works, and it is the right call at midnight when nothing else does.  Two conditions.  Put the file in `.gitignore` *before* the token goes in, not after, because a commit that contains a token has leaked it whether or not the next commit removes it.  And expect GitHub's push protection to reject the push anyway, which is that lesson arriving from the other direction.  For work you hand in, use the variable or the file.
 
 **Where the configuration file goes.**  opencode reads `opencode.json` from the project directory as well as from `~/.config/opencode/`, and the choice is about scope rather than convenience.  A configuration that belongs to one repository belongs in that repository, where its tools load when you are working there and nowhere else; a configuration you want everywhere goes in the home-directory copy.  Step 5b comes back to this, and the MCP session leans on it hard.
+
+## Using OpenCode and Oh My Pi
+
+Suppose you want a coding agent to count the words in a paragraph, and you want it to use a tool you wrote rather than guess.  To get there, each agent needs a model to think with and a way to reach your tool.  After that, it helps to know the features that change how you work with it.  Let's set up both agents the same way, so that you can compare them.
+
+This section assumes you have finished Step 1 and Step 5 of the Overview assignment.  It is optional, and nothing graded depends on it.  The examples use `llama3.2`, so substitute the model you pulled.  On Route A, replace `localhost` with `host.docker.internal` in every address.
+
+### The tool we will connect
+
+MCP, the Model Context Protocol, is a standard way for an agent to discover and call tools.  Save this as `word_count_server.py` in your project:
+
+```python
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("word-tools")
+
+@mcp.tool()
+def word_count(text: str) -> int:
+    """Count the words in a piece of text."""
+    return len(text.split())
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+Install the library in your project's environment with `uv add 'mcp[cli]<2'` or `python3 -m pip install 'mcp[cli]<2'`.  The docstring becomes the tool's description, and the description is what the model reads when it decides whether to call the tool.
+
+A small local model may see this tool and still call it badly.  When we tested `llama3.2:1b`, opencode sent the arguments in the wrong shape, and Oh My Pi printed the call as text instead of making it.  Both agents had found the tool, so the setup was right.  If this happens to you, try a larger model.
+{: .tb-warning data-title="Watch out"}
+
+### OpenCode
+
+**A local model and the MCP server.**  Save this as `opencode.json` in your project:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "llama3.2": { "name": "llama3.2", "tools": true } }
+    }
+  },
+  "model": "ollama/llama3.2",
+  "mcp": {
+    "word-tools": {
+      "type": "local",
+      "command": ["python3", "word_count_server.py"],
+      "enabled": true
+    }
+  }
+}
+```
+
+Run `opencode mcp list` from that folder.  If it says that no servers are configured, run it a second time, because the first listing in a new folder can come back empty.  Use the `python3` from your project's environment in `command` if the library is installed there.
+
+**A custom provider.**  Any service with an OpenAI-compatible address can be added next to `ollama` inside `provider`.  The file names the variable that holds your key and never holds the key itself:
+
+```json
+"ursinus": {
+  "npm": "@ai-sdk/openai-compatible",
+  "name": "Ursinus AI",
+  "options": {
+    "baseURL": "https://ursinus.ai/api/v1",
+    "apiKey": "{env:URSINUSAI_API_KEY}"
+  },
+  "models": { "MODEL-NAME": { "name": "Ursinus model", "tools": true } }
+}
+```
+
+Replace `MODEL-NAME` with a model your key can use, and choose it with `/models` inside opencode.  The [End-to-End OpenCode Setup]({{ site.baseurl }}/Tutorials/OpenCodeSetup) tutorial goes further on providers, permission gates, skills, and plugins.
+
+**Plan before you build.**  Press **Tab** to switch between the two main agents.  **Build** can change your files, and **Plan** is restricted to analysis, so you can discuss an approach first and press Tab again when you are ready for it to act.
+
+**Other features you will use.**
+
+| To do this | Use |
+|---|---|
+| Point the agent at a file | Type `@` and part of the file name |
+| Hand a task to a helper agent | Mention it, such as `@general` or `@explore` |
+| Run a shell command and show the agent its output | Start the message with `!`, as in `!ls -la` |
+| Have it write an `AGENTS.md` for this project | `/init` |
+| Take back its last change, or restore it | `/undo` and `/redo`, in a git repository |
+| Choose a model | `/models` |
+| Shrink a long conversation | `/compact` |
+| Start over, or return to earlier work | `/new` and `/sessions` |
+| Save the conversation | `/export` |
+| Share it by link | `/share`, and read it first, because anyone with the link can see it |
+| Make your own command | Save a prompt as `.opencode/commands/review.md`, using `$ARGUMENTS` for what you type after `/review` |
+
+### Oh My Pi
+
+**A local model.**  Oh My Pi keeps its models in `~/.omp/agent/models.yml`:
+
+```yaml
+providers:
+  ollama:
+    baseUrl: http://localhost:11434/v1
+    api: openai-completions
+    auth: none
+    models:
+      - id: "llama3.2"
+        name: "llama3.2"
+        reasoning: false
+        input: [text]
+        contextWindow: 16384
+        maxTokens: 4096
+```
+
+Make it the default in `~/.omp/agent/config.yml`:
+
+```yaml
+modelRoles:
+  default: "ollama/llama3.2"
+```
+
+Check it with `omp models ollama`.  On Route A, your home directory disappears when the container exits, so keep these files in your repository by running `export PI_CODING_AGENT_DIR=/workspace/.omp-agent` first and saving them there.  Add `.omp-agent/` to `.gitignore`, because Oh My Pi writes its session history there as well.
+
+**A custom provider.**  Add another entry under `providers`.  Here, `apiKey` is the *name* of the variable, not the key:
+
+```yaml
+  ursinus:
+    baseUrl: https://ursinus.ai/api/v1
+    api: openai-completions
+    apiKey: URSINUSAI_API_KEY
+    models:
+      - id: "MODEL-NAME"
+        name: "Ursinus model"
+        reasoning: false
+        input: [text]
+        contextWindow: 128000
+        maxTokens: 4096
+```
+
+**The MCP server.**  Save this as `.omp/mcp.json` in your project, then type `/mcp list` inside Oh My Pi to confirm it, or `/mcp test word-tools` to try the connection:
+
+```json
+{
+  "mcpServers": {
+    "word-tools": {
+      "command": "python3",
+      "args": ["word_count_server.py"]
+    }
+  }
+}
+```
+
+**Plan mode.**  Type `/plan`, or press Alt+Shift+P, to turn it on.  You can also start with a request, as in `/plan add input checking to my script`.  The agent stays read-only while it works out a plan, and then you review the plan before anything changes.  `/plan-review` reopens that review.
+
+**Loop mode.**  `/loop` sends the same prompt again each time the agent finishes.  This is useful when "keep going until it works" is a real instruction, but an unbounded loop keeps spending time and tokens, so give it a limit:
+
+| Command | What it does |
+|---|---|
+| `/loop 5 Fix the next failing test.` | Runs the prompt five times |
+| `/loop 10m Improve the docstrings.` | Keeps going for ten minutes |
+| `/loop 20 --until 'pytest -q' Fix the next failing test.` | Runs up to twenty times, and stops when `pytest -q` succeeds |
+| `/loop 20 --while 'grep -q TODO notes.md' Finish the next TODO.` | Continues only while the command succeeds |
+| `/loop` | Turns loop mode off when it is on |
+
+Why would we check with a command instead of asking the model whether it is done?  The exit status of `pytest` does not depend on the model's opinion of its own work!
+
+**Other features you will use.**
+
+| To do this | Use |
+|---|---|
+| Give it one objective to pursue on its own | `/goal`, or `/guided-goal` to be interviewed first.  If it says goal mode is off, turn it on in `/settings` |
+| Switch models for this session | `/model`, or Alt+P |
+| Change how hard it thinks | `/effort`, or Shift+Tab |
+| Ask a side question without derailing the task | `/btw` |
+| Line up your next message while it works | `/queue`, or Ctrl+Q |
+| See its task list | `/todo` |
+| See what is using up the context window | `/context` |
+| See which tools it can use | `/tools` |
+| Shrink a long conversation | `/compact`, or `/handoff` to write a summary for later |
+| Go back to an earlier message and try another path | `/branch`, then `/tree` to move between paths |
+| Start over, or return to earlier work | `/new` and `/resume` |
+| Review, stage, and commit changes | `/git` |
+| Work in a separate git worktree | `/wt` |
+| Find and install skills | `/skills` |
+| Have a second model review each turn | `/advisor` |
+| See every shortcut | `/hotkeys` |
+
+Run one small task through both agents, then ask which differences came from the model and which came from the agent around it.  Keep the model the same for that comparison, or you will not be able to tell.
+
+---
 
 ## Optional: Install OpenWebUI, the chat interface over Ollama
 
