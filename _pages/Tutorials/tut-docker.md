@@ -395,13 +395,16 @@ FROM node:22-slim
 
 # git and ripgrep are what coding agents reach for constantly
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      git ripgrep ca-certificates \
+      git ripgrep ca-certificates curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install whichever agent CLI you are using. opencode is the course default:
 # it speaks to any OpenAI-compatible backend, so it talks to your host Ollama
 # with no account and no API key, and it is what the course image ships.
 RUN npm install -g opencode-ai
+
+# Oh My Pi, a second agent, so you can compare two on one task.
+RUN curl -fsSL https://omp.sh/install | PI_INSTALL_DIR=/usr/local/bin sh -s -- --binary
 
 # RUN npm install -g @anthropic-ai/claude-code
 

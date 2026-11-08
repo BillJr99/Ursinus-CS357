@@ -84,6 +84,7 @@ python3 -c "import requests; print(requests.get('http://host.docker.internal:114
 node --version                  # v24.21.0; promptfoo requires 22.22 or newer
 promptfoo --version
 opencode --version
+omp --version
 herdr --version
 gh --version
 python3 -c "import spacy; spacy.load('en_core_web_sm'); print('spacy OK')"
@@ -112,6 +113,7 @@ current 24 LTS is the safe choice) and `npm install -g promptfoo opencode-ai`
 for the evaluation and coding-agent labs, install the
 [GitHub CLI](https://cli.github.com/) (`brew install gh`,
 `winget install --id GitHub.cli`, or your package manager) and run `gh auth login`,
+install Oh My Pi with `curl -fsSL https://omp.sh/install | sh`,
 and use `http://localhost:11434` instead of `host.docker.internal` in every URL.
 
 ## Troubleshooting

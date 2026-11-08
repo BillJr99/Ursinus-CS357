@@ -227,6 +227,7 @@ Three commands, each proving one tool is in the image.  The fourth thing the con
 | 2 | `python3 -c "import spacy; nlp = spacy.load('en_core_web_sm'); print('spacy OK:', nlp('Agents plan and act.')[0].pos_)"` | `spacy OK: NOUN` | The NLP model the explainability directions use is loaded |
 | 3 | `opencode --version` | `opencode x.x.x` | The coding agent is baked into the image, so Step 5 has nothing left to install |
 | optional | `node --version` | `v24.21.0` | The image pins an exact Node release, because promptfoo requires 22.22 or newer; worth running first whenever promptfoo misbehaves.  Not graded |
+| optional | `omp --version` | a version string | **Oh My Pi**, a second coding agent, is in the image too; this one is not graded |
 | optional | `herdr --version` | a version string | **herdr**, an agent-aware terminal multiplexer a later lab uses, is in the image too; this one is not graded |
 | optional | `gh --version` | `gh version 2.x.x` | **gh**, the GitHub CLI the *Coding Agents* session runs its whole loop through, is in the image as well, so Route A has nothing to install.  Part 1.5, Step 2 is where it is graded, not here |
 

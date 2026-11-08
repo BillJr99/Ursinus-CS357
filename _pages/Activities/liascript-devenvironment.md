@@ -772,6 +772,28 @@ You do not need herdr today.  It is here so that it is on your bench before the 
 
 ---
 
+### 8.7: Oh My Pi, a Second Coding Agent
+
+Having two agents lets you hand both the same task and ask which differences come from the model and which come from the agent wrapped around it.  **Oh My Pi** (`omp`) is that second agent.
+
+**On the container route, it is already installed**, once your image has been rebuilt with `docker compose build --no-cache`:
+
+```bash
+omp --version
+```
+
+**On the native route** from Step 10, install it in your normal terminal:
+
+```bash
+curl -fsSL https://omp.sh/install | sh
+```
+
+The installer downloads one prebuilt binary and checks its SHA-256 before installing it.  On macOS, `brew install can1357/tap/omp` works too, and Windows without WSL uses `irm https://omp.sh/install.ps1 | iex` in PowerShell.
+
+Nothing graded depends on it.  It is here so that it is on your bench when a later session compares agents.
+
+---
+
 ### Model: What Did You Just Delegate?
 
 Look back at the session you just ran, with your team.

@@ -293,6 +293,21 @@ OPENROUTER_API_KEY=not-a-real-key ./run.sh bash -c 'env | grep -c OPENROUTER_API
 
 This demo stays non-root on purpose.  Root inside the container, even with its capabilities dropped, owns everything in the mount and leaves root-owned files on your disk.
 
+### The Full Version: Two Agents and a Local Model
+
+[cs357-agent-box.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-agent-box.sh) builds the same kind of box with both **Oh My Pi** and **opencode** installed, shares only the directory you run it from, and removes its containers, network, volume, and images when you exit.  It needs only Docker.
+
+```bash
+cd ~/cs357-work
+bash /path/to/cs357-agent-box.sh omp        # or opencode, or nothing for a shell
+```
+
+- **The model.**  By default both agents use a small model, `llama3.2:1b`, running in a second container.  Set `MODEL` to try another.
+- **Ursinus AI.**  If `URSINUSAI_API_KEY` is set in your shell, the box uses `https://ursinus.ai/api/v1` instead, and `URSINUSAI_MODEL` chooses the model.  The key reaches the container by name, and an agent inside can read it.
+- **No internet.**  With `NET=none`, the box can reach the local model and nothing else.
+
+Expect this model to be slow on a CPU, a few minutes for a first reply, and to make mistakes.  In testing, Oh My Pi used its write tool correctly on this model, while opencode produced garbled tool calls.  A small model is enough to prove the walls hold.  For real work with opencode, use a larger model.
+
 ### Questions to Work Through
 
 1.  The mount is the boundary.  What should be true of the folder you mount before you let an agent write to it?

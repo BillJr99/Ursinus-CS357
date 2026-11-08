@@ -105,6 +105,26 @@ If that prints `command not found` right after a successful install, the install
 
 The desktop application is a separate download from [opencode.ai](https://opencode.ai/), in beta for macOS, Windows, and Linux.  You can take either route through this page.
 
+### Install Oh My Pi too
+
+**What it is.**  [Oh My Pi](https://omp.sh/) (`omp`) is a second coding agent.  Having two lets you give the same task to both and see which differences come from the model and which come from the agent around it.  The rest of this page configures opencode, and nothing graded depends on `omp`.
+
+| System | Install |
+|---|---|
+| **macOS, Linux, WSL2 Ubuntu** | `curl -fsSL https://omp.sh/install \| sh` |
+| **macOS, with Homebrew** | `brew install can1357/tap/omp` |
+| **Windows, PowerShell** | `irm https://omp.sh/install.ps1 \| iex` |
+| **The course container** | Nothing.  It is in the image, once you have rebuilt it |
+{: .tb-full}
+
+Verify, in a **new** terminal:
+
+```bash
+omp --version
+```
+
+The installer also puts the binary in `~/.local/bin`, so the same `PATH` fix applies.
+
 ---
 
 ## 2.  Create `opencode.json`
@@ -658,12 +678,15 @@ The course container already carries opencode, and if you are on Route A you can
 FROM node:24-bookworm-slim
 
 # git so the agent can commit its own work; ripgrep because agents reach for it
-# constantly; ca-certificates so HTTPS works at all.
+# constantly; ca-certificates so HTTPS works at all; curl for the omp installer.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        git ripgrep ca-certificates \
+        git ripgrep ca-certificates curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g opencode-ai
+
+# Oh My Pi, a second agent. Run it instead with: docker run ... course-agent omp
+RUN curl -fsSL https://omp.sh/install | PI_INSTALL_DIR=/usr/local/bin sh -s -- --binary
 
 # The model lives on the host, not in here. Code inside the container reaches it
 # across the container wall at this address.

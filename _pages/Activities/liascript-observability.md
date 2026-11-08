@@ -120,7 +120,11 @@ Run `python3 rag_demo.py "Who do I tell if I get hurt?"`, then `python3 rag_demo
 
 **Question.**  Could a score threshold catch the bikes question?
 
-> **Answer.**  No threshold separates these two, because any cutoff that rejects bikes also rejects a right answer.  The grounding instruction has to catch it, and a golden set is how you find out whether it did.
+> **Answer.**  No threshold separates these two, because any cutoff that rejects bikes also rejects a right answer.  The grounding instruction is what is supposed to catch it, and a golden set, run more than once, is how you find out whether it did.
+
+With `llama3.2:1b`, retrieval was right every time and the answers were not: over seven runs of each question, the model wrongly refused the injury question once, and on the bikes question it invented an answer once and contradicted itself once.  Retrieval working does not mean the answer is right.
+
+To run this whole demo with nothing but Docker, and have it remove everything afterward, use [cs357-rag-demo-docker.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-rag-demo-docker.sh).
 
 ## Demo 2: The Same Retriever as an MCP Tool
 
@@ -170,13 +174,15 @@ rpc(3, "tools/call", {"name": "search_notes",
 server.terminate()
 ```
 
+[cs357-mcp-demo-docker.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-mcp-demo-docker.sh) runs this demo the same way.
+
 **Question.**  Who decides to call `search_notes`?
 
 > **Answer.**  The model chooses, the client executes, and the server is where the checks live.  The docstring became the tool's description, so that sentence is part of your prompt, and it rides in the window on every call.
 
 ## Demo 3: An Agent That Can See One Folder
 
-Follow *Try It: An Agent That Can See One Folder* in [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).  The mount is the boundary, and it opens both ways.
+Follow *Try It: An Agent That Can See One Folder* in [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).  The mount is the boundary, and it opens both ways.  [cs357-agent-box.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-agent-box.sh) gives you the same box with both agents and a local model.
 
 ---
 

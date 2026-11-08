@@ -2,8 +2,8 @@
 # ----------------------------------
 # One image that runs every CS357 lab: the Python libraries for retrieval,
 # classical ML, NLP, and explainability, plus Node.js with promptfoo for the
-# evaluation lab, opencode, the course coding agent, and herdr, the
-# agent-aware terminal multiplexer. The ONE thing that
+# evaluation lab, opencode, the course coding agent, Oh My Pi, a second coding
+# agent, and herdr, the agent-aware terminal multiplexer. The ONE thing that
 # stays OUTSIDE this container is Ollama:
 # it runs natively on your host for model performance, and code inside the
 # container reaches it at http://host.docker.internal:11434 -- exactly the
@@ -115,6 +115,11 @@ RUN npm install -g promptfoo
 # /workspace is mounted, so an agent installed by hand into ~/.local/bin would
 # have to be reinstalled every single session.
 RUN npm install -g opencode-ai
+
+# omp -- Oh My Pi, a second coding agent, so you can compare two agents on one
+# task. The installer downloads a single release binary and verifies its
+# SHA-256; PI_INSTALL_DIR puts it on the PATH for every user in the image.
+RUN curl -fsSL https://omp.sh/install | PI_INSTALL_DIR=/usr/local/bin sh -s -- --binary
 
 # herdr -- the agent-aware terminal multiplexer (Agentic CLI Tools tutorial,
 # Part IV). tmux keeps agents alive after you detach; herdr also shows which

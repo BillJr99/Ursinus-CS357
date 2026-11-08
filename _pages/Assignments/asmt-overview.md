@@ -171,7 +171,7 @@ Four short references before the steps begin.  Every *at a glance* box below say
 |---|---|
 | Python 3.11 with the course libraries: retrieval, classical ML, NLP, and explainability | **Ollama**, the model server, installed natively for speed |
 | Node.js with **promptfoo**, the evaluation lab's harness | Your SSH key for GitHub (Part 1.5) |
-| **opencode**, the coding agent, and **herdr**, the agent multiplexer | Docker Desktop itself, and your `cs357-work` clone on disk |
+| **opencode** and **Oh My Pi**, the coding agents, and **herdr**, the agent multiplexer | Docker Desktop itself, and your `cs357-work` clone on disk |
 | `git`, `curl`, and `zip`, so you commit, probe, and package from inside | Your browser, your other courses, and everything else |
 
 Your containerized code reaches Ollama at `http://host.docker.internal:11434`.  Two ideas carry the whole design:
@@ -470,6 +470,18 @@ Then start `opencode`, type `/models`, and confirm your Ollama provider is liste
 - [ ] `opencode --version` returns a version string
 - [ ] `/models` lists your Ollama provider
 - [ ] The agent answered one prompt from your local model
+
+#### Install a second agent: Oh My Pi
+
+**Oh My Pi** (`omp`) is a second coding agent, so that later you can give two agents one task and compare them.  It is not graded, and nothing below depends on it.
+
+| | Route A | Route B |
+|---|---|---|
+| **Install** | Nothing.  It is in the course image | One of the commands below, for your system |
+| **macOS, Linux, or WSL** | | `curl -fsSL https://omp.sh/install \| sh` |
+| **Native Windows, in PowerShell** | | `irm https://omp.sh/install.ps1 \| iex` |
+
+**Do.**  Run `omp --version`, in a new terminal on Route B.  If your Route A container was built before Oh My Pi joined the image, rebuild it with `docker compose build --no-cache`.
 
 > **Optional.**  [Connect a hosted endpoint]({{ site.baseurl }}/Tutorials/SetupBasics#optional-5d-connect-a-hosted-endpoint-if-you-are-given-one), if you are given one, or [install herdr]({{ site.baseurl }}/Tutorials/SetupBasics#optional-install-herdr-while-you-are-here).
 

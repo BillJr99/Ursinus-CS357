@@ -392,7 +392,11 @@ The bag-of-words stand-in shares a weakness with any keyword search: "Who do I t
 | Who do I tell if I get hurt? | `safety-1`, "Report any injury to the shift volunteer..." | 0.625 |
 | Does the co-op sell new bikes? | `hours-0`, the opening hours, which do not answer it | 0.642 |
 
-No file answers the bikes question, and it scored higher than the right answer did.  So no score threshold separates them: any cutoff that rejects bikes also rejects the injury passage.  The grounding instruction has to catch it, and your golden set is how you find out whether it did.
+No file answers the bikes question, and it scored higher than the right answer did.  So no score threshold separates them: any cutoff that rejects bikes also rejects the injury passage.  The grounding instruction is what is supposed to catch it, and your golden set, run more than once, is how you find out whether it did.
+
+With `llama3.2:1b`, retrieval was right every time and the answers were not: over seven runs of each question, the model wrongly refused the injury question once, and on the bikes question it invented an answer once and contradicted itself once.  Retrieval working does not mean the answer is right.
+
+[cs357-rag-demo-docker.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-rag-demo-docker.sh) runs this comparison with nothing but Docker and removes everything afterward.
 
 ---
 # Part II: The Same Corpus on Your Machine
