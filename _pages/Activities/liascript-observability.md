@@ -126,6 +126,26 @@ With `llama3.2:1b`, retrieval was right every time and the answers were not: ove
 
 To run this whole demo with nothing but Docker, and have it remove everything afterward, use [cs357-rag-demo-docker.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-rag-demo-docker.sh).
 
+### How `rag_demo.py` works, piece by piece
+
+RAG has two steps: retrieve the passages closest to the question, and paste them into the prompt. The whole program is those two steps.
+
+| Piece of the code | What it does |
+|---|---|
+| `CORPUS` | Four short files, held in a dictionary so that the demo has nothing to download. Each file is split into paragraphs at the blank line. |
+| `embed(texts)` | Sends a list of strings to Ollama's `/api/embed` endpoint, and gets one vector back per string. The numbers come from the model `nomic-embed-text:v1.5`. |
+| `cosine(u, v)` | Measures the angle between two vectors: the dot product divided by the product of their lengths. A higher score means the two texts are closer in meaning, and it says nothing about whether one answers the other. |
+| `CHUNKS` | One tuple per paragraph: an ID such as `safety-1`, the file name, and the text. |
+| `VECTORS` | The embedding of every chunk, computed once when the program starts. This line is why the program fails right away if Ollama is not running. |
+| `search(question, k=3)` | Embeds the question, scores every chunk against it, sorts from high to low, and returns the top `k`. |
+| The bottom of the file | Prints the scores to standard error, so that they do not end up in the prompt, and prints the prompt to standard output. |
+
+The prompt has three parts in a fixed order: an instruction, the passages with their file names, and the question. The instruction does the grounding: "Answer using ONLY the passages below. Name the source file for each fact. If the passages do not contain the answer, say: I could not find that in your notes."
+
+Read the first run from the top. `0.625 safety-1` is the injury passage, in first place, although "hurt" and "injury" are different words. The bag-of-words retriever scored this question at zero, because it counts shared words, and an embedding places related meanings close together.
+
+Now read the bikes run. The top score is 0.642, which is higher than the score of the question that has a real answer. So similarity is not the same thing as answerability. The hours passage is simply the nearest thing in the corpus to a question about the co-op. Retrieval always returns its top `k`, even when none of them helps.
+
 ## Demo 2: The Same Retriever as an MCP Tool
 
 Save as `notes_server.py`, next to `rag_demo.py`:
@@ -180,6 +200,31 @@ server.terminate()
 
 > **Answer.**  The model chooses, the client executes, and the server is where the checks live.  The docstring became the tool's description, so that sentence is part of your prompt, and it rides in the window on every call.
 
+### How the MCP demo works, message by message
+
+The retriever has not changed. `notes_server.py` imports `search` from the RAG demo and wraps it, and each line has one job:
+
+| Line | What it does |
+|---|---|
+| `mcp = FastMCP("coop-notes")` | Creates a server with a name. |
+| `@mcp.tool()` | Registers the next function as a tool that clients can discover. |
+| `def search_notes(question: str, k: int = 3)` | The type hints become the tool's input schema, and the default makes `k` optional. |
+| The docstring | Becomes the tool's description. This sentence is what a model reads when it decides whether to call the tool, so it is part of the prompt. |
+| `mcp.run()` | Serves the tool over standard input and output. |
+
+`mcp_raw.py` starts the server as a child process and speaks the protocol by hand, writing one JSON object per line. Nothing in the client knows about `search_notes` ahead of time.
+
+| Message | The client sends | The server answers | What it buys |
+|---|---|---|---|
+| `initialize` | The protocol version it speaks, and its own name | The version it agrees to, what it supports, and its name | The two sides agree on the rules |
+| `notifications/initialized` | A note saying setup is finished. It has no `id`, so no reply comes back | Nothing | The session can begin |
+| `tools/list` | An empty request | Every tool's name, description and input schema | Discovery: the client learns what exists at run time |
+| `tools/call` | The tool name, and the arguments as JSON | The result, as content the client can use | The work itself |
+
+A real agent adds one step between `tools/list` and `tools/call`. It puts every tool's description in the model's window, the model answers with the tool it wants and the arguments, and the client makes the call. So the model chooses, the client executes, and the server is where the checks belong. Every tool the server advertises costs tokens on every call, whether or not the model uses it.
+
+This is the same pattern as the plain HTTP `/tools/list` and `/tools/call` from earlier in the term. The difference is that everyone has agreed on the messages, so one server works with any client.
+
 ## Demo 3: An Agent That Can See One Folder
 
 Follow *Try It: An Agent That Can See One Folder* in [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).  The mount is the boundary, and it opens both ways.  [cs357-agent-box.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-agent-box.sh) gives you the same box with both agents and a local model.
@@ -201,6 +246,21 @@ Giving an agent unlimited memory hurts it in three separate ways, and each one p
 **The principle.**  Each agent call should receive the minimum context sufficient for its current decision: its standing instructions, a compact state summary, the most recent turn, and retrieved facts on demand.  Everything else has to live somewhere the agent can read it back.  If state must leave the context window, the files it lands in have to be shareable, observable, traceable, and ready to hand off, because the next reader may be a different agent.  Those four words are the rest of today.
 
 ---
+
+### The context arithmetic, line by line
+
+At step 1, the prompt is the 300-token system prompt and the 40-token question, which is 340 tokens. By step 31, the 30 earlier triples have joined it, at 150 tokens each.
+
+```text
+system prompt             300
+30 triples x 150        4,500
+current question           40
+total                   4,840
+```
+
+If the work of attention grows with the square of the length, then the ratio of the costs is the square of the ratio of the lengths: 4,840 divided by 340 is about 14.2, and 14.2 squared is about 202. So step 31 costs about 202 times what step 1 cost, and the agent did not get any smarter.
+
+The three forces are compute, which that arithmetic measures; attention quality, because the model attends worst to the middle of a long prompt, which is where the 30 triples sit; and distraction, because everything irrelevant in the window competes with what matters. The response is to give each call the minimum context sufficient for its current decision: its standing instructions, a compact state summary, the most recent turn, and retrieved facts on demand. RAG and MCP were how we get the last of those.
 
 ## Model 1: The Bloated Agent
 
@@ -382,6 +442,20 @@ show()
 
 Change `STALE_AFTER` to `0` and rerun: the takeover happens on the first check, which is what a too-short timeout does to a slow but healthy agent.  Then replace the `os.rename()` in `claim()` with an `os.path.exists()` check followed by a copy, and explain to your group why the cell still prints one winner even though the protocol is now broken (this cell runs the agents one after the other; the bug appears only when they run at once).
 
+### How the shared-folder race works, line by line
+
+The folder is the message medium, and three directories hold the state of a task: `inbox/`, `claimed/` and `done/`.
+
+| Function | What it does | Why it is written that way |
+|---|---|---|
+| `post_task` | Writes the task file to `inbox/` | Anyone can post |
+| `claim` | Renames the file from `inbox/` to `claimed/`, then writes a `.claim` file naming the agent and the time | A rename on one disk is atomic, so exactly one caller can succeed. The loser gets `FileNotFoundError`, which needs no locking code |
+| `take_if_stale` | Reads the `.claim` and compares its age to `STALE_AFTER` | A crashed holder must not block the task forever, and a working holder must not lose it |
+| `finish` | Moves the task to `done/`, deletes the `.claim`, and writes the result | Finished work looks different from abandoned work, using the folder alone |
+| `show` | Lists the three directories | So that we can watch the state change |
+
+The script backdates the claim by `STALE_AFTER + 1` seconds, because waiting five minutes in class is not useful. That edit stands in for the holder having crashed.
+
 ### Critical Thinking Questions
 
 7.  Predict before running the cell: Agent A and Agent B both call `claim("task-7.md")`.  Which one wins, what does the loser see, and does the loser have to read the `.claim` file to find out?  Then notice that the `.claim` file is written *after* the rename succeeds: what does a third agent see in that window, and would the other order be better or worse?
@@ -504,6 +578,26 @@ print(open(TRACE_PATH).read())
 Three habits are already in that cell.  The question is hashed rather than stored.  Every line shares the `trace_id`, so one step can be pulled back out of a file holding thousands.  And the `act` line names the rule that allowed the action, which is the fourth traceability link written at the moment it is cheapest to write.
 
 ---
+
+### How to read a trace, field by field
+
+Each line of the file is one JSON object, one event in the agent's loop. Lines that share a `trace_id` belong to one task.
+
+| Field | Meaning | The question it answers |
+|---|---|---|
+| `ts` | When it happened | How long did each piece take? |
+| `trace_id` | The task this event belongs to | Which events go together? |
+| `step` | The loop iteration | How far along was it? |
+| `phase` | `perceive`, `plan` or `act` | What part of the loop was this? |
+| `query_hash` | A hash of the question instead of its text | Was it the same question, without storing what it said? |
+| `prompt_tokens`, `completion_tokens` | The size of the call | What did it cost, and is the window growing? |
+| `latency_ms` | The time the model took | Where did the time go? |
+| `finish_reason` | How the model stopped: `stop` means it finished, and `length` means it ran out of room | Is this output whole? |
+| `decision`, `tool_name` | What the model chose | Why did it do that next? |
+| `success`, `result_chars` | How the tool went, by size | Did it work, without logging the content? |
+| `rule` | The standing decision that allowed the action | Who said it could do that? |
+
+Change `"stop"` to `"length"` in `fake_llm`, and run it again. The printed answer does not change, and one line of the trace does. A truncated model reply raises no error, so the trace is the only place it shows.
 
 ## Model 4: Reading a Trace
 
@@ -665,6 +759,20 @@ Check your protocol against this checklist.  Every row must be true of your prot
 | A stale claim can be broken, and the protocol says by whom and when | |
 | Finished work is distinguishable from abandoned work in the medium | |
 | Every not-done row in the Reality Check cites a command or artifact | |
+
+### How to write the handoff skill, rule by rule
+
+A `SKILL.md` is a procedure that an agent loads and follows. The frontmatter's `description` says when to load it, so write it as a trigger. Rules 1 to 7 and 12 are the same for every team, and rules 8 to 11 are where your team's medium goes.
+
+| Rules | What they do | Why |
+|---|---|---|
+| 1 to 3, on start | Read the files in order, state the mission, the task and the Next Safe Action, and re-run the Reality Check | A fresh agent has no memory, so it must rebuild the state from files and confirm that those files are still true |
+| 4, while working | One JSON line per phase, with the `rule` on every act line, and no prompt text or retrieved content | This is the trace you just read |
+| 5 to 7, on stop | Write a dated session entry, update the Reality Check, and commit one logical change | Stopping for any reason, including finishing, has to leave the next agent able to start |
+| 8 to 11, handing off | How to claim, what to do on seeing a claim, when a claim is stale, and what done looks like | These are the four rules of the shared folder, in your own medium |
+| 12, limits | Stop new work when context, quota or time runs low, and run rules 5 to 7 first | A session that dies mid-task loses everything that was not written down |
+
+Every rule in 8 to 11 should name a path and a condition, so that it can be checked. Then mark each one enforced or advisory: enforced when the system makes the rule true, as a rename does on one disk, and advisory when it holds only because both agents choose to follow it. The advisory rules are the first to break when the second agent runs a different model.
 
 ### Critical Thinking Questions
 

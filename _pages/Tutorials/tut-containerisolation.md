@@ -293,6 +293,52 @@ OPENROUTER_API_KEY=not-a-real-key ./run.sh bash -c 'env | grep -c OPENROUTER_API
 
 This demo stays non-root on purpose.  Root inside the container, even with its capabilities dropped, owns everything in the mount and leaves root-owned files on your disk.
 
+### How the isolation demo works, flag by flag
+
+The Dockerfile starts from a Debian image with Bun, pinned by digest so that a re-tag upstream cannot change the demo. It installs `ca-certificates` and `curl`, installs Oh My Pi to `/opt/omp`, and makes that folder readable by everyone. `chmod 711 /home` means that an unprivileged user can pass through `/home` and cannot list it. `USER bun` means that everything after that line runs as an ordinary user.
+
+`run.sh` is where the isolation is decided:
+
+| Flag | What it does | What goes wrong without it |
+|---|---|---|
+| `--rm` | Deletes the container when it exits | Stopped containers pile up, along with anything written inside them |
+| `-it` | Attaches a terminal | No interactive shell |
+| `--read-only` | Makes the container's own filesystem read-only | The agent can rewrite its own tools |
+| `--tmpfs /tmp` and `--tmpfs /home/bun:exec,mode=1777` | Two scratch areas held in memory, gone at exit | The agent has nowhere to put temporary files or its configuration |
+| `--cap-drop=ALL` | Removes every Linux capability | Root inside the container could still do privileged things |
+| `--security-opt no-new-privileges` | A program cannot gain privileges, even through `setuid` | A `setuid` binary could raise privileges |
+| `--pids-limit 256` and `--memory 1g` | Caps on processes and memory | A runaway agent can exhaust the machine |
+| `--user "$(id -u):$(id -g)"` | Runs as your own user ID | Files in the mount come out owned by root |
+| `-e HOME=/home/bun` | Points the home directory at the scratch area | Tools look for configuration in the wrong place |
+| `-e OPENROUTER_API_KEY` | Passes that one variable from your shell, by name | The agent has no key, which is safest if it needs none |
+| `-v "$PWD/workspace:/workspace"` | The one host folder the container can see, and it can write there | Without it, the agent has nothing to work on |
+| `-w /workspace` | Starts in that folder | The agent starts somewhere else |
+
+Each probe tests one of those lines. Predict each one before running it.
+
+| Command | Result | Why |
+|---|---|---|
+| `id` | `uid=1000(bun)` | `--user` and `USER bun`: the agent is not root |
+| `ls /home` | Permission denied | `chmod 711 /home`: it can pass through and cannot list |
+| `cat /etc/shadow` | Permission denied | An ordinary user cannot read it |
+| `touch /etc/x` | Read-only file system | `--read-only` |
+| `find / -name decoy-secret.txt` | Nothing | The file is on the host, beside the `workspace` folder. It was never mounted, so to this process it does not exist |
+| `cat /workspace/README.txt` | The file's text | The mount |
+| `echo ... > /workspace/from-container.txt` | Works, and the file is on the host afterward | The mount opens both ways, so an agent can also delete your work in there. Keep it a clean git tree |
+| `omp --version` | `omp/18.18.1` | The tool is in the image, and needs no access to your disk |
+
+The disk is only one of three doors:
+
+| Door | Controlled by | The test | Result |
+|---|---|---|---|
+| The mount | `-v` | The probes above | Only `/workspace` is visible |
+| The network | `NET=none` adds `--network none` | `curl` to `example.com` | `200` with the network on. `Could not resolve host` and `000` with it off |
+| Secrets | `-e` | `env` counts `OPENROUTER_API_KEY` | `1`, so any key we pass in is readable by the agent |
+
+An agent that read something private in the folder and has the network can send it anywhere. Turn the network off, and it also cannot reach a hosted model. A container that needs no secret cannot leak one, which is the case for running a model on hardware you own.
+
+A container protects you exactly as much as your mount layout does.
+
 ### The Full Version: Two Agents and a Local Model
 
 [cs357-agent-box.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-agent-box.sh) builds the same kind of box with both **Oh My Pi** and **opencode** installed, shares only the directory you run it from, and removes its containers, network, volume, and images when you exit.  It needs only Docker.
