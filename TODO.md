@@ -61,3 +61,4 @@
 - [ ] Simplify the Overview assignment and streamline its software setup. Leave the Warmup syllabus survey assignment unchanged.
 
 - [ ] Refine the rubrics and the assignment steps: make each rubric row match what the assignment steps ask students to do, and make each step concrete enough to check.
+- [ ] Give each lab and assignment a component that relates directly to the team project, so the work students do in labs and assignments also moves their project forward. (added 2026-11-09)
