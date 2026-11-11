@@ -379,6 +379,7 @@ The supervisor spent three times the pipeline's calls to reach the same checked 
 - **Returning the newest text on an early stop.**  The newest text in Step 3 was the broken one.  Return the newest text that passed the check, and say that the run stopped early.
 - **Not counting the supervisor's own calls.**  Every decision is a model call.  A supervisor that makes six decisions to dispatch three sub-agents spent nine calls, not three.
 - **Silent fallbacks.**  A router that maps an unknown label to a default hides the failure.  Fail closed to a person, and log it.
+- **Trusting a check that had nothing to check.**  `check_times` loops over the extracted facts.  If the extract stage returns nothing, say because the model is missing or the request failed, there is nothing to miss, and the check prints `every day and time present` for an empty digest.  Treat an empty extraction as a failure in its own right before you run the check.
 - **Letting a parse error crash the loop.**  Wrap `json.loads` and stop with a named status, as `supervise` does, rather than letting an exception end the run with no record.
 
 ---
@@ -436,6 +437,16 @@ def model_supervisor(task, transcript):
 
 Run `python orchestrate.py` and save the full output.  Your outputs will differ from the page, because a real model does not make the stand-in's scripted mistakes; it makes its own.  An empty reply from `chat_once` means the request failed, and `supervise` will stop it as a malformed decision rather than guess.
 
+### What One Real Run Looked Like
+
+Here is what `llama3.2` did with this code at temperature 0 and seed 42.  Your run will differ, but look for the same three things.
+
+- **The polish kept every fact, and the check still failed it.**  The model wrote "Thursday, 7pm" where the check looks for the exact text "Thursday at 7pm."  A check in code checks exactly what it says.  This one was stricter than we meant.
+- **The router stayed inside its labels and was still wrong.**  It called the moved frisbee game an `event` instead of a `change`, and the pizza an `event`, so the pizza went into the digest.  The closed-set guard catches labels the model invents, not wrong labels from the list.  Catching those takes a labeled test set.
+- **The supervisor skipped the extractor.**  It called the writer first and then tried to stop five times.  With no facts to check against, `supervise` refused every stop, and the budget ended the run after 6 turns and 7 model calls, with no answer.  That is an honest "nothing checked," not a wrong answer.
+
+A second run with the same seed changed the wording of the draft and dropped "10am" from one event in the polish, but it stopped for the same reasons.  A fixed seed and temperature 0 make a run more repeatable, not identical.
+
 > **Checkpoint 5 (code route).**  Add a row to the Checkpoint 4 table for each pattern on the real model.  Did the real polish stage keep every day and time?  Did the real router stay inside its four labels?  Which stop condition ended the real supervisor's run, after how many turns and model calls?  If the run differs between two executions with the same seed, write down where.
 
 ## No-Code Route: Run the Protocol by Hand
@@ -480,7 +491,7 @@ The supervisor's writer, check, and refused stop are already a critique-and-refi
 
 ---
 
--> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* takes the check you wrote today and asks what happens when it cannot be a program: a critic model that feeds issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab you received today.  Have `supervise` and your cost table ready.  The RAG Knowledge Base lab is due at that session, and Sprint Check 1 is at the start of class.
+-> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* takes the check you wrote today and asks what happens when it cannot be a program: a critic model that feeds issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab you received today.  Have `supervise` and your cost table ready.  Sprint Check 1 is at the start of that class, and the RAG Knowledge Base lab is due at the Judge Pipeline Workshop, the session after it.
 
 ## Further Reading
 
