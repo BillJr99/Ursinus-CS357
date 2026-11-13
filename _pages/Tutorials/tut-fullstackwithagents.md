@@ -171,7 +171,7 @@ Both agents read the same context file and the same skills folder, so one set of
 
 ## 4.  Permissions: Git Yes, `rm` No
 
-The agent may change files, but every move and delete has to go through git, so `git status` shows it and `git restore` can undo it. `git mv` and `git rm` are allowed with the rest of git; plain `mv`, `rm`, and `rmdir` are refused. Deploying, deleting anything on Cloudflare, and pushing always ask.
+The agent may change files, but every move and delete has to go through git, so `git status` shows it and `git restore` can undo it. `git mv` and `git rm` are allowed with the rest of git; plain `mv`, `rm`, and `rmdir` are refused. Two git commands are the exception, because they destroy work git cannot bring back: `git clean` deletes files git never tracked, and `git reset --hard` throws away uncommitted changes, so both always ask. Deploying, deleting anything on Cloudflare, and pushing ask too.
 
 Save this as `opencode.json`:
 
@@ -188,6 +188,8 @@ Save this as `opencode.json`:
       "*": "ask",
       "git *": "allow",
       "git push *": "ask",
+      "git clean *": "ask",
+      "git reset --hard*": "ask",
       "npm test*": "allow",
       "npx vitest *": "allow",
       "npm ci": "allow",
@@ -220,6 +222,8 @@ bash:
     - { match: "npx wrangler delete*", approval: prompt }
     - { match: "npx wrangler d1 delete*", approval: prompt }
     - { match: "git push *", approval: prompt }
+    - { match: "git clean *", approval: prompt }
+    - { match: "git reset --hard*", approval: prompt }
     - { match: "git *", approval: allow }
     - { match: "npm test*", approval: allow }
     - { match: "npx vitest *", approval: allow }
@@ -325,7 +329,7 @@ Read `CHARTER.md` first. It says what this app is for and what you may and may n
 
 ## Rules
 
-- Files: create and edit them with your edit tool. Move or delete a tracked file only with `git mv` or `git rm`, so every change shows up in `git status` and can be undone. Plain `rm`, `mv`, and `rmdir` are denied.
+- Files: create and edit them with your edit tool. Move or delete a tracked file only with `git mv` or `git rm`, so every change shows up in `git status` and can be undone. Plain `rm`, `mv`, and `rmdir` are denied, and `git clean` and `git reset --hard` (which destroy work git cannot bring back) always ask.
 - Never write a token, key, or password into any file, commit, or log. Cloudflare credentials arrive only as the environment variables `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 - Never weaken a test to make it pass. If a test is wrong, say so and ask.
 - Stay inside this folder.
