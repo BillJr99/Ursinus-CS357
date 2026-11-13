@@ -15,7 +15,7 @@ tags:
 
 ## About This Tutorial
 
-*Orchestration and Multi-Agent Patterns* named three ways to connect small agents: a fixed pipeline, a router, and a supervisor loop in which a model picks the next move.  The *Orchestration Worked Example* built all three in class.  In this tutorial, you practice each one on your own, one at a time, on the same small task.  The task is the nightly club digest: five raw messages go in, and one short digest comes out with every day and time intact.  Then you pick one pattern and try it on a task you choose.  Your team's project task is one good option, but any small task with a checkable output works.
+*Orchestration and Multi-Agent Patterns* named three ways to connect small agents: a fixed pipeline, a router, and a supervisor loop in which a model picks the next move, and built all three in class.  In this tutorial, you practice each one on your own, one at a time, on the same small task.  The task is the nightly club digest: five raw messages go in, and one short digest comes out with every day and time intact.  Then you pick one pattern and try it on a task you choose.  Your team's project task is one good option, but any small task with a checkable output works.
 {: .tb-lede}
 
 Part I sets up the task.  Part II runs each pattern in isolation, makes each control fire on purpose, and ends with a cost table that shows how many model calls each pattern spent on the same digest.  Part III runs the same patterns on a real model, by code or by hand.  Part IV is your own task.  Nothing here is collected or graded.  If you are short on time, Parts I and II and one path in Part III are enough to get you started on Part IV.
@@ -581,8 +581,7 @@ Everything below is optional.  Nothing here is collected or graded.  Each exerci
 
 ## Further Reading
 
-- [Orchestration and Multi-Agent Patterns](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestration.md), especially Loop Safety Controls, Termination, and The Supervisor Loop.
-- [Orchestration Worked Example](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestrationworkshop.md), the in-class build-along this tutorial follows, with the table mapping each control to the lab.
+- [Orchestration and Multi-Agent Patterns](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestrationworkshop.md), the in-class build-along this tutorial follows; see Part III for loop safety controls and termination, Part IV for the supervisor loop, and Part VI for the table mapping each control to the lab.
 - The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), where the budget, the fail-closed parse, and the call counts are graded.
 - [Agent Teams](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentTeams), for composing these patterns into a project team and choosing a topology.
 - [Agent Frameworks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentFrameworks), for frameworks that build the supervisor for you, and what they move into their own prompts when they do.

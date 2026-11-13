@@ -841,7 +841,7 @@ Every rule in 8 to 11 should name a path and a condition, so that it can be chec
 
 ---
 
--> Coming Up Next: In *Orchestration Worked Example: Build a Pipeline, a Router, and a Supervisor* we stop handing work between agents by hand and start composing them: pipelines, routers, and a supervisor loop in which a model decides which agent runs next.  Read *Orchestration and Multi-Agent Patterns* before class, because it names the patterns the session builds.  Every one of those compositions passes work across a seam, and today's trace and claim rules are how you will see what crossed it.  Have your `SKILL.md` draft and its checklist ready; the roster, budget, and stop condition you meet there are rules 8 through 12 in another form.
+-> Coming Up Next: In *Orchestration and Multi-Agent Patterns* we stop handing work between agents by hand and start composing them: pipelines, routers, and a supervisor loop in which a model decides which agent runs next.  Every one of those compositions passes work across a seam, and today's trace and claim rules are how you will see what crossed it.  Have your `SKILL.md` draft and its checklist ready; the roster, budget, and stop condition you meet there are rules 8 through 12 in another form.
 
 ## Further Reading
 

@@ -50,8 +50,8 @@ info:
       progressing: The reflection identifies at least one place the design changed or would break under real use, with a plausible revision, though the connection between evidence and revision is loose
       proficient: The reflection names a specific assumption that changed, a specific surprise or leak surfaced by the pre-mortem or the loop, and the concrete revision each motivates; the submission is professionally formatted, internally consistent, fully anonymized where the domain involves real people or data, and answers every reflection prompt with a specific observation from this assignment
   readings:
-    - rtitle: "Orchestration and Multi-Agent Patterns Activity"
-      rlink: "Activities/liascript-orchestration.md"
+    - rtitle: "Orchestration and Multi-Agent Patterns"
+      rlink: "Activities/liascript-orchestrationworkshop.md"
       liapage: true
     - rtitle: "Pre-mortem Technique (Klein, 2007)"
       rlink: "https://hbr.org/2007/09/performing-a-project-premortem"
@@ -64,8 +64,8 @@ info:
     - rtitle: "The Coding Agents activity: the overnight brief, and loops that run themselves (Ralph, autoresearch, gnhf, crews)"
       rlink: "Activities/liascript-codingagents.md"
       liapage: true
-    - rtitle: "The Orchestration activity, Part IIb on loops that recover: control flow, reflection, and recovery (checkpointing and termination design)"
-      rlink: "Activities/liascript-orchestration.md"
+    - rtitle: "Orchestration and Multi-Agent Patterns, Part III: loops that recover"
+      rlink: "Activities/liascript-orchestrationworkshop.md"
       liapage: true
     - rtitle: "The Critique, Consensus, and the LLM Judge activity, whose extension covers human-in-the-loop oversight, escalation, and appropriate autonomy"
       rlink: "Activities/liascript-critiqueconsensusjudge.md"
