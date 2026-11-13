@@ -581,6 +581,8 @@ schedule:
     rlink: "https://hamel.dev/blog/posts/evals/"
   - rtitle: "Carr, The Glass Cage, Chapters 2-3: automation, deskilling, and automation bias, the human side of trusting a judge"
   - rtitle: "Benjamin, Race After Technology, Chapters 1-2: case studies in discriminatory design, read with an eye to what an automated judge would miss"
+  - rtitle: "From Requirements to Deployment with a Coding Agent: today's demo, a full-stack app built test first by OpenCode or Oh My Pi in a one-folder container, reviewed, run through CI, and deployed to Cloudflare with a human at every gate"
+    rlink: "Tutorials/FullStackWithAgents"
 - week: "12"
   date: "1"
   title: "Judge Pipeline Workshop: Build and Audit a Judge"
@@ -738,6 +740,7 @@ Every tool and technique in this course has a tutorial you can work through at y
 - [Testing Agents]({{ site.baseurl }}/Tutorials/TestingAgents)
 - [Red-Teaming LLMs]({{ site.baseurl }}/Tutorials/RedTeaming)
 - [Terminal and Filesystem Isolation for Agent Safety]({{ site.baseurl }}/Tutorials/FilesystemIsolation)
+- [From Requirements to Deployment with a Coding Agent]({{ site.baseurl }}/Tutorials/FullStackWithAgents)
 
 **More tutorials**
 

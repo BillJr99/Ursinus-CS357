@@ -650,6 +650,27 @@ One question separates them, and it is worth asking before you choose.  Is the t
 
 All three nest.  A gauntlet round's revision step is a Karpathy increment with the critique as its plan, a Karpathy loop's first move on an untested feature is a quick gauntlet on the spec, to find the fog before the agent finds it for you, and an autoresearch attempt is a Karpathy increment whose check happens to print a number instead of a verdict.
 
+## 8b.  One Loop for a Whole Project
+
+The same habit scales from one function to a whole app.  Wrap the Karpathy loop in a gauntlet on the spec at the front and a gate at the back, and you have a development process with a person at every decision:
+
+1.  **Requirements.**  You write a one-page charter: purpose, users, success criteria, and non-goals.
+2.  **Interview.**  The agent questions you until the spec has no fog in it (a gauntlet on the spec, run as a conversation).
+3.  **Seams.**  You agree which public interfaces the tests will check.
+4.  **Slices.**  One failing test, watched failing; the least code that passes; the whole suite; stop.  You read the diff and say "next."
+5.  **Review, then refactor.**  A review skill checks the branch against the standards and the spec; refactoring happens only with the suite green before and after.
+6.  **A clean run and CI.**  The committed code is tested from scratch, in a throwaway container and again on every push.
+7.  **A gated deploy, and a teardown.**  Nothing reaches the internet until you approve the run.
+
+[From Requirements to Deployment with a Coding Agent](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FullStackWithAgents) walks through all seven with a small Cloudflare app.  One moment from building it is worth carrying into any loop: with the upvote route missing, four of five tests passed, and one of the four was "answers 404 for a question that does not exist."  It passed because every unknown path already answered 404.
+
+Why does the loop insist on watching each new test fail before writing the code?
+
+[( )] Failing first proves the test runner is installed correctly
+[(X)] A test that has never been red has never shown it can catch the bug it is named for
+[( )] A red run makes the agent write more careful code
+[( )] Coverage tools only count tests that failed at least once
+
 ## 9.  Loops That Run Themselves
 
 Loops that remove you from the gate entirely exist, and this deck is where the course describes them: the agent finishes, a script restarts it, and it keeps going while you sleep.  Each iteration begins with a fresh context window, and the memory lives on disk: the codebase, a running `TODO` file, and the `git` history.

@@ -637,3 +637,21 @@ Every non-trivial decision the sprint forces gets one row in your running `DECIS
 | 2026-09-18 | Stakeholder: campus sustainability office | Local food bank; Bio dept lab group | Best access + clear agent-shaped problem | (member name) | If interview access falls through |
 
 [[___ Your sprint card, the done-when result at minute 25, and the decision-log row ___]]
+
+---
+
+# Extension: Ship It Behind a Gate (self-paced)
+
+Optional.  If your project has code, give it the two guards a real team relies on, before the gallery walk rather than after.
+
+### Continuous integration
+
+A workflow file in `.github/workflows/` runs your tests on GitHub's machines on every push and every pull request.  For a Node project it is about a dozen lines: check out the code, set up Node, `npm ci`, `npm test`.  Then add a branch protection rule on `main` that requires that check to pass, and nobody on the team, human or agent, can merge red code.
+
+### A deploy that waits for a person
+
+If your project deploys anywhere, deploy from a workflow that only starts when someone runs it by hand and then waits on a GitHub **environment** with a required reviewer.  The credentials live in the repository's secret store, never in a file or a chat, and the approval is recorded with a name on it.  Pair it with a written teardown, so the deployment ends when the project does.
+
+[From Requirements to Deployment with a Coding Agent](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FullStackWithAgents) has both workflows in full, a deploy skill and a teardown skill an agent can follow, and the permission files that keep the agent from deploying on its own.
+
+[[___ Your CI run's result, and who on your team approves a deploy ___]]

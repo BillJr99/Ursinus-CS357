@@ -579,6 +579,22 @@ Respond to all three levels in your notebook:
 
 ---
 
+## 6.  Borrowing Skills: Pin Them, Read Them
+
+You will not write every skill you use.  Matt Pocock's [skills repository](https://github.com/mattpocock/skills) (MIT licensed) is a widely used set worth reading as examples of the authoring principles above:
+
+- `grilling`: the agent interviews you in rounds of numbered questions, each with its recommended answer, and works outward through a tree of decisions until nothing is left assumed.  It asks you only for decisions; facts it looks up itself.
+- `tdd`: red, then green, one slice at a time, tests only at seams you agreed to, and no "tautological" tests that recompute the expected value the way the code does.
+- `code-review`: reviews a branch two ways, against your documented standards (with a baseline of Fowler's code smells, each labeled a judgment call) and against the spec, in two separate sub-agents.
+
+Install a borrowed skill **at a fixed commit**, by copying its files into `.agents/skills/<name>/`, rather than from "latest": the skill you read is then the skill that runs, and an upstream change cannot quietly change your agent's instructions.  Notice too how these skills depend on each other (`grill-me` is one line that calls `grilling`; `tdd` calls `codebase-design` for its vocabulary), so installing one sometimes means installing three.  [From Requirements to Deployment with a Coding Agent](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FullStackWithAgents) installs six of them this way and writes three of its own (deploy, teardown, and a clean test in a throwaway container).
+
+### Critical Thinking Questions
+
+1.  `grill-me` is a single line that tells the agent to load `grilling`.  Why might an author publish a one-line skill like that instead of copying the interview into it?  What does a user gain, and what could go wrong if `grilling` were missing?
+
+2.  The `tdd` skill says a test that passes by construction "can never disagree with the code."  Write one for a function `add(a, b)` and explain what it fails to test.
+
 ## Further Reading
 
 - OpenCode documentation. https://opencode.ai/docs/skills/, which covers where skills are discovered, the three values `permission.skill` takes (`allow`, `ask`, `deny`), and a short checklist to work through when a skill you wrote never appears.

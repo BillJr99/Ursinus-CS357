@@ -570,6 +570,33 @@ export const Guard = async ({ project, client, $, directory, worktree }) => ({
 
 The delete gate is one scenario.  Section D of the Extension is a recipe book for the others: files the agent must not read, a secret pasted into a prompt, a tool result that needs scrubbing before the model reads it, tests that must pass before the agent stops, a network allowlist, an audit line per call, and a person before any write through a tool server, each in the Claude Code form and the opencode form.
 
+### The same gate in Oh My Pi, and the rule order that flips
+
+Oh My Pi reads the same `AGENTS.md` and the same `.agents/skills/` folder, so one project works in both agents, but its gate lives in `.omp/config.yml` and reads its list the other way around: **the first matching rule wins**, where opencode takes the last.  Here is "git yes, `rm` no, ask before pushing" in both:
+
+```json
+{
+  "permission": {
+    "bash": { "*": "ask", "git *": "allow", "git push *": "ask", "rm *": "deny", "mv *": "deny" }
+  }
+}
+```
+
+```yaml
+tools:
+  approvalMode: always-ask
+bash:
+  patterns:
+    - { match: "rm *", approval: deny }
+    - { match: "mv *", approval: deny }
+    - { match: "git push *", approval: prompt }
+    - { match: "git *", approval: allow }
+```
+
+Allowing `git mv` and `git rm` while refusing plain `mv` and `rm` is a deliberate pairing: every move and delete then shows up in `git status`, and `git restore` can undo it.  Oh My Pi also checks each part of a compound line such as `cd x && rm -rf y` against its `deny` rules.  [From Requirements to Deployment with a Coding Agent](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/FullStackWithAgents) runs both agents in a container that sees one folder and uses exactly these two files.
+
+**Predict:** copy the opencode order into Oh My Pi unchanged, with `"git *": "allow"` above `"git push *": "prompt"`.  Which command stops asking, and why?
+
 ## Model 3b: The Rule That Bent and the Gate That Held
 
 Two runs of the same request against the same repository.  In both, `AGENTS.md` says `Never run rm -rf. Ask before deleting anything.`  In both, the agent reads a file that argues with that rule.  Only Run B has the hook from Section 4b installed.  Read both as a team; the Recorder marks the line where the runs diverge.
