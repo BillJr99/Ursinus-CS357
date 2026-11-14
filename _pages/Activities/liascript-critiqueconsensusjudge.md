@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  You leave with two runnable loops and a catalog of the ways each use fails, both of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration and Multi-Agent Patterns* session and due Thursday, December 3, builds on.  In that session's worked example, the check that refused the supervisor's stop was a program; today asks what to do when the check has to be a model.
 
-**Today:** the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is due, and Sprint Check 1 is at the start of class.
+**This week:** Sprint Check 1 is at the start of class on Tuesday, November 17, and the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is due Thursday, November 19.
 
 ## Directions and Group Roles
 
@@ -29,7 +29,7 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 | **Reward hacking** | The generator satisfies the letter of the rubric while violating its intent | "Exactly 3 sentences" met by joining three ideas with semicolons into one unreadable sentence |
 | **Independent and correlated errors** | Errors are independent when two agents are unlikely to make the same mistake; correlated when shared training makes them agree on the same wrong answer.  Debate fixes the first kind only | Three agents at temperature 0.9 exploring different paths, versus three agents sharing one misconception |
 | **Majority vote and judge agent** | Two ways to decide after a debate: count the most common answer, or have a separate agent read all the reasoning and pick | "10", "15", "10" votes to "10"; a judge prompt that asks which reasoning is most rigorous |
-| **Stochastic consensus** | Sample the same question many times at high temperature, group the drafts by meaning with embeddings, and let a low-temperature synthesizer write the majority position while disclosing close splits | Five salsa recipes that cluster into three positions with support 3, 2, 1 |
+| **Stochastic consensus** | Sample the same question many times at high temperature, group the drafts by meaning with embeddings, and let a low-temperature synthesizer write the majority position while disclosing close splits | Five salsa recipes that cluster into three positions with support 3, 1, 1 |
 | **Position and verbosity bias** | Two systematic errors of an LLM judge: rating the first answer in an A/B comparison higher regardless of quality, and rating longer answers higher even when the extra length adds nothing | The judge flips its answer when you swap two essays; two empty filler sentences raise an essay's score |
 | **Calibration set** | A small set of artifacts already scored by humans, used to check whether the judge agrees with people before you trust it on new work | Ten essays scored by your team and by the judge; a consistent gap on one criterion means that descriptor needs work |
 
@@ -443,7 +443,7 @@ There are three ways to aggregate the samples, and they are not interchangeable.
 
 ## Model 5: Five Recipes, Three Positions
 
-Five agents at temperature 1.0 propose tomatillo salsa recipes.  Three roast the tomatillos, one boils them, one uses them raw; four include cilantro; opinions split on jalapeño versus serrano.  Work the three questions below out on paper before you build anything in the lab, because they are the design decisions the code will otherwise make for you.
+Five agents at temperature 1.0 propose tomatillo salsa recipes.  Three roast the tomatillos, one boils them, one uses them raw; all five include cilantro; opinions split on jalapeño versus serrano.  Work the three questions below out on paper before you build anything in the lab, because they are the design decisions the code will otherwise make for you.
 
 | Agent | Cooking technique | Chile | Key aromatics | Cluster |
 |---|---|---|---|---|

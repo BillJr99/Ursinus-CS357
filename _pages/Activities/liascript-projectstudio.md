@@ -48,7 +48,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it.
 
 ## Session Two: Final Integration and Demo Rehearsal
 
-The second session is a rehearsal, not a work session.  The rehearsal rule: if your system does not run end to end at the start of class, that is the thing to fix, before anything else on the backlog.  Skip the gallery walk (section 2) in this second session and run these numbered sections in order: the stand-up in section 1, with the current number from your harness; triage in section 3, applied to whatever your integration work surfaced since the gallery walk; the release readiness checklist in section 4, which the Evaluator signs off with evidence; and Exercise 3, the 90-second explainability story, repeated until every teammate can deliver it solo.  Your last Intra-Team Check-In (Performing into Adjourning) is also due at this session, on Tuesday, December 8.
+The second session is a rehearsal, not a work session.  The rehearsal rule: if your system does not run end to end at the start of class, that is the thing to fix, before anything else on the backlog.  Skip the gallery walk (section 2) in this second session and run these numbered sections in order: the stand-up in section 1, with the current number from your harness; triage in section 3, applied to whatever your integration work surfaced since the gallery walk; the release readiness checklist in section 4, which the Evaluator signs off with evidence; and Exercise 3, the 90-second explainability story, repeated until every teammate can deliver it solo.  Your last Intra-Team Check-In (Performing into Adjourning) was due at the end of the gallery-walk day, Thursday, December 3.
 
 ---
 
