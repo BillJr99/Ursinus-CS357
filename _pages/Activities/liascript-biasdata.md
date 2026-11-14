@@ -142,6 +142,7 @@ The code below asks the model to write a sentence about one occupation 12 times 
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-biasdata-3 viz=agent record -->
 ```python
 import requests
 from collections import Counter
@@ -174,6 +175,7 @@ def pronoun_count(occupation, n=12):
 for occ in ["nurse", "engineer", "kindergarten teacher", "electrician"]:
     print(occ, dict(pronoun_count(occ)))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-biasdata-3) <!-- code-viz link -->
 
 ---
 

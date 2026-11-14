@@ -107,6 +107,7 @@ Read the `RUBRIC` object at the top of the code cell before you read the functio
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Save it as `judge.py` in the folder that contains `samples/`.
 
+<!-- run: id=cs357-liascript-rubricworkshop-2 viz=agent record -->
 ```python
 import json
 import requests
@@ -155,6 +156,7 @@ total, detail = judge(essay)
 print(f"weighted score: {total}/100")
 print(json.dumps(detail, indent=1))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-rubricworkshop-2) <!-- code-viz link -->
 
 Run `python3 judge.py` once and confirm you get a weighted score and a JSON block for the dining essay.  Then append the batch loop below to the bottom of `judge.py` and run it again.  It walks `samples/`, calls `judge()` on each file, fails closed on a parse error, checks every quoted sentence against the source, and writes `grades.csv`.
 
