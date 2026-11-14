@@ -67,6 +67,7 @@ This section assumes Ollama is running locally (we install it together in the *R
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-agentloop-1 viz=agent record -->
 ```python
 import json
 import requests
@@ -90,6 +91,7 @@ def chat(messages, temperature=0.7):
 
 print("Environment ready.")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-agentloop-1) <!-- code-viz link -->
 
 ---
 

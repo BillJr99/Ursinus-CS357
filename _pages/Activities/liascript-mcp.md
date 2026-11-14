@@ -242,6 +242,7 @@ print(call_remote("room_lookup", {"building": "Pfahler"}))
 
 > **Runs on your machine, not here.**  This cell needs `server.py` running on `localhost:8765`, which a web page has no route to.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-mcp-2 viz=env -->
 ```python
 import requests
 import traceback
@@ -255,6 +256,7 @@ except Exception as e:
     print(f"[mcpclient:bad_calls] {e}")
     traceback.print_exc()
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-mcp-2) <!-- code-viz link -->
 
 You should see:
 

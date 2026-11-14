@@ -48,6 +48,7 @@ These five cells use only the Python standard library.  Paste them in order into
 
 The corpus is four short files about an invented bicycle co-op.  Before any code indexes them, we write the test: six questions, each with an **evidence phrase** that only the right passage contains and the fact a right answer must state.  One question has no answer in the notes, so the test can tell whether the system knows when to stop.  We name evidence by a phrase, not by a chunk ID.  Chunk IDs change when the chunking changes, but a phrase does not.
 
+<!-- run: id=cs357-tut-ragfromzero-1 viz=env -->
 ```python
 # Cell 1: the corpus, and the golden set written before anything is indexed.
 CORPUS = {   # four invented files about a bicycle co-op; every fact in them is synthetic
@@ -84,6 +85,7 @@ GOLDEN = [   # (question, a phrase only the right passage contains, the fact a r
 print(f"{len(CORPUS)} files, {len(GOLDEN)} golden questions, "
       f"{sum(1 for _, ev, _ in GOLDEN if ev is None)} the notes cannot answer")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-ragfromzero-1) <!-- code-viz link -->
 
 You should see `4 files, 6 golden questions, 1 the notes cannot answer`.  Notice that the questions use different words from the notes ("hurt" against "injury," "take home" against "borrow").  We did that on purpose: real users do not word their questions the way the documents are written.
 

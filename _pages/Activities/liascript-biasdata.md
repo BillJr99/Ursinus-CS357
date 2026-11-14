@@ -424,6 +424,7 @@ Each conversion is one multiplication, and each multiplies by an assumption.  Th
 
 Here is a two-agent run over ten tasks, as `summarize()` would report it.  Before you run the cell, predict whether the two carbon methods agree to within a factor of two.
 
+<!-- run: id=cs357-liascript-biasdata-1 viz=env -->
 ```python
 # One evaluation run, from token_usage.csv
 calls = 40
@@ -453,6 +454,7 @@ print(f"Carbon from per-token rates: {carbon_from_tokens:.3f} g CO2e, plus {trai
 print(f"Hosted price avoided: ${hosted_cost:.2f}, plus {kwh:.4f} kWh at your electricity rate")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-biasdata-1) <!-- code-viz link -->
 
 The two carbon figures disagree by more than an order of magnitude.  That is a finding, not a bug: one is your laptop's measured time at an assumed wattage, and the other is a published band's midpoint for a typical local query.  Report both, say which assumption drives the gap, and say which number you would defend to an auditor.  Then multiply by your evaluation set and your expected users, because a gram per run is not the number a policy governs.
 
@@ -744,6 +746,7 @@ A development team wants to reduce the carbon footprint of their AI-powered cust
 
 A cost section needs a number, so build the model that produces one.  This script prices a hypothetical Ursinus College tutoring agent at 200 queries per day against a GPU rented by the hour.  Before you run it, predict which monthly figure is larger.  Then change `queries_per_day` until the two lines cross, and explain why the crossover depends on how fully the GPU is used.
 
+<!-- run: id=cs357-liascript-biasdata-2 viz=env -->
 ```python
 # Cost model for Ursinus tutoring agent
 queries_per_day = 200
@@ -772,6 +775,7 @@ monthly_gpu_cost = gpu_cost_per_hour * 24 * 30
 print(f"Monthly local GPU cost: ${monthly_gpu_cost:.2f}")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-biasdata-2) <!-- code-viz link -->
 
 
 Your policy has a structure, your project is mapped onto real frameworks, and you have numbers for what inference costs.  Now write.  Draft two sections of its final project's governance one-pager, one about data (section 5) and one about cost and routing, then trades them and reads the other team's draft the way an auditor would.

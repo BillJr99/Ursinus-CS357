@@ -756,6 +756,7 @@ In this section you classify computing systems as deterministic or probabilistic
 
 A **deterministic** program always produces exactly the same output given the same input and the same starting state.  There is no randomness; the result is fully predictable.
 
+<!-- run: id=cs357-tut-sampling-1 viz=env -->
 ```python
 def add(a, b):
     return a + b
@@ -763,6 +764,7 @@ def add(a, b):
 # Always returns 5, no exceptions, no surprises.
 print(add(2, 3))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-sampling-1) <!-- code-viz link -->
 {% include pyrun.html %}
 
 Database queries, sorting algorithms, cryptographic hashes, and arithmetic are all deterministic.  This predictability is a feature: it makes these systems easy to test, debug, and trust because you can verify them exhaustively.
@@ -777,6 +779,7 @@ Deterministic systems have three key properties:
 
 A **probabilistic** (or *stochastic*) program intentionally samples from a probability distribution, so the output varies across runs even with identical input.
 
+<!-- run: id=cs357-tut-sampling-2 viz=env -->
 ```python
 import random
 
@@ -786,6 +789,7 @@ def flip_coin():
 # Could return either, by design.
 print(flip_coin())
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-sampling-2) <!-- code-viz link -->
 {% include pyrun.html %}
 
 Randomness is not a bug here; it is a feature.  Probabilistic systems are used when we want to explore a space of possibilities, when the real-world phenomenon being modeled is inherently uncertain, or when avoiding predictability is itself valuable (cryptography, game fairness).

@@ -104,6 +104,7 @@ Then add D04 through D12: at least one defect per criterion, several drafts with
 
 A multi-line docstring has to become one JSON string with `\n` for each line break and `\"` for each quote.  You do not have to escape it by hand.  This cell builds one entry and prints the escaped version for you to paste in.  It needs no model.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-1 viz=env -->
 ```python
 import json
 
@@ -124,6 +125,7 @@ Example:
 entry = {"id": "D04", "defect": "missing_C2", "description": "Parameter b has no type", "draft": draft}
 print(json.dumps(entry, indent=2))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-multiagentmeasurement-1) <!-- code-viz link -->
 
 Check the finished file with `python3 -m json.tool calibration_drafts.json`.  It should print the whole file back with no error.  An error at a line number usually means an unescaped quote or a missing comma between entries.
 

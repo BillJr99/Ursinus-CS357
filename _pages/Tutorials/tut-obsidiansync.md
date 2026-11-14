@@ -199,6 +199,7 @@ agent-context/
 
 A Python helper that injects this folder into an agent session:
 
+<!-- run: id=cs357-tut-obsidiansync-1 viz=env -->
 ```python
 
 # inject_vault_context.py
@@ -229,6 +230,7 @@ def load_context() -> str:
 if __name__ == "__main__":
     print(load_context())
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-obsidiansync-1) <!-- code-viz link -->
 
 ### Pointing OpenCode at Your Vault
 

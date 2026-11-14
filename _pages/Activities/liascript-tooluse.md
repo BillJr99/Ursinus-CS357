@@ -160,6 +160,7 @@ The code below defines two tools, `get_today` and `days_until`.  It describes th
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-tooluse-1 viz=agent record -->
 ```python
 import json
 import requests
@@ -218,6 +219,7 @@ def agent(question, max_steps=4):
 
 print(agent("How many days until the last day of classes, December 7, 2026?"))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-tooluse-1) <!-- code-viz link -->
 
 You should see one `[tool]` line followed by a one-sentence answer that states the number of days.  The `[tool]` line has this shape, with today's count in place of the placeholder:
 

@@ -51,6 +51,7 @@ Here `llm()` calls `stand_in()`, which is a set of fixed rules per role, not a l
 
 Run the cells in order, in one Python session (a notebook, or one file that you add to as you go).  Each cell uses what the cells before it built.
 
+<!-- run: id=cs357-tut-orchestrationpatterns-1 viz=env -->
 ```python
 # Section 1: the task, the settings you own, and a scripted stand-in for the model.
 import json
@@ -110,6 +111,7 @@ print(f"{len(MESSAGES)} messages; settings {CONFIG}")
 print(repr(llm(CLASSIFY, MESSAGES[0])), repr(llm(EXTRACT, MESSAGES[0])))
 CALLS.clear()
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-orchestrationpatterns-1) <!-- code-viz link -->
 
 **You should see:**
 

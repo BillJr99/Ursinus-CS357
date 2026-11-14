@@ -174,6 +174,7 @@ Pipes and redirection let you compose simple commands into powerful one-liners w
 
 **A pipe `|` sends one command's output into the next command's input**, composing small tools into pipelines.  The three examples below each build a chain from left to right; read each one as a sentence ("search for X, then count the results") and predict the output before running it in your terminal.
 
+<!-- run: id=cs357-tut-shell-1 viz=cast -->
 ```bash
 grep "ERROR" agent.log | wc -l
 
@@ -193,6 +194,7 @@ cat results.csv | grep "fail" | head -10
 
 # head -10 keeps only the first 10 of those; result is the first ten failures
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-shell-1) <!-- code-viz link -->
 
 Redirection sends output to files instead of the screen.  Use `>` to overwrite, `>>` to append, and `2>` to capture error messages separately.  Read the comments in the block below carefully before running any of these; the difference between `>` and `>>` is one character but the consequences are very different, and the `2>` line is the one you will reach for every time a script crashes silently.
 

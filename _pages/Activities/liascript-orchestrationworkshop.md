@@ -161,6 +161,7 @@ The code below builds a three-stage pipeline (extract, draft, polish) and a two-
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page cannot reach.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-orchestrationworkshop-2 viz=agent record -->
 ```python
 import requests
 
@@ -246,6 +247,7 @@ for ticket in [
     label, response = route(ticket)
     print(f"\n[Category: {label}]\nTicket: {ticket}\nResponse: {response}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-orchestrationworkshop-2) <!-- code-viz link -->
 
 ---
 
@@ -457,6 +459,7 @@ The sketch below is for reading and running on your own machine, not for product
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page cannot reach.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-orchestrationworkshop-3 viz=agent record -->
 ```python
 import json, requests
 
@@ -521,6 +524,7 @@ def supervise(task):
 
 print(supervise("Write one tight paragraph on why local models matter, then have it reviewed."))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-orchestrationworkshop-3) <!-- code-viz link -->
 
 **What you still own.**  Handing the control flow to a model does *not* hand it your responsibilities.  Three levers stay in your code, and they are the reason a dynamic system is safe to ship:
 
@@ -573,6 +577,7 @@ Five messages arrived today.  Three are events for the digest, one is a question
 
 In this page, `llm()` calls `stand_in()`, which follows fixed rules for each role and is not a language model.  It extracts events with a regular expression and writes one sentence per event.  In the polish stage, it makes the mistake Question 6 warned about, on purpose: it changes "Thursday" to "Friday" while editing for concision.  It also returns a label outside the closed set for the pizza message.  Both mistakes are scripted, so you can watch the controls catch them every time.
 
+<!-- run: id=cs357-liascript-orchestrationworkshop-1 viz=env -->
 ```python
 # Setup: the task, the settings you own, and a scripted stand-in for the model.
 import json
@@ -633,6 +638,7 @@ print(repr(llm(CLASSIFY, MESSAGES[0])), repr(llm(EXTRACT, MESSAGES[0])))
 CALLS.clear()
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-orchestrationworkshop-1) <!-- code-viz link -->
 
 **You should see:**
 

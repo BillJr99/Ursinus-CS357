@@ -115,6 +115,7 @@ The harness runs five fixed questions through the model at temperature 0.0 with 
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-evaluatingoutputs-1 viz=agent record -->
 ```python
 import requests
 
@@ -149,6 +150,7 @@ for q, gold in tasks:
 
 print(f"\naccuracy = {correct}/{len(tasks)} = {correct/len(tasks):.2f}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-evaluatingoutputs-1) <!-- code-viz link -->
 
 ---
 

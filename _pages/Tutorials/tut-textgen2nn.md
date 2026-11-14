@@ -248,6 +248,7 @@ The code below implements the exact network above using plain Python lists (no l
 > You traced this forward pass by hand in the table above.  Write your two hidden activations and your output value down now, before you run anything.  The cell prints the same numbers; if they disagree, the disagreement tells you exactly which step of your trace drifted.
 {: .tb-intuition data-title="Predict first"}
 
+<!-- run: id=cs357-tut-textgen2nn-1 viz=env -->
 ```python
 W1 = [[0.5, 1.0],    # weights into h1
       [1.0, -1.0]]   # weights into h2
@@ -273,6 +274,7 @@ def forward(x, verbose=True):
 for x in [(1.0, 2.0), (2.0, 1.0), (0.0, 0.0)]:
     forward(list(x))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-textgen2nn-1) <!-- code-viz link -->
 {% include pyrun.html %}
 
 If any line disagrees with your hand trace, find the first row where they diverge; that row contains the arithmetic slip.  This is exactly how you will debug real models later: compare expected and actual values layer by layer, top to bottom.

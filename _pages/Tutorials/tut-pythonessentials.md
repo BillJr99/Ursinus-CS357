@@ -41,6 +41,7 @@ Add `.venv/` to your `.gitignore`, because it is large and each person rebuilds 
 
 A **list** keeps items in order.  A **dictionary** (`dict`) looks up a value by a key.  Nearly every API in this course sends and receives these two shapes, nested inside each other.
 
+<!-- run: id=cs357-tut-pythonessentials-1 viz=env -->
 ```python
 message = {"role": "user", "content": "Hello"}
 print(message["role"])              # look up one key
@@ -55,6 +56,7 @@ print(messages[-1]["content"])      # the last item, then one of its keys
 for m in messages:
     print(m["role"], "said", m["content"])
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-1) <!-- code-viz link -->
 
 You should see:
 
@@ -102,6 +104,7 @@ You should see `['first paragraph', 'second paragraph']`.  A blank line is two n
 
 ## Files and Folders with `pathlib`
 
+<!-- run: id=cs357-tut-pythonessentials-2 viz=env -->
 ```python
 from pathlib import Path
 
@@ -113,6 +116,7 @@ folder.mkdir(exist_ok=True)
 for doc in sorted(folder.glob("*.txt")):
     print(doc.name, doc.stem, doc.read_text(encoding="utf-8").strip())
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-2) <!-- code-viz link -->
 
 You should see:
 
@@ -127,6 +131,7 @@ b.txt b beta
 
 **JSON** is how programs and models pass structured data as text.  `json.loads` turns text into Python, and `json.dumps` turns Python into text.
 
+<!-- run: id=cs357-tut-pythonessentials-3 viz=env -->
 ```python
 import json
 
@@ -135,6 +140,7 @@ data = json.loads(reply)
 print(data["action"], data["args"]["term"])
 print(json.dumps({"ok": True, "n": 3}))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-3) <!-- code-viz link -->
 
 You should see:
 
@@ -147,6 +153,7 @@ A model's reply is only text, so it is not always valid JSON.  Parse it inside a
 
 ## When Things Go Wrong: `try` and `except`
 
+<!-- run: id=cs357-tut-pythonessentials-4 viz=env -->
 ```python
 import json
 
@@ -160,6 +167,7 @@ def parse_reply(text):
 print(parse_reply('{"ok": 1}'))
 print(parse_reply("Sure! Here is the JSON"))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-4) <!-- code-viz link -->
 
 You should see:
 
@@ -194,17 +202,20 @@ This needs Ollama running with `llama3.2` pulled, and the reply will vary.  `rai
 
 A **regular expression** describes a pattern in text.  `re.findall` returns every match, as a list.
 
+<!-- run: id=cs357-tut-pythonessentials-5 viz=env -->
 ```python
 import re
 
 text = "SCORE: 3\nsome reasoning\nSCORE: 5"
 print(re.findall(r"SCORE:\s*(\d+)", text))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-5) <!-- code-viz link -->
 
 You should see `['3', '5']`.  `\s*` means any amount of space, `\d+` means one or more digits, and the parentheses mark the part you want returned.  The last match is `matches[-1]`, which is the one you want when a model states an answer more than once, and an empty list means there was no match.
 
 ## Counting with `Counter`
 
+<!-- run: id=cs357-tut-pythonessentials-6 viz=env -->
 ```python
 from collections import Counter
 
@@ -213,6 +224,7 @@ print(votes)
 print(votes.most_common(1))
 print(votes.most_common(1)[0][0])
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-6) <!-- code-viz link -->
 
 You should see:
 
@@ -228,6 +240,7 @@ red
 
 An embedding is a list of numbers, and NumPy does arithmetic on whole lists at once.  Install it with `python3 -m pip install numpy`.
 
+<!-- run: id=cs357-tut-pythonessentials-7 viz=env -->
 ```python
 import numpy as np
 
@@ -242,6 +255,7 @@ print(average)
 print(round(float(normed[0] @ normed[1]), 2))
 print(int(np.argmax([0.2, 0.9, 0.5])))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-7) <!-- code-viz link -->
 
 You should see:
 
@@ -260,6 +274,7 @@ You should see:
 
 Some libraries, including the MCP SDK, are **asynchronous**: a call can wait on a network without holding up the whole program.  You mainly need to recognize the shape.
 
+<!-- run: id=cs357-tut-pythonessentials-8 viz=env -->
 ```python
 import asyncio
 
@@ -272,5 +287,6 @@ async def main():
 
 asyncio.run(main())
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-pythonessentials-8) <!-- code-viz link -->
 
 You should see `got tools`.  Three rules cover it.  You define such a function with `async def`.  You call it with `await`, which works only inside another `async def`.  And you start the outermost one with `asyncio.run`.  `async with` is the same idea applied to `with`: it opens something over the network, and it closes it again when the block ends.

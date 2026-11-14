@@ -262,6 +262,7 @@ For completeness, because a thorough agent may pre-compute it: the `sha` field, 
 
 The following code demonstrates how to compute a git blob SHA, the exact hash format that git uses internally and that the sync metadata file requires.  Run it and observe that the plain SHA-1 of the same content (shown in the second output line) produces a different value, which is the mistake that causes silent sync failures.
 
+<!-- run: id=cs357-tut-secondbrain-1 viz=env -->
 ```python
 
 # The git blob SHA, demystified: this reproduces `git hash-object` exactly.
@@ -285,6 +286,7 @@ print("plain sha1 (WRONG for git):", hashlib.sha1(note.encode()).hexdigest())
 emoji_note = "café ☕\n"
 print("bytes:", len(emoji_note.encode("utf-8")), "chars:", len(emoji_note))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-secondbrain-1) <!-- code-viz link -->
 
 Notice the last line: for content containing multi-byte characters (accented letters, emoji, non-ASCII), the *byte length* and the *character count* differ.  Git uses byte length in the header; using character count instead will produce a wrong SHA that causes the sync to fail silently.
 

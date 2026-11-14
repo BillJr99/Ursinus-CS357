@@ -124,6 +124,7 @@ The following simulation models a queue of requests with different prompt length
 > This cell makes network calls that the page sandbox blocks.  Copy it into your course container and run it there.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-llmserving-1 viz=env -->
 ```python
 import math
 import random
@@ -240,6 +241,7 @@ print()
 print("Observation: Larger batch sizes improve throughput but do NOT")
 print("directly improve any individual request's TTFT or TPOT.")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-llmserving-1) <!-- code-viz link -->
 
 ### Questions to Work Through
 

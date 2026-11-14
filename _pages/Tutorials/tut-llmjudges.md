@@ -65,6 +65,7 @@ $$
 
 where $$w_c$$ is the weight of criterion $$c$$ and $$\ell_c$$ is the level awarded on it.  A sample at level 4 everywhere scores 100, and one at level 1 everywhere scores 25.
 
+<!-- run: id=cs357-tut-llmjudges-1 viz=env -->
 ```python
 import os
 
@@ -105,6 +106,7 @@ HAND = {
 for name, levels in HAND.items():
     print(name, "hand total:", weighted_total(levels))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-llmjudges-1) <!-- code-viz link -->
 
 Running it prints `100.0`, `57.5`, and `25.0`, the totals for the levels the samples were designed to land on.  Those designed levels are a starting point, not an answer key.
 
@@ -274,9 +276,11 @@ with open("dataset.csv", "w", newline="") as f:
 
 The prompt is a one-line template that echoes each stored answer straight through, so the judge grades your dataset rather than a freshly generated reply.  promptfoo's template syntax is the variable name inside two pairs of curly braces.  Create the file with this command rather than typing it:
 
+<!-- run: id=cs357-tut-llmjudges-2 viz=cast -->
 ```bash
 python3 -c "print('{' * 2 + 'answer' + '}' * 2)" > prompt.txt
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-llmjudges-2) <!-- code-viz link -->
 
 Then save the judge itself as `promptfooconfig-rubric.yaml`:
 
