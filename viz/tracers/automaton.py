@@ -1,11 +1,29 @@
 """code-viz automaton loader and simulator.
 
+Full manual: the header of code-viz (`code-viz readme`, or README.md), sections 7 Kinds of visualization, 8 Reading the viewer (automaton), 14 Trace format.
+
 Reads a finite automaton drawn in Graphviz DOT (the course's files/dotty/*.dot style: a start
 arrow from an invisible node, accepting states as doublecircle, edge labels as input symbols,
 comma separated, with "ε", "eps" or "epsilon" for epsilon moves) and simulates it on an input
 string, recording the set of current states after each symbol (NFA and ε-NFA aware).
 
 Usage:  python3 automaton.py FILE.dot --input abba > trace.json
+
+PIPELINE
+  driver.py for viz=automaton examples and the .dot files in viz/manifest.json; the viewer also
+  re-simulates in the browser when the input box is edited (the same logic in JavaScript).
+
+TRACE FIELDS WRITTEN
+  kind "automaton", language "dot", source, input, automaton: {states, start, accept, edges:
+  [[from, to, symbol]]}, graph (DOT), accepted, stdout, error, truncated, and steps:
+  {read, rest, states}.
+
+OPTIONS  --input TEXT.   ENVIRONMENT  none.
+
+EXAMPLE  python3 automaton.py files/dotty/ends_in_ab.dot --input abab > t.json
+
+LIMITS AND KNOWN PROBLEMS
+  - Only the DOT conventions above are understood; other start or accept markings are missed.
 """
 import json
 import re

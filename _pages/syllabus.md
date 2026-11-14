@@ -435,7 +435,7 @@ schedule:
   readings:
   - rtitle: "Hugging Face MCP Course"
     rlink: "https://huggingface.co/learn/mcp-course/"
-  - rtitle: "Optional: install Obsidian before class."
+  - rtitle: "Install Obsidian before class."
     rlink: "https://obsidian.md"
 - week: "5"
   date: "1"
@@ -454,9 +454,7 @@ schedule:
     rlink: "https://www.youtube.com/watch?v=rz40ukZ3krQ&t=10s"
 - week: "6"
   date: "0"
-  title: "RAG and Fine-Tuning: Retrieval Quality and LoRA"
-  link: "Activities/liascript-rag.md"
-  liapage: true
+  title: "RAG Knowledge Base: Code and No-Code Routes"
   readings:
   - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Have your team's Stakeholder Brief draft ready for peer review."
@@ -487,9 +485,7 @@ schedule:
   - rtitle: "Have your stuck points and your pipeline-in-progress ready for the open studio."
 - week: "8"
   date: "0"
-  title: "How I AI: A Vault, a Charter, and a Personal Agent Setup"
-  link: "Activities/liascript-howiai.md"
-  liapage: true
+  title: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox"
   deliverables:
   - dtitle: "Lab: Local Agent Due"
     dlink: "Assignments/LocalAgent"
@@ -501,9 +497,7 @@ schedule:
     rubricpath: "_pages/Projects/proj-finalproject.md"
 - week: "8"
   date: "1"
-  title: "RAG: Building and Measuring a Knowledge Base"
-  link: "Activities/liascript-rag.md"
-  liapage: true
+  title: "RAG Knowledge Base: Code and No-Code Routes"
   readings:
   - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Reading Response: Connect RAG to a corpus of your own."
@@ -637,9 +631,9 @@ schedule:
   - rtitle: "Reading Response: Name one design choice you would make differently in a system you deploy."
   - rtitle: "Have your judge, three artifacts from your final project, and your integrated project and proposal ready."
     rlink: false
-  - rtitle: "Gandalf (Lakera), optional"
+  - rtitle: "Gandalf (Lakera)"
     rlink: "https://gandalf.lakera.ai/"
-  - rtitle: "Tensor Trust, optional"
+  - rtitle: "Tensor Trust"
     rlink: "https://tensortrust.ai/"
 - week: "14"
   date: "1"
@@ -660,9 +654,7 @@ schedule:
     rlink: false
 - week: "15"
   date: "0"
-  title: "Project Studio: Final Integration and Demo Rehearsal (Class Switch Day: follows a Thursday schedule)"
-  link: "Activities/liascript-projectstudio.md"
-  liapage: true
+  title: "Project Studio and Gallery Walk (Class Switch Day: follows a Thursday schedule)"
   deliverables:
   - dtitle: "Project: Demo Day Presentations Due"
     dlink: "Projects/FinalProject"

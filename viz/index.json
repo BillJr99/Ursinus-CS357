@@ -1,7 +1,7 @@
 {
  "course": "cs357",
  "site": "https://billjr99.github.io/Ursinus-CS357-Fall2026",
- "built": "2026-11-14 03:49",
+ "built": "2026-11-14 12:43",
  "examples": [
   {
    "id": "cs357-liascript-agentloop-1",
@@ -172,6 +172,46 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
    "error": null,
    "steps": 39
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-4",
+   "viz": "env",
+   "lang": "python",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 655,
+   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
+   "error": null,
+   "steps": 44
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-5",
+   "viz": "env",
+   "lang": "python",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 712,
+   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
+   "error": null,
+   "steps": 50
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-6",
+   "viz": "env",
+   "lang": "python",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 760,
+   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
+   "error": null,
+   "steps": 177
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-7",
+   "viz": "env",
+   "lang": "python",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 849,
+   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
+   "error": null,
+   "steps": 18
   },
   {
    "id": "cs357-liascript-rag-1",

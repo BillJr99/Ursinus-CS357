@@ -1,55 +1,317 @@
 {
- "labeled": [],
+ "labeled": [
+  {
+   "id": "cs357-liascript-agentloop-1",
+   "page": "_pages/Activities/liascript-agentloop.md",
+   "line": 71
+  },
+  {
+   "id": "cs357-liascript-biasdata-3",
+   "page": "_pages/Activities/liascript-biasdata.md",
+   "line": 146
+  },
+  {
+   "id": "cs357-liascript-biasdata-1",
+   "page": "_pages/Activities/liascript-biasdata.md",
+   "line": 430
+  },
+  {
+   "id": "cs357-liascript-biasdata-2",
+   "page": "_pages/Activities/liascript-biasdata.md",
+   "line": 752
+  },
+  {
+   "id": "cs357-liascript-critiqueconsensusjudge-1",
+   "page": "_pages/Activities/liascript-critiqueconsensusjudge.md",
+   "line": 135
+  },
+  {
+   "id": "cs357-liascript-critiqueconsensusjudge-2",
+   "page": "_pages/Activities/liascript-critiqueconsensusjudge.md",
+   "line": 316
+  },
+  {
+   "id": "cs357-liascript-evaluatingoutputs-1",
+   "page": "_pages/Activities/liascript-evaluatingoutputs.md",
+   "line": 119
+  },
+  {
+   "id": "cs357-liascript-iterationloops-1",
+   "page": "_pages/Activities/liascript-iterationloops.md",
+   "line": 584
+  },
+  {
+   "id": "cs357-liascript-iterationloops-2",
+   "page": "_pages/Activities/liascript-iterationloops.md",
+   "line": 859
+  },
+  {
+   "id": "cs357-liascript-mcp-2",
+   "page": "_pages/Activities/liascript-mcp.md",
+   "line": 246
+  },
+  {
+   "id": "cs357-liascript-observability-1",
+   "page": "_pages/Activities/liascript-observability.md",
+   "line": 77
+  },
+  {
+   "id": "cs357-liascript-observability-2",
+   "page": "_pages/Activities/liascript-observability.md",
+   "line": 383
+  },
+  {
+   "id": "cs357-liascript-observability-3",
+   "page": "_pages/Activities/liascript-observability.md",
+   "line": 523
+  },
+  {
+   "id": "cs357-liascript-observability-4",
+   "page": "_pages/Activities/liascript-observability.md",
+   "line": 880
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-2",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 165
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-3",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 463
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-1",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 581
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-4",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 655
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-5",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 712
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-6",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 760
+  },
+  {
+   "id": "cs357-liascript-orchestrationworkshop-7",
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 849
+  },
+  {
+   "id": "cs357-liascript-rag-1",
+   "page": "_pages/Activities/liascript-rag.md",
+   "line": 289
+  },
+  {
+   "id": "cs357-liascript-ragworkshop-1",
+   "page": "_pages/Activities/liascript-ragworkshop.md",
+   "line": 91
+  },
+  {
+   "id": "cs357-liascript-rubricworkshop-2",
+   "page": "_pages/Activities/liascript-rubricworkshop.md",
+   "line": 111
+  },
+  {
+   "id": "cs357-liascript-rubricworkshop-1",
+   "page": "_pages/Activities/liascript-rubricworkshop.md",
+   "line": 246
+  },
+  {
+   "id": "cs357-liascript-tooluse-1",
+   "page": "_pages/Activities/liascript-tooluse.md",
+   "line": 164
+  },
+  {
+   "id": "cs357-tut-aibyhand-1",
+   "page": "_pages/Tutorials/tut-aibyhand.md",
+   "line": 196
+  },
+  {
+   "id": "cs357-tut-aibyhand-2",
+   "page": "_pages/Tutorials/tut-aibyhand.md",
+   "line": 314
+  },
+  {
+   "id": "cs357-tut-aibyhand-3",
+   "page": "_pages/Tutorials/tut-aibyhand.md",
+   "line": 474
+  },
+  {
+   "id": "cs357-tut-aibyhand-4",
+   "page": "_pages/Tutorials/tut-aibyhand.md",
+   "line": 510
+  },
+  {
+   "id": "cs357-tut-aibyhand-5",
+   "page": "_pages/Tutorials/tut-aibyhand.md",
+   "line": 633
+  },
+  {
+   "id": "cs357-tut-biasprobes-4",
+   "page": "_pages/Tutorials/tut-biasprobes.md",
+   "line": 325
+  },
+  {
+   "id": "cs357-tut-handoffprotocols-1",
+   "page": "_pages/Tutorials/tut-handoffprotocols.md",
+   "line": 129
+  },
+  {
+   "id": "cs357-tut-handoffprotocols-2",
+   "page": "_pages/Tutorials/tut-handoffprotocols.md",
+   "line": 256
+  },
+  {
+   "id": "cs357-tut-llmjudges-1",
+   "page": "_pages/Tutorials/tut-llmjudges.md",
+   "line": 69
+  },
+  {
+   "id": "cs357-tut-llmjudges-2",
+   "page": "_pages/Tutorials/tut-llmjudges.md",
+   "line": 280
+  },
+  {
+   "id": "cs357-tut-llmpretraining-1",
+   "page": "_pages/Tutorials/tut-llmpretraining.md",
+   "line": 213
+  },
+  {
+   "id": "cs357-tut-llmserving-1",
+   "page": "_pages/Tutorials/tut-llmserving.md",
+   "line": 128
+  },
+  {
+   "id": "cs357-tut-multiagentmeasurement-1",
+   "page": "_pages/Tutorials/tut-multiagentmeasurement.md",
+   "line": 108
+  },
+  {
+   "id": "cs357-tut-obsidiansync-1",
+   "page": "_pages/Tutorials/tut-obsidiansync.md",
+   "line": 203
+  },
+  {
+   "id": "cs357-tut-offlineragfinetuning-1",
+   "page": "_pages/Tutorials/tut-offlineragfinetuning.md",
+   "line": 561
+  },
+  {
+   "id": "cs357-tut-orchestrationpatterns-1",
+   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
+   "line": 55
+  },
+  {
+   "id": "cs357-tut-pythonessentials-1",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 45
+  },
+  {
+   "id": "cs357-tut-pythonessentials-2",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 108
+  },
+  {
+   "id": "cs357-tut-pythonessentials-3",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 135
+  },
+  {
+   "id": "cs357-tut-pythonessentials-4",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 157
+  },
+  {
+   "id": "cs357-tut-pythonessentials-5",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 206
+  },
+  {
+   "id": "cs357-tut-pythonessentials-6",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 219
+  },
+  {
+   "id": "cs357-tut-pythonessentials-7",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 244
+  },
+  {
+   "id": "cs357-tut-pythonessentials-8",
+   "page": "_pages/Tutorials/tut-pythonessentials.md",
+   "line": 278
+  },
+  {
+   "id": "cs357-tut-ragfromzero-1",
+   "page": "_pages/Tutorials/tut-ragfromzero.md",
+   "line": 52
+  },
+  {
+   "id": "cs357-tut-rlhf-1",
+   "page": "_pages/Tutorials/tut-rlhf.md",
+   "line": 207
+  },
+  {
+   "id": "cs357-tut-sampling-1",
+   "page": "_pages/Tutorials/tut-sampling.md",
+   "line": 760
+  },
+  {
+   "id": "cs357-tut-sampling-2",
+   "page": "_pages/Tutorials/tut-sampling.md",
+   "line": 783
+  },
+  {
+   "id": "cs357-tut-secondbrain-1",
+   "page": "_pages/Tutorials/tut-secondbrain.md",
+   "line": 266
+  },
+  {
+   "id": "cs357-tut-shell-1",
+   "page": "_pages/Tutorials/tut-shell.md",
+   "line": 178
+  },
+  {
+   "id": "cs357-tut-textgen2nn-1",
+   "page": "_pages/Tutorials/tut-textgen2nn.md",
+   "line": 252
+  },
+  {
+   "id": "cs357-tut-tokensembeddings-1",
+   "page": "_pages/Tutorials/tut-tokensembeddings.md",
+   "line": 726
+  },
+  {
+   "id": "cs357-tut-tokensenergycost-1",
+   "page": "_pages/Tutorials/tut-tokensenergycost.md",
+   "line": 155
+  },
+  {
+   "id": "cs357-tut-tokensenergycost-2",
+   "page": "_pages/Tutorials/tut-tokensenergycost.md",
+   "line": 251
+  }
+ ],
  "suggested": [
   {
    "page": "_pages/Activities/liascript-agentloop.md",
-   "line": 70,
-   "viz": "agent",
+   "line": 199,
+   "viz": "env",
    "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-agentloop.md",
-   "line": 197,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-biasdata.md",
-   "line": 145,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-biasdata.md",
-   "line": 427,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-biasdata.md",
-   "line": 747,
-   "viz": "env",
-   "lang": "python"
+   "setup": "cs357-liascript-agentloop-1"
   },
   {
    "page": "_pages/Activities/liascript-codingagents.md",
    "line": 683,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-critiqueconsensusjudge.md",
-   "line": 134,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-critiqueconsensusjudge.md",
-   "line": 313,
    "viz": "agent",
    "lang": "python",
    "record": true
@@ -65,26 +327,6 @@
    "line": 341,
    "viz": "cast",
    "lang": "shell"
-  },
-  {
-   "page": "_pages/Activities/liascript-evaluatingoutputs.md",
-   "line": 118,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-iterationloops.md",
-   "line": 583,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-iterationloops.md",
-   "line": 856,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
   },
   {
    "page": "_pages/Activities/liascript-localai.md",
@@ -122,110 +364,38 @@
   },
   {
    "page": "_pages/Activities/liascript-mcp.md",
-   "line": 245,
+   "line": 414,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line213"
   },
   {
    "page": "_pages/Activities/liascript-mcp.md",
-   "line": 412,
+   "line": 484,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line320"
   },
   {
    "page": "_pages/Activities/liascript-mcp.md",
-   "line": 482,
+   "line": 560,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-mcp.md",
-   "line": 558,
-   "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line213,cs357-liascript-mcp-2"
   },
   {
    "page": "_pages/Activities/liascript-observability.md",
-   "line": 76,
+   "line": 174,
+   "viz": "env",
+   "lang": "python"
+  },
+  {
+   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
+   "line": 910,
    "viz": "agent",
    "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-observability.md",
-   "line": 172,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-observability.md",
-   "line": 380,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-observability.md",
-   "line": 518,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-observability.md",
-   "line": 873,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 164,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 460,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 576,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 648,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 703,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 749,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 836,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 896,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
+   "record": true,
+   "setup": "cs357-liascript-orchestrationworkshop-1"
   },
   {
    "page": "_pages/Activities/liascript-promptengineering.md",
@@ -250,78 +420,58 @@
   },
   {
    "page": "_pages/Activities/liascript-rag.md",
-   "line": 288,
-   "viz": "env",
-   "lang": "python"
+   "line": 580,
+   "viz": "agent",
+   "lang": "python",
+   "record": true
   },
   {
    "page": "_pages/Activities/liascript-rag.md",
-   "line": 578,
-   "viz": "agent",
+   "line": 1205,
+   "viz": "lambda",
+   "lang": "lambda"
+  },
+  {
+   "page": "_pages/Activities/liascript-ragworkshop.md",
+   "line": 152,
+   "viz": "env",
    "lang": "python",
-   "record": true
+   "setup": "cs357-liascript-ragworkshop-1"
   },
   {
    "page": "_pages/Activities/liascript-ragworkshop.md",
-   "line": 90,
+   "line": 213,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-liascript-ragworkshop-1,line152"
   },
   {
    "page": "_pages/Activities/liascript-ragworkshop.md",
-   "line": 150,
+   "line": 264,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-liascript-ragworkshop-1,line152,line213"
   },
   {
    "page": "_pages/Activities/liascript-ragworkshop.md",
-   "line": 211,
+   "line": 336,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-liascript-ragworkshop-1,line152,line213,line264"
   },
   {
    "page": "_pages/Activities/liascript-ragworkshop.md",
-   "line": 262,
+   "line": 410,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-ragworkshop.md",
-   "line": 334,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-ragworkshop.md",
-   "line": 408,
-   "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-liascript-ragworkshop-1"
   },
   {
    "page": "_pages/Activities/liascript-rubricworkshop.md",
-   "line": 110,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-rubricworkshop.md",
-   "line": 243,
-   "viz": "cast",
-   "lang": "shell"
-  },
-  {
-   "page": "_pages/Activities/liascript-rubricworkshop.md",
-   "line": 312,
+   "line": 316,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Activities/liascript-skills.md",
-   "line": 132,
-   "viz": "agent",
    "lang": "python",
-   "record": true
+   "setup": "cs357-liascript-rubricworkshop-2"
   },
   {
    "page": "_pages/Activities/liascript-skills.md",
@@ -338,36 +488,33 @@
   },
   {
    "page": "_pages/Activities/liascript-tooluse.md",
-   "line": 163,
+   "line": 279,
    "viz": "agent",
    "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Activities/liascript-tooluse.md",
-   "line": 277,
-   "viz": "agent",
-   "lang": "python",
-   "record": true
+   "record": true,
+   "setup": "cs357-liascript-tooluse-1"
   },
   {
    "page": "_pages/Tutorials/tut-agentframeworks.md",
    "line": 397,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line371"
   },
   {
    "page": "_pages/Tutorials/tut-agentframeworks.md",
    "line": 410,
    "viz": "agent",
    "lang": "python",
-   "record": true
+   "record": true,
+   "setup": "line371"
   },
   {
    "page": "_pages/Tutorials/tut-agentframeworks.md",
    "line": 440,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line371,line410"
   },
   {
    "page": "_pages/Tutorials/tut-agenticopenwebui.md",
@@ -391,36 +538,6 @@
    "record": true
   },
   {
-   "page": "_pages/Tutorials/tut-aibyhand.md",
-   "line": 195,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-aibyhand.md",
-   "line": 311,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-aibyhand.md",
-   "line": 469,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-aibyhand.md",
-   "line": 503,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-aibyhand.md",
-   "line": 624,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
    "page": "_pages/Tutorials/tut-biasprobes.md",
    "line": 65,
    "viz": "agent",
@@ -431,7 +548,8 @@
    "page": "_pages/Tutorials/tut-biasprobes.md",
    "line": 130,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line65"
   },
   {
    "page": "_pages/Tutorials/tut-biasprobes.md",
@@ -443,26 +561,16 @@
    "page": "_pages/Tutorials/tut-biasprobes.md",
    "line": 206,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line65,line130,line171"
   },
   {
    "page": "_pages/Tutorials/tut-biasprobes.md",
    "line": 269,
    "viz": "agent",
    "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Tutorials/tut-biasprobes.md",
-   "line": 324,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-biasprobes.md",
-   "line": 366,
-   "viz": "env",
-   "lang": "python"
+   "record": true,
+   "setup": "line65,line130"
   },
   {
    "page": "_pages/Tutorials/tut-chessaicoach.md",
@@ -476,7 +584,8 @@
    "line": 420,
    "viz": "agent",
    "lang": "python",
-   "record": true
+   "record": true,
+   "setup": "line296"
   },
   {
    "page": "_pages/Tutorials/tut-githubpowertools.md",
@@ -487,19 +596,7 @@
   },
   {
    "page": "_pages/Tutorials/tut-handoffprotocols.md",
-   "line": 128,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-handoffprotocols.md",
-   "line": 253,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-handoffprotocols.md",
-   "line": 307,
+   "line": 311,
    "viz": "env",
    "lang": "python"
   },
@@ -512,72 +609,55 @@
   },
   {
    "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 68,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 133,
+   "line": 135,
    "viz": "agent",
    "lang": "python",
-   "record": true
+   "record": true,
+   "setup": "cs357-tut-llmjudges-1"
   },
   {
    "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 170,
+   "line": 172,
    "viz": "agent",
    "lang": "python",
-   "record": true
+   "record": true,
+   "setup": "cs357-tut-llmjudges-1"
   },
   {
    "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 217,
+   "line": 219,
    "viz": "agent",
    "lang": "python",
-   "record": true
+   "record": true,
+   "setup": "cs357-tut-llmjudges-1,line135"
   },
   {
    "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 277,
-   "viz": "cast",
-   "lang": "shell"
+   "line": 346,
+   "viz": "env",
+   "lang": "python",
+   "setup": "cs357-tut-llmjudges-1"
   },
   {
    "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 342,
+   "line": 380,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-llmjudges-1,line135,line219,line261"
   },
   {
    "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 376,
+   "line": 403,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-llmjudges-1,line346"
   },
   {
    "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 399,
+   "line": 420,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-llmjudges.md",
-   "line": 416,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-llmpretraining.md",
-   "line": 212,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-llmserving.md",
-   "line": 127,
-   "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-llmjudges-1,line135,line219,line261"
   },
   {
    "page": "_pages/Tutorials/tut-memorycontext.md",
@@ -602,27 +682,24 @@
   },
   {
    "page": "_pages/Tutorials/tut-multiagentmeasurement.md",
-   "line": 107,
+   "line": 296,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line253"
   },
   {
    "page": "_pages/Tutorials/tut-multiagentmeasurement.md",
-   "line": 294,
+   "line": 575,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line505"
   },
   {
    "page": "_pages/Tutorials/tut-multiagentmeasurement.md",
-   "line": 573,
+   "line": 750,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-multiagentmeasurement.md",
-   "line": 748,
-   "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "line710"
   },
   {
    "page": "_pages/Tutorials/tut-observability.md",
@@ -638,72 +715,54 @@
    "record": true
   },
   {
-   "page": "_pages/Tutorials/tut-observability.md",
-   "line": 465,
+   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
+   "line": 133,
+   "viz": "env",
+   "lang": "python",
+   "setup": "cs357-tut-orchestrationpatterns-1"
+  },
+  {
+   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
+   "line": 200,
+   "viz": "env",
+   "lang": "python",
+   "setup": "cs357-tut-orchestrationpatterns-1"
+  },
+  {
+   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
+   "line": 251,
+   "viz": "env",
+   "lang": "python",
+   "setup": "cs357-tut-orchestrationpatterns-1,line133,line200"
+  },
+  {
+   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
+   "line": 336,
+   "viz": "env",
+   "lang": "python",
+   "setup": "cs357-tut-orchestrationpatterns-1,line133,line200,line251"
+  },
+  {
+   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
+   "line": 374,
+   "viz": "env",
+   "lang": "python",
+   "setup": "cs357-tut-orchestrationpatterns-1,line133,line200,line251,line336"
+  },
+  {
+   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
+   "line": 442,
    "viz": "agent",
    "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Tutorials/tut-obsidiansync.md",
-   "line": 202,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-offlineragfinetuning.md",
-   "line": 560,
-   "viz": "env",
-   "lang": "python"
+   "record": true,
+   "setup": "cs357-tut-orchestrationpatterns-1"
   },
   {
    "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 54,
+   "line": 516,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 131,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 198,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 249,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 334,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 372,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 440,
-   "viz": "agent",
    "lang": "python",
-   "record": true
-  },
-  {
-   "page": "_pages/Tutorials/tut-orchestrationpatterns.md",
-   "line": 514,
-   "viz": "env",
-   "lang": "python"
+   "setup": "cs357-tut-orchestrationpatterns-1,line133,line442"
   },
   {
    "page": "_pages/Tutorials/tut-personapipeline.md",
@@ -720,94 +779,45 @@
   },
   {
    "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 44,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 105,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 130,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 150,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 178,
+   "line": 186,
    "viz": "agent",
    "lang": "python",
    "record": true
   },
   {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 197,
+   "page": "_pages/Tutorials/tut-ragfromzero.md",
+   "line": 96,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 208,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 231,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-pythonessentials.md",
-   "line": 263,
-   "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-ragfromzero-1"
   },
   {
    "page": "_pages/Tutorials/tut-ragfromzero.md",
-   "line": 51,
+   "line": 136,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-ragfromzero-1,line96"
   },
   {
    "page": "_pages/Tutorials/tut-ragfromzero.md",
-   "line": 94,
+   "line": 192,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-ragfromzero-1,line96,line136"
   },
   {
    "page": "_pages/Tutorials/tut-ragfromzero.md",
-   "line": 134,
+   "line": 249,
    "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-ragfromzero-1,line96,line136,line192"
   },
   {
    "page": "_pages/Tutorials/tut-ragfromzero.md",
-   "line": 190,
+   "line": 333,
    "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-ragfromzero.md",
-   "line": 247,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-ragfromzero.md",
-   "line": 331,
-   "viz": "env",
-   "lang": "python"
+   "lang": "python",
+   "setup": "cs357-tut-ragfromzero-1,line96"
   },
   {
    "page": "_pages/Tutorials/tut-redteaming.md",
@@ -866,12 +876,6 @@
    "record": true
   },
   {
-   "page": "_pages/Tutorials/tut-rlhf.md",
-   "line": 206,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
    "page": "_pages/Tutorials/tut-sampling.md",
    "line": 110,
    "viz": "agent",
@@ -907,24 +911,6 @@
    "record": true
   },
   {
-   "page": "_pages/Tutorials/tut-sampling.md",
-   "line": 759,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-sampling.md",
-   "line": 780,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-secondbrain.md",
-   "line": 265,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
    "page": "_pages/Tutorials/tut-setupbasics.md",
    "line": 469,
    "viz": "cast",
@@ -937,29 +923,11 @@
    "lang": "shell"
   },
   {
-   "page": "_pages/Tutorials/tut-shell.md",
-   "line": 177,
-   "viz": "cast",
-   "lang": "shell"
-  },
-  {
    "page": "_pages/Tutorials/tut-terminalfilesystem.md",
    "line": 574,
    "viz": "agent",
    "lang": "python",
    "record": true
-  },
-  {
-   "page": "_pages/Tutorials/tut-terminalfilesystem.md",
-   "line": 604,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-textgen2nn.md",
-   "line": 251,
-   "viz": "env",
-   "lang": "python"
   },
   {
    "page": "_pages/Tutorials/tut-tokensembeddings.md",
@@ -969,29 +937,11 @@
    "record": true
   },
   {
-   "page": "_pages/Tutorials/tut-tokensembeddings.md",
-   "line": 725,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
    "page": "_pages/Tutorials/tut-tokensenergycost.md",
    "line": 79,
    "viz": "agent",
    "lang": "python",
    "record": true
-  },
-  {
-   "page": "_pages/Tutorials/tut-tokensenergycost.md",
-   "line": 154,
-   "viz": "env",
-   "lang": "python"
-  },
-  {
-   "page": "_pages/Tutorials/tut-tokensenergycost.md",
-   "line": 248,
-   "viz": "env",
-   "lang": "python"
   },
   {
    "page": "_pages/Tutorials/tut-visualagents.md",
@@ -1001,7 +951,7 @@
   }
  ],
  "invalid_config": [
-  "_pages/Activities/liascript-observability.md:606 json: Extra data: line 2 column 1 (char 129)",
+  "_pages/Activities/liascript-observability.md:612 json: Extra data: line 2 column 1 (char 129)",
   "_pages/Tutorials/tut-agentteams.md:90 json: Expecting value: line 1 column 1 (char 0)",
   "_pages/Tutorials/tut-setupbasics.md:181 json: Extra data: line 1 column 10 (char 9)",
   "_pages/Tutorials/tut-setupbasics.md:250 json: Extra data: line 1 column 10 (char 9)"
