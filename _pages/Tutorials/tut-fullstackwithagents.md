@@ -14,6 +14,7 @@ tags:
 - cloudflare
 - testing
 - ci
+- agent-skills
 ---
 ## About This Tutorial
 
@@ -21,7 +22,7 @@ Ask a coding agent to "build me a questions board for class" and it will. It wil
 
 This tutorial builds one small app the other way around. You decide what it should do, the agent asks you about everything you left out, the agent writes each piece test first while you watch, a reviewer skill checks the result, GitHub runs the tests on every push, and nothing reaches the internet until you approve it. The app is a **Questions Board**: students post a question during class, upvote the ones they want answered, and the most-wanted question rises to the top. It has a web page, an API, and a database, and it runs on Cloudflare's free tier.
 
-The path runs **a workbench (a container that sees one folder) → requirements (a charter, an interview, a spec) → building one slice at a time (red, then green) → review and refactoring → a clean test and continuous integration → a gated deploy → teardown**. Everything works with either of the two coding agents this course uses, **OpenCode** and **Oh My Pi**, and the places where they differ are called out where they matter.
+The path runs **a workbench (a container that sees one folder) → requirements (a charter, an interview, a spec) → building one slice at a time (red, then green) → review and refactoring → a clean test and continuous integration → a gated deploy → teardown**, with an optional Part V that adds two public skill packs, tstack and pstack. Everything works with either of the two coding agents this course uses, **OpenCode** and **Oh My Pi**, and the places where they differ are called out where they matter.
 {: .tb-lede}
 
 ## Key Concepts
@@ -41,6 +42,8 @@ The path runs **a workbench (a container that sees one folder) → requirements 
 | **Continuous integration (CI)** | A service that runs your tests on every push and pull request, on a clean machine | `.github/workflows/ci.yml` on GitHub Actions |
 | **Environment protection** | A GitHub setting that pauses a workflow until a named reviewer approves it | The `production` environment that the deploy workflow waits on |
 | **Teardown** | Deleting everything a deployment created, on purpose and in order | The `cloudflare-teardown` skill: the Worker, then the database |
+| **Skill pack** | A published set of skills that you copy into a project or install as a plugin | Pocock's skills in section 7; tstack and pstack in Part V |
+| **Pinned commit** | One exact version of a repository, named by its commit hash, so the files you read are the files that run | The commit in every install command in sections 7 and 19 |
 
 ### Before You Start
 
@@ -48,6 +51,7 @@ The path runs **a workbench (a container that sees one folder) → requirements 
 - Git and a GitHub account.
 - A model your agent can use: an OpenRouter key, or one of the providers from [OpenCode Setup]({{ site.baseurl }}/Tutorials/OpenCodeSetup).
 - A free Cloudflare account, but only for Part IV. Everything before that runs on your own machine with no account at all.
+- For Part V only, a GitHub token that the `gh` command can use (section 19 shows how to make one).
 - Helpful background, which this page links instead of repeating: [Agent Skills]({{ site.baseurl }}/Tutorials/AgentSkills), [Container Isolation]({{ site.baseurl }}/Tutorials/ContainerIsolation), and [Hosting with Cloudflare]({{ site.baseurl }}/Tutorials/Cloudflare).
 
 ## The Loop, and Who Decides
@@ -74,14 +78,14 @@ Every step below has an owner. The agent does most of the typing, and you make e
 
 ## 1.  A Folder and a Repository
 
-Everything this project is lives in one folder, under git from the first minute:
+The whole project lives in one folder, under git from the first minute:
 
 ```bash
 mkdir questions-board && cd questions-board
 git init -b main
 ```
 
-Create an empty private repository on GitHub named `questions-board` and connect it (`git remote add origin ...`), but don't push yet; there is nothing to push.
+Create an empty private repository on GitHub named `questions-board` and connect it with `git remote add origin ...`. Don't push yet, because there is nothing to push.
 
 ## 2.  The Dev Container: Both Agents, One Folder
 
@@ -356,7 +360,7 @@ mkdir -p docs/adr docs/issues
 
 ## 7.  Skills: Borrowed and Written
 
-Skills are directories under `.agents/skills/`, so both agents find them (see [Agent Skills]({{ site.baseurl }}/Tutorials/AgentSkills) for how loading works). This project uses six from Matt Pocock's [skills repository](https://github.com/mattpocock/skills) (MIT licensed) and three it writes for itself.
+Skills are directories under `.agents/skills/`, so both agents find them (see [Agent Skills]({{ site.baseurl }}/Tutorials/AgentSkills) for how loading works). This project uses six from Matt Pocock's [skills repository](https://github.com/mattpocock/skills) (MIT licensed) and three that it writes for itself. Part V adds a few more, from two other public packs.
 
 | Skill | From | What it does here |
 |---|---|---|
@@ -386,13 +390,13 @@ done
 curl -fsSL "$P/LICENSE" -o .agents/skills/LICENSE-mattpocock-skills.txt
 ```
 
-Pocock's own installer (`npx skills@latest add mattpocock/skills -a opencode`) does the same job and keeps the skills updatable; the loop above trades updates for knowing exactly what you installed. Some of his skills mention running `/setup-matt-pocock-skills` to choose an issue tracker. You don't need it here: `AGENTS.md` already tells them the tracker is `docs/issues/`.
+Pocock's own installer (`npx skills@latest add mattpocock/skills -a opencode`) does the same job and keeps the skills easy to update. The loop above gives up easy updates in exchange for knowing exactly what you installed. Some of his skills mention running `/setup-matt-pocock-skills` to choose an issue tracker. You don't need it here: `AGENTS.md` already tells them the tracker is `docs/issues/`.
 
 **Write the three project skills.** Save each file at the path in its heading.
 
 `.agents/skills/cloudflare-deploy/SKILL.md`:
 
-```markdown
+````markdown
 ---
 name: cloudflare-deploy
 description: Install Wrangler and deploy this app to Cloudflare Workers with its D1 database. Use when the user asks to deploy, publish, ship, go live, or put the app on Cloudflare, or asks to install or check the Cloudflare tools.
@@ -435,7 +439,7 @@ npx wrangler deploy                            # uploads the Worker and the page
 ## Prefer the pipeline
 
 For a team project, deploy through the `Deploy` workflow in `.github/workflows/deploy.yml` instead: it runs the same steps after a reviewer approves the run in GitHub, and the token lives only in GitHub's secret store.
-```
+````
 
 `.agents/skills/cloudflare-deploy/scripts/check-tools.sh`:
 
@@ -969,7 +973,7 @@ git switch -c first-release
 git push -u origin first-release
 ```
 
-The **CI** check appears on the pull request and turns green when the tests pass. Then make it a rule: in the repository's **Settings → Branches**, add a protection rule for `main` that requires the `test` check from the CI workflow to pass before merging. Now neither you nor the agent can merge red code, and the agent never pushes to `main` at all (`AGENTS.md` and the permission files both say so).
+The **CI** check appears on the pull request and turns green when the tests pass. Then make it a rule: in the repository's **Settings → Branches**, add a protection rule for `main` that requires the `test` check from the CI workflow to pass before merging. Now neither you nor the agent can merge red code, and the agent never pushes to `main` at all (`AGENTS.md` and the permission files both say so). Part V shows how two tstack skills can open this pull request and watch it through CI for you, while the merge stays yours.
 
 > This is the human-near-the-loop version of review.  The agent does the work on a branch, the pull request shows you the whole diff with the test results beside it, and the merge button is yours.
 {: .tb-key data-title="Why this matters"}
@@ -984,7 +988,13 @@ You need a Cloudflare account now, and an API token that can do exactly two thin
 CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... OPENROUTER_API_KEY=... devbox/devbox.sh opencode
 ```
 
-Then ask for the `cloudflare-deploy` skill. Follow along in the skill's file: it checks the tools, runs the tests, confirms the credentials are present without printing them, and then shows you `npx wrangler d1 create questions-board` and waits. After your yes it copies the new `database_id` into `wrangler.jsonc` and commits. It then shows you the two commands that change the live world, `npx wrangler d1 migrations apply DB --remote` and `npx wrangler deploy`, and waits again. It finishes by calling the live URL and reporting what it deployed.
+Then ask for the `cloudflare-deploy` skill, and follow along in the skill's file as it works:
+
+1. It checks the tools, runs the tests, and confirms that the credentials are present without printing them.
+2. It shows you `npx wrangler d1 create questions-board` and waits for your yes.
+3. It copies the new `database_id` into `wrangler.jsonc` and commits.
+4. It shows you the two commands that change the live world, `npx wrangler d1 migrations apply DB --remote` and `npx wrangler deploy`, and waits again.
+5. It calls the live URL and reports what it deployed.
 
 Before you approve anything, you can see exactly what would be uploaded with `npx wrangler deploy --dry-run --outdir /tmp/out`:
 
@@ -1035,7 +1045,204 @@ Start it from the **Actions** tab (**Deploy → Run workflow**). It runs the tes
 
 ## 17.  Teardown
 
-A deployment you forget about is still on the internet. When the project is over, or before you redeploy from scratch, ask for the `cloudflare-teardown` skill. It shows what exists (including a preview with `npx wrangler delete --name questions-board --dry-run`), offers to back up the questions with `npx wrangler d1 export`, then deletes the Worker and the database, each after its own yes, and resets `database_id` so the next deploy starts clean. Afterward, check the Cloudflare dashboard yourself, and delete the API token if you made it for this project alone.
+A deployment you forget about is still on the internet. When the project is over, or before you redeploy from scratch, ask for the `cloudflare-teardown` skill. It:
+
+1. Shows what exists, including a preview from `npx wrangler delete --name questions-board --dry-run`.
+2. Offers to back up the questions with `npx wrangler d1 export`.
+3. Deletes the Worker, then the database, each after its own yes.
+4. Resets `database_id`, so the next deploy starts clean.
+
+Afterward, check the Cloudflare dashboard yourself, and delete the API token if you made it for this project alone.
+
+---
+
+# Part V: Two More Skill Packs
+
+The Pocock skills in section 7 cover requirements, tests, and review. Two other public packs cover the work around them. Theo Browne's **tstack** handles pull requests, and Lauren Tan's **pstack** helps you understand code and check a change before you trust it. Nothing in Parts I to IV needs either one. Add them once the Questions Board works, and add only the skills you have read.
+
+## 18.  What the Two Packs Are
+
+| | tstack | pstack |
+|---|---|---|
+| Author | Theo Browne ([t3dotgg](https://github.com/t3dotgg)) | Lauren Tan ([poteto](https://github.com/poteto)) |
+| Source | [github.com/t3dotgg/tstack](https://github.com/t3dotgg/tstack) | [github.com/cursor/plugins, folder `pstack`](https://github.com/cursor/plugins/tree/main/pstack) |
+| Version used here | Commit `11e37a7` (November 11, 2026); the repository has no releases | Version 0.15.36, at repository commit `3dbd22f` (November 14, 2026) |
+| License | MIT | MIT |
+| Written for | Claude Code and Codex | Cursor, with a generated copy for Claude Code |
+| What is in it | Nine skills for the pull-request part of the job: open one, watch it through CI, take one over, or have other models review it | 58 skills: `poteto-mode` with its 23 playbooks, 24 one-rule "principle" skills, and skills for explaining code, designing before coding, and adversarial review |
+| What it needs | An authenticated GitHub CLI (`gh`), plus `python3` for `babysit-pr` | Nothing extra for the skills used here; several others call models from other providers |
+{: .tb-full}
+
+Both packs use the same `SKILL.md` format as the Pocock skills, so OpenCode and Oh My Pi load them from `.agents/skills/` even though neither pack names those two agents. (About the name: you may hear these called the "t3 stack" skills, but the repository is `t3dotgg/tstack`. The T3 Stack and `create-t3-app` are a different project, a starter template for TypeScript web apps.)
+
+**Which skills this project uses, and which it leaves out.** Each pack was written for someone else's workflow, so take the skills that fit this one and leave the rest.
+
+| Skill | Pack | What it does | Here? |
+|---|---|---|---|
+| `file-pr` | tstack | Opens a pull request whose description starts with the problem, not a list of changes | Yes, in section 20 |
+| `babysit-pr` | tstack | Watches a pull request through CI and review bots, and fixes the real findings | Yes, after `file-pr` |
+| `leaving-pr-comments` | tstack | Marks every comment the agent posts for you as agent-written | Yes, because the two above use it |
+| `in-your-own-words` | pstack | Plays your goal back to you before any work starts | Yes, before the interview |
+| `how` | pstack | Walks through how part of the code works | Yes, to read the Worker |
+| `blast-radius` | pstack | Finds what else a change could break, and proves the safe part by running code | Yes, during review |
+| `architect` | pstack | Settles function signatures and module shape before code | Yes, before the next feature |
+| `principle-prove-it-works` | pstack | Checks the real result (run it, read the value) before calling the work done | Yes, at the end of each slice |
+| `full-send` | tstack | Finishes a change and **merges it, with nobody watching** | **No.** It merges on its own |
+| `full-stop` | tstack | Does the same work but stops before the merge | **No.** It treats "full stop" as permission to run its tests even where a project file says to ask first |
+| `council`, `sol-loop` | tstack | Have models from other providers review a change until they agree | No. They need those providers, and every round costs money |
+| `poteto-mode` | pstack | Routes a task to a playbook and runs it start to finish | **No.** Its playbooks include overnight runs that merge, and its `never-block-on-the-human` principle says to go ahead with reversible work and let you correct it afterward. This project asks first |
+| `tdd` | pstack | Writes the failing test first | No. Pocock's `tdd` already has this name, and two skills with one name leave it unclear which one loads |
+{: .tb-full}
+
+## 19.  Install Them, Pinned
+
+**1. Give the box GitHub's command-line tool.** tstack's skills open and watch pull requests with `gh`, so add it to the `apt-get install` line in `devbox/Dockerfile`:
+
+```dockerfile
+ && apt-get install -y --no-install-recommends git ca-certificates curl gh \
+```
+
+The `node:22-bookworm` image already has `python3` (Python 3.11), which `babysit-pr` needs. Then add `GH_TOKEN` to the list of variables that `devbox/devbox.sh` forwards:
+
+```bash
+for v in OPENROUTER_API_KEY ANTHROPIC_API_KEY OPENAI_API_KEY CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID GH_TOKEN; do
+```
+
+**2. Make a GitHub token that can do one job.** In GitHub, go to **Settings → Developer settings → Personal access tokens → Fine-grained tokens**. Limit the token to this one repository and give it an expiry. Give it read and write on **Contents** and **Pull requests**, and read-only on **Actions** and **Commit statuses**. If `pr-wait` later stops with a permissions error, add the read permission the error names. Pass the token only to sessions that need it:
+
+```bash
+GH_TOKEN=... OPENROUTER_API_KEY=... devbox/devbox.sh opencode
+```
+
+As with the Cloudflare token, the agent can read anything you pass it.
+
+**3. Copy the skills at one commit.** Run this yourself from the project folder, in the box or on your machine. It uses `cp`, which the agent's permission files deny.
+
+```bash
+# tstack: the three pull-request skills, at one commit
+TSTACK=11e37a74d0a6868c121cd0910ab2b3bd9873b92a
+git clone -q https://github.com/t3dotgg/tstack /tmp/tstack
+git -C /tmp/tstack checkout -q "$TSTACK"
+mkdir -p .agents/skills
+for s in file-pr babysit-pr leaving-pr-comments; do cp -R "/tmp/tstack/skills/$s" .agents/skills/; done
+cp /tmp/tstack/LICENSE .agents/skills/LICENSE-tstack.txt
+
+# pstack: five skills, from Cursor's plugin repository at one commit (only the pstack folder is downloaded)
+PSTACK=3dbd22ff12742fb28c9700b9760baa29ed41dc13
+git clone -q --filter=blob:none --no-checkout https://github.com/cursor/plugins /tmp/cursor-plugins
+git -C /tmp/cursor-plugins sparse-checkout set pstack
+git -C /tmp/cursor-plugins checkout -q "$PSTACK"
+for s in in-your-own-words how architect blast-radius principle-prove-it-works; do cp -R "/tmp/cursor-plugins/pstack/skills/$s" .agents/skills/; done
+cp /tmp/cursor-plugins/pstack/LICENSE .agents/skills/LICENSE-pstack.txt
+```
+
+Each skill lands in its own folder, `.agents/skills/<name>/`, with any scripts and reference files it brought along (`babysit-pr/scripts/pr-wait`, for example).
+
+**4. Check, then commit.** `opencode debug skill` and `omp skill list` should now list the eight new skills next to the nine from section 7. If a name appears twice, two skills are competing for it; remove one with `git rm -r` before you go on. Then commit the skills with their licenses:
+
+```bash
+git add .agents/skills && git commit -m "Add pinned skills from tstack and pstack"
+```
+
+**Updating later.** Change the commit hash, run step 3 again, and read `git diff .agents/skills` before you commit. The diff is the new set of instructions your agent will follow.
+
+**Using these packs outside the box.** Each pack also has its own installer, but every one installs the whole pack for every project on your machine, so the selection above no longer applies:
+
+| Agent | tstack | pstack |
+|---|---|---|
+| Claude Code | `cp -R tstack/skills/* ~/.claude/skills/` | `/plugin marketplace add cursor/plugins`, then `/plugin install pstack@cursor-plugins`; commands get a `pstack:` prefix, as in `/pstack:how` |
+| Codex | `cp -R tstack/skills/* ~/.codex/skills/` | (none published) |
+| Cursor | (none published) | `/add-plugin pstack` |
+{: .tb-full}
+
+## 20.  Using Them on the Questions Board
+
+Each skill below has a place in the loop you already know. Name the skill in your prompt every time; pstack marks most of its skills to run only when you ask for them by name.
+
+**Before the interview (section 8), check that the agent understood the charter.**
+
+```text
+Use the in-your-own-words skill. Read CHARTER.md and tell me what you think I want
+this app to do and what problem it solves. Then stop.
+```
+
+Compare the answer with your charter. If it mentions accounts, editing, or real-time updates, ask yourself whether your non-goals line is as clear as you thought.
+
+**Before you change code you didn't write, ask how it works.**
+
+```text
+Use the how skill: how does a POST to /api/questions get from the browser to the
+questions table? Name the file and the function for each step.
+```
+
+By default, pstack sends parts of `how` and `architect` to subagents on other models. In an agent running one model, watch what it does with that step, and tell it to do the work itself if it stalls.
+
+**During review (section 13), find out what a change could break before you make it.** The review may suggest keeping the 280-character limit in one place.
+
+```text
+Use the blast-radius skill on this change: keep the 280-character limit in one
+place. What else could break? Prove the safe part by running code. Change nothing.
+```
+
+**Predict first:** how many places does the limit live in this project? (Look at the Worker, the migration, and the page.) Which of them can you change without writing a new migration, and why can't you just edit `0001_create_questions.sql`?
+
+**Before the next feature, settle its shape.** Suppose the next charter adds "one vote per person" (Question 2 below). Before the first `tdd` slice:
+
+```text
+Use the architect skill to sketch the data and the function signatures for one vote
+per person, within CHARTER.md's rules. Stop after the sketch.
+```
+
+**At the end of each slice, prove it works.** Passing tests and a working app are different claims.
+
+```text
+Use the principle-prove-it-works skill: run npm run db:local and npx wrangler dev,
+call the five routes from section 12, and show me the real responses.
+```
+
+**At the pull request (section 15), file it and watch it.** Instead of opening the pull request by hand:
+
+```text
+Use the file-pr skill to open a pull request from first-release into main. Show me
+the title and description before you file it.
+```
+
+`file-pr` checks whether a pull request already exists, follows your repository's title style, starts the description with the problem, and ends it with the model and agent that wrote the change. Then:
+
+```text
+Use the babysit-pr skill on that pull request. Stop when the CI check is green.
+Do not merge.
+```
+
+`babysit-pr` waits with its own `pr-wait` script, which prints one line for each real event (a check finished, someone commented) and exits when the pull request is ready or needs you. Merging stays with you.
+
+**Let the read-only `gh` commands through, and refuse merges.** Under the permission files from section 4, every `gh` command asks. Allow the two read-only ones and deny merging. In `opencode.json` the last match wins, so add these lines after `"*": "ask"` in the `bash` block:
+
+```json
+"gh pr view *": "allow",
+"gh pr checks *": "allow",
+"gh pr merge *": "deny",
+```
+
+In `.omp/config.yml` the first match wins, so put them at the top of `bash.patterns`:
+
+```yaml
+    - { match: "gh pr merge *", approval: deny }
+    - { match: "gh pr view *", approval: allow }
+    - { match: "gh pr checks *", approval: allow }
+```
+
+> A rule matches command text, so `gh api -X PUT repos/<you>/questions-board/pulls/1/merge` merges without ever typing `gh pr merge`.  What stops it is the same pair as before: the catch-all `ask` rule, and the branch protection rule from section 15 that requires a green `test` check.
+{: .tb-warning data-title="Watch out"}
+
+## 21.  Before You Trust a Skill
+
+- **Read every `SKILL.md` you install, and every script in its folder.** A skill is a set of instructions your agent follows with your permissions. Look for merging, pushing, force-pushing, deleting, calls to other models or services, and any line that says to go ahead without asking.
+- **Pin, then update on purpose.** Install from a commit, never from "latest", and read the diff when you move to a newer one (section 19).
+- **Your permission files hold even when a skill says otherwise.** `full-stop` says that "full stop" is permission to run its tests without asking, but it also says it cannot bypass your agent's own approval prompts. Approve what the prompt in front of you shows, not what a skill promises.
+- **Watch for name collisions.** After every install, list the skills again. Two skills with one name, like the two `tdd` skills, leave it unclear which instructions run.
+- **Other models cost money and see your code.** `council`, `sol-loop`, `interrogate`, `arena`, `swarm`, and pstack's subagent defaults all send your code to other providers.
+- **Keep the licenses.** Both packs are MIT licensed, which lets you copy and change the skills as long as the license notice goes with them. That is why step 3 copies each `LICENSE` file.
 
 ---
 
@@ -1061,10 +1268,14 @@ A deployment you forget about is still on the internet. When the project is over
 3. `opencode.json` denies `rm *`. Name two commands that would still delete a file, and say which part of this setup stops each one.
 4. Why does the deploy workflow run the tests again, when CI already ran them on the pull request?
 5. Swap D1 for Supabase. Which files change, which new secret appears, and what happens to the tests? (Start from `docs/adr/0001-d1-over-supabase.md`.)
+6. `full-stop` treats "full stop" as permission to run its tests even where a project file says to ask first. Which file in this project says to ask, and what would still stop the agent?
+7. pstack's `never-block-on-the-human` principle says to go ahead with reversible work and let the human correct it afterward. This project asks first at every slice. Describe a project where each approach is the better one.
 
 ## Further Reading
 
 - [Matt Pocock's skills](https://github.com/mattpocock/skills), especially `grilling`, `tdd`, and `code-review`
+- [tstack](https://github.com/t3dotgg/tstack), Theo Browne's pull-request skills
+- [pstack](https://github.com/cursor/plugins/tree/main/pstack), Lauren Tan's skills, and its [guide](https://github.com/cursor/plugins/tree/main/pstack/docs/guide), which walks through a first real task
 - [Cloudflare D1](https://developers.cloudflare.com/d1/) and [Workers static assets](https://developers.cloudflare.com/workers/static-assets/)
 - [Testing Workers with Vitest](https://developers.cloudflare.com/workers/testing/vitest-integration/)
 - [OpenCode permissions](https://opencode.ai/docs/permissions/)
