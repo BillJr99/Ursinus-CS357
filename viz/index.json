@@ -1,7 +1,7 @@
 {
  "course": "cs357",
  "site": "https://billjr99.github.io/Ursinus-CS357-Fall2026",
- "built": "2026-11-13 22:00",
+ "built": "2026-11-13 22:20",
  "examples": [
   {
    "id": "cs357-liascript-agentloop-1",
@@ -101,7 +101,7 @@
    "line": 77,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-observability",
    "error": null,
-   "steps": 9
+   "steps": 4
   },
   {
    "id": "cs357-liascript-observability-2",
