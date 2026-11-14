@@ -487,9 +487,7 @@ schedule:
   - rtitle: "Have your stuck points and your pipeline-in-progress ready for the open studio."
 - week: "8"
   date: "0"
-  title: "How I AI: A Vault, a Charter, and a Personal Agent Setup"
-  link: "Activities/liascript-howiai.md"
-  liapage: true
+  title: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox"
   deliverables:
   - dtitle: "Lab: Local Agent Due"
     dlink: "Assignments/LocalAgent"
