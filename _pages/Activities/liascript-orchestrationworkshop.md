@@ -651,6 +651,7 @@ CALLS.clear()
 
 **Goal:** extract, draft, and polish in an order you wrote, print every intermediate, and run a check in code after the last stage.  The check is not a fourth model call.  Whether "Thursday at 7pm" appears in the digest is something a program can verify exactly, so a program verifies it.  When the check fails, the pipeline stops for a stated reason and returns the last version that passed, with the problem attached.  The lab's critique loop follows the same rule when its budget runs out.
 
+<!-- run: id=cs357-liascript-orchestrationworkshop-4 viz=env setup=cs357-liascript-orchestrationworkshop-1 -->
 ```python
 # Step 1: a fixed pipeline.  You wrote the order; the code checks the seam the model cannot.
 def check_times(facts, text):
@@ -681,6 +682,7 @@ digest, problems = digest_pipeline(MESSAGES)
 print(f"\nRESULT: {digest}\nmodel calls: {len(CALLS)}")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-orchestrationworkshop-4) <!-- code-viz link -->
 
 **You should see:**
 
@@ -706,6 +708,7 @@ model calls: 3
 
 **Goal:** classify each message once into a closed set, then dispatch it.  Events and changes go on to the digest pipeline, questions go to an FAQ queue, and anything outside the set goes to a person.  Part II's router fell back to "software" without telling anyone.  This one fails closed and says so, which is the louder failure Question 5 asked for.
 
+<!-- run: id=cs357-liascript-orchestrationworkshop-5 viz=env setup=cs357-liascript-orchestrationworkshop-1 -->
 ```python
 # Step 2: a router.  One classification per message, a closed set, and a loud failure.
 ROUTES = {"event": "digest", "change": "digest (marked UPDATED)", "question": "FAQ queue"}
@@ -726,6 +729,7 @@ for message in MESSAGES:
 print(f"\nmodel calls: {len(CALLS)}; {len(for_digest)} of {len(MESSAGES)} messages go on to the pipeline")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-orchestrationworkshop-5) <!-- code-viz link -->
 
 **You should see:**
 
@@ -752,6 +756,7 @@ model calls: 5; 3 of 5 messages go on to the pipeline
 
 The stand-in supervisor below is scripted to make a plausible mistake: it always stops with the newest text, whether or not that text passed the check.
 
+<!-- run: id=cs357-liascript-orchestrationworkshop-6 viz=env setup=cs357-liascript-orchestrationworkshop-1,cs357-liascript-orchestrationworkshop-4,cs357-liascript-orchestrationworkshop-5 -->
 ```python
 # Step 3: a supervisor loop.  A model picks the next move each turn; you own the roster,
 # the budget, and every stop condition.
@@ -815,6 +820,7 @@ print(f"\nSTATUS: {outcome['status']} (turns: {outcome['turns']}, model calls: {
 print(f"ANSWER (newest text that passed the check): {outcome['answer']}")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-orchestrationworkshop-6) <!-- code-viz link -->
 
 **You should see:**
 
@@ -839,6 +845,7 @@ Read the transcript as the loop's log.  Turns 1 to 3 are the pipeline again, thi
 
 Now make the other two stop conditions fire, one misbehaving supervisor at a time.
 
+<!-- run: id=cs357-liascript-orchestrationworkshop-7 viz=env setup=cs357-liascript-orchestrationworkshop-1,cs357-liascript-orchestrationworkshop-4,cs357-liascript-orchestrationworkshop-5,cs357-liascript-orchestrationworkshop-6 -->
 ```python
 # The other two stop conditions, each fired on purpose by a misbehaving stand-in supervisor.
 def stubborn(task, transcript):        # asks for the same extraction forever
@@ -853,6 +860,7 @@ for name, decide in [("stubborn", stubborn), ("chatty", chatty)]:
     print(f"-> {name}: {result['status']} (turns: {result['turns']}, model calls: {len(CALLS)})\n")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-orchestrationworkshop-7) <!-- code-viz link -->
 
 **You should see:**
 
