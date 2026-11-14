@@ -62,3 +62,7 @@
 
 - [ ] Refine the rubrics and the assignment steps: make each rubric row match what the assignment steps ask students to do, and make each step concrete enough to check.
 - [ ] Give each lab and assignment a component that relates directly to the team project, so the work students do in labs and assignments also moves their project forward. (added 2026-11-09)
+
+- [ ] Add an ungraded interview with each student (a short one-on-one conversation about their work and progress).
+
+- [ ] Add a grading component tied to on-time submissions.
