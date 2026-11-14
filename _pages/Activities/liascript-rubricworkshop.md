@@ -240,9 +240,11 @@ with open("dataset.csv", "w", newline="") as f:
 
 The second is the config.  Its prompt is a template that echoes each stored answer straight through, so the judge grades your dataset rather than a freshly generated reply.  promptfoo's template syntax is the variable name inside two pairs of curly braces (the form promptfoo's documentation uses); create that one-line file with the command below rather than typing it, then save the YAML as `promptfooconfig-rubric.yaml`:
 
+<!-- run: id=cs357-liascript-rubricworkshop-1 viz=cast -->
 ```bash
 python3 -c "print('{' * 2 + 'answer' + '}' * 2)" > prompt.txt
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-rubricworkshop-1) <!-- code-viz link -->
 
 ```yaml
 # promptfooconfig-rubric.yaml

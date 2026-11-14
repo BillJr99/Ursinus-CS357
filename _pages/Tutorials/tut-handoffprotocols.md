@@ -125,6 +125,7 @@ The three cells below need only `python3` and the standard library.  Save each o
 
 This is the claim race from Model 3 of the *Agents That Talk* session, with two additions: a `.notes` file whose writes count as a sign of life, and a trace line for every action.  Read `claim()` first.  The whole claim rule rests on one fact: a rename cannot half-happen.
 
+<!-- run: id=cs357-tut-handoffprotocols-1 viz=env -->
 ```python
 import os, json, time, shutil
 
@@ -226,6 +227,7 @@ print("B takes the stale claim:", take_if_stale("agent-B", "task-7.md"))
 finish("agent-B", "task-7.md", "Lost message, crashed receiver, unparseable schema.")
 show()
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-handoffprotocols-1) <!-- code-viz link -->
 
 It prints:
 
@@ -250,6 +252,7 @@ This cell runs the agents one after the other, so it cannot show you a real race
 
 Here, the code releases two threads at the same instant, a hundred times, and both threads try to claim the same file.  The first version claims with a rename.  The second checks whether the file is there and then copies it, which is two steps.
 
+<!-- run: id=cs357-tut-handoffprotocols-2 viz=env -->
 ```python
 import os, shutil, tempfile, threading, time
 
@@ -297,6 +300,7 @@ def race(claim_fn, rounds=100):
 print("rename:         rounds with two winners =", race(rename_claim))
 print("check then act: rounds with two winners =", race(check_then_act_claim))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-handoffprotocols-2) <!-- code-viz link -->
 
 The first line should print 0 every time you run it.  The second line prints how many of the hundred rounds ended with both agents believing they owned the task.  Run it a few times and write down what you see.  The second number can change from run to run, but the first should not.
 

@@ -209,6 +209,7 @@ The code below implements a character-level tokenizer and computes the CLM cross
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-llmpretraining-1 viz=env -->
 ```python
 
 # Character-level CLM cross-entropy loss, manual implementation
@@ -330,6 +331,7 @@ print()
 print("3. Compute the perplexity of a PERFECT model that assigns P=1.0 to every")
 print("   correct token. What is -log(1.0)? What is e^0? What does perfect perplexity look like?")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-llmpretraining-1) <!-- code-viz link -->
 {% include pyrun.html %}
 
 ---

@@ -131,6 +131,7 @@ python critique_round.py
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-critiqueconsensusjudge-1 viz=agent record -->
 ```python
 import json
 import requests
@@ -197,6 +198,7 @@ if verdict["verdict"] != "accept":
     verdict = critique(draft)
     print(f"--- critic: {verdict['verdict']} | issues: {verdict['issues']}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-critiqueconsensusjudge-1) <!-- code-viz link -->
 
 ## Model 2: Instrumenting the Loop
 
@@ -310,6 +312,7 @@ python debate.py
 
 > **Runs on your machine, not here.**  This cell talks to the Ollama server on your own laptop at `localhost:11434`, which a web page has no route to.  Copy it into your course container and run it there.
 
+<!-- run: id=cs357-liascript-critiqueconsensusjudge-2 viz=agent record -->
 ```python
 import requests
 from collections import Counter
@@ -384,6 +387,7 @@ finals, (winner, count) = debate(question, n_agents=3, rounds=2)
 print(f"\n=== Majority vote: '{winner}' with {count}/{len(finals)} agents agreeing ===")
 print("Correct answer: 10 dollars")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-critiqueconsensusjudge-2) <!-- code-viz link -->
 
 ## Model 4: Autopsy of a Debate
 

@@ -722,6 +722,7 @@ The cell below runs the entire request (embed, project, attend, feed-forward, un
 
 This cell runs in your browser, so there is nothing to install.  Change the numbers and run it again as often as you like.
 
+<!-- run: id=cs357-tut-tokensembeddings-1 viz=env -->
 ```python
 import numpy as np
 np.set_printoptions(precision=4, suppress=True)
@@ -788,6 +789,7 @@ def loss_at(w):
 num = (loss_at(W_U[target,0]+eps) - loss_at(W_U[target,0]-eps)) / (2*eps)
 print("numerical grad = %.4f   analytic grad = %.4f  (match!)" % (num, grad))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-tokensembeddings-1) <!-- code-viz link -->
 {% include pyrun.html %}
 
 ---

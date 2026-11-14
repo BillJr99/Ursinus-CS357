@@ -321,6 +321,7 @@ The stand-in judge below scores the workshop's three library-hours samples with 
 
 > Pure Python with no network.
 
+<!-- run: id=cs357-tut-biasprobes-4 viz=env -->
 ```python
 SAMPLES = {
     "s01": ("The library should stay open until 2 a.m. during finals week. Seventy-one percent of students "
@@ -358,6 +359,7 @@ for name, text in SAMPLES.items():
         print(f"{name:6}  {len(text.split()):5}  {criterion:15}  {before[criterion]:6}  "
               f"{after[criterion]:5}  {after[criterion] - before[criterion]:+5}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-biasprobes-4) <!-- code-viz link -->
 
 Directness moves up one level for `s02` and `s03`, and nothing moves for `s01`.  The judge has the same flaw on all three samples.  `s01` shows a delta of zero because it was already over 50 words and already at the top level, so the bonus had nowhere to go.  That is why the workshop says a delta of zero on three cells does not clear the judge.  One sample, one padding string, and one model can hide a flaw that is really there.
 

@@ -73,6 +73,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it.
 
 Save as `rag_demo.py`:
 
+<!-- run: id=cs357-liascript-observability-1 viz=agent record args="'Who do I tell if I get hurt?'" -->
 ```python
 # rag_demo.py: the co-op corpus from Thursday, with a real embedding model.
 # Needs Ollama running and `ollama pull nomic-embed-text:v1.5`. Standard library only.
@@ -113,6 +114,7 @@ if __name__ == "__main__":
           "If the passages do not contain the answer, say: I could not find that in your notes.\n\n"
           f"Passages:\n{context}\n\nQuestion: {question}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-observability-1) <!-- code-viz link -->
 
 Run `python3 rag_demo.py "Who do I tell if I get hurt?"`, then `python3 rag_demo.py "Does the co-op sell new bikes?"`.
 
@@ -377,6 +379,7 @@ What breaks when both agents write at once depends on the medium.  On one machin
 
 This cell builds the three folders in a temporary directory, posts one task, has two agents race to claim it, then simulates a crashed claim holder and lets the other agent take over.  The only synchronization primitive is `os.rename()`.  Read `claim()` first: the whole protocol is the fact that a rename cannot half-happen.
 
+<!-- run: id=cs357-liascript-observability-2 viz=env -->
 ```python
 import os, json, time, tempfile
 
@@ -439,6 +442,7 @@ finish("agent-B", "task-7.md", "Lost message, crashed receiver, unparseable sche
 show()
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-observability-2) <!-- code-viz link -->
 
 Change `STALE_AFTER` to `0` and rerun: the takeover happens on the first check, which is what a too-short timeout does to a slow but healthy agent.  Then replace the `os.rename()` in `claim()` with an `os.path.exists()` check followed by a copy, and explain to your group why the cell still prints one winner even though the protocol is now broken (this cell runs the agents one after the other; the bug appears only when they run at once).
 
@@ -515,6 +519,7 @@ You walked this chain in the traceability drill in *How I AI*, and you found the
 
 The smallest useful trace is one line per phase of one loop step, in JSON Lines: one JSON object per line, so `grep` can search it and the file can be appended to forever.  Run the cell.  Then change `finish_reason` in `fake_llm` to `"length"` and run it again; the printed answer does not change, but the trace does, and that is the point.
 
+<!-- run: id=cs357-liascript-observability-3 viz=env -->
 ```python
 import json
 import os
@@ -574,6 +579,7 @@ print("\nTrace:")
 print(open(TRACE_PATH).read())
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-observability-3) <!-- code-viz link -->
 
 Three habits are already in that cell.  The question is hashed rather than stored.  Every line shares the `trace_id`, so one step can be pulled back out of a file holding thousands.  And the `act` line names the rule that allowed the action, which is the fourth traceability link written at the moment it is cheapest to write.
 
@@ -870,6 +876,7 @@ Every `prompt_tokens` and `completion_tokens` in Model 4 is a number the model s
 
 The cell below is the Ollama response behind Model 4's step 1 `plan` line.  Run it and read what the durations say about where the 2,773 milliseconds went.
 
+<!-- run: id=cs357-liascript-observability-4 viz=agent record -->
 ```python
 # The Ollama response behind Model 4, step 1 (durations are in nanoseconds)
 resp = {"model": "hermes-3", "done": True, "done_reason": "stop",
@@ -893,6 +900,7 @@ print({"trace_id": "t-77b0", "step": 1, "phase": "plan",
        "latency_ms": int(total_s * 1000), "finish_reason": resp["done_reason"]})
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-observability-4) <!-- code-viz link -->
 
 Ten times as many input tokens took well under a second; forty-one output tokens took two.  Reading is one parallel pass over the prompt, and writing is one pass per token.  Now use the cell's two speeds to predict how long step 2, with 3,690 input and 512 output tokens, should have taken.  Compare your prediction with the 8,422 milliseconds Model 4 logged, and say what the gap suggests: a faster machine, a prompt served partly from cache, or a trace line you should not trust.
 

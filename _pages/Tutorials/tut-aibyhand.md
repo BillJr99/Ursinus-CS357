@@ -192,6 +192,7 @@ The result is exactly 1 for any scale factor $$s > 0$$, not only for 3: the nume
 
 **Python verification:**
 
+<!-- run: id=cs357-tut-aibyhand-1 viz=env -->
 ```python
 import numpy as np
 
@@ -204,6 +205,7 @@ def cosine_sim(x, y):
 print(f"cos(a, b) = {cosine_sim(a, b):.3f}")
 print(f"cos(a, 3a) = {cosine_sim(a, 3*a):.3f}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-aibyhand-1) <!-- code-viz link -->
 
 Expected output:
 
@@ -308,6 +310,7 @@ Recap: attention is four steps, dot product, scale, softmax, weighted sum, and n
 
 Before you run this, write down your three raw scores, your three softmax weights, and your new `bank` vector.  Then hold the machine to your numbers.
 
+<!-- run: id=cs357-tut-aibyhand-2 viz=env -->
 ```python
 import numpy as np
 
@@ -328,6 +331,7 @@ print("raw/scaled scores :", np.round(scores, 3))
 print("softmax weights   :", np.round(weights, 3))
 print("new bank vector   :", np.round(new_bank, 3))
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-aibyhand-2) <!-- code-viz link -->
 
 Expected output:
 
@@ -466,6 +470,7 @@ What the numbers demonstrate: as temperature decreases toward zero, the probabil
 
 **Python verification:**
 
+<!-- run: id=cs357-tut-aibyhand-3 viz=env -->
 ```python
 import numpy as np
 
@@ -477,6 +482,7 @@ for T in [0.5, 1.0, 2.0]:
     probs = exp_scaled / exp_scaled.sum()
     print(f"T={T}: {probs.round(3)}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-aibyhand-3) <!-- code-viz link -->
 
 Expected output:
 
@@ -500,6 +506,7 @@ High entropy means the distribution is flat and the model is uncertain.  Low ent
 
 Before you run the sweep below, sketch on paper what you expect to happen to the probability of `Paris` and to the entropy as temperature climbs from 0.1 to 2.0.  Draw the shape of the curve, not only the direction.  Then run it and check your sketch against the table.
 
+<!-- run: id=cs357-tut-aibyhand-4 viz=env -->
 ```python
 import math
 
@@ -524,6 +531,7 @@ for T in [0.1, 0.5, 1.0, 1.5, 2.0]:
     H = entropy(probs)
     print(f"{T:>5.1f}  " + "  ".join(f"{p:>8.4f}" for p in probs) + f"  {H:>8.4f}")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-aibyhand-4) <!-- code-viz link -->
 
 Expected output:
 
@@ -621,6 +629,7 @@ Now $$h_2$$ is active and $$h_1$$ is clipped.  The active-neuron pattern flipped
 
 **Python verification:**
 
+<!-- run: id=cs357-tut-aibyhand-5 viz=env -->
 ```python
 W1 = [[2.0, -1.0], [-1.0, 1.0]]
 b1 = [-0.5, -0.5]
@@ -635,6 +644,7 @@ def forward(x):
 forward([1.0, 1.0])
 forward([0.0, 2.0])
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-aibyhand-5) <!-- code-viz link -->
 
 Expected output:
 

@@ -580,6 +580,7 @@ Suppose the Step 7 re-score had come back differently: Candidate 1 clears the we
 
 A rubric a program can score is a rubric you can re-run on every candidate without re-reading the spec.  The cell below loads the quantitative rubric from Section 7, scores a candidate's observed behavior, and applies both stopping rules.  The values shown are Candidate 0 from Model 3, so it prints 0.67 and names K4, K6, and K9; set `K4`, `K6`, and `K9` to `True` and it prints 0.96 and `converged`.  Change them to what your own Candidate 1 does and run it again.
 
+<!-- run: id=cs357-liascript-iterationloops-1 viz=env -->
 ```python
 # The candidate is what you observed by running the verification methods.
 
@@ -635,6 +636,7 @@ def score(candidate, rubric):
 score(candidate, RUBRIC)
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-iterationloops-1) <!-- code-viz link -->
 
 Read the last branch carefully.  A material failure blocks convergence no matter how high the score climbs, and the threshold only decides cases where everything material already passes.  That ordering is the whole reason the rubric records materiality per criterion instead of leaving it to whoever is reading the output.
 
@@ -853,6 +855,7 @@ Or run the four prompts from Model 3 in sequence in the message bar and keep the
 
 The cell below is a standalone version of `eval/score.py` with the corpus inlined, so it runs here rather than on your laptop.  It scores the same twelve queries against the four variants from Model 4's table, and it should print the same four numbers.  Change `stopwords` or `title_weight` and watch what happens.
 
+<!-- run: id=cs357-liascript-iterationloops-2 viz=agent record -->
 ```python
 # The corpus and the twelve labeled queries are the practice kit's.  Each variant is a
 # scoring function; the metric is mean reciprocal rank, and higher is better.
@@ -938,6 +941,7 @@ for name, score in variants:
 print(f"\nbest {best:.3f}, target 0.80")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-iterationloops-2) <!-- code-viz link -->
 
 The `kept` line inside the loop is the discard rule from Model 4, so the cell decides rather than printing four numbers and leaving the judgment to you.  That is the difference between measuring and looping: the loop has a rule about what to do with the measurement, decided before the measurement arrives.
 

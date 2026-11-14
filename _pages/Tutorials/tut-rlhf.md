@@ -203,6 +203,7 @@ The code below generates three prompt-response pairs, simulates a human labeling
 > Three prompts, two candidate responses each.  Before you run this, write down which response you expect the "better" model to prefer in each pair, and how confident you are.  Then run it and see where your intuition and the simulated annotator disagree.  The disagreements are the interesting part: they are where real annotator noise comes from.
 {: .tb-intuition data-title="Predict first"}
 
+<!-- run: id=cs357-tut-rlhf-1 viz=env -->
 ```python
 
 # Simulating RLHF preference data collection
@@ -285,6 +286,7 @@ print("Edit ground_truth_preferred to flip one judgment (e.g., [1, 0, 1])")
 print("Then re-run. What does this mean for the training signal the reward model receives?")
 print("Which response in pair 2 is actually better? Do you agree with the annotation?")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-rlhf-1) <!-- code-viz link -->
 {% include pyrun.html %}
 
 ---

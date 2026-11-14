@@ -151,6 +151,7 @@ One response is one call.  A run of your system is many calls, made by several a
 
 The cell below uses a small practice trace.  The two planner rows are Model 4's two plan steps from the Observability session.  **The two critic rows are made up for practice; they are not measurements.**  Before you run it, predict which agent reads more input tokens and which writes more output tokens.
 
+<!-- run: id=cs357-tut-tokensenergycost-1 viz=env -->
 ```python
 import json
 from collections import defaultdict
@@ -194,6 +195,7 @@ avg_in = sum(t["in"] for t in tasks.values()) / len(tasks)
 avg_out = sum(t["out"] for t in tasks.values()) / len(tasks)
 print(f"\naverage per task: {avg_in:.0f} input, {avg_out:.0f} output tokens")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-tokensenergycost-1) <!-- code-viz link -->
 
 The run totals 9,392 input and 701 output tokens over 17.7 seconds.  The cell also prints the per-task and per-agent tables and the average per task.  To use your own system, point the `open` call at your own `trace.jsonl` (or at the `token_usage.csv` that the Observability tutorial's `metered` decorator writes) and delete the lines that write the practice file.  If your trace has more than one run, the `run_id` table gets one row per run.
 
@@ -245,6 +247,7 @@ Here is where each parameter's value comes from, and which ones you must find yo
 
 The cell takes the run totals from Part II and leaves every unsourced parameter as `None`.  It computes whatever it can from the parameters that have values, and it lists the ones still missing instead of inventing them.
 
+<!-- run: id=cs357-tut-tokensenergycost-2 viz=env -->
 ```python
 # Run t-77b0, totaled in the previous cell
 input_tokens = 9392
@@ -295,6 +298,7 @@ if kwh is not None and need("dollars_per_kwh"):
 print(f"grid intensity in use: {P['grid_g_per_kwh']:.1f} g CO2e per kWh")
 print("still to fill and source:", ", ".join(missing) if missing else "nothing")
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-tokensenergycost-2) <!-- code-viz link -->
 
 As shipped, the cell can compute only the per-token carbon line.  It prints that line and then names the four parameters you still have to fill and source.  Fill in your measured wattage, and the energy and time-based carbon lines appear.  Fill in a price, and the hosted price line appears.  Change nothing else.  If the two carbon figures disagree, that is a finding, not a bug.  Report both, and say which assumption drives the gap.
 

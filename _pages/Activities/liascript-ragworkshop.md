@@ -87,6 +87,7 @@ The last row is the lab's "one question your notes do not answer."  A golden set
 
 **Goal:** every file read in with its name, and split into chunks with stable IDs, exactly as the lab's `index.py` does it: one chunk per paragraph, separated by blank lines, with the ID `{file stem}-{paragraph number}` and the file name kept beside the text.
 
+<!-- run: id=cs357-liascript-ragworkshop-1 viz=env -->
 ```python
 # Steps 1 and 2: ingest a small corpus and chunk it the way the lab's index.py does.
 CORPUS = {   # four invented files; every fact in them is synthetic
@@ -127,6 +128,7 @@ for c in chunks:
     print(f"  {c['id']:<13} {c['source']:<14} {c['text'][:55]!r}")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-ragworkshop-1) <!-- code-viz link -->
 
 **You should see:**
 

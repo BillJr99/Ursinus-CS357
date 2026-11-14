@@ -285,6 +285,7 @@ A retriever over the five campus documents from Part II returned the three chunk
 
 Score recall@1, recall@2, and recall@3 by hand before you run the cell.  Then run it and check your arithmetic.
 
+<!-- run: id=cs357-liascript-rag-1 viz=env -->
 ```python
 retrieved = {
     "Q1": ["doc0", "doc3", "doc4"],
@@ -305,6 +306,7 @@ for k in (1, 2, 3):
     print(f"recall@{k} = {recall_at_k(retrieved, gold, k):.2f}   missed: {misses}")
 ```
 @Pyodide.eval
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-liascript-rag-1) <!-- code-viz link -->
 
 You should see recall@1 = 0.40, recall@2 = 0.60, and recall@3 = 0.80, with Q5 missed at every $k$.
 

@@ -557,6 +557,7 @@ Fine-tuning is good at **behavior** (a format, a tone, when to refuse) and unrel
 
 ### The data, split three ways
 
+<!-- run: id=cs357-tut-offlineragfinetuning-1 viz=env -->
 ```python
 # lora_data.py: a small synthetic dataset, split three ways, with the test facts kept out of training.
 import json
@@ -620,6 +621,7 @@ def build():
 if __name__ == "__main__":
     build()
 ```
+[Visualize this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/#cs357-tut-offlineragfinetuning-1) <!-- code-viz link -->
 
 ```text
 $ python lora_data.py
