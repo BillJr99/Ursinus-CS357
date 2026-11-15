@@ -9,7 +9,7 @@
   {
    "kind": "reveal",
    "lines": "1-3",
-   "description": "This runs OpenWebUI in Docker. The page says OpenWebUI is a self-hosted web front end that sits in front of your Ollama server, and the install is one of two routes, with Docker recommended if Docker Desktop is already running."
+   "description": "This runs OpenWebUI in Docker. The page says OpenWebUI is a self-hosted web front end that sits in front of your Ollama server. There are two ways to install it, and Docker is the recommended one if Docker Desktop is already running."
   },
   {
    "kind": "focus",
