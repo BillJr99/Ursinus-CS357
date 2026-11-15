@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-18",
+ "title": "Automation-Safe Scripts",
+ "description": "Two rules for a CI-safe script: never wait for input, and be idempotent. This block shows a hang and its fixes.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "Two rules make a script CI-safe: never wait for input, and be idempotent. Line 3 breaks the first rule."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "`read -p` blocks on stdin. In CI there is no one to press a key, so the runner waits and then times out."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "The fix is non-interactive: `</dev/null` sends any stray prompt EOF, so the command proceeds or fails instead of blocking."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-11",
+   "description": "The `if` block shows the second rule. It creates the KV namespace only when it is absent, so running the script twice reaches the same end state."
+  }
+ ]
+}

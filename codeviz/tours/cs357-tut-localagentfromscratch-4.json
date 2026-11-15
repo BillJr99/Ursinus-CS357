@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-localagentfromscratch-4",
+ "title": "Memory as Typed Records",
+ "description": "Pydantic MemoryRecord validates each remembered fact with key, value, and source for provenance; saves to JSON and refuses corrupt files.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-43",
+   "description": "Complete memory validation code."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Purpose: P6 validates agent memory as typed records."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-11",
+   "description": "MemoryRecord: Pydantic model with key, value, and source fields for provenance tracking."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-13",
+   "description": "Setup: MEMORY file path and TypeAdapter for list validation."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-17",
+   "description": "Save: writes validated records to JSON file with indentation."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-28",
+   "description": "Load: reads and validates JSON, handles missing file or corruption gracefully."
+  },
+  {
+   "kind": "focus",
+   "lines": "30-43",
+   "description": "Demonstration: creates clean records, saves, reloads, damages file, and shows refusal."
+  }
+ ]
+}

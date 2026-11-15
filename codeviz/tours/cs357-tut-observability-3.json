@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-observability-3",
+ "title": "Exporting One Session for Counting",
+ "description": "Three commands that find a session, export it as JSON, and run a script to total its token counts.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "These commands work per message. `opencode session list` finds the session, and `opencode export` writes it as JSON for the script to total."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "`opencode session list -n 5` lists the newest five sessions, with their IDs. You copy the ID of the one you want."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "`opencode export ses_XXXXXXXX > session.json` writes the full session as JSON. Each assistant message in the export carries its own `tokens` block."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`python opencode_tokens.py session.json` runs the script that totals one export."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says opencode reports cache reads separately, so the prompt the model actually saw on a call is input plus what?",
+   "answer": "cache.read"
+  }
+ ]
+}

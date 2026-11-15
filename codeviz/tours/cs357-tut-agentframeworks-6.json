@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-6",
+ "title": "LangChain: Multi-Agent Handoff",
+ "description": "Two differently-prompted ChatOllama models where clarifier's output becomes executor's entire context, ensuring clean separation.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-21",
+   "description": "Handoff pattern: clarifier creates a brief, executor fulfills it with only that brief as context."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-5",
+   "description": "Model instances: two ChatOllama models with different temperatures."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "Question: the user's vague request to summarize why local models matter."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-14",
+   "description": "Agent 1: clarifier with SystemMessage to rewrite request as precise brief, HumanMessage with the question."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-20",
+   "description": "Handoff: executor's ENTIRE context is clarifier's output, with its own SystemMessage and the brief as HumanMessage."
+  },
+  {
+   "kind": "focus",
+   "lines": "21",
+   "description": "Result: print the executor's answer."
+  }
+ ]
+}

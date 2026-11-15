@@ -60,6 +60,7 @@ Here is where each step landed.  The section comments in `tiny_agent.py` use the
 
 Every value you might want to change without editing code is in `config.json`.  Save this file next to `tiny_agent.py`:
 
+<!-- run: id=cs357-tut-localagentfromscratch-1 viz=show -->
 ```json
 {
   "provider_url": "http://localhost:11434",
@@ -74,6 +75,7 @@ Every value you might want to change without editing code is in `config.json`.  
   "log_level": "INFO"
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localagentfromscratch-1) <!-- code-viz link -->
 
 Three settings deserve a sentence each.  `provider_url` can be overridden by the `OLLAMA_URL` environment variable, so the same file works inside a container, and `api_key` stays `null` for local Ollama.  To use a hosted provider instead, set `provider_url` to its full chat endpoint and `api_key` to your key: for ursinus.ai, `"provider_url": "https://ursinus.ai/api/chat/completions"`, with `model` set to a name the service lists.  A URL ending in `/chat/completions` gets the OpenAI request and reply shape; any other URL is treated as an Ollama server's base address.  Keep a `config.json` that holds a key out of any repository you push.  `allowed_commands` is the first gate, described in Part IV.  `log_level` accepts `DEBUG`, `INFO`, `WARNING`, or `ERROR`; at `INFO`, every command the agent runs or refuses is logged.
 
@@ -87,6 +89,7 @@ Three settings deserve a sentence each.  `provider_url` can be overridden by the
 
 Save this as `tiny_agent.py`.  Create the Step 4 skill if you have not already (the `mkdir` and `cat > .agents/skills/terse-helper/SKILL.md` commands in Section 4d of the deck).
 
+<!-- run: id=cs357-tut-localagentfromscratch-2 viz=show -->
 ```python
 """tiny_agent.py: the five steps from Running Your Own AI, composed into one program.
 
@@ -253,6 +256,7 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localagentfromscratch-2) <!-- code-viz link -->
 
 Run it:
 
@@ -336,6 +340,7 @@ In *Running Your Own AI* you wrote the `terse-helper` skill: a `SKILL.md` file w
 
 The cell writes the skill file first, so it runs anywhere.
 
+<!-- run: id=cs357-tut-localagentfromscratch-3 viz=show -->
 ```python
 # P5: a skill's front matter as a Pydantic model
 import traceback
@@ -388,6 +393,7 @@ except ValidationError as e:
     print(f"[pydantic_tut:p5] {len(e.errors())} errors: " + "; ".join(f"{x['loc'][0]}: {x['msg']}" for x in e.errors()))
     traceback.print_exc()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localagentfromscratch-3) <!-- code-viz link -->
 
 You should see the skill load, then a hand-written front matter refused for two reasons at once:
 
@@ -405,6 +411,7 @@ In *Running Your Own AI*, `history.json` was the model's entire memory of you, a
 
 #### Code Cell: Save, Reload, Refuse
 
+<!-- run: id=cs357-tut-localagentfromscratch-4 viz=show -->
 ```python
 # P6: agent memory as typed records, saved to JSON and loaded back
 import traceback
@@ -450,6 +457,7 @@ print("Prompt line:", "; ".join(f"{r.key} = {r.value} (from {r.source})" for r i
 MEMORY.write_text('[{"key": "name", "value": "Sam", "source": "a rumor"}]')
 print("After the damage:", load())
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localagentfromscratch-4) <!-- code-viz link -->
 
 You should see the first run start empty, the saved file, the prompt line built from it, and then the damaged file refused:
 
@@ -495,6 +503,8 @@ model reply (text) --> AgentStep.model_validate_json --> invalid? --> tell the m
 The stand-in model replays four replies.  The second one claims to be done without an answer.
 
 {% raw %}
+
+<!-- run: id=cs357-tut-localagentfromscratch-5 viz=show -->
 ```python
 # P7: a step-budgeted agent loop in which every model turn is a validated AgentStep
 import traceback
@@ -569,6 +579,8 @@ def run_agent(goal, step_budget=6):
 answer, steps, reason = run_agent(f"How many days until my final on {exam}, and how many hours if I study 3 a day?")
 print(f"Steps: {steps} | Termination: {reason}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localagentfromscratch-5) <!-- code-viz link -->
+
 {% endraw %}
 
 You should see one step rejected, and the loop recover:
@@ -586,6 +598,7 @@ JSON Schema can say that `done` is a boolean.  It cannot say "if `done` is true,
 > The same loop with `call_model` replacing the stand-in, and the schema sent in `format`.  It talks to Ollama on your own machine, so it is not run here.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-localagentfromscratch-6 viz=show -->
 ```python
 # P7 on your machine: the AgentStep loop against a live Ollama (needs Ollama on localhost:11434)
 import traceback
@@ -667,6 +680,7 @@ if __name__ == "__main__":
     exam = (date.today() + timedelta(days=70)).isoformat()
     print(run_agent(f"How many days until my final on {exam}, and how many hours if I study 3 a day?"))
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localagentfromscratch-6) <!-- code-viz link -->
 
 #### Questions to Work Through
 

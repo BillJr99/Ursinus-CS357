@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-4",
+ "title": "LangChain: Model Object Wrapper",
+ "description": "ChatOllama wraps a local Ollama server, providing a common chat interface with invoke() for sending requests and receiving responses.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "Complete model setup: import, model instantiation, and a sample invoke call."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Imports: langchain-ollama and langchain-core packages."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Model creation: ChatOllama with llama3.2 model and temperature=0, then invoke with a question about agents."
+  }
+ ]
+}

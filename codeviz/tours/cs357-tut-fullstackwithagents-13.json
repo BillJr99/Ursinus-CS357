@@ -1,0 +1,60 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-13",
+ "title": "test/api.test.js: API Test Suite",
+ "description": "Comprehensive test suite for the questions board API: empty list, add and list, validation, sorting by votes, and 404 handling.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-49",
+   "description": "Complete API test suite."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Imports: exports from cloudflare:workers, vitest functions."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-5",
+   "description": "Api helper: constructs fetch calls to https://board.test."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-9",
+   "description": "Ask helper: POST to /api/questions with JSON body."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-15",
+   "description": "BeforeEach: clears questions table for isolation."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-21",
+   "description": "First test: starts with no questions, expects 200 and empty array."
+  },
+  {
+   "kind": "focus",
+   "lines": "23-29",
+   "description": "Add test: posts a question, expects 201, verifies content, then lists and checks."
+  },
+  {
+   "kind": "focus",
+   "lines": "31-35",
+   "description": "Validation: refuses empty and over-280-character questions with 400, accepts exactly 280 with 201."
+  },
+  {
+   "kind": "focus",
+   "lines": "37-44",
+   "description": "Sorting: upvotes second question, verifies it appears first in list."
+  },
+  {
+   "kind": "focus",
+   "lines": "46-48",
+   "description": "404: expects 404 for non-existent question upvote."
+  }
+ ]
+}

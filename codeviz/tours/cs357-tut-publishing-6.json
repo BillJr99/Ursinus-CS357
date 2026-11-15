@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-6",
+ "title": "GitHub Actions: Container Publish Workflow",
+ "description": "Workflow that logs into GHCR using GITHUB_TOKEN, builds and pushes image with tag from ref_name, triggered manually.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-16",
+   "description": "Complete GitHub Actions workflow."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-8",
+   "description": "Login: docker/login-action@v3 authenticates to ghcr.io with github.actor and GITHUB_TOKEN."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-15",
+   "description": "Build and push: docker/build-push-action@v6 builds from context, pushes true, tags with repository and ref_name."
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-16",
+ "title": "Runnable pyproject.toml: Complete Example",
+ "description": "Complete pyproject.toml with build-system, project metadata, and project.scripts for CLI entry point after pip install.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-18",
+   "description": "Complete runnable pyproject.toml."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-3",
+   "description": "Build-system: hatchling backend and build-backend."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-13",
+   "description": "Project: name, version, description, readme, Python requirement, dependencies."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-18",
+   "description": "Scripts: [project.scripts] with ask entry point mapping to my_agent:main, enables ask CLI command."
+  }
+ ]
+}

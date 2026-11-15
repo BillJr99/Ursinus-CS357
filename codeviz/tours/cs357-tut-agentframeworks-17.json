@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-17",
+ "title": "Pydantic AI: MCP in Context Window",
+ "description": "MCP server tools appear in context window as offered tools: library_hours with its description, tool-call, and tool-return.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-21",
+   "description": "Full MCP context: instructions, user prompt, tool call and return for library hours."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-7",
+   "description": "Imports: asyncio, date, Agent, MCPToolset, common helpers."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-11",
+   "description": "Agent setup: same as previous block with campus toolset."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-14",
+   "description": "Async main: async with agent.iter for step-by-step loop inspection."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-19",
+   "description": "Iteration: async for node in run prints type names, UsageLimits prevents infinite loops."
+  },
+  {
+   "kind": "focus",
+   "lines": "20-21",
+   "description": "Result: print final output after loop completes."
+  }
+ ]
+}

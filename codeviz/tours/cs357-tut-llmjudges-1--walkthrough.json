@@ -1,0 +1,51 @@
+{
+ "version": 1,
+ "example": "cs357-tut-llmjudges-1",
+ "name": "walkthrough",
+ "title": "LLM Judges and promptfoo: A Rubric, a Judge, and How Far to Trust It",
+ "description": "Walk through setting up samples, rubric as data, hand scores, and promptfoo configuration for LLM-based judging.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "Import os for file operations"
+  },
+  {
+   "kind": "focus",
+   "lines": "3-11",
+   "description": "Define SAMPLES dict with three text samples and write them to samples/"
+  },
+  {
+   "kind": "focus",
+   "lines": "13-24",
+   "description": "Define RUBRIC with three criteria, weights, and level descriptions"
+  },
+  {
+   "kind": "focus",
+   "lines": "27-29",
+   "description": "Define weighted_total to compute score from levels and weights"
+  },
+  {
+   "kind": "predict",
+   "question": "What is the hand total for s01.txt?",
+   "answer": "s01.txt hand total: 100.0"
+  },
+  {
+   "kind": "stage",
+   "stage": "cs357-tut-llmjudges-2",
+   "description": "Move to promptfoo setup"
+  },
+  {
+   "kind": "reveal",
+   "lines": "1",
+   "description": "Create prompt.txt with answer template"
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Template syntax uses double curly braces around answer"
+  }
+ ]
+}

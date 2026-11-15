@@ -1,0 +1,60 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-10",
+ "title": "Pydantic AI: Context Window Hook",
+ "description": "Hook-based observation of model requests: records instructions, messages, and tools for each request to the WINDOWS list.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-40",
+   "description": "Complete common.py helper with model, hook, and context display."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-7",
+   "description": "Imports: os, Hooks, OpenAIChatModel, and OllamaProvider."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-9",
+   "description": "Global state: WINDOWS list stores tuples of instructions, messages, tools."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-18",
+   "description": "Hook: before_model_request decorator, extract messages, tools, instructions, append to WINDOWS."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-25",
+   "description": "Make_model: creates OllamaProvider with base_url and api_key from env, returns OpenAIChatModel."
+  },
+  {
+   "kind": "reveal",
+   "lines": "28-40",
+   "description": "Show_context function for printing the context window."
+  },
+  {
+   "kind": "focus",
+   "lines": "28-32",
+   "description": "Request indexing: handles negative indices, prints request number."
+  },
+  {
+   "kind": "focus",
+   "lines": "33-34",
+   "description": "Instructions: prints [instructions] with repr if present."
+  },
+  {
+   "kind": "focus",
+   "lines": "35-38",
+   "description": "Messages: iterates through parts, prints part_kind and truncated content."
+  },
+  {
+   "kind": "focus",
+   "lines": "39-40",
+   "description": "Tools: prints [tool offered] with name and description for each tool."
+  }
+ ]
+}

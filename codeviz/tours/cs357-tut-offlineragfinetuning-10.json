@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-10",
+ "title": "Training the LoRA Adapter",
+ "description": "The training script that freezes the base model, trains a small LoRA adapter, and saves only the adapter.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-15",
+   "description": "The header comment says the script freezes the base model, trains a small LoRA adapter, and saves only the adapter. It sets `HF_HUB_OFFLINE` so training never downloads, imports torch, PEFT, and transformers, loads the config, and seeds torch."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-25",
+   "description": "`encode` builds token ids for the whole chat but puts labels only on the assistant's reply. The comment marks `-100` as ignored by the loss, so the model learns to answer rather than repeat questions."
+  },
+  {
+   "kind": "focus",
+   "lines": "28-35",
+   "description": "`batches` groups rows into batches, pads each sequence to the batch width, and yields input ids, an attention mask, and padded labels."
+  },
+  {
+   "kind": "focus",
+   "lines": "38-43",
+   "description": "`mean_loss` switches the model to eval, computes the loss over the rows under `no_grad`, then switches back to train and averages the losses."
+  },
+  {
+   "kind": "focus",
+   "lines": "46-55",
+   "description": "`main` loads the data, tokenizer, and base model with `local_files_only=True`, builds a `LoraConfig` from the config, and calls `get_peft_model`. The comment notes the base weights are frozen and only the two small matrices train."
+  },
+  {
+   "kind": "focus",
+   "lines": "57-82",
+   "description": "It builds an AdamW optimizer over the trainable parameters, prints the starting validation loss, then loops over epochs, backpropagates, steps, and reports train and validation loss. A NaN validation loss exits with a message about lowering the learning rate. Finally it saves the adapter, and the entry point wraps `main` in a try block."
+  }
+ ]
+}

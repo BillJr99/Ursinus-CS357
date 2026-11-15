@@ -175,6 +175,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* For your final project agent, write a Python test file that implements at least five property-based assertions.  Each assertion should be a standalone function that takes an agent output string and returns `True` if the property holds or `False` if it fails.  Run your suite against ten sampled outputs and report the overall pass rate.  If a property fails, diagnose whether the root cause is a test design problem or an agent quality problem.
 
    *Starter hint:* The code below shows the pattern for all property functions: each one takes a string (the agent's output) and returns True or False.  Notice that `has_citation` uses a regex rather than exact matching; this makes the test robust to different citation formats.
+   <!-- run: id=cs357-tut-testingagents-1 viz=show -->
    ```python
    # Each property is a function: output (str) -> bool
    def has_citation(output: str) -> bool:
@@ -192,6 +193,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    results = {prop.__name__: prop(output) for prop in [has_citation, ...]}
    pass_rate = sum(results.values()) / len(results)
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-testingagents-1) <!-- code-viz link -->
 
    *You've succeeded when:* All five property functions run without errors, your script prints a summary table showing pass/fail for each property across all ten samples, and you can explain in writing why one failing property is a test design issue and another is an agent quality issue.
 
@@ -200,6 +202,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* Build a minimal eval harness for your project: a script that (a) loads a JSON file of test cases with `{input, expected_properties}` structure, (b) runs each input through your agent, (c) checks each property function against the output, (d) prints a summary table of pass/fail/score per test case, and (e) writes a timestamped results file so you can compare runs over time.  If your final project needs an eval harness, this is the shape it wants, and building it here means you are not building it under deadline later.
 
    *Starter hint:* The harness below loads test cases from a JSON file, runs each through the agent, checks the defined property functions, and writes a timestamped results file; the timestamped file is what lets you compare two runs side-by-side later.
+   <!-- run: id=cs357-tut-testingagents-2 viz=show -->
    ```python
    import json, datetime
 
@@ -223,6 +226,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    with open(f"eval_results_{timestamp}.json", "w") as f:
        json.dump(results, f, indent=2)
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-testingagents-2) <!-- code-viz link -->
 
    *You've succeeded when:* Your harness runs all test cases end-to-end without crashing, produces a readable summary table in the terminal, and writes a JSON results file you can open and compare between runs.
 

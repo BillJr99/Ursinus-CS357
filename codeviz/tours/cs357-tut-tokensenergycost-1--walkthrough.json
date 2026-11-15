@@ -1,0 +1,58 @@
+{
+ "version": 1,
+ "example": "cs357-tut-tokensenergycost-1",
+ "name": "walkthrough",
+ "title": "Tokens, Energy, and Cost: Measuring What Your Agent Spends",
+ "description": "Walk through code that aggregates token usage and estimates energy, carbon, and cost.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "Import json, define practice trace with four rows"
+  },
+  {
+   "kind": "focus",
+   "lines": "22-30",
+   "description": "Define total_by that aggregates calls, input, output, and seconds by key"
+  },
+  {
+   "kind": "predict",
+   "question": "What is the average per task?",
+   "answer": "average per task: 4696 input, 350 output tokens"
+  },
+  {
+   "kind": "run",
+   "trace_step": 54,
+   "lines": "36",
+   "description": "Print per agent summary"
+  },
+  {
+   "kind": "stage",
+   "stage": "cs357-tut-tokensenergycost-2",
+   "description": "Move to energy estimation"
+  },
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "Define input_tokens, output_tokens, generation_seconds"
+  },
+  {
+   "kind": "focus",
+   "lines": "8-24",
+   "description": "Define parameters dictionary P with sources"
+  },
+  {
+   "kind": "predict",
+   "question": "What is carbon from per-token rates?",
+   "answer": "Carbon from per-token rates: 0.0061 g CO2e"
+  },
+  {
+   "kind": "run",
+   "trace_step": 30,
+   "lines": "39",
+   "description": "Print carbon from per-token rates"
+  }
+ ]
+}

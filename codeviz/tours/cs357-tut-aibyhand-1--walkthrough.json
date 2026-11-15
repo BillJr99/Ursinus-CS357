@@ -1,0 +1,134 @@
+{
+ "version": 1,
+ "example": "cs357-tut-aibyhand-1",
+ "name": "walkthrough",
+ "title": "AI by Hand: cosine similarity, attention, softmax, and a forward pass",
+ "description": "A step-by-step tour of the five Python blocks in the AI by Hand tutorial. You watch cosine similarity, attention, softmax with temperature, and a two-neuron forward pass each turn from paper arithmetic into running code.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "The program builds two vectors with numpy. Vector a is (2, 1, 0, 2) and vector b is (1, 1, 1, 1), the same two vectors you worked by hand on the page."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "cosine_sim takes two vectors and returns their dot product divided by the product of their lengths. That is the cosine similarity formula from the page in one line of numpy."
+  },
+  {
+   "kind": "predict",
+   "question": "The program prints two cosine values. What is the second one, cos(a, 3a)?",
+   "answer": "cos(a, 3a) = 1.000"
+  },
+  {
+   "kind": "reveal",
+   "lines": "9-10",
+   "description": "The two print calls show cos(a, b) and cos(a, 3a). Scaling a by 3 leaves its direction unchanged, so the second value is exactly 1.000."
+  },
+  {
+   "kind": "stage",
+   "stage": "cs357-tut-aibyhand-2",
+   "description": "Next the attention demo turns the four paper steps into code, with three tokens and a query, key and value vector for each."
+  },
+  {
+   "kind": "reveal",
+   "lines": "3-5",
+   "description": "Three dictionaries hold the vectors: q for the query, k for the key and v for the value of each token, river, bank and loan."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-10",
+   "description": "softmax subtracts the largest score before exponentiating, which keeps the numbers small; the comment in the code calls this numerical stability. It then divides each exponential by the sum, so the weights add to 1."
+  },
+  {
+   "kind": "reveal",
+   "lines": "12-14",
+   "description": "The scores are the bank query dotted with each key, divided by the square root of 2. softmax turns the scores into weights, and new_bank is the weighted sum of the value vectors."
+  },
+  {
+   "kind": "predict",
+   "question": "What does the program print for the softmax weights?",
+   "answer": "softmax weights   : [0.248 0.248 0.503]"
+  },
+  {
+   "kind": "stage",
+   "stage": "cs357-tut-aibyhand-3",
+   "description": "This block runs the same softmax three times, once for each temperature in the page table."
+  },
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "The program imports numpy and sets three logits, 4.0, 2.0 and 1.0, the same logits the page uses."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-8",
+   "description": "For each temperature T the loop divides the logits by T, exponentiates, and divides by the sum. That is the temperature softmax from the page."
+  },
+  {
+   "kind": "run",
+   "trace_step": 5,
+   "lines": "8",
+   "description": "At this step the loop divides the exponentials by their sum, which turns them into probabilities that add to 1."
+  },
+  {
+   "kind": "predict",
+   "question": "What does the program print for T = 0.5?",
+   "answer": "T=0.5: [0.98  0.018 0.002]"
+  },
+  {
+   "kind": "stage",
+   "stage": "cs357-tut-aibyhand-4",
+   "description": "This block sweeps five temperatures over five tokens and reports each distribution's entropy."
+  },
+  {
+   "kind": "reveal",
+   "lines": "3-8",
+   "description": "softmax_temp repeats the temperature softmax in plain Python: divide by the temperature, subtract the largest value, exponentiate, and normalize."
+  },
+  {
+   "kind": "reveal",
+   "lines": "10-11",
+   "description": "entropy sums -p log p over the probabilities. The small 1e-10 added inside the log keeps the value finite when a probability is zero."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-16",
+   "description": "VOCAB lists the five tokens and LOGITS holds one raw score for each. Paris has the highest score, 4.5."
+  },
+  {
+   "kind": "run",
+   "trace_step": 30,
+   "lines": "21",
+   "description": "At this step the loop reaches line 21 and computes the entropy of the distribution for the current temperature."
+  },
+  {
+   "kind": "stage",
+   "stage": "cs357-tut-aibyhand-5",
+   "description": "The last block runs a small two-neuron ReLU network on the two inputs from the page tables."
+  },
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "W1 holds the two hidden-neuron weight rows, b1 their biases, and V with c the output weights and bias."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-8",
+   "description": "forward computes each hidden pre-activation, applies ReLU with max(0.0, p) to clip it at zero, then combines the hidden values into the output y."
+  },
+  {
+   "kind": "run",
+   "trace_step": 8,
+   "lines": "7",
+   "description": "At this step the code clips both pre-activations at zero to form h. For the first input the pre-activations are 0.5 and -0.5, so h becomes [0.5, 0.0]."
+  },
+  {
+   "kind": "predict",
+   "question": "For the second input, x = (0.0, 2.0), what does the program print?",
+   "answer": "x=[0.0, 2.0]  pre=[-2.5, 1.5]  h=[0.0, 1.5]  y=2.5"
+  }
+ ]
+}

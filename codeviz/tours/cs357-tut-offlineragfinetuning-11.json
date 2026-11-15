@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-11",
+ "title": "Reloading the Adapter",
+ "description": "A fresh process that loads the base model, attaches the saved adapter, and compares answers with the adapter on and off.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-14",
+   "description": "The header comment says a fresh process loads the base model, attaches the saved adapter, and compares. It sets `HF_HUB_OFFLINE`, imports torch, PEFT, and transformers, pulls the prompt format, and loads the config."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-23",
+   "description": "`load` reads the tokenizer and base model at the pinned revision with `local_files_only=True`, then attaches the saved adapter with `PeftModel.from_pretrained`. The comment says the adapter must be loaded to matter."
+  },
+  {
+   "kind": "focus",
+   "lines": "26-33",
+   "description": "`generate` builds the messages with the system format, applies the chat template, then runs `model.generate` with `do_sample=False` for greedy decoding and the configured token limit. It decodes only the new tokens and strips them."
+  },
+  {
+   "kind": "focus",
+   "lines": "36-43",
+   "description": "The entry point loads the model, then loops over two questions. For each it prints the answer with the adapter on, then prints the answer again inside `model.disable_adapter()`, which bypasses the adapter on the same weights."
+  },
+  {
+   "kind": "focus",
+   "lines": "44-47",
+   "description": "The try block catches any error, prints a labeled message and the traceback, and exits with status 1."
+  }
+ ]
+}

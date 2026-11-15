@@ -116,6 +116,7 @@ Containerization is the outer shell.  Inside it, the agent code itself needs saf
 
 The agent loop below has three safety gates, in order: a human checkpoint for irreversible actions, a static analysis check for generated code, and a hard tool-call budget.  Each gate matches one failure mode.
 
+<!-- run: id=cs357-tut-containerisolation-1 viz=show -->
 ```python
 # Constants defined at the top, easy to adjust per deployment
 MAX_ITERATIONS = 25    # Maximum number of plan-act-verify cycles before forced stop
@@ -157,6 +158,7 @@ for iteration in range(MAX_ITERATIONS):
         # Do NOT retry the same action blindly; that would loop forever on a broken action
         context.add(f"Action failed: {result.error}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-containerisolation-1) <!-- code-viz link -->
 
 > Never pass LLM-generated strings directly to `eval()`, `exec()`, or `subprocess.run(shell=True)`.  Even inside a sandboxed container, these calls can consume resources, corrupt the agent's own working state, or exploit vulnerabilities in the Python interpreter.  The pattern above routes generated code through `sandbox_validates()` before execution.
 {: .tb-warning data-title="Watch out"}
@@ -212,14 +214,19 @@ Everything above is easier to believe once you have watched it.  This demo puts 
 
 Make a folder with a `workspace/` directory inside it, and a decoy file beside that directory:
 
+<!-- run: id=cs357-tut-containerisolation-2 viz=show -->
 ```bash
 mkdir -p iso/workspace && cd iso
 echo "Hello from the one host directory this container is allowed to see." > workspace/README.txt
 echo "decoy: grades.csv would be here" > decoy-secret.txt
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-containerisolation-2) <!-- code-viz link -->
+
+[Simulate this session](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=simulate#cs357-tut-containerisolation-onefolder) <!-- code-viz simulate link -->
 
 Save this as `Dockerfile`:
 
+<!-- run: id=cs357-tut-containerisolation-3 viz=show -->
 ```dockerfile
 # Debian + Bun 1.4.4, pinned by digest so a re-tag upstream cannot change this demo.
 FROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e
@@ -237,9 +244,11 @@ ENV HOME=/home/bun
 WORKDIR /workspace
 CMD ["bash"]
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-containerisolation-3) <!-- code-viz link -->
 
 Save this as `run.sh`:
 
+<!-- run: id=cs357-tut-containerisolation-4 viz=show -->
 ```bash
 #!/usr/bin/env bash
 # run.sh: an agent that can see one folder. Usage: ./run.sh bash   or   ./run.sh omp
@@ -257,6 +266,7 @@ exec docker run --rm -it --read-only \
   -v "$PWD/workspace:/workspace" -w /workspace \
   cs357-isolation-demo "$@"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-containerisolation-4) <!-- code-viz link -->
 
 Then build it and open a shell inside it:
 
@@ -267,6 +277,7 @@ docker build -t cs357-isolation-demo . && chmod +x run.sh
 
 Predict each line before you press Enter:
 
+<!-- run: id=cs357-tut-containerisolation-5 viz=show -->
 ```bash
 id
 ls /home
@@ -278,16 +289,19 @@ echo "written from inside the container" > /workspace/from-container.txt
 omp --version
 exit
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-containerisolation-5) <!-- code-viz link -->
 
 > **You should see.**  A non-root user, `Permission denied` for `/home` and `/etc/shadow`, `Read-only file system` for `/etc/x`, nothing at all from `find`, and the README's text.  Back on the host, `cat workspace/from-container.txt` shows the line you wrote, because the mount works in both directions.
 
 That stops the disk.  It does not stop two other routes out:
 
+<!-- run: id=cs357-tut-containerisolation-6 viz=show -->
 ```bash
 ./run.sh bash -c 'curl -sS -m 8 -o /dev/null -w "%{http_code}\n" https://example.com'
 NET=none ./run.sh bash -c 'curl -sS -m 8 -o /dev/null -w "%{http_code}\n" https://example.com'
 OPENROUTER_API_KEY=not-a-real-key ./run.sh bash -c 'env | grep -c OPENROUTER_API_KEY'
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-containerisolation-6) <!-- code-viz link -->
 
 > **You should see.**  `200` with the network on; a failed lookup and `000` with `NET=none`; and `1`, because any key you hand the container is a key the agent can read.
 

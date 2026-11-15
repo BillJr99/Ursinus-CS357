@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-opencodesetup-10",
+ "title": "The Permission Gates",
+ "description": "A permission block that turns advice into enforced gates, with a general ask rule, a bash map, and an edit rule.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-11",
+   "description": "This is a `permission` block. A rule in `AGENTS.md` is advice the model may ignore; a permission entry is a gate the harness enforces before the tool runs, so the model does not get a vote."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`\"*\": \"ask\"` is the general rule: ask about everything not matched by a later rule."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-8",
+   "description": "The `bash` value is itself a map of command patterns. It asks about everything, allows anything starting with `git`, and denies anything starting with `rm`."
+  },
+  {
+   "kind": "focus",
+   "lines": "9",
+   "description": "`edit` is set to `ask`, so file edits prompt you before they run."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the rule that decides everything is what?",
+   "answer": "the last matching rule wins"
+  }
+ ]
+}

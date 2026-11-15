@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-2",
+ "title": "Online Stage Setup",
+ "description": "The one-time online commands that create the project, install pinned packages, pull the Ollama models, and cache the base model locally.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "Make the project folder, move into it, create a virtual environment, and activate it. The page calls this the online stage, run once with the network available."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-6",
+   "description": "Install the pinned packages: `chromadb`, `ollama`, `requests`, `pydantic-ai-slim`, `transformers`, `peft`, and `accelerate`. The last line installs the CPU build of `torch`, and the comment says to skip it on a GPU machine."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-10",
+   "description": "Pull three Ollama models with `ollama pull`. The comments name the embedding model `nomic-embed-text`, the generator `llama3.2`, and the tool-calling generator `qwen2.5:3b` for Section C, with each model's size and license."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-17",
+   "description": "Set `HF_HOME` so the Hugging Face cache stays inside the project, then download SmolLM2-360M-Instruct with `snapshot_download` at a pinned `revision`. The page says the revision is a commit hash, so a later update on the Hub cannot change what you trained on."
+  }
+ ]
+}

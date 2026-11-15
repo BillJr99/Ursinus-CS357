@@ -135,6 +135,7 @@ Start with the global file, so every project inherits a working model.
 
 **macOS, Linux, WSL2 Ubuntu:**
 
+<!-- run: id=cs357-tut-opencodesetup-1 viz=show -->
 ```bash
 mkdir -p ~/.config/opencode
 cat > ~/.config/opencode/opencode.json <<'JSON'
@@ -143,9 +144,11 @@ cat > ~/.config/opencode/opencode.json <<'JSON'
 }
 JSON
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-1) <!-- code-viz link -->
 
 **Windows, PowerShell:**
 
+<!-- run: id=cs357-tut-opencodesetup-2 viz=show -->
 ```powershell
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.config\opencode" | Out-Null
 Set-Content -Path "$env:USERPROFILE\.config\opencode\opencode.json" -Encoding utf8 -Value @'
@@ -154,6 +157,7 @@ Set-Content -Path "$env:USERPROFILE\.config\opencode\opencode.json" -Encoding ut
 }
 '@
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-2) <!-- code-viz link -->
 
 The `$schema` line is optional and worth keeping.  It tells an editor what keys are legal, so a typo in `permission` or `provider` is underlined while you type instead of discovered at runtime.
 
@@ -177,6 +181,7 @@ A provider entry has three parts, and knowing their names makes every example be
 
 Append this to `opencode.json`, as a sibling of `$schema`:
 
+<!-- run: id=cs357-tut-opencodesetup-3 viz=show -->
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
@@ -194,6 +199,7 @@ Append this to `opencode.json`, as a sibling of `$schema`:
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-3) <!-- code-viz link -->
 
 **The address rule.**  Use `http://localhost:11434/v1` when opencode runs on the same machine as Ollama.  Use `http://host.docker.internal:11434/v1` when opencode runs **inside the course container**, because `localhost` inside a container means the container, where nothing is listening.  That substitution is the only difference between the two, and it is the same rule *Your AI Workbench* teaches for every other address.
 {: .tb-key data-title="Why this matters"}
@@ -211,6 +217,7 @@ An empty model list is almost always one of three things, in this order: the fil
 
 Nothing in this course requires a paid provider, and you should not add one to complete an assignment.  The shape is here because you will meet it, and because it is where the credential rule bites.  Any OpenAI-compatible service wires up the same way; only the address, the key, and the model names change.
 
+<!-- run: id=cs357-tut-opencodesetup-4 viz=show -->
 ```json
 {
   "provider": {
@@ -228,6 +235,7 @@ Nothing in this course requires a paid provider, and you should not add one to c
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-4) <!-- code-viz link -->
 
 Notice what the file holds: the **name** of a variable, never its value.  Set the value in your shell (`export ACME_API_KEY=...`, or `$env:ACME_API_KEY = "..."` in PowerShell), or write it to a file and reference that instead with `{file:~/.secrets/acme-key}` after `chmod 600`.  A configuration file that contains a key is a key you have committed, and a commit that contains a key has leaked it even if the next commit removes it.
 
@@ -282,6 +290,7 @@ If you are given access to a hosted, OpenAI-compatible endpoint (an address endi
 
 2.  **Name the endpoint in `opencode.json`.**  Add a provider block holding only the address, with no key and no `models` map.  The plugin fills the models in from the endpoint on the next start, and the key comes in the next step.  Pick a short provider ID; `myendpoint` below is a placeholder, and you will type the same word again in step 3.
 
+    <!-- run: id=cs357-tut-opencodesetup-5 viz=show -->
     ```json
     {
       "provider": {
@@ -295,6 +304,7 @@ If you are given access to a hosted, OpenAI-compatible endpoint (an address endi
       }
     }
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-5) <!-- code-viz link -->
 
     Merge this into your existing `provider` map rather than pasting a second one, check it with `python3 -m json.tool`, and then `/quit` and restart once more.  You may ask the agent to make this edit, too; give it the address, never the key.
 
@@ -311,6 +321,7 @@ If `/models` shows your provider with no models, or does not show it at all, che
 
 Everything above uses the configuration format of the current stable opencode.  If you are running **OpenCode v2**, the provider block is spelled differently: it is `providers` (plural), the adapter is named under `package`, the address sits under `settings`, and the credential is named in an `env` list.  Here is a v2 configuration for an OpenAI-compatible endpoint such as an AI gateway, written to your global config file, `~/.config/opencode/opencode.jsonc` (on Windows, `~\.config\opencode\opencode.jsonc`):
 
+<!-- run: id=cs357-tut-opencodesetup-6 viz=show -->
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
@@ -332,6 +343,7 @@ Everything above uses the configuration format of the current stable opencode.  
   "model": "custom/cloudflare_ai_gateway.anthropic/claude-sonnet-5"
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-6) <!-- code-viz link -->
 
 Then give the opencode service the key and start it, from your terminal:
 
@@ -375,6 +387,7 @@ A working agent with no instructions will do something reasonable and occasional
 
 **macOS, Linux, WSL2:**
 
+<!-- run: id=cs357-tut-opencodesetup-7 viz=show -->
 ```bash
 cat > AGENTS.md <<'MD'
 # cs357-work
@@ -387,9 +400,11 @@ My CS357 lab workspace.
 - Small, readable functions with docstrings.
 MD
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-7) <!-- code-viz link -->
 
 **Windows, PowerShell:**
 
+<!-- run: id=cs357-tut-opencodesetup-8 viz=show -->
 ```powershell
 Set-Content -Path AGENTS.md -Encoding utf8 -Value @'
 # cs357-work
@@ -402,14 +417,17 @@ My CS357 lab workspace.
 - Small, readable functions with docstrings.
 '@
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-8) <!-- code-viz link -->
 
 **How opencode finds it, and how that differs from `instructions`.**  opencode reads `AGENTS.md` from the project root **on its own**; you never name it in the configuration.  The `instructions` key names *additional* files to load alongside it, and it accepts paths and globs:
 
+<!-- run: id=cs357-tut-opencodesetup-9 viz=show -->
 ```json
 {
   "instructions": ["CHARTER.md", ".ai/MEMORY.md"]
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-9) <!-- code-viz link -->
 
 So the two mechanisms are not alternatives.  `AGENTS.md` is discovered; everything else you want in context has to be listed.  The OpenCode Studio lab uses both, which is why the distinction is worth having straight before you start it.
 {: .tb-key data-title="Why this matters"}
@@ -423,6 +441,7 @@ If you open the **wrong folder** in the desktop application, the parent of your 
 
 **What it is.**  A rule in `AGENTS.md` is advice the model may ignore.  A **permission** entry is a gate the harness enforces before the tool runs, so the model does not get a vote.  That difference is most of what makes running an agent on your own files reasonable.
 
+<!-- run: id=cs357-tut-opencodesetup-10 viz=show -->
 ```json
 {
   "permission": {
@@ -436,6 +455,7 @@ If you open the **wrong folder** in the desktop application, the parent of your 
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-10) <!-- code-viz link -->
 
 Values are `allow`, `ask`, or `deny`.  Keys are tool names: `bash`, `edit`, `read`, `webfetch`, `external_directory`, and `skill`.  A tool's value may itself be a map of command patterns using `*` and `?`.
 
@@ -492,6 +512,7 @@ This page installs into the **project** path, at the root of the repository you 
 
 **macOS, Linux, WSL2:**
 
+<!-- run: id=cs357-tut-opencodesetup-11 viz=show -->
 ```bash
 mkdir -p .agents/skills/commit-message
 cat > .agents/skills/commit-message/SKILL.md <<'MD'
@@ -505,9 +526,11 @@ seventy characters saying what changed and why, then a blank line, then the
 reasoning if it is not obvious.  Do not describe the change line by line.
 MD
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-11) <!-- code-viz link -->
 
 **Windows, PowerShell:**
 
+<!-- run: id=cs357-tut-opencodesetup-12 viz=show -->
 ```powershell
 New-Item -ItemType Directory -Force -Path .agents\skills\commit-message | Out-Null
 Set-Content -Path .agents\skills\commit-message\SKILL.md -Encoding utf8 -Value @'
@@ -521,12 +544,14 @@ seventy characters saying what changed and why, then a blank line, then the
 reasoning if it is not obvious.  Do not describe the change line by line.
 '@
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-12) <!-- code-viz link -->
 
 Two rules cause almost every failure.  **The directory name must match the `name:` field**, or the skill silently never loads.  And **the `description` is the trigger**: the model reads it to decide whether this situation is that situation, so a description naming the occasion works and one naming the topic does not.
 {: .tb-warning data-title="Watch out"}
 
 Skills are read at startup, so restart opencode and ask it to list the skills it can see.  Which skills an agent may load is itself a gate, through the `skill` key in the permission block, which takes the same three values and the same last-matching-rule-wins ordering as the `bash` map in §5:
 
+<!-- run: id=cs357-tut-opencodesetup-13 viz=show -->
 ```json
 {
   "permission": {
@@ -534,6 +559,7 @@ Skills are read at startup, so restart opencode and ask it to list the skills it
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-13) <!-- code-viz link -->
 
 `ask` prompts you before the skill loads.  While every skill on disk is one you wrote, `"*": "allow"` is reasonable and saves you a keystroke.  The moment you install one from someone else, switch the wildcard to `"ask"` and allow your own by name, as above: a skill is instructions the model will follow, and a `deny` you forgot to write is not a gate.  [Agent Skills and Plugins]({{ site.baseurl }}/Tutorials/AgentSkills) covers what to read before installing someone else's.
 
@@ -547,6 +573,7 @@ The simplest way to add one is the `plugin` array, which takes a package name or
 
 **What `opencode-auto-models` does.**  On startup it runs opencode's `config` hook, calls `GET {baseURL}/models` on each eligible provider, and merges whatever that provider reports into your `models` map, leaving any entry you wrote by hand alone.  It works for any `@ai-sdk/openai-compatible` provider, so your Ollama block and your OpenWebUI block both qualify, and it caches the result on disk so later starts are fast.  It needs opencode **1.18.29 or newer** on the v1 line, or **2.0.x** on the v2 line; check with `opencode --version`.  On v1 it is the `plugin` entry below.  On v2 the entry has a different home, and `opencode plugin add github:BillJr99/opencode-auto-models` writes it for you.  §3's step-by-step route installs it by asking the agent, which works on either line.
 
+<!-- run: id=cs357-tut-opencodesetup-14 viz=show -->
 ```json
 {
   "plugin": [
@@ -554,6 +581,7 @@ The simplest way to add one is the `plugin` array, which takes a package name or
   ]
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-14) <!-- code-viz link -->
 
 That URL is a fork of [`vitkuz573/opencode-auto-models`](https://github.com/vitkuz573/opencode-auto-models), which is MIT licensed.
 
@@ -616,6 +644,7 @@ Give the agent a token scoped to one repository, never your personal one, and ne
 
 A tool server advertises each operation as its own named tool, so the agent calls `github_create_issue` rather than composing a command line.  The practical difference is what your rules can match: a tool name has one spelling, while a command line has many.
 
+<!-- run: id=cs357-tut-opencodesetup-15 viz=show -->
 ```json
 {
   "mcp": {
@@ -630,6 +659,7 @@ A tool server advertises each operation as its own named tool, so the agent call
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-15) <!-- code-viz link -->
 
 The hosted server is an HTTPS endpoint, so it works anywhere the network does, **including inside the course container**.  There is also a local server that runs as a `docker run` command, and that one needs a Docker CLI, which the course container does not have.  Configure the local form on your host and use the hosted form from inside the container.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -673,6 +703,7 @@ Three properties make the arrangement work, and it is worth naming them because 
 
 The course container already carries opencode, and if you are on Route A you can skip to §11 and use it. This is the minimal standalone version, which is worth building once because it is short enough to read in full.
 
+<!-- run: id=cs357-tut-opencodesetup-16 viz=show -->
 ```dockerfile
 # Dockerfile.agent
 FROM node:24-bookworm-slim
@@ -700,6 +731,7 @@ USER agent
 WORKDIR /workspace
 CMD ["opencode"]
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-16) <!-- code-viz link -->
 
 ```bash
 docker build -f Dockerfile.agent -t course-agent .
@@ -712,6 +744,7 @@ Notice what is **not** in the image: no API key, no token, no `~/.ssh`, no `~/.c
 
 The container sees your project because you mount it, and it sees nothing else because you do not.
 
+<!-- run: id=cs357-tut-opencodesetup-17 viz=show -->
 ```bash
 cd ~/cs357-work        # a git repository, with a GitHub remote
 
@@ -722,9 +755,11 @@ docker run -it --rm \
   --cap-drop ALL --security-opt no-new-privileges \
   course-agent
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-17) <!-- code-viz link -->
 
 In PowerShell the line continuations are backticks rather than backslashes, and `$PWD` works the same way:
 
+<!-- run: id=cs357-tut-opencodesetup-18 viz=show -->
 ```powershell
 docker run -it --rm `
   --add-host=host.docker.internal:host-gateway `
@@ -733,6 +768,7 @@ docker run -it --rm `
   --cap-drop ALL --security-opt no-new-privileges `
   course-agent
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-18) <!-- code-viz link -->
 
 Each flag earns its place. `--rm` deletes the container on exit, so an experiment cleans up after itself and your files survive because they were never in the container to begin with. `-v "$PWD:/workspace"` is the only door. `-w /workspace` makes that directory the agent's world from the first keystroke. `--add-host` makes `host.docker.internal` resolve on Linux, where Docker Engine does not provide it for free. `--cap-drop ALL` and `--security-opt no-new-privileges` remove kernel capabilities the agent has no use for.
 
@@ -754,6 +790,7 @@ opencode --auto
 
 Or in the project's `opencode.json`, which is the route the desktop application needs since it has no flag to pass:
 
+<!-- run: id=cs357-tut-opencodesetup-19 viz=show -->
 ```json
 {
   "permission": {
@@ -761,9 +798,11 @@ Or in the project's `opencode.json`, which is the route the desktop application 
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-19) <!-- code-viz link -->
 
 **A `deny` still holds.** The flag approves what is not explicitly denied, so a `deny` rule survives it. That makes `deny` the right tool for anything you never want attempted, even in this mode, and it is worth keeping a short list of those even inside a container:
 
+<!-- run: id=cs357-tut-opencodesetup-20 viz=show -->
 ```json
 {
   "permission": {
@@ -775,6 +814,7 @@ Or in the project's `opencode.json`, which is the route the desktop application 
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-20) <!-- code-viz link -->
 
 The first protects the mount's contents from the one command that empties it faster than you can react. The second protects the history on GitHub, which is the copy the container cannot reach and therefore the one thing here that is genuinely irreversible.
 
@@ -783,6 +823,7 @@ The first protects the mount's contents from the one command that empties it fas
 
 The workflow, end to end, is four commands:
 
+<!-- run: id=cs357-tut-opencodesetup-21 viz=show -->
 ```bash
 git status                      # start clean
 docker run ... course-agent     # the run above
@@ -790,6 +831,7 @@ opencode run "<the job>" --auto 2>&1 | tee agent-run.log   # inside the containe
 # ...agent works, you go and do something else...
 less agent-run.log              # the action log that run wrote
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-21) <!-- code-viz link -->
 
 Then review, commit, and push from the container or the host, whichever you prefer. The push is how the work leaves the blast radius.
 
@@ -845,6 +887,7 @@ done, tell me the full path of the file you edited.
 
 The template it writes should look like this:
 
+<!-- run: id=cs357-tut-opencodesetup-22 viz=show -->
 ```json
 {
   "provider": {
@@ -859,6 +902,7 @@ The template it writes should look like this:
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-opencodesetup-22) <!-- code-viz link -->
 
 Then open that file in your own editor, at the path opencode reported, and replace the three placeholders.  Add the file to `.gitignore` *before* the key goes in, so the key never reaches a commit.  Restart `opencode`, type `/models`, and confirm the new provider is listed.
 

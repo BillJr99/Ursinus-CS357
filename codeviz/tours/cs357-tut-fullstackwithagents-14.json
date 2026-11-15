@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-14",
+ "title": "src/index.js: Worker Entry Point",
+ "description": "Worker that handles /api/questions for GET and POST, /api/questions/:id/upvote for POST, with validation and D1 database operations.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-56",
+   "description": "Complete Worker implementation."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Header and constant: comment about Workers Assets, MAX_LENGTH=280."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-11",
+   "description": "Json helper: creates Response with JSON stringified body and status."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-18",
+   "description": "ListQuestions: SELECT from questions ordered by votes DESC, id ASC, returns JSON."
+  },
+  {
+   "kind": "focus",
+   "lines": "20-35",
+   "description": "AddQuestion: parses JSON, validates text length 1-280, INSERT with RETURNING, returns 201."
+  },
+  {
+   "kind": "focus",
+   "lines": "37-42",
+   "description": "Upvote: UPDATE votes + 1 WHERE id = ?, RETURNING, returns row or 404."
+  },
+  {
+   "kind": "focus",
+   "lines": "44-56",
+   "description": "Fetch: routes to listQuestions, addQuestion, upvote based on pathname and method, 404 for unknown."
+  }
+ ]
+}

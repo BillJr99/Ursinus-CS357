@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-8",
+ "title": "RAG Through Pydantic AI",
+ "description": "The same RAG system through Pydantic AI, first with retrieval in your code, then with retrieval as a typed tool the model calls.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-11",
+   "description": "The header comment says this is the same RAG system through Pydantic AI, first explicit, then as a typed tool. It imports the Pydantic AI pieces, inserts a path, and pulls `make_model`, `show_trace`, and `retrieve`."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-28",
+   "description": "`RAGAnswer` is a typed model with an `answer` and a list of `citations`. `Evidence` carries the retrieved IDs. The `explicit` agent, Path 1, takes the answer model as output, uses `Evidence` as deps, allows 2 retries, and instructs the model to answer only from the prompt's sources and cite their IDs."
+  },
+  {
+   "kind": "focus",
+   "lines": "31-41",
+   "description": "The output validator enforces two structural rules: every cited ID must have been retrieved, and an abstention must cite nothing. The closing comment notes it is structurally sound but that whether the cited text supports the answer is still unchecked."
+  },
+  {
+   "kind": "focus",
+   "lines": "44-52",
+   "description": "`ask_explicit` retrieves evidence, prints it with distances, formats the sources, and runs the agent with a request limit of 3. It returns the typed output."
+  },
+  {
+   "kind": "focus",
+   "lines": "55-73",
+   "description": "Path 2 defines a `Library` deps class and a `tooled` agent that instructs the model to call search before answering. The `search` tool retrieves passages, records the IDs it returned in `ctx.deps.seen`, and returns them as bracketed sources."
+  },
+  {
+   "kind": "focus",
+   "lines": "76-90",
+   "description": "The entry point runs both paths on the question, defaulting to the PVC question. It prints the Path 1 answer, runs Path 2 with request and tool-call limits, prints the answer, prints the IDs the tool actually returned, and shows the trace."
+  }
+ ]
+}

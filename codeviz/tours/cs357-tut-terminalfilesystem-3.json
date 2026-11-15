@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-3",
+ "title": "Student A: Over-Mounted Home Directory",
+ "description": "Student A mounts entire home directory into container, exposing SSH keys, AWS credentials, git config, and all projects to the agent.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-14",
+   "description": "Student A's Docker command with full home directory mount."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-12",
+   "description": "Comments: the agent sees entire /home/user including SSH keys, AWS credentials, git config, and all projects."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-14",
+   "description": "Problem: docker run with -v /home/user:/home/user mounts the entire home directory, flagged as the problem."
+  }
+ ]
+}

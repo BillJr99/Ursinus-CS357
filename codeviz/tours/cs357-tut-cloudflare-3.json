@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-3",
+ "title": "The Worker Configuration File",
+ "description": "Three keys in wrangler.toml that give a Worker project its identity: its name, its entry point, and its runtime compatibility date.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "This is the project's configuration file, `wrangler.toml`. Three keys give the project its identity."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "`name` becomes the subdomain: `hello-worker.<you>.workers.dev`."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "`main` names the entry point file that Cloudflare runs."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`compatibility_date` pins runtime behavior to a specific date, so future platform updates cannot silently change your deployed behavior."
+  }
+ ]
+}

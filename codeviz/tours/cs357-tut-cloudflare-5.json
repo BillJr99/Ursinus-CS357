@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-5",
+ "title": "Deploy and Test the Live Worker",
+ "description": "Commands that deploy the Worker to Cloudflare and then test all three routes with curl.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "`npx wrangler deploy` deploys the Worker to Cloudflare's global network. It prompts you to confirm, which is the human gate before publishing to a public URL."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "The deploy prints the live URL, `https://hello-worker.<your-subdomain>.workers.dev`."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-9",
+   "description": "The first `curl` tests the `/greet` route with the query parameter `name=Bill`."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-14",
+   "description": "The second `curl` tests `/health`, which returns `ok: true` and a timestamp."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-18",
+   "description": "The third `curl` hits an unknown path and expects a 404 JSON error."
+  }
+ ]
+}

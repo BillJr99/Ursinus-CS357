@@ -87,6 +87,7 @@ A chatbot appears to "remember" your conversation.  Under the hood, the model re
 
 The clearest way to see this is a prompt template: a string with labelled `{}` blanks that you fill in each turn.
 
+<!-- run: id=cs357-tut-memorycontext-1 viz=show -->
 ```python
 TEMPLATE = """You are a concise study-planning assistant.
 
@@ -96,6 +97,7 @@ Conversation so far:
 User's new message: {question}
 Answer:"""
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-memorycontext-1) <!-- code-viz link -->
 
 `{history}` is where prior turns get pasted; `{question}` is the current message.  The model sees only whatever ends up inside that filled-in string.  If `{history}` is blank, the model is a stranger meeting you for the first time, no matter how many times you have talked before.  Fill `{history}` and the "memory" appears.  Nothing changed on the server; the only thing that changed is the string you built.  The same mechanism makes RAG work (you paste *retrieved* facts into a blank), and the same mechanism is what the `SummarizingMemory` class in Part III improves (you paste a *compressed* history into the blank instead of the raw one).
 

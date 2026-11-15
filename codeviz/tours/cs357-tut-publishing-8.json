@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-8",
+ "title": "Exercise 1: First Container Image",
+ "description": "Build and publish hello-cs357 image to GHCR, make it public, have teammate verify pull works without credentials.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "Exercise 1 starter commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-4",
+   "description": "Build and publish: docker build with ghcr.io/yourusername/hello-cs357:0.1.0, authenticate, push."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "Verification: teammate runs docker pull and docker run to confirm image works without credentials."
+  }
+ ]
+}

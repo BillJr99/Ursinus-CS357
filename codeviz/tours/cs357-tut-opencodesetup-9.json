@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-opencodesetup-9",
+ "title": "The instructions Key",
+ "description": "A one-key block that names extra files for opencode to load alongside AGENTS.md, which opencode discovers on its own.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "The `instructions` key names additional files to load alongside `AGENTS.md`. `AGENTS.md` is discovered on its own; everything else you want in context has to be listed."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "The array lists two files: `CHARTER.md` and `.ai/MEMORY.md`. The page notes it accepts paths and globs."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says AGENTS.md is discovered, and everything else you want in context has to be what?",
+   "answer": "listed"
+  }
+ ]
+}

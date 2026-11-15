@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-9",
+ "title": "Deploying a Static Site to Pages",
+ "description": "One command that deploys a static site to Cloudflare Pages, with a preview URL for each deploy and a stable production URL.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "This command deploys a static site to Pages. `npx wrangler pages deploy ./dist --project-name=cs357-demo` publishes the built output directory, and the first run creates the project."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Build your static site first if it needs a build, then point `pages deploy` at the output directory."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-11",
+   "description": "Every later deploy creates a new version. Each gets a unique preview URL, and the stable production URL always points at the latest deploy."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says to share the preview URL with a teammate to get feedback before promoting to what?",
+   "answer": "production"
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentstack-4",
+ "title": "Verify Gateway Models",
+ "description": "From the host, curl the gateway to verify it answers and knows its configured models.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-8",
+   "description": "Verification command and its context."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Verification step: curl to localhost:4000/models with Bearer authorization."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-7",
+   "description": "Checkpoint: expected answer is a JSON object with data array listing llama3 and qwen2.5-3b."
+  },
+  {
+   "kind": "predict",
+   "question": "What should curl -s http://localhost:4000/models return?",
+   "answer": "A JSON object whose data array lists the two configured model names, llama3 and qwen2.5-3b"
+  }
+ ]
+}

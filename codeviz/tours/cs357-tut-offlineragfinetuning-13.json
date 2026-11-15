@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-13",
+ "title": "Comparing the Four Conditions",
+ "description": "The comparison script that runs one base model across four conditions on the same held-out questions and scores each answer.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-14",
+   "description": "The header comment says one base model, four conditions, the same held-out questions and decoding settings. It sets `HF_HUB_OFFLINE`, imports retrieval and the generation helpers, and loads the held-out test questions into `DATA`."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-29",
+   "description": "`score` marks whether the reply starts with `ANSWER:`, whether it abstained, and whether retrieval recalled the source. For an unanswerable question it counts an abstention as correct, and otherwise it checks the gold text and whether the reply cites the chunk that holds the fact."
+  },
+  {
+   "kind": "focus",
+   "lines": "32-44",
+   "description": "`run` loops over the test cases. It retrieves evidence only when the condition contains RAG, builds the context, then generates with the adapter on for a LoRA condition or inside `disable_adapter` otherwise. Each row records the question, kind, reply, and score."
+  },
+  {
+   "kind": "focus",
+   "lines": "47-59",
+   "description": "`main` loads the model with the adapter, then loops over the four conditions in order. For each it runs the cases, stores the rows, and prints correct, format, and cited-right counts plus the elapsed time. It writes the full report to `compare_report.json` and prints the peak memory."
+  },
+  {
+   "kind": "focus",
+   "lines": "62-68",
+   "description": "The entry point calls `main` inside a try block, printing a labeled message and the traceback and exiting with status 1 on error."
+  }
+ ]
+}

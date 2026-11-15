@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-setupbasics-8",
+ "title": "Running OpenWebUI in Docker",
+ "description": "The Docker route for OpenWebUI, with each flag doing one job: publishing a port, reaching Ollama on the host, and keeping your data in a named volume.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "This runs OpenWebUI in Docker. The page says OpenWebUI is a self-hosted web front end that sits in front of your Ollama server, and the install is one of two routes, with Docker recommended if Docker Desktop is already running."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "`-p 3000:8080` publishes the container's port 8080 on your host's port 3000. `--add-host=host.docker.internal:host-gateway` lets the container reach Ollama on your host, required on Linux and harmless elsewhere. `-d` runs it in the background."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "`-v open-webui:/app/backend/data` keeps your account, models, and chat history in a named volume that survives restarts. `--name open-webui` names the container, and `--restart always` keeps it running."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "The image to run is `ghcr.io/open-webui/open-webui:main`."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the named volume keeps your account, models, and chat history, and it survives what?",
+   "answer": "restarts"
+  }
+ ]
+}

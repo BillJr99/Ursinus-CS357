@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-12",
+ "title": "Download and Install small-model-orchestrator Skill (bash)",
+ "description": "Creates .agents/skills directory, downloads the skill archive, extracts it, and verifies SKILL.md exists.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "Complete bash install sequence."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Directory creation: mkdir -p .agents/skills."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Download: curl fetches the skill archive from GitHub Pages."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Extraction: unzip into .agents/skills/ and remove the archive."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Verification: ls confirms SKILL.md is at the expected path."
+  }
+ ]
+}

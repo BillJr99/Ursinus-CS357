@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-chessaicoach-11",
+ "title": "Minimal Backend Proxy",
+ "description": "A small Flask server that holds the provider key on the server side, so the browser never sees it.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "The header comments name the file `minimal_proxy.py` and show the run command with a real key in the environment, and warn never to commit it. It imports `os`, `requests`, and the Flask pieces."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-9",
+   "description": "Create the Flask app and read the key from `os.environ`. The comment marks this as coming from the environment, not the source code, which is the whole point of the proxy."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-13",
+   "description": "Define the `POST /api/coach` route. The browser calls this endpoint, and the handler reads the user prompt from the request JSON."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-20",
+   "description": "Post to the OpenAI chat completions endpoint with the key added server-side in the `Authorization` header, sending the model and a single user message, with a 120-second timeout."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-22",
+   "description": "Parse the response and return the reply text as JSON. The page says the secret never leaves your server and users never see it."
+  }
+ ]
+}

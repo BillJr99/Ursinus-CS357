@@ -1,0 +1,23 @@
+{
+ "version": 1,
+ "id": "cs357-tut-docker-bindmount",
+ "title": "Making a host folder available to a container",
+ "description": "Section 8, Steps 1, 2 and 4: create the folder, mount it, then write into it from inside the container and find the file on the host. The tutorial writes alpine with no tag; the recording pins alpine:3.20. The read-only check is left out because the Section 9.5 exercise asks you to paste its output yourself.",
+ "page": "_pages/Tutorials/tut-docker.md",
+ "scenario": {
+  "commands": [
+   "mkdir -p \"$HOME/agents/work\"",
+   "docker run --rm -v \"$HOME/agents/work:/work\" alpine:3.20 ls /work",
+   "docker run --rm -v \"$HOME/agents/work:/work\" alpine:3.20 sh -c 'ls -la /work && touch /work/hello && echo wrote'",
+   "ls \"$HOME/agents/work\""
+  ],
+  "images": [
+   "alpine:3.20"
+  ],
+  "network": "isolated",
+  "watch": [
+   "agents/work"
+  ],
+  "timeout": 300
+ }
+}

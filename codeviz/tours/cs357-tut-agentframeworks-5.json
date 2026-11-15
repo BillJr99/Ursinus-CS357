@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-5",
+ "title": "LangChain: Tool and Agent Loop",
+ "description": "Tool decorator generates JSON schema from type hints and docstring; bind_tools attaches schemas; explicit loop mirrors Local Agent Lab structure.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-10",
+   "description": "Tool definition: days_between with type hints and docstring for schema generation."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-9",
+   "description": "Tool: @tool decorator, function signature with start_iso and end_iso parameters, docstring, and datetime computation."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-12",
+   "description": "Binding: llm.bind_tools attaches the days_between schema, registry maps tool names to functions."
+  },
+  {
+   "kind": "reveal",
+   "lines": "14-24",
+   "description": "Agent loop: perceive-plan-act pattern with 4 iteration limit."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-16",
+   "description": "Loop setup: messages list with initial HumanMessage, 4 iteration cap."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-20",
+   "description": "Framework work: llm_with_tools.invoke handles HTTP, formatting, and parsing; stopping decision is yours."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-24",
+   "description": "Your authority: execute tool calls from registry, print results, append ToolMessage to messages."
+  }
+ ]
+}

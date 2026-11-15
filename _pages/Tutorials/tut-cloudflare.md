@@ -71,6 +71,7 @@ Around them sit storage primitives you may eventually want, of which **KV** (a k
 
 The following commands install Wrangler, connect it to your Cloudflare account, and confirm the connection.  Run them in order; `wrangler login` will open a browser tab to complete authorization.
 
+<!-- run: id=cs357-tut-cloudflare-1 viz=show -->
 ```bash
 
 # Install Wrangler globally (or use npx wrangler to run without installing)
@@ -85,6 +86,7 @@ wrangler login
 # Confirm your account is connected
 wrangler whoami
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-1) <!-- code-viz link -->
 
 `wrangler login` stores an OAuth credential on your machine, scoped to your Cloudflare account.  On shared machines (like a lab computer), run `wrangler logout` when you are finished, the same hygiene rule as any other credential.
 
@@ -100,6 +102,7 @@ In this part, you will scaffold, run locally, and deploy a JSON API Worker, then
 
 These commands scaffold a new Worker project from the official template and start the local development server.  The local server hot-reloads on every save, so you can edit and test without redeploying.
 
+<!-- run: id=cs357-tut-cloudflare-2 viz=show -->
 ```bash
 
 # Create a new Worker project from the official template
@@ -115,14 +118,17 @@ npx wrangler dev
 
 # Your Worker runs at http://localhost:8787 - open it in a browser or use curl
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-2) <!-- code-viz link -->
 
 `wrangler dev` runs your Worker in a faithful local simulation with live reload: edit, save, curl, repeat, the same inner loop as everything else this semester.  The project's identity lives in its configuration file (`wrangler.toml`, or `wrangler.jsonc` in newer scaffolds; same keys, different syntax):
 
+<!-- run: id=cs357-tut-cloudflare-3 viz=show -->
 ```toml
 name = "hello-worker"            # becomes the subdomain: hello-worker.<you>.workers.dev
 main = "src/index.js"            # the entry point file that Cloudflare runs
 compatibility_date = "2026-06-01"  # pins runtime behavior to a specific date
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-3) <!-- code-viz link -->
 
 That `compatibility_date` line deserves a pause: it is the platform's version-pinning mechanism, freezing runtime semantics as of a specific date so future Cloudflare platform updates cannot silently change your deployed behavior.  This is the same reproducibility instinct as pinning an image tag; you are saying "run my code against the platform as it existed on this date."
 
@@ -132,6 +138,7 @@ A Worker exports a `fetch` handler: an HTTP request comes in, your function runs
 
 The following Worker exports a `fetch` handler with three routes and error handling.  Read the comments inside the code; they explain what each piece does and why it is structured this way.
 
+<!-- run: id=cs357-tut-cloudflare-4 viz=show -->
 ```javascript
 // src/index.js: a tiny JSON API with three routes and error handling
 export default {
@@ -162,6 +169,7 @@ export default {
   },
 };
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-4) <!-- code-viz link -->
 
 Note the `env` parameter: this is where secrets and configuration variables arrive from Cloudflare, covered in the next section.  The `ctx` parameter provides lifecycle hooks for advanced patterns like waiting for a background task to finish before the Worker shuts down.
 
@@ -169,6 +177,7 @@ Note the `env` parameter: this is where secrets and configuration variables arri
 
 The following commands deploy your Worker to Cloudflare's global network and immediately test all three routes.  The first `wrangler deploy` command may prompt you to confirm; this is the human gate before publishing to a public URL.
 
+<!-- run: id=cs357-tut-cloudflare-5 viz=show -->
 ```bash
 
 # Deploy to Cloudflare's network (prompts to confirm, then shows the live URL)
@@ -189,6 +198,7 @@ curl https://hello-worker.<your-subdomain>.workers.dev/anything-else
 
 # Expected: {"error":"not found"} with HTTP status 404
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-5) <!-- code-viz link -->
 
 That is the entire distance from laptop to public URL. Now the part everyone gets wrong without instruction:
 
@@ -196,6 +206,7 @@ That is the entire distance from laptop to public URL. Now the part everyone get
 
 **Secrets** (API keys, tokens, passwords) go through Wrangler's secret store and *never* touch any file:
 
+<!-- run: id=cs357-tut-cloudflare-6 viz=show -->
 ```bash
 
 # The value is entered interactively (not typed on the command line where it could appear in shell history)
@@ -203,7 +214,9 @@ That is the entire distance from laptop to public URL. Now the part everyone get
 # It goes directly to Cloudflare's secure storage, not to any local file
 npx wrangler secret put UPSTREAM_API_KEY
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-6) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-cloudflare-7 viz=show -->
 ```toml
 
 # wrangler.toml (committed to your repository; only non-sensitive values here)
@@ -211,12 +224,15 @@ npx wrangler secret put UPSTREAM_API_KEY
 MODEL_NAME = "claude-3-5-sonnet-20241022"    # safe to commit: not a secret
 ENVIRONMENT = "production"                    # safe to commit: not a secret
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-7) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-cloudflare-8 viz=show -->
 ```javascript
 // In the handler, secrets and vars both arrive on the env object, same syntax, different storage
 const key = env.UPSTREAM_API_KEY;            // secret: stored by wrangler secret put, never in files
 const model = env.MODEL_NAME;                // plain var: stored in wrangler.toml, committed to repo
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-8) <!-- code-viz link -->
 
 For local development, secrets go in a `.dev.vars` file (same syntax as a `.env` file).  Add `.dev.vars` to `.gitignore` in the same breath as creating it.
 
@@ -251,6 +267,7 @@ In this part, you will deploy a static site to Pages and apply the governance pr
 
 Anything static (a project landing page, a built React artifact, your team's demo write-up, a visualization) deploys to Pages directly from a local directory:
 
+<!-- run: id=cs357-tut-cloudflare-9 viz=show -->
 ```bash
 
 # Build your static site first (if needed), then deploy the output directory
@@ -264,6 +281,7 @@ npx wrangler pages deploy ./dist --project-name=cs357-demo
 
 # -> https://cs357-demo.pages.dev         (stable production URL, always latest)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-9) <!-- code-viz link -->
 
 The first run creates the project on Cloudflare; later runs create new deployments, each with a unique preview URL alongside the stable production URL. This gives you free per-version review links; share the preview URL with a teammate to get feedback before promoting to production.
 
@@ -330,6 +348,7 @@ The first principle of a safe pipeline is **where the deploy logic lives**.  A t
 
 The following `deploy.sh` is the entire deploy logic.  Read the top three lines and the comments: it fails fast, it reads the token *from the environment* (never a hardcoded string), and it never prints the token.
 
+<!-- run: id=cs357-tut-cloudflare-10 viz=show -->
 ```bash
 #!/usr/bin/env bash
 
@@ -354,10 +373,13 @@ npx wrangler deploy --name "${WORKER_NAME}" </dev/null
 
 echo "Deploy complete."
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-10) <!-- code-viz link -->
 
 The workflow that runs it is short, because the logic is elsewhere:
 
 {% raw %}
+
+<!-- run: id=cs357-tut-cloudflare-11 viz=show -->
 ```yaml
 
 # .github/workflows/deploy.yml  (skeleton; full guarded version appears in Section 11)
@@ -367,6 +389,8 @@ The workflow that runs it is short, because the logic is elsewhere:
     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}   # injected, then masked in logs
     WORKER_NAME: ${{ vars.WORKER_NAME }}                        # plain, non-secret variable
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-11) <!-- code-viz link -->
+
 {% endraw %}
 
 ## The CI Deploy Pipeline
@@ -419,14 +443,17 @@ GitHub gives you three places to put values, and choosing correctly is the whole
 
 **The one rule that prevents most leaks:** a registered secret is automatically masked as `***` in logs, *unless you print it yourself*.  These two lines defeat the mask and leak the token into a world-readable log:
 
+<!-- run: id=cs357-tut-cloudflare-12 viz=show -->
 ```bash
 echo "Deploying with token $CLOUDFLARE_API_TOKEN"   # NEVER - prints the secret verbatim
 set -x                                               # DANGEROUS in a script that touches secrets:
                                                      #    it echoes every command with its expanded values
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-12) <!-- code-viz link -->
 
 Instead, prove a secret arrived without revealing it, the same discipline as Exercise 2, now for CI:
 
+<!-- run: id=cs357-tut-cloudflare-13 viz=show -->
 ```bash
 
 # Confirms the token is present without exposing a single character of it
@@ -436,9 +463,11 @@ else
   echo "CLOUDFLARE_API_TOKEN is missing." >&2; exit 1
 fi
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-13) <!-- code-viz link -->
 
 And local development still uses `.dev.vars` / `.env`, which are **git-ignored**, always:
 
+<!-- run: id=cs357-tut-cloudflare-14 viz=show -->
 ```bash
 
 # .gitignore - add these the moment the files could exist, before your first git add
@@ -446,6 +475,7 @@ And local development still uses `.dev.vars` / `.env`, which are **git-ignored**
 .env
 *.local
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-14) <!-- code-viz link -->
 
 Your deploy script needs the Cloudflare token, and you want a required reviewer to approve every production deploy.  The correct place to store the token is:
 
@@ -495,6 +525,7 @@ Three claims do the security work, and **the identity provider (not your workflo
 
 The **classic, dangerous mistake** is a loose subject scope.  A trust policy that accepts `repo:ORG/*` (or worse, `*`) will hand production credentials to *any* repository (or any branch, or a pull request from a fork).  Pin the subject to the exact repo **and** branch/environment you deploy from:
 
+<!-- run: id=cs357-tut-cloudflare-15 viz=show -->
 ```json
 {
   "Version": "2012-10-17",
@@ -512,9 +543,11 @@ The **classic, dangerous mistake** is a loose subject scope.  A trust policy tha
   }]
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-15) <!-- code-viz link -->
 
 And the *permission* policy the role grants should be least-privilege too, only the actions the deploy performs, never `"Action": "*"`:
 
+<!-- run: id=cs357-tut-cloudflare-16 viz=show -->
 ```json
 {
   "Version": "2012-10-17",
@@ -525,6 +558,7 @@ And the *permission* policy the role grants should be least-privilege too, only 
   }]
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-16) <!-- code-viz link -->
 
 > "OIDC is complicated, so a stored token must be the simpler and therefore safer choice."  The opposite is usually true.  A stored long-lived token is a standing liability: it can leak, and until someone notices and rotates it, an attacker has your access.  An OIDC token is minted per run, expires in minutes, and is bound by its subject to one repository and branch.  The *setup* is a bit more involved; the *ongoing risk* is far lower.  Cloudflare's Wrangler flow uses a scoped API token today, so you still hold one carefully-scoped secret, but the direction every mature pipeline moves is: smallest scope, shortest life, no key at rest.
 {: .tb-pitfall data-title="Common Misconception"}
@@ -554,6 +588,8 @@ With credentials scoped, the last layer is governance: constraining *who* can tr
 Here is the full guarded workflow, the skeleton from Section 8 with every gate wired in.  Every `<PLACEHOLDER>` is a TODO you fill in for your own repo.
 
 {% raw %}
+
+<!-- run: id=cs357-tut-cloudflare-17 viz=show -->
 ```yaml
 
 # .github/workflows/deploy.yml
@@ -592,6 +628,8 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}   # environment secret, masked
           WORKER_NAME: ${{ vars.WORKER_NAME }}                        # plain variable
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-17) <!-- code-viz link -->
+
 {% endraw %}
 
 ## 12.  Automation-Safe Scripts: No Prompts, No Hangs
@@ -603,6 +641,7 @@ Two rules make a script CI-safe:
 - **Never wait for input.**  Pass assume-yes flags (`--yes`, `--force`, or the tool's non-interactive mode), set `CI=true` where the tool honors it, and redirect stdin from nothing with `</dev/null` so any accidental prompt gets EOF and the command proceeds or fails instead of blocking.
 - **Be idempotent.**  Running the script twice must reach the same end state: create-if-not-exists, not create-and-crash-if-it-exists.  A re-run after a flaky network should be harmless.
 
+<!-- run: id=cs357-tut-cloudflare-18 viz=show -->
 ```bash
 
 # Hangs forever in CI; there is no one to press a key:
@@ -616,6 +655,7 @@ if ! npx wrangler kv namespace list </dev/null | grep -q "$KV_TITLE"; then
   npx wrangler kv namespace create "$KV_TITLE" </dev/null
 fi
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-18) <!-- code-viz link -->
 
 > **How to recognize the failure:** a CI job that "just sits there" and eventually hits its time limit, with the log frozen on a step that *would* have asked a question, is almost always a script blocked on a prompt.  The fix is upstream: remove the interactive `read`, add the assume-yes flag, or append `</dev/null`.
 
@@ -666,6 +706,7 @@ Two practical realities sit on top of everything above: *someone (or something) 
 - **Manual dispatch for expensive jobs.**  Put costly workflows (full deploys, large test matrices, browser E2E) behind `workflow_dispatch` so they run when a person asks, not on every commit.  This is the credit-saving twin of the human gate.
 - **Scope automatic triggers.**  Restrict `push`/`pull_request` triggers to the branches and paths that matter, so a docs-only edit does not trigger a full build:
 
+<!-- run: id=cs357-tut-cloudflare-19 viz=show -->
 ```yaml
 on:
   push:
@@ -673,15 +714,20 @@ on:
     paths: ["src/**", "deploy.sh"]   # skip runs when only docs/images change
   workflow_dispatch:                 # expensive path stays manual/on-demand
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-19) <!-- code-viz link -->
 
 - **Cancel superseded runs.**  A `concurrency` group with `cancel-in-progress: true` stops an older run when a newer commit arrives, so you are not paying for a build that is already obsolete (use this for *test/CI* jobs; keep `cancel-in-progress: false` for the *deploy* job so a live deploy is never interrupted mid-flight):
 
 {% raw %}
+
+<!-- run: id=cs357-tut-cloudflare-20 viz=show -->
 ```yaml
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true           # newer push cancels the older, still-running CI
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-20) <!-- code-viz link -->
+
 {% endraw %}
 
 - **Trim what runs.**  Skip redundant jobs with `if:` conditions, keep the test matrix as small as it can be, and cache dependencies so each run does less work.
@@ -719,6 +765,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-cloudflare-21 viz=show -->
 ```bash
 npm create cloudflare@latest hello-worker
 cd hello-worker
@@ -733,6 +780,7 @@ npx wrangler dev                  # test locally first
 # curl http://localhost:8787/anything
 npx wrangler deploy               # deploy when local tests pass
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-21) <!-- code-viz link -->
 
 *You've succeeded when:* You can share a URL that returns `{"ok":true,...}` from `/health`, a greeting from `/greet?name=X`, and a proper 404 JSON from any other path.
 
@@ -742,6 +790,7 @@ npx wrangler deploy               # deploy when local tests pass
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-cloudflare-22 viz=show -->
 ```javascript
 // Prove the secret arrived without revealing it:
 return Response.json({
@@ -750,6 +799,7 @@ return Response.json({
   secret_length: env.SECRET_SUFFIX?.length           // length proves it arrived, not the content
 });
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-22) <!-- code-viz link -->
 
 *You've succeeded when:* The response shows `"secret_present": true` and the correct `secret_length`, but the actual secret value never appears in the output.
 
@@ -759,6 +809,7 @@ return Response.json({
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-cloudflare-23 viz=show -->
 ```bash
 
 # Minimal example if you have no existing static output
@@ -767,6 +818,7 @@ npx wrangler pages deploy ./my-site --project-name=cs357-yourname
 
 # Output includes a unique preview URL, share that for review
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-23) <!-- code-viz link -->
 
 *You've succeeded when:* Your site is accessible at a `*.pages.dev` URL that a teammate can open in their browser.
 
@@ -776,6 +828,7 @@ npx wrangler pages deploy ./my-site --project-name=cs357-yourname
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-cloudflare-24 viz=show -->
 ```javascript
 // The Worker calls the LLM API on the server side; the browser never sees the key
 if (url.pathname === "/complete") {
@@ -792,6 +845,7 @@ if (url.pathname === "/complete") {
   return Response.json({ completion: result.choices[0].text });
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-24) <!-- code-viz link -->
 
 *You've succeeded when:* The browser DevTools Network tab shows requests to your `workers.dev` URL only; the LLM provider API call is invisible to the browser, and the key is not in any response.
 
@@ -801,6 +855,7 @@ if (url.pathname === "/complete") {
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-cloudflare-25 viz=show -->
 ```bash
 
 # Deploy a throwaway Worker
@@ -816,6 +871,7 @@ npx wrangler delete --name throwaway-worker
 # Confirm deletion
 curl https://throwaway-worker.<your-subdomain>.workers.dev/  # should fail
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-25) <!-- code-viz link -->
 
 *You've succeeded when:* You can describe what happens at the URL after deletion, whether the secrets stored via `wrangler secret put` are also deleted, and one sentence on what "reversibility" means for deployed Workers.
 
@@ -825,6 +881,7 @@ curl https://throwaway-worker.<your-subdomain>.workers.dev/  # should fail
 
 *Starter hint:* The five categories to hunt for are: a hardcoded secret, an over-broad credential, a missing who/where guardrail, a secret leaked to the logs, and a script that will hang in CI. Look for one of each.
 
+<!-- run: id=cs357-tut-cloudflare-26 viz=show -->
 ```yaml
 
 # .github/workflows/deploy.yml  (DELIBERATELY FLAWED, do not copy)
@@ -841,7 +898,9 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: cf_live_9s8d7f6g5h4j3k2l1   # (defect) hardcoded secret in the repo
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-26) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-cloudflare-27 viz=show -->
 ```bash
 
 # deploy.sh  (DELIBERATELY FLAWED, do not copy)
@@ -849,6 +908,7 @@ set -x                                    # (defect) echoes every command + expa
 read -p "Deploy now? [y/N] " ok           # (defect) hangs forever in CI, no human to answer
 npx wrangler deploy --api-token GLOBAL_KEY # (over-broad: a global key, not a scoped token)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-27) <!-- code-viz link -->
 
 *You've succeeded when:* You have listed all five defects with a fix for each, and can explain (in one sentence) which single defect you would fix *first* if you could only fix one, and why.
 
@@ -859,12 +919,16 @@ npx wrangler deploy --api-token GLOBAL_KEY # (over-broad: a global key, not a sc
 *Starter hint:* The easiest to demonstrate quickly is the branch restriction or the actor allowlist: push from a non-`main` branch, or have a teammate (not on the allowlist) trigger it, and screenshot the skipped/blocked job.  The simulated deploy step keeps everything free:
 
 {% raw %}
+
+<!-- run: id=cs357-tut-cloudflare-28 viz=show -->
 ```yaml
       - name: Deploy (simulated)
         run: echo "would deploy ${WORKER_NAME} - real wrangler deploy goes here"
         env:
           WORKER_NAME: ${{ vars.WORKER_NAME }}
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-cloudflare-28) <!-- code-viz link -->
+
 {% endraw %}
 
 *You've succeeded when:* You can show one run that was correctly *refused* by your guardrail and one that was correctly *allowed*, and explain which human judgment the guardrail replaced.

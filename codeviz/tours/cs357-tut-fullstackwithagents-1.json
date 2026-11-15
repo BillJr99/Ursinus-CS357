@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-1",
+ "title": "Dev Container Dockerfile",
+ "description": "Node 22-based container with git, OpenCode, and Oh My Pi installed at pinned versions, mounting only one folder.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-13",
+   "description": "Complete Dockerfile for the dev container."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Base: Node 22-bookworm as the foundation for Wrangler."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-5",
+   "description": "Apt: install git, ca-certificates, curl, then clean apt lists to minimize image."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "Pinned tools: opencode-ai@1.19.5 and bun@1.4.4 installed globally with no audit/fund."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-10",
+   "description": "Oh My Pi: BUN_INSTALL path, global install of @oh-my-pi/pi-coding-agent@18.20.0, symlink to /usr/local/bin/omp."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-13",
+   "description": "Workspace: mkdir /work with 777 permissions, WORKDIR /work, CMD bash."
+  }
+ ]
+}

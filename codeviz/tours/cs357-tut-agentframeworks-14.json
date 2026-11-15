@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-14",
+ "title": "Pydantic AI: Tool Integration",
+ "description": "Tool decorator with type hints and docstring generates schema; tool appears as description and result in context window.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-15",
+   "description": "Tool integration: days_between tool, agent with instructions, and invoke."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Imports: datetime, Agent, and common helpers."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "Agent: Agent with make_model, instructions to use tools for date arithmetic, capabilities with watch."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-11",
+   "description": "Tool: @agent.tool_plain decorator, days_between with type hints and docstring for schema generation."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-15",
+   "description": "Execution: run_sync with date question, print output, show_context to see tool in window."
+  }
+ ]
+}

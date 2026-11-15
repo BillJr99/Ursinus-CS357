@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-13",
+ "title": "Pydantic AI: Skill System",
+ "description": "Skills as loadable prompts: menu of one-line descriptions in context, full body loaded via tool when requested.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-31",
+   "description": "Skill system: directory scanning, menu generation, and load_skill tool."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-6",
+   "description": "Setup: imports and SKILLS dict built from glob pattern for */SKILL.md."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-12",
+   "description": "Description extraction: reads the description: line from front matter."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-15",
+   "description": "Agent: Agent with make_model and instructions."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-20",
+   "description": "Skill menu: @agent.instructions decorator generates one-line menu of available skills."
+  },
+  {
+   "kind": "focus",
+   "lines": "22-26",
+   "description": "Load_skill tool: tool_plain decorator, reads full SKILL.md body after front matter."
+  },
+  {
+   "kind": "focus",
+   "lines": "28-31",
+   "description": "Execution: run_sync with study plan request, show first and last context to see menu vs loaded skill."
+  }
+ ]
+}

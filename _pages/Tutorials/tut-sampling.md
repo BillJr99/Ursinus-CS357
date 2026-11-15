@@ -17,6 +17,8 @@ tags:
 
 ## About This Tutorial
 
+[Walk through this tutorial's code, step by step](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain&tour=walkthrough#cs357-tut-sampling-1) <!-- code-viz walkthrough link -->
+
 You have already turned this dial twice.  In *Running Your Own AI* you set temperature to 0, then to 1, and watched six answers to the same prompt.  In the *Agent Loop* activity you pinned it to 0 so the loop's parser would find the same strings every run.  You know what the dial does.  This tutorial explains what it is.
 {: .tb-lede}
 
@@ -916,6 +918,7 @@ LLMs typically do not.  They generate fluent, confident-sounding prose regardles
 
 Read the following two outputs.  Both come from the same model in the same fluent style:
 
+<!-- run: id=cs357-tut-sampling-3 viz=show -->
 ```yaml
 User: What is the boiling point of water at sea level?
 AI:   The boiling point of water at sea level is 100°C (212°F).
@@ -924,6 +927,7 @@ User: Who won the 1987 Ursinus College intramural chess tournament?
 AI:   The 1987 Ursinus College intramural chess tournament was won by
       Michael Chen, a junior majoring in mathematics.
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-sampling-3) <!-- code-viz link -->
 
 The first answer is verifiable and correct.  The second is almost certainly fabricated, but the model delivers both in identical, authoritative prose with no hedging, no uncertainty signal, and no difference in tone.
 

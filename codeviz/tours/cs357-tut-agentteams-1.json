@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentteams-1",
+ "title": "A Minimal Blackboard",
+ "description": "A shared dictionary that holds a team's goal, facts, draft, issues, and status, with the status field acting as a small state machine.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "This is a minimal blackboard: a shared dictionary that every agent reads and writes. The keys hold the goal, the facts, the draft, the issues, and the status."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "`goal` holds the task, and `facts` is a list of claims. Each claim carries its `source` and a `verified` flag."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-5",
+   "description": "`draft` starts as `null` and holds the writing once it exists. `issues` starts empty and collects problems found during checking."
+  },
+  {
+   "kind": "focus",
+   "lines": "6",
+   "description": "`status` is a tiny state machine. The comment names its path: researching, then drafting, then checking, then done."
+  },
+  {
+   "kind": "predict",
+   "question": "The page calls the `status` field what kind of machine?",
+   "answer": "a tiny state machine"
+  }
+ ]
+}

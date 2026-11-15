@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-18",
+ "title": "small-model-orchestrator SKILL.md Frontmatter",
+ "description": "YAML frontmatter defining the skill's name, description, purpose, and metadata.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-16",
+   "description": "Complete YAML frontmatter."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Document start: YAML frontmatter delimiters."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Name and start of description."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-9",
+   "description": "Description: lists trigger conditions and behaviors for when to use the skill."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-13",
+   "description": "License and metadata: author, version, primary-use-case."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-15",
+   "description": "Optimization target: maximum-verified-task-success."
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "version": 1,
+ "id": "cs357-tut-shell-basics",
+ "title": "Moving around the filesystem",
+ "description": "The tutorial's first navigation commands, run in a fresh home folder that holds one projects folder. The later examples read files (config.json, agent.log, results.csv) that the tutorial does not supply, so they are not part of this session.",
+ "page": "_pages/Tutorials/tut-shell.md",
+ "scenario": {
+  "shell": {
+   "image": "debian:12-slim"
+  },
+  "files": {
+   "projects/.keep": ""
+  },
+  "commands": [
+   "pwd",
+   "ls",
+   "ls -la",
+   "cd projects",
+   "pwd",
+   "cd ..",
+   "cd ~",
+   "pwd",
+   "cd -"
+  ],
+  "images": [
+   "debian:12-slim"
+  ],
+  "network": "none",
+  "timeout": 120
+ }
+}

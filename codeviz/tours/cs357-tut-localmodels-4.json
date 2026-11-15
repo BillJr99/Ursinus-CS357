@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-localmodels-4",
+ "title": "Exercise 3: A Function-Calling Stress Test",
+ "description": "A starter hint that defines a three-parameter tool in a system prompt and lists ten queries: five that should call the tool and five that should not.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-10",
+   "description": "`SYSTEM` is the system prompt. It gives the model one tool and the rules for using it."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-6",
+   "description": "The tool is `search_database`. It takes three parameters: `query` (required), `limit` (required, 1 to 20), and `filter_category` (optional). The exercise asks for one optional parameter, and this is it."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-10",
+   "description": "The prompt sets the output rule: for product questions, respond only with a JSON tool call; for other questions, respond normally in plain text."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-18",
+   "description": "`tool_queries` holds five queries that should trigger the tool, each tagged with the comment `should call tool`. They are all product searches."
+  },
+  {
+   "kind": "focus",
+   "lines": "19-25",
+   "description": "`non_tool_queries` holds five general questions, each tagged `should NOT call tool`. They need no database search, so the model should answer in plain text."
+  },
+  {
+   "kind": "predict",
+   "question": "The exercise says a good function-calling model should score what range on the ten queries?",
+   "answer": "8-10/10"
+  }
+ ]
+}

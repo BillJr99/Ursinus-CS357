@@ -122,6 +122,7 @@ The following pseudocode shows how to wrap an agent invocation with OpenTelemetr
 > This cell needs libraries that are installed in your course container rather than in the page.  Copy it there and run it.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-observability-1 viz=show -->
 ```python
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
@@ -154,6 +155,7 @@ def handle_query(user_query: str, user_id: str) -> str:
 
         return response.text
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-observability-1) <!-- code-viz link -->
 
 For **SLA tracking**, the attributes you instrument determine what you can measure.  A service level agreement (SLA) might specify: "95th-percentile latency under 2 seconds," "error rate below 0.1%," or "completion token usage under 500 per request."  Each of these requires a specific attribute to be present on spans.
 
@@ -211,19 +213,23 @@ These commands were checked against opencode 1.18, the version the course contai
 
 **Across sessions.**  `opencode stats` prints token and cost totals for every session on your machine ([CLI reference](https://opencode.ai/docs/cli/)):
 
+<!-- run: id=cs357-tut-observability-2 viz=show -->
 ```bash
 opencode stats                        # everything, all time, all projects
 opencode stats --days 1 --project ""  # today, in the current project only
 opencode stats --days 7 --models      # the last week, broken down by model
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-observability-2) <!-- code-viz link -->
 
 **Per message.**  `opencode session list` finds the session, and `opencode export` writes it as JSON.  Each assistant message in the export carries its own `tokens` block, and opencode reports cache reads separately from input, so the prompt the model actually saw on a call is `input` plus `cache.read`.  The script below totals one export.
 
+<!-- run: id=cs357-tut-observability-3 viz=show -->
 ```bash
 opencode session list -n 5                           # newest five sessions, with their IDs
 opencode export ses_XXXXXXXX > session.json          # the full session as JSON
 python opencode_tokens.py session.json
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-observability-3) <!-- code-viz link -->
 
 ```python
 """Total the token counts in one `opencode export` file.  Usage: python opencode_tokens.py session.json"""
@@ -258,12 +264,14 @@ print(f"{len(rows)} assistant messages: {sum(r[2] for r in rows)} input, {sum(r[
 
 Every non-streaming response from Ollama's `/api/chat` and `/api/generate` carries its own usage counters ([Ollama usage reference](https://docs.ollama.com/api/usage)).  A response looks like this, trimmed:
 
+<!-- run: id=cs357-tut-observability-4 viz=show -->
 ```json
 {"model": "llama3.2", "done": true, "done_reason": "stop",
  "total_duration": 2773000000, "load_duration": 12000000,
  "prompt_eval_count": 412, "prompt_eval_duration": 610000000,
  "eval_count": 41, "eval_duration": 2100000000}
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-observability-4) <!-- code-viz link -->
 
 `prompt_eval_count` is input tokens and `eval_count` is output tokens.  Every duration is in nanoseconds, so generation speed is `eval_count / eval_duration * 10**9`: here 41 tokens in 2.1 seconds, about 19.5 tokens per second.  `prompt_eval_duration` is the time to read the prompt, which grows with the history you resend, and `load_duration` is the cost of loading the model, paid once when it is cold.
 
@@ -385,6 +393,7 @@ def summarize(path=USAGE_CSV, run_id=RUN_ID):
 
 **Wrapping an existing agent loop.**  Your loop already calls `chat(messages)` and expects text back.  Keep that contract and change only what `chat` calls underneath, so no line of the loop changes and every call is counted.  Wrap the inner call once per agent, and each agent's tokens land in the CSV under its own name:
 
+<!-- run: id=cs357-tut-observability-5 viz=show -->
 ```python
 from token_usage import metered, ollama_chat, summarize
 
@@ -400,11 +409,13 @@ plan = chat([{"role": "user", "content": "In two sentences, plan how to find whe
 review = chat([{"role": "user", "content": "Critique this plan in one sentence: " + plan}], call=critic_call)
 summarize()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-observability-5) <!-- code-viz link -->
 
 Each call prints a line such as `[planner] in=412 out=41 19.5 tok/s, 2.773 s`, appends a row to `token_usage.csv`, and `summarize()` ends the run with a per-agent table and a total.  Run the script three times and the CSV holds three runs, separated by `run_id`, which is exactly the token table the Responsible AI Report asks for.  Put the same `run_id` in your JSON-lines trace and a row in the CSV can be matched to the steps that spent it.
 
 **Streaming.**  With `"stream": true`, Ollama sends many small chunks, and only the **last one**, the chunk with `"done": true`, carries `prompt_eval_count`, `eval_count`, and the durations.  A streaming helper therefore has to keep that final chunk and hand it back; because it does, the same `metered` decorator works on it unchanged:
 
+<!-- run: id=cs357-tut-observability-6 viz=show -->
 ```python
 import json
 import traceback
@@ -441,6 +452,7 @@ def ollama_chat_stream(messages, temperature=0.7):
         traceback.print_exc()
         return {}
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-observability-6) <!-- code-viz link -->
 
 A helper that stops reading when the text looks finished, or keeps only the text, loses the counts for that call.  That is the most common reason a token table has zeros in it.
 

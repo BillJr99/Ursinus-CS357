@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-7",
+ "title": "pi Dockerfile with Ollama/OpenWebUI Plugin",
+ "description": "Dockerfile that installs pi-coding-agent and pi-openai-compat, configured for non-root user with volume for Ollama host access.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-18",
+   "description": "Complete pi Dockerfile with Ollama/OpenWebUI support."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Base: node:20-slim as the foundation."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-5",
+   "description": "Git: installed for pi to show changes before writing."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-8",
+   "description": "Non-root: create and switch to agent user for safety."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-12",
+   "description": "Ollama: add host.docker.internal to /etc/hosts and install curl and socat for connectivity."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-16",
+   "description": "Pi: install pi-coding-agent globally in agent's home directory."
+  },
+  {
+   "kind": "focus",
+   "lines": "18",
+   "description": "Plugin: pi install pi-openai-compat for Ollama/OpenWebUI provider support."
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-personapipeline-1",
+ "title": "config.json",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-10",
+   "description": "Lines 1-10 start the example."
+  },
+  {
+   "kind": "reveal",
+   "lines": "11-20",
+   "description": "Lines 11-20 continue it."
+  },
+  {
+   "kind": "reveal",
+   "lines": "21-30",
+   "description": "Lines 21-30 continue it."
+  },
+  {
+   "kind": "reveal",
+   "lines": "31-37",
+   "description": "Lines 31-37 continue it."
+  }
+ ]
+}

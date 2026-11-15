@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-3",
+ "title": "AutoGen: GroupChat with Shared Messages",
+ "description": "AssistantAgent and UserProxyAgent in a GroupChat where all agents share the same messages list, with GroupChatManager deciding who speaks next.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-20",
+   "description": "Three agents: researcher and drafter as AssistantAgent, critic as UserProxyAgent with NEVER human input mode."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-9",
+   "description": "Researcher: AssistantAgent with system message for searching and retrieving passages."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-14",
+   "description": "Drafter: AssistantAgent with system message for writing from provided passages."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-20",
+   "description": "Critic: UserProxyAgent with system message for identifying weaknesses, no human input, no code execution."
+  },
+  {
+   "kind": "focus",
+   "lines": "22-26",
+   "description": "GroupChat: agents list, empty messages, max_round=6 to prevent infinite loops."
+  },
+  {
+   "kind": "focus",
+   "lines": "27-28",
+   "description": "Manager: GroupChatManager with the groupchat, then researcher initiates the chat with the question."
+  }
+ ]
+}

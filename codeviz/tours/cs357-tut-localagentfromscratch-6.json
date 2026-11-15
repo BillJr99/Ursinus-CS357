@@ -1,0 +1,50 @@
+{
+ "version": 1,
+ "example": "cs357-tut-localagentfromscratch-6",
+ "title": "AgentStep Loop Against Live Ollama",
+ "description": "Same AgentStep validation but with call_model talking to a live Ollama instance on localhost:11434; schema sent in format parameter constrains decoding.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-79",
+   "description": "Complete live Ollama loop code."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Purpose: P7 runs against a live Ollama instance on localhost:11434."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-19",
+   "description": "AgentStep model: same validation as fake model version."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-29",
+   "description": "Tools: days_until and calculator functions identical to fake model version."
+  },
+  {
+   "kind": "focus",
+   "lines": "30-34",
+   "description": "SYSTEM prompt: instructs model to produce one step as JSON with constraints."
+  },
+  {
+   "kind": "focus",
+   "lines": "36-47",
+   "description": "Call_model: posts to localhost:11434/api/chat with schema in format parameter for constrained decoding."
+  },
+  {
+   "kind": "focus",
+   "lines": "49-75",
+   "description": "Run_agent: same loop as fake model but calls live Ollama, validates responses, executes tools."
+  },
+  {
+   "kind": "focus",
+   "lines": "77-79",
+   "description": "Main: runs agent with study hours question when executed as script."
+  }
+ ]
+}

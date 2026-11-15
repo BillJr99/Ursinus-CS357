@@ -1,0 +1,141 @@
+{
+ "version": 1,
+ "example": "cs357-tut-handoffprotocols-1",
+ "name": "walkthrough",
+ "title": "Handoff protocols: claims, stale claims, and a handoff skill",
+ "description": "This tour walks through the handoff protocol tutorial: the claim race using atomic rename, the .claim and .notes files, the stale claim takeover with a time threshold, the finish action, and the trace log. Then it compares atomic rename against check-then-act in a concurrent race.",
+ "reviewed": false,
+ "source": "draft: pi free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "Setup: ROOT folder handoff-demo, three subfolders inbox, claimed, done under handoff/, trace file .ai/trace.jsonl. All directories created fresh."
+  },
+  {
+   "kind": "reveal",
+   "lines": "11-12",
+   "description": "STALE_AFTER = 300 seconds idle before a claim may be broken. TRACE_ID identifies the session."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-20",
+   "description": "log_action writes one JSON line per action to trace.jsonl with timestamp, trace_id, agent, action, task, rule, and extra fields. Never stores prompt text."
+  },
+  {
+   "kind": "reveal",
+   "lines": "22-24",
+   "description": "post_task writes a task file into inbox/."
+  },
+  {
+   "kind": "focus",
+   "lines": "26-36",
+   "description": "claim(agent, name) uses os.rename to move task from inbox/ to claimed/. Atomic on one disk: one caller wins. On FileNotFoundError, logs skip and returns False. On success, writes .claim JSON with claimed_by and claimed_at, logs claim, returns True."
+  },
+  {
+   "kind": "reveal",
+   "lines": "38-42",
+   "description": "note(agent, name, text) appends to .notes file with agent prefix and timestamp. Each write is a sign of life."
+  },
+  {
+   "kind": "focus",
+   "lines": "44-51",
+   "description": "last_write(name) reads .claim JSON and .notes mtime, returns the claim dict and the newest timestamp (claim or notes)."
+  },
+  {
+   "kind": "focus",
+   "lines": "53-64",
+   "description": "take_if_stale(agent, name) checks if claim is stale: if same agent or idle < STALE_AFTER, logs wait and returns False. Otherwise overwrites .claim with new agent and taken_from, logs break-claim, returns True."
+  },
+  {
+   "kind": "focus",
+   "lines": "66-74",
+   "description": "finish(agent, name, result) moves task from claimed/ to done/, removes .claim, moves .notes to done/, writes .result.md with finished_by and result, logs finish."
+  },
+  {
+   "kind": "reveal",
+   "lines": "76-78",
+   "description": "show() prints contents of inbox/, claimed/, done/."
+  },
+  {
+   "kind": "reveal",
+   "lines": "80-98",
+   "description": "Demo sequence: post task-7.md, A claims (True), B claims (False), A notes, B tries take too early (False), show state. Then simulate A dying: backdate claim and notes by STALE_AFTER+1. B takes stale claim (True), B finishes, show final state."
+  },
+  {
+   "kind": "predict",
+   "question": "What does B's first claim attempt return?",
+   "answer": "False"
+  },
+  {
+   "kind": "run",
+   "trace_step": 66,
+   "lines": "30-31",
+   "description": "B's claim finds FileNotFoundError because A already renamed the file, logs skip with rule handoff-protocol#9, returns False."
+  },
+  {
+   "kind": "predict",
+   "question": "What does B's early take_if_stale return?",
+   "answer": "False"
+  },
+  {
+   "kind": "run",
+   "trace_step": 78,
+   "lines": "55-57",
+   "description": "Idle time is small (A just wrote notes), so take_if_stale logs wait with rule handoff-protocol#10, returns False."
+  },
+  {
+   "kind": "predict",
+   "question": "After backdating, what does B's take_if_stale return?",
+   "answer": "True"
+  },
+  {
+   "kind": "run",
+   "trace_step": 97,
+   "lines": "55-63",
+   "description": "Idle exceeds STALE_AFTER, take_if_stale overwrites .claim with agent-B and taken_from agent-A, logs break-claim with idle_s and taken_from, returns True."
+  },
+  {
+   "kind": "stage",
+   "stage": "cs357-tut-handoffprotocols-2",
+   "description": "Move to the race comparison."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-8",
+   "description": "rename_claim uses a single os.rename. It either happens or it does not. No intermediate state."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-20",
+   "description": "check_then_act_claim checks os.path.exists, reads the file, sleeps, then writes and removes. Two steps with a gap where anything can happen."
+  },
+  {
+   "kind": "reveal",
+   "lines": "22-42",
+   "description": "race(claim_fn, rounds=100) creates a temp folder with one task file, uses a Barrier to release two threads at the same instant, runs claim_fn for each agent, counts rounds where both agents win (double claim)."
+  },
+  {
+   "kind": "predict",
+   "question": "How many rounds with two winners for rename_claim?",
+   "answer": "0"
+  },
+  {
+   "kind": "run",
+   "trace_step": 44,
+   "lines": "44",
+   "description": "rename claim: rounds with two winners = 0. Atomic rename prevents double claims."
+  },
+  {
+   "kind": "predict",
+   "question": "How many rounds with two winners for check_then_act_claim?",
+   "answer": "varies, typically > 0"
+  },
+  {
+   "kind": "run",
+   "trace_step": 45,
+   "lines": "45",
+   "description": "check then act: rounds with two winners = varies. The gap between check and act allows both agents to pass the check and both write the file."
+  }
+ ]
+}

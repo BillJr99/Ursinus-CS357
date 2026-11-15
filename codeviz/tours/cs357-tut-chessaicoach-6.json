@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-chessaicoach-6",
+ "title": "Open WebUI / Local Branch",
+ "description": "The third branch, which targets a local OpenAI-compatible server and reuses the same response parsing as OpenAI.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "Enter the Open WebUI branch. Normalize the base URL (the comment says it trims trailing slashes), then throw if the base URL or the model is missing."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-11",
+   "description": "Post to `baseUrl + /api/chat/completions`. The `authorization` header sends a Bearer token only when a key is present, because the page says the key is optional for a local server."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-17",
+   "description": "The body sends the configured model, the `messages` array, `max_tokens`, and `temperature`."
+  },
+  {
+   "kind": "focus",
+   "lines": "20-23",
+   "description": "Parse and error-check the response, then return `extractOpenAIText(data).trim()`. The comment notes it uses the same `choices[0].message.content` path as OpenAI, because the server speaks the same protocol."
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-15",
+ "title": "Docker Run: Rootless pi Container (bash)",
+ "description": "Run course-pi-ollama container as current user with security hardening and workspace mount.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "Complete docker run command."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Interactive: -it flags for interactive terminal session."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "User mapping: --user maps container UID/GID to host user."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Host access: --add-host enables container-to-host networking."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Security: --security-opt and --cap-drop remove all privileges."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Volume and workspace: binds current directory as /workspace, sets working directory."
+  },
+  {
+   "kind": "focus",
+   "lines": "7",
+   "description": "Model selection: environment variable sets the Ollama model to use."
+  }
+ ]
+}

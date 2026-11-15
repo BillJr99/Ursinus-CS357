@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-9",
+ "title": "package.json: Pinned Dependencies",
+ "description": "Project configuration with pinned versions of vitest-plugin, vitest, and wrangler, plus scripts for dev, test, and database operations.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-17",
+   "description": "Complete package.json."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Metadata: name questions-board, private true, type module."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-11",
+   "description": "Scripts: dev, test, db:local, db:remote, deploy commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-16",
+   "description": "DevDependencies: cloudflare/vitest-plugin 1.8.1, vitest 5.1.0, wrangler 4.161.0."
+  }
+ ]
+}

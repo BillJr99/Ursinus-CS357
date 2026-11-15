@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-multiagentmeasurement-3",
+ "title": "Computing the Critic's Rates",
+ "description": "calibrate.py runs the critic on the planted-defect set, counts true and false positives and negatives per criterion, and prints a detection rate and a false positive rate for each.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "The script imports `json` and `re`, and pulls `critique_draft`, `load_config`, and `load_rubric` from `critique_refine`, the lab module."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-20",
+   "description": "`run_calibration` loads the calibration file, calls `critique_draft` on each draft, and records its `id`, `planted_defect`, `critic_verdict`, and `critic_issues`. It prints one line per draft."
+  },
+  {
+   "kind": "focus",
+   "lines": "22-33",
+   "description": "`compute_rates` reads the criteria ids from the rubric and starts four counts per criterion: `tp`, `fp`, `fn`, and `tn`. The comments define each case, including that a draft counts as positive for a criterion only if its planted defect names it."
+  },
+  {
+   "kind": "focus",
+   "lines": "35-49",
+   "description": "The inner loop decides two things. `has_defect` searches the planted-defect string for the criterion id, and `critic_flagged` checks whether any issue string mentions the id. The four `if` branches then increment the matching count."
+  },
+  {
+   "kind": "focus",
+   "lines": "51-54",
+   "description": "`detection_rate` is `tp` over `tp + fn`, and `fp_rate` is `fp` over `fp + tn`. Each falls back to `nan` when its denominator is zero. Both are stored and printed per criterion."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says a printed nan means what?",
+   "answer": "no draft tested that case"
+  }
+ ]
+}

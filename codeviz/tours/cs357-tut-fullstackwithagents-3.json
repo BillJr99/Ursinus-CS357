@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-3",
+ "title": "OpenCode Permissions: opencode.json",
+ "description": "Permission rules for OpenCode: default ask, read allowed, git allowed except push/clean/reset-hard, rm/mv/rmdir denied, wrangler deploy/delete always ask.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-28",
+   "description": "Complete opencode.json permission configuration."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-3",
+   "description": "Schema and root: schema URL and permission block start."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-8",
+   "description": "Defaults: catch-all ask, read allow, edit ask, external_directory deny, skill allow."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-14",
+   "description": "Git rules: git commands allowed except push, clean, and reset --hard which ask."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-17",
+   "description": "Test commands: npm test, npx vitest, npm ci all allowed without asking."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-20",
+   "description": "Safe commands: ls and cat allowed for inspection."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-25",
+   "description": "Denial and ask: rm/mv/rmdir denied, wrangler deploy/delete/d1 delete always ask."
+  }
+ ]
+}

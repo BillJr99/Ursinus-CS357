@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-2",
+ "title": "devbox.sh: Container Entry Script",
+ "description": "Bash script to build and run the dev container with strict isolation, forwarding API keys and git identity.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-23",
+   "description": "Complete devbox.sh script."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-8",
+   "description": "Usage: shebang, description, and usage examples for shell, opencode, omp."
+  },
+  {
+   "kind": "focus",
+   "lines": "9",
+   "description": "Safety: set -euo pipefail for strict error handling."
+  },
+  {
+   "kind": "focus",
+   "lines": "10",
+   "description": "Directory: cd to project folder using dirname."
+  },
+  {
+   "kind": "focus",
+   "lines": "11",
+   "description": "Build: docker build -q -t cs357-devbox devbox with output suppressed."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-15",
+   "description": "API keys: loop through OPENROUTER, ANTHROPIC, OPENAI, CLOUDFLARE credentials and pass non-empty ones."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-23",
+   "description": "Isolation: read-only filesystem, tmpfs mounts, cap drop ALL, no new privileges, pids limit, memory limit, user mapping, git identity, volume mount."
+  }
+ ]
+}

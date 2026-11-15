@@ -1,0 +1,50 @@
+{
+ "version": 1,
+ "example": "cs357-tut-localagentfromscratch-5",
+ "title": "AgentStep Loop with Fake Model",
+ "description": "Pydantic AgentStep validates each model turn with thought, action, argument, done flag, and final_answer; fake model replays four replies including one invalid.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-72",
+   "description": "Complete AgentStep loop code."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Purpose: P7 validates a step-budgeted agent loop with Pydantic."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-19",
+   "description": "AgentStep model: fields for thought, action, argument, done, final_answer with validation rule."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-19",
+   "description": "Validator: done=true requires action='none' and a final_answer, enforced in code."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-29",
+   "description": "Tools: days_until and calculator functions with safety checks."
+  },
+  {
+   "kind": "focus",
+   "lines": "30-39",
+   "description": "Script: four pre-written model replies, second one breaks the done rule."
+  },
+  {
+   "kind": "focus",
+   "lines": "44-69",
+   "description": "Run_agent: loop validates each step, rejects invalid ones, executes tools, tracks budget."
+  },
+  {
+   "kind": "focus",
+   "lines": "71-72",
+   "description": "Execution: runs agent with study hours question and prints results."
+  }
+ ]
+}

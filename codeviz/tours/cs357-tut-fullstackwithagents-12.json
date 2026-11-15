@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-12",
+ "title": "test/apply-migrations.js: Migration Setup",
+ "description": "Applies D1 migrations to the test database using cloudflare:test API, safe to run multiple times as only unapplied migrations execute.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "Complete apply-migrations.js script."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Imports: applyD1Migrations from cloudflare:test, env from cloudflare:workers."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Safety: comment noting idempotency - only unapplied migrations run."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "Execution: await applyD1Migrations with env.DB and env.TEST_MIGRATIONS."
+  }
+ ]
+}

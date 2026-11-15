@@ -87,6 +87,7 @@ Different problems call for different team shapes, just as different organizatio
 
 A minimal blackboard is just a dictionary with discipline:
 
+<!-- run: id=cs357-tut-agentteams-1 viz=show -->
 ```json
 state = {
   "goal":        "...",
@@ -96,6 +97,7 @@ state = {
   "status":      "researching"   # researching -> drafting -> checking -> done
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentteams-1) <!-- code-viz link -->
 
 The `status` field is a tiny state machine; each agent's contract is "when status is X and my inputs exist, produce Y and advance status."  The blackboard makes the team's entire cognition *inspectable at every step*, our explainability theme made concrete.
 

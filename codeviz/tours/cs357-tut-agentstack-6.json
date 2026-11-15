@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentstack-6",
+ "title": "Hermes Agent Setup",
+ "description": "Pull hermes-agent, create identity directory, run setup once, then start with mounted volumes.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-14",
+   "description": "Complete hermes-agent Docker commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Pull: docker pull nousresearch/hermes-agent:latest fetches the image."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Identity directory: mkdir creates $HOME/agents/hermes/home for persistent data."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-7",
+   "description": "Setup: --rm -it container with volume mount runs setup wizard to write config and keys."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-14",
+   "description": "Run: thereafter, start hermes with identity and workspace volumes mounted."
+  }
+ ]
+}

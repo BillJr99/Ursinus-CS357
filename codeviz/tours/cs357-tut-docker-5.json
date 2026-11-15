@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-docker-5",
+ "title": "Compose Commands",
+ "description": "The four Compose commands that start, inspect, follow, and tear down a stack.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1",
+   "description": "`docker compose up -d` starts the whole stack in the background."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "`docker compose ps` shows the status of the services."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`docker compose logs -f` follows all logs, interleaved and labeled by service."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "`docker compose down` stops and removes the stack. The comment notes the volumes survive, so your data persists."
+  }
+ ]
+}

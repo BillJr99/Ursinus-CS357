@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentskills-3",
+ "title": "Installing One Skill from a Repository",
+ "description": "A five-line recipe that clones a skills repository shallowly, reads the skill before installing it, and copies out the one directory you want.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "This recipe installs one skill from a repository that holds many. It clones shallowly into a scratch directory and copies out the single skill directory."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "`git clone --depth 1` fetches only the latest revision, which is enough when you want one skill."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "The middle two lines are the point of the detour. Line 2 reads the `SKILL.md`, and line 3 lists the `scripts/` directory so you can read anything executable. A skill can tell the agent to run what is in there."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-5",
+   "description": "`mkdir -p .agents/skills` creates the discovery path, and `cp -r` copies the skill directory into it."
+  },
+  {
+   "kind": "predict",
+   "question": "When you read a skill before installing it, what do you read?",
+   "answer": "the whole directory"
+  }
+ ]
+}

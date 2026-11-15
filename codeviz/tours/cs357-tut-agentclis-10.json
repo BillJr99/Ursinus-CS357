@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentclis-10",
+ "title": "Standard Course Docker Run Pattern",
+ "description": "A 7-line docker run command with flags that enforce boundaries: --rm for self-cleaning, -it for interactive terminal, --add-host for host.docker.internal, two volume mounts for identity and workspace, -w to set working directory, and the image with tool name.",
+ "reviewed": false,
+ "source": "draft: omp free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "The command mounts the agent's home directory for persistent auth, the shared workspace for read/write, sets the working directory to /workspace, and runs the commercial-ai image with claude."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Line 2 makes host.docker.internal resolve to the host machine IP so the container can reach the local gateway."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "Lines 3-4 mount two directories: the first persists the agent's authentication tokens and settings; the second is the workspace the agent reads and writes."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "Line 5 sets the container's working directory to /workspace so the agent's world is exactly the workspace mount."
+  },
+  {
+   "kind": "predict",
+   "question": "What does the first volume mount persist?",
+   "answer": "the agent's authentication tokens and settings"
+  }
+ ]
+}

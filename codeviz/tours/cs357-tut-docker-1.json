@@ -1,0 +1,20 @@
+{
+ "version": 1,
+ "example": "cs357-tut-docker-1",
+ "title": "Publish a Container Port",
+ "description": "The docker run line that publishes a container port to the host, using the -p HOST:CONTAINER flag.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1",
+   "description": "Run the Open WebUI image detached with `-d`, name the container `webui`, and publish the port with `-p 3000:8080`. The page says a containerized server listens on a port inside the container, invisible to your browser until you publish it."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "The comment reads the mapping: Open WebUI listens on 8080 inside, and your browser visits `http://localhost:3000`. The page says to read `-p 3000:8080` as host port 3000 forwards to container port 8080, and the host side is yours to choose."
+  }
+ ]
+}

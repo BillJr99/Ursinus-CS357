@@ -106,6 +106,7 @@ In this part, you will bring up the stack tier by tier: inference first, then ga
 
 Ollama is the inference foundation, the service that downloads model files and answers requests.  Everything else can be added incrementally once it answers:
 
+<!-- run: id=cs357-tut-agentstack-1 viz=show -->
 ```bash
 
 # Native install (preferred: keeps model I/O off the Docker path)
@@ -113,6 +114,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 ollama pull qwen2.5:3b && ollama pull llama3 && ollama pull hermes3:8b
 curl http://localhost:11434/api/tags        # verify: lists your models
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentstack-1) <!-- code-viz link -->
 
 `lmstudio` and `local-ai` are alternates with the same OpenAI-compatible surface (LM Studio adds a friendly GUI for model management on port 1234; LocalAI adds whisper transcription and image generation behind 8080); the gateway makes the choice invisible to everything downstream, so start with Ollama and add the others when a need appears.
 
@@ -124,6 +126,7 @@ Build it as a numbered checklist; complete and verify each step before starting 
 
 1.  **Create the routing file** at `llmproxy/litellm_config.yaml`.  This maps each public model name to a backend:
 
+   <!-- run: id=cs357-tut-agentstack-2 viz=show -->
    ```yaml
    # llmproxy/litellm_config.yaml
    model_list:
@@ -136,9 +139,11 @@ Build it as a numbered checklist; complete and verify each step before starting 
          model: ollama/qwen2.5:3b
          api_base: http://host.docker.internal:11434
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentstack-2) <!-- code-viz link -->
 
 2.  **Create the Compose file** at `llmproxy/docker-compose.yml`, mounting the routing file read-only:
 
+   <!-- run: id=cs357-tut-agentstack-3 viz=show -->
    ```yaml
    # llmproxy/docker-compose.yml
    services:
@@ -150,6 +155,7 @@ Build it as a numbered checklist; complete and verify each step before starting 
        extra_hosts: ["host.docker.internal:host-gateway"]
        restart: unless-stopped
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentstack-3) <!-- code-viz link -->
 
 3.  **Start the service** from the `llmproxy/` directory:
 
@@ -189,6 +195,7 @@ Read the config's `api_base` carefully: the gateway is *itself a container*, so 
 
 With the gateway answering, frontends attach by URL. Open WebUI:
 
+<!-- run: id=cs357-tut-agentstack-4 viz=show -->
 ```bash
 docker run -d --name open-webui -p 3000:8080 \
   --add-host=host.docker.internal:host-gateway \
@@ -199,6 +206,7 @@ docker run -d --name open-webui -p 3000:8080 \
 
 #   URL http://host.docker.internal:4000/v1, key sk-litellm-local
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentstack-4) <!-- code-viz link -->
 
 > **Isolation and trust boundaries**, meaning which tier may talk to which and what a container actually isolates, are worked through in the tutorial [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).
 
@@ -206,6 +214,7 @@ docker run -d --name open-webui -p 3000:8080 \
 
 Agents are where the stack earns its name; they are the autonomous workers that use the inference, gateway, frontend, and tool tiers as their instruments.  Each agent has a distinct personality and capability level, but they all deploy the same way: a port row, an identity directory, and a gateway URL in their config.  The code below shows the pattern for `hermes`, a tool-calling agent; the others follow the same template.
 
+<!-- run: id=cs357-tut-agentstack-5 viz=show -->
 ```bash
 docker pull nousresearch/hermes-agent:latest
 mkdir -p "$HOME/agents/hermes/home"
@@ -222,6 +231,7 @@ docker run --rm -it --name hermes \
   -v "$HOME/agents/workspace:/workspace" \
   nousresearch/hermes-agent:latest
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentstack-5) <!-- code-viz link -->
 
 Read the first `-v` carefully, because it is the one people get wrong.  The container keeps **all** of its user data, meaning configuration, keys, sessions, skills, and memories, in a single directory at `/opt/data`; the image declares that path as its volume and gives the in-container `hermes` user `/opt/data` as a home directory.  Mount the host identity directory there and nowhere else.  Mount it at a path the image does not use and the container still runs, still appears to work, and writes its real state to an anonymous volume that `docker rm` discards, which is a failure you only discover when the identity you were counting on is gone.
 
@@ -259,6 +269,7 @@ A stack is not up until its connections are proven, pairwise, from the right van
 
 Build the matrix:
 
+<!-- run: id=cs357-tut-agentstack-6 viz=show -->
 ```bash
 
 # From the HOST: is each service alive?
@@ -275,6 +286,7 @@ curl -s http://localhost:4000/v1/chat/completions \
   -H "Authorization: Bearer sk-litellm-local" -H "Content-Type: application/json" \
   -d '{"model":"qwen2.5-3b","messages":[{"role":"user","content":"Say STACK OK."}]}'
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentstack-6) <!-- code-viz link -->
 
 When a cell of the matrix fails, the diagnostic ladder from the *Docker from Zero: Containers for Agent Builders* tutorial applies: host-side first, container-side second, then the `--add-host` flag, the port row, and the logs, in that order.
 

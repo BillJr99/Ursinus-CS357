@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-7",
+ "title": "The Vars Table in wrangler.toml",
+ "description": "The vars table that holds non-secret configuration in the config file, committed to the repository on purpose.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "This is the `[vars]` table in `wrangler.toml`. It holds configuration that is not secret, and it is committed to your repository."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-5",
+   "description": "`MODEL_NAME` and `ENVIRONMENT` are plain values. Both comments note they are safe to commit because they are not secrets."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "The comment reminds you to keep only non-sensitive values in this file."
+  }
+ ]
+}

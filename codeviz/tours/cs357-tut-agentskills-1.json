@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentskills-1",
+ "title": "Skill Permissions in opencode.json",
+ "description": "A permission block that controls whether skills load, using allow, deny, and ask. The last matching rule wins, so order the rules from general to specific.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "This is a `permission` block in `opencode.json`. It controls skills, which no longer live in the config file; the file still holds permissions."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-6",
+   "description": "`skill` names the category. The keys are skill names or patterns, and the values decide what happens: `ask` prompts you, `allow` loads the skill without asking, and `deny` hides it."
+  },
+  {
+   "kind": "predict",
+   "question": "Which value hides a skill from the agent entirely?",
+   "answer": "deny"
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "The last matching rule wins, so order these from general to specific. `\"*\": \"ask\"` is the general rule that covers every skill."
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-1",
+ "title": "Identity Directories: Setup and Docker Runs",
+ "description": "Create isolated identity directories for researcher and writer agents with restrictive permissions, then run each in Docker with carefully scoped mounts and no network access.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-74",
+   "description": "Complete terminal session for two-agent workspace setup."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-6",
+   "description": "Top-level directory: create agents directory under project root with mkdir -p."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-15",
+   "description": "Identity directories: create researcher and writer subdirectories {config,memory,logs,workspace} in one command."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-23",
+   "description": "Permissions: chmod 700 on identity directories prevents other users from reading memory and logs."
+  },
+  {
+   "kind": "focus",
+   "lines": "25-31",
+   "description": "Shared knowledgebase: chmod 755 makes it readable by Docker agent running as different UID."
+  },
+  {
+   "kind": "focus",
+   "lines": "33-37",
+   "description": "Shared output: chmod 750 allows owner and group to read/write, others cannot."
+  },
+  {
+   "kind": "focus",
+   "lines": "39-55",
+   "description": "Researcher container: mounts identity dir rw, knowledgebase ro, network none, runs python agent.py."
+  },
+  {
+   "kind": "focus",
+   "lines": "57-74",
+   "description": "Writer container: mounts its own identity dir, shared output rw, researcher workspace ro, network none."
+  }
+ ]
+}

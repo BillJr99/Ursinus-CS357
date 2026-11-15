@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-7",
+ "title": "Ask: Evidence, Answer, or Abstain",
+ "description": "The ask script that retrieves passages, prints the evidence, then answers with citations or abstains.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-16",
+   "description": "The header comment describes the flow: retrieve, show the evidence, then answer with citations or abstain. It imports the shared config and collection, and defines the prompt template. The template tells the model to cite the source ID in square brackets after each fact, and to reply exactly `not in my documents` when the sources lack the answer."
+  },
+  {
+   "kind": "focus",
+   "lines": "19-23",
+   "description": "`retrieve` opens the collection and queries it with the question. The comment notes the query is embedded too, and it returns each hit's ID, document, and distance."
+  },
+  {
+   "kind": "focus",
+   "lines": "26-33",
+   "description": "`generate` formats the kept evidence as bracketed sources, then posts to the Ollama chat endpoint with `stream: False`, `temperature: 0.0`, and a fixed `seed`. It returns the reply text from the response."
+  },
+  {
+   "kind": "focus",
+   "lines": "36-44",
+   "description": "`ask` retrieves the evidence and prints it with each distance, because the page says printing the evidence first lets you tell a retrieval failure from a generation failure. It keeps only hits within `max_distance`, and returns an abstention message when nothing is close enough."
+  },
+  {
+   "kind": "focus",
+   "lines": "47-53",
+   "description": "The entry point runs `ask` on the command-line question, defaulting to the laser cutter question, inside a try block that prints and exits on error."
+  }
+ ]
+}

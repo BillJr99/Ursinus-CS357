@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-22",
+ "title": "Exercise 2: Prove a Secret Arrived",
+ "description": "A response that shows a secret was received without printing its value, by reporting presence and length instead.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "This snippet proves the secret arrived without revealing it. The comment states the goal, and the response is built with `Response.json`."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`greeting` uses the plain var `env.GREETING_PREFIX` together with `name`."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "`secret_present` compares `env.SECRET_SUFFIX` against `undefined`, so it is a true or false flag, not the value. The comment says exactly that."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "`secret_length` reads `env.SECRET_SUFFIX?.length`. The comment explains that the length proves the secret arrived, without exposing its content."
+  },
+  {
+   "kind": "predict",
+   "question": "The exercise's success check expects `secret_present` to be what value, while the secret value itself never appears?",
+   "answer": "true"
+  }
+ ]
+}

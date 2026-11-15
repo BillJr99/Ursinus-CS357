@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-tokensembeddings-2",
+ "title": "Inspect a real tokenizer's pieces",
+ "description": "A tokenizer divides text into pieces represented by numeric IDs. You can read how this example compares those pieces across the supplied words.",
+ "reviewed": false,
+ "source": "draft: GPT-6",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "The comment names the needed package. The code imports tiktoken and selects the cl100k_base encoding."
+  },
+  {
+   "kind": "reveal",
+   "lines": "4-6",
+   "description": "The loop visits five supplied strings. encode converts each string into a sequence of token IDs."
+  },
+  {
+   "kind": "reveal",
+   "lines": "7",
+   "description": "The list comprehension decodes one token ID at a time so you can inspect its text piece."
+  },
+  {
+   "kind": "reveal",
+   "lines": "8",
+   "description": "The formatted line pairs the original string with its token count and pieces. Compare those pieces with the page's hand-traced example."
+  }
+ ]
+}

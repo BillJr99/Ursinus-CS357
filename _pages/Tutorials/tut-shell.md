@@ -79,6 +79,7 @@ Before you can read or modify files, you need to know where you are and how to m
 
 Three commands carry most navigation.  The following snippet shows each command alongside a comment explaining what it does; run each one in your terminal and observe the output before moving on.  Pay special attention to how `cd ..` and `cd -` complement each other: one moves you up the tree, the other undoes the last move.
 
+<!-- run: id=cs357-tut-shell-2 viz=show -->
 ```bash
 pwd                  # print working directory: where am I right now?
 ls                   # list all files and folders here
@@ -88,6 +89,9 @@ cd ..                # go UP one level to the parent folder
 cd ~                 # jump directly to your home directory, no matter where you are
 cd -                 # jump back to wherever you just were (like a browser Back button)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-shell-2) <!-- code-viz link -->
+
+[Simulate this session](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=simulate#cs357-tut-shell-basics) <!-- code-viz simulate link -->
 
 The filesystem is a tree.  Paths beginning with `/` are **absolute** (measured from the root of the entire tree); paths without a leading `/` are **relative** (measured from where you stand right now). `.` means "the current directory"; `..` means "the parent directory."  Press **Tab** to autocomplete names (the single biggest speed upgrade available), and the up arrow to recall previous commands. `history` shows everything you have typed, which is also how you will audit what an agent typed.
 
@@ -198,6 +202,7 @@ cat results.csv | grep "fail" | head -10
 
 Redirection sends output to files instead of the screen.  Use `>` to overwrite, `>>` to append, and `2>` to capture error messages separately.  Read the comments in the block below carefully before running any of these; the difference between `>` and `>>` is one character but the consequences are very different, and the `2>` line is the one you will reach for every time a script crashes silently.
 
+<!-- run: id=cs357-tut-shell-3 viz=show -->
 ```bash
 python run_eval.py > results.txt
 
@@ -215,6 +220,7 @@ python run_eval.py > out.txt 2> err.txt
 
 # The "2>" targets file descriptor 2, which is the error stream
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-shell-3) <!-- code-viz link -->
 
 The four workhorses worth memorizing by name are `grep` (search text for a pattern), `wc` (count lines, words, or characters), `sort` (sort lines), and `find` (search for files by name or type: `find . -name "*.json"` finds all JSON files under the current directory).  Everything else can be looked up as needed.
 
@@ -273,6 +279,7 @@ They were overwritten and are gone, because > truncates the file before writing;
 
 **Environment variables** are named values the shell stores in memory and passes automatically to every program it launches, so programs can read configuration without hardcoded paths or secrets; think of them as the shell's global settings.  They are how this course's tools receive configuration and credentials without you having to hardcode those values into your code.  The following block shows the four most important environment variable operations for this course.  Note that `export` is what makes a variable visible to child processes such as `ollama` and `opencode`; without it, the variable exists only in your current shell session and the tool cannot see it.
 
+<!-- run: id=cs357-tut-shell-4 viz=show -->
 ```bash
 echo $HOME
 
@@ -295,6 +302,7 @@ env | grep OLLAMA
 
 # Use this to confirm your variables are set correctly before launching a tool
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-shell-4) <!-- code-viz link -->
 
 Variables set with `export` last only until the terminal closes; to make them permanent, append the export lines to `~/.bashrc` (or `~/.zshrc` on macOS) and run `source ~/.bashrc` to reload the file in the current session.  **Never paste a real secret into a file that might be committed to git**; we return to secret handling in the publishing module.
 
@@ -321,6 +329,7 @@ PATH is the list of directories the shell searches to find commands.  When you t
 
 Every running program is a **process** (a running instance of a program, assigned a unique process ID number, PID, by the operating system so it can be tracked and stopped independently of other programs).  The controls you need.  The sequence below covers the full lifecycle: starting a process in the foreground, interrupting it, launching one in the background, finding it by name, and stopping it gracefully or forcibly, in that order.
 
+<!-- run: id=cs357-tut-shell-5 viz=show -->
 ```bash
 some_long_command
 
@@ -354,6 +363,7 @@ kill -9 12345
 
 # The process cannot clean up after itself, so use this as a last resort
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-shell-5) <!-- code-viz link -->
 
 When a port is "already in use" (a constant companion in the Docker module), `lsof -i :3000` names the process holding port 3000, and now you know how to evict it.
 

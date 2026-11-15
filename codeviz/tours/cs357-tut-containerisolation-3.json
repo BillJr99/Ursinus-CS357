@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-containerisolation-3",
+ "title": "Isolation Demo Dockerfile",
+ "description": "Dockerfile for Oh My Pi coding agent on Debian with Bun, pinned by digest, configured for non-root user and workspace mount.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-15",
+   "description": "Complete Dockerfile for the isolation demo."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Base image: Debian + Bun 1.4.4 pinned by SHA256 digest for reproducibility."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "Root user setup: USER root for package installation and system configuration."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Apt cleanup: update, install ca-certificates and curl, remove apt lists to minimize image size."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-10",
+   "description": "Oh My Pi installation: BUN_INSTALL=/opt/omp, global install, symlink to /usr/local/bin/omp, permissions fix."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-15",
+   "description": "User configuration: chmod 711 on /home, mkdir /workspace, chown to bun user, USER bun, HOME env, WORKDIR."
+  }
+ ]
+}

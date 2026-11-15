@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-multiagentmeasurement-9",
+ "title": "The Shootout Task Set",
+ "description": "shootout.py imports the debate helpers, loads the config, and defines ten labeled questions with checkable answers, mixing arithmetic traps, short facts, and classic puzzles.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "The script imports `csv`, `traceback`, `requests`, and `Counter`, and pulls `load_config`, `extract_answer`, `run_debate`, and `majority_vote` from `lab4`. The config is loaded once."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-20",
+   "description": "`SHOOTOUT_TASKS` is a list of ten entries, `S01` through `S10`. Each has an `id`, a `question`, and a checkable `answer`, such as `27.00` for a sale-price problem."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-25",
+   "description": "The closing comment groups the tasks. `S03` to `S05` are arithmetic word problems with a trap step, `S06` to `S08` are short factual questions with verifiable answers, and `S09` and `S10` are classic puzzles where the intuitive-but-wrong answer is a well-known misconception."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the puzzle questions are good candidates for what kind of failure, where every agent agrees on the same wrong answer?",
+   "answer": "a correlated failure"
+  }
+ ]
+}

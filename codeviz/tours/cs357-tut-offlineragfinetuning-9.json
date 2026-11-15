@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-9",
+ "title": "The LoRA Hyperparameters",
+ "description": "The config file that pins the base model, the adapter output path, and the LoRA training settings.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "The file pins `base_model` to SmolLM2-360M-Instruct, its exact `revision` commit hash, and the `adapter_dir` where the saved adapter goes."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-7",
+   "description": "Three LoRA settings: `r` is the rank, `alpha` scales the update, and `dropout` drops a few adapter inputs during training. The page says `lora_alpha=16` scales the update by alpha over r, which is 2."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-13",
+   "description": "`target_modules` lists the four attention projections the adapter attaches to: `q_proj`, `k_proj`, `v_proj`, and `o_proj`, in every layer."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-19",
+   "description": "The training loop settings: `epochs` at 4, `batch_size` at 4, `learning_rate` at 0.001, `max_new_tokens` at 48, and `seed` at 42."
+  }
+ ]
+}

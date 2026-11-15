@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentstack-5",
+ "title": "Open WebUI Container",
+ "description": "Run Open WebUI container pointing to the gateway URL with host.docker.internal and data volume.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-8",
+   "description": "Complete Open WebUI docker run command."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Container name: open-webui runs detached with port 3000:8080."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Host alias: --add-host=host.docker.internal:host-gateway allows container to reach host."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Data volume: $HOME/agents/openwebui/data mounts to /app/backend/data for persistence."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-8",
+   "description": "Configuration: Admin Settings use URL http://host.docker.internal:4000/v1 with key sk-litellm-local."
+  }
+ ]
+}

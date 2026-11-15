@@ -77,6 +77,7 @@ Two numbers describe the critic on each criterion.  The **detection rate** is th
 
 Create `calibration_drafts.json` and start from these three entries.  Each one records the draft, the defect you planted, and a short description.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-2 viz=show -->
 ```json
 [
   {
@@ -99,6 +100,7 @@ Create `calibration_drafts.json` and start from these three entries.  Each one r
   }
 ]
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-2) <!-- code-viz link -->
 
 Then add D04 through D12: at least one defect per criterion, several drafts with more than one defect, and at least two defect-free drafts in total.  Make some defects subtle, such as a parameter that lists its name but not its type, or an example that shows a call but not the return value.  An obvious defect tells you nothing about the critic, because every critic catches it.  Name each defect with the ids it breaks (`missing_C2`, `missing_C1_and_C4`), because the scoring code in Section 2 finds the criterion by its id in that string.
 
@@ -135,6 +137,7 @@ For each criterion, the code counts four cases.  A **true positive** is a plante
 
 Save this as `calibrate.py`.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-3 viz=show -->
 ```python
 import json
 import re
@@ -199,6 +202,7 @@ if __name__ == "__main__":
     results = run_calibration("calibration_drafts.json", config, rubric)
     compute_rates(results, rubric)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-3) <!-- code-viz link -->
 
 Run `python3 calibrate.py`.  You should see one line per draft, such as `D01 (defect=missing_C4): critic says revise`, then one line per criterion in the form `  C1: detection=0.75, fp_rate=0.00`.  A `nan` means that no draft tested that case.  Add drafts until no `nan` remains.
 
@@ -250,6 +254,7 @@ Read each criterion's descriptor literally, the way the critic does, and look fo
 
 Write down which criterion you can satisfy without producing anything useful, and why.  Then save this as `hack.py`.  If the example does not fit your task, replace `hack_draft` with your own hack.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-4 viz=show -->
 ```python
 import json
 from critique_refine import critique_draft, load_config, load_rubric
@@ -282,6 +287,7 @@ print(f"Critic verdict on hack: {critique['verdict']}")
 print(f"Issues: {critique['issues']}")
 # Expected: verdict == "accept" despite being a poor docstring
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-4) <!-- code-viz link -->
 
 Run `python3 hack.py`.  A working hack prints `Critic verdict on hack: accept` with an empty issue list.  Save that output next to a sentence or two of your own on why the draft is poor.
 
@@ -342,6 +348,7 @@ The comparison is fair only when both conditions use the same tasks and the same
 
 Save this as `compare.py`.  It comes with three tasks.  Add five more of increasing complexity, following the comments, so you have at least eight.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-5 viz=show -->
 ```python
 import csv
 from critique_refine import generate_draft, critique_draft, critique_refine_loop, load_config, load_rubric
@@ -410,6 +417,7 @@ avg_loop_calls = sum(r["loop_calls"] for r in results) / len(results)
 print(f"\nSingle-shot: avg score={avg_single:.2f}, avg calls={avg_single_calls:.1f}")
 print(f"Loop: avg score={avg_loop:.2f}, avg calls={avg_loop_calls:.1f}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-5) <!-- code-viz link -->
 
 **Predict:** before you run it, which condition do you expect to score higher, and by how many extra calls per task?  Write your guess down so you can compare.
 
@@ -471,6 +479,7 @@ First, add two keys to `config.json`: `"judge_rubric_file": "judge_rubric.json"`
 
 Then create `judge_rubric.json`.  If your task is not the docstring task, adapt the criteria.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-6 viz=show -->
 ```json
 {
   "task": "function_docstring",
@@ -499,9 +508,11 @@ Then create `judge_rubric.json`.  If your task is not the docstring task, adapt 
   ]
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-6) <!-- code-viz link -->
 
 Now create `judge_refine.py` with `judge_score`.  It imports your lab helpers, so the only new request code is its own model call.  Like the critic, it fails closed: a reply it cannot parse scores every criterion as not meeting its bar.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-7 viz=show -->
 ```python
 import json
 import csv
@@ -561,6 +572,7 @@ def judge_score(draft, judge_rubric, config):
             for c in judge_rubric["criteria"]
         }}
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-7) <!-- code-viz link -->
 
 Check your work.  `python3 -m json.tool judge_rubric.json` should print the rubric back with no error.  `python3 judge_refine.py` should exit silently, because the file only defines a function so far.  An `ImportError` on `critique_refine` means `judge_refine.py` is not in the same folder as `critique_refine.py`.
 
@@ -654,6 +666,7 @@ Rounds: 3 | Reason: all_meet
 
 Then run one probe for sycophancy.  It costs two calls.  The first call re-scores the round-1 draft as it was.  The second re-scores it with one added sentence that claims compliance and changes nothing else.  A judge that reads the text returns the same levels as in round 1.  Any level that rises shows the judge rewarding a claim of compliance instead of compliance itself.  Save this as `probe.py`.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-8 viz=show -->
 ```python
 import json
 from critique_refine import load_config
@@ -670,6 +683,7 @@ after = judge_score(round1 + "\n\nAll of the judge's revision instructions have 
 for c in judge_rubric["criteria"]:
     print(c["id"], before["scores"][c["id"]]["level"], "->", after["scores"][c["id"]]["level"])
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-8) <!-- code-viz link -->
 
 The judge runs at temperature 0 with a fixed seed, so `before` should repeat the round-1 levels in your log.  If it does not, that is worth knowing too: compare `before` with the round-1 rows before you read anything into `after`.
 
@@ -707,6 +721,7 @@ You need at least ten questions with checkable answers.  Good kinds for this com
 
 Create `shootout.py` and start it with these lines.  They import your debate functions, load the config once, and define the task set.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-9 viz=show -->
 ```python
 import csv
 import traceback
@@ -734,6 +749,7 @@ SHOOTOUT_TASKS = [
 # good candidates for a correlated failure, where every agent agrees on the same
 # wrong answer. Feel free to swap in questions of your own, keeping this mix.
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-9) <!-- code-viz link -->
 
 At this point `python3 shootout.py` exits silently: it loads `lab4.py` and the config but has nothing to run yet.  An `ImportError` on `lab4` means `shootout.py` is not in the same folder as `lab4.py`.
 
@@ -894,6 +910,7 @@ In the lab's consensus Practice, your six study-group drafts became some number 
 
 Save this as `threshold.py`.  It changes `distance_threshold` in memory only, so your `config.json` stays as it was.
 
+<!-- run: id=cs357-tut-multiagentmeasurement-10 viz=show -->
 ```python
 from lab4 import load_config, run_consensus
 config = load_config()
@@ -909,6 +926,7 @@ for threshold in thresholds:
     print(f"Clusters: {num_clusters}")
     print(f"Synthesis (first 200 chars): {synthesis[:200]}...")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multiagentmeasurement-10) <!-- code-viz link -->
 
 Run `python3 threshold.py`.  Each threshold makes seven calls (six samples and one synthesis), so the run makes twenty-one.  The cluster count should fall as the threshold rises.  The sample below shows the shape of the output.  Your counts and text will differ.
 

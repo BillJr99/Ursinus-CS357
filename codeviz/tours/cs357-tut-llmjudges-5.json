@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-llmjudges-5",
+ "title": "The Rubric as a promptfoo Config",
+ "description": "A promptfoo configuration that states the judge as data: a prompt, an echo provider, a judge model, three rubric assertions, and the dataset.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "This is `promptfooconfig-rubric.yaml`. The page says the no-code path says the same thing in a configuration file: here are the outputs, here is the judge, here are the assertions. The header comments name the file and the judge, `ollama llama3.2` at temperature 0."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "`prompts` points at `file://prompt.txt`, the one-line template that echoes each stored answer straight through."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-9",
+   "description": "`providers` is `echo`. With the echo provider nothing generates a fresh reply, so the judge grades your dataset rather than a newly generated answer."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-14",
+   "description": "`defaultTest` sets the judge that grades every assertion. Its `provider` is `ollama:chat:llama3.2`, the comment calling it the judge model that grades every `llm-rubric` assertion."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-28",
+   "description": "The `assert` list holds three `llm-rubric` assertions, one per criterion: `claims_cited`, `directness`, and `counterargument`. Each `value` states a PASS and a FAIL condition in plain text."
+  },
+  {
+   "kind": "focus",
+   "lines": "30",
+   "description": "`tests: file://dataset.csv` supplies the rows to grade. The page says `dataset.csv` holds one row per sample with columns `id` and `answer`."
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-6",
+ "title": "Ingest: Chunk, Label, Embed, Store",
+ "description": "The ingest script that loads the corpus, chunks it, embeds only what changed, and stays safe to rerun.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "The header comment says the script loads, chunks, embeds, and stores, and that it is safe to rerun: same text, same ID, no duplicates. It imports `hashlib`, `sys`, `traceback`, `Path`, and the shared module pieces."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-20",
+   "description": "`chunks` splits text on blank lines into paragraphs, then merges them until they reach about `size` characters. The docstring calls these paragraph chunks."
+  },
+  {
+   "kind": "focus",
+   "lines": "23-29",
+   "description": "`ingest` opens the collection, then loops over the markdown files in the corpus directory. Each chunk gets a stable source ID like `equipment-0` and a short SHA-256 hash of its text."
+  },
+  {
+   "kind": "focus",
+   "lines": "31-35",
+   "description": "It reads the existing metadata for the document and finds IDs no longer present. The comment marks the delete as the case where the document got shorter, so leftover chunks are removed."
+  },
+  {
+   "kind": "focus",
+   "lines": "36-44",
+   "description": "It computes which chunks changed by comparing hashes, then `upsert`s only those, which replaces rather than duplicates. A log line reports chunks, embedded, unchanged, and removed, and a final print reports the collection total."
+  },
+  {
+   "kind": "focus",
+   "lines": "47-53",
+   "description": "The entry point calls `ingest` inside a try block, and on any error prints a labeled message, prints the traceback, and exits with status 1."
+  }
+ ]
+}

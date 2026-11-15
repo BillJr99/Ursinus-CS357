@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-aimaker-1",
+ "title": "A Test File First",
+ "description": "A unittest file that states the contract for a to_celsius function before any implementation exists, including a test that pre-decides the comma bug.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "This is a test file for a `to_celsius` function. It imports `unittest` and `traceback`, pulls in `to_celsius` from `converter`, and starts a `TestConverter` class."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "The comment states the pattern: the spec exists as a failing test first."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-8",
+   "description": "`test_freezing` and `test_negative_forty` are two contracts: 32 degrees Fahrenheit is 0 Celsius, and -40 is -40."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-11",
+   "description": "`test_rejects_nonnumeric` uses `assertRaises(ValueError)` to require an error for `\"1,000\"`. The comment calls this the comma bug, pre-decided."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-18",
+   "description": "The main block runs the tests with `unittest.main`, and the `try`/`except` prints any exception and its traceback."
+  },
+  {
+   "kind": "predict",
+   "question": "Which test pre-decides the comma-bug behavior?",
+   "answer": "test_rejects_nonnumeric"
+  }
+ ]
+}

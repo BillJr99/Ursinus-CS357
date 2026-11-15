@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-setupbasics-5",
+ "title": "Oh My Pi Model Configuration",
+ "description": "Oh My Pi keeps its models in ~/.omp/agent/models.yml. This block lists the Ollama provider and the llama3.2 model it serves.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-12",
+   "description": "This is Oh My Pi's model file, `~/.omp/agent/models.yml`. The page says Oh My Pi keeps its models here, listing the providers and the models each one serves."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-5",
+   "description": "The `providers` map holds `ollama`. `baseUrl` is `http://localhost:11434/v1`, `api` is `openai-completions`, and `auth` is none."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-12",
+   "description": "`models` lists one entry, `llama3.2`, with `reasoning` false, `input` as text, a `contextWindow` of 16384, and `maxTokens` of 4096."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says on Route A you run which export first, because your home directory disappears when the container exits?",
+   "answer": "export PI_CODING_AGENT_DIR=/workspace/.omp-agent"
+  }
+ ]
+}

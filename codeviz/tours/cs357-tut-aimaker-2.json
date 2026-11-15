@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-aimaker-2",
+ "title": "A GitHub Actions CI Workflow",
+ "description": "A workflow that runs on every push and pull request, sets up Python 3.12, installs dependencies, and runs the test suite.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-8",
+   "description": "This is a GitHub Actions workflow. The comment names its path, `.github/workflows/ci.yml`. It defines one job named `test` that runs on `ubuntu-latest`."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "`on: [push, pull_request]` is the trigger. Your automated checks attach to the development process here."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-12",
+   "description": "The steps check out the repository and set up Python 3.12."
+  },
+  {
+   "kind": "focus",
+   "lines": "13",
+   "description": "`pip install -r requirements.txt` installs the project's dependencies."
+  },
+  {
+   "kind": "focus",
+   "lines": "14",
+   "description": "`python -m pytest tests/ -v` runs the test suite. This is the second line where your checks attach."
+  },
+  {
+   "kind": "predict",
+   "question": "The page calls CI \"the referee that no agent can\" do what?",
+   "answer": "charm"
+  }
+ ]
+}

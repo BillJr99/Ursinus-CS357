@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-10",
+ "title": "Python Safe File Operations",
+ "description": "Python pattern for safe file operations: open with 'x' mode for exclusive creation, write atomically, rename for atomic commit.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "Python safe write pattern."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Import: os module for file operations."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Temp file: write to tmp_path first, 'x' mode raises FileExistsError if file exists."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Write: write content to temporary file."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Atomic commit: os.replace atomically replaces target with tmp_path."
+  }
+ ]
+}

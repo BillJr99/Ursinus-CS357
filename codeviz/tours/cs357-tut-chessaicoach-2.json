@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-chessaicoach-2",
+ "title": "The callTextModel Dispatcher",
+ "description": "One function that sends the same prompt to Anthropic, OpenAI, or a local Open WebUI server, branching on the selected provider.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "`callTextModel` takes the provider config, the prompt, and an options object with defaults for `maxTokens` and `temperature`. It reads `providerConfig.provider` into a local `provider`."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-5",
+   "description": "Three branches, one per provider. The comments mark each endpoint: Anthropic posts to `api.anthropic.com/v1/messages`, OpenAI to `api.openai.com/v1/chat/completions`, and Open WebUI to `<baseUrl>/api/chat/completions`."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "If no branch matched, throw an error for an unsupported provider. The page says the rest of the app never knows or cares which provider is active, so adding a fourth provider means adding one more branch here and nothing else changes."
+  }
+ ]
+}

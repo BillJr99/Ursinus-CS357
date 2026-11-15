@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentstack-1",
+ "title": "Ollama Native Installation",
+ "description": "Native install keeps model I/O off the Docker path; download and verify models via curl.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "Complete installation and verification commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Native install: the script installs Ollama directly on the host."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Pulling models: qwen2.5:3b, llama3, and hermes3:8b are downloaded for inference."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "Verification: curl to localhost:11434/api/tags lists the installed models."
+  }
+ ]
+}

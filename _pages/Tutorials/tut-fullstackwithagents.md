@@ -93,6 +93,7 @@ The agent runs inside a container that can see this one folder and nothing else 
 
 Save this as `devbox/Dockerfile`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-1 viz=show -->
 ```dockerfile
 # The dev container: Node 22 (for Wrangler), git, OpenCode, and Oh My Pi. It sees one folder.
 FROM node:22-bookworm
@@ -108,9 +109,11 @@ RUN mkdir -p /work && chmod 777 /work
 WORKDIR /work
 CMD ["bash"]
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-1) <!-- code-viz link -->
 
 Save this as `devbox/devbox.sh`, and make it executable with `chmod +x devbox/devbox.sh`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-2 viz=show -->
 ```bash
 #!/usr/bin/env bash
 # devbox.sh: open the project in the dev container. Usage, from the project folder:
@@ -136,6 +139,7 @@ exec docker run --rm -it --read-only \
   "${pass[@]}" -p 127.0.0.1:8787:8787 \
   -v "$PWD:/work" -w /work cs357-devbox "$@"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-2) <!-- code-viz link -->
 
 Then open a shell in the box and check what is installed:
 
@@ -179,6 +183,7 @@ The agent may change files, but every move and delete has to go through git, so 
 
 Save this as `opencode.json`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-3 viz=show -->
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
@@ -209,9 +214,11 @@ Save this as `opencode.json`:
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-3) <!-- code-viz link -->
 
 And this as `.omp/config.yml`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-4 viz=show -->
 ```yaml
 # Oh My Pi project settings. Same intent as opencode.json, written for Oh My Pi's rules:
 # the FIRST matching pattern wins here (opencode uses the LAST), so denials come first.
@@ -233,6 +240,7 @@ bash:
     - { match: "npx vitest *", approval: allow }
     - { match: "npm ci", approval: allow }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-4) <!-- code-viz link -->
 
 **Predict, then try.** Start either agent in the box and ask it to delete a scratch file with `rm`, then with `git rm`. Which one runs without asking? What does the agent do when a command is refused?
 
@@ -377,6 +385,7 @@ Skills are directories under `.agents/skills/`, so both agents find them (see [A
 
 **Install Pocock's skills, pinned.** Copy them at one commit rather than "latest", so the skill you read is the skill that runs. Read each `SKILL.md` before you trust it; they are instructions your agent will follow.
 
+<!-- run: id=cs357-tut-fullstackwithagents-5 viz=show -->
 ```bash
 P=https://raw.githubusercontent.com/mattpocock/skills/5863806dd4e15c63174bee4e7515a4256792ecfa
 for f in productivity/grilling/SKILL.md productivity/grill-me/SKILL.md \
@@ -389,6 +398,7 @@ for f in productivity/grilling/SKILL.md productivity/grill-me/SKILL.md \
 done
 curl -fsSL "$P/LICENSE" -o .agents/skills/LICENSE-mattpocock-skills.txt
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-5) <!-- code-viz link -->
 
 Pocock's own installer (`npx skills@latest add mattpocock/skills -a opencode`) does the same job and keeps the skills easy to update. The loop above gives up easy updates in exchange for knowing exactly what you installed. Some of his skills mention running `/setup-matt-pocock-skills` to choose an issue tracker. You don't need it here: `AGENTS.md` already tells them the tracker is `docs/issues/`.
 
@@ -443,6 +453,7 @@ For a team project, deploy through the `Deploy` workflow in `.github/workflows/d
 
 `.agents/skills/cloudflare-deploy/scripts/check-tools.sh`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-6 viz=show -->
 ```bash
 #!/usr/bin/env bash
 # Checks Node, installs the project's pinned Wrangler if needed, and prints the versions.
@@ -457,6 +468,7 @@ fi
 echo "node $have"
 npx wrangler --version
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-6) <!-- code-viz link -->
 
 `.agents/skills/cloudflare-teardown/SKILL.md`:
 
@@ -498,6 +510,7 @@ A clean run catches what a long working session hides: a file you forgot to comm
 Report the pass and fail counts. If the clean run fails and your normal run passes, find out what the difference is before doing anything else.
 ```
 
+<!-- run: id=cs357-tut-fullstackwithagents-7 viz=show -->
 ```bash
 #!/usr/bin/env bash
 # Runs the committed project's tests in a throwaway container. Nothing is left behind.
@@ -506,7 +519,9 @@ cd "$(git rev-parse --show-toplevel)"
 git archive --format=tar HEAD | docker run --rm -i node:22-bookworm bash -c \
   'mkdir /app && cd /app && tar -x && npm ci --no-audit --no-fund >/dev/null && npm test'
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-7) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-fullstackwithagents-8 viz=show -->
 ```bash
 #!/usr/bin/env bash
 # The same clean run without Docker: a fresh copy of the committed project under /tmp.
@@ -517,6 +532,7 @@ trap 'cd /; chmod -R u+w "$dir"; command rm -rf "$dir"' EXIT
 git -C "$root" archive --format=tar HEAD | tar -x -C "$dir"
 cd "$dir" && npm ci --no-audit --no-fund >/dev/null && npm test
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-8) <!-- code-viz link -->
 
 Make the scripts executable (`chmod +x .agents/skills/*/scripts/*.sh`), then commit everything so far:
 
@@ -595,6 +611,7 @@ Some files are configuration, not behavior, and it is fine for you or the agent 
 
 `package.json` pins every tool, so the box, your laptop, and CI run the same versions:
 
+<!-- run: id=cs357-tut-fullstackwithagents-9 viz=show -->
 ```json
 {
   "name": "questions-board",
@@ -614,9 +631,11 @@ Some files are configuration, not behavior, and it is fine for you or the agent 
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-9) <!-- code-viz link -->
 
 `wrangler.jsonc` describes the Worker, the page, and the database binding:
 
+<!-- run: id=cs357-tut-fullstackwithagents-10 viz=show -->
 ```jsonc
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -636,6 +655,7 @@ Some files are configuration, not behavior, and it is fine for you or the agent 
   ]
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-10) <!-- code-viz link -->
 
 `migrations/0001_create_questions.sql`, the schema, with the length rule enforced by the database too:
 
@@ -650,6 +670,7 @@ CREATE TABLE questions (
 
 `vitest.config.js` and `test/apply-migrations.js` run the tests inside the real Workers runtime, with a fresh local D1 that has the same migrations applied. (Cloudflare renamed this test package in 2026: it is now `@cloudflare/vitest-plugin`, and older guides still say `@cloudflare/vitest-pool-workers`.)
 
+<!-- run: id=cs357-tut-fullstackwithagents-11 viz=show -->
 ```js
 import path from "node:path";
 import { cloudflareTest, readD1Migrations } from "@cloudflare/vitest-plugin";
@@ -669,7 +690,9 @@ export default defineConfig(async () => {
   };
 });
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-11) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-fullstackwithagents-12 viz=show -->
 ```js
 import { applyD1Migrations } from "cloudflare:test";
 import { env } from "cloudflare:workers";
@@ -677,6 +700,7 @@ import { env } from "cloudflare:workers";
 // Safe to run more than once: only migrations not yet applied are run.
 await applyD1Migrations(env.DB, env.TEST_MIGRATIONS);
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-12) <!-- code-viz link -->
 
 `.gitignore`:
 
@@ -720,6 +744,7 @@ AssertionError: expected undefined to be 1 // Object.is equality
 
 After every green slice, the agent stops. Read the test and the diff, then say "commit it and do the next behavior." Five slices later, the suite and the Worker look like this:
 
+<!-- run: id=cs357-tut-fullstackwithagents-13 viz=show -->
 ```js
 import { env, exports } from "cloudflare:workers";
 import { beforeEach, describe, it, expect } from "vitest";
@@ -771,7 +796,9 @@ describe("questions board API", () => {
   });
 });
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-13) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-fullstackwithagents-14 viz=show -->
 ```js
 // The Questions Board API. Static files in public/ are served by Workers Assets; this code
 // answers only /api/* (see "run_worker_first" in wrangler.jsonc).
@@ -830,6 +857,7 @@ export default {
   },
 };
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-14) <!-- code-viz link -->
 
 ```text
  Test Files  1 passed (1)
@@ -842,6 +870,7 @@ Notice the `beforeEach` at the top of the tests. Without it, the tests share one
 
 The page is one static file that calls the API. Ask the agent for it, or save it as `public/index.html`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-15 viz=show -->
 ```html
 <!doctype html>
 <html lang="en">
@@ -891,6 +920,7 @@ The page is one static file that calls the API. Ask the agent for it, or save it
 </body>
 </html>
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-15) <!-- code-viz link -->
 
 **Why does the page use `textContent` and never `innerHTML`** to show a question? (Think about what a student could type into the box.)
 
@@ -905,6 +935,7 @@ npx wrangler dev --ip 0.0.0.0
 
 Open `http://localhost:8787` on your own machine, or try the API from a second terminal:
 
+<!-- run: id=cs357-tut-fullstackwithagents-16 viz=show -->
 ```bash
 curl -s localhost:8787/api/questions
 curl -s -X POST -H 'content-type: application/json' -d '{"text":"How does D1 run locally?"}' localhost:8787/api/questions
@@ -912,6 +943,7 @@ curl -s -X POST localhost:8787/api/questions/1/upvote
 curl -s -X POST -H 'content-type: application/json' -d '{"text":"   "}' localhost:8787/api/questions
 curl -s localhost:8787/api/nope
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-16) <!-- code-viz link -->
 
 > **You should see** `[]`; then the new question with `"votes":0`; then the same question with `"votes":1`; then `{"error":"text must be 1 to 280 characters"}`; then `{"error":"not found"}`.  The database lives in `.wrangler/` in your folder, which `.gitignore` keeps out of git.
 
@@ -946,6 +978,7 @@ On your own machine the skill runs `test-in-docker.sh`, which pipes `git archive
 
 CI is the same clean run, on GitHub's machines, on every push and every pull request. Save this as `.github/workflows/ci.yml`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-17 viz=show -->
 ```yaml
 name: CI
 on:
@@ -965,6 +998,7 @@ jobs:
       - run: npm ci
       - run: npm test
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-17) <!-- code-viz link -->
 
 Push a branch and open a pull request:
 
@@ -1010,6 +1044,8 @@ env.ASSETS                        Assets
 **Every later deploy, from GitHub.** Once the database exists, deploys belong in a pipeline where the token never touches your laptop or the agent. In the repository's **Settings → Secrets and variables → Actions**, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. In **Settings → Environments**, create `production` and add yourself (or your team) as a **required reviewer**. Then save `.github/workflows/deploy.yml`:
 
 {% raw %}
+
+<!-- run: id=cs357-tut-fullstackwithagents-18 viz=show -->
 ```yaml
 name: Deploy
 # Runs only when someone starts it from the Actions tab, and then waits for a reviewer:
@@ -1039,6 +1075,8 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-18) <!-- code-viz link -->
+
 {% endraw %}
 
 Start it from the **Actions** tab (**Deploy → Run workflow**). It runs the tests and then stops at "Waiting for review" until a required reviewer clicks **Approve and deploy**. That click is the human gate, and it is recorded with your name on it.
@@ -1118,6 +1156,7 @@ As with the Cloudflare token, the agent can read anything you pass it.
 
 **3. Copy the skills at one commit.** Run this yourself from the project folder, in the box or on your machine. It uses `cp`, which the agent's permission files deny.
 
+<!-- run: id=cs357-tut-fullstackwithagents-19 viz=show -->
 ```bash
 # tstack: the three pull-request skills, at one commit
 TSTACK=11e37a74d0a6868c121cd0910ab2b3bd9873b92a
@@ -1135,6 +1174,7 @@ git -C /tmp/cursor-plugins checkout -q "$PSTACK"
 for s in in-your-own-words how architect blast-radius principle-prove-it-works; do cp -R "/tmp/cursor-plugins/pstack/skills/$s" .agents/skills/; done
 cp /tmp/cursor-plugins/pstack/LICENSE .agents/skills/LICENSE-pstack.txt
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-19) <!-- code-viz link -->
 
 Each skill lands in its own folder, `.agents/skills/<name>/`, with any scripts and reference files it brought along (`babysit-pr/scripts/pr-wait`, for example).
 
@@ -1218,19 +1258,23 @@ Do not merge.
 
 **Let the read-only `gh` commands through, and refuse merges.** Under the permission files from section 4, every `gh` command asks. Allow the two read-only ones and deny merging. In `opencode.json` the last match wins, so add these lines after `"*": "ask"` in the `bash` block:
 
+<!-- run: id=cs357-tut-fullstackwithagents-20 viz=show -->
 ```json
 "gh pr view *": "allow",
 "gh pr checks *": "allow",
 "gh pr merge *": "deny",
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-20) <!-- code-viz link -->
 
 In `.omp/config.yml` the first match wins, so put them at the top of `bash.patterns`:
 
+<!-- run: id=cs357-tut-fullstackwithagents-21 viz=show -->
 ```yaml
     - { match: "gh pr merge *", approval: deny }
     - { match: "gh pr view *", approval: allow }
     - { match: "gh pr checks *", approval: allow }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-fullstackwithagents-21) <!-- code-viz link -->
 
 > A rule matches command text, so `gh api -X PUT repos/<you>/questions-board/pulls/1/merge` merges without ever typing `gh pr merge`.  What stops it is the same pair as before: the catch-all `ask` rule, and the branch protection rule from section 15 that requires a green `test` check.
 {: .tb-warning data-title="Watch out"}

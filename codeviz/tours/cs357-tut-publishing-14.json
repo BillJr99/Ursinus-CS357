@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-14",
+ "title": "Build Output: Wheel and SDist",
+ "description": "python -m build creates two files: a wheel (.whl) for fast binary install and a source distribution (.tar.gz) as fallback.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "Build output directory structure."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Directory: dist/ contains the built artifacts."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Wheel: my_agent-0.1.0-py3-none-any.whl is the pre-built binary archive for fast installs."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Sdist: my_agent-0.1.0.tar.gz is the source distribution fallback for platforms without pre-built wheels."
+  }
+ ]
+}

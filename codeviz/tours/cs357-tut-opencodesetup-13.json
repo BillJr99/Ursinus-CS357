@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-opencodesetup-13",
+ "title": "Gating Which Skills Load",
+ "description": "A permission block with a skill key that asks by default, allows your own skill by name, and denies any skill whose name starts with experimental-.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "This gates which skills an agent may load, through the `skill` key in the `permission` block. It takes the same three values and the same last-matching-rule-wins ordering as the `bash` map from the earlier permission block."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`\"*\": \"ask\"` prompts you before any skill not matched later loads. `\"commit-message\": \"allow\"` allows your own skill by name, and `\"experimental-*\": \"deny\"` denies any skill whose name starts with `experimental-`."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the moment you install a skill from someone else, you switch the wildcard to which value and allow your own by name?",
+   "answer": "ask"
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-8",
+ "title": "DeepAgents: Sub-Agents and Delegation",
+ "description": "Agent with subagents for researcher and critic, system prompt instructs delegation flow, isolated context windows prevent cross-talk.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-20",
+   "description": "Delegating agent with subagents for isolated context windows."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-8",
+   "description": "Researcher_subagent definition with its own system prompt and tools."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-10",
+   "description": "Critic_subagent definition with its own system prompt."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-14",
+   "description": "Main agent: study-plan writer with system prompt that explicitly delegates to researcher, then critic."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-16",
+   "description": "Subagents list: researcher_subagent and critic_subagent as isolated helpers."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-20",
+   "description": "Invocation: agent.invoke with study plan request, print the final content."
+  }
+ ]
+}

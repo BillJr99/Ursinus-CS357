@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-opencodesetup-15",
+ "title": "The GitHub MCP Server",
+ "description": "A remote tool server that advertises each GitHub operation as its own named tool, with the credential referenced from an environment variable.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-12",
+   "description": "This is the GitHub MCP server, a tool server. It advertises each operation as its own named tool, so the agent calls `github_create_issue` rather than composing a command line, and a tool name has one spelling your rules can match."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-6",
+   "description": "The server is named `github`. `type` is `remote` and `url` is the hosted endpoint `https://api.githubcopilot.com/mcp/`, with `oauth` set to false."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-9",
+   "description": "`headers` carries the credential as `\"Authorization\": \"Bearer {env:GITHUB_SCRATCH_PAT}\"`. That is the name of a variable, not its value. The page says to give the agent a token scoped to one repository, never your personal one."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the hosted server is an HTTPS endpoint, so it works anywhere the network does, including where?",
+   "answer": "inside the course container"
+  }
+ ]
+}

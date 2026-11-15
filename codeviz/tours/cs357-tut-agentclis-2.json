@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentclis-2",
+ "title": "First Session Commands in Markdown Fence",
+ "description": "The same four commands rendered in a markdown code fence with an explain link, showing the first-session sequence for Claude Code.",
+ "reviewed": false,
+ "source": "draft: omp free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "The four commands appear inside a bash fence: node version check, npm install, cd to project, and claude launch."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Line 3 emphasizes starting in the project directory; the working directory is the agent's world."
+  },
+  {
+   "kind": "predict",
+   "question": "What is the explain link for this block?",
+   "answer": "https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-1"
+  }
+ ]
+}

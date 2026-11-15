@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-localagentfromscratch-1",
+ "title": "Agent Configuration File",
+ "description": "JSON configuration file with all settings you might want to change without editing code: provider URL, model, temperature, history path, skill path, allowed commands, and logging.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-12",
+   "description": "Complete config.json file."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-5",
+   "description": "Provider settings: URL, API key, model, and temperature for the LLM."
+  },
+  {
+   "kind": "focus",
+   "lines": "6,11",
+   "description": "File paths: history_path for memory, log_level for verbosity."
+  },
+  {
+   "kind": "focus",
+   "lines": "7",
+   "description": "Skill_path: points to the SKILL.md file for the agent's instructions."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-10",
+   "description": "Command safety: allowed_commands list, timeout, and max commands per turn."
+  }
+ ]
+}

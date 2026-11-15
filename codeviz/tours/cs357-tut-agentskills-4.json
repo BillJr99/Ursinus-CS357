@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentskills-4",
+ "title": "Cloning a Published Skill Bundle",
+ "description": "Two clone commands that install a published skills repository into a discovery path, for every project or for one project.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "A classmate installs your published bundle by cloning it into a discovery path. The directory is the whole installation."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "The `~/.agents/skills/cs357` path is global, so the bundle is available in every project."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "The project path installs the bundle for one project, which is the one a reviewer can clone and check."
+  },
+  {
+   "kind": "predict",
+   "question": "The directory name is the skill name. Which front matter field must it match?",
+   "answer": "name"
+  }
+ ]
+}

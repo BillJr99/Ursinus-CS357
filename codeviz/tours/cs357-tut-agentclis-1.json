@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentclis-1",
+ "title": "First Session: Install and Launch Claude Code",
+ "description": "Four commands take you from a fresh machine to a running Claude Code session: confirm Node 20+, install the package globally, change into your project directory, and launch with authentication.",
+ "reviewed": false,
+ "source": "draft: omp free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "The block shows the complete first-session sequence: node version check, global npm install, project directory change, and claude launch."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Line 3 is the most common beginner error: launching from ~ instead of the project directory grants the agent your entire home directory."
+  },
+  {
+   "kind": "predict",
+   "question": "What does the comment on line 3 warn against?",
+   "answer": "launching from ~ and granting an agent your entire home directory"
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Line 4 launches the tool and prompts for authentication on first run; this is the only interactive step in the sequence."
+  }
+ ]
+}

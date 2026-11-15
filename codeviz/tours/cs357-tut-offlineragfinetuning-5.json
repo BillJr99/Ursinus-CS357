@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-5",
+ "title": "The Shared Module",
+ "description": "One module that holds the configuration, the embedding function, and the on-disk Chroma collection, so the embedding model is named in one place.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-14",
+   "description": "The header comment says this module keeps configuration, the embedding function, and the persistent store in one place. It imports the Chroma pieces, loads `config.json` into `CFG`, and sets up logging."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-18",
+   "description": "`open_collection` opens or creates the on-disk collection. The docstring says the embedding model is named explicitly, because a collection must be queried with the same embedding model that built it."
+  },
+  {
+   "kind": "focus",
+   "lines": "20-22",
+   "description": "Create a `PersistentClient` at the configured path with `anonymized_telemetry=False`, then build an `OllamaEmbeddingFunction` from the configured URL and embed model."
+  },
+  {
+   "kind": "focus",
+   "lines": "23-25",
+   "description": "Get or create the collection with that embedding function. The metadata records the cosine distance space and the embed model name, so the store remembers which model built it."
+  },
+  {
+   "kind": "focus",
+   "lines": "26-29",
+   "description": "On any error, print a labeled message, print the traceback, and re-raise, so a failure is visible instead of silent."
+  }
+ ]
+}

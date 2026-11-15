@@ -1,0 +1,19 @@
+{
+ "version": 1,
+ "id": "cs357-tut-docker-disappearing-file",
+ "title": "The disappearing file",
+ "description": "The setup of the exercise in Part I: a file written inside one container is gone in the next container from the same image. The tutorial does this interactively with docker run -it ubuntu bash; here each step runs as one command, with ubuntu pinned to 24.04. It stops at docker ps -a, before the exercise's questions are answered.",
+ "page": "_pages/Tutorials/tut-docker.md",
+ "scenario": {
+  "commands": [
+   "docker run --name first ubuntu:24.04 sh -c 'echo my notes > /notes.txt && cat /notes.txt'",
+   "docker run --rm ubuntu:24.04 cat /notes.txt",
+   "docker ps -a"
+  ],
+  "images": [
+   "ubuntu:24.04"
+  ],
+  "network": "isolated",
+  "timeout": 300
+ }
+}

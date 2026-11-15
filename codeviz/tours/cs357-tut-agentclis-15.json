@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentclis-15",
+ "title": "Exercise 3: Gate Calibration with allowedTools",
+ "description": "Five commands launch Claude Code with --allowedTools for read_file and --disallowedTools for write_file and execute_command, then inside the session you ask it to read, create, and run a file to hit each gate behavior.",
+ "reviewed": false,
+ "source": "draft: omp free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "The launch flags configure reads as auto-approved, writes and shell commands as gated. Inside the session, the three actions (read README.md, create hello.py, run it) each hit a different gate."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Line 3 shows the disallowed tools: write_file and execute_command both require approval while read_file passes silently."
+  },
+  {
+   "kind": "predict",
+   "question": "What three screenshots should you capture?",
+   "answer": "(a) a file read that passed silently, (b) a file write gate prompt, and (c) a shell command gate prompt"
+  }
+ ]
+}

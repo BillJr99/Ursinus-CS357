@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-opencodesetup-8",
+ "title": "AGENTS.md in PowerShell",
+ "description": "The Windows version of the same file: Set-Content writes AGENTS.md from a here-string with the identical instructions.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-10",
+   "description": "This is the Windows, PowerShell version of `AGENTS.md`. It writes the same file with the same instructions."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "`Set-Content -Path AGENTS.md -Encoding utf8` writes the file, taking its value from the here-string that starts at `@'`."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-9",
+   "description": "The content matches the shell version: the `cs357-work` heading, the one-line description, and the four bullets covering the model server, Python dependencies, error handling, and docstrings."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the instructions key names additional files to load alongside AGENTS.md, and it accepts what?",
+   "answer": "paths and globs"
+  }
+ ]
+}

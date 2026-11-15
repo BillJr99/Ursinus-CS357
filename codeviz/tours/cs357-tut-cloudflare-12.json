@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-12",
+ "title": "Two Lines That Leak the Token",
+ "description": "The two lines that defeat the log mask and print a secret into a world-readable log.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "These two lines defeat the log mask and leak the token. A registered secret is masked as `***` in logs unless you print it yourself."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "The first line prints the secret verbatim, so the mask never applies."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "`set -x` echoes every command with its expanded values, so the token appears again in the log. The comment marks both as never and dangerous."
+  }
+ ]
+}

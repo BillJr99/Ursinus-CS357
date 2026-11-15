@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-containerisolation-1",
+ "title": "Agent Loop with Three Safety Gates",
+ "description": "Code-level safety rails for LLM agents: human checkpoint for irreversible actions, static analysis for generated code, and hard tool-call budget.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "Constants and counters: MAX_ITERATIONS=25, MAX_TOOL_CALLS=50, and tool_call_count initialized to 0."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Constants: easy to adjust per deployment, define maximum cycles and total tool calls."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-39",
+   "description": "Loop: for iteration in range(MAX_ITERATIONS) with three safety gates in sequence."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-16",
+   "description": "Safety gate 1: human checkpoint for irreversible actions like deleting files or sending emails."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-24",
+   "description": "Safety gate 2: static analysis via sandbox_validates for code execution actions, rejects bad code and continues."
+  },
+  {
+   "kind": "focus",
+   "lines": "26-30",
+   "description": "Safety gate 3: tool-call budget enforced with running counter, returns budget_exceeded when exhausted."
+  },
+  {
+   "kind": "focus",
+   "lines": "32-39",
+   "description": "Execution: sandbox.execute with 30-second timeout, failure added to context for agent reasoning."
+  }
+ ]
+}

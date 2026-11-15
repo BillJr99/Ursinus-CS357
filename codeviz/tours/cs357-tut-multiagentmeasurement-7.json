@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-multiagentmeasurement-7",
+ "title": "The Judge That Fails Closed",
+ "description": "judge_refine.py defines judge_score, which asks a model to pick a level and quote the justifying sentence, then decides 'meets' in code and fails closed on an unparseable reply.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "The file imports `json`, `csv`, `traceback`, and `requests`, and pulls `load_config` and `generate_draft` from `critique_refine`. The page says the only new request code is its own model call."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-12",
+   "description": "`judge_score` scores a draft on every criterion and returns a `scores` map. Its docstring states it fails closed: an unparseable reply scores every criterion as not meeting its bar."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-21",
+   "description": "`system_prompt` tells the judge to choose the matching level, quote the exact justifying sentence, and write one revision instruction when the draft misses the MEETS line. It asks for only valid JSON in the given format, and appends the rubric criteria."
+  },
+  {
+   "kind": "focus",
+   "lines": "22-30",
+   "description": "The `payload` sends the system prompt and the draft as messages, with `stream` off. The model and the `temperature` and `seed` come from the config, so the judge reuses `critic_temp` and `critic_seed`."
+  },
+  {
+   "kind": "focus",
+   "lines": "41-51",
+   "description": "The parse block strips code fences, loads the JSON, coerces each level to an int, and sets `meets` by comparing the level to `meets_level`. The comment says the code decides `meets`, not the model."
+  },
+  {
+   "kind": "focus",
+   "lines": "52-57",
+   "description": "The `except` block is the fail-closed path. It prints a parse-failure message and returns every criterion at level 0 with `meets` false and a note that no instruction is given this round."
+  }
+ ]
+}

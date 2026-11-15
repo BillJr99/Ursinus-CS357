@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-coursecontainer-2",
+ "title": "Add Course Container Files",
+ "description": "Download the three devcontainer files from the course repository into the .devcontainer folder of your clone.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-8",
+   "description": "Eight commands to set up devcontainer files."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Navigation: cd to cs357-work, then mkdir -p .devcontainer to create the folder."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-6",
+   "description": "Downloads: three curl commands fetch Dockerfile, docker-compose.yml, and devcontainer.json from the course gh-pages."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-8",
+   "description": "Verification: cd back to clone root, then ls -la .devcontainer to list the three files."
+  }
+ ]
+}

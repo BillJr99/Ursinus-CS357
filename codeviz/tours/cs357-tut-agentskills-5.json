@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentskills-5",
+ "title": "Run a Skill from Python Against Ollama",
+ "description": "A short script that loads a SKILL.md file, sends its body to a local Ollama model as the system message, and runs a chat loop.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "This script loads a skill and hands it to a local model through Ollama. `OLLAMA_URL` is the chat endpoint, and `MODEL` names the model to use."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-17",
+   "description": "`load_skill` reads the file and strips the front matter. It splits on `---` and keeps the body, so the model sees the instructions and not the metadata."
+  },
+  {
+   "kind": "focus",
+   "lines": "20-28",
+   "description": "`chat` sends the conversation to Ollama with `stream` off and returns the reply text."
+  },
+  {
+   "kind": "focus",
+   "lines": "31-45",
+   "description": "`main` loads the skill from the command-line argument and runs an input loop that reads your request until you type `quit`."
+  },
+  {
+   "kind": "focus",
+   "lines": "39",
+   "description": "Line 39 puts the skill body in the system message. That is what the agent does under the hood: the body of `SKILL.md` becomes the system message."
+  },
+  {
+   "kind": "predict",
+   "question": "What does the script send to the model on every turn?",
+   "answer": "the whole conversation"
+  }
+ ]
+}

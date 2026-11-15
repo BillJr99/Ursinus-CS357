@@ -183,6 +183,7 @@ The two outputs below come from the same user query sent to two different models
 
 **Scenario:** A weather agent exposes this tool:
 
+<!-- run: id=cs357-tut-localmodels-1 viz=show -->
 ```python
 
 # Tool definition (this is what the agent framework sends to the model)
@@ -193,6 +194,7 @@ def get_weather(city: str) -> dict:
     """
     ...
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localmodels-1) <!-- code-viz link -->
 
 **User query:** "What's the weather like in Philadelphia right now?"
 
@@ -213,6 +215,7 @@ This is prose *describing* a function call.  An agent framework trying to parse 
 
 **Function-calling-optimized model output (e.g., `hermes3:8b` via `ollama pull hermes3:8b`):**
 
+<!-- run: id=cs357-tut-localmodels-2 viz=show -->
 ```json
 {
   "tool_call": {
@@ -223,6 +226,7 @@ This is prose *describing* a function call.  An agent framework trying to parse 
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localmodels-2) <!-- code-viz link -->
 
 This is valid JSON conforming to the tool schema.  The agent framework can parse, validate, and execute it directly.  The difference is not intelligence; it is format training.  Hermes-3 was explicitly fine-tuned on thousands of examples of correct tool-call JSON so the output format is highly reliable.
 
@@ -259,6 +263,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     *What to do:* Choose two models that fit your RAM (use the hardware table).  Run each model with `ollama run <model>` and type the same five prompts.  Use the same prompt text for both models; do not rephrase.
 
     *Starter hint:*
+    <!-- run: id=cs357-tut-localmodels-3 viz=show -->
     ```bash
     # Pull two models that fit your hardware
     ollama pull llama3.2:3b        # ~2 GB, runs on any laptop
@@ -285,6 +290,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
         )
         print(response.choices[0].message.content)
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localmodels-3) <!-- code-viz link -->
 
     *You've succeeded when:* You have a 5×2 comparison table (5 tasks × 2 models) with a 1-5 rating and a one-sentence justification for each cell.  Discuss whether the results surprised you.
 
@@ -323,6 +329,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     *What to do:* Define a simple `search_database(query: str, limit: int, filter_category: str = None)` tool in your system prompt.  Send 5 queries that require database search and 5 general questions.  Parse the JSON output and count successes.
 
     *Starter hint:*
+    <!-- run: id=cs357-tut-localmodels-4 viz=show -->
     ```python
     SYSTEM = """You have access to one tool:
     search_database(query: str, limit: int, filter_category: str = None)
@@ -350,6 +357,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
         "Explain how photosynthesis works.",            # should NOT call tool
     ]
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-localmodels-4) <!-- code-viz link -->
 
     *You've succeeded when:* You have a 10-row result table showing each query, whether the model called the tool or not, whether that was correct, and (for tool calls) whether the JSON was valid and schema-conformant.  A good function-calling model should score 8-10/10.
 

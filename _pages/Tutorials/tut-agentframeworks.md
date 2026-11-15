@@ -92,6 +92,7 @@ The three code blocks below implement the same three-agent pipeline in three dif
 
 **LangChain / LangGraph (`pip install langgraph`):**
 
+<!-- run: id=cs357-tut-agentframeworks-1 viz=show -->
 ```python
 from langgraph.graph import StateGraph, END
 from typing import TypedDict
@@ -113,6 +114,8 @@ graph.add_conditional_edges("critic", should_revise, {"yes": "drafter", "no": EN
 app = graph.compile()
 result = app.invoke({"question": q})
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-1) <!-- code-viz link -->
+
 *What this makes easy:* Stateful loops, conditional branching, streaming intermediate results to LangSmith for monitoring.  Every node's input and output is a typed dictionary slice of `PipelineState`.
 
 *What this hides (and can leak):* The `PipelineState` accumulates state from all prior nodes.  If `researcher_chain` adds a key to the state, the `critic_chain` can see it, even if you didn't intend that.  LCEL's (LangChain Expression Language) `|` operator overloading hides the prompt structure; to see the exact system prompt your Researcher is receiving, you must call `researcher_chain.get_prompts()`.
@@ -123,6 +126,7 @@ The CrewAI version replaces explicit routing code with plain-English role descri
 
 **CrewAI (`pip install crewai crewai-tools`):**
 
+<!-- run: id=cs357-tut-agentframeworks-2 viz=show -->
 ```python
 from crewai import Agent, Task, Crew, Process
 from crewai_tools import SerperDevTool  # web search tool
@@ -150,6 +154,8 @@ crew = Crew(agents=[researcher, drafter, critic],
             process=Process.sequential)
 crew.kickoff(inputs={"question": q})
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-2) <!-- code-viz link -->
+
 *What this makes easy:* Role semantics are human-readable: great for demos and for explaining agent behavior to non-technical stakeholders.  The `backstory`, `role`, and `goal` fields form the agent's identity in plain English.
 
 *What this hides (and can leak):* CrewAI writes part of every agent's system prompt for you: the `role`, `backstory`, and `goal` are injected into a prompt template you cannot see by default.  Inter-task data passing is implicit: `{passages}` in `task_d` is filled by the output of `task_r` automatically.  If the Researcher's output doesn't match what the Drafter's description expects, the pipeline silently uses unexpected data.
@@ -160,6 +166,7 @@ The AutoGen version exposes the shared `groupchat.messages` list explicitly.  As
 
 **AutoGen (`pip install pyautogen`):**
 
+<!-- run: id=cs357-tut-agentframeworks-3 viz=show -->
 ```python
 import autogen
 
@@ -190,6 +197,8 @@ groupchat = autogen.GroupChat(
 manager = autogen.GroupChatManager(groupchat=groupchat, llm_config=llm_config)
 researcher.initiate_chat(manager, message=q)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-3) <!-- code-viz link -->
+
 *What this makes easy:* Conversational handoffs between agents; code execution built in for the UserProxy pattern; native async support for parallel agent execution.
 
 *What this hides (and can leak):* All three agents share the `groupchat.messages` list: every agent sees every message from every other agent in every round.  The GroupChatManager uses an LLM to decide which agent speaks next, which is itself a prompt injection surface.  If the Critic's feedback mentions something that contradicts the Researcher's retrieval, the Drafter may update its draft in a direction the developer did not intend.
@@ -283,6 +292,7 @@ Next you will build a minimal LangChain agent against your local Ollama server a
 
 **Step 1: the model object.**  LangChain wraps every provider behind a common chat interface. `ChatOllama` is the wrapper for your local server (`pip install langchain-ollama`); its `.invoke()` is doing exactly what your Local Agent Lab `requests.post` to `/api/chat` did, with retry, parsing, and message formatting hidden inside:
 
+<!-- run: id=cs357-tut-agentframeworks-4 viz=show -->
 ```python
 
 # pip install langchain-ollama langchain-core
@@ -291,9 +301,11 @@ from langchain_ollama import ChatOllama
 llm = ChatOllama(model="llama3.2", temperature=0)
 print(llm.invoke("In one sentence: what is an agent?").content)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-4) <!-- code-viz link -->
 
 **Step 2: a tool and an agent loop.**  The `@tool` decorator builds the JSON schema for you *from the function's type hints and docstring*, the same schema you wrote by hand in the Tool Use activity. `bind_tools` attaches the schemas to every request, and the loop below is deliberately written in the same shape as your Local Agent Lab loop so you can see what moved into the framework and what did not:
 
+<!-- run: id=cs357-tut-agentframeworks-5 viz=show -->
 ```python
 from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage, ToolMessage
@@ -320,11 +332,13 @@ for _ in range(4):                          # perceive-plan-act, same as Local A
         print(f"[tool] {call['name']}({call['args']}) -> {result}")
         messages.append(ToolMessage(content=result, tool_call_id=call["id"]))
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-5) <!-- code-viz link -->
 
 Read the comments as a ledger: the framework absorbed the *plumbing* (schema generation, request formatting, `tool_calls` parsing into typed objects), while the *authority* (which functions exist, when to stop, whether a call needs human confirmation) stayed in your loop.  LangChain also ships prebuilt agent loops (e.g., LangGraph's `create_react_agent`) that absorb the loop itself; use them once you can say precisely what they took from you.
 
 **Step 3: a multi-agent handoff.**  Two "agents" are two differently-prompted model objects; the handoff is nothing more than one agent's output becoming the other agent's entire context:
 
+<!-- run: id=cs357-tut-agentframeworks-6 viz=show -->
 ```python
 from langchain_core.messages import SystemMessage, HumanMessage
 
@@ -348,6 +362,7 @@ answer = executor.invoke([
 ]).content
 print(answer)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-6) <!-- code-viz link -->
 
 Notice what the handoff pattern controls that a shared group chat does not: the executor sees *only* the brief, not the original question, not the clarifier's system prompt.  In LangGraph terms, this is a two-node graph whose state carries a single `brief` field; in Part II's terms, it is the leak-proof version of AutoGen's shared message list.
 
@@ -368,6 +383,7 @@ You supply the tools and the instructions; the loop, the planning, and the deleg
 
 **Step 4a: the minimal deep agent.**  One call, one tool, no loop.  Notice that you never write a `for` loop or a stopping condition; the harness owns both:
 
+<!-- run: id=cs357-tut-agentframeworks-7 viz=show -->
 ```python
 
 # pip install deepagents   (talks to your local Ollama, same as Steps 1-3)
@@ -391,6 +407,7 @@ result = agent.invoke({"messages": "How many days until the final on 2026-12-07,
                                    "and what should I study each week?"})
 print(result["messages"][-1].content)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-7) <!-- code-viz link -->
 
 **Step 4b: watch it plan.**  The harness gave the model a `write_todos` tool without you asking.  On a multi-part request the model calls it to lay out a plan, then works the list.  You can see the plan by walking the returned message list instead of only printing the last message:
 
@@ -447,6 +464,7 @@ print(out["files"].get("summary.md", "(no file written)"))   # read what it wrot
 
 **Step 4e: choosing the model and provider.**  Every cell above passed `model="ollama:llama3.2"`, but that argument is doing real work worth understanding, because **DeepAgents does not default to a local model**: out of the box it reaches for a hosted Anthropic Claude model and expects that provider's API key.  To run on your own infrastructure you set `model=` explicitly, and it accepts two forms:
 
+<!-- run: id=cs357-tut-agentframeworks-8 viz=show -->
 ```python
 from deepagents import create_deep_agent
 
@@ -469,6 +487,7 @@ from langchain_openai import ChatOpenAI
 llm = ChatOpenAI(base_url="http://localhost:3000/api", api_key="sk-...", model="llama3.2")
 agent = create_deep_agent(model=llm, tools=[days_between], system_prompt="...")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-8) <!-- code-viz link -->
 
 Two things decide whether this works.  First, **the provider must be reachable and its integration installed**: a `provider:model` string only resolves if the corresponding `langchain-<provider>` package is present.  Second, **the model must support tool calling**: DeepAgents' whole architecture (planning, sub-agent delegation) is built out of tool calls, so a model without tool training will stall.  You can also override the model *per sub-agent* (give a sub-agent its own `model` key) so a small, cheap model handles planning while a stronger one drafts, which is often the practical way to keep a deep agent affordable on local hardware.
 
@@ -531,15 +550,18 @@ If you have not met Pydantic AI before, read [Pydantic AI From the Loop Up]({{ s
 
 ## Setup, and a Window Onto the Window
 
+<!-- run: id=cs357-tut-agentframeworks-9 viz=show -->
 ```bash
 pip install "pydantic-ai-slim[openai,mcp]" fastmcp
 ollama pull llama3.2               # any local model trained for tool calling will do
 ollama pull qwen2.5:3b             # recommended for the tool steps (4 to 6); export MODEL=qwen2.5:3b
 export PYDANTIC_AI_NO_BANNER=1     # hides a start-up banner that otherwise prints on every run
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-9) <!-- code-viz link -->
 
 The `[openai]` extra lets Pydantic AI talk to any OpenAI-compatible server, which includes Ollama's `/v1` endpoint; `[mcp]` brings the MCP client, and `fastmcp` lets you write the small MCP server in Step 5.  Save the helper below as `common.py` next to your scripts.  It does two things.  `make_model()` points Pydantic AI at your local Ollama server, the same server and model as the LangChain section above.  The `watch` hook runs just before every model request and records what is about to be sent, so `show_context()` can print it.  The sample output below comes from a tool-capable model; a reasoning model also prints `[thinking]` entries, which are its own earlier reasoning sent back to it as context.
 
+<!-- run: id=cs357-tut-agentframeworks-10 viz=show -->
 ```python
 # common.py: the model, plus a hook that shows exactly what goes into the context window.
 import os
@@ -582,6 +604,7 @@ def show_context(i=-1):
     for t in tools:
         print(f"[tool offered] {t.name}: {t.description}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-10) <!-- code-viz link -->
 
 To route through OpenWebUI instead, set `BASE_URL=http://localhost:3000/api` and `API_KEY` to your OpenWebUI key before running; nothing else changes.
 
@@ -590,6 +613,7 @@ To route through OpenWebUI instead, set `BASE_URL=http://localhost:3000/api` and
 
 **Step 1: a basic request.**  An agent with instructions and nothing else:
 
+<!-- run: id=cs357-tut-agentframeworks-11 viz=show -->
 ```python
 # step1_basic.py
 from pydantic_ai import Agent
@@ -600,6 +624,7 @@ result = agent.run_sync("In one sentence: what is an agent?")
 print(result.output)
 show_context()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-11) <!-- code-viz link -->
 
 The printout is short, and that is the point:
 
@@ -613,6 +638,7 @@ Your instructions did not configure the model.  Pydantic AI pasted them into the
 
 **Step 2: memory.**  Two kinds of memory, both of them text.  Long-term memory is a file the program reads into the instructions; short-term memory is the earlier conversation, handed back in with `message_history`:
 
+<!-- run: id=cs357-tut-agentframeworks-12 viz=show -->
 ```python
 # step2_memory.py
 from pathlib import Path
@@ -635,6 +661,7 @@ second = agent.run_sync("Which of those has more programming?", message_history=
 print(second.output)
 show_context()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-12) <!-- code-viz link -->
 
 ```text
 --- request 2 of 2: the context window ---
@@ -660,6 +687,7 @@ list with one line per day.
 
 The agent sees a one-line menu of skills on every call and loads a skill's full text only when one fits, which is the same design the terminal coding agents opencode and pi use (see the [Agent CLIs tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs)):
 
+<!-- run: id=cs357-tut-agentframeworks-13 viz=show -->
 ```python
 # step3_skill.py
 from pathlib import Path
@@ -693,6 +721,7 @@ print(result.output)
 show_context(0)   # first request: the menu only
 show_context()    # last request: the skill body has arrived as a tool result
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-13) <!-- code-viz link -->
 
 Compare the first and last requests of the run:
 
@@ -713,6 +742,7 @@ On the first request, the skill cost one line.  On the second, its whole body sa
 
 **Step 4: a tool.**  The same `days_between` tool as the LangChain section, so you can set the two side by side:
 
+<!-- run: id=cs357-tut-agentframeworks-14 viz=show -->
 ```python
 # step4_tool.py
 from datetime import date
@@ -730,6 +760,7 @@ result = agent.run_sync("How many days are there from 2026-10-05 to 2026-12-14?"
 print(result.output)
 show_context()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-14) <!-- code-viz link -->
 
 ```text
 --- request 2 of 2: the context window ---
@@ -744,6 +775,7 @@ The tool reaches the model twice as text: once as a description (generated from 
 
 **Step 5: MCP.**  Move the tool out of your program and into a server.  This one is a complete MCP server:
 
+<!-- run: id=cs357-tut-agentframeworks-15 viz=show -->
 ```python
 # campus_server.py
 # campus_server.py: a tiny MCP server. Pydantic AI starts it and talks to it over stdio.
@@ -759,9 +791,11 @@ def library_hours(day: str) -> str:
 if __name__ == "__main__":
     mcp.run(show_banner=False)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-15) <!-- code-viz link -->
 
 The agent connects to it as a toolset.  Pydantic AI starts the server, asks it what tools it has, and offers them to the model:
 
+<!-- run: id=cs357-tut-agentframeworks-16 viz=show -->
 ```python
 # step5_mcp.py
 from pathlib import Path
@@ -777,6 +811,7 @@ result = agent.run_sync("When is the library open on Saturday?")
 print(result.output)
 show_context()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-16) <!-- code-viz link -->
 
 ```text
 --- request 2 of 2: the context window ---
@@ -791,6 +826,7 @@ The window looks exactly like Step 4's.  MCP changed where the tool lives and ho
 
 **Step 6: the agentic loop.**  `run_sync` has been running a loop all along.  `agent.iter` lets you walk it one step at a time:
 
+<!-- run: id=cs357-tut-agentframeworks-17 viz=show -->
 ```python
 # step6_loop.py
 import asyncio
@@ -814,6 +850,7 @@ async def main():
 
 asyncio.run(main())
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-17) <!-- code-viz link -->
 
 ```text
 UserPromptNode
@@ -904,6 +941,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
        print(final.choices[0].message.content)
    ```
 
+   <!-- run: id=cs357-tut-agentframeworks-18 viz=show -->
    ```python
    # === Agno (lightweight framework) ===
    # pip install agno duckduckgo-search
@@ -918,6 +956,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    )
    agent.print_response("Who won the 2024 Tour de France?")
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-18) <!-- code-viz link -->
 
    *You've succeeded when:* You have working code in both frameworks, a line count for each, and a written comparison table with the same columns as the Part I Framework Comparison table filled in based on your own experience.
 

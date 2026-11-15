@@ -86,12 +86,14 @@ Your lab work lives in a private GitHub repository named `cs357-work`, the direc
 1.  On [github.com](https://github.com/): **New repository** -> name `cs357-work` -> **Private** -> check **Add a README file**.
 2.  Clone it, from the Ubuntu terminal on Windows or the Terminal on macOS and Linux:
 
+<!-- run: id=cs357-tut-coursecontainer-1 viz=show -->
 ```bash
 cd ~
 git clone https://github.com/YOURUSERNAME/cs357-work.git
 cd cs357-work
 git remote -v
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-coursecontainer-1) <!-- code-viz link -->
 
 > **Watch out!**  Keep the clone under your home folder.  Docker Desktop shares that location with containers by default, and a clone on a second drive or a network share is the most common cause of an empty bind mount later.
 
@@ -131,6 +133,7 @@ The course container is defined by three small files, which you keep in a `.devc
 
 **Do.**  The commands below fetch all three into the right place.  Run them from your clone:
 
+<!-- run: id=cs357-tut-coursecontainer-2 viz=show -->
 ```bash
 cd ~/cs357-work
 mkdir -p .devcontainer
@@ -141,6 +144,7 @@ curl -fsSL -o devcontainer.json https://raw.githubusercontent.com/BillJr99/Ursin
 cd ..
 ls -la .devcontainer
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-coursecontainer-2) <!-- code-viz link -->
 
 > **What you should see:** the three files, under exactly those names, so that your repository looks like this:
 > ```
@@ -187,11 +191,13 @@ Build and enter by either front door.  Both use the same Dockerfile, and you can
 
 **Do, for Option B:**
 
+<!-- run: id=cs357-tut-coursecontainer-3 viz=show -->
 ```bash
 cd ~/cs357-work/.devcontainer
 docker compose build
 docker compose run --rm cs357
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-coursecontainer-3) <!-- code-viz link -->
 
 > **Budget note.**  The first build downloads the ML libraries and takes a while; start it and go do Step 1 in another terminal.  Rebuilds are nearly instant thanks to layer caching.
 
@@ -233,11 +239,13 @@ Three commands, each proving one tool is in the image.  The fourth thing the con
 
 **Do.**  At the container prompt, the three graded checks, ready to paste:
 
+<!-- run: id=cs357-tut-coursecontainer-4 viz=show -->
 ```bash
 promptfoo --version
 python3 -c "import spacy; nlp = spacy.load('en_core_web_sm'); print('spacy OK:', nlp('Agents plan and act.')[0].pos_)"
 opencode --version
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-coursecontainer-4) <!-- code-viz link -->
 
 **Paste.**  All three outputs, with the container prompt visible.
 
@@ -267,11 +275,13 @@ The container ships with `git` but knows nothing about you, and it cannot push w
 
 **Do, identity.**  Set your identity **per repository**, so it is stored in `/workspace/.git/config`, on your disk, inside the mount, and survives container teardown:
 
+<!-- run: id=cs357-tut-coursecontainer-5 viz=show -->
 ```bash
 cd /workspace
 git config user.name "Your Name"
 git config user.email "you@example.com"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-coursecontainer-5) <!-- code-viz link -->
 
 > **Note.**  The VS Code route copies your host `~/.gitconfig` into the container automatically, so Option A students often find this already done.
 
@@ -331,6 +341,7 @@ Return to the Overview's Route A checklist.  On Route A, Steps 1 through 3 run o
 
 Working in a container means your environment is a file rather than a machine.  When a tool the course depends on changes underneath us, and sooner or later one always does, nobody has to reinstall anything by hand or compare laptops to work out whose setup drifted.  The Dockerfile in your repository *is* the environment, so a corrected Dockerfile plus a rebuild puts the whole class back on an identical, working stack.  When an update is announced, fetch the current file and rebuild:
 
+<!-- run: id=cs357-tut-coursecontainer-6 viz=show -->
 ```bash
 cd ~/cs357-work/.devcontainer
 curl -fsSL -o Dockerfile https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/devcontainer/Dockerfile
@@ -338,6 +349,7 @@ git add Dockerfile && git commit -m "Update course container"
 docker compose build
 docker compose run --rm cs357
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-coursecontainer-6) <!-- code-viz link -->
 
 You need that first `curl` because the Dockerfile lives in *your* repository, not in a registry somewhere, so rebuilding without fetching the new one just rebuilds the image you already have.
 

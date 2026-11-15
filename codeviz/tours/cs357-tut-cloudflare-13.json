@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-13",
+ "title": "Proving a Secret Arrived",
+ "description": "A snippet that confirms the token is present without exposing a single character of it.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "This snippet proves the token arrived without revealing it. It checks whether the variable is set."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "`[ -n \"${CLOUDFLARE_API_TOKEN:-}\" ]` tests that the variable is non-empty. If it is set, the `echo` prints the length, not the value."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-7",
+   "description": "If the token is missing, the script prints a message to standard error and exits with status 1."
+  }
+ ]
+}

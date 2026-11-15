@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-19",
+ "title": "Install Skills: tstack and pstack",
+ "description": "Script to clone and install tstack skills (file-pr, babysit-pr, leaving-pr-comments) and pstack skills (in-your-own-words, how, architect, blast-radius, principle-prove-it-works) at pinned commits.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-15",
+   "description": "Complete skill installation script."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-7",
+   "description": "Tstack: TSTACK commit hash, clone t3dotgg/tstack, checkout commit, copy three skills to .agents/skills/."
+  },
+  {
+   "kind": "focus",
+   "lines": "8",
+   "description": "Separator: blank line between tstack and pstack sections."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-15",
+   "description": "Pstack: PSTACK commit hash, clone cursor/plugins with filter, sparse-checkout pstack, checkout commit, copy five skills, copy LICENSE."
+  }
+ ]
+}

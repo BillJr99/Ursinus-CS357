@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-explainabilitydeep-1",
+ "title": "SHAP Sentiment Analysis Explanation",
+ "description": "Load a pre-trained sentiment model and use SHAP to produce token-level attributions for five test sentences.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-24",
+   "description": "Complete SHAP sentiment analysis code."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-4",
+   "description": "Imports: transformers pipeline and shap libraries."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-8",
+   "description": "Model loading: distilbert-base-uncased-finetuned-sst-2-english for sentiment analysis."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-16",
+   "description": "Test sentences: negation, sarcasm, positive, mixed, and ambiguous examples."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-19",
+   "description": "Predictions: sentiment analysis results for each sentence."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-24",
+   "description": "SHAP explanation: explainer creation, shap_values computation, and text plot for first sentence."
+  }
+ ]
+}

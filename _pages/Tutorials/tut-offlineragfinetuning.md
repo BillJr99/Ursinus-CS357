@@ -58,6 +58,7 @@ Two sentences carry the whole tutorial.  **RAG changes what the model reads; it 
 
 Make a project folder and run these with the network available:
 
+<!-- run: id=cs357-tut-offlineragfinetuning-2 viz=show -->
 ```bash
 mkdir offline-rag && cd offline-rag
 python -m venv .venv && source .venv/bin/activate
@@ -77,6 +78,7 @@ snapshot_download("HuggingFaceTB/SmolLM2-360M-Instruct",           # Apache-2.0
                   revision="a10cc1512eabd3dde888204e902eca88bddb4951")
 EOF
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-2) <!-- code-viz link -->
 
 The `revision` is a commit hash, so a later update to the model on the Hub cannot change what you trained on.  Read each model's license on its model page before you use it outside class: Apache-2.0 for SmolLM2 and `nomic-embed-text`, the Llama 3.2 Community License for `llama3.2`, and the Qwen Research License for `qwen2.5:3b`.
 
@@ -99,6 +101,7 @@ OSError: We couldn't connect to 'https://huggingface.co' to load the files, and 
 
 All settings live in `config.json`, so changing a model or a path never means editing code:
 
+<!-- run: id=cs357-tut-offlineragfinetuning-3 viz=show -->
 ```json
 {
   "ollama_url": "http://localhost:11434",
@@ -113,9 +116,11 @@ All settings live in `config.json`, so changing a model or a path never means ed
   "log_level": "INFO"
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-3) <!-- code-viz link -->
 
 `preflight.py` checks the pinned packages, that Ollama is answering on `localhost`, and that both models are present.  It never downloads anything; it tells you what to fetch during the online stage.
 
+<!-- run: id=cs357-tut-offlineragfinetuning-4 viz=show -->
 ```python
 # preflight.py: check every local asset before the offline stage. It never downloads anything.
 import importlib.metadata as md
@@ -150,6 +155,7 @@ if problems:
     sys.exit(1)
 print("preflight ok: packages pinned, Ollama local, both models present")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-4) <!-- code-viz link -->
 
 ### How we verified "offline"
 
@@ -225,6 +231,7 @@ The first aid kit hangs in the hallway outside the wood shop.
 
 The embedding function is named explicitly, in one place.  A collection must be queried with the same embedding model that built it, so the model's name is also stored in the collection's metadata.  The store lives on disk at `./chroma_db`.
 
+<!-- run: id=cs357-tut-offlineragfinetuning-5 viz=show -->
 ```python
 # rag_common.py: configuration, the embedding function, and the persistent store, in one place.
 import json
@@ -256,9 +263,11 @@ def open_collection():
         traceback.print_exc()
         raise
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-5) <!-- code-viz link -->
 
 ### Ingest: chunk, label, embed, store, and rerun safely
 
+<!-- run: id=cs357-tut-offlineragfinetuning-6 viz=show -->
 ```python
 # ingest.py: load, chunk, embed, and store. Safe to rerun: same text, same ID, no duplicates.
 import hashlib
@@ -314,6 +323,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-6) <!-- code-viz link -->
 
 Each chunk gets a **stable source ID** (`equipment-0`) and a hash of its text.  Rerunning compares hashes, so unchanged chunks are skipped and changed ones are re-embedded with `upsert`, which replaces rather than duplicates.  If a document gets shorter, its leftover chunk IDs are deleted.  The first two runs:
 
@@ -334,6 +344,7 @@ Five chunks after two runs: no duplicates.  Close the terminal, reboot if you li
 
 ### Ask: show the evidence, then answer or abstain
 
+<!-- run: id=cs357-tut-offlineragfinetuning-7 viz=show -->
 ```python
 # ask.py: retrieve, show the evidence, then answer with citations or abstain.
 import sys
@@ -389,6 +400,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-7) <!-- code-viz link -->
 
 The script prints the retrieved evidence **before** the model sees it, so you can always tell a retrieval failure from a generation failure.  Three runs with `llama3.2`:
 
@@ -432,6 +444,7 @@ One chunk re-embedded, the answer changed, and no model was retrained.  That is 
 
 This section reuses `common.py` from the [Pydantic AI tutorial]({{ site.baseurl }}/Tutorials/PydanticAI) (put it beside these files, or keep the `sys.path` line below pointing at it).  Its default model is `qwen2.5:3b`, because Path 2 depends on tool calling and `qwen2.5:3b` calls tools far more reliably than `llama3.2`; Sections B and F keep `llama3.2` and SmolLM2, which never need to call a tool.  This section shows two designs.  **Path 1** keeps retrieval in your code, before the model is called, so it works with any model.  **Path 2** offers retrieval as a typed tool and lets the model decide when to search, which only works with a model that calls tools reliably.
 
+<!-- run: id=cs357-tut-offlineragfinetuning-8 viz=show -->
 ```python
 # rag_agent.py: the same RAG system through Pydantic AI, first explicit, then as a typed tool.
 import sys
@@ -524,6 +537,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-8) <!-- code-viz link -->
 
 The output validator in Path 1 checks two structural rules: every cited ID was actually retrieved, and an abstention cites nothing.  What it cannot check is whether the cited text **supports** the answer.  Our test with the default `qwen2.5:3b` (`python rag_agent.py "How much does filament cost?"`) shows the gap:
 
@@ -634,6 +648,7 @@ The split is **by fact**, not by row.  Our first version split by row, and a par
 
 The hyperparameters live in `lora_config.json`:
 
+<!-- run: id=cs357-tut-offlineragfinetuning-9 viz=show -->
 ```json
 {
   "base_model": "HuggingFaceTB/SmolLM2-360M-Instruct",
@@ -655,7 +670,9 @@ The hyperparameters live in `lora_config.json`:
   "seed": 42
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-9) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-offlineragfinetuning-10 viz=show -->
 ```python
 # train_lora.py: freeze the base model, train a small LoRA adapter, save only the adapter.
 import json
@@ -740,6 +757,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-10) <!-- code-viz link -->
 
 What each piece does:
 
@@ -767,6 +785,7 @@ The saved folder holds `adapter_config.json` and `adapter_model.safetensors`, 6.
 
 Training an adapter and loading one are different jobs.  Anyone with the same base model revision can load your adapter without training anything:
 
+<!-- run: id=cs357-tut-offlineragfinetuning-11 viz=show -->
 ```python
 # infer_lora.py: a fresh process loads the base model, attaches the saved adapter, and compares.
 import json
@@ -816,6 +835,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-11) <!-- code-viz link -->
 
 ```text
 $ python infer_lora.py
@@ -831,6 +851,7 @@ Same process, same base weights in memory, different answers.  With the adapter 
 
 ### Merging, and why Ollama is a separate step
 
+<!-- run: id=cs357-tut-offlineragfinetuning-12 viz=show -->
 ```python
 # merge_lora.py: fold the adapter into a copy of the base weights, and check nothing changed.
 import json
@@ -860,6 +881,7 @@ except Exception as e:
     traceback.print_exc()
     sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-12) <!-- code-viz link -->
 
 ```text
 adapter attached: ANSWER: 9am to 5pm [hours-0]
@@ -896,6 +918,7 @@ Every condition uses one base model (SmolLM2-360M-Instruct at the pinned revisio
 
 The eight held-out questions cover five **answerable** facts not in the training data, two **unanswerable** questions, and one **changed** fact: the handbook now says Thursdays, while the adapter was trained on Wednesdays.  Run it after the Thursday edit and re-ingest from Section B.
 
+<!-- run: id=cs357-tut-offlineragfinetuning-13 viz=show -->
 ```python
 # compare.py: one base model, four conditions, the same held-out questions and decoding settings.
 import json
@@ -966,6 +989,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-offlineragfinetuning-13) <!-- code-viz link -->
 
 ### Our results
 

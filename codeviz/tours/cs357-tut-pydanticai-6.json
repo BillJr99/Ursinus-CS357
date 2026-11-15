@@ -1,0 +1,50 @@
+{
+ "version": 1,
+ "example": "cs357-tut-pydanticai-6",
+ "title": "Validation said these are a string and a date. It did not say this write is allo",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "2-3",
+   "description": "Lines 2-3 import `datetime` and `pathlib`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "5",
+   "description": "Line 5 imports `pydantic_ai`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "7-8",
+   "description": "Lines 7-8 import `common` and `step3_deps`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "10-25",
+   "description": "Lines 10-25 run the main code."
+  },
+  {
+   "kind": "focus",
+   "lines": "16",
+   "description": "Line 16 loops over `range(2)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "17",
+   "description": "Line 17 makes a decision."
+  },
+  {
+   "kind": "focus",
+   "lines": "20",
+   "description": "Line 20 loops over `result.output.approvals`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "27-28",
+   "description": "Lines 27-28 continue the main code and print the results."
+  }
+ ]
+}

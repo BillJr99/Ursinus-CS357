@@ -97,6 +97,7 @@ In this part, you will publish a container image to GHCR and Docker Hub using th
 
 GHCR is the natural home for course images because it lives beside your code: in the same GitHub account, with the same permissions model, and visible on the same repository page.  The four commands below form the complete publish-and-verify cycle; read the comment on Step 4 especially, because pulling from a clean slate is the only way to confirm your image is truly public:
 
+<!-- run: id=cs357-tut-publishing-1 viz=show -->
 ```bash
 
 # 1. Authenticate; the PAT must have the write:packages scope
@@ -120,6 +121,7 @@ docker push ghcr.io/yourusername/agent-eval:0.1.0
 docker rmi ghcr.io/yourusername/agent-eval:0.1.0   # remove local copy
 docker pull ghcr.io/yourusername/agent-eval:0.1.0   # pull as a stranger would
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-1) <!-- code-viz link -->
 
 One GHCR-specific step trips everyone the first time: new packages default to **private**.  Visit the package's page on GitHub (your profile -> Packages tab), open Package settings, and change visibility to public if you intend `docker pull` to work without authentication.  While you are there, link the package to its source repository; consumers deserve to find your Dockerfile and understand what they are running.
 
@@ -127,6 +129,7 @@ One GHCR-specific step trips everyone the first time: new packages default to **
 
 Identical commands, different namespace, after creating a free account at hub.docker.com:
 
+<!-- run: id=cs357-tut-publishing-2 viz=show -->
 ```bash
 
 # Interactive login; use your Docker Hub access token as the password, not your account password
@@ -138,6 +141,7 @@ docker tag agent-eval:0.1.0 yourusername/agent-eval:0.1.0
 # Push to Docker Hub
 docker push yourusername/agent-eval:0.1.0
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-2) <!-- code-viz link -->
 
 Docker Hub is where unqualified names resolve (a plain `docker pull nginx` pulls from Docker Hub) which gives it broader reach among users outside GitHub.  GHCR gives you co-location with code and shared permissions with your repository.  Publishing to both costs one extra `tag` and `push`, and many projects do exactly that.
 
@@ -166,15 +170,20 @@ In this part, you will publish a working npm package with a CLI entry point, the
 
 An npm package is a directory with a `package.json`; everything else is detail.  A minimal CLI utility that works as a real publishable package:
 
+<!-- run: id=cs357-tut-publishing-3 viz=show -->
 ```bash
 
 # Create the directory and initialize the package with your scoped username
 mkdir hello-agent && cd hello-agent
 npm init --scope=@yourusername -y      # scoped to your username: collision-proof
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-3) <!-- code-viz link -->
+
+[Simulate this session](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=simulate#cs357-tut-publishing-npm-pack) <!-- code-viz simulate link -->
 
 The resulting `package.json` defines the three fields that do the most work; read the note after the code block to understand why `bin`, `files`, and `license` are each load-bearing:
 
+<!-- run: id=cs357-tut-publishing-4 viz=show -->
 ```json
 {
   "name": "@yourusername/hello-agent",
@@ -185,6 +194,7 @@ The resulting `package.json` defines the three fields that do the most work; rea
   "license": "MIT"
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-4) <!-- code-viz link -->
 
 ```javascript
 #!/usr/bin/env node
@@ -206,6 +216,7 @@ Three `package.json` fields deserve special attention.  **`bin`** is what makes 
 
 ## 6.  Dry Run, Publish, Verify
 
+<!-- run: id=cs357-tut-publishing-5 viz=show -->
 ```bash
 
 # Step 1: Log in (once per machine; use your npm access token when prompted for a password)
@@ -228,6 +239,7 @@ npx @yourusername/hello-agent Bill
 npm version patch                  # bumps 0.1.0 -> 0.1.1, edits package.json, creates a git tag
 npm publish                        # publish the new version (no --access needed after first time)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-5) <!-- code-viz link -->
 
 `npm pack --dry-run` is the publish gate in command form: it lists every file about to go public, and reading that list before every publish is the habit that prevents the credential-in-a-tarball incidents you find in security news every year.  Make it a reflex: dry run, read every line, then publish.
 
@@ -235,6 +247,7 @@ npm publish                        # publish the new version (no --access needed
 
 Once publishing works by hand, a GitHub Actions workflow can automate it on every tagged release.  The container pattern, from the course stack's own deployment:
 
+<!-- run: id=cs357-tut-publishing-6 viz=show -->
 ```yaml
 {% raw %}
 
@@ -253,6 +266,7 @@ Once publishing works by hand, a GitHub Actions workflow can automate it on ever
     # github.ref_name is the tag you pushed (e.g., v0.2.0)
 {% endraw %}
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-6) <!-- code-viz link -->
 
 The npm equivalent swaps in `npm ci && npm publish` with an `NPM_TOKEN` stored as a repository secret.  Notice what triggers the workflow: a *tag you push deliberately* (not every commit) so the human decision to publish survives the automation.  That design is the AI-maker module's CI lesson and the human-oversight section of the governance one-pager from *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference*, implemented in seven lines of YAML.
 
@@ -313,6 +327,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-publishing-7 viz=show -->
 ```bash
 
 # Build and push
@@ -324,6 +339,7 @@ docker push ghcr.io/yourusername/hello-cs357:0.1.0
 docker pull ghcr.io/yourusername/hello-cs357:0.1.0
 docker run --rm ghcr.io/yourusername/hello-cs357:0.1.0
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-7) <!-- code-viz link -->
 
 *You've succeeded when:* A teammate can run `docker pull ghcr.io/yourusername/hello-cs357:0.1.0` from a fresh terminal without any credentials and get the image.  Keep the image name, the commands you ran, and the teammate's pull transcript together, so you can retrace the publish if it ever stops working.
 
@@ -333,6 +349,7 @@ docker run --rm ghcr.io/yourusername/hello-cs357:0.1.0
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-publishing-8 viz=show -->
 ```bash
 
 # In your package directory
@@ -342,6 +359,7 @@ npm publish --access public
 # Teammate verifies:
 npx @yourusername/hello-agent "CS357 classmate"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-8) <!-- code-viz link -->
 
 *You've succeeded when:* A teammate can run `npx @yourusername/hello-agent` and receive the expected JSON output.  Check the dry-run output you saved against what actually shipped, and confirm that nothing unexpected went out.
 
@@ -351,6 +369,7 @@ npx @yourusername/hello-agent "CS357 classmate"
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-publishing-9 viz=show -->
 ```bash
 npm version patch     # bumps 0.1.0 -> 0.1.1
 npm publish
@@ -359,6 +378,7 @@ npm publish
 npm install @yourusername/hello-agent@0.1.0   # old version
 npm install @yourusername/hello-agent@0.1.1   # new version
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-9) <!-- code-viz link -->
 
 *You've succeeded when:* You can run both versions and observe different outputs.  Write two sentences explaining what npm's version immutability guarantees for your users.
 
@@ -368,6 +388,7 @@ npm install @yourusername/hello-agent@0.1.1   # new version
 
 *Starter hint:*
 
+<!-- run: id=cs357-tut-publishing-10 viz=show -->
 ```bash
 git tag v0.2.0
 git push origin v0.2.0   # this triggers the workflow
@@ -377,6 +398,7 @@ git push origin v0.2.0   # this triggers the workflow
 # After it completes, verify:
 docker pull ghcr.io/yourusername/hello-cs357:v0.2.0
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-10) <!-- code-viz link -->
 
 *You've succeeded when:* The Actions tab shows a successful run triggered by your tag, and the image is pullable from GHCR. Identify in one sentence where the human gate lives in your pipeline (hint: it is not in the YAML).
 
@@ -408,16 +430,19 @@ A modern Python package is defined by a single `pyproject.toml` file.  The file 
 
 **`[build-system]`** tells pip which backend to use to turn your source code into a wheel:
 
+<!-- run: id=cs357-tut-publishing-11 viz=show -->
 ```toml
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-11) <!-- code-viz link -->
 
 `hatchling` is the build backend.  It reads the rest of `pyproject.toml` and knows how to produce a `.whl` file without any additional configuration.  Other popular backends include `setuptools` and `flit`; the syntax is identical, only the backend name changes.
 
 **`[project]`** is the package metadata that appears on PyPI and that `pip install` reads to resolve dependencies:
 
+<!-- run: id=cs357-tut-publishing-12 viz=show -->
 ```toml
 [project]
 name = "my-agent"
@@ -429,6 +454,7 @@ dependencies = [
     "requests>=2.31.0",
 ]
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-12) <!-- code-viz link -->
 
 Every field here is a promise to your users. `name` must be globally unique on PyPI. `dependencies` are installed automatically when a user runs `pip install my-agent`, so list exactly what your code imports, no more, no less.
 
@@ -445,6 +471,7 @@ After `pip install my-agent`, a user can type `ask "What is photosynthesis?"` in
 
 ### The Build Pipeline
 
+<!-- run: id=cs357-tut-publishing-13 viz=show -->
 ```bash
 
 # Install the build frontend (one-time setup)
@@ -453,6 +480,7 @@ pip install build
 # Produce both a wheel and a source distribution
 python -m build
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-13) <!-- code-viz link -->
 
 This command creates two files in a `dist/` directory:
 
@@ -470,12 +498,14 @@ A **wheel** (`.whl`) is a pre-built binary archive. `pip install` unpacks it dir
 
 PyPI is permanent.  A version you publish cannot be unpublished after 72 hours, and mirrors cache everything immediately.  **TestPyPI** (`test.pypi.org`) is a separate, identical registry used exclusively for testing the upload pipeline.  Publishing to TestPyPI first lets you catch metadata errors, dependency conflicts, and `pyproject.toml` mistakes without polluting the real index.
 
+<!-- run: id=cs357-tut-publishing-14 viz=show -->
 ```bash
 
 # Upload to TestPyPI (safe; does not affect the real PyPI)
 pip install twine
 twine upload --repository testpypi dist/*
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-14) <!-- code-viz link -->
 
 Twine will prompt for your TestPyPI username and password, or you can use an API token (recommended; generate one at https://test.pypi.org/manage/account/token/).
 
@@ -487,12 +517,14 @@ pip install --index-url https://test.pypi.org/simple/ my-agent
 
 Note: if your package has dependencies from the real PyPI (like `requests`), add `--extra-index-url https://pypi.org/simple/` so pip can find them:
 
+<!-- run: id=cs357-tut-publishing-15 viz=show -->
 ```bash
 pip install \
   --index-url https://test.pypi.org/simple/ \
   --extra-index-url https://pypi.org/simple/ \
   my-agent
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-15) <!-- code-viz link -->
 
 ---
 
@@ -510,6 +542,7 @@ For course labs, start with SemVer at `0.1.0` (the `0.x` range signals that the 
 
 ### Runnable Example: A Minimal pyproject.toml
 
+<!-- run: id=cs357-tut-publishing-16 viz=show -->
 ```toml
 [build-system]
 requires = ["hatchling"]
@@ -530,6 +563,7 @@ dependencies = [
 # After pip install, users can run: ask "What is photosynthesis?"
 ask = "my_agent:main"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-publishing-16) <!-- code-viz link -->
 
 After saving this file and running `python -m build`, verify the wheel exists:
 

@@ -682,6 +682,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
    The pseudocode below implements the detect-log-alert-block sequence; pay attention to what gets logged and why each piece of information matters for forensic investigation after an incident.
 
+   <!-- run: id=cs357-tut-agentcasestudies-1 viz=show -->
    ```python
    import logging
    import datetime
@@ -703,6 +704,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
            return False  # Block the outbound action
        return True  # Safe to proceed
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentcasestudies-1) <!-- code-viz link -->
 
    *You've succeeded when:* Your pseudocode handles detection, logging (with timestamp and context), action blocking, and incident response initiation.  You can explain in a paragraph why the canary must be placed somewhere the agent reads but should never send, and why the check must happen before the outbound action, not after.
 

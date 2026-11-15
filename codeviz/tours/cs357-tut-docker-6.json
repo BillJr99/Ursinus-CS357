@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-docker-6",
+ "title": "A Small Agent Image",
+ "description": "A Dockerfile that installs coding-agent tools into an image and drops root, so the tool and its dependencies stay disposable.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "The comment names the file `Dockerfile.agent`, and the build starts from the `node:22-slim` base image."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-8",
+   "description": "Install `git`, `ripgrep`, `ca-certificates`, and `curl` with apt, then clear the apt lists. The comment says git and ripgrep are what coding agents reach for constantly."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-13",
+   "description": "Install the `opencode-ai` CLI globally. The comments say opencode is the course default because it speaks to any OpenAI-compatible backend, so it talks to your host Ollama with no account and no API key."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-16",
+   "description": "Install a second agent, Oh My Pi, so you can compare two on one task. The line pipes its install script to `sh` and sets the install directory."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-24",
+   "description": "The commented lines list other agents you could install instead: Claude Code, Gemini CLI, Codex, and Aider. The note marks Aider as Python, installed with `pip install aider-chat`."
+  },
+  {
+   "kind": "focus",
+   "lines": "26-30",
+   "description": "Create a non-root user `agent`, switch to it with `USER agent`, set `WORKDIR /work`, and default to `bash`. The comment says never run as root inside a container you hand to an agent."
+  }
+ ]
+}

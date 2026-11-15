@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-pydanticai-12",
+ "title": "calendarserver.py: the same two tools, served over real MCP (JSON-RPC over stdio",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "2-3",
+   "description": "Lines 2-3 import `asyncio` and `pathlib`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "5-7",
+   "description": "Lines 5-7 import `fastmcp`, `pydantic_ai` and `pydantic_ai.mcp`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "9",
+   "description": "Line 9 imports `common`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "12-21",
+   "description": "Lines 12-21 define `inspect_server()`."
+  },
+  {
+   "kind": "focus",
+   "lines": "14",
+   "description": "Line 14 loops over `await client.list_tools()`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "24-31",
+   "description": "Lines 24-31 run the main code and print the results."
+  }
+ ]
+}

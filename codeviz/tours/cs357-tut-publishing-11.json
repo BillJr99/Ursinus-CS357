@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-11",
+ "title": "pyproject.toml: Build System",
+ "description": "Build system configuration with hatchling backend: requires hatchling, build-backend is hatchling.build.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "Build system section."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Section header: [build-system] marks the build configuration."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Requires: hatchling is the build backend dependency."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Backend: hatchling.build is the backend that reads pyproject.toml and produces .whl files."
+  }
+ ]
+}

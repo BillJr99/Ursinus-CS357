@@ -240,6 +240,7 @@ The plugin tracks every file's sync state in `.obsidian/github-sync-metadata.jso
 
 Each metadata entry follows this schema:
 
+<!-- run: id=cs357-tut-secondbrain-2 viz=show -->
 ```json
 {
   "path": "wiki/projects/cs357.md",
@@ -249,6 +250,7 @@ Each metadata entry follows this schema:
   "lastModified": 1718100000000
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-secondbrain-2) <!-- code-viz link -->
 
 The easy, correct path for agents: after creating or modifying a file, write its metadata entry with `sha` set to **null** and `dirty` set to **true**, with `lastModified` as the current Unix time in milliseconds.  The plugin uploads the file on the next sync and fills in the real SHA itself.  Deletions add `deleted: true` and a `deletedAt` timestamp.
 
@@ -326,6 +328,7 @@ atomically, including the sync metadata updates AGENTS.md specifies.
 
 Provide the PAT as an environment variable when launching the container (never inline in the prompt, which lands in logs):
 
+<!-- run: id=cs357-tut-secondbrain-3 viz=show -->
 ```bash
 docker run --rm -it --name hermes \
   --add-host=host.docker.internal:host-gateway \
@@ -334,6 +337,7 @@ docker run --rm -it --name hermes \
   -v "$HOME/agents/workspace:/workspace" \
   nousresearch/hermes-agent:latest
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-secondbrain-3) <!-- code-viz link -->
 
 For agents on the same machine, a simpler read path exists: bind-mount the vault directory itself (`-v "$HOME/obsidian-vault:/vault:ro"` for context-consuming agents; read-write only for designated wiki authors).  Standing instructions then go in each project's context file:
 

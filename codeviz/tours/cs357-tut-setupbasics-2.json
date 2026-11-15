@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-setupbasics-2",
+ "title": "A Word-Count MCP Tool",
+ "description": "A small MCP server that registers one tool. MCP is a standard way for an agent to discover and call tools, and the docstring becomes the tool's description.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-11",
+   "description": "This is `word_count_server.py`, a small MCP server. MCP, the Model Context Protocol, is a standard way for an agent to discover and call tools. The page says to save this file as `word_count_server.py` in your project."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "`from mcp.server.fastmcp import FastMCP` imports `FastMCP`, the class that builds the server."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`mcp = FastMCP(\"word-tools\")` creates the server and names it `word-tools`."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-8",
+   "description": "`@mcp.tool()` registers the function below as a tool. `word_count` takes `text` and returns an int, and its docstring, `Count the words in a piece of text.`, becomes the tool's description."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-11",
+   "description": "The `__main__` guard runs `mcp.run()`, which starts the server when you run the file directly."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the docstring becomes the tool's description, and the description is what the model reads when it decides what?",
+   "answer": "whether to call the tool"
+  }
+ ]
+}

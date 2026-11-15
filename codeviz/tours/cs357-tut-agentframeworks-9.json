@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-9",
+ "title": "Pydantic AI: Setup Commands",
+ "description": "Installation and model pulling commands for Pydantic AI with Ollama, plus banner suppression.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "All four setup commands for the Pydantic AI environment."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Pip install: pydantic-ai-slim with openai and mcp extras, plus fastmcp."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Model pulling: llama3.2 for general use, qwen2.5:3b recommended for tool steps."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Banner suppression: PYDANTIC_AI_NO_BANNER=1 hides the startup banner."
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-4",
+ "title": "Oh My Pi Permissions: .omp/config.yml",
+ "description": "Oh My Pi permission rules with first-match-wins: denials first, then git, test commands, and always-ask default for tools.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-19",
+   "description": "Complete .omp/config.yml for Oh My Pi."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Header: comment explaining first-match-wins rule and that denials come first."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "Tools: approvalMode always-ask sets the default for tools."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-19",
+   "description": "Bash patterns: denials first (rm, mv, rmdir), then deploy commands ask, then git with push/clean/reset-hard ask, test commands allow."
+  }
+ ]
+}

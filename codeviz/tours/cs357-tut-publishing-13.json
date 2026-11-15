@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-13",
+ "title": "Python Build: Wheel and SDist",
+ "description": "Install build frontend once, then python -m build produces both wheel (.whl) and source distribution (.tar.gz) in dist/.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "Python build process."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Setup: pip install build as one-time frontend installation."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Execution: python -m build produces wheel and sdist in dist/ directory."
+  }
+ ]
+}

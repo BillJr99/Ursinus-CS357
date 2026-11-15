@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-7",
+ "title": "DeepAgents: Minimal Agent",
+ "description": "create_deep_agent with model, tools, and system_prompt; no explicit loop needed as the harness owns it.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-21",
+   "description": "Minimal deep agent: tool, agent creation, and invoke with a multi-part question."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-5",
+   "description": "Imports: deepagents and langchain_core.tools for the tool decorator."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-11",
+   "description": "Tool: days_between with @tool decorator, type hints, docstring, and datetime logic."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-17",
+   "description": "Agent creation: create_deep_agent with ollama model, days_between tool, and scheduling assistant prompt."
+  },
+  {
+   "kind": "focus",
+   "lines": "19-21",
+   "description": "Invocation: agent.invoke with messages dict containing the question, then print the last message content."
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-1",
+ "title": "LangChain/LangGraph: Three-Agent Pipeline",
+ "description": "Stateful pipeline with Researcher, Drafter, and Critic nodes connected via StateGraph, with conditional edges for revision loops.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "PipelineState TypedDict that carries question, passages, draft, and revision_notes through the graph."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-13",
+   "description": "Three node additions: researcher, drafter, and critic chains that form the pipeline stages."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-15",
+   "description": "Edges: researcher to drafter is direct, while critic has conditional routing."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-17",
+   "description": "Conditional edge: should_revise decides whether to loop back to drafter or end."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-19",
+   "description": "Compilation and invocation: graph.compile() creates the app, then app.invoke() runs it with the question."
+  }
+ ]
+}

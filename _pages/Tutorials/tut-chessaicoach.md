@@ -58,6 +58,7 @@ Before reading any code, **play the app** so the rest of the activity has someth
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-1 viz=show -->
 ```bash
 
 # From the folder that contains chess-ai-coach.html
@@ -65,6 +66,7 @@ python -m http.server 8000
 
 # then open http://localhost:8000/chess-ai-coach.html
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-1) <!-- code-viz link -->
 
 3.  Leave the provider set to **Local only** and play a few moves.  The board enforces full chess rules and a computer opponent replies, **with no AI and no API key at all.**  Keep that in mind: the language model is an *addition*, not the engine.
 
@@ -156,6 +158,7 @@ const text = await callTextModel(providerConfig, prompt, { maxTokens: 350, tempe
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-2 viz=show -->
 ```js
 async function callTextModel(providerConfig, prompt, { maxTokens = 500, temperature = 0.2 } = {}) {
   const provider = providerConfig.provider;
@@ -165,6 +168,7 @@ async function callTextModel(providerConfig, prompt, { maxTokens = 500, temperat
   throw new Error("Unsupported AI provider.");
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-2) <!-- code-viz link -->
 
 Notice the shape: **the rest of the app never knows or cares which provider is active.**  Adding a fourth provider later means adding one more branch here and nothing else changes.  That is the whole point of a dispatcher.
 
@@ -174,6 +178,7 @@ Anthropic's Messages API uses its own endpoint and header names.  Here is the br
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-3 viz=show -->
 ```js
 if (provider === "anthropic") {
   if (!providerConfig.anthropicKey) throw new Error("Enter an Anthropic API key.");
@@ -202,6 +207,7 @@ if (provider === "anthropic") {
   return data?.content?.map(block => block?.text || "").join("").trim() || "";
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-3) <!-- code-viz link -->
 
 Three things to note: the auth header is **`x-api-key`** (not `Authorization: Bearer`); a **version** header is mandatory; and the reply text lives at **`data.content[].text`**, an array of content blocks, not a single string.
 
@@ -211,6 +217,7 @@ The OpenAI branch uses the same `/v1/chat/completions` shape you already know fr
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-4 viz=show -->
 ```js
 if (provider === "openai") {
   if (!providerConfig.openaiKey) throw new Error("Enter an OpenAI API key.");
@@ -236,11 +243,13 @@ if (provider === "openai") {
   return extractOpenAIText(data).trim(); // reads choices[0].message.content, defensively
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-4) <!-- code-viz link -->
 
 The reply lives at **`choices[0].message.content`**.  The app wraps that access in a small helper, `extractOpenAIText`, that tolerates a few response shapes instead of crashing on an unexpected one:
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-5 viz=show -->
 ```js
 function extractOpenAIText(data) {
   if (typeof data?.output_text === "string" && data.output_text) return data.output_text;
@@ -250,6 +259,7 @@ function extractOpenAIText(data) {
   return "";
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-5) <!-- code-viz link -->
 
 ## 6.  Open WebUI / Local: `POST <baseUrl>/api/chat/completions`
 
@@ -257,6 +267,7 @@ The third branch targets a **local, OpenAI-compatible server** (Open WebUI in fr
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-6 viz=show -->
 ```js
 if (provider === "openwebui") {
   const baseUrl = normalizeBaseUrl(providerConfig.openWebUIUrl); // trims trailing slashes
@@ -283,6 +294,7 @@ if (provider === "openwebui") {
   return extractOpenAIText(data).trim(); // same choices[0].message.content path as OpenAI
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-6) <!-- code-viz link -->
 
 The app can even **discover** which models a local server has, via a `GET /api/models` call in `fetchOpenWebUIModels`, the same "list models before you use one" pattern from the REST activity's `/v1/models`.
 
@@ -374,6 +386,7 @@ Now that the pipe exists, what do we push through it?  Two different jobs: **pro
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-7 viz=show -->
 ```js
 async function getAICommentary(providerConfig, beforeFen, afterFen, san, pgnSoFar, eloEst) {
   const prompt = `You are an expert chess coach. The player is White (estimated ~${eloEst} Elo).
@@ -402,6 +415,7 @@ Be encouraging but honest.`;
   return callTextModel(providerConfig, prompt, { maxTokens: 350, temperature: 0.2 });
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-7) <!-- code-viz link -->
 
 Design decisions worth copying:
 
@@ -438,6 +452,7 @@ The evaluation bar and the Elo meter cannot use a paragraph; they need a **numbe
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-8 viz=show -->
 ```js
 async function getAIEvaluation(providerConfig, fen) {
   const prompt = `You are a chess engine. Given this FEN, estimate the evaluation from White's` +
@@ -455,6 +470,7 @@ function safeJsonParse(text, fallback) {
   try { return JSON.parse(text); } catch { return fallback; }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-8) <!-- code-viz link -->
 
 Three defenses stacked together make this reliable:
 
@@ -470,6 +486,7 @@ After you move, the app wants **two** independent AI answers: commentary and a f
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-9 viz=show -->
 ```js
 const [c, elo] = await Promise.all([
   getAICommentary(currentProviderConfig, beforeFen, afterFen, san, pgnSoFar, eloEstimate.elo),
@@ -478,16 +495,19 @@ const [c, elo] = await Promise.all([
 setCommentary(c);
 setEloEstimate(elo);
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-9) <!-- code-viz link -->
 
 One subtlety specific to long-lived UI code: the move handler is an `async` function that may still be awaiting a slow API call when you change the provider dropdown.  If it read the provider from the React render that created it, it could use **stale** settings.  The app avoids this by reading the *current* config from a ref at call time:
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-10 viz=show -->
 ```js
 const currentProviderConfig = providerConfigRef.current; // always the latest, even mid-await
 const currentAIEnabled = aiEnabledRef.current;
 // ...a useEffect keeps providerConfigRef.current in sync whenever the settings change.
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-10) <!-- code-viz link -->
 
 ---
 
@@ -585,6 +605,7 @@ The browser calls **your** endpoint.  Your server reads the key from an environm
 > This cell starts a server and binds a port, which a web page cannot do.  Copy it into your course container and run it there.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-chessaicoach-11 viz=show -->
 ```python
 
 # minimal_proxy.py  - run with a real key in the environment, e.g.
@@ -609,6 +630,7 @@ def coach():
     data = r.json()
     return jsonify({"text": data["choices"][0]["message"]["content"]})
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-11) <!-- code-viz link -->
 
 The **local-model escape hatch** sidesteps the whole problem: point the app at Open WebUI / Ollama and there is *no cloud key to leak*.  That is a big reason this course leans on local models, and why the app supports them as a first-class provider.
 
@@ -667,6 +689,7 @@ The provider settings are ordinary React state (a dropdown value plus the releva
 
 ## Code Cell
 
+<!-- run: id=cs357-tut-chessaicoach-12 viz=show -->
 ```jsx
 // Is any provider actually ready to use?
 const aiEnabled =
@@ -690,6 +713,7 @@ if (currentAIEnabled) {
   setCommentary(`You played ${san}. Configure a provider for AI analysis.`);
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-12) <!-- code-viz link -->
 
 Notice the `try/catch/finally`: a failed API call turns into a **visible message** and the loading spinner always clears.  Silent failures are the worst failures in AI features, because the user can't tell "the model is thinking" from "the model is broken."
 

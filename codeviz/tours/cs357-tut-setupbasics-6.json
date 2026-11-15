@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-setupbasics-6",
+ "title": "Oh My Pi Custom Provider",
+ "description": "Another entry under providers in models.yml. Here apiKey is the name of the variable that holds the key, not the key.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-11",
+   "description": "This is another entry under `providers` in `~/.omp/agent/models.yml`. The page says to add a custom provider here, and that `apiKey` is the name of the variable, not the key."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "The provider is `ursinus`. `baseUrl` is `https://ursinus.ai/api/v1`, `api` is `openai-completions`, and `apiKey` is `URSINUSAI_API_KEY`, the name of the variable."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-11",
+   "description": "`models` lists one entry, `MODEL-NAME`, with a display name of `Ursinus model`, `reasoning` false, `input` as text, a `contextWindow` of 128000, and `maxTokens` of 4096."
+  }
+ ]
+}

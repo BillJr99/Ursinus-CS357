@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-17",
+ "title": "The Full Guarded Deploy Workflow",
+ "description": "A workflow with every guardrail wired in: a branch restriction, an actor allowlist, an environment with required reviewers, and a concurrency group.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-17",
+   "description": "This is the full guarded workflow. It runs on manual dispatch or on a push to `main`, and a `concurrency` group keeps two production deploys from overlapping."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-12",
+   "description": "The `on` block holds the triggers. `workflow_dispatch` needs a person to click Run, and `push: branches: [main]` is GATE 1, the branch restriction."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-16",
+   "description": "The `concurrency` group serializes deploys, and `cancel-in-progress: false` keeps a live deploy from being interrupted."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-23",
+   "description": "GATE 3 is `environment: production`, which requires reviewer approval. GATE 2 is the `if` line, an actor allowlist of who may run the deploy."
+  },
+  {
+   "kind": "focus",
+   "lines": "24-26",
+   "description": "`permissions` grants `contents: read` and `id-token: write`. The comment notes the OIDC token is only needed for that path."
+  },
+  {
+   "kind": "focus",
+   "lines": "32-36",
+   "description": "The Deploy step runs `./deploy.sh` and passes the token from secrets and the Worker name from a plain variable."
+  }
+ ]
+}

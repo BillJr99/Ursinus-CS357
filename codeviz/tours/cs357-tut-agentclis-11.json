@@ -1,0 +1,20 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentclis-11",
+ "title": "tmux Session: Start, Detach, Reattach",
+ "description": "Seven lines show the tmux workflow: create a named session, launch a long agent task, detach with Ctrl-b d, close the laptop, then reattach from anywhere to find the agent still running.",
+ "reviewed": false,
+ "source": "draft: omp free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "The sequence creates a session named 'agents', runs claude inside it, detaches with Ctrl-b then d, and later reattaches with tmux attach -t agents from a fresh SSH login."
+  },
+  {
+   "kind": "predict",
+   "question": "What does detaching do to the agent task?",
+   "answer": "the agent keeps running the whole time on the multiplexer's persistent server"
+  }
+ ]
+}

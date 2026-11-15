@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-2",
+ "title": "CrewAI: Declarative Agent Roles",
+ "description": "Agents defined by plain-English role, goal, and backstory, with sequential task execution and implicit data passing.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "Agent definitions: Researcher with web search tool, Drafter as technical writer, Critic as demanding editor."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-7",
+   "description": "Researcher: role, goal for finding passages, backstory as rigorous academic, and SerperDevTool."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-13",
+   "description": "Drafter and Critic: Drafter writes responses from passages, Critic identifies gaps and weaknesses."
+  },
+  {
+   "kind": "reveal",
+   "lines": "15-20",
+   "description": "Task definitions that bind agents to descriptions and expected outputs."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-16",
+   "description": "Task_r: Researcher task takes question, produces 3-5 passages with sources."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-20",
+   "description": "Task_d and task_c: Drafter consumes passages, Critic consumes draft, each with specific output formats."
+  },
+  {
+   "kind": "focus",
+   "lines": "22-25",
+   "description": "Crew assembly: agents list, tasks list, sequential process, and kickoff with question input."
+  }
+ ]
+}

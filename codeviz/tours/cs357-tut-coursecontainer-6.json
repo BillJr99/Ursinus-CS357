@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-coursecontainer-6",
+ "title": "Update Container Dockerfile",
+ "description": "Fetch updated Dockerfile, commit it, and rebuild to ensure the course container stays current when dependencies change.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "Five commands to update and rebuild the container."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Directory: cd to .devcontainer folder in your clone."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Download: curl fetches the latest Dockerfile from the course gh-pages."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Version control: git add and commit the updated Dockerfile with a descriptive message."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-5",
+   "description": "Rebuild: docker compose build rebuilds the image, docker compose run --rm cs357 starts the updated container."
+  }
+ ]
+}

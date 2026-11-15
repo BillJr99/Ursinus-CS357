@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-11",
+ "title": "Skill Check: small-model-orchestrator",
+ "description": "Launches checks for small-model-orchestrator skill in .agents/skills/ or .pi/skills/ directories and raises ValueError if not found.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "Skill lookup and check logic."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Skill path search: tries .agents/skills/ then .pi/skills/ for SKILL.md."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "Check: if no SKILL.md found, skill is None."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "Error: raises ValueError with explicit message about both possible locations."
+  }
+ ]
+}

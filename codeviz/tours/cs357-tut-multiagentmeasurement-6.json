@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-multiagentmeasurement-6",
+ "title": "A Judge Rubric with Levels and Bars",
+ "description": "judge_rubric.json holds three criteria, each with three levels, a meets_level bar, and a meets line stated so a reader can check it.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "This is `judge_rubric.json`. It names the task, `function_docstring`, and starts the `criteria` list. The page says this rubric asks whether the parts of a docstring are any good, not just whether they are present."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-10",
+   "description": "`J1` is Accuracy. It has three `levels` and `meets_level: 3`. Its `meets` line says a reader could predict the output for a new input from the docstring alone."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-17",
+   "description": "`J2` is Edge cases. Level 3 names at least two edge cases and states the result of each. Its `meets` line gives an empty list as the example."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-25",
+   "description": "`J3` is Example. Its level 3 is a doctest that exercises a nontrivial case with a correct output. Its `meets` line says the doctest would pass and would fail on a plausible bug such as dropping duplicates."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the code compares the awarded level with what, so the model never decides 'meets' on its own?",
+   "answer": "meets_level"
+  }
+ ]
+}

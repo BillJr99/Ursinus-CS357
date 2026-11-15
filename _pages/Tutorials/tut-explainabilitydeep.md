@@ -225,6 +225,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 > This cell needs libraries that are installed in your course container rather than in the page.  Copy it there and run it.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-explainabilitydeep-1 viz=show -->
 ```python
 
 # Install: pip install transformers shap
@@ -251,6 +252,7 @@ explainer = shap.Explainer(sentiment)
 shap_values = explainer(sentences)
 shap.plots.text(shap_values[0])  # display explanation for first sentence
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-explainabilitydeep-1) <!-- code-viz link -->
 
 *You've succeeded when:* You have a table showing each sentence, its prediction, its SHAP-attributed words, and at least one case where the attribution surprises you or raises a follow-up question you write down.
 

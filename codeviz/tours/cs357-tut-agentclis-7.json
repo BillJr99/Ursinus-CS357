@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentclis-7",
+ "title": "opencode Configuration with Ollama and OpenWebUI",
+ "description": "A 20-line JSON config registers two providers (ollama and openwebui) in opencode, each using the openai-compatible npm package with separate base URLs and model names so both appear in /models.",
+ "reviewed": false,
+ "source": "draft: omp free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-20",
+   "description": "The config creates the opencode directory, then writes a JSON file with a provider map containing ollama (baseURL localhost:11434/v1, model llama3.2) and openwebui (baseURL localhost:3000/api/v1, apiKey placeholder, model llama3.2)."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Line 2 creates the config directory if it does not exist."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-8",
+   "description": "Lines 5-8 define the ollama provider with the raw Ollama endpoint and a descriptive model name."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-16",
+   "description": "Lines 10-16 define the openwebui provider with its endpoint, an API key placeholder, and a distinct model name so you can tell them apart in /models."
+  },
+  {
+   "kind": "predict",
+   "question": "What is the file name opencode expects for its config?",
+   "answer": "opencode.json (not config.json)"
+  }
+ ]
+}

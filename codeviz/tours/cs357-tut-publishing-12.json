@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-12",
+ "title": "pyproject.toml: Project Metadata",
+ "description": "Project metadata for PyPI: name, version, description, readme, Python requirement, and dependencies array.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "Complete [project] section."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Section header: [project] contains package metadata."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-5",
+   "description": "Identity: name my-agent, version 0.1.0, description, readme file."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "Requirements: requires-python >=3.11, dependencies array with requests>=2.31.0."
+  }
+ ]
+}

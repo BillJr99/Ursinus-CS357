@@ -16,6 +16,8 @@ tags:
 
 ## About This Tutorial
 
+[Walk through this tutorial's code, step by step](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain&tour=walkthrough#cs357-tut-tokensenergycost-1) <!-- code-viz walkthrough link -->
+
 Your teammate writes "our agent use had no cost" because the OpenCode sidebar said `$0.00`.  No one can check that sentence, and it is not true.  A local model still reads and writes every token, and each token costs your machine seconds and draws watts from the wall.  This tutorial shows you how to replace that sentence with numbers that someone else can check against your logs.
 {: .tb-lede}
 
@@ -62,6 +64,7 @@ You never have to compute a token count.  The model server counts every token it
 
 **To save a response of your own** (this needs Ollama running on your machine; inside the course container, change `localhost` to `host.docker.internal`):
 
+<!-- run: id=cs357-tut-tokensenergycost-3 viz=show -->
 ```bash
 curl -s http://localhost:11434/api/chat -d '{
   "model": "llama3.2",
@@ -69,6 +72,7 @@ curl -s http://localhost:11434/api/chat -d '{
   "stream": false
 }' > response.json
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-tokensenergycost-3) <!-- code-viz link -->
 
 Keep `"stream": false`.  With streaming on, the counts arrive only in the last chunk (the one with `"done": true`).  A helper that keeps only the text loses them.
 

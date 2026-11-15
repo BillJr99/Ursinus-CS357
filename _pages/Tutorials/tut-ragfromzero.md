@@ -322,11 +322,13 @@ Read it row by row.  The membership answer is grounded and wrong.  The bare head
 
 Part II uses the lab's code, models, and versions.  Do this setup once:
 
+<!-- run: id=cs357-tut-ragfromzero-2 viz=show -->
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install "pydantic-ai-slim[openai]==2.54.0" "chromadb==1.5.9"
 ollama pull qwen2.5:3b
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-ragfromzero-2) <!-- code-viz link -->
 
 Then save the co-op corpus as a `corpus/` folder.  This cell needs only Python.  Part IV reuses `load_corpus` for your own files.
 
@@ -360,6 +362,7 @@ You should see `['hours.md', 'membership.md', 'safety.md', 'tools.md'] -> 12 chu
 
 Save this as `measure.py` beside `rag_agent.py` and run `python measure.py`.  It imports the lab's `agent`, `collection`, and `model` (the file's `__main__` guard keeps the import from asking a question).  Then it computes recall@1 and recall@3 against Chroma and asks every golden question.  Finally, it asks one question twice: once with a `closed_book` agent that has the same model and rules but no search tool, and once with the real agent.
 
+<!-- run: id=cs357-tut-ragfromzero-3 viz=show -->
 ```python
 # measure.py: score the lab's index and agent on the golden set, then compare retrieval off and on.
 import traceback
@@ -427,6 +430,7 @@ if __name__ == "__main__":
         answer, returned = ask(which, question)
         print(f"\nretrieval {label}  searched={bool(returned)}\n  Q: {question}\n  A: {answer}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-ragfromzero-3) <!-- code-viz link -->
 
 The script checks what a machine can check: recall, whether the agent searched, and whether the answer holds the right fact or abstains when it should.  It cannot check that the file an answer names actually says the claim.  You make that check: for each answer, open the named file and write one line saying whether it supports the answer.  Exact wording depends on the model, so your answers will not match anyone else's word for word.
 

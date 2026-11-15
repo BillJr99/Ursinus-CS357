@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-15",
+ "title": "public/index.html: Questions Board Page",
+ "description": "Static HTML page with form for asking questions, list display with upvote buttons, and JavaScript that calls the API without innerHTML for XSS safety.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-47",
+   "description": "Complete index.html page."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-12",
+   "description": "Structure: doctype, html lang, head with charset, viewport, title, and CSS styles."
+  },
+  {
+   "kind": "focus",
+   "lines": "13-20",
+   "description": "Body: h1 Questions Board, form with input and button, alert paragraph, ul for list."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-24",
+   "description": "DOM references: list and problem elements."
+  },
+  {
+   "kind": "focus",
+   "lines": "25-36",
+   "description": "Load: fetches /api/questions, maps to li elements with text span and vote button using textContent for safety."
+  },
+  {
+   "kind": "focus",
+   "lines": "37-43",
+   "description": "Submit: prevents default, posts to /api/questions, shows error or clears form and reloads."
+  },
+  {
+   "kind": "focus",
+   "lines": "44",
+   "description": "Startup: load() called on page load."
+  }
+ ]
+}

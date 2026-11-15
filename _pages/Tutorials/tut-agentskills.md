@@ -128,6 +128,7 @@ Those five keys are the whole list, and opencode ignores anything else rather th
 
 Permissions live in `opencode.json`, and skills no longer do.  The config file still exists; it holds different things:
 
+<!-- run: id=cs357-tut-agentskills-1 viz=show -->
 ```json
 {
   "permission": {
@@ -139,6 +140,7 @@ Permissions live in `opencode.json`, and skills no longer do.  The config file s
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentskills-1) <!-- code-viz link -->
 
 Three values are available, and the course has used two of them already on `bash` and `edit`.  `allow` loads the skill without asking.  `deny` hides it from the agent entirely, which is also one of the things to check (item 6 in *If a Skill Does Not Load*, below) when a skill you installed never appears.  `ask` prompts you before the skill loads, and it is the one that earns its keep here: once anything in a discovery path came from someone else, `"*": "ask"` means no stranger's instructions reach the model without you saying yes that time.  The last matching rule wins, exactly as in the permission block you wrote in the OpenCode Studio lab, so order these from general to specific.
 
@@ -146,16 +148,19 @@ Three values are available, and the course has used two of them already on `bash
 
 pi installs extensions and skills from npm or a Git host.  Add `-l` to scope the install to the current project instead of your home directory:
 
+<!-- run: id=cs357-tut-agentskills-2 viz=show -->
 ```bash
 pi install npm:@someone/pi-tools
 pi install git:github.com/someone/their-skills
 pi install git:github.com/someone/their-skills -l   # project-local
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentskills-2) <!-- code-viz link -->
 
 For opencode, a skill directory is installed by being in one of the discovery paths.  Cloning a repository of skills into `.agents/skills/` (or symlinking it there) is the whole installation.  That is simpler than a package manager, and it means you can read exactly what you installed before you run it.  Do read it.  A skill is instructions your agent will follow, and installing one you have not read is the same category of decision as running a script you have not read.
 
 Cloning the whole repository is right when you want the whole bundle and have read it.  Most published repositories carry dozens of skills, and you usually want one, so clone shallow into a scratch directory and copy out the single directory you came for:
 
+<!-- run: id=cs357-tut-agentskills-3 viz=show -->
 ```bash
 git clone --depth 1 https://github.com/someone/their-skills /tmp/their-skills
 less /tmp/their-skills/skills/commit-tidy/SKILL.md     # read it BEFORE it is installed
@@ -163,6 +168,7 @@ ls /tmp/their-skills/skills/commit-tidy/scripts        # and read anything execu
 mkdir -p .agents/skills
 cp -r /tmp/their-skills/skills/commit-tidy .agents/skills/
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentskills-3) <!-- code-viz link -->
 
 The middle two lines are the point of the detour.  A skill may ship a `scripts/` directory, and its instructions can tell the agent to run what is in there, so "read the skill" means the whole directory and not just the `SKILL.md`.
 
@@ -287,11 +293,13 @@ cs357-skills/                       <- repository root
 
 A classmate installs the bundle by cloning it into a discovery path:
 
+<!-- run: id=cs357-tut-agentskills-4 viz=show -->
 ```bash
 git clone https://github.com/your-username/cs357-skills.git ~/.agents/skills/cs357
 # or, for one project only:
 git clone https://github.com/your-username/cs357-skills.git .agents/skills/cs357
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentskills-4) <!-- code-viz link -->
 
 For pi, the same repository installs with `pi install git:github.com/your-username/cs357-skills`.
 
@@ -375,6 +383,7 @@ opencode is not the only way to use a skill.  Because a skill is just text, you 
 
 With Ollama running and your model pulled (`ollama pull llama3.2`), save this as `run_skill.py` in the project root and run `python3 run_skill.py .agents/skills/study-planner/SKILL.md`:
 
+<!-- run: id=cs357-tut-agentskills-5 viz=show -->
 ```python
 import sys
 import traceback
@@ -434,6 +443,7 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentskills-5) <!-- code-viz link -->
 
 The `messages` list is the whole conversation, sent again on every turn; that is how the model "remembers" your earlier answers to its interview.  Notice what this script does *not* do: it never decides whether the skill should fire, because you loaded it by hand.  That trigger decision is the part opencode adds.  If you try this, include a short transcript and one sentence on whether the skill behaved the same as it did in opencode.
 

@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-7",
+ "title": "cloudflare-teardown SKILL.md",
+ "description": "Skill for tearing down Cloudflare resources: creates D1 database, applies migrations, deploys, then deletes database and resets ID.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "Cloudflare-teardown skill content."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Metadata: name is cloudflare-teardown."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-6",
+   "description": "Steps: D1 create with yes, copy database_id to wrangler.jsonc and commit, deploy commands with yes, check deletion, reset database_id to zeros."
+  }
+ ]
+}

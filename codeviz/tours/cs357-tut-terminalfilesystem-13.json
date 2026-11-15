@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-13",
+ "title": "Download and Install small-model-orchestrator Skill (PowerShell)",
+ "description": "PowerShell equivalent: creates .agents/skills, downloads archive, extracts it, and verifies SKILL.md.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "Complete PowerShell install sequence."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Directory creation: New-Item -ItemType Directory -Force."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Download: curl.exe fetches the skill archive, saved as .zip."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Extraction: Expand-Archive extracts to .agents/skills, then removes the zip."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Verification: Get-Item confirms SKILL.md path exists."
+  }
+ ]
+}

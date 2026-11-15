@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-chessaicoach-5",
+ "title": "extractOpenAIText Helper",
+ "description": "A small helper that pulls the reply text out of an OpenAI-style response while tolerating several response shapes.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1",
+   "description": "`extractOpenAIText` takes the parsed response object. The page says it tolerates a few response shapes instead of crashing on an unexpected one."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "First it checks for a top-level `output_text` string and returns it when present."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "Otherwise it reads `choices[0].message` and returns `message.content` when that is a string."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "When `message.content` is an array, it maps each part to its `text` or `content` and joins them."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "If none of the shapes matched, return an empty string rather than throwing."
+  }
+ ]
+}

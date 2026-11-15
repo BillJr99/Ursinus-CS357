@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-opencodesetup-12",
+ "title": "The Same Skill in PowerShell",
+ "description": "The Windows version of the same install: create the skill directory with New-Item and write SKILL.md from a here-string.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-11",
+   "description": "This is the Windows, PowerShell version of the same install. It writes the identical `SKILL.md` into the skill directory under `.agents`, and the file is the same either way; only the directory changes."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "`New-Item -ItemType Directory -Force -Path .agents\\skills\\commit-message` creates the directory, `-Force` tolerates one that already exists, and `| Out-Null` suppresses its output."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "`Set-Content -Path .agents\\skills\\commit-message\\SKILL.md -Encoding utf8` writes the file as UTF-8 from the here-string that starts at `@'`."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-6",
+   "description": "The front matter is the same: `name: commit-message`, and the `description` that states when to use it."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-10",
+   "description": "The body repeats the same instruction: read the staged files with `git status --short`, write a subject line under seventy characters, and add the reasoning only if it is not obvious."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the description is the trigger, so a description naming what works, while one naming the topic does not?",
+   "answer": "the occasion"
+  }
+ ]
+}

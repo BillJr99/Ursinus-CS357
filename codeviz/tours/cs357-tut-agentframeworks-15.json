@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-15",
+ "title": "Pydantic AI: Tool in Context",
+ "description": "Tool appears twice in context: as offered tool with description from docstring, and as tool-return with the computed result.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-13",
+   "description": "Complete tool example: same days_between as LangChain for side-by-side comparison."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-5",
+   "description": "Imports and setup: datetime, Agent, common helpers."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-7",
+   "description": "Agent with tool usage instructions and watch capability."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-11",
+   "description": "Tool definition: type hints for start_iso and end_iso, returns int, docstring describes ISO date format."
+  },
+  {
+   "kind": "focus",
+   "lines": "13",
+   "description": "Execution: date range question, output print, show_context reveals tool schema and result."
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-multiagentmeasurement-5",
+ "title": "Comparing the Loop with Single-Shot",
+ "description": "compare.py runs each task two ways: one generator call, then the full critique-and-refine loop. It scores both with the calibrated critic and records the calls each condition spent.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "The script imports `csv` and the `critique_refine` helpers, then loads the config and the rubric once."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-18",
+   "description": "`COMPARISON_TASKS` starts with three tasks. The comments say to add five more of increasing complexity, so you have at least eight. The third task is a worked example that adds competing constraints all four criteria must cover at once."
+  },
+  {
+   "kind": "focus",
+   "lines": "20-29",
+   "description": "`score_draft` is your calibrated critic as a scorer. It counts the criteria the critic did not complain about: `num_criteria` minus the number of issues, floored at 0. It returns the score, the critique, and 1 call for the critique."
+  },
+  {
+   "kind": "focus",
+   "lines": "31-53",
+   "description": "The loop runs both conditions per task. Condition A is single shot: one `generate_draft` plus one critique. Condition B runs `critique_refine_loop` and then one final scoring critique. Each result records the scores, calls, rounds, and reason, and prints one line."
+  },
+  {
+   "kind": "focus",
+   "lines": "55-66",
+   "description": "The results are written to `comparison_results.csv`. Then the script prints the average score and average calls for each condition."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the scorer counts the criteria the critic did not complain about, so a four-criterion rubric scores what range?",
+   "answer": "0 to 4"
+  }
+ ]
+}

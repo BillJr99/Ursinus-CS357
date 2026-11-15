@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-2",
+ "title": "Identity Directories: Multiple Choice",
+ "description": "Four options for what identity directories provide, with the correct answer being isolated space per agent to prevent accidental cross-contamination.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-16",
+   "description": "All four multiple choice options."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Full access: giving entire home directory for flexibility is wrong."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Model artifacts: storing model weights in identity directory is not the primary purpose."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Correct answer: isolated space for config, memory, logs, workspace prevents accidental access to each other's state."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Docker replacement: identity directories are not a replacement for Docker isolation."
+  }
+ ]
+}

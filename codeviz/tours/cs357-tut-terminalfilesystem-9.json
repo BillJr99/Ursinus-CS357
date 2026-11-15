@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-9",
+ "title": "Ollama/OpenWebUI Endpoints Table",
+ "description": "Comparison table showing direct laptop vs container URLs for Ollama and OpenWebUI, with Linux-specific caveats.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "Endpoints table with run commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Header: Ollama and OpenWebUI endpoint comparison."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "Direct: localhost:11434/v1 for Ollama, localhost:3000/api/v1 for OpenWebUI."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Container: host.docker.internal replaces localhost for container-to-host access."
+  }
+ ]
+}

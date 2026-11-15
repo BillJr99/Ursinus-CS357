@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-20",
+ "title": "Cancelling Superseded Runs",
+ "description": "A concurrency group with cancel-in-progress turned on, so a newer push cancels an older CI run that is already obsolete.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "This is a `concurrency` group. It controls how runs that share a key overlap."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "`group: ci-${{ github.ref }}` builds the key from the branch reference, so runs on the same branch share one group."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`cancel-in-progress: true` stops the older run when a newer push arrives. The comment says the newer push cancels the older, still-running CI, so you are not paying for a build that is already obsolete."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says to keep `cancel-in-progress` set to which value for the deploy job, so a live deploy is never interrupted mid-flight?",
+   "answer": "false"
+  }
+ ]
+}

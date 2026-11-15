@@ -139,6 +139,7 @@ Hand-tracing is the point, but seeing where the toy diverges from production is 
 > This cell needs the `tiktoken` package, which you install in your course container rather than in the page.  Copy it there and run it.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-tokensembeddings-2 viz=show -->
 ```python
 # pip install tiktoken
 import tiktoken
@@ -149,6 +150,7 @@ for word in ["lowest", "strawberry", "Collegeville", "CS357", "internationalizat
     pieces = [enc.decode([i]) for i in ids]
     print(f"{word:22s} -> {len(ids)} tokens  {pieces}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-tokensembeddings-2) <!-- code-viz link -->
 
 Run it and compare against the `lowest` trace above.  Two things to notice: common words are single tokens while rare ones shatter, and the split points frequently land mid-morpheme.  The tokenizer optimizes for frequency, not for meaning.  That gap is where a surprising share of model weirdness lives.
 

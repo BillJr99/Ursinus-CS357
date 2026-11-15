@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-ragfromzero-3",
+ "title": "Scoring the Index and Comparing Retrieval",
+ "description": "measure.py scores the lab's index and agent on the golden set, then asks one question twice to compare retrieval off and retrieval on.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "This is `measure.py`. It scores the lab's index and agent on the golden set, then compares retrieval off and on. It imports `Agent` and `UsageLimits` from `pydantic_ai`, and reuses `agent`, `collection`, and `model` from `rag_agent.py`."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-14",
+   "description": "`GOLDEN` is the same golden set as Cell 1: each row holds a question, a piece of evidence, and the fact an answer should contain. The last row has `None` for both evidence and fact, so the notes cannot answer it and the agent should abstain."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-23",
+   "description": "`closed_book` is a second agent with the same model and rules but no search tool, so retrieval is off. Its instructions say to name the source file for each fact and to answer `I could not find that in your notes.` when the notes cannot answer."
+  },
+  {
+   "kind": "focus",
+   "lines": "26-52",
+   "description": "`top_k` asks `collection.query` for the `k` passages Chroma returns for a question and hands back their text. `recall_at_k` keeps only the answerable rows, the ones with evidence, and measures the share where the evidence appears in the top `k` passages. `ask` runs one agent once under a request limit of four, collects every `tool-return` part as the search results it was given, and returns the answer with those results."
+  },
+  {
+   "kind": "focus",
+   "lines": "55-65",
+   "description": "The `__main__` block prints `recall@1` and `recall@3`, then asks every golden question of the real agent, marking whether it searched and whether the answer is right. It ends by asking the Saturday-hours question twice: once with `closed_book` (OFF) and once with the real agent (ON)."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says the script checks recall, whether the agent searched, and whether the answer holds the right fact or abstains when it should, but it cannot check that the file an answer names actually says the claim. Who makes that check?",
+   "answer": "you"
+  }
+ ]
+}

@@ -70,6 +70,7 @@ Community plugins are disabled by default because they run arbitrary code.  To e
 
 Not every file in your vault folder should go to GitHub.  The workspace state and plugin caches change constantly and create noisy commits with no informational value.  A minimal `.gitignore`:
 
+<!-- run: id=cs357-tut-obsidiansync-2 viz=show -->
 ```gitignore
 
 # Obsidian workspace state; changes on every open/close, no information value
@@ -87,6 +88,7 @@ Not every file in your vault folder should go to GitHub.  The workspace state an
 .DS_Store
 Thumbs.db
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-obsidiansync-2) <!-- code-viz link -->
 
 Keep `.obsidian/plugins/` and `.obsidian/app.json` in version control so your plugin settings travel with the vault.
 
@@ -404,6 +406,7 @@ In practice, this almost never causes a problem because:
 
 When a conflict does occur (visible as `<<<<<<< HEAD` markers in the file), the resolution strategy is always the same:
 
+<!-- run: id=cs357-tut-obsidiansync-3 viz=show -->
 ```bash
 cd ~/Documents/Obsidian/MyVault
 git pull origin main --no-rebase   # fetch the other side
@@ -417,6 +420,7 @@ git add memories/session-log.md
 git commit -m "memory: merge conflict resolved (kept both sections)"
 git push
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-obsidiansync-3) <!-- code-viz link -->
 
 This strategy is safe for append-only files because both conflicting versions added content; neither deleted or modified existing entries.  The merged result contains everything from both sides.
 

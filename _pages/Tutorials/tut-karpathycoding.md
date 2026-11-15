@@ -121,6 +121,7 @@ In this part, you will practice the spec-first workflow: writing a clear functio
 > This is a test file: save it in your repository and run it with `pytest`.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-karpathycoding-1 viz=show -->
 ```python
 import pytest
 
@@ -156,6 +157,7 @@ def test_k_zero_raises():
     with pytest.raises(ValueError):
         search_memory("library", k=0)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-karpathycoding-1) <!-- code-viz link -->
 
 Running `pytest` on this file before any implementation shows five `FAILED` lines, the **red** phase.
 

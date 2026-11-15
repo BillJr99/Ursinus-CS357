@@ -88,12 +88,14 @@ From zero to a working session, with Claude Code as the example (the others are 
 
 The following commands take you from a fresh machine to a running Claude Code session.  Watch carefully for the authentication step; the tool will prompt you to log in on first launch.
 
+<!-- run: id=cs357-tut-agentclis-1 viz=show -->
 ```bash
 node --version                                # 1. confirm Node 20+
 npm install -g @anthropic-ai/claude-code      # 2. install
 cd ~/projects/my-first-agent-project          # 3. ALWAYS start in the project dir
 claude                                        # 4. launch; authenticate when prompted
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-1) <!-- code-viz link -->
 
 Then, inside the session, the rhythm: describe a small goal ("write a Python script that fetches the weather for Collegeville and prints it; include error handling with traceback"), watch the agent read the directory, review each proposed edit and command at its gate, approve or refuse, and iterate.  Useful in-session commands shared (with small spelling differences) across tools: `/help`, `/clear` (reset the conversation), `/model` (switch models), and plain `Ctrl+C` twice to leave.  **Start the tool in the right directory**: the working directory *is* the agent's world, the same scoping idea as a Docker mount, and the most common beginner error is launching from `~` and granting an agent your entire home directory.
 
@@ -105,11 +107,13 @@ Section 2 walked one tool end to end.  Here is the same path for each of the oth
 
 ### Prerequisites, once
 
+<!-- run: id=cs357-tut-agentclis-2 viz=show -->
 ```bash
 node --version     # need 20+ for the Node-based tools; install from nodejs.org or via nvm
 python3 --version  # need 3.10+ for the Python-based tools
 git --version      # every one of these tools assumes git
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-2) <!-- code-viz link -->
 
 If `node` is missing and you would rather not install it on your host, skip to §2c and run the tool in a container instead.
 
@@ -167,6 +171,7 @@ Commit that file.  It is the cheapest reliability improvement available, and it 
 
 If you would rather not install a coding agent on your laptop at all (or you want the freedom to let it work without approving every step), run it in the fenced container from the Docker module:
 
+<!-- run: id=cs357-tut-agentclis-3 viz=show -->
 ```bash
 docker run -it --rm \
   -v "$PWD:/work" \
@@ -175,6 +180,7 @@ docker run -it --rm \
   --cap-drop ALL --security-opt no-new-privileges \
   course-agent opencode
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-3) <!-- code-viz link -->
 
 One writable mount (`/work`, git-tracked), one read-only mount, and **no credential of any kind**, because the model is reached across `host.docker.internal` on hardware you own.  A container that needs no secret cannot leak one.  The **[Docker from Zero]({{ site.baseurl }}/Tutorials/Docker)** module builds `course-agent` and explains each flag, including when disabling the permission prompts becomes a reasonable trade rather than a reckless one.
 
@@ -287,16 +293,19 @@ It stops at a gate: auto-accept edits waives the prompt for *file edits only*; a
 
 Our stack (agent stack module) exposes one OpenAI-compatible endpoint for everything, and pointing a commercial CLI at it is two environment variables:
 
+<!-- run: id=cs357-tut-agentclis-4 viz=show -->
 ```bash
 export ANTHROPIC_BASE_URL=http://localhost:4000   # redirect all API calls to local gateway
 export ANTHROPIC_API_KEY=sk-litellm-local         # dummy key accepted by the local proxy
 claude        # now running against local models through the gateway
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-4) <!-- code-viz link -->
 
 The flags explained: `ANTHROPIC_BASE_URL` overrides the default `https://api.anthropic.com` endpoint; any value you set here is where Claude Code sends its requests. `ANTHROPIC_API_KEY` is still required by the client library, but the gateway ignores its value and uses its own routing rules instead; `sk-litellm-local` is a conventional placeholder.
 
 For the other tools, the same redirect looks slightly different:
 
+<!-- run: id=cs357-tut-agentclis-5 viz=show -->
 ```toml
 # Codex: add to ~/.codex/config.toml (the first two lines go above any [table] in the file)
 model_provider = "local"
@@ -307,12 +316,15 @@ name = "local gateway"
 base_url = "http://localhost:4000/v1"
 env_key = "LITELLM_API_KEY"   # Codex reads the key from this variable: export LITELLM_API_KEY=sk-litellm-local
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-5) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-agentclis-6 viz=show -->
 ```yaml
 # Aider: add to ~/.aider.conf.yml
 openai-api-base: http://localhost:4000/v1
 openai-api-key: sk-litellm-local
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-6) <!-- code-viz link -->
 
 opencode and pi each get a section of their own below, because both can hold **more than one endpoint at a time**, and that turns out to be worth setting up deliberately rather than in passing.
 
@@ -344,6 +356,7 @@ opencode reads one global config file, and the file name matters: it is `opencod
 
 The `provider` block is a map, so listing two keys registers two providers, both live at once, and `/models` shows you the union:
 
+<!-- run: id=cs357-tut-agentclis-7 viz=show -->
 ```bash
 mkdir -p ~/.config/opencode
 cat > ~/.config/opencode/opencode.json <<'JSON'
@@ -366,6 +379,7 @@ cat > ~/.config/opencode/opencode.json <<'JSON'
 }
 JSON
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-7) <!-- code-viz link -->
 
 Running opencode in a container instead?  Substitute `host.docker.internal` for `localhost` in both `baseURL` values, and nothing else changes.
 
@@ -384,11 +398,13 @@ pi connects to arbitrary OpenAI-compatible endpoints through a plugin, **[pi-ope
 
 Install it once:
 
+<!-- run: id=cs357-tut-agentclis-8 viz=show -->
 ```bash
 pi install npm:@billjr99/pi-openai-compat
 # or, straight from source:
 # pi install git:github.com/BillJr99/pi-openai-compat
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-8) <!-- code-viz link -->
 
 Then, inside pi, run the login wizard once per endpoint:
 
@@ -429,6 +445,7 @@ Our stack runs every CLI tool inside a dedicated container with three mounts: an
 
 The following `docker run` command is the standard course pattern for running a CLI agent inside a container.  Read each flag carefully before running it; each one enforces a specific boundary between the agent and your host machine.
 
+<!-- run: id=cs357-tut-agentclis-9 viz=show -->
 ```bash
 docker run --rm -it \
   --add-host=host.docker.internal:host-gateway \
@@ -437,6 +454,7 @@ docker run --rm -it \
   -w /workspace \
   commercial-ai:latest claude
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-9) <!-- code-viz link -->
 
 The flags explained: `--rm` deletes the container when it exits (experiments are self-cleaning). `-it` allocates an interactive terminal (required for any REPL). `--add-host=host.docker.internal:host-gateway` makes `host.docker.internal` resolve to your actual machine's IP from inside the container, which is how containerized tools reach the local gateway at `http://host.docker.internal:4000`.  The two `-v` flags mount directories from your host into the container: the first keeps the agent's authentication tokens and settings persistent across container restarts (otherwise you would re-login every time); the second is the shared workspace the agent reads and writes. `-w /workspace` sets the container's working directory so the agent's world is exactly the workspace mount, nothing else.  The payoff paragraph from the Docker module applies verbatim: the agent sees exactly what is mounted and nothing else, identities hot-swap by changing one path, and an experiment is destroyed with the container.  The agent stack module provides the full `build.sh`/`run.sh` set; today, understand *why* the mounts are shaped this way.
 
@@ -450,6 +468,7 @@ So far every session has assumed you sit and watch.  But a coding agent working 
 
 Here is a failure every remote worker eventually hits: you SSH into a machine, launch a half-hour agent task, close your laptop for the train, and the task dies, because it was a child of your SSH connection and the connection went away.  A **terminal multiplexer** (`tmux` or the older `screen`) fixes this by running your shell inside a persistent **server process** that is *not* tied to your terminal.  You **attach** a view to it, and you can **detach** that view without stopping anything underneath.
 
+<!-- run: id=cs357-tut-agentclis-10 viz=show -->
 ```bash
 tmux new -s agents        # start a persistent session named "agents"
 claude                    # launch a long agent task inside it
@@ -459,6 +478,7 @@ claude                    # launch a long agent task inside it
 # ... close your laptop, ride the train, open it again ...
 tmux attach -t agents     # REATTACH from anywhere, even a fresh SSH login
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-10) <!-- code-viz link -->
 
 The session is a room that keeps its lights on after you leave.  Detaching is walking out the door; the work inside continues.  Multiplexers also **split** one terminal into several panes, so you can watch two or three agents side by side.  This is the mechanical foundation of every "walk away and come back" workflow: a long agent run belongs inside a multiplexer, never in a raw SSH shell that dies with the connection.
 
@@ -472,11 +492,13 @@ A **tailnet** is that private network.  Tailscale builds one on top of WireGuard
 
 Set it up once on the machine that runs your agents:
 
+<!-- run: id=cs357-tut-agentclis-11 viz=show -->
 ```bash
 curl -fsSL https://tailscale.com/install.sh | sh   # macOS and Windows have installers instead
 sudo tailscale up                                  # opens a browser once, to sign in
 tailscale ip -4                                    # prints this machine's tailnet address
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-11) <!-- code-viz link -->
 
 That last command prints something like `100.92.14.7`.  Write it down, because it does not change.  Now install Tailscale on your phone or your second laptop, sign in with the same account, and the two devices can find each other from anywhere:
 
@@ -581,12 +603,14 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* Install Claude Code plus one other tool from the comparison table, complete authentication for both, and run the identical three-line task ("write a Python script that fetches the weather for Collegeville, prints the result, and handles errors with a traceback") in both tools inside a fresh empty directory.  Keep both full transcripts and write one paragraph for yourself comparing the experience.
 
    *Starter hint:* Run these commands in order, substituting your second tool's install command from the table:
+   <!-- run: id=cs357-tut-agentclis-12 viz=show -->
    ```bash
    mkdir ~/cs357-exercise1 && cd ~/cs357-exercise1
    npm install -g @anthropic-ai/claude-code   # install Claude Code
    npm install -g @google/gemini-cli          # example: install Gemini CLI as your second tool
    claude                                     # start Claude Code session; /login if prompted
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-12) <!-- code-viz link -->
 
    *You've succeeded when:* You have two transcript files saved, each showing the full exchange from the first prompt to a working Python script, and your comparison paragraph names at least one specific difference in how the two tools handled permission gates or file reads.
 
@@ -595,6 +619,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* Run the same task in a project directory first *without* any context file, then create the starter `CLAUDE.md` shown in Section 3 (adapt the project description to your actual task), and rerun the identical prompt.  Document two concrete behavior changes the context file caused: things the agent did differently in session two that you can point to in the transcript.
 
    *Starter hint:*
+   <!-- run: id=cs357-tut-agentclis-13 viz=show -->
    ```bash
    mkdir ~/cs357-exercise2 && cd ~/cs357-exercise2
    claude   # run your task; save transcript as transcript-no-context.txt
@@ -603,6 +628,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    claude   # run the identical task again; save as transcript-with-context.txt
    # open both transcripts side by side and note where they diverge
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-13) <!-- code-viz link -->
 
    *You've succeeded when:* You can quote two specific lines (one from each transcript) that show a concrete difference in agent behavior attributable to the context file, such as a different test command, a different boundary the agent respected, or a different convention in the generated code.
 
@@ -611,6 +637,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* In your preferred tool, locate the permission settings and configure them so that file reads are auto-approved, file writes are gated, and shell commands are gated.  Then deliberately provoke each gate type once (read a file, write a file, run a shell command) and screenshot each gate prompt as it appears.
 
    *Starter hint:* For Claude Code, gate settings live in the settings file and can also be set interactively.  The quickest way to configure per-session behavior is the `--allowedTools` and `--disallowedTools` flags at launch:
+   <!-- run: id=cs357-tut-agentclis-14 viz=show -->
    ```bash
    cd ~/cs357-exercise3
    # Launch with reads allowed automatically, writes and shell requiring approval:
@@ -618,6 +645,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    # Then inside the session, ask: "read README.md, then create hello.py, then run it"
    # Each of the three actions will hit a different gate behavior
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-14) <!-- code-viz link -->
 
    *You've succeeded when:* You have three screenshots showing (a) a file read that passed silently, (b) a file write gate prompt, and (c) a shell command gate prompt, and you can explain in one sentence why each is calibrated the way it is.
 
@@ -626,6 +654,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* With the course stack running locally, set the two environment variables from Section 6 to route your tool through the local gateway.  Verify the redirect worked by asking the agent to name the model it is using.  Then switch models mid-session using `/model` and send the same prompt to both models.  Write a two-sentence report on any latency or quality differences you noticed.
 
    *Starter hint:*
+   <!-- run: id=cs357-tut-agentclis-15 viz=show -->
    ```bash
    # In your terminal, before launching the tool:
    export ANTHROPIC_BASE_URL=http://localhost:4000   # redirect to local gateway
@@ -635,6 +664,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    # Inside the session, type: "What model are you?"
    # Then: /model    (to see available models and switch)
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-15) <!-- code-viz link -->
 
    *You've succeeded when:* The agent's response to "what model are you?" names a model served by your local gateway (not the default Anthropic cloud model), and you have tried at least two different models via `/model` with the same prompt.
 
@@ -643,6 +673,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* Complete one full task entirely inside VS Code: either in the integrated terminal (Ctrl+`) or via the official Claude Code or Codex extension if you have it installed.  Use the editor's change view to review every proposed file change before you approve it.  Reflect in three sentences: did seeing the change visually (rather than reading it in the terminal) change any decision you made?
 
    *Starter hint:*
+   <!-- run: id=cs357-tut-agentclis-16 viz=show -->
    ```bash
    # Open VS Code in your project directory:
    code ~/cs357-exercise5
@@ -651,6 +682,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    claude   # launch the agent in the VS Code terminal
    # When the agent proposes a file edit, look at the change view that appears in the editor pane above
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-16) <!-- code-viz link -->
 
    *You've succeeded when:* You have approved at least one change and refused or revised at least one proposed change based on what you saw in the change view, and your three-sentence reflection names the specific change you caught or reconsidered.
 
@@ -659,6 +691,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    *What to do:* Start a multi-minute agent task inside a multiplexer (`tmux`, or `herdr` if you have installed it), give the agent a goal that will take a little while ("write a small CLI tool with tests and run the tests"), then **detach** the session.  Do something else for two minutes.  **Reattach** and confirm the agent kept working while you were gone.  Write two sentences: what state did you return to, and what would have happened without the multiplexer?
 
    *Starter hint:*
+   <!-- run: id=cs357-tut-agentclis-17 viz=show -->
    ```bash
    tmux new -s ex6            # persistent session
    cd ~/cs357-exercise6
@@ -667,6 +700,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
    tmux ls                    # confirm the session still exists
    tmux attach -t ex6         # reattach and inspect progress
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentclis-17) <!-- code-viz link -->
 
    *You've succeeded when:* Your reattached session shows progress the agent made *after* you detached (new files, more test output, or a completed task), and you can state in one sentence why the same task in a plain SSH shell would not have survived a disconnect.
 

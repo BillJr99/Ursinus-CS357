@@ -1,0 +1,55 @@
+{
+ "version": 1,
+ "example": "cs357-tut-pydanticai-7",
+ "title": "Part 4: Structured Output, and What Validation Cannot Catch",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "2-3",
+   "description": "Lines 2-3 import `traceback` and `datetime`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "5-6",
+   "description": "Lines 5-6 import `pydantic` and `pydantic_ai`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "8",
+   "description": "Line 8 imports `common`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "11-13",
+   "description": "Lines 11-13 define the class `Deadline`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "16-22",
+   "description": "Lines 16-22 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "25-30",
+   "description": "Lines 25-30 define `not_in_the_past(output)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "28",
+   "description": "Line 28 checks `output.target < date.today()`."
+  },
+  {
+   "kind": "focus",
+   "lines": "30",
+   "description": "Line 30 returns `output`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "33-41",
+   "description": "Lines 33-41 continue the main code and print the results."
+  }
+ ]
+}

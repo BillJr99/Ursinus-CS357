@@ -1,0 +1,20 @@
+{
+ "version": 1,
+ "example": "cs357-tut-chessaicoach-9",
+ "title": "Two AI Calls at Once",
+ "description": "Promise.all fires the commentary and the Elo estimate together, since neither depends on the other, and waits once.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "`Promise.all` runs two independent calls together: `getAICommentary` for the move and `getAIElo` for a fresh estimate. The page says they do not depend on each other, so the app fires them together and waits once."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Destructure the two results, then store them with `setCommentary` and `setEloEstimate`."
+  }
+ ]
+}

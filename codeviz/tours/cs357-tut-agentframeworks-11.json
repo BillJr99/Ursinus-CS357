@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-11",
+ "title": "Pydantic AI: Basic Request",
+ "description": "Minimal agent with instructions only: run_sync sends the prompt, show_context displays what the model received.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-8",
+   "description": "Complete basic agent example: import, agent creation, invoke, print, and context display."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Imports: pydantic_ai Agent, and common helpers make_model, show_context, watch."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Agent creation: Agent with make_model, instructions as concise study-planning assistant, capabilities with watch."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-8",
+   "description": "Execution: run_sync with the question, print output, then show_context to reveal the window."
+  }
+ ]
+}

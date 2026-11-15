@@ -18,6 +18,8 @@ tags:
 
 ## About This Tutorial
 
+[Walk through this tutorial's code, step by step](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain&tour=walkthrough#cs357-tut-llmjudges-1) <!-- code-viz walkthrough link -->
+
 Suppose you have forty short essays and a rubric, and you want a model to do the first pass of grading.  You can write that judge in an afternoon.  The harder question is whether you should believe it.  This tutorial builds the judge from the *Judge Pipeline Workshop* step by step, on three sample submissions you can see in full.  Then it asks how far to trust the judge: how often it agrees with you, whether padding moves it, where it disagrees, and how you would notice if a later change made it worse.
 {: .tb-lede}
 
@@ -25,11 +27,13 @@ There are two ways through, and you only need one.  The **code path** is Python 
 
 **You need** Ollama running with `llama3.2` pulled for the real judge, Python with `requests` for the code path, and Node.js for the no-code path (promptfoo runs through `npx`, so there is nothing else to install).  Check the ones you plan to use:
 
+<!-- run: id=cs357-tut-llmjudges-3 viz=show -->
 ```bash
 curl http://localhost:11434/api/tags
 python3 -c "import requests; print('requests ok')"
 npx promptfoo@latest --version
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-llmjudges-3) <!-- code-viz link -->
 
 If you work inside the course container from *Your AI Workbench*, use `host.docker.internal:11434` wherever this page says `localhost:11434`.
 
@@ -258,6 +262,7 @@ The no-code path says the same thing in a configuration file: here are the outpu
 
 The judge needs two more files.  `dataset.csv` holds one row per sample, with columns `id` and `answer`.  You can build it in a spreadsheet (paste each sample into the `answer` column and export as CSV), or save this short script as `make_dataset.py` and run it in the folder that contains `samples/`.  The script also adds the padded copy of `s02` you will use in Section 7:
 
+<!-- run: id=cs357-tut-llmjudges-4 viz=show -->
 ```python
 import csv
 import os
@@ -273,6 +278,7 @@ with open("dataset.csv", "w", newline="") as f:
                     open(os.path.join("samples", name)).read().strip()])
     w.writerow(["s02_padded", open("samples/s02.txt").read().strip() + " " + PAD])
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-llmjudges-4) <!-- code-viz link -->
 
 The prompt is a one-line template that echoes each stored answer straight through, so the judge grades your dataset rather than a freshly generated reply.  promptfoo's template syntax is the variable name inside two pairs of curly braces.  Create the file with this command rather than typing it:
 
@@ -284,6 +290,7 @@ python3 -c "print('{' * 2 + 'answer' + '}' * 2)" > prompt.txt
 
 Then save the judge itself as `promptfooconfig-rubric.yaml`:
 
+<!-- run: id=cs357-tut-llmjudges-5 viz=show -->
 ```yaml
 # promptfooconfig-rubric.yaml
 # Judge: ollama llama3.2, temperature 0
@@ -316,6 +323,7 @@ defaultTest:
 
 tests: file://dataset.csv
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-llmjudges-5) <!-- code-viz link -->
 
 ```bash
 npx promptfoo@latest eval -c promptfooconfig-rubric.yaml --output grades_promptfoo.csv
@@ -455,12 +463,14 @@ The first time you run the file, this prints `baseline saved; run again after yo
 
 **On the no-code path,** the tripwire is a second configuration file.  Save a baseline, copy the config, make one plausible-looking change (for example, loosen the `claims_cited` line to "PASS if the answer mentions any evidence"), and run the copy:
 
+<!-- run: id=cs357-tut-llmjudges-6 viz=show -->
 ```bash
 npx promptfoo@latest eval -c promptfooconfig-rubric.yaml --output run_baseline.json
 cp promptfooconfig-rubric.yaml promptfooconfig-regressed.yaml
 # edit one value: line in promptfooconfig-regressed.yaml, then:
 npx promptfoo@latest eval -c promptfooconfig-regressed.yaml --output run_regressed.json
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-llmjudges-6) <!-- code-viz link -->
 
 Find which verdicts changed and in which direction, then confirm the original config still gives the baseline verdicts.
 

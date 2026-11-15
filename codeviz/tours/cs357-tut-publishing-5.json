@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-5",
+ "title": "index.js: CLI Entry Point",
+ "description": "Shebang-enabled Node script that greets by name from process.argv, with structured JSON output and course exception pattern.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-20",
+   "description": "Complete index.js CLI implementation."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Shebang: #!/usr/bin/env node makes file executable as CLI command."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Comment and argument: explains purpose, gets name from process.argv[2] or defaults to world."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-5",
+   "description": "Output: logs structured JSON with greeting and CS357 identifier."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-10",
+   "description": "Error handling: course exception pattern with console.error for debug info and clean exit."
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentclis-3",
+ "title": "Prerequisites: Node, Python, Git",
+ "description": "Three one-line checks confirm the required tools before installing any agent CLI: Node 20+, Python 3.10+, and Git.",
+ "reviewed": false,
+ "source": "draft: omp free model",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-3",
+   "description": "Each line checks one prerequisite: node for Node-based tools, python3 for Python-based tools, and git which every tool assumes."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Line 1 notes you can skip to the container section if you prefer not to install Node on your host."
+  },
+  {
+   "kind": "predict",
+   "question": "What is the alternative if node is missing?",
+   "answer": "skip to §2c and run the tool in a container instead"
+  }
+ ]
+}

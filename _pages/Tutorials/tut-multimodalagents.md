@@ -290,6 +290,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
     *Starter hint:* The code below chains two steps (Whisper transcription followed by LLM extraction) look for how the transcript is passed verbatim into the extraction prompt, and consider what happens to the extraction if the transcription contains a word error:
 
+    <!-- run: id=cs357-tut-multimodalagents-1 viz=show -->
     ```python
     import whisper  # pip install openai-whisper
 
@@ -323,6 +324,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     for item in action_items['action_items']:
         print(f"  - {item['description']} (Owner: {item['assignee']}, Due: {item['due_date']})")
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multimodalagents-1) <!-- code-viz link -->
 
     *You've succeeded when:* You can demonstrate the full pipeline (audio in, structured JSON action items out) and you have tested it on at least one audio file where you know the ground truth (either you recorded it yourself or you have a transcript).
 
@@ -339,6 +341,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     *What to do:* Ask the VLM to return `{"elements": [{"name": "Submit button", "bbox": [x1, y1, x2, y2], "confidence": "high/low"}]}`.  Crop the image using Pillow and display the crops.
 
     *Starter hint:*
+    <!-- run: id=cs357-tut-multimodalagents-2 viz=show -->
     ```python
     from PIL import Image
 
@@ -354,6 +357,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     for element in extracted["elements"]:
         crop_and_show("screenshot.png", element["bbox"], element["name"].replace(" ", "_"))
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-multimodalagents-2) <!-- code-viz link -->
 
     *You've succeeded when:* You have saved cropped images for each element and can confirm visually that the VLM pointed to the correct region (not just the right general area).  Note and document any cases where the bounding box was incorrect.
 

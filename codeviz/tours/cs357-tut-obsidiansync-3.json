@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-obsidiansync-3",
+ "title": "Resolving a Simultaneous-Write Conflict",
+ "description": "The fixed strategy for a conflict in the append-only session log: pull, keep both sections, remove the markers, then commit and push.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "The page says the resolution strategy is always the same. Line 1 enters the vault, and line 2 runs `git pull origin main --no-rebase` to fetch the other side of the conflict."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-6",
+   "description": "The comments tell you to open `memories/session-log.md` in any editor. The conflict markers show your version on top and the remote version on the bottom."
+  },
+  {
+   "kind": "focus",
+   "lines": "8",
+   "description": "This is the resolution rule: keep BOTH sections, remove the markers, and keep all content. The page says this is safe for append-only files because both versions added content and neither deleted or modified existing entries."
+  },
+  {
+   "kind": "focus",
+   "lines": "9-11",
+   "description": "The last three lines stage the file, commit it with the message `memory: merge conflict resolved (kept both sections)`, and push the merged result."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says a conflict is visible in the file as which markers?",
+   "answer": "<<<<<<< HEAD"
+  }
+ ]
+}

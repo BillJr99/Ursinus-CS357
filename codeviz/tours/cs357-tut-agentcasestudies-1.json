@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentcasestudies-1",
+ "title": "Canary Token Check",
+ "description": "Starter pseudocode for the canary token task: a function that checks outbound text for a secret canary value, logs the detection, and blocks the send.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "This is the starter pseudocode for the canary token task. The page says a canary is a value the agent reads but should never send, and this function runs before any tool sends data outside the agent's process. It imports `logging` and `datetime` and defines the canary constant."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-11",
+   "description": "`check_for_canary` takes the outbound text and the canary value, which defaults to the constant. The docstring says it returns `True` when the send is safe and `False` when the canary is found, and that you call it before every outbound tool action."
+  },
+  {
+   "kind": "focus",
+   "lines": "12-15",
+   "description": "When the canary appears in the outbound text, the function logs two critical lines: the detection time from `datetime` and the first 500 characters of the outbound text. The page says the log carries a timestamp and context for forensic investigation."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-19",
+   "description": "The comment lists the response: revoke agent credentials, halt execution, and alert on-call. `trigger_incident_response()` is left for you to implement. The function then returns `False` to block the outbound action, and returns `True` when no canary is found."
+  },
+  {
+   "kind": "predict",
+   "question": "The starter hint says the pseudocode implements a named sequence. What is the sequence?",
+   "answer": "detect-log-alert-block"
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentframeworks-12",
+ "title": "Pydantic AI: Memory",
+ "description": "Long-term memory from a file and short-term memory via message_history, both rendered as text in the context window.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-20",
+   "description": "Memory implementation: file-based long-term and message_history short-term."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-6",
+   "description": "Setup: imports and memory.md creation with student info."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-9",
+   "description": "Agent creation: Agent with make_model and instructions."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-13",
+   "description": "Long-term memory: @agent.instructions decorator reads memory.md and pastes it into context."
+  },
+  {
+   "kind": "focus",
+   "lines": "15-16",
+   "description": "First request: run_sync asks about courses, print output."
+  },
+  {
+   "kind": "focus",
+   "lines": "17-19",
+   "description": "Short-term memory: second run_sync includes message_history from first to maintain conversation context."
+  },
+  {
+   "kind": "focus",
+   "lines": "20",
+   "description": "Inspection: show_context reveals both memory types in the window."
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-4",
+ "title": "Student B: Minimal Read-Only Mount",
+ "description": "Student B mounts only the researcher workspace directory as read-only, so agent sees only /workspace with the specific files it needs.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-8",
+   "description": "Student B's Docker command with minimal mount."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-4",
+   "description": "Mount scope: only researcher's specific workspace directory is mounted."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-8",
+   "description": "Visibility: agent sees /workspace containing only the files it was given, nothing else."
+  }
+ ]
+}

@@ -82,6 +82,7 @@ The following terminal session sets up a two-agent workspace with isolated ident
 
 The following terminal session creates two agent identity directories with restrictive permissions, then runs each agent in a Docker container with carefully scoped mounts.  Read the comments inside the code; each one explains a security decision, not just a syntax choice.
 
+<!-- run: id=cs357-tut-terminalfilesystem-1 viz=show -->
 ```bash
 
 # Create the top-level agents directory under the project root
@@ -158,6 +159,7 @@ docker run --rm \
 
 # Expected: the agent reads summaries from /workspace/input/, writes a draft to /workspace/output/
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-1) <!-- code-viz link -->
 
 The table below maps the same physical directories to what each agent sees inside its container.  Notice that some paths on the host are completely invisible to one agent; Docker's mount system enforces this, not convention.
 
@@ -214,6 +216,7 @@ Read each of the two `docker run` commands below and predict its blast radius be
 
 **Student A's command:**
 
+<!-- run: id=cs357-tut-terminalfilesystem-2 viz=show -->
 ```bash
 
 # Student A mounts their ENTIRE home directory into the container
@@ -232,9 +235,11 @@ docker run --rm \
   my-researcher-image \
   python agent.py
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-2) <!-- code-viz link -->
 
 **Student B's command:**
 
+<!-- run: id=cs357-tut-terminalfilesystem-3 viz=show -->
 ```bash
 
 # Student B mounts ONLY the researcher's specific workspace directory
@@ -251,6 +256,7 @@ docker run --rm \
   my-researcher-image \
   python agent.py
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-3) <!-- code-viz link -->
 
 | Question | Student A: What Actually Happens | Student B: What Actually Happens |
 |---|---|---|
@@ -272,6 +278,7 @@ docker run --rm \
 
    *Starter hint: You can add a second `-v` flag to a single `docker run` command.  A second mount with `:rw` on a specific subdirectory will give write access just to that path, even if the main mount is `:ro`.*
 
+   <!-- run: id=cs357-tut-terminalfilesystem-4 viz=show -->
    ```bash
    # Your revised command goes here
    # You need two -v flags: one for the read-only researcher content,
@@ -282,6 +289,7 @@ docker run --rm \
      my-researcher-image \
      python agent.py
    ```
+   [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-4) <!-- code-viz link -->
 
 9.  Two agents share a single read-write filesystem volume mounted at `/shared/output`.  Agent 1 writes a file called `draft.md` containing its summary.  Agent 2 also writes a file called `draft.md` containing its own different summary.  Describe exactly what happens at the filesystem level when Agent 2 writes its file, and explain why this is a problem for the pipeline.  What naming convention or coordination mechanism would prevent this collision?
 
@@ -321,6 +329,7 @@ pi's model support is extensible through plugins, and connecting it to an arbitr
 
 Both installs are ordinary npm-shaped commands, so both belong in the image:
 
+<!-- run: id=cs357-tut-terminalfilesystem-5 viz=show -->
 ```dockerfile
 FROM node:20-slim
 
@@ -346,6 +355,7 @@ RUN pi install npm:@billjr99/pi-openai-compat
 WORKDIR /workspace
 CMD ["pi"]
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-5) <!-- code-viz link -->
 
 Build it once:
 
@@ -359,6 +369,7 @@ docker build -t course-pi .
 
 Now apply Student B's lesson from the section above.  One writable mount for the work, one read-only mount for reference, and nothing else:
 
+<!-- run: id=cs357-tut-terminalfilesystem-6 viz=show -->
 ```bash
 docker run -it --rm \
   --add-host=host.docker.internal:host-gateway \
@@ -368,6 +379,7 @@ docker run -it --rm \
   --cap-drop ALL --security-opt no-new-privileges \
   course-pi
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-6) <!-- code-viz link -->
 
 Read that command as a list of decisions rather than as boilerplate.  `$PWD` and nothing above it is what the agent can change, so launch it from a project directory and never from `~`.  `/reference` is readable and not writable, so the agent can consult your notes and cannot rewrite them.  `--cap-drop ALL` removes the Linux capabilities a coding agent has no business holding, and `--security-opt no-new-privileges` stops any process inside from acquiring more than it started with.  The named volume `pi-config` is the one deliberate exception to `--rm`: it survives the container so you do not re-register your providers on every launch, and it holds credentials, which is why it is a volume you can inspect and delete rather than a bind mount into your real `~/.config`.
 
@@ -403,6 +415,7 @@ Keeping both registered means you can answer "is this the model or is this my pi
 
 The wizard is fine for one person at one laptop.  For a lab where twenty students should get a working agent on first launch, pre-seed the config instead.  The plugin stores providers in `~/.config/pi-openai-compat/config.json`, it re-reads that file at session start, and a provider with an empty `cachedModels` list triggers a live fetch of the model catalog on first run.  So a hand-written file with both endpoints and no cached models is exactly the right thing to ship:
 
+<!-- run: id=cs357-tut-terminalfilesystem-7 viz=show -->
 ```dockerfile
 RUN mkdir -p "$HOME/.config/pi-openai-compat" && \
     printf '%s' '{ \
@@ -423,6 +436,7 @@ RUN mkdir -p "$HOME/.config/pi-openai-compat" && \
       } \
     }' > "$HOME/.config/pi-openai-compat/config.json"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-7) <!-- code-viz link -->
 
 Leave `apiKey` as `null` in the image and let each student supply their own OpenWebUI key with `/compat-login` on first run, which re-registers that one provider with the key attached.  **Do not bake a key into a Dockerfile.**  An image is a shareable artifact and every layer is readable with `docker history`; a key committed there is a key published there.  This is the same reasoning that kept `-e ANTHROPIC_API_KEY` out of the `docker run` above.
 
@@ -489,6 +503,7 @@ They are the same program.  Every path below quotes the bash file; the PowerShel
 
 The whole configuration is a block of shell parameter expansions at the top.  The `${NAME:-default}` form means "use the environment variable `NAME` if it is set, otherwise this default", so every one of these is overridable without editing the file:
 
+<!-- run: id=cs357-tut-terminalfilesystem-8 viz=show -->
 ```bash
 PROJECT_DIR="${PI_PROJECT_DIR:-$PWD}"
 BASE_IMAGE="${PI_BASE_IMAGE:-node:24-bookworm}"
@@ -499,6 +514,7 @@ PI_OLLAMA_URL="${PI_OLLAMA_URL:-http://host.docker.internal:11434}"
 PI_FALLBACK_CONTEXT="${PI_FALLBACK_CONTEXT:-8192}"
 PI_MAX_CONTEXT="${PI_MAX_CONTEXT:-0}" # 0: no extra client ceiling
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-8) <!-- code-viz link -->
 
 Four of those lines are worth pausing on.
 
@@ -524,6 +540,7 @@ $env:PI_RUN_AS = "root"; .\run-pi-ollama.ps1
 
 Choose that only when you need the agent itself to install system packages, and expect the warning the script prints when you do.  Left at its default, the container takes this branch instead, after the packages are installed:
 
+<!-- run: id=cs357-tut-terminalfilesystem-9 viz=show -->
 ```bash
 if [[ "$PI_RUN_AS" == user ]]; then
     chown -R "$PI_USER_UID:$PI_USER_GID" "$PI_HOME"
@@ -533,6 +550,7 @@ if [[ "$PI_RUN_AS" == user ]]; then
         python3 /opt/pi-launcher/launcher.py
 fi
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-9) <!-- code-viz link -->
 
 `setpriv` changes the user and group of the process about to run, and the three capability flags make the change one-way: `--bounding-set=-all` drops the capabilities the process could ever regain, and `--inh-caps=-all` and `--ambient-caps=-all` stop any of them from being inherited by what it launches.  The agent that starts after this line is genuinely unprivileged, and on Linux and macOS the files it writes into your project come back owned by you.
 
@@ -558,12 +576,14 @@ This is the part of the script that will stop you on your first run, and the fai
 
 Inside the container, a Python launcher asks your Ollama server what it is actually doing before it tells the agent anything.  It asks four questions in order, and each one is a fallback for the last:
 
+<!-- run: id=cs357-tut-terminalfilesystem-10 viz=show -->
 ```python
 tags = request_json(base, "/api/tags", timeout=timeout)      # 1. is the model installed?
 show = request_json(base, "/api/show", {"model": model}, timeout)  # 2. what is its stated maximum?
 request_json(base, "/v1/chat/completions", probe, timeout)   # 3. load it, using the same endpoint pi will
 active = active_context(request_json(base, "/api/ps", ...))  # 4. what did the server ACTUALLY allocate?
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-10) <!-- code-viz link -->
 
 Step 4 is the one that matters, and step 3 exists to make step 4 meaningful: a model that is not loaded has no allocation to report, so the launcher sends one trivial completion first to force the load.  Note the comment in the script that the probe deliberately does not set `num_ctx`, because a probe that configured the window would measure a runner other than the one the agent later uses.
 
@@ -613,6 +633,7 @@ An operator assumption is not a measurement.  If you see that warning, the numbe
 
 The script will also refuse to start if the orchestration skill is not in your project:
 
+<!-- run: id=cs357-tut-terminalfilesystem-11 viz=show -->
 ```python
 skill = next((root / path for path in (
     ".agents/skills/small-model-orchestrator",
@@ -620,24 +641,29 @@ skill = next((root / path for path in (
 if skill is None:
     raise ValueError("small-model-orchestrator/SKILL.md was not found under .agents/skills or .pi/skills")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-11) <!-- code-viz link -->
 
 Two locations are checked in order and the first `SKILL.md` found wins.  Use the first, `.agents/skills/`, because it is also one of the directories opencode reads.  One skills directory then serves both tools, and you never have to remember which project uses which convention.
 
 A `.skill` file is a zip archive with the skill's directory at its top level, so **extracting it into `.agents/skills/` produces exactly the path the launcher checks last**, which is the one to use.  Run this from the root of the project you want the agent to work on, before your first launch:
 
+<!-- run: id=cs357-tut-terminalfilesystem-12 viz=show -->
 ```bash
 mkdir -p .agents/skills
 curl -fsSL -o smo.skill https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
 unzip -q smo.skill -d .agents/skills/ && rm smo.skill
 ls .agents/skills/small-model-orchestrator/SKILL.md
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-12) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-terminalfilesystem-13 viz=show -->
 ```powershell
 New-Item -ItemType Directory -Force -Path .agents\skills | Out-Null
 curl.exe -fsSL -o smo.zip https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/files/small-model-orchestrator.skill
 Expand-Archive -Path smo.zip -DestinationPath .agents\skills -Force; Remove-Item smo.zip
 Get-Item .agents\skills\small-model-orchestrator\SKILL.md
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-13) <!-- code-viz link -->
 
 The PowerShell version downloads under a `.zip` name because `Expand-Archive` insists on that extension.  The bytes are identical either way.
 
@@ -653,6 +679,7 @@ That skill is the subject of the next section.
 
 The script installs a small extension that watches for the two ways a session ends badly and writes a record of each to disk:
 
+<!-- run: id=cs357-tut-terminalfilesystem-14 viz=show -->
 ```javascript
 pi.on("turn_end", async (event, ctx) => {
   if (["length", "error", "aborted"].includes(event.message?.stopReason)) {
@@ -665,6 +692,7 @@ pi.on("session_compact_failed", async (event, ctx) => {
   record(ctx, "compaction-failed", { reason: event.reason, ... });
 });
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-14) <!-- code-viz link -->
 
 A `stopReason` of `length` means the model was cut off mid-sentence, and the notification says to check disk state *before retrying* rather than simply retrying.  That instruction is the whole idea: a tool call that was cut off may still have run, and the response you did not receive is not evidence that nothing happened.
 
@@ -691,6 +719,7 @@ docker build -t course-pi-ollama .
 
 Then run it from whatever project you want the agent to work on:
 
+<!-- run: id=cs357-tut-terminalfilesystem-15 viz=show -->
 ```bash
 docker run --rm -it \
   --user "$(id -u):$(id -g)" \
@@ -700,7 +729,9 @@ docker run --rm -it \
   -e PI_OLLAMA_MODEL=llama3.2 \
   course-pi-ollama
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-15) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-terminalfilesystem-16 viz=show -->
 ```powershell
 docker run --rm -it `
   --add-host=host.docker.internal:host-gateway `
@@ -709,6 +740,7 @@ docker run --rm -it `
   -e PI_OLLAMA_MODEL=llama3.2 `
   course-pi-ollama
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-16) <!-- code-viz link -->
 
 Three differences between those two commands, all of them real, and all of them worth knowing before you spend an afternoon on one:
 
@@ -747,14 +779,17 @@ The previous section put a small model inside a box and handed it your project. 
 
 The course site hosts the archive rather than its unpacked contents, so reading it is a download rather than a click.  A `.skill` file is an ordinary zip, which means you can look inside before you commit to anything:
 
+<!-- run: id=cs357-tut-terminalfilesystem-17 viz=show -->
 ```bash
 curl -fsSL -O https://www.billmongan.com/Ursinus-CS357-Fall2026/files/small-model-orchestrator.skill
 unzip -l small-model-orchestrator.skill          # list the contents without extracting
 unzip -p small-model-orchestrator.skill small-model-orchestrator/SKILL.md | head -40
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-17) <!-- code-viz link -->
 
 That last line is worth running before anything else, because the first fifteen lines are the whole of what a model sees when deciding whether this skill applies to the task in front of it:
 
+<!-- run: id=cs357-tut-terminalfilesystem-18 viz=show -->
 ```yaml
 ---
 name: small-model-orchestrator
@@ -773,6 +808,7 @@ metadata:
   optimization-target: "maximum-verified-task-success"
 ---
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-18) <!-- code-viz link -->
 
 Read the `description` as a set of trigger conditions rather than as a summary.  It names task types (coding, tool use, research, data, documents), then a condition under which the skill should fire at all, *when correctness matters more than latency or token cost*, then the specific behaviors it will impose.  A model matching this against "fix the typo in line 4" should decline; a model matching it against "migrate this schema and verify nothing broke" should load it.  **That judgment is made entirely from this block**, which is why the Skill Design Study spends as much time on the description as on the body.
 
@@ -944,12 +980,14 @@ Remember what you learned in the previous section: the model's advertised maximu
 
 One setting only becomes meaningful at the bottom of that table, and it explains two defaults that look inert on `llama3.2`.  The launcher ships with `PI_REASONING=auto` and `PI_THINKING_LEVEL=medium`, and `auto` means it asks Ollama whether the model advertises a `thinking` capability and turns reasoning off when it does not:
 
+<!-- run: id=cs357-tut-terminalfilesystem-19 viz=show -->
 ```python
 capabilities = show.get("capabilities")
 reasoning = config["reasoning"] == "on" or (
     config["reasoning"] == "auto" and "thinking" in (capabilities or []))
 thinking = config["thinkingLevel"] if reasoning else "off"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-terminalfilesystem-19) <!-- code-viz link -->
 
 On `llama3.2` that resolves to off, and the launcher says so at startup.  On a reasoning model such as `qwen3.8:27b`, whose thinking mode is on by default and whose depth is tunable through `reasoning_effort`, the same two settings suddenly do something, and `PI_THINKING_LEVEL` becomes a dial worth turning.  The warning in that branch is worth heeding in the other direction too: **do not force `PI_REASONING=on` for a model you have not confirmed supports it**, because you will be sending a parameter the server may reject or quietly ignore.
 

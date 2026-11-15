@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-offlineragfinetuning-4",
+ "title": "Preflight Check",
+ "description": "A script that checks every local asset before the offline stage and never downloads anything.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "The header comment says this checks every local asset before the offline stage and never downloads anything. It imports `importlib.metadata`, `sys`, and `requests`, pulls the config with `CFG`, and defines the `PINNED` package versions the tutorial was tested with."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-18",
+   "description": "Loop over the pinned packages and compare the installed version to the wanted one. A mismatch or a missing package appends a message to `problems` instead of raising."
+  },
+  {
+   "kind": "focus",
+   "lines": "20-27",
+   "description": "Ask Ollama for its model tags with `GET /api/tags`, build the set of available names, and check that both the embed model and the chat model are present. If Ollama cannot be reached, the code records a message naming the error and suggesting `ollama serve`."
+  },
+  {
+   "kind": "focus",
+   "lines": "29-32",
+   "description": "If any problem was collected, print `PREFLIGHT FAILED` with each message and exit with status 1. Otherwise print that preflight is ok: packages pinned, Ollama local, both models present."
+  }
+ ]
+}

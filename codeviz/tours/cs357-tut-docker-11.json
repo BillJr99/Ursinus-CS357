@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-docker-11",
+ "title": "Exercise 2 Starter: Persistent Service",
+ "description": "The starter run command for the second exercise, which recreates a container with the same mount to show the data survived.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "Run Open WebUI detached, named `webui`, and publish host port 3000 to container port 8080."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Bind-mount `$HOME/agents/openwebui/data` to the app's data directory, so chats, settings, and accounts live on your disk."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Use the Open WebUI image. The exercise says the second run command after `docker rm webui` is identical, and that is the whole point: the same mount brings the account back."
+  }
+ ]
+}

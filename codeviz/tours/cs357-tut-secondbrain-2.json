@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-secondbrain-2",
+ "title": "Metadata Entry Schema",
+ "description": "Schema for .obsidian/github-sync-metadata.json entries: path, sha, dirty, justDownloaded, lastModified track sync state for each vault file.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "Complete metadata entry schema."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Path and sha: path identifies the vault file, sha is null for agent writes until plugin fills it."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "Dirty flag: dirty true means the file needs sync, justDownloaded false means it was not just pulled."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-6",
+   "description": "Timestamp: lastModified is Unix time in milliseconds when the file was last changed."
+  }
+ ]
+}

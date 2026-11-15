@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-agentstack-3",
+ "title": "Gateway Compose File",
+ "description": "Docker Compose service for llmproxy with routing config mounted read-only and host.docker.internal resolved.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "Complete llmproxy/docker-compose.yml file."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "File purpose: this is llmproxy/docker-compose.yml."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Service definition: llmproxy service uses the litellm main-latest image."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "Ports: container port 4000 is published to host port 4000."
+  },
+  {
+   "kind": "focus",
+   "lines": "6",
+   "description": "Volumes: the routing config is mounted read-only at /app/config.yaml."
+  },
+  {
+   "kind": "focus",
+   "lines": "8",
+   "description": "Extra_hosts: host.docker.internal maps to host-gateway for Linux resolution."
+  }
+ ]
+}

@@ -18,6 +18,8 @@ tags:
 
 ## About This Tutorial
 
+[Walk through this tutorial's code, step by step](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain&tour=walkthrough#cs357-tut-aibyhand-1) <!-- code-viz walkthrough link -->
+
 Every model you use this semester does five things with numbers: it cuts text into tokens, it compares vectors with a dot product, it mixes vectors with attention, it turns scores into probabilities with softmax, and it pushes inputs through weights in a forward pass.  Each of those is arithmetic you can do on paper in a few minutes.  This article collects every by-hand model from the course in one place, works each one with every intermediate step written out, and gives you a short Python snippet to check your answer.  The concept articles at [Tokens, Embeddings, and Attention]({{ site.baseurl }}/Tutorials/TokensEmbeddingsAttention) and [Sampling and Temperature]({{ site.baseurl }}/Tutorials/SamplingAndTemperature) explain why these computations matter; this one is where you do them.
 {: .tb-lede}
 
@@ -105,6 +107,7 @@ Recap: BPE learns merges from frequency alone, and it encodes unseen words by ap
 > This cell needs the `tiktoken` library, which is installed in your course container rather than in the page.  Copy it there and run it.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-aibyhand-6 viz=show -->
 ```python
 # pip install tiktoken
 import tiktoken
@@ -115,6 +118,7 @@ for word in ["lowest", "strawberry", "Collegeville", "CS357", "internationalizat
     pieces = [enc.decode([i]) for i in ids]
     print(f"{word:22s} -> {len(ids)} tokens  {pieces}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-aibyhand-6) <!-- code-viz link -->
 
 Compare the output against your hand trace.  Two things to notice: common words are single tokens while rare ones shatter, and the split points frequently land mid-morpheme, because the tokenizer optimizes for frequency, not for meaning.
 

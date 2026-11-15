@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-terminalfilesystem-19",
+ "title": "Reasoning Capability Check",
+ "description": "Checks if the model supports reasoning/thinking capability and configures it accordingly.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "Reasoning capability detection logic."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Capabilities extraction: gets model capabilities from show response."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-3",
+   "description": "Reasoning logic: enabled if config says on, or if auto and model has thinking capability."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Thinking level: uses config if reasoning enabled, otherwise off."
+  }
+ ]
+}

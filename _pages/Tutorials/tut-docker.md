@@ -82,6 +82,9 @@ The pair worth internalizing is **run versus exec**: `run` creates a *new* conta
 
 ## The Disappearing File
 
+[Simulate this session](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=simulate#cs357-tut-docker-disappearing-file) <!-- code-viz simulate link -->
+
+
 > Remember the apartment analogy: each time you call `docker run` you are moving into a **brand-new, empty apartment** cloned from the master floor plan, not returning to the one you previously lived in.  Any notes you left in the old apartment stay there, in that stopped container, untouched but unreachable until you go back to it explicitly.
 
 A teammate runs `docker run -it ubuntu bash`, creates `/notes.txt` inside, exits, runs the same command again, and the file is gone.
@@ -136,12 +139,14 @@ Read `-p 3000:8080` as "host port 3000 forwards to container port 8080."  The ho
 
 **A bind mount maps a host directory into the container** with `-v HOST_PATH:CONTAINER_PATH`, and it is the answer to Model 1:
 
+<!-- run: id=cs357-tut-docker-1 viz=show -->
 ```bash
 docker run -d --name webui \
   -p 3000:8080 \
   -v "$HOME/agents/openwebui/data:/app/backend/data" \
   ghcr.io/open-webui/open-webui:main
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-1) <!-- code-viz link -->
 
 Now the application's data directory lives on *your* disk; destroy and recreate the container and your chats, settings, and accounts persist.  Append `:ro` to make a mount **read-only** (`-v "$HOME/vault:/vault:ro"`), which is precisely how we hand an agent reference material it must not modify.  Our course stack uses a disciplined four-tier mount layout (identity, workspace, skills, tool data) that the agent stack module details; the principle to absorb today is that *the container is disposable and the mounts are not*.
 
@@ -175,6 +180,7 @@ http://localhost:8080, because the host side of -p (the left number) is what the
 
 **A Dockerfile is the recipe that builds an image**, a text file of instructions that Docker executes top to bottom, saving each step as a layer (a cached snapshot).  One instruction per layer, and Docker only re-executes layers where something changed.  Here is a complete, real one for a tiny Python agent service, annotated:
 
+<!-- run: id=cs357-tut-docker-2 viz=show -->
 ```dockerfile
 FROM python:3.12-slim
 
@@ -203,14 +209,17 @@ CMD ["python", "server.py"]
 
 # The default command a container runs at start.
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-2) <!-- code-viz link -->
 
 Build and run it:
 
+<!-- run: id=cs357-tut-docker-3 viz=show -->
 ```bash
 docker build -t myagent:0.1 .          # -t names (tags) the image; . is the build context
 docker run -d -p 8000:8000 --name myagent myagent:0.1
 curl http://localhost:8000/health      # verify
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-3) <!-- code-viz link -->
 
 The ordering rule (stable layers first, volatile layers last) is the single most useful Dockerfile habit: it turns five-minute rebuilds into five-second ones.
 
@@ -232,6 +241,7 @@ The ordering rule (stable layers first, volatile layers last) is the single most
 
 Running three services with hand-typed `docker run` lines gets old immediately.  **Compose declares the whole stack in one YAML file** (YAML is a human-readable configuration format, similar to a Python dictionary but without the quotes and brackets):
 
+<!-- run: id=cs357-tut-docker-4 viz=show -->
 ```yaml
 
 # docker-compose.yml
@@ -257,13 +267,16 @@ services:
     depends_on:
       - gateway
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-4) <!-- code-viz link -->
 
+<!-- run: id=cs357-tut-docker-5 viz=show -->
 ```bash
 docker compose up -d        # start the whole stack
 docker compose ps           # status
 docker compose logs -f      # all logs, interleaved and labeled
 docker compose down         # stop and remove (volumes survive)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-5) <!-- code-viz link -->
 
 Within a Compose file, services reach each other *by name* (`http://gateway:4000`), because Compose puts them on a private network together.  Reaching things *outside* that network, on your host machine, is the next section, and it is the key to our whole stack.
 
@@ -341,6 +354,8 @@ This is the single most common thing you will do all semester, and the single mo
 mkdir -p "$HOME/agents/work"
 ```
 
+[Simulate this session](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=simulate#cs357-tut-docker-bindmount) <!-- code-viz simulate link -->
+
 **Step 2: use an absolute path.**  A relative path like `-v ./work:/work` works in Compose but is unreliable on the command line. `$HOME` and `$(pwd)` are your friends, and the quotes matter if any folder name contains a space:
 
 ```bash
@@ -388,6 +403,7 @@ A coding agent is a program that reads your files, writes new ones, and runs she
 
 Install the agent CLI into an image rather than onto your laptop, so the tool and its dependencies are disposable too:
 
+<!-- run: id=cs357-tut-docker-6 viz=show -->
 ```dockerfile
 
 # Dockerfile.agent
@@ -420,6 +436,7 @@ USER agent
 WORKDIR /work
 CMD ["bash"]
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-6) <!-- code-viz link -->
 
 ```bash
 docker build -f Dockerfile.agent -t course-agent .
@@ -429,6 +446,7 @@ docker build -f Dockerfile.agent -t course-agent .
 
 The discipline that makes everything else safe is **one read-write mount and everything else read-only or absent**:
 
+<!-- run: id=cs357-tut-docker-7 viz=show -->
 ```bash
 docker run -it --rm \
   --name agent \
@@ -437,6 +455,7 @@ docker run -it --rm \
   -e AGENT_API_KEY \
   course-agent
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-7) <!-- code-viz link -->
 
 - `/work`: the project.  Read-write, because the agent's job is to change it.  This folder is a **git repository**, so every change the agent makes is listed by `git status` and revertible with `git checkout`.
 - `/reference:ro`: your notes, style guides, or corpus.  The agent reads them and physically cannot modify them.
@@ -460,6 +479,7 @@ Most agents offer a way to skip the prompts.  Claude Code, for example, has `--d
 
 Inside a properly constrained container, the calculus changes: the container boundary replaces the per-action prompt.
 
+<!-- run: id=cs357-tut-docker-8 viz=show -->
 ```bash
 
 # Reasonable ONLY because of the flags around it
@@ -474,6 +494,7 @@ docker run -it --rm \
   -e AGENT_API_KEY \
   course-agent claude --dangerously-skip-permissions
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-8) <!-- code-viz link -->
 
 Read that command as a sentence: *the agent may act without asking, and the worst it can do is damage one git-tracked folder.*  Every clause earns the first one.
 
@@ -484,6 +505,7 @@ Read that command as a sentence: *the agent may act without asking, and the wors
 
 Isolation gets stronger when the container's *own* filesystem is read-only and only your workspace is writable:
 
+<!-- run: id=cs357-tut-docker-9 viz=show -->
 ```bash
 docker run -it --rm \
   --read-only \
@@ -493,6 +515,7 @@ docker run -it --rm \
   -v "$HOME/notes/vault:/reference:ro" \
   course-agent
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-9) <!-- code-viz link -->
 
 `--read-only` makes the entire container root filesystem immutable; the two `--tmpfs` mounts give back the scratch space that tools need, in memory, discarded on exit.  An agent under this configuration cannot install a background service, cannot modify its own tooling, and cannot leave anything behind outside `/work`.
 
@@ -513,6 +536,7 @@ docker run -it --rm \
 
 Do not take the flags on faith; test them, the same way you would test any other claim:
 
+<!-- run: id=cs357-tut-docker-10 viz=show -->
 ```bash
 
 # Should print "Read-only file system"
@@ -526,6 +550,7 @@ docker run --rm --network none course-agent \
 # Should show only /work as a writable bind mount
 docker run --rm -v "$HOME/agents/project:/work" course-agent mount | grep /work
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-10) <!-- code-viz link -->
 
 Then `git status` in the project after a session, and open what it lists.  The agent's work should be entirely visible as tracked changes; if something appeared that git does not show, your mount layout is wider than you thought.
 
@@ -566,12 +591,15 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     *What to do:* Run Open WebUI with a published port and a bind-mounted data directory.  Create a user account inside the web interface.  Stop and remove the container completely with `docker stop webui && docker rm webui`.  Then recreate the container using the exact same `-v` flag pointing to the same host directory, and log back in to demonstrate your account survived container destruction.  Write both `docker run` commands down and check for yourself that they are identical.
 
     *Starter hint:* Your two run commands should look like this (fill in the blanks):
+    <!-- run: id=cs357-tut-docker-11 viz=show -->
     ```bash
     docker run -d --name webui \
       -p 3000:8080 \
       -v "$HOME/agents/openwebui/data:/app/backend/data" \
       ghcr.io/open-webui/open-webui:main
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-11) <!-- code-viz link -->
+
     The second run command after `docker rm webui` is identical; that is the whole point.
 
     *You've succeeded when:* You log back into the recreated container and your previously created account, settings, or chat history is still present, proving the data lived on your disk rather than inside the (now-deleted) container.
@@ -602,6 +630,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     *What to do:* Start any server on your host machine: Ollama if it is installed, or a simple Python HTTP server with `python3 -m http.server 8001` run in a terminal.  Then start a container with an interactive shell.  From inside the container, attempt `curl http://localhost:8001` and show that it fails.  Then attempt `curl http://host.docker.internal:8001` and show that it succeeds.  On Linux, include the required flag.  Read both curl outputs side by side and satisfy yourself that the only thing that changed was the hostname.
 
     *Starter hint:* On macOS or Windows with Docker Desktop, run:
+    <!-- run: id=cs357-tut-docker-12 viz=show -->
     ```bash
     docker run --rm -it ubuntu bash
     # then inside:
@@ -609,6 +638,8 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     curl http://localhost:8001          # should fail
     curl http://host.docker.internal:8001  # should succeed
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-12) <!-- code-viz link -->
+
     On Linux, you must add the host flag when starting the container:
     ```bash
     docker run --rm -it --add-host=host.docker.internal:host-gateway ubuntu bash
@@ -621,11 +652,14 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
     *What to do:* Build the agent image from Section 9.1 and prove its boundaries hold before you trust an agent inside it.  Create a scratch git repository to be the writable workspace and a second folder to be the read-only reference.  Build the image, then run all three verification commands from Section 9.5 and paste the output of each.  Finally, write one sentence naming the worst thing an agent could do to your machine from inside that container.
 
     *Starter hint:* Save the Section 9.1 Dockerfile as `Dockerfile.agent` and build it:
+    <!-- run: id=cs357-tut-docker-13 viz=show -->
     ```bash
     mkdir -p ~/agents/project ~/agents/reference
     git -C ~/agents/project init
     docker build -f Dockerfile.agent -t course-agent .
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-docker-13) <!-- code-viz link -->
+
     Then run the three checks from Section 9.5 in order: write to the `:ro` mount, resolve a hostname under `--network none`, and list the writable bind mounts.  Each is written to *fail loudly* when the fence is working, so a failure is your evidence, not your bug.
 
     *You've succeeded when:* Your three pasted outputs show, in order, `Read-only file system` (or your `BLOCKED-as-expected` message) from the reference mount, a name-resolution failure under `--network none`, and exactly one writable bind mount at `/work`.  Your worst-case sentence names a specific, bounded outcome, damage to files in one git-tracked folder, rather than a vague reassurance.  If you cannot write that sentence, Section 9.3 says you have not earned `--dangerously-skip-permissions`, and this exercise is where you find that out.

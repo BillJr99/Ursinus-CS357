@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-multiagentmeasurement-4",
+ "title": "A Hack Draft Against Your Own Rubric",
+ "description": "hack.py scores a deliberately poor docstring with your critic, to test whether a rubric loophole lets a useless draft pass. Reward hacking is satisfying the letter of a rule while missing its intent.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-9",
+   "description": "The script imports `json` and the critic helpers. `load_rubric_from_file` reads a rubric file, and `config` and `rubric` are loaded once."
+  },
+  {
+   "kind": "focus",
+   "lines": "11-25",
+   "description": "`hack_draft` is a deliberately poor docstring. It opens with `\"\"\"Do stuff.` and gives minimal parameter descriptions like `a (list[int]): a.`. It meets the letter of the criteria without being useful."
+  },
+  {
+   "kind": "focus",
+   "lines": "27-29",
+   "description": "`critique_draft` scores the hack draft, and the script prints the verdict and the issues."
+  },
+  {
+   "kind": "focus",
+   "lines": "30",
+   "description": "The last comment states the expected result: verdict equals `accept` despite being a poor docstring. The page calls this reward hacking, satisfying the letter of a scoring rule while missing its intent."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says a working hack prints 'Critic verdict on hack: accept' together with what kind of issue list?",
+   "answer": "an empty issue list"
+  }
+ ]
+}

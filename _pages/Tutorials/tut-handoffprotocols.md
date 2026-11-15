@@ -16,6 +16,8 @@ tags:
 
 ## About This Tutorial
 
+[Walk through this tutorial's code, step by step](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain&tour=walkthrough#cs357-tut-handoffprotocols-1) <!-- code-viz walkthrough link -->
+
 Two agents are pointed at the same task list.  Neither can see the other's context window.  Agent A starts a task, and an hour later Agent B looks at the same list.  How does B know the task is taken?  What if A crashed halfway through?  And when B finds a file in `done/`, how does it know the work was finished rather than abandoned?  This tutorial answers those questions on a small practice problem first.  Then you write the answers down as a handoff skill for a real repository.
 {: .tb-lede}
 

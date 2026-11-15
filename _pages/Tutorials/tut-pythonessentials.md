@@ -19,14 +19,18 @@ Run the examples with `python3`.  Type them into the interactive prompt, or save
 
 ## Keeping a Project's Packages Together: `venv`
 
+[Walk through this tutorial's code, step by step](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain&tour=walkthrough#cs357-tut-pythonessentials-1) <!-- code-viz walkthrough link -->
+
 A **virtual environment** gives one project its own Python and its own packages, so that installing something for one lab cannot break another.  It is a folder, usually named `.venv`.
 
+<!-- run: id=cs357-tut-pythonessentials-9 viz=show -->
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 python3 -m pip install requests
 python3 -c "import requests; print('requests ok')"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pythonessentials-9) <!-- code-viz link -->
 
 You should see `requests ok`.  Run the `source` line again in each new terminal, because activating lasts only as long as the terminal does.
 

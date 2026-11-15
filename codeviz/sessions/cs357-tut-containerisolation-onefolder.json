@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "id": "cs357-tut-containerisolation-onefolder",
+ "title": "An agent that can see one folder",
+ "description": "The tutorial's own Dockerfile and run.sh, built and run for real. Predict each probe's result first, as the tutorial asks, then step through. The probes the tutorial types at the container's prompt run here as ./run.sh bash -c commands, the form the tutorial uses for its network checks. The API-key check uses the tutorial's fake key, not-a-real-key. Commands run as an ordinary user (uid 1000), as a student's own account would.",
+ "page": "_pages/Tutorials/tut-containerisolation.md",
+ "scenario": {
+  "files": {
+   "iso/Dockerfile": "# Debian + Bun 1.4.4, pinned by digest so a re-tag upstream cannot change this demo.\nFROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e\nUSER root\nRUN apt-get update \\\n && apt-get install -y --no-install-recommends ca-certificates curl \\\n && rm -rf /var/lib/apt/lists/*\nRUN BUN_INSTALL=/opt/omp bun install -g \"@oh-my-pi/pi-coding-agent@18.18.1\" \\\n && ln -sfn /opt/omp/install/global/node_modules/@oh-my-pi/pi-coding-agent/dist/cli.js /usr/local/bin/omp \\\n && chmod -R a+rX /opt/omp \\\n && /usr/local/bin/omp --version\nRUN chmod 711 /home && mkdir -p /workspace && chown bun:bun /workspace\nUSER bun\nENV HOME=/home/bun\nWORKDIR /workspace\nCMD [\"bash\"]\n",
+   "iso/run.sh": "#!/usr/bin/env bash\n# run.sh: an agent that can see one folder. Usage: ./run.sh bash   or   ./run.sh omp\nset -euo pipefail\ncd \"$(dirname \"$0\")\"\nnet=()\nif [ \"${NET:-}\" = \"none\" ]; then net=(--network none); fi\nexec docker run --rm -it --read-only \\\n  --tmpfs /tmp \\\n  --tmpfs /home/bun:exec,mode=1777 \\\n  --cap-drop=ALL --security-opt no-new-privileges \\\n  --pids-limit 256 --memory 1g \\\n  --user \"$(id -u):$(id -g)\" -e HOME=/home/bun -e OPENROUTER_API_KEY \\\n  \"${net[@]}\" \\\n  -v \"$PWD/workspace:/workspace\" -w /workspace \\\n  cs357-isolation-demo \"$@\"\n"
+  },
+  "commands": [
+   "mkdir -p iso/workspace && cd iso",
+   "echo \"Hello from the one host directory this container is allowed to see.\" > workspace/README.txt",
+   "echo \"decoy: grades.csv would be here\" > decoy-secret.txt",
+   "docker build -t cs357-isolation-demo . && chmod +x run.sh",
+   "./run.sh bash -c 'id'",
+   "./run.sh bash -c 'ls /home'",
+   "./run.sh bash -c 'cat /etc/shadow'",
+   "./run.sh bash -c 'touch /etc/x'",
+   "./run.sh bash -c 'find / -name decoy-secret.txt 2>/dev/null'",
+   "./run.sh bash -c 'cat /workspace/README.txt'",
+   "./run.sh bash -c 'echo \"written from inside the container\" > /workspace/from-container.txt'",
+   "./run.sh bash -c 'omp --version'",
+   "./run.sh bash -c 'curl -sS -m 8 -o /dev/null -w \"%{http_code}\\n\" https://example.com'",
+   "NET=none ./run.sh bash -c 'curl -sS -m 8 -o /dev/null -w \"%{http_code}\\n\" https://example.com'",
+   "OPENROUTER_API_KEY=not-a-real-key ./run.sh bash -c 'env | grep -c OPENROUTER_API_KEY'"
+  ],
+  "images": [
+   "oven/bun:1.4.4-debian"
+  ],
+  "network": "internet",
+  "watch": [
+   "iso",
+   "iso/workspace"
+  ],
+  "timeout": 1800,
+  "user": "student"
+ }
+}

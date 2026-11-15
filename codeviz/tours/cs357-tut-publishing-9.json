@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-9",
+ "title": "Exercise 2: First npm Package",
+ "description": "Publish scoped npm package: run dry-run, publish with access public, teammate verifies with npx.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-6",
+   "description": "Exercise 2 starter commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-4",
+   "description": "Steps: dry-run to read every line, publish with --access public, teammate verifies with npx."
+  },
+  {
+   "kind": "focus",
+   "lines": "6",
+   "description": "Success: teammate runs npx @yourusername/hello-agent with message, receives expected JSON output."
+  }
+ ]
+}

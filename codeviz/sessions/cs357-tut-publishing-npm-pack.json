@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "id": "cs357-tut-publishing-npm-pack",
+ "title": "Packaging a scoped npm module",
+ "description": "The tutorial's npm steps up to the dry run: a scoped package.json, then npm pack --dry-run to list what would ship. npm login and npm publish need an npm account, so the session stops before them. It runs in node:22.",
+ "page": "_pages/Tutorials/tut-publishing.md",
+ "scenario": {
+  "shell": {
+   "image": "node:22"
+  },
+  "commands": [
+   "mkdir hello-agent && cd hello-agent",
+   "npm init --scope=@yourusername -y",
+   "npm pack --dry-run"
+  ],
+  "images": [
+   "node:22"
+  ],
+  "network": "isolated",
+  "watch": [
+   "hello-agent"
+  ],
+  "timeout": 300
+ }
+}

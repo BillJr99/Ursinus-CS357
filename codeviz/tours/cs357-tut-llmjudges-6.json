@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-llmjudges-6",
+ "title": "The No-Code Tripwire",
+ "description": "Four lines that save a baseline, copy the config, change one value, and run the copy, so you can see which verdicts changed.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-4",
+   "description": "On the no-code path the tripwire is a second configuration file. The page's recipe is to save a baseline, copy the config, make one plausible-looking change, and run the copy."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "The first `eval` runs the rubric config and writes the results to `run_baseline.json`. That file is the baseline to compare against."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "`cp promptfooconfig-rubric.yaml promptfooconfig-regressed.yaml` copies the config, so the original stays intact."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "The comment marks the edit step: change one value or line in `promptfooconfig-regressed.yaml`. The page's example is loosening the `claims_cited` line."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "The second `eval` runs the changed config and writes `run_regressed.json`. You then find which verdicts changed, and in which direction."
+  },
+  {
+   "kind": "predict",
+   "question": "The page's example change loosens the claims_cited line to PASS under what condition?",
+   "answer": "if the answer mentions any evidence"
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-16",
+ "title": "Run It Yourself: Local Development",
+ "description": "Commands to start the local development server and test the API endpoints with curl.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "Five curl commands for testing."
+  },
+  {
+   "kind": "focus",
+   "lines": "1",
+   "description": "Empty list: curl localhost:8787/api/questions should return empty array."
+  },
+  {
+   "kind": "focus",
+   "lines": "2",
+   "description": "Create: POST with JSON body to add a question, expects created question with votes:0."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "Upvote: POST to /api/questions/1/upvote, expects same question with votes:1."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "Validation: POST with empty text, expects 400 error about length."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "404: GET /api/nope, expects not found error."
+  }
+ ]
+}

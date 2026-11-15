@@ -1,0 +1,75 @@
+{
+ "version": 1,
+ "example": "cs357-tut-pydanticai-10",
+ "title": "Part 7: Skills",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "2-3",
+   "description": "Lines 2-3 import `datetime` and `pathlib`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "5-8",
+   "description": "Lines 5-8 continue the example."
+  },
+  {
+   "kind": "reveal",
+   "lines": "11-13",
+   "description": "Lines 11-13 define the class `SkillCard`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "16-19",
+   "description": "Lines 16-19 define `read_skill(path)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "19",
+   "description": "Line 19 returns a value."
+  },
+  {
+   "kind": "reveal",
+   "lines": "22-24",
+   "description": "Lines 22-24 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "27-31",
+   "description": "Lines 27-31 define `skill_menu()`."
+  },
+  {
+   "kind": "focus",
+   "lines": "30",
+   "description": "Line 30 returns a value."
+  },
+  {
+   "kind": "reveal",
+   "lines": "34-39",
+   "description": "Lines 34-39 define `load_skill(name)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "37",
+   "description": "Line 37 checks `name not in SKILLS`."
+  },
+  {
+   "kind": "focus",
+   "lines": "39",
+   "description": "Line 39 returns `SKILLS[name][1]`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "42-45",
+   "description": "Lines 42-45 define `days_until(target)`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "48-52",
+   "description": "Lines 48-52 continue the main code and print the results."
+  }
+ ]
+}

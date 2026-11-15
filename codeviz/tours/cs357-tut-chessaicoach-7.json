@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-chessaicoach-7",
+ "title": "Coach Commentary Prompt",
+ "description": "The function that builds the prompt for the sentence or two of commentary after each move, assembling game context and setting guardrails.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "`getAICommentary` takes the provider config, the FEN before and after the move, the move in SAN, the PGN so far, and the Elo estimate. The prompt opens by framing the model as an expert chess coach and noting the player is White with an estimated Elo."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-16",
+   "description": "The prompt embeds the concrete state: the full PGN so far, the FEN before the move, the move just played, and the FEN after. The page says this lets the model reason about the actual position, not a vague description."
+  },
+  {
+   "kind": "focus",
+   "lines": "18-20",
+   "description": "The instructions set explicit scope: analyze only the move just played, judge whether it is good, inaccurate, a mistake, or a blunder, and name a better move when the move is suboptimal."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-23",
+   "description": "Two guardrails follow: do not mention, predict, recommend, or hint at any future moves, and keep the answer to 2-4 sentences. The page says the scope limits stop the model from volunteering whole opening lines."
+  },
+  {
+   "kind": "focus",
+   "lines": "25-26",
+   "description": "Finally it calls `callTextModel` with `maxTokens: 350` and `temperature: 0.2`, and returns the result."
+  }
+ ]
+}

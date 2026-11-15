@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-fullstackwithagents-11",
+ "title": "vitest.config.js: Test Configuration",
+ "description": "Vitest configuration that uses cloudflare/vitest-plugin to run tests in Workers runtime with local D1 database.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-17",
+   "description": "Complete vitest.config.js."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Imports: path, cloudflareTest, readD1Migrations, defineConfig."
+  },
+  {
+   "kind": "focus",
+   "lines": "5-15",
+   "description": "Export: async defineConfig reads migrations, returns cloudflareTest plugin with wrangler config and miniflare bindings."
+  },
+  {
+   "kind": "focus",
+   "lines": "16",
+   "description": "Setup: test setupFiles includes apply-migrations.js."
+  }
+ ]
+}

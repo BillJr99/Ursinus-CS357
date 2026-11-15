@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-multiagentmeasurement-2",
+ "title": "Three Planted-Defect Entries",
+ "description": "The start of calibration_drafts.json. Each entry records a draft, the defect you planted in it, and a short description, so you know the right verdict before the critic sees it.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "This is `calibration_drafts.json`, a JSON array. Each entry records the draft, the defect you planted, and a short description. `D01` has defect `missing_C4` and the description `No example provided`."
+  },
+  {
+   "kind": "focus",
+   "lines": "8-13",
+   "description": "`D02` has defect `missing_C2_and_C3` and the description `No parameter or return descriptions`. The defect string names the two criteria it breaks."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-20",
+   "description": "`D03` has defect `none` and the description `Defect-free draft`. The page says you can see false positives only if the set includes drafts with nothing wrong, so include some."
+  },
+  {
+   "kind": "predict",
+   "question": "To fit a multi-line docstring into one JSON string, what stands in for each line break?",
+   "answer": "\\n"
+  }
+ ]
+}

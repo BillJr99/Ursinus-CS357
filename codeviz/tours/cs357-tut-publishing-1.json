@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-1",
+ "title": "GHCR Publish Cycle: Four Steps",
+ "description": "Complete publish-and-verify cycle for GHCR: authenticate with PAT, build with registry name, push, verify from clean slate.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-21",
+   "description": "Complete four-step GHCR publishing process."
+  },
+  {
+   "kind": "focus",
+   "lines": "2-5",
+   "description": "Step 1: authenticate with CR_PAT environment variable via docker login to ghcr.io."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-14",
+   "description": "Step 2: build with full registry name, using docker build -t or docker tag for existing images."
+  },
+  {
+   "kind": "focus",
+   "lines": "16-17",
+   "description": "Step 3: push to registry with docker push."
+  },
+  {
+   "kind": "focus",
+   "lines": "19-21",
+   "description": "Step 4: verify by removing local copy and pulling as a stranger would to simulate first-time user experience."
+  }
+ ]
+}

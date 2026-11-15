@@ -48,6 +48,7 @@ Read this after the hand-written versions, not instead of them.  A framework is 
 
 Everything here runs against the Ollama server on your own machine.  Nothing calls a hosted model, and nothing sends traces anywhere: Pydantic AI only reports to Logfire if you install and configure Logfire, which this tutorial does not do.
 
+<!-- run: id=cs357-tut-pydanticai-1 viz=show -->
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -55,6 +56,7 @@ python3 -m pip install "pydantic-ai-slim[openai,mcp]==2.54.0" "fastmcp==4.0.11" 
 ollama pull qwen2.5:3b     # this tutorial's default: a reliable tool caller (3B, about 1.9 GB)
 ollama pull llama3.2       # the course's general chat model, for the comparisons (3B, about 2 GB)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-1) <!-- code-viz link -->
 
 > **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python and refuses packages installed directly into it, so use the virtual environment above.  The MCP lab's [Troubleshooting]({{ site.baseurl }}/Assignments/ToolsMCP#troubleshooting) section explains this error and the `ensurepip` error.
 
@@ -66,6 +68,7 @@ Save this helper as `common.py`.  `make_model()` is the only place the code name
 > **Why qwen2.5:3b for tool calling:** The rest of the course uses `llama3.2` for chat, and it is fine there.  For tool calling, we switch to `qwen2.5:3b`, which is the same size and calls tools far more reliably.  When we ran this tutorial with `llama3.2`, it wrote a tool call as plain text instead of making one (Part 7), and it ignored a tool's result in its answer (Part 5).  `qwen2.5:3b` did neither.  Every output below comes from `qwen2.5:3b` unless it says otherwise, and setting `MODEL=llama3.2` reproduces the comparisons.  `qwen2.5:3b` is released under the Qwen Research License, so read its terms before using it outside class.
 {: .tb-tip data-title="Model choice"}
 
+<!-- run: id=cs357-tut-pydanticai-2 viz=show -->
 ```python
 # common.py: one place that says which model the agent talks to, plus a trace printer.
 import os
@@ -98,6 +101,7 @@ def show_trace(messages):
             elif hasattr(part, "content"):
                 print(f"  [{kind}] {str(part.content)[:120]!r}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-2) <!-- code-viz link -->
 
 `MODEL=llama3.2 python step1_paired.py` switches models without editing code.  To go through OpenWebUI instead, set `BASE_URL=http://localhost:3000/api` and `API_KEY` to your OpenWebUI key.
 
@@ -115,6 +119,7 @@ The last day of classes is 61 days from today.
 
 Now the same task in Pydantic AI:
 
+<!-- run: id=cs357-tut-pydanticai-3 viz=show -->
 ```python
 # step1_paired.py: the Tool Use deck's two tools, now registered with Pydantic AI.
 from datetime import date
@@ -154,6 +159,7 @@ print(result.output)
 show_trace(result.all_messages())
 print(result.usage)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-3) <!-- code-viz link -->
 
 ```text
 $ python step1_paired.py
@@ -186,6 +192,7 @@ The trace is the deck's Model 2 protocol: a user message, a model reply that ask
 
 The two names are easy to blur, and they do different jobs.  Core Pydantic validates data.  It has no idea that a model exists:
 
+<!-- run: id=cs357-tut-pydanticai-4 viz=show -->
 ```python
 # step2_schema.py: the schema you wrote by hand in the deck, generated from the signature.
 import json
@@ -218,6 +225,7 @@ try:
 except ValidationError as e:
     print("rejected:", e.errors()[0]["msg"])
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-4) <!-- code-viz link -->
 
 ```text
 {
@@ -246,6 +254,7 @@ Validation answers "is this a well-formed date?"  It does not answer "may the ag
 
 This agent can save a deadline to a notes file.  Its tools receive a `RunContext` carrying **dependencies**: today's date, the one folder it may write to, and the student's courses.  Your program supplies those, not the model, so a test can pin today's date and a real run can point at a real folder.
 
+<!-- run: id=cs357-tut-pydanticai-5 viz=show -->
 ```python
 # step3_deps.py: typed dependencies, a validated tool, a permission check, and a human approval.
 from dataclasses import dataclass, field
@@ -306,6 +315,7 @@ def save_deadline(ctx: RunContext[Deps], course: str, due: date, title: str) -> 
         f.write(f"- {due.isoformat()}: {title}\n")
     return f"saved to {path.name}"
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-5) <!-- code-viz link -->
 
 Three different checks happen in `save_deadline`, in this order:
 
@@ -315,6 +325,7 @@ Three different checks happen in `save_deadline`, in this order:
 
 The script that runs the agent asks the person and resumes the run with their decisions:
 
+<!-- run: id=cs357-tut-pydanticai-6 viz=show -->
 ```python
 # step3_run.py: run the deadline agent, and put a person in front of every write.
 from datetime import date
@@ -345,6 +356,7 @@ for _ in range(2):                                  # bounded: at most two round
 print(result.output)
 show_trace(result.all_messages())
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-6) <!-- code-viz link -->
 
 ```text
 $ python step3_run.py
@@ -377,6 +389,7 @@ Sometimes the answer itself should be data rather than prose.  Pydantic AI can r
 
 The validator was doing its job: it caught a well-formed wrong answer every time.  The fix was a design change, not a better prompt.  **The model extracts; your code computes.**
 
+<!-- run: id=cs357-tut-pydanticai-7 viz=show -->
 ```python
 # step4_output.py: the answer as a validated object. The model extracts; your code computes.
 import traceback
@@ -420,6 +433,7 @@ except Exception as e:
     print(f"[step4_output:main] {e}")
     traceback.print_exc()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-7) <!-- code-viz link -->
 
 ```text
 $ python step4_output.py
@@ -437,6 +451,7 @@ The schema guarantees that `target` is a date.  The validator adds a rule the sc
 
 `run_sync` runs a loop.  `agent.iter` lets you step through that loop one node, or stage, at a time:
 
+<!-- run: id=cs357-tut-pydanticai-8 viz=show -->
 ```python
 # step5_loop.py: walk the agentic loop one node at a time, then trip each kind of limit.
 import asyncio
@@ -496,6 +511,7 @@ async def main():
 
 asyncio.run(main())
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-8) <!-- code-viz link -->
 
 ```text
 $ python step5_loop.py
@@ -521,6 +537,7 @@ Now run it with `MODEL=llama3.2`.  The trace is the same: it called `get_today`,
 
 Short-term memory is the message list, handed back with `message_history`.  Long-term memory is the same list saved to disk.  A history processor decides how much of it is sent to the model on each call, so the file can grow without the context window growing with it.
 
+<!-- run: id=cs357-tut-pydanticai-9 viz=show -->
 ```python
 # step6_memory.py: short-term memory is the message list; saving it to disk makes it long-term.
 from pathlib import Path
@@ -555,6 +572,7 @@ print("agent>", result.output)
 HISTORY.write_bytes(ModelMessagesTypeAdapter.dump_json(result.all_messages(), indent=2))
 print(f"saved {len(result.all_messages())} messages to {HISTORY}")
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-9) <!-- code-viz link -->
 
 ```text
 $ rm -f history.json; echo "" | python step6_memory.py
@@ -588,6 +606,7 @@ hardest topic first, and leave the last day for a full practice exam. Answer as 
 numbered list with one line per day.
 ```
 
+<!-- run: id=cs357-tut-pydanticai-10 viz=show -->
 ```python
 # step7_skills.py: a skill menu in the instructions, and a tool that loads one skill on demand.
 from datetime import date, timedelta
@@ -642,6 +661,7 @@ result = agent.run_sync(f"My calculus exam is on {exam} and covers series, integ
 print(result.output)
 show_trace(result.all_messages())
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-10) <!-- code-viz link -->
 
 `SkillCard` is core Pydantic again, checking the front matter.  `load_skill` refuses any name that is not in `SKILLS` and lists the valid ones; the registry, not the model's string, decides what can be read.  That is the same lesson as the deck's `REGISTRY[name]`, and the same lesson as a path-traversal check.
 
@@ -670,6 +690,7 @@ $ MODEL=llama3.2 python step7_skills.py
 
 The MCP deck's Flask server teaches the shape of MCP (`/tools/list`, `/tools/call`), but it is not an MCP server: it speaks plain HTTP and JSON, not the JSON-RPC protocol (a standard way to encode function calls and their results as JSON messages) that MCP clients expect.  This part runs a real one.  The two date tools move out of your program and into a server process:
 
+<!-- run: id=cs357-tut-pydanticai-11 viz=show -->
 ```python
 # calendar_server.py: the same two tools, served over real MCP (JSON-RPC over stdio).
 from datetime import date
@@ -694,9 +715,11 @@ def days_until(target: date) -> int:
 if __name__ == "__main__":
     mcp.run(show_banner=False)          # stdio by default: the client starts this process
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-11) <!-- code-viz link -->
 
 The client starts the server as a separate process and talks to it over stdio (standard input and output), asks what it offers, and calls a tool, first by hand and then through an agent:
 
+<!-- run: id=cs357-tut-pydanticai-12 viz=show -->
 ```python
 # step8_mcp.py: discover the server's tools over MCP, then hand them to an agent.
 import asyncio
@@ -730,6 +753,7 @@ result = agent.run_sync("How many days until 2026-12-07?", usage_limits=UsageLim
 print(result.output)
 show_trace(result.all_messages())
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-12) <!-- code-viz link -->
 
 ```text
 $ python step8_mcp.py
@@ -755,6 +779,7 @@ The server validated the bad date itself, on its side of the connection, before 
 
 Every result above depended on a model that answers differently on different machines.  The plumbing does not have to.  Pydantic AI can swap the model for `TestModel` (which calls each tool with schema-valid arguments) or `FunctionModel` (which plays back the calls you script), so the checks that matter most run in a second, with no Ollama at all:
 
+<!-- run: id=cs357-tut-pydanticai-13 viz=show -->
 ```python
 # test_agents.py: test the plumbing with no model at all. Run with: python -m pytest -q test_agents.py
 from datetime import date
@@ -830,6 +855,7 @@ def test_request_limit_and_tool_call_limit_are_different(tmp_path):
         with pytest.raises(UsageLimitExceeded, match="tool_calls_limit"):
             deadline_agent.run_sync("q", deps=deps(tmp_path), usage_limits=UsageLimits(tool_calls_limit=2))
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-13) <!-- code-viz link -->
 
 ```text
 $ python -m pytest -q test_agents.py
@@ -845,6 +871,7 @@ These are the tests to keep green as you change the agent: a bad date becomes a 
 
 You now have every piece of a small, honest agent: typed tools with dependencies (Part 3), a permission check and a human gate on the one tool that writes (Part 3), extraction instead of model arithmetic (Part 4), limits on both requests and tool calls (Part 5), a history file with a trimming policy (Part 6), a skill menu (Part 7), and an MCP server for the tools that live elsewhere (Part 8), all covered by tests that need no model (Part 9).  To combine them, pass more than one thing to the same `Agent`:
 
+<!-- run: id=cs357-tut-pydanticai-14 viz=show -->
 ```python
 agent = Agent(
     make_model(),
@@ -857,6 +884,7 @@ agent = Agent(
 # then register save_deadline (Part 3), skill_menu and load_skill (Part 7) on this agent,
 # and call it with deps=..., message_history=..., and usage_limits=UsageLimits(...)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-pydanticai-14) <!-- code-viz link -->
 
 Building that file is Exercise 1.
 

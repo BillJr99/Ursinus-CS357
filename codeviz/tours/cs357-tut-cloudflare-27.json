@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-27",
+ "title": "Exercise 6: A Deliberately Flawed deploy.sh",
+ "description": "The second file in the audit exercise. Its own comments mark each defect, and it is labeled deliberately flawed, do not copy.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-5",
+   "description": "This is `deploy.sh`, the second file in the audit. Line 2 marks it as `DELIBERATELY FLAWED, do not copy`."
+  },
+  {
+   "kind": "focus",
+   "lines": "3",
+   "description": "`set -x` echoes every command with its expanded values. Its own comment is the defect note: it echoes every command plus the expanded secret."
+  },
+  {
+   "kind": "focus",
+   "lines": "4",
+   "description": "`read -p \"Deploy now? [y/N] \" ok` waits for input. Its own comment is the defect note: it hangs forever in CI, where there is no human to answer."
+  },
+  {
+   "kind": "focus",
+   "lines": "5",
+   "description": "The deploy passes `--api-token GLOBAL_KEY`. Its own comment notes the credential is over-broad: a global key, not a scoped token."
+  },
+  {
+   "kind": "predict",
+   "question": "The exercise asks you to name which single defect you would fix first if you could fix only one. How many defects are there in total?",
+   "answer": "five"
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "example": "cs357-tut-publishing-10",
+ "title": "Exercise 3: Version Walk",
+ "description": "Make a fix, bump version with npm version patch, republish, verify both old and new versions are installable by exact version.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "Exercise 3 starter commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Bump and publish: npm version patch increments 0.1.0 to 0.1.1, then npm publish."
+  },
+  {
+   "kind": "focus",
+   "lines": "4-7",
+   "description": "Verification: npm install both versions explicitly to confirm they work and produce different outputs."
+  }
+ ]
+}

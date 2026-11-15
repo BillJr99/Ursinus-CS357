@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "example": "cs357-tut-opencodesetup-4",
+ "title": "An External Provider Entry",
+ "description": "The shape of a hosted, OpenAI-compatible provider. The key is a reference to an environment variable, never the value itself.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-15",
+   "description": "This is an external provider entry, for an OpenAI-compatible service. The page says nothing in the course requires a paid provider; the shape is here because you will meet it, and because it is where the credential rule bites."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-5",
+   "description": "The provider is named `acmeai`. `npm` is the same adapter package, and `name` notes that this is an example, not a real service."
+  },
+  {
+   "kind": "focus",
+   "lines": "6-9",
+   "description": "`options` holds the `baseURL` and an `apiKey` set to `\"{env:ACME_API_KEY}\"`. That is the name of a variable, not its value."
+  },
+  {
+   "kind": "focus",
+   "lines": "8",
+   "description": "The page says the file holds the name of a variable, never its value. You set the value in your shell, or reference a file with `{file:~/.secrets/acme-key}`."
+  },
+  {
+   "kind": "predict",
+   "question": "The page says a configuration file that contains a key is a key you have done what?",
+   "answer": "committed"
+  }
+ ]
+}

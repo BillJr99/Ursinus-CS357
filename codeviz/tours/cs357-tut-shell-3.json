@@ -1,0 +1,20 @@
+{
+ "version": 1,
+ "example": "cs357-tut-shell-3",
+ "title": "head -10 keeps only the first 10 of those; result is the first ten failures",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-12",
+   "description": "Lines 1-12 set things up."
+  },
+  {
+   "kind": "reveal",
+   "lines": "13-15",
+   "description": "Lines 13-15 run the rest of the example."
+  }
+ ]
+}

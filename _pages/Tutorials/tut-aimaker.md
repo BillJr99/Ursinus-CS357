@@ -82,6 +82,7 @@ The code below illustrates the "test first" pattern: notice that the tests exist
 > This is a test file: save it in your repository and run it with `pytest`.
 {: .tb-warning data-title="Runs on your machine, not here"}
 
+<!-- run: id=cs357-tut-aimaker-1 viz=show -->
 ```python
 
 # The pattern in miniature: the spec exists as a failing test first.
@@ -102,6 +103,7 @@ if __name__ == "__main__":
         print(f"[test_converter:main] {e}")
         traceback.print_exc()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-aimaker-1) <!-- code-viz link -->
 
 Hand the agent *this file* and the request "make these pass without modifying the tests," and you have converted a vague wish into a checkable contract, with the no-modification clause closing the most obvious hack.  That clause should sound familiar: it is your rubric-patching lab, transplanted.
 
@@ -166,6 +168,7 @@ In this part, you will set up Continuous Integration, the mechanism that runs yo
 
 CI is the mechanization of everything above: a service (GitHub Actions, in our course) that runs your checks automatically on every push, so the question "did anything break?" gets answered by a machine, every time, before a human ever trusts the change.  A complete, real workflow: read the `on: [push, pull_request]` trigger and the `run: python -m pytest tests/ -v` step carefully, because those two lines are where your automated checks attach to the development process:
 
+<!-- run: id=cs357-tut-aimaker-2 viz=show -->
 ```yaml
 
 # .github/workflows/ci.yml
@@ -182,6 +185,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m pytest tests/ -v
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-aimaker-2) <!-- code-viz link -->
 
 Commit that file and the green check or red X appears on every push and pull request, including the agent's.  For Track B the same idea applies one level up: connect your project to Pages or a similar service so every change produces a *preview deployment*, and your acceptance checklist runs against the preview before anything reaches the real URL. In both tracks, CI is also the referee between you and your agent: an agent's change that turns the build red is rejected by the system itself, with no negotiation, which is a deterministic checker in exactly the sense your pre-mortems demanded.  And note where the human gates survive: CI *verifies* on every push, but *publishing* still triggers only on a deliberate human act (a tag, a merge), the design the publishing module called the gate moving rather than vanishing.
 

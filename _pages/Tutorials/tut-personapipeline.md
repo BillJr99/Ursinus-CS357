@@ -148,6 +148,7 @@ Reply with the system prompt only: no code fence, no greeting, no commentary.
 
 Every variable lives here: the endpoint, the model, the seed, and the four steps with their personas, temperatures, skill bindings, and visibility rules.  Change the chain by editing this file, not the code.
 
+<!-- run: id=cs357-tut-personapipeline-1 viz=show -->
 ```json
 {
   "provider_url": "http://host.docker.internal:11434",
@@ -187,9 +188,11 @@ Every variable lives here: the endpoint, the model, the seed, and the four steps
   ]
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-personapipeline-1) <!-- code-viz link -->
 
 ### `persona_pipeline.py`
 
+<!-- run: id=cs357-tut-personapipeline-2 viz=show -->
 ```python
 """persona_pipeline.py: a multi-step prompt chain with one persona per step.
 
@@ -506,6 +509,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         sys.exit(1)
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-personapipeline-2) <!-- code-viz link -->
 
 ### `ollama_client.py`
 

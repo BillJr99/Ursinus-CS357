@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "example": "cs357-tut-cloudflare-11",
+ "title": "The Workflow Step That Runs the Script",
+ "description": "A short workflow step that orchestrates the deploy script and passes the token and Worker name from GitHub.",
+ "reviewed": false,
+ "source": "draft: Big Pickle",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-7",
+   "description": "This is the workflow step that runs the deploy. It is short because the logic lives in `deploy.sh`."
+  },
+  {
+   "kind": "focus",
+   "lines": "3-4",
+   "description": "The step runs `./deploy.sh`. The workflow orchestrates; the script does the work."
+  },
+  {
+   "kind": "focus",
+   "lines": "6",
+   "description": "`CLOUDFLARE_API_TOKEN` comes from GitHub's secrets and is masked in the logs."
+  },
+  {
+   "kind": "focus",
+   "lines": "7",
+   "description": "`WORKER_NAME` is a plain variable, not a secret."
+  }
+ ]
+}

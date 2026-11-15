@@ -1,0 +1,45 @@
+{
+ "version": 1,
+ "example": "cs357-tut-localagentfromscratch-3",
+ "title": "Skill Front Matter Validation",
+ "description": "Use Pydantic to validate SKILL.md front matter, ensuring name matches folder and description meets length requirements.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-50",
+   "description": "Complete skill validation code."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-2",
+   "description": "Purpose: P5 validates a skill's front matter using Pydantic."
+  },
+  {
+   "kind": "focus",
+   "lines": "7-19",
+   "description": "Setup: writes the terse-helper skill file with front matter and rules."
+  },
+  {
+   "kind": "focus",
+   "lines": "21-23",
+   "description": "Model definition: SkillFrontMatter with name pattern and description length constraints."
+  },
+  {
+   "kind": "focus",
+   "lines": "25-35",
+   "description": "Load_skill: reads SKILL.md, splits front matter, validates with Pydantic, checks folder match."
+  },
+  {
+   "kind": "focus",
+   "lines": "37-43",
+   "description": "Validation: loads skill, prints metadata and first body line, catches validation errors."
+  },
+  {
+   "kind": "focus",
+   "lines": "46-49",
+   "description": "Error demonstration: hand-written front matter with invalid name and short description is refused."
+  }
+ ]
+}

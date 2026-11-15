@@ -32,6 +32,7 @@ Every setup step happens at a terminal, and several ask you to save a file.  Her
 
 **2. Find where you are, and move.**  The terminal always has a current folder, and every relative path is measured from it.  These commands work the same in every shell above, including PowerShell:
 
+<!-- run: id=cs357-tut-setupbasics-1 viz=show -->
 ```bash
 pwd               # print the folder you are in
 ls                # list what is here (ls -la also shows hidden files; in PowerShell, plain ls)
@@ -40,6 +41,7 @@ mkdir -p ~/cs357  # make a folder for this course (in PowerShell: mkdir ~/cs357)
 cd ~/cs357        # go into it
 cd ..             # go up one level
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-1) <!-- code-viz link -->
 
 > **What `~` means on each system.**  `~` is your home folder:
 >
@@ -198,6 +200,7 @@ This section assumes you have finished Step 1 and Step 5 of the Overview assignm
 
 MCP, the Model Context Protocol, is a standard way for an agent to discover and call tools.  Save this as `word_count_server.py` in your project:
 
+<!-- run: id=cs357-tut-setupbasics-2 viz=show -->
 ```python
 from mcp.server.fastmcp import FastMCP
 
@@ -211,6 +214,7 @@ def word_count(text: str) -> int:
 if __name__ == "__main__":
     mcp.run()
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-2) <!-- code-viz link -->
 
 Install the library in your project's environment with `uv add 'mcp[cli]<2'` or `python3 -m pip install 'mcp[cli]<2'`.  The docstring becomes the tool's description, and the description is what the model reads when it decides whether to call the tool.
 
@@ -221,6 +225,7 @@ A small local model may see this tool and still call it badly.  When we tested `
 
 **A local model and the MCP server.**  Save this as `opencode.json` in your project:
 
+<!-- run: id=cs357-tut-setupbasics-3 viz=show -->
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
@@ -242,11 +247,13 @@ A small local model may see this tool and still call it badly.  When we tested `
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-3) <!-- code-viz link -->
 
 Run `opencode mcp list` from that folder.  If it says that no servers are configured, run it a second time, because the first listing in a new folder can come back empty.  Use the `python3` from your project's environment in `command` if the library is installed there.
 
 **A custom provider.**  Any service with an OpenAI-compatible address can be added next to `ollama` inside `provider`.  The file names the variable that holds your key and never holds the key itself:
 
+<!-- run: id=cs357-tut-setupbasics-4 viz=show -->
 ```json
 "ursinus": {
   "npm": "@ai-sdk/openai-compatible",
@@ -258,6 +265,7 @@ Run `opencode mcp list` from that folder.  If it says that no servers are config
   "models": { "MODEL-NAME": { "name": "Ursinus model", "tools": true } }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-4) <!-- code-viz link -->
 
 Replace `MODEL-NAME` with a model your key can use, and choose it with `/models` inside opencode.  The [End-to-End OpenCode Setup]({{ site.baseurl }}/Tutorials/OpenCodeSetup) tutorial goes further on providers, permission gates, skills, and plugins.
 
@@ -283,6 +291,7 @@ Replace `MODEL-NAME` with a model your key can use, and choose it with `/models`
 
 **A local model.**  Oh My Pi keeps its models in `~/.omp/agent/models.yml`:
 
+<!-- run: id=cs357-tut-setupbasics-5 viz=show -->
 ```yaml
 providers:
   ollama:
@@ -297,6 +306,7 @@ providers:
         contextWindow: 16384
         maxTokens: 4096
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-5) <!-- code-viz link -->
 
 Make it the default in `~/.omp/agent/config.yml`:
 
@@ -309,6 +319,7 @@ Check it with `omp models ollama`.  On Route A, your home directory disappears w
 
 **A custom provider.**  Add another entry under `providers`.  Here, `apiKey` is the *name* of the variable, not the key:
 
+<!-- run: id=cs357-tut-setupbasics-6 viz=show -->
 ```yaml
   ursinus:
     baseUrl: https://ursinus.ai/api/v1
@@ -322,9 +333,11 @@ Check it with `omp models ollama`.  On Route A, your home directory disappears w
         contextWindow: 128000
         maxTokens: 4096
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-6) <!-- code-viz link -->
 
 **The MCP server.**  Save this as `.omp/mcp.json` in your project, then type `/mcp list` inside Oh My Pi to confirm it, or `/mcp test word-tools` to try the connection:
 
+<!-- run: id=cs357-tut-setupbasics-7 viz=show -->
 ```json
 {
   "mcpServers": {
@@ -335,6 +348,7 @@ Check it with `omp models ollama`.  On Route A, your home directory disappears w
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-7) <!-- code-viz link -->
 
 **Plan mode.**  Type `/plan`, or press Alt+Shift+P, to turn it on.  You can also start with a request, as in `/plan add input checking to my script`.  The agent stays read-only while it works out a plan, and then you review the plan before anything changes.  `/plan-review` reopens that review.
 
@@ -389,20 +403,24 @@ OpenWebUI is a self-hosted web front end that sits in front of your Ollama serve
 
 Route 1, Docker.  Each flag does one job: `-p 3000:8080` publishes the container's port 8080 on your host's port 3000; `--add-host=host.docker.internal:host-gateway` lets the container reach Ollama on your host (required on Linux, harmless elsewhere); `-v open-webui:/app/backend/data` keeps your account, models, and chat history in a named volume that survives restarts.
 
+<!-- run: id=cs357-tut-setupbasics-8 viz=show -->
 ```bash
 docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway \
   -v open-webui:/app/backend/data --name open-webui --restart always \
   ghcr.io/open-webui/open-webui:main
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-8) <!-- code-viz link -->
 
 Route 2, pip.  The install downloads a large dependency set; expect several minutes.  The last command starts the server in your terminal; leave that terminal open.  When the startup banner shows `Uvicorn running on http://0.0.0.0:8080`, the server is up.
 
+<!-- run: id=cs357-tut-setupbasics-9 viz=show -->
 ```bash
 python3 -m venv owui
 source owui/bin/activate        # PowerShell: .\owui\Scripts\Activate.ps1
 python3 -m pip install open-webui
 open-webui serve
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-9) <!-- code-viz link -->
 
 > **If `pip` says `externally-managed-environment`.**  Your operating system manages its own Python (common on Ubuntu, Debian, WSL, and Homebrew), so it refuses packages installed directly into it, because they could break the tools that depend on it.  Nothing is wrong with your machine, and the virtual environment is the fix: run the first two lines, and then install again.  Do not use `--break-system-packages`.
 
@@ -429,6 +447,7 @@ open-webui serve
 1.  **Install the auto-models plugin by asking the agent.**  In `opencode`, with any model selected (the free default is enough), type the prompt `install this opencode plugin https://github.com/BillJr99/opencode-auto-models`.  Read the change it proposes to `opencode.json` before you approve it.  Then type `/quit` and start `opencode` again, because plugins load only at startup.  The plugin asks each provider which models it serves, so you never type model names by hand.
 2.  **Name the endpoint in `opencode.json`.**  Add a second entry to the `provider` map you wrote in 5b, holding only the address: no key, and no `models` map, since the plugin fills that in.  `myendpoint` is a placeholder ID; you type the same word again in the next step.
 
+    <!-- run: id=cs357-tut-setupbasics-10 viz=show -->
     ```json
     "myendpoint": {
       "npm": "@ai-sdk/openai-compatible",
@@ -436,6 +455,7 @@ open-webui serve
       "options": { "baseURL": "https://YOUR-ENDPOINT/api/v1" }
     }
     ```
+    [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-setupbasics-10) <!-- code-viz link -->
 
     Check that the file still parses with `python3 -m json.tool opencode.json`, then `/quit` and restart.
 3.  **Store the key with `/connect`.**  Type `/connect`, scroll to **Other**, enter the same provider ID (`myendpoint`), and paste your API key at the key prompt.  `/connect` asks only for the ID and the key, never the address, which is why step 2 comes first.

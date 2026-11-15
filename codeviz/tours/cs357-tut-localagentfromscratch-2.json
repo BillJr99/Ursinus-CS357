@@ -1,0 +1,55 @@
+{
+ "version": 1,
+ "example": "cs357-tut-localagentfromscratch-2",
+ "title": "Tiny Agent Program",
+ "description": "Complete agent program composing the five steps: prompt, remember, iterate, skill, and command with gated execution.",
+ "reviewed": false,
+ "source": "draft: vibe",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-164",
+   "description": "Complete tiny_agent.py program."
+  },
+  {
+   "kind": "focus",
+   "lines": "1-4",
+   "description": "Docstring: the five steps composed into one program."
+  },
+  {
+   "kind": "focus",
+   "lines": "10-12",
+   "description": "TOOL_RULE: the instruction telling the model it can run shell commands."
+  },
+  {
+   "kind": "focus",
+   "lines": "14-23",
+   "description": "Load_config: reads config.json and applies OLLAMA_URL override from environment."
+  },
+  {
+   "kind": "focus",
+   "lines": "25-49",
+   "description": "Chat: Step 1 prompt, handles both OpenAI-style and Ollama endpoints."
+  },
+  {
+   "kind": "focus",
+   "lines": "51-70",
+   "description": "Step 2 remember: load_history and save_history for persistence."
+  },
+  {
+   "kind": "focus",
+   "lines": "71-94",
+   "description": "Step 4 skill: strip_front_matter, load_skill, build_system integrate SKILL.md."
+  },
+  {
+   "kind": "focus",
+   "lines": "96-135",
+   "description": "Step 5 command: gate, run_command, take_turn implement two-gate security model."
+  },
+  {
+   "kind": "focus",
+   "lines": "137-162",
+   "description": "Step 3 iterate: main loop with /forget, /quit commands and memory management."
+  }
+ ]
+}

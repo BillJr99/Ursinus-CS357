@@ -127,6 +127,7 @@ The desktop application has no such flag, and its closest equivalent is you: app
 
 The configuration-file equivalent is a permissive `permission` block, which applies to every session until you change it back:
 
+<!-- run: id=cs357-tut-agentprojectdesign-1 viz=show -->
 ```json
 {
   "permission": {
@@ -134,6 +135,7 @@ The configuration-file equivalent is a permissive `permission` block, which appl
   }
 }
 ```
+[Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentprojectdesign-1) <!-- code-viz link -->
 
 That block is a file edit in both faces: you can make it in an editor, or ask opencode to make it, and in the desktop application it takes effect once you reopen the folder.  The flag is the safer of the two, because it expires when the command does.  A permissive block is a decision you will forget you made, which is the failure the charter exists to prevent.
 
