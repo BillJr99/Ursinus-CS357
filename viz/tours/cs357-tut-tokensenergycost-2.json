@@ -1,0 +1,75 @@
+{
+ "code": "# Run t-77b0, totaled in the previous cell\ninput_tokens = 9392\noutput_tokens = 701\ngeneration_seconds = 17.695\n\n# ---- Parameters: every assumption has a name, a unit, and a source.  Replace them. ----\nLB_TO_G = 453.592\nP = {\n    # MEASURE: no source in the course gives your machine's draw.  Use a plug-in meter,\n    # nvidia-smi, or powermetrics on a Mac, and write down which.\n    \"machine_watts\": None,\n    # SOURCE: EPA eGRID2023 U.S. total output rate, 770.9 lb CO2e/MWh, as cited in Part VII\n    # of the Cost of Inference session.  Replace with your region (epa.gov/egrid/power-profiler).\n    \"grid_g_per_kwh\": 770.9 * LB_TO_G / 1000,\n    # SOURCE: energy-profiles.json, offline profile (0.0005 g per local query midpoint).\n    \"g_per_input_token\": 5.3e-7,\n    \"g_per_output_token\": 1.6e-6,\n    # LOOK UP: a comparable hosted model's published price, in dollars per million tokens.\n    # Write down the model, the page, and the date you read it.\n    \"price_in_per_million\": None,\n    \"price_out_per_million\": None,\n    # LOOK UP: the rate on your electricity bill, in dollars per kWh.\n    \"dollars_per_kwh\": None,\n}\n\nmissing = [name for name, value in P.items() if value is None]\n\ndef need(*names):\n    \"\"\"True only when every named parameter has a value.\"\"\"\n    return all(P[n] is not None for n in names)\n\nkwh = None\nif need(\"machine_watts\"):\n    kwh = P[\"machine_watts\"] * generation_seconds / 3600 / 1000\n    print(f\"Energy: {kwh * 1000:.3f} Wh\")\n    print(f\"Carbon from measured time: {kwh * P['grid_g_per_kwh']:.4f} g CO2e\")\n\ncarbon_tokens = input_tokens * P[\"g_per_input_token\"] + output_tokens * P[\"g_per_output_token\"]\nprint(f\"Carbon from per-token rates: {carbon_tokens:.4f} g CO2e\")\n\nif need(\"price_in_per_million\", \"price_out_per_million\"):\n    hosted = (input_tokens / 1e6) * P[\"price_in_per_million\"] + (output_tokens / 1e6) * P[\"price_out_per_million\"]\n    print(f\"Hosted price avoided: ${hosted:.4f}\")\nif kwh is not None and need(\"dollars_per_kwh\"):\n    print(f\"Electricity: ${kwh * P['dollars_per_kwh']:.6f}\")\n\nprint(f\"grid intensity in use: {P['grid_g_per_kwh']:.1f} g CO2e per kWh\")\nprint(\"still to fill and source:\", \", \".join(missing) if missing else \"nothing\")",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "example": "cs357-tut-tokensenergycost-2",
+ "lang": "python",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "description": "Lines 2-24 run the main code.",
+   "kind": "reveal",
+   "lines": "2-24"
+  },
+  {
+   "description": "Line 26 continues the main code.",
+   "kind": "reveal",
+   "lines": "26"
+  },
+  {
+   "description": "Lines 28-30 define `need()`.",
+   "kind": "reveal",
+   "lines": "28-30"
+  },
+  {
+   "description": "Line 30 returns `all(P[n] is not None for n in names)`.",
+   "kind": "focus",
+   "lines": "30"
+  },
+  {
+   "description": "Lines 32-43 continue the main code and print the results.",
+   "kind": "reveal",
+   "lines": "32-43"
+  },
+  {
+   "description": "Line 33 checks `need(\"machine_watts\")`.",
+   "kind": "focus",
+   "lines": "33"
+  },
+  {
+   "description": "Line 41 makes a decision.",
+   "kind": "focus",
+   "lines": "41"
+  },
+  {
+   "description": "Lines 44-48 continue the main code and print the results.",
+   "kind": "reveal",
+   "lines": "44-48"
+  },
+  {
+   "description": "Line 44 makes a decision.",
+   "kind": "focus",
+   "lines": "44"
+  },
+  {
+   "description": "Here `need` is called for the first time; its frame appears on the right.",
+   "kind": "run",
+   "lines": "30",
+   "trace_step": 23
+  },
+  {
+   "description": "Here `need` returns, the first time it does.",
+   "kind": "run",
+   "lines": "30",
+   "trace_step": 28
+  },
+  {
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "kind": "run",
+   "lines": "48",
+   "trace_step": 41
+  }
+ ],
+ "title": "7.  Code Path: The Estimate",
+ "version": 1
+}

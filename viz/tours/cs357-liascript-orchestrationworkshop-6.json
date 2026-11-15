@@ -1,0 +1,82 @@
+{
+ "code": "# Step 3: a supervisor loop.  A model picks the next move each turn; you own the roster,\n# the budget, and every stop condition.\nROSTER = {\"extractor\": EXTRACT, \"writer\": DRAFT, \"polisher\": POLISH}\n\ndef naive_supervisor(task, transcript):\n    \"\"\"A scripted stand-in for the supervisor model.  It replies with the same JSON a real\n    supervisor must produce, and it makes a plausible mistake: it always stops with the\n    newest text, whether or not that text passed the check.\"\"\"\n    results = [t for t in transcript if \"result\" in t]\n    done = [t[\"agent\"] for t in results]\n    if \"extractor\" not in done:\n        return json.dumps({\"action\": \"call\", \"agent\": \"extractor\", \"input\": task})\n    if \"writer\" not in done:\n        return json.dumps({\"action\": \"call\", \"agent\": \"writer\", \"input\": results[0][\"result\"]})\n    if \"polisher\" not in done:\n        return json.dumps({\"action\": \"call\", \"agent\": \"polisher\", \"input\": results[-1][\"result\"]})\n    return json.dumps({\"action\": \"stop\", \"answer\": results[-1][\"result\"]})\n\ndef supervise(task, decide, budget=CONFIG[\"spawn_budget\"]):\n    transcript, seen, facts = [], set(), None\n    def best():                                        # the newest text that passed the check\n        ok = [t[\"result\"] for t in transcript if t.get(\"check\") == \"ok\"]\n        return ok[-1] if ok else None\n    for turn in range(1, budget + 1):\n        CALLS.append(\"SUPERVISOR\")                     # the supervisor's own decision is a model call\n        raw = decide(task, transcript)\n        print(f\"turn {turn}: {raw[:84]}\")\n        try:\n            step = json.loads(raw)\n        except json.JSONDecodeError:                   # stop condition: fail closed\n            return {\"status\": \"stopped: malformed decision\", \"answer\": best(), \"turns\": turn}\n        if step.get(\"action\") == \"stop\":\n            missing = check_times(facts, step.get(\"answer\", \"\")) if facts else [\"no facts yet\"]\n            if not missing:                            # stop condition: the check passed\n                return {\"status\": \"done\", \"answer\": step[\"answer\"], \"turns\": turn}\n            transcript.append({\"agent\": \"supervisor\", \"error\": f\"stop refused, missing {missing}\"})\n            print(f\"   stop refused: missing {missing}\")\n            continue\n        agent, text = step.get(\"agent\"), step.get(\"input\", \"\")\n        if agent not in ROSTER:                        # closed roster, like the router's labels\n            transcript.append({\"agent\": agent, \"error\": \"unknown sub-agent\"})\n            print(f\"   refused: {agent!r} is not on the roster\")\n            continue\n        if (agent, text) in seen:                      # stop condition: the same call twice is a loop\n            return {\"status\": f\"stopped: repeated call to {agent}\", \"answer\": best(), \"turns\": turn}\n        seen.add((agent, text))\n        result = llm(ROSTER[agent], text)              # the sub-agent sees only its own input\n        entry = {\"agent\": agent, \"result\": result}\n        if agent == \"extractor\":\n            facts = result\n        elif facts:\n            entry[\"check\"] = check_times(facts, result) or \"ok\"\n        transcript.append(entry)\n        print(f\"   {agent} -> {result[:58].replace(chr(10), ' / ')}...  check={entry.get('check', '-')}\")\n    return {\"status\": f\"stopped: budget of {budget} turns reached\", \"answer\": best(), \"turns\": budget}\n\nCALLS.clear()\noutcome = supervise(\"\\n\".join(for_digest), naive_supervisor)\nprint(f\"\\nSTATUS: {outcome['status']} (turns: {outcome['turns']}, model calls: {len(CALLS)})\")\nprint(f\"ANSWER (newest text that passed the check): {outcome['answer']}\")",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "example": "cs357-liascript-orchestrationworkshop-6",
+ "lang": "python",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "description": "Line 3 runs the main code.",
+   "kind": "reveal",
+   "lines": "3"
+  },
+  {
+   "description": "Lines 5-17 define `naive_supervisor(task, transcript)`.",
+   "kind": "reveal",
+   "lines": "5-17"
+  },
+  {
+   "description": "Line 11 checks `\"extractor\" not in done`.",
+   "kind": "focus",
+   "lines": "11"
+  },
+  {
+   "description": "Line 15 checks `\"polisher\" not in done`.",
+   "kind": "focus",
+   "lines": "15"
+  },
+  {
+   "description": "Lines 19-55 define `supervise(task, decide, budget)`.",
+   "kind": "reveal",
+   "lines": "19-55"
+  },
+  {
+   "description": "Line 31 returns a value.",
+   "kind": "focus",
+   "lines": "31"
+  },
+  {
+   "description": "Line 44 checks `(agent, text) in seen`.",
+   "kind": "focus",
+   "lines": "44"
+  },
+  {
+   "description": "Lines 57-60 continue the main code and print the results.",
+   "kind": "reveal",
+   "lines": "57-60"
+  },
+  {
+   "description": "Here `naive_supervisor` is called for the first time; its frame appears on the right.",
+   "kind": "run",
+   "lines": "9",
+   "trace_step": 10
+  },
+  {
+   "description": "Here `naive_supervisor` returns, the first time it does.",
+   "kind": "run",
+   "lines": "12",
+   "trace_step": 14
+  },
+  {
+   "description": "Here `supervise` is called for the first time; its frame appears on the right.",
+   "kind": "run",
+   "lines": "20",
+   "trace_step": 5
+  },
+  {
+   "description": "Here `supervise` returns, the first time it does.",
+   "kind": "run",
+   "lines": "55",
+   "trace_step": 173
+  },
+  {
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "kind": "run",
+   "lines": "60",
+   "trace_step": 176
+  }
+ ],
+ "title": "Step 3: A Supervisor Loop With a Budget and Stop Conditions",
+ "version": 1
+}

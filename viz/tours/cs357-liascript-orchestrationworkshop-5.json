@@ -1,0 +1,65 @@
+{
+ "code": "# Step 2: a router.  One classification per message, a closed set, and a loud failure.\nROUTES = {\"event\": \"digest\", \"change\": \"digest (marked UPDATED)\", \"question\": \"FAQ queue\"}\n\ndef route(message):\n    label = llm(CLASSIFY, message).strip().lower()\n    if label not in ROUTES:            # closed-set guard: fail closed, and say so\n        return label, \"needs_human\"\n    return label, ROUTES[label]\n\nCALLS.clear()\nfor_digest = []\nfor message in MESSAGES:\n    label, destination = route(message)\n    print(f\"{label:<13} -> {destination:<24} {message[:44]}\")\n    if destination.startswith(\"digest\"):\n        for_digest.append(message)\nprint(f\"\\nmodel calls: {len(CALLS)}; {len(for_digest)} of {len(MESSAGES)} messages go on to the pipeline\")",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "example": "cs357-liascript-orchestrationworkshop-5",
+ "lang": "python",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "description": "Line 2 runs the main code.",
+   "kind": "reveal",
+   "lines": "2"
+  },
+  {
+   "description": "Lines 4-8 define `route(message)`.",
+   "kind": "reveal",
+   "lines": "4-8"
+  },
+  {
+   "description": "Line 6 checks `label not in ROUTES`.",
+   "kind": "focus",
+   "lines": "6"
+  },
+  {
+   "description": "Line 7 returns `label, \"needs_human\"`.",
+   "kind": "focus",
+   "lines": "7"
+  },
+  {
+   "description": "Line 8 returns `label, ROUTES[label]`.",
+   "kind": "focus",
+   "lines": "8"
+  },
+  {
+   "description": "Lines 10-17 continue the main code and print the results.",
+   "kind": "reveal",
+   "lines": "10-17"
+  },
+  {
+   "description": "Line 12 loops over `MESSAGES`.",
+   "kind": "focus",
+   "lines": "12"
+  },
+  {
+   "description": "Here `route` is called for the first time; its frame appears on the right.",
+   "kind": "run",
+   "lines": "5",
+   "trace_step": 6
+  },
+  {
+   "description": "Here `route` returns, the first time it does.",
+   "kind": "run",
+   "lines": "8",
+   "trace_step": 9
+  },
+  {
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "kind": "run",
+   "lines": "17",
+   "trace_step": 49
+  }
+ ],
+ "title": "Step 2: A Router in Front of the Pipeline",
+ "version": 1
+}
