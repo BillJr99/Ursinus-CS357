@@ -1,40 +1,31 @@
 {
- "version": 1,
- "example": "cs357-liascript-agentloop-1",
- "title": "Code Cell",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
- "reviewed": false,
- "source": "skeleton",
- "steps": [
-  {
-   "kind": "reveal",
-   "lines": "1-2",
-   "description": "Lines 1-2 import `json` and `requests`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "4-5",
-   "description": "Lines 4-5 run the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "7-19",
-   "description": "Lines 7-19 define `chat(messages, temperature)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "15",
-   "description": "Line 15 returns `r.json()[\"message\"][\"content\"]`."
-  },
-  {
-   "kind": "focus",
-   "lines": "19",
-   "description": "Line 19 returns `\"\"`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "21",
-   "description": "Line 21 continues the main code and print the results."
-  }
- ]
+  "version": 1,
+  "example": "cs357-liascript-agentloop-1",
+  "title": "Prepare the local chat helper",
+  "description": "You read the request settings and response handling before the agent loop is built.",
+  "reviewed": false,
+  "source": "draft: codex free model + check fix: claude",
+  "steps": [
+    {
+      "kind": "reveal",
+      "lines": "1-5",
+      "description": "You import the request tools and name the local Ollama endpoint and model."
+    },
+    {
+      "kind": "reveal",
+      "lines": "7-15",
+      "description": "You define chat with a messages argument and a default temperature. The request sends those values with stream set to False, then returns the response's message content."
+    },
+    {
+      "kind": "predict",
+      "lines": "16-19",
+      "question": "What does chat return when the request or response handling raises an exception?",
+      "answer": "It prints the error and traceback, then returns an empty string."
+    },
+    {
+      "kind": "reveal",
+      "lines": "16-21",
+      "description": "You finish the exception handler and print Environment ready. The supplied recording contains that setup message."
+    }
+  ]
 }
