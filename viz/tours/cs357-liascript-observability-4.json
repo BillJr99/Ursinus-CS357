@@ -4,7 +4,7 @@
  "example": "cs357-liascript-observability-4",
  "lang": "python",
  "reviewed": false,
- "source": "draft: pi free model",
+ "source": "draft: pi free model + edit: codex",
  "steps": [
   {
    "description": "The resp dictionary holds a real Ollama response from Model 4's step 1 plan phase. It includes total_duration, load_duration, prompt_eval_count, prompt_eval_duration, eval_count, and eval_duration, all in nanoseconds.",
@@ -12,7 +12,7 @@
    "lines": "1-5"
   },
   {
-   "description": "The key fields: 412 input tokens took 610ms (prompt_eval_duration), 41 output tokens took 2100ms (eval_duration), and the total was 2773ms. The load_duration of 12ms is negligible.",
+   "description": "The key fields: 412 input tokens took 610ms (prompt_eval_duration), 41 output tokens have their duration in eval_duration, and the total was 2773ms. The load_duration of 12ms is negligible.",
    "kind": "focus",
    "lines": "3-5"
   },

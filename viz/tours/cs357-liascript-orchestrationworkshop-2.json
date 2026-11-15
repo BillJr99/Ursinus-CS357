@@ -4,7 +4,7 @@
  "example": "cs357-liascript-orchestrationworkshop-2",
  "lang": "python",
  "reviewed": false,
- "source": "draft: pi free model",
+ "source": "draft: pi free model + edit: codex",
  "steps": [
   {
    "description": "The llm function calls a local Ollama server at localhost:11434 with a system prompt, user input, temperature 0.0, and a fixed seed. It returns the model's response or an empty string on error.",
@@ -12,7 +12,7 @@
    "lines": "1-20"
   },
   {
-   "description": "digest_pipeline runs three stages. extract pulls structured 'name | date | location' lines from the raw text. draft writes a friendly 3-sentence digest from those facts, and polish edits it for concision and warmth under 60 words. All the intermediate results are returned so you can inspect them.",
+   "description": "digest_pipeline runs three stages: extract pulls structured 'name | date | location' lines from raw text. Draft writes a friendly 3-sentence digest from the facts; polish edits for concision and warmth under 60 words. All intermediates are returned for inspection.",
    "kind": "reveal",
    "lines": "22-43"
   },
@@ -27,7 +27,7 @@
    "lines": "34-37"
   },
   {
-   "description": "Stage 3 (polish) sees only the draft and tightens it to under 60 words. The raw announcements are two stages away, which avoids 'lost in the middle'.",
+   "description": "Stage 3 (polish) sees only the draft and tightens it to under 60 words. The raw announcements are two stages away  -  this avoids 'lost in the middle'.",
    "kind": "focus",
    "lines": "39-42"
   },
@@ -42,7 +42,7 @@
    "lines": "55-76"
   },
   {
-   "description": "The router's system prompt demands exactly one word. The guard at line 73 catches any label outside the closed set and silently defaults to 'software'. That is a fix in the code, not in the prompt.",
+   "description": "The router's system prompt demands exactly one word. The guard at line 73 catches any label outside the closed set and silently defaults to 'software'  -  a code-level fix, not a prompt-level one.",
    "kind": "focus",
    "lines": "67-73"
   },

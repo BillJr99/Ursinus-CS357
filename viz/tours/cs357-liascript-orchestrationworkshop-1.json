@@ -4,7 +4,7 @@
  "example": "cs357-liascript-orchestrationworkshop-1",
  "lang": "python",
  "reviewed": false,
- "source": "draft: pi free model",
+ "source": "draft: pi free model + edit: codex",
  "steps": [
   {
    "description": "Five messages arrive: three events (chess, hawk hacks, ultimate frisbee), one question about library hours, and one announcement about free pizza.",
@@ -47,12 +47,12 @@
    "lines": "34-39"
   },
   {
-   "description": "For POLISH, two deliberate bugs: ' is on ' becomes ': ' and 'Thursday' becomes 'Friday', the mistake Question 6 warned about.",
+   "description": "For POLISH, two deliberate bugs: ' is on ' becomes ': ' and 'Thursday' becomes 'Friday'  -  the mistake Question 6 warned about.",
    "kind": "focus",
    "lines": "40-41"
   },
   {
-   "description": "For CLASSIFY: 'moved' or 'cancel' means change; ends with '?' means question; matches EVENT means event; otherwise 'announcement', a label outside the closed set.",
+   "description": "For CLASSIFY: 'moved' or 'cancel' means change; ends with '?' means question; matches EVENT means event; otherwise 'announcement'  -  a label outside the closed set.",
    "kind": "focus",
    "lines": "42-47"
   },
