@@ -544,7 +544,9 @@ The Code Cell's supervisor is about ten lines of Python, and its sub-agents are 
 
 **HerdrDroid puts the person in the loop.**  [HerdrDroid](https://www.billmongan.com/software/herdrdroid/) is an Android app I wrote that signs in to that server over SSH and shows every tab as a card with its state, its model, and how much of its usage allowance is left.  When an agent stops to ask for approval, the question becomes a card with one button per answer, so I can approve, refuse, or redirect the work from my phone.
 
-<!-- ORCHESTRATION_VIDEO -->
+!?[A 44-second screen recording of HerdrDroid: an orchestrating Claude agent splits a task and sends parts to Codex, Muse and Grok; their cards turn to Working; Grok stops at Needs you, and its approval is answered from the phone; all three finish and Claude collects the results](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/media/herdrdroid-orchestration.mp4)
+
+*A mock-up: the computer, the agents' tasks and the usage figures are made up, but the app is the real HerdrDroid, recorded on an Android emulator.  [Poster frame](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/media/herdrdroid-orchestration-poster.png).*
 
 Each piece of the setup has a counterpart in the Code Cell.
 
