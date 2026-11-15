@@ -1,0 +1,42 @@
+{
+ "code": "import json\nimport requests\n\nOLLAMA_URL = \"http://localhost:11434/api/chat\"\nMODEL = \"llama3.2\"\n\ndef chat(messages, temperature=0.7):\n    try:\n        r = requests.post(OLLAMA_URL, json={\n            \"model\": MODEL,\n            \"messages\": messages,\n            \"stream\": False,\n            \"options\": {\"temperature\": temperature}\n        }, timeout=120)\n        return r.json()[\"message\"][\"content\"]\n    except Exception as e:\n        print(f\"[agentloop:chat] {e}\")\n        import traceback; traceback.print_exc()\n        return \"\"\n\nprint(\"Environment ready.\")",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "example": "cs357-liascript-agentloop-1",
+ "lang": "python",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "description": "Lines 1-2 import `json` and `requests`.",
+   "kind": "reveal",
+   "lines": "1-2"
+  },
+  {
+   "description": "Lines 4-5 run the main code.",
+   "kind": "reveal",
+   "lines": "4-5"
+  },
+  {
+   "description": "Lines 7-19 define `chat(messages, temperature)`.",
+   "kind": "reveal",
+   "lines": "7-19"
+  },
+  {
+   "description": "Line 15 returns `r.json()[\"message\"][\"content\"]`.",
+   "kind": "focus",
+   "lines": "15"
+  },
+  {
+   "description": "Line 19 returns `\"\"`.",
+   "kind": "focus",
+   "lines": "19"
+  },
+  {
+   "description": "Line 21 continues the main code and print the results.",
+   "kind": "reveal",
+   "lines": "21"
+  }
+ ],
+ "title": "Code Cell",
+ "version": 1
+}

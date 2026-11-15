@@ -1,0 +1,22 @@
+{
+ "code": "# The Ollama response behind Model 4, step 1 (durations are in nanoseconds)\nresp = {\"model\": \"hermes-3\", \"done\": True, \"done_reason\": \"stop\",\n        \"total_duration\": 2_773_000_000, \"load_duration\": 12_000_000,\n        \"prompt_eval_count\": 412, \"prompt_eval_duration\": 610_000_000,\n        \"eval_count\": 41, \"eval_duration\": 2_100_000_000}\n\nNS = 1e9\nin_tok, out_tok = resp[\"prompt_eval_count\"], resp[\"eval_count\"]\nread_s = resp[\"prompt_eval_duration\"] / NS\nwrite_s = resp[\"eval_duration\"] / NS\ntotal_s = resp[\"total_duration\"] / NS\n\nprint(f\"read  {in_tok:>4} input tokens  in {read_s:.2f} s  ({in_tok / read_s:.0f} tokens/s)\")\nprint(f\"wrote {out_tok:>4} output tokens in {write_s:.2f} s  ({out_tok / write_s:.1f} tokens/s)\")\nprint(f\"total {total_s:.2f} s, and writing was {write_s / total_s:.0%} of it\")\n\n# The trace line, built from measured numbers rather than estimates\nprint({\"trace_id\": \"t-77b0\", \"step\": 1, \"phase\": \"plan\",\n       \"prompt_tokens\": in_tok, \"completion_tokens\": out_tok,\n       \"latency_ms\": int(total_s * 1000), \"finish_reason\": resp[\"done_reason\"]})",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "example": "cs357-liascript-observability-4",
+ "lang": "python",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "description": "Lines 2-13 run the main code and print the results.",
+   "kind": "reveal",
+   "lines": "2-13"
+  },
+  {
+   "description": "Lines 14-20 continue the main code and print the results.",
+   "kind": "reveal",
+   "lines": "14-20"
+  }
+ ],
+ "title": "Extension: Counting Tokens, the Number Under Every Cost (self-paced)",
+ "version": 1
+}

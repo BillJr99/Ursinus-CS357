@@ -1,0 +1,77 @@
+{
+ "code": "# Step 1: a fixed pipeline.  You wrote the order; the code checks the seam the model cannot.\ndef check_times(facts, text):\n    \"\"\"A check in code, not a model: every extracted day and time must survive into the text.\"\"\"\n    missing = []\n    for row in facts.splitlines():\n        name, day, time, _ = [x.strip() for x in row.split(\"|\")]\n        if f\"{day} at {time}\" not in text:\n            missing.append(f\"{name}: {day} at {time}\")\n    return missing\n\ndef digest_pipeline(messages):\n    facts = llm(EXTRACT, \"\\n\".join(messages))\n    print(\"1. EXTRACT ->\\n\" + facts)\n    draft = llm(DRAFT, facts)\n    print(\"2. DRAFT ->\\n\" + draft)\n    final = llm(POLISH, draft)\n    print(\"3. POLISH ->\\n\" + final)\n    missing = check_times(facts, final)\n    print(\"4. CHECK ->\", missing or \"every day and time present\")\n    if missing:                        # stop condition: never ship a digest that lost a fact\n        print(\"   polish broke a fact; returning the draft, with the problem attached\")\n        return draft, missing\n    return final, []\n\nCALLS.clear()\ndigest, problems = digest_pipeline(MESSAGES)\nprint(f\"\\nRESULT: {digest}\\nmodel calls: {len(CALLS)}\")",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "example": "cs357-liascript-orchestrationworkshop-4",
+ "lang": "python",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "description": "Lines 2-9 define `check_times(facts, text)`.",
+   "kind": "reveal",
+   "lines": "2-9"
+  },
+  {
+   "description": "Line 5 loops over `facts.splitlines()`.",
+   "kind": "focus",
+   "lines": "5"
+  },
+  {
+   "description": "Line 7 checks `f\"{day} at {time}\" not in text`.",
+   "kind": "focus",
+   "lines": "7"
+  },
+  {
+   "description": "Lines 11-23 define `digest_pipeline(messages)`.",
+   "kind": "reveal",
+   "lines": "11-23"
+  },
+  {
+   "description": "Line 20 checks `missing`.",
+   "kind": "focus",
+   "lines": "20"
+  },
+  {
+   "description": "Line 22 returns `draft, missing`.",
+   "kind": "focus",
+   "lines": "22"
+  },
+  {
+   "description": "Lines 25-27 run the main code and print the results.",
+   "kind": "reveal",
+   "lines": "25-27"
+  },
+  {
+   "description": "Here `check_times` is called for the first time; its frame appears on the right.",
+   "kind": "run",
+   "lines": "4",
+   "trace_step": 11
+  },
+  {
+   "description": "Here `check_times` returns, the first time it does.",
+   "kind": "run",
+   "lines": "9",
+   "trace_step": 36
+  },
+  {
+   "description": "Here `digest_pipeline` is called for the first time; its frame appears on the right.",
+   "kind": "run",
+   "lines": "12",
+   "trace_step": 4
+  },
+  {
+   "description": "Here `digest_pipeline` returns, the first time it does.",
+   "kind": "run",
+   "lines": "22",
+   "trace_step": 41
+  },
+  {
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "kind": "run",
+   "lines": "27",
+   "trace_step": 43
+  }
+ ],
+ "title": "Step 1: A Fixed Pipeline With a Check at the Seam",
+ "version": 1
+}
