@@ -534,6 +534,37 @@ print(supervise("Write one tight paragraph on why local models matter, then have
 
 DeepAgents makes these same decisions (when to plan, when to start a sub-agent, when to finish) *inside* its built-in system prompt.  That is why it is so short to use and so much harder to debug when it misbehaves.  When you write the loop yourself, those decisions are visible in ten lines; when a framework writes it, they move into the framework's prompt.
 
+## 3b.  A Supervisor You Can Watch: herdr and HerdrDroid
+
+The Code Cell's supervisor is about ten lines of Python, and its sub-agents are function calls.  I run the same pattern every day with full coding agents as the sub-agents, and the levers you just read about are exactly the ones that keep it safe to leave running.  Here is how it is set up.
+
+**One server, one tab per agent.**  The agents run on a small always-on server, not on my laptop.  [herdr](https://herdr.dev/), an agent-aware terminal multiplexer, keeps each one (Claude Code, Codex, Grok, Muse and several others) alive in its own labelled tab with its own working folder, so I can disconnect and come back later.  Because herdr recognizes each agent, it also reports each tab's state: **working**, **done**, **idle**, or **blocked** waiting for a person.
+
+**The supervisor is an agent, and herdr is its tool.**  One agent acts as the orchestrator.  It reads the task, chooses which agent should do each part, and hands that part over by typing a prompt into the chosen agent's tab through herdr's command line.  It then watches that tab's state and reads the reply, much as `supervise()` appends each result to its transcript.  A small wrapper around those herdr commands refuses to type into a tab that is busy or that is waiting at an approval prompt, so the orchestrator cannot answer a question that belongs to a person.
+
+**HerdrDroid puts the person in the loop.**  [HerdrDroid](https://www.billmongan.com/software/herdrdroid/) is an Android app I wrote that signs in to that server over SSH and shows every tab as a card with its state, its model, and how much of its usage allowance is left.  When an agent stops to ask for approval, the question becomes a card with one button per answer, so I can approve, refuse, or redirect the work from my phone.
+
+<!-- ORCHESTRATION_VIDEO -->
+
+The table maps each piece of the setup onto the Code Cell.
+
+| Idea from the Code Cell | In `supervise()` | In the herdr setup |
+|---|---|---|
+| Supervisor | The model call that picks the next action | An orchestrating coding agent |
+| Roster | `ROSTER`, the menu of sub-agents | The labelled herdr tabs the orchestrator may send work to |
+| Action | `{"agent": ..., "input": ...}` | One prompt typed into one tab |
+| Transcript | The `transcript` list | Each agent's own session log, plus herdr's state for every tab |
+| Spawn budget | `SPAWN_BUDGET` | Each agent's usage allowance; an agent near its limit is set aside until it resets |
+| Fail closed to a person | `[stopped: ...]` instead of a guessed answer | A **blocked** tab waits for me, and the approval reaches my phone as a card |
+
+The setup itself is written up in [Herding Agents](https://www.billmongan.com/posts/2026/10/herdr-multiagent-mcpproxy/).
+
+### Critical Thinking Questions
+
+19b. In the herdr setup, the orchestrator may not answer an approval prompt in another agent's tab, even when the answer looks obvious.  Which lever from **What you still own** does that rule implement, and what failure would you expect if the orchestrator were allowed to approve its own sub-agents' requests?
+
+    > *Hint: An approval prompt is the sub-agent saying "a person should decide this."  If the supervisor can answer it, who is actually deciding?  Think about the runaway loop in Question 19, and what happens when nothing in the loop is ever forced to stop for a human.*
+
 ## Model 4: Who Decides Control Flow?
 
 | Pattern | Who decides the control flow | Reach for it when | Main risk |
