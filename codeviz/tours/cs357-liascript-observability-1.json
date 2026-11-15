@@ -1,1 +1,63 @@
-{"version": 1, "example": "cs357-liascript-observability-1", "title": "RAG demo with real embeddings from Ollama", "description": "This example builds a small RAG pipeline: it embeds a corpus with Ollama, retrieves the closest passages for a question, and formats a prompt for an LLM to answer using only those passages.", "reviewed": false, "source": "draft: pi free model", "steps": [{"kind": "reveal", "lines": "1-10", "description": "The corpus is four markdown files about a bike co-op: hours, membership, tools, and safety. Each file's text is a single string."}, {"kind": "reveal", "lines": "12-16", "description": "The embed function sends texts to Ollama's /api/embed endpoint and returns the embedding vectors. It uses nomic-embed-text:v1.5."}, {"kind": "reveal", "lines": "18-19", "description": "cosine computes cosine similarity between two vectors using the standard formula."}, {"kind": "reveal", "lines": "21-23", "description": "CHUNKS splits each corpus file into paragraphs (separated by blank lines) and tags each with an id, source file, and text. VECTORS embeds all chunk texts at startup."}, {"kind": "focus", "lines": "21-23", "description": "Each chunk becomes a tuple: chunk id, source filename, and the paragraph text. VECTORS holds the embedding for every chunk."}, {"kind": "reveal", "lines": "25-28", "description": "search embeds the question, computes cosine similarity against every chunk vector, sorts by score descending, and returns the top k."}, {"kind": "predict", "lines": "30-38", "question": "What does the main block print when run with a question?", "answer": "It prints a prompt for an LLM that includes the top retrieved passages and instructions to answer using only those passages, naming the source file for each fact."}, {"kind": "reveal", "lines": "30-38", "description": "The main block reads the question from argv, runs search, prints the scored chunks to stderr, builds a context string from the top hits, and prints the full prompt with instructions."}, {"kind": "run", "trace_step": 2, "lines": "28", "description": "search returns the top 3 chunks for 'Who do I tell if I get hurt?'. The injury passage from safety.md ranks first with a score around 0.625."}, {"kind": "run", "trace_step": 3, "lines": "36-38", "description": "The prompt is printed with the retrieved passages: the injury passage, the safety glasses passage, and the hours passage, followed by the question."}]}
+{
+  "version": 1,
+  "example": "cs357-liascript-observability-1",
+  "title": "RAG demo with real embeddings from Ollama",
+  "description": "This example builds a small RAG pipeline. It embeds a corpus with Ollama, retrieves the closest passages for a question, and formats a prompt that asks an LLM to answer from those passages only.",
+  "reviewed": false,
+  "source": "draft: pi free model",
+  "steps": [
+    {
+      "kind": "reveal",
+      "lines": "1-10",
+      "description": "The corpus is four markdown files about a bike co-op: hours, membership, tools, and safety. Each file's text is a single string."
+    },
+    {
+      "kind": "reveal",
+      "lines": "12-16",
+      "description": "The embed function sends texts to Ollama's /api/embed endpoint and returns the embedding vectors. It uses nomic-embed-text:v1.5."
+    },
+    {
+      "kind": "reveal",
+      "lines": "18-19",
+      "description": "cosine computes cosine similarity between two vectors using the standard formula."
+    },
+    {
+      "kind": "reveal",
+      "lines": "21-23",
+      "description": "CHUNKS splits each corpus file into paragraphs (separated by blank lines) and tags each with an id, source file, and text. VECTORS embeds all chunk texts at startup."
+    },
+    {
+      "kind": "focus",
+      "lines": "21-23",
+      "description": "Each chunk becomes a tuple: chunk id, source filename, and the paragraph text. VECTORS holds the embedding for every chunk."
+    },
+    {
+      "kind": "reveal",
+      "lines": "25-28",
+      "description": "search embeds the question, computes cosine similarity against every chunk vector, sorts by score descending, and returns the top k."
+    },
+    {
+      "kind": "predict",
+      "lines": "30-38",
+      "question": "What does the main block print when run with a question?",
+      "answer": "It prints a prompt for an LLM that includes the top retrieved passages and instructions to answer using only those passages, naming the source file for each fact."
+    },
+    {
+      "kind": "reveal",
+      "lines": "30-38",
+      "description": "The main block reads the question from argv, runs search, prints the scored chunks to stderr, builds a context string from the top hits, and prints the full prompt with instructions."
+    },
+    {
+      "kind": "run",
+      "trace_step": 2,
+      "lines": "28",
+      "description": "search returns the top 3 chunks for 'Who do I tell if I get hurt?'. The injury passage from safety.md ranks first with a score around 0.625."
+    },
+    {
+      "kind": "run",
+      "trace_step": 3,
+      "lines": "36-38",
+      "description": "The prompt is printed with the retrieved passages: the injury passage, the safety glasses passage, and the hours passage, followed by the question."
+    }
+  ]
+}
