@@ -14,12 +14,12 @@
     {
       "kind": "reveal",
       "lines": "22-43",
-      "description": "digest_pipeline runs three stages: extract pulls structured 'name | date | location' lines from raw text; draft writes a friendly 3-sentence digest from the facts; polish edits for concision and warmth under 60 words. All intermediates are returned for inspection."
+      "description": "digest_pipeline runs three stages. extract pulls structured 'name | date | location' lines from the raw text, draft writes a friendly 3-sentence digest from those facts, and polish edits it for concision and warmth under 60 words. All the intermediate results are returned so you can inspect them."
     },
     {
       "kind": "focus",
       "lines": "28-31",
-      "description": "digest_pipeline runs three stages. extract pulls structured 'name | date | location' lines from the raw text, draft writes a friendly 3-sentence digest from those facts, and polish edits it for concision and warmth under 60 words. All the intermediate results are returned so you can inspect them."
+      "description": "Stage 1 (extract) sees the raw announcements and outputs one structured line per event."
     },
     {
       "kind": "focus",
@@ -29,12 +29,12 @@
     {
       "kind": "focus",
       "lines": "39-42",
-      "description": "Stage 3 (polish) sees only the draft and tightens it to under 60 words. The raw announcements are two stages away — this avoids 'lost in the middle'."
+      "description": "Stage 3 (polish) sees only the draft and tightens it to under 60 words. The raw announcements are two stages away, which avoids 'lost in the middle'."
     },
     {
       "kind": "reveal",
       "lines": "45-53",
-      "description": "Stage 3 (polish) sees only the draft and tightens it to under 60 words. The raw announcements are two stages away, which avoids 'lost in the middle'."
+      "description": "The raw input has three events. The pipeline runs and prints facts, draft, and final digest."
     },
     {
       "kind": "reveal",
@@ -44,14 +44,13 @@
     {
       "kind": "focus",
       "lines": "67-73",
-      "description": "The router's system prompt demands exactly one word. The guard at line 73 catches any label outside the closed set and silently defaults to 'software' — a code-level fix, not a prompt-level one."
+      "description": "The router's system prompt demands exactly one word. The guard at line 73 catches any label outside the closed set and silently defaults to 'software'. That is a fix in the code, not in the prompt."
     },
     {
       "kind": "predict",
       "lines": "78-83",
       "question": "What happens when a ticket about a login problem is classified?",
-      "answer": "The router classifies it as 'accounts', the guard passes, and the accounts specialist returns two concrete steps for account access issues.",
-      "description": "The router's system prompt demands exactly one word. The guard at line 73 catches any label outside the closed set and silently defaults to 'software'. That is a fix in the code, not in the prompt."
+      "answer": "The router classifies it as 'accounts', the guard passes, and the accounts specialist returns two concrete steps for account access issues."
     },
     {
       "kind": "run",
