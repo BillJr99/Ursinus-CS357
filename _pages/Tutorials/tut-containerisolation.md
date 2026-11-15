@@ -224,6 +224,18 @@ echo "decoy: grades.csv would be here" > decoy-secret.txt
 
 [Simulate this session](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=simulate#cs357-tut-containerisolation-onefolder) <!-- code-viz simulate link -->
 
+### Recorded terminal session
+
+Play the commands and their recorded output. Pause to inspect a result, or choose a marker to revisit a step.
+Build logs and version strings are sample output.
+
+<iframe title="One shared directory in a container" loading="lazy"
+  src="{{ '/viz/?mode=terminal&embed=1#cs357-tut-containerisolation-onefolder-terminal' | relative_url }}"
+  style="width:100%;height:740px;border:1px solid #888"></iframe>
+
+[Open the terminal recording]({{ '/viz/?mode=terminal#cs357-tut-containerisolation-onefolder-terminal' | relative_url }})
+
+
 Save this as `Dockerfile`:
 
 <!-- run: id=cs357-tut-containerisolation-3 viz=show -->
