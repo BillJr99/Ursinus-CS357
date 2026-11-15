@@ -14,7 +14,7 @@
     {
       "kind": "reveal",
       "lines": "22-43",
-      "description": "digest_pipeline runs three stages. extract pulls structured 'name | date | location' lines from the raw text, draft writes a friendly 3-sentence digest from those facts, and polish edits it for concision and warmth under 60 words. All the intermediate results are returned so you can inspect them."
+      "description": "digest_pipeline runs three stages. extract pulls structured 'name | date | location' lines from the raw text. draft writes a friendly 3-sentence digest from those facts, and polish edits it for concision and warmth under 60 words. All the intermediate results are returned so you can inspect them."
     },
     {
       "kind": "focus",
