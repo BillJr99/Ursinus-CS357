@@ -187,6 +187,19 @@ The [Development Environment activity]({{ site.lia_viewer_url }}{{ site.raw_page
 
 **Do A1 through A6 in the [Course Container tutorial]({{ site.baseurl }}/Tutorials/CourseContainer)**, and then come back here for the checklist.
 
+
+
+### Demo: Docker Desktop and the course tools
+
+Illustration: typical output; yours may differ. Follow A1 through A6 in the Course Container tutorial. This animation uses a shortened container prompt.
+The demo plays once when you scroll it into view. You can pause it. Reduced-motion settings show the finished transcript.
+
+<iframe title="Docker Desktop and the course tools" loading="lazy"
+  src="{{ '/viz/?mode=terminal&embed=1#cs357-demo-overview-setup' | relative_url }}"
+  style="width:100%;height:640px;border:1px solid #888"></iframe>
+
+[Open this demo]({{ '/viz/?mode=terminal#cs357-demo-overview-setup' | relative_url }})
+
 #### Route A Checklist
 
 - [ ] `docker run hello-world` printed `Hello from Docker!`

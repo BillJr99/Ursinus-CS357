@@ -1,4 +1,4 @@
-{"version": 2, "width": 100, "height": 30, "title": "One shared directory in a container", "duration": 45.01}
+{"version": 2, "width": 100, "height": 30, "title": "One shared directory in a container", "code_viz_provenance": "recorded", "duration": 45.01}
 [0.0, "m", "Prepare the workspace"]
 [0.0, "o", "$ mkdir -p iso/workspace && cd iso\r\n"]
 [0.0, "o", ""]

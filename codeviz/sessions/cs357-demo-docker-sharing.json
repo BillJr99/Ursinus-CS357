@@ -1,0 +1,48 @@
+{
+ "version": 1,
+ "id": "cs357-demo-docker-sharing",
+ "title": "Write through a Docker bind mount",
+ "description": "Recorded tutorial bind-mount commands in an isolated Docker sandbox. The image tag is pinned. The shared directory starts empty.",
+ "page": "_pages/Tutorials/tut-docker.md",
+ "scenario": {
+  "commands": [
+   "mkdir -p \"$HOME/agents/work\"",
+   "docker run --rm -v \"$HOME/agents/work:/work\" alpine:3.20 ls /work",
+   "docker run --rm -v \"$HOME/agents/work:/work\" alpine:3.20 sh -c 'touch /work/hello && echo wrote'",
+   "ls \"$HOME/agents/work\""
+  ],
+  "images": [
+   "alpine:3.20"
+  ],
+  "network": "isolated",
+  "watch": [
+   "agents/work"
+  ],
+  "timeout": 300
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "recorded",
+ "markers": [
+  {
+   "step": 0,
+   "title": "Create the shared directory",
+   "note": "You create a directory in the demo home."
+  },
+  {
+   "step": 1,
+   "title": "Mount the directory",
+   "note": "The container lists the shared directory. It starts empty."
+  },
+  {
+   "step": 2,
+   "title": "Write from the container",
+   "note": "The container creates hello through the mount."
+  },
+  {
+   "step": 3,
+   "title": "Check from the host",
+   "note": "The host-side listing shows the shared file."
+  }
+ ]
+}

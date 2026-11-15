@@ -1,7 +1,7 @@
 {
  "course": "cs357",
  "site": "https://billjr99.github.io/Ursinus-CS357-Fall2026",
- "built": "2026-11-15 11:31",
+ "built": "2026-11-15 13:42",
  "examples": [
   {
    "id": "cs357-liascript-agentloop-1",
@@ -365,6 +365,19 @@
    "modes": [
     "run",
     "explain"
+   ]
+  },
+  {
+   "id": "cs357-demo-overview-setup",
+   "viz": "session",
+   "lang": "shell",
+   "page": "_pages/Assignments/asmt-overview.md",
+   "line": 0,
+   "page_url": "",
+   "error": null,
+   "steps": 0,
+   "modes": [
+    "terminal"
    ]
   },
   {
@@ -1858,6 +1871,20 @@
    "steps": 0,
    "modes": [
     "simulate"
+   ]
+  },
+  {
+   "id": "cs357-demo-docker-sharing",
+   "viz": "session",
+   "lang": "shell",
+   "page": "_pages/Tutorials/tut-docker.md",
+   "line": 0,
+   "page_url": "",
+   "error": null,
+   "steps": 0,
+   "modes": [
+    "simulate",
+    "terminal"
    ]
   },
   {
