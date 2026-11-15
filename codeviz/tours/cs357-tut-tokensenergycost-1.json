@@ -1,0 +1,73 @@
+{
+ "version": 1,
+ "example": "cs357-tut-tokensenergycost-1",
+ "title": "4.  A Trace Line per Call, Summed per Run, Task, and Agent",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "Lines 1-2 import `json` and `collections`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "6-18",
+   "description": "Lines 6-18 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "19-20",
+   "description": "Lines 19-20 continue the main code and print the results."
+  },
+  {
+   "kind": "focus",
+   "lines": "19",
+   "description": "Line 19 checks `unmeasured`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "22-30",
+   "description": "Lines 22-30 define `total_by(key)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "24",
+   "description": "Line 24 loops over `rows`."
+  },
+  {
+   "kind": "focus",
+   "lines": "30",
+   "description": "Line 30 returns `sums`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "32-41",
+   "description": "Lines 32-41 continue the main code and print the results."
+  },
+  {
+   "kind": "focus",
+   "lines": "32",
+   "description": "Line 32 loops over `[\"run_id\", \"task\", \"agent\"]`."
+  },
+  {
+   "kind": "run",
+   "trace_step": 24,
+   "lines": "23",
+   "description": "Here `total_by` is called for the first time; its frame appears on the right."
+  },
+  {
+   "kind": "run",
+   "trace_step": 53,
+   "lines": "30",
+   "description": "Here `total_by` returns, the first time it does."
+  },
+  {
+   "kind": "run",
+   "trace_step": 185,
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "lines": "41"
+  }
+ ]
+}

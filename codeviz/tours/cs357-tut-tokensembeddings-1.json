@@ -1,0 +1,73 @@
+{
+ "version": 1,
+ "example": "cs357-tut-tokensembeddings-1",
+ "title": "Code Cell: Reproduce Every Number",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1",
+   "description": "Line 1 imports `numpy`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "2-14",
+   "description": "Lines 2-14 run the main code and print the results."
+  },
+  {
+   "kind": "reveal",
+   "lines": "15-26",
+   "description": "Lines 15-26 continue the main code and print the results."
+  },
+  {
+   "kind": "reveal",
+   "lines": "27-38",
+   "description": "Lines 27-38 continue the main code and print the results."
+  },
+  {
+   "kind": "reveal",
+   "lines": "41-52",
+   "description": "Lines 41-52 continue the main code and print the results."
+  },
+  {
+   "kind": "reveal",
+   "lines": "52-58",
+   "description": "Lines 52-58 continue the main code and print the results."
+  },
+  {
+   "kind": "reveal",
+   "lines": "59-62",
+   "description": "Lines 59-62 define `loss_at(w)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "62",
+   "description": "Line 62 returns `-np.log(pp[target])`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "63-64",
+   "description": "Lines 63-64 continue the main code and print the results."
+  },
+  {
+   "kind": "run",
+   "trace_step": 47,
+   "lines": "60",
+   "description": "Here `loss_at` is called for the first time; its frame appears on the right."
+  },
+  {
+   "kind": "run",
+   "trace_step": 50,
+   "lines": "62",
+   "description": "Here `loss_at` returns, the first time it does."
+  },
+  {
+   "kind": "run",
+   "trace_step": 56,
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "lines": "64"
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "example": "cs357-liascript-agentloop-1",
+ "title": "Code Cell",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-2",
+   "description": "Lines 1-2 import `json` and `requests`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "4-5",
+   "description": "Lines 4-5 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "7-19",
+   "description": "Lines 7-19 define `chat(messages, temperature)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "15",
+   "description": "Line 15 returns `r.json()[\"message\"][\"content\"]`."
+  },
+  {
+   "kind": "focus",
+   "lines": "19",
+   "description": "Line 19 returns `\"\"`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "21",
+   "description": "Line 21 continues the main code and print the results."
+  }
+ ]
+}
