@@ -1,0 +1,60 @@
+{
+ "version": 1,
+ "example": "cs357-liascript-orchestrationworkshop-2",
+ "title": "Code Cell",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1",
+   "description": "Line 1 imports `requests`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "3-20",
+   "description": "Lines 3-20 define `llm(system, user, temperature)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "16",
+   "description": "Line 16 returns `r.json()[\"message\"][\"content\"].strip()`."
+  },
+  {
+   "kind": "focus",
+   "lines": "20",
+   "description": "Line 20 returns `\"\"`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "25-43",
+   "description": "Lines 25-43 define `digest_pipeline(raw_announcements)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "43",
+   "description": "Line 43 returns `facts, draft, final`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "45-62",
+   "description": "Lines 45-62 run the main code and print the results."
+  },
+  {
+   "kind": "reveal",
+   "lines": "64-76",
+   "description": "Lines 64-76 define `route(ticket)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "76",
+   "description": "Line 76 returns `label, response`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "78-83",
+   "description": "Lines 78-83 continue the main code and print the results."
+  }
+ ]
+}

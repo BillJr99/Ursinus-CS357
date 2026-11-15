@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "example": "cs357-tut-aibyhand-4",
+  "title": "A Temperature Sweep with Entropy",
+  "description": "A sweep over five temperatures for five tokens, printing each softmax distribution and its entropy so you can see the shape flatten as temperature rises.",
+  "reviewed": false,
+  "source": "draft: opencode free model",
+  "steps": [
+    {
+      "kind": "reveal",
+      "lines": "1",
+      "description": "`math` gives us `exp` and `log` for this sweep."
+    },
+    {
+      "kind": "reveal",
+      "lines": "3-8",
+      "description": "`softmax_temp` scales the logits by the temperature, subtracts the maximum for numerical stability, exponentiates, and divides by the sum. It returns a probability for each token."
+    },
+    {
+      "kind": "reveal",
+      "lines": "10-11",
+      "description": "`entropy` returns the negative sum of `p * log(p)`. The tiny `1e-10` inside the log keeps a zero probability from making the log blow up. High entropy means a flat, uncertain distribution; low entropy means a peaked, confident one."
+    },
+    {
+      "kind": "reveal",
+      "lines": "14-15",
+      "description": "`VOCAB` names five tokens and `LOGITS` gives each a raw score. `Paris` leads at 4.5, and `croissant` trails at -0.5."
+    },
+    {
+      "kind": "reveal",
+      "lines": "17-18",
+      "description": "The first print lays out the table header, and the second prints a line of dashes under it."
+    },
+    {
+      "kind": "reveal",
+      "lines": "19-21",
+      "description": "The loop walks five temperatures from 0.1 to 2.0. For each one it calls `softmax_temp` to get the probabilities and `entropy` to summarize them into a single number."
+    },
+    {
+      "kind": "predict",
+      "question": "Each pass prints one row. At `T = 0.1`, what do you expect the row to show for `Paris` and for the entropy?",
+      "answer": "`Paris` shows about 1.0000 and the entropy about 0.0000. A very low temperature concentrates almost all the probability on the top logit.",
+      "lines": "22"
+    },
+    {
+      "kind": "run",
+      "trace_step": 7,
+      "lines": "19",
+      "description": "Run it. The loop reaches the first temperature, `T = 0.1`."
+    },
+    {
+      "kind": "run",
+      "trace_step": 45,
+      "lines": "22",
+      "description": "The first row prints. Across the five rows, `Paris` slides from 1.0000 to 0.5666 while the entropy climbs from 0.0000 to 1.2332, the flattening the sketch was meant to predict."
+    }
+  ]
+}

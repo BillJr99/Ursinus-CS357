@@ -1,0 +1,55 @@
+{
+ "version": 1,
+ "example": "cs357-liascript-orchestrationworkshop-3",
+ "title": "Code Cell",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1",
+   "description": "Line 1 imports `json` and `requests`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "3-10",
+   "description": "Lines 3-10 define `chat(messages, temperature)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "10",
+   "description": "Line 10 returns a value."
+  },
+  {
+   "kind": "reveal",
+   "lines": "15-21",
+   "description": "Lines 15-21 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "23-60",
+   "description": "Lines 23-60 define `supervise(task)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "26",
+   "description": "Line 26 loops over `range(SPAWN_BUDGET)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "43",
+   "description": "Line 43 checks `step.get(\"action\") == \"stop\"`."
+  },
+  {
+   "kind": "focus",
+   "lines": "47",
+   "description": "Line 47 checks `agent not in ROSTER`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "62",
+   "description": "Line 62 continues the main code and print the results."
+  }
+ ]
+}

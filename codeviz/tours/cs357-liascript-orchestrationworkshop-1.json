@@ -1,0 +1,90 @@
+{
+ "version": 1,
+ "example": "cs357-liascript-orchestrationworkshop-1",
+ "title": "Setup: The Task, the Settings You Own, and the Stand-In",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "2-3",
+   "description": "Lines 2-3 import `json` and `re`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "5-16",
+   "description": "Lines 5-16 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "17-22",
+   "description": "Lines 17-22 continue the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "24-48",
+   "description": "Lines 24-48 define `stand_in(system, user)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "27",
+   "description": "Line 27 checks `system == EXTRACT`."
+  },
+  {
+   "kind": "focus",
+   "lines": "34",
+   "description": "Line 34 checks `system == DRAFT`."
+  },
+  {
+   "kind": "focus",
+   "lines": "41",
+   "description": "Line 41 returns a value."
+  },
+  {
+   "kind": "focus",
+   "lines": "45",
+   "description": "Line 45 checks `user.rstrip().endswith(\"?\")`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "50-53",
+   "description": "Lines 50-53 define `llm(system, user)`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "55-57",
+   "description": "Lines 55-57 continue the main code and print the results."
+  },
+  {
+   "kind": "run",
+   "trace_step": 16,
+   "lines": "27",
+   "description": "Here `stand_in` is called for the first time; its frame appears on the right."
+  },
+  {
+   "kind": "run",
+   "trace_step": 23,
+   "lines": "47",
+   "description": "Here `stand_in` returns, the first time it does."
+  },
+  {
+   "kind": "run",
+   "trace_step": 14,
+   "lines": "52",
+   "description": "Here `llm` is called for the first time; its frame appears on the right."
+  },
+  {
+   "kind": "run",
+   "trace_step": 24,
+   "lines": "53",
+   "description": "Here `llm` returns, the first time it does."
+  },
+  {
+   "kind": "run",
+   "trace_step": 38,
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "lines": "57"
+  }
+ ]
+}

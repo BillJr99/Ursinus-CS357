@@ -1,0 +1,65 @@
+{
+ "version": 1,
+ "example": "cs357-liascript-observability-1",
+ "title": "Demo 1: RAG With a Real Embedding",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "3",
+   "description": "Line 3 imports `json`, `math`, `sys` and `urllib.request`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "5-10",
+   "description": "Lines 5-10 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "12-16",
+   "description": "Lines 12-16 define `embed(texts)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "16",
+   "description": "Line 16 returns a value."
+  },
+  {
+   "kind": "reveal",
+   "lines": "18-19",
+   "description": "Lines 18-19 define `cosine(u, v)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "19",
+   "description": "Line 19 returns a value."
+  },
+  {
+   "kind": "reveal",
+   "lines": "21-23",
+   "description": "Lines 21-23 continue the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "25-28",
+   "description": "Lines 25-28 define `search(question, k)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "28",
+   "description": "Line 28 returns `scored[:k]`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "30-38",
+   "description": "Lines 30-38 continue the main code and print the results."
+  },
+  {
+   "kind": "focus",
+   "lines": "30",
+   "description": "Line 30 checks `__name__ == \"__main__\"`."
+  }
+ ]
+}

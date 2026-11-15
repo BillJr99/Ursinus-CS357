@@ -1,0 +1,68 @@
+{
+ "version": 1,
+ "example": "cs357-tut-biasprobes-4",
+ "title": "Code Cell: Padding Probe on a Stand-In Judge",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "1-14",
+   "description": "Lines 1-14 run the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "15-16",
+   "description": "Lines 15-16 continue the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "18-28",
+   "description": "Lines 18-28 define `stand_in_judge(text)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "26",
+   "description": "Line 26 checks `len(text.split()) > 50`."
+  },
+  {
+   "kind": "focus",
+   "lines": "28",
+   "description": "Line 28 returns `levels`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "30-35",
+   "description": "Lines 30-35 continue the main code and print the results."
+  },
+  {
+   "kind": "focus",
+   "lines": "31",
+   "description": "Line 31 loops over `SAMPLES.items()`."
+  },
+  {
+   "kind": "focus",
+   "lines": "33",
+   "description": "Line 33 loops over `before`."
+  },
+  {
+   "kind": "run",
+   "trace_step": 9,
+   "lines": "20",
+   "description": "Here `stand_in_judge` is called for the first time; its frame appears on the right."
+  },
+  {
+   "kind": "run",
+   "trace_step": 17,
+   "lines": "28",
+   "description": "Here `stand_in_judge` returns, the first time it does."
+  },
+  {
+   "kind": "run",
+   "trace_step": 105,
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "lines": "31"
+  }
+ ]
+}

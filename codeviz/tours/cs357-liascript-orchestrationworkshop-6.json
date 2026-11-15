@@ -1,0 +1,80 @@
+{
+ "version": 1,
+ "example": "cs357-liascript-orchestrationworkshop-6",
+ "title": "Step 3: A Supervisor Loop With a Budget and Stop Conditions",
+ "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "reviewed": false,
+ "source": "skeleton",
+ "steps": [
+  {
+   "kind": "reveal",
+   "lines": "3",
+   "description": "Line 3 runs the main code."
+  },
+  {
+   "kind": "reveal",
+   "lines": "5-17",
+   "description": "Lines 5-17 define `naive_supervisor(task, transcript)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "11",
+   "description": "Line 11 checks `\"extractor\" not in done`."
+  },
+  {
+   "kind": "focus",
+   "lines": "15",
+   "description": "Line 15 checks `\"polisher\" not in done`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "19-55",
+   "description": "Lines 19-55 define `supervise(task, decide, budget)`."
+  },
+  {
+   "kind": "focus",
+   "lines": "31",
+   "description": "Line 31 returns a value."
+  },
+  {
+   "kind": "focus",
+   "lines": "44",
+   "description": "Line 44 checks `(agent, text) in seen`."
+  },
+  {
+   "kind": "reveal",
+   "lines": "57-60",
+   "description": "Lines 57-60 continue the main code and print the results."
+  },
+  {
+   "kind": "run",
+   "trace_step": 10,
+   "lines": "9",
+   "description": "Here `naive_supervisor` is called for the first time; its frame appears on the right."
+  },
+  {
+   "kind": "run",
+   "trace_step": 14,
+   "lines": "12",
+   "description": "Here `naive_supervisor` returns, the first time it does."
+  },
+  {
+   "kind": "run",
+   "trace_step": 5,
+   "lines": "20",
+   "description": "Here `supervise` is called for the first time; its frame appears on the right."
+  },
+  {
+   "kind": "run",
+   "trace_step": 173,
+   "lines": "55",
+   "description": "Here `supervise` returns, the first time it does."
+  },
+  {
+   "kind": "run",
+   "trace_step": 176,
+   "description": "This is the end of the run: the final state, and all of the output.",
+   "lines": "60"
+  }
+ ]
+}
