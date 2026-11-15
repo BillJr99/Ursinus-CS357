@@ -1,65 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-5",
- "title": "Part 3: Dependencies, Permissions, and Approval",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Typed dependencies, permission checks, and human approval",
+ "description": "Tools receive program-supplied dependencies through RunContext[Deps] and combine schema validation, a domain check, a permission check, and human approval.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2-4",
-   "description": "Lines 2-4 import `dataclasses`, `datetime` and `pathlib`."
+   "lines": "1-25",
+   "description": "Deps holds today's date, the notes_dir folder, and the set of allowed_courses. The Agent declares deps_type=Deps and allows DeferredToolRequests as an output type when a tool pauses for approval."
   },
   {
    "kind": "reveal",
-   "lines": "6-7",
-   "description": "Lines 6-7 import `pydantic_ai`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "9",
-   "description": "Line 9 imports `common`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "12-16",
-   "description": "Lines 12-16 define the class `Deps`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "19-25",
-   "description": "Lines 19-25 run the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "28-38",
-   "description": "Lines 28-38 define `days_until(ctx, target)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "35",
-   "description": "Line 35 checks `target.year > ctx.deps.today.year + 1`."
-  },
-  {
-   "kind": "focus",
-   "lines": "38",
-   "description": "Line 38 returns `(target - ctx.deps.today).days`."
+   "lines": "28-39",
+   "description": "days_until reads ctx.deps.today and raises ModelRetry if the target date is more than a year ahead, sending a correction back to the model."
   },
   {
    "kind": "reveal",
    "lines": "41-58",
-   "description": "Lines 41-58 define `save_deadline(ctx, course, due, title)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "52",
-   "description": "Line 52 returns a value."
-  },
-  {
-   "kind": "focus",
-   "lines": "53",
-   "description": "Line 53 checks `not ctx.tool_call_approved`."
+   "description": "save_deadline checks whether course is in ctx.deps.allowed_courses, raises ApprovalRequired() if the call is not yet approved, and only then appends the deadline to the course file."
   }
  ]
 }

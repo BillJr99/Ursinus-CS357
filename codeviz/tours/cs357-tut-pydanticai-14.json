@@ -1,15 +1,20 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-14",
- "title": "Part 10: Putting It Together",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Combining dependencies, approvals, MCP tools, and history on one Agent",
+ "description": "This snippet shows how to pass dependencies, deferred approvals, an MCP toolset, and a history processor to a single Agent.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
    "lines": "1-8",
-   "description": "Lines 1-8 run the main code."
+   "description": "Configure one Agent with deps_type=Deps, output_type=[str, DeferredToolRequests], MCPToolset for calendar_server.py, and ProcessHistory(keep_recent)."
+  },
+  {
+   "kind": "reveal",
+   "lines": "9-10",
+   "description": "The comments note the remaining pieces for Exercise 1: registering save_deadline, skill_menu, and load_skill, and passing deps, message_history, and usage_limits at run time."
   }
  ]
 }

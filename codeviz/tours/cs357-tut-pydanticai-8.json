@@ -1,75 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-8",
- "title": "Part 5: The Agentic Loop, Node by Node",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Stepping through the agentic loop and tripping usage limits",
+ "description": "agent.iter steps through each node of an agent run, and trip_limits shows how request_limit and tool_calls_limit stop a run at different points.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2-7",
-   "description": "Lines 2-7 continue the example."
+   "lines": "1-25",
+   "description": "Register get_today and days_until on the agent and define QUESTION, which asks for both today's date and the days until 2026-12-07."
   },
   {
    "kind": "reveal",
-   "lines": "9-10",
-   "description": "Lines 9-10 run the main code."
+   "lines": "28-39",
+   "description": "walk() uses agent.iter(QUESTION, ...) to iterate over each stage node (UserPromptNode, ModelRequestNode, CallToolsNode, End) and prints the tools requested on each CallToolsNode."
   },
   {
    "kind": "reveal",
-   "lines": "13-16",
-   "description": "Lines 13-16 define `get_today()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "16",
-   "description": "Line 16 returns `date.today().isoformat()`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "19-22",
-   "description": "Lines 19-22 define `days_until(target)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "22",
-   "description": "Line 22 returns `(target - date.today()).days`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "25",
-   "description": "Line 25 continues the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "28-38",
-   "description": "Lines 28-38 define `walk()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "30",
-   "description": "Line 30 loops over `run`."
-  },
-  {
-   "kind": "focus",
-   "lines": "32",
-   "description": "Line 32 checks `name == \"CallToolsNode\"`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "43-49",
-   "description": "Lines 43-49 define `trip_limits()`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "52-54",
-   "description": "Lines 52-54 define `main()`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "57",
-   "description": "Line 57 continues the main code."
+   "lines": "43-57",
+   "description": "trip_limits() runs the same question under UsageLimits(request_limit=1) and UsageLimits(tool_calls_limit=1), catching UsageLimitExceeded to show how each budget fails."
   }
  ]
 }

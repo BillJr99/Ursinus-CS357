@@ -1,75 +1,35 @@
 {
  "version": 1,
  "example": "cs357-tut-personapipeline-2",
- "title": "personapipeline.py",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Running and verifying a multi-persona prompt pipeline",
+ "description": "Walk through loading skill files, enforcing context isolation per step, running the four-step loop, and verifying the final prompt in Python.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: agy",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "1-32",
-   "description": "Lines 1-32 run the main code."
+   "lines": "1-52",
+   "description": "The module header summarizes the four architectural rules (persona before rules, explicit skill pasting, attacker isolation via `sees`, and per-step temperatures) and defines the word lists (`HEDGES`, `REFUSALS`, `ESCALATIONS`) used by the code verifier."
   },
   {
    "kind": "reveal",
-   "lines": "34-73",
-   "description": "Lines 34-73 continue the example."
-  },
-  {
-   "kind": "focus",
-   "lines": "64",
-   "description": "Line 64 checks `not lines or lines[0].strip() != \"---\"`."
-  },
-  {
-   "kind": "focus",
-   "lines": "69",
-   "description": "Line 69 returns `text.strip()`."
+   "lines": "54-103",
+   "description": "`strip_front_matter` removes the YAML header between `---` markers from a `SKILL.md` file. `load_skill` reads `<skills_dir>/<name>/SKILL.md` and raises `FileNotFoundError` if a skill is missing so the pipeline never runs silently without its rules."
   },
   {
    "kind": "reveal",
-   "lines": "76-102",
-   "description": "Lines 76-102 define `load_skill(cfg, name)`."
+   "lines": "105-145",
+   "description": "`build_system` places the step's role before the pasted skill body. `build_user` enforces context isolation: it iterates over `step[\"sees\"]` and includes only those named artifacts from `context` before appending `step[\"instruction\"]`."
   },
   {
    "kind": "reveal",
-   "lines": "105-144",
-   "description": "Lines 105-144 define `build_system` and `build_user`."
-  },
-  {
-   "kind": "focus",
-   "lines": "133",
-   "description": "Line 133 loops over `step.get(\"sees\", [])`."
+   "lines": "147-238",
+   "description": "`run_step` calls `chat()` with each step's own temperature and the shared seed, while `run_pipeline` loops over `cfg[\"steps\"]` in order and stores each reply under `context[step[\"writes\"]]`."
   },
   {
    "kind": "reveal",
-   "lines": "147-173",
-   "description": "Lines 147-173 define `run_step(cfg, step, context)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "176-217",
-   "description": "Lines 176-217 define `describe_plan` and `run_pipeline`."
-  },
-  {
-   "kind": "focus",
-   "lines": "213",
-   "description": "Line 213 returns `context, trace`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "220-237",
-   "description": "Lines 220-237 define `render_trace(trace)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "240-272",
-   "description": "Lines 240-272 define `verify(prompt)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "275-314",
-   "description": "Lines 275-314 continue the example."
+   "lines": "240-314",
+   "description": "`verify(prompt)` tests the finished prompt in Python against six concrete checks (role, scope, refusal, escalation, format, and hedge-free wording), and the `__main__` block runs the pipeline and prints the PASS/FAIL table."
   }
  ]
 }

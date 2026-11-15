@@ -1,75 +1,30 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-13",
- "title": "Part 9: Testing Without a Model",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Testing agent plumbing with TestModel and FunctionModel",
+ "description": "test_agents.py replaces the language model with TestModel and a scripted FunctionModel so pytest can verify tool calls, validation retries, permissions, approval gates, and usage limits without Ollama.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2-8",
-   "description": "Lines 2-8 continue the example."
+   "lines": "1-23",
+   "description": "deps(tmp_path) pins today to 2026-10-07 and points notes_dir at a temporary folder. The first test uses TestModel to verify that days_until can be called with schema-generated arguments."
   },
   {
    "kind": "reveal",
-   "lines": "10-14",
-   "description": "Lines 10-14 continue the example."
-  },
-  {
-   "kind": "focus",
-   "lines": "14",
-   "description": "Line 14 returns a value."
+   "lines": "25-49",
+   "description": "scripted(*turns) wraps a callback in FunctionModel to replay predetermined ToolCallPart responses. The next two tests verify that days_until uses the injected date and that an invalid date string produces a retry-prompt."
   },
   {
    "kind": "reveal",
-   "lines": "17-22",
-   "description": "Lines 17-22 define `test_every_tool_gets_called_with_schema_valid_arguments(tmp_path)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "25-34",
-   "description": "Lines 25-34 define `scripted()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "30",
-   "description": "Line 30 checks `turns`."
-  },
-  {
-   "kind": "focus",
-   "lines": "32",
-   "description": "Line 32 returns a value."
-  },
-  {
-   "kind": "focus",
-   "lines": "33",
-   "description": "Line 33 returns `ModelResponse(parts=[TextPart(\"done\")])`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "37-41",
-   "description": "Lines 37-41 define `test_days_until_uses_the_injected_today(tmp_path)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "44-48",
-   "description": "Lines 44-48 define `test_a_bad_date_goes_back_to_the_model_as_a_retry(tmp_path)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "51-56",
-   "description": "Lines 51-56 define `test_valid_arguments_are_not_permission(tmp_path)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "59-63",
-   "description": "Lines 59-63 define `test_a_write_pauses_for_approval(tmp_path)`."
+   "lines": "51-64",
+   "description": "These two tests verify that saving a deadline for an unpermitted course ('HIST101') is refused without writing a file, and that a permitted course ('CS357') pauses with DeferredToolRequests."
   },
   {
    "kind": "reveal",
    "lines": "66-73",
-   "description": "Lines 66-73 define `test_request_limit_and_tool_call_limit_are_different(tmp_path)`."
+   "description": "The final test replays three tool calls under request_limit=2 and tool_calls_limit=2 to confirm that each limit raises UsageLimitExceeded."
   }
  ]
 }

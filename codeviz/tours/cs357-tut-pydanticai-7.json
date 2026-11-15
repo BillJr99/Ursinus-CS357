@@ -1,55 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-7",
- "title": "Part 4: Structured Output, and What Validation Cannot Catch",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Structured extraction with NativeOutput and an output validator",
+ "description": "The model extracts a typed Deadline object constrained by NativeOutput, an output validator checks that the date has not passed, and Python computes the day count.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2-3",
-   "description": "Lines 2-3 import `traceback` and `datetime`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "5-6",
-   "description": "Lines 5-6 import `pydantic` and `pydantic_ai`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "8",
-   "description": "Line 8 imports `common`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "11-13",
-   "description": "Lines 11-13 define the class `Deadline`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "16-22",
-   "description": "Lines 16-22 run the main code."
+   "lines": "1-22",
+   "description": "Deadline defines event and target fields, and the Agent uses NativeOutput(Deadline) so Ollama constrains the reply to that JSON schema."
   },
   {
    "kind": "reveal",
    "lines": "25-30",
-   "description": "Lines 25-30 define `not_in_the_past(output)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "28",
-   "description": "Line 28 checks `output.target < date.today()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "30",
-   "description": "Line 30 returns `output`."
+   "description": "The @agent.output_validator function not_in_the_past checks that output.target is not before today and raises ModelRetry if it is."
   },
   {
    "kind": "reveal",
    "lines": "33-41",
-   "description": "Lines 33-41 continue the main code and print the results."
+   "description": "After agent.run_sync returns the validated Deadline instance d, line 38 computes (d.target - date.today()).days in Python rather than asking the model to do arithmetic."
   }
  ]
 }

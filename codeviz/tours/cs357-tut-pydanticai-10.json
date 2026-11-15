@@ -1,75 +1,30 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-10",
- "title": "Part 7: Skills",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Loading SKILL.md instructions on demand with a skill menu",
+ "description": "The agent receives a compact menu of skill names and descriptions in its instructions and calls load_skill to fetch a skill's full body only when needed.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2-3",
-   "description": "Lines 2-3 import `datetime` and `pathlib`."
+   "lines": "1-22",
+   "description": "SkillCard validates the name and description in each SKILL.md YAML front matter, and SKILLS maps each skill folder name to its (SkillCard, body) pair."
   },
   {
    "kind": "reveal",
-   "lines": "5-8",
-   "description": "Lines 5-8 continue the example."
+   "lines": "24-32",
+   "description": "The @agent.instructions function skill_menu lists each skill's one-line description and tells the model to call load_skill when a skill fits the task."
   },
   {
    "kind": "reveal",
-   "lines": "11-13",
-   "description": "Lines 11-13 define the class `SkillCard`."
+   "lines": "34-40",
+   "description": "load_skill checks that name is in the SKILLS registry (raising ModelRetry with the valid names if not) before returning the skill body."
   },
   {
    "kind": "reveal",
-   "lines": "16-19",
-   "description": "Lines 16-19 define `read_skill(path)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "19",
-   "description": "Line 19 returns a value."
-  },
-  {
-   "kind": "reveal",
-   "lines": "22-24",
-   "description": "Lines 22-24 run the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "27-31",
-   "description": "Lines 27-31 define `skill_menu()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "30",
-   "description": "Line 30 returns a value."
-  },
-  {
-   "kind": "reveal",
-   "lines": "34-39",
-   "description": "Lines 34-39 define `load_skill(name)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "37",
-   "description": "Line 37 checks `name not in SKILLS`."
-  },
-  {
-   "kind": "focus",
-   "lines": "39",
-   "description": "Line 39 returns `SKILLS[name][1]`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "42-45",
-   "description": "Lines 42-45 define `days_until(target)`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "48-52",
-   "description": "Lines 48-52 continue the main code and print the results."
+   "lines": "42-52",
+   "description": "Register days_until and run the study-planning request with UsageLimits(request_limit=6, tool_calls_limit=4)."
   }
  ]
 }

@@ -1,45 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-4",
- "title": "Part 2: Core Pydantic Versus Pydantic AI",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Generated tool schemas versus core Pydantic validation",
+ "description": "Pydantic AI generates a JSON Schema from a tool function's type hints and docstring, using core Pydantic BaseModel validation under the hood.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2-3",
-   "description": "Lines 2-3 import `json` and `datetime`."
+   "lines": "1-18",
+   "description": "Wrapping days_until in Tool(days_until) builds a JSON Schema directly from the target: date annotation and the Args docstring entry."
   },
   {
    "kind": "reveal",
-   "lines": "5-6",
-   "description": "Lines 5-6 import `pydantic` and `pydantic_ai`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "9-15",
-   "description": "Lines 9-15 define `days_until(target)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "15",
-   "description": "Line 15 returns `(target - date.today()).days`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "18",
-   "description": "Line 18 runs the main code and print the results."
-  },
-  {
-   "kind": "reveal",
-   "lines": "22-23",
-   "description": "Lines 22-23 define the class `DaysUntilArgs`."
+   "lines": "21-24",
+   "description": "DaysUntilArgs is a plain Pydantic BaseModel with no agent involved; it declares the same target: date field and description."
   },
   {
    "kind": "reveal",
    "lines": "26-30",
-   "description": "Lines 26-30 continue the main code and print the results."
+   "description": "model_validate parses '2026-12-07' into a Python date object and raises ValidationError on 'next Tuesday'."
   }
  ]
 }

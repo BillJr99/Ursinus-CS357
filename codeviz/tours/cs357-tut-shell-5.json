@@ -1,25 +1,30 @@
 {
  "version": 1,
  "example": "cs357-tut-shell-5",
- "title": "6.  Processes",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Managing foreground and background processes",
+ "description": "Walk through stopping foreground commands, starting background servers with &, finding process IDs with ps and grep, and stopping processes with kill.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: agy",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "1-12",
-   "description": "Lines 1-12 set things up."
+   "lines": "1-7",
+   "description": "A normal command runs in the foreground and holds your prompt until it finishes. Pressing `Ctrl+C` sends an interrupt signal (`SIGINT`) that asks the foreground process to stop immediately."
   },
   {
    "kind": "reveal",
-   "lines": "13-24",
-   "description": "Lines 13-24 run the rest of the example."
+   "lines": "9-13",
+   "description": "Adding `&` at the end of `some_server &` starts the process in the background, prints its numeric Process ID (PID), and gives your shell prompt right back."
   },
   {
    "kind": "reveal",
-   "lines": "25-31",
-   "description": "Lines 25-31 run the rest of the example."
+   "lines": "15-19",
+   "description": "`ps aux | grep ollama` lists every running process on the machine and filters for lines mentioning `ollama` so you can find its PID, CPU usage, and memory usage."
+  },
+  {
+   "kind": "reveal",
+   "lines": "21-31",
+   "description": "`kill 12345` sends a polite termination signal (`SIGTERM`) so PID `12345` can clean up and exit. If the process is frozen and ignores `kill`, `kill -9 12345` sends `SIGKILL` to force the operating system to stop it immediately."
   }
  ]
 }

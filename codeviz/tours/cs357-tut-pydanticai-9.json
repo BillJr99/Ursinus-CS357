@@ -1,55 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-9",
- "title": "Part 6: Memory",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Saving message history to disk and trimming the context window",
+ "description": "ModelMessagesTypeAdapter loads and saves the full message list as JSON on disk, while ProcessHistory(keep_recent) sends only the most recent slice to the model.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2",
-   "description": "Line 2 imports `pathlib`."
+   "lines": "1-17",
+   "description": "keep_recent slices the last six messages and drops any leading messages that are not a ModelRequest so the trimmed history always begins with a request."
   },
   {
    "kind": "reveal",
-   "lines": "4-5",
-   "description": "Lines 4-5 import `pydantic_ai` and `pydantic_ai.capabilities`."
+   "lines": "20-25",
+   "description": "Attach ProcessHistory(keep_recent) to the agent and load any existing messages from history.json using ModelMessagesTypeAdapter.validate_json."
   },
   {
    "kind": "reveal",
-   "lines": "7",
-   "description": "Line 7 imports `common`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "9",
-   "description": "Line 9 runs the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "12-17",
-   "description": "Lines 12-17 define `keep_recent(messages)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "15",
-   "description": "Line 15 starts a loop."
-  },
-  {
-   "kind": "focus",
-   "lines": "17",
-   "description": "Line 17 returns `recent`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "20-31",
-   "description": "Lines 20-31 continue the main code and print the results."
-  },
-  {
-   "kind": "reveal",
-   "lines": "32",
-   "description": "Line 32 continues the main code and print the results."
+   "lines": "27-32",
+   "description": "Pass message_history=history into agent.run_sync, print the reply, and write result.all_messages() back to history.json."
   }
  ]
 }

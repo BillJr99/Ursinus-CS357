@@ -1,15 +1,20 @@
 {
  "version": 1,
  "example": "cs357-tut-shell-2",
- "title": "2.  Moving Around",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Checking your current folder, listing files, and changing directories",
+ "description": "These seven commands print the working directory, list visible and hidden files, and move around the directory tree with cd.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "1-7",
-   "description": "Lines 1-7 set things up."
+   "lines": "1-3",
+   "description": "pwd prints your current working directory, ls lists the files and folders in it, and ls -la includes hidden files (whose names start with a dot) along with size, owner, and date."
+  },
+  {
+   "kind": "reveal",
+   "lines": "4-7",
+   "description": "cd projects enters the projects subfolder, cd .. moves up one level to the parent folder, cd ~ jumps to your home directory, and cd - returns to the previous directory."
   }
  ]
 }

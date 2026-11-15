@@ -1,50 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-6",
- "title": "Validation said these are a string and a date. It did not say this write is allo",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Prompting a person to approve or deny a deferred tool call",
+ "description": "When a run pauses with DeferredToolRequests, this script asks the user for approval and resumes the run with their decision.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2-3",
-   "description": "Lines 2-3 import `datetime` and `pathlib`."
+   "lines": "1-15",
+   "description": "Create the Deps instance and UsageLimits(request_limit=6, tool_calls_limit=4), then start the run with agent.run_sync."
   },
   {
    "kind": "reveal",
-   "lines": "5",
-   "description": "Line 5 imports `pydantic_ai`."
+   "lines": "16-23",
+   "description": "If result.output is a DeferredToolRequests object, loop over its pending approvals and prompt the user with [y/N]."
   },
   {
    "kind": "reveal",
-   "lines": "7-8",
-   "description": "Lines 7-8 import `common` and `step3_deps`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "10-25",
-   "description": "Lines 10-25 run the main code."
-  },
-  {
-   "kind": "focus",
-   "lines": "16",
-   "description": "Line 16 loops over `range(2)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "17",
-   "description": "Line 17 makes a decision."
-  },
-  {
-   "kind": "focus",
-   "lines": "20",
-   "description": "Line 20 loops over `result.output.approvals`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "27-28",
-   "description": "Lines 27-28 continue the main code and print the results."
+   "lines": "24-28",
+   "description": "Record True or ToolDenied for each tool_call_id, resume agent.run_sync with the saved message_history and deferred_tool_results, and print the final output and trace."
   }
  ]
 }

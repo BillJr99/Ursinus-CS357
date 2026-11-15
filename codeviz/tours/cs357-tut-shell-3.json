@@ -1,20 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-shell-3",
- "title": "head -10 keeps only the first 10 of those; result is the first ten failures",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Redirecting standard output and error streams",
+ "description": "Walk through saving command output to files with >, appending with >>, and separating error streams with 2>.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: agy",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "1-12",
-   "description": "Lines 1-12 set things up."
+   "lines": "1-5",
+   "description": "`>` redirects standard output (`stdout`) from the screen into `results.txt`. It creates `results.txt` if missing and overwrites the entire file if it already exists."
   },
   {
    "kind": "reveal",
-   "lines": "13-15",
-   "description": "Lines 13-15 run the rest of the example."
+   "lines": "7-9",
+   "description": "`>>` appends standard output to the end of `results.txt` instead of overwriting it. Use `>>` when you want to accumulate output across multiple runs."
+  },
+  {
+   "kind": "reveal",
+   "lines": "11-15",
+   "description": "`>` sends normal output (stream 1) to `out.txt`, while `2>` redirects the error stream (file descriptor 2, `stderr`) to `err.txt` so warnings and tracebacks stay separate from your results."
   }
  ]
 }

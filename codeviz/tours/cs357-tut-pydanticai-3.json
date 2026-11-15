@@ -1,55 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-3",
- "title": "Part 1: The Same Two Tools, Both Ways",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Registering date tools on a Pydantic AI agent",
+ "description": "This script registers get_today and days_until with @agent.tool_plain and runs the agent with a four-request limit.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2",
-   "description": "Line 2 imports `datetime`."
+   "lines": "1-12",
+   "description": "Create an Agent using make_model(), instructions telling the model to use tools for dates rather than guessing, and deterministic model settings."
   },
   {
    "kind": "reveal",
-   "lines": "4",
-   "description": "Line 4 imports `pydantic_ai`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "6",
-   "description": "Line 6 imports `common`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "8-12",
-   "description": "Lines 8-12 run the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "15-18",
-   "description": "Lines 15-18 define `get_today()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "18",
-   "description": "Line 18 returns `date.today().isoformat()`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "21-28",
-   "description": "Lines 21-28 define `days_until(target)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "28",
-   "description": "Line 28 returns `(target - date.today()).days`."
+   "lines": "15-29",
+   "description": "@agent.tool_plain registers get_today and days_until as tools. Pydantic AI builds each tool's schema from its type hints and docstring."
   },
   {
    "kind": "reveal",
    "lines": "31-37",
-   "description": "Lines 31-37 continue the main code and print the results."
+   "description": "agent.run_sync runs the prompt with UsageLimits(request_limit=4), then prints the final answer, the full message trace, and token and request usage."
   }
  ]
 }

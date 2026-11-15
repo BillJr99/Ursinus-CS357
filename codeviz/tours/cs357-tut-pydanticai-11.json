@@ -1,55 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-11",
- "title": "Part 8: MCP, the Real Protocol",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Serving date tools over MCP with FastMCP",
+ "description": "calendar_server.py exposes get_today and days_until over the Model Context Protocol (MCP) using JSON-RPC over standard input and output.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2",
-   "description": "Line 2 imports `datetime`."
+   "lines": "1-6",
+   "description": "Import FastMCP and create the 'calendar' MCP server instance."
   },
   {
    "kind": "reveal",
-   "lines": "4",
-   "description": "Line 4 imports `fastmcp`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "6",
-   "description": "Line 6 runs the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "9-12",
-   "description": "Lines 9-12 define `get_today()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "12",
-   "description": "Line 12 returns `date.today().isoformat()`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "15-18",
-   "description": "Lines 15-18 define `days_until(target)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "18",
-   "description": "Line 18 returns `(target - date.today()).days`."
+   "lines": "9-18",
+   "description": "Decorate get_today and days_until with @mcp.tool so FastMCP publishes their names, docstrings, and typed schemas to any connected MCP client."
   },
   {
    "kind": "reveal",
    "lines": "21-22",
-   "description": "Lines 21-22 continue the main code."
-  },
-  {
-   "kind": "focus",
-   "lines": "21",
-   "description": "Line 21 checks `__name__ == \"__main__\"`."
+   "description": "mcp.run(show_banner=False) runs the server over stdio so a client process can start it and communicate with it."
   }
  ]
 }

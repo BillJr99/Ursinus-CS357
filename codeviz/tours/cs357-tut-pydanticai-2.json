@@ -1,55 +1,25 @@
 {
  "version": 1,
  "example": "cs357-tut-pydanticai-2",
- "title": "Part 0: Setup",
- "description": "A walkthrough built from the code's structure: each part in reading order, then the moments to look at.",
+ "title": "Shared model builder and trace printer in common.py",
+ "description": "common.py defines make_model() so every script connects to the local Ollama endpoint in one place, and show_trace() to print each message part in a run.",
  "reviewed": false,
- "source": "skeleton",
+ "source": "draft: gemini",
  "steps": [
   {
    "kind": "reveal",
-   "lines": "2",
-   "description": "Line 2 imports `os`."
+   "lines": "1-8",
+   "description": "Set PYDANTIC_AI_NO_BANNER to silence the startup banner and import OpenAIChatModel and OllamaProvider."
   },
   {
    "kind": "reveal",
-   "lines": "4",
-   "description": "Line 4 runs the main code."
-  },
-  {
-   "kind": "reveal",
-   "lines": "6-7",
-   "description": "Lines 6-7 import `pydantic_ai.models.openai` and `pydantic_ai.providers.ollama`."
-  },
-  {
-   "kind": "reveal",
-   "lines": "10-17",
-   "description": "Lines 10-17 define `make_model()`."
-  },
-  {
-   "kind": "focus",
-   "lines": "17",
-   "description": "Line 17 returns a value."
+   "lines": "10-18",
+   "description": "make_model() connects to the local Ollama server at http://localhost:11434/v1 (or BASE_URL) and defaults to qwen2.5:3b unless you set the MODEL environment variable."
   },
   {
    "kind": "reveal",
    "lines": "20-30",
-   "description": "Lines 20-30 define `show_trace(messages)`."
-  },
-  {
-   "kind": "focus",
-   "lines": "22",
-   "description": "Line 22 loops over `messages`."
-  },
-  {
-   "kind": "focus",
-   "lines": "25",
-   "description": "Line 25 checks `kind == \"tool-call\"`."
-  },
-  {
-   "kind": "focus",
-   "lines": "27",
-   "description": "Line 27 checks `kind in (\"tool-return\", \"retry-prompt\")`."
+   "description": "show_trace() loops over every message and its parts, printing tool calls, tool returns, retry prompts, and text content so you can inspect the full exchange."
   }
  ]
 }
