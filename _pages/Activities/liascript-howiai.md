@@ -228,7 +228,7 @@ A vault is only half of the system.  The other half is the agent that reads it a
 | **Supervision** | Which of my agents is working, which is done, and which is blocked waiting on me? | **herdr**, an agent-aware terminal multiplexer whose headless server keeps every agent alive after I disconnect | [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs), Sections 9 to 11 |
 | **Reach** | How do I get to that machine from somewhere else without exposing it to the internet? | A VPN (virtual private network); a Tailscale tailnet is one straightforward way to provide one | [Agentic CLI Tools](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/AgentCLIs), Section 9a |
 
-**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is the argument the table in Section 1 is making.
+**How I run this myself.**  The agent that works my vault is **hermes**, in a container, reading the same `AGENTS.md` contract; *Building a Second Brain* has the wiring and *The Local Agent Stack* has the container pattern.  I supervise it alongside my coding agents in **herdr**, the agent-aware multiplexer from *Agentic CLI Tools*, which keeps all of them alive on a persistent server and shows me at a glance which one is blocked and waiting on me.  I reach that machine from wherever I happen to be over a VPN; a Tailscale tailnet is one straightforward way to provide one, and Section 9a of *Agentic CLI Tools* walks through the setup.  None of those three choices is load-bearing.  Swap hermes for another agent, herdr for plain `tmux`, Tailscale for any VPN you already trust, and the vault does not notice, which is the argument the table in Section 1 is making.  The [Orchestration and Multi-Agent Patterns](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-orchestrationworkshop.md) workshop, section 3b, shows this setup supervising several agents at once.
 
 The three properties from *Your AI Workbench*, Step 8.5, are what make that setup safe to leave running.  The container bounds what hermes can reach.  The vault's git history, and herdr's view of each agent's state, show what it did.  And every write it makes is a commit, so a bad one comes back out with `git revert`.  Section 3c returns to those three properties for your repositories.
 
@@ -357,6 +357,8 @@ You met these three in *Your AI Workbench*, Step 8.5, as properties of a contain
 
 The pattern generalizes past this course.  Each property is bought the same way in both columns: **observability by writing things down in files**, **isolation by boundaries the system enforces rather than boundaries you ask for**, and **reversibility by never having exactly one copy of anything that matters.**
 
+**How I apply isolation to experiments.**  Every build, test, experiment, or exploration my agents run happens in a throwaway Docker container on a separate machine, never on the server where the agents live.  The container gets a copy of the folder it needs, the run happens inside it, and only the results come back; then the container, its image, and its volumes are deleted.  An agent that installs the wrong package, runs code it does not understand, or fills a disk damages nothing that outlives the run.  The boundary is the container, which the agent cannot talk its way out of, and the cleanup is part of the run instead of a chore someone has to remember.
+
 Notice which one is most often missing in practice.  Isolation is the one people think of, because it sounds like security.  Reversibility is the one that saves the semester, and it is nearly free: it is a commit before you start.
 
 > **Common Misconception:** "Reversibility means I can undo anything, so I can be less careful about the other two."  Reversibility is bounded by observability.  You can only revert a change you *noticed*, and the dangerous agent failure is not the dramatic one; it is the small wrong edit that lands in a wiki page you do not reread for a month, by which time you have written three things on top of it.  Git will happily let you undo it; nothing will tell you that you should.
@@ -404,6 +406,26 @@ Nothing was remembered.  Everything was **read**.
 8.  Your Project Thread team has four people and probably several agents.  Name one specific failure this whole apparatus prevents that a group chat would not, and one failure it does *not* prevent.
 
 > **Common Misconception:** "This is a lot of paperwork for something a bigger context window will solve."  Context windows have grown by orders of magnitude, and that does not remove the need, because the problem was never only size.  A conversation is unreviewable by your teammates, invisible to continuous integration (CI), unsearchable next semester, and gone when the tool changes.  Files in a repository are none of those things.  The paperwork is not a workaround for small models; it is what makes the work legible to anyone who was not in the room.
+
+### From One Handoff File to a Shared Board
+
+One `SESSION.md` works when one agent hands work to its own next session.  With several agents working at once, I keep the same idea on a shared board: a folder named `kanban` on the server, with one short Markdown card per job.  A card is a handoff note that outlives any one session:
+
+```markdown
+---
+id: course-site-demo
+title: "Record the terminal demo for the setup tutorial"
+status: waiting-on-bill
+owner: codex
+---
+## Goal         What done looks like: the demo plays on the tutorial page, both themes.
+## State        Branch terminal-demo, commit 1a2b3c4; the recording is checked in.
+## Next step    After Bill approves the screenshots, merge and push.
+## Resume notes Only viz/ and the tutorial page may change.  Bill approved the plan on Nov 15.
+## Log          Dated lines the tool appends as the work moves.
+```
+
+Every agent checks the board before it starts, updates its own cards as it works, and can pick up any job from its card alone.  Every change goes through a small command-line tool, and the folder is a git repository, so each move, note, and status change becomes a commit, and the board's history is its own audit trail.  When a job is done and I have been told, its card is removed, and it stays in the history.  Each evening an agent sends me a short digest: what is waiting on me, what is blocked, and what finished.
 
 ---
 
