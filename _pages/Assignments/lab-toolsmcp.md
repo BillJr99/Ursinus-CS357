@@ -216,7 +216,7 @@ If you picked a different **remote** server from the table, change `SERVER_URL`,
 
 > **You should see.**  For a remote server, the same shape as in Step A.1: a count of discovered tools, one line per tool with its arguments, and then the opening of the result from the tool you chose.
 
-If you picked a **local** server, the server runs as a process on your machine and talks over its standard input and output (*stdio*) instead of HTTP.  Replace the import and the first `async with` line.  The rest of the file does not change, and that is the point of the protocol:
+If you picked a **local** server, the server runs as a process on your machine and talks over its standard input and output (*stdio*) instead of HTTP.  Replace the import and the first `async with` line.  The protocol lets you keep the rest of the file unchanged:
 
 ```python
 from mcp import ClientSession, StdioServerParameters

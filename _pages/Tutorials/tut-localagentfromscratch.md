@@ -295,7 +295,7 @@ model> The rm command is not available due to security restrictions. ...
 
 Four things happened, and each one is a step you wrote.  The name survived a restart because of the history file.  Every reply ended with `Next step:` because the skill loaded.  The pipe failed because there is no shell to interpret it, so `cat` received `|`, `wc`, and `-l` as file names.  And `rm` never reached the person at all, because the allowlist refused it first.
 
-Notice also what went wrong.  The model misread the pipe failure as "wc is not available."  A small model explains its errors confidently and sometimes wrongly.  Your code did not trust that explanation; it simply reported what happened.
+Notice also what went wrong.  The model misread the pipe failure as "wc is not available."  A small model explains its errors confidently and sometimes wrongly.  Your code reported what happened without trusting that explanation.
 
 ### Questions
 

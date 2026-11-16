@@ -54,7 +54,7 @@ The pipeline, stage by stage:
 
 **Multimodal training (-> a *vision/multimodal* model).**  Separately (and often layered on top of an instruct model), a **vision encoder** is trained and connected via a **projection layer** so that images become tokens the language model can attend to, using image-text pairs.  The result is a *vision* or *multimodal* model.  This is Part III, with the deep dive in the multimodal agents activity.
 
-A key idea: these stages are **cumulative and modular**.  A reasoning model is still an instruct model underneath; a vision model is usually an aligned instruct model with an image path bolted on.  "Model type" is really "how far down the pipeline this snapshot was taken, and which optional branches it took."
+These stages are **cumulative and modular**.  A reasoning model is still an instruct model underneath; a vision model is usually an aligned instruct model with an image path bolted on.  "Model type" means "how far down the pipeline this snapshot was taken, and which optional branches it took."
 
 ---
 

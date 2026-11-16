@@ -315,7 +315,7 @@ print("===== Prompt v2 (specific) =====")
 evaluate(specific, "v2 specific")
 ```
 
-The loop is the whole point: **write the test set once, then let it referee every future change to the prompt.**  You used this same harness last session in *Skills: Design One, Then Measure It* to score a skill with and without.  We build a larger, hallucination-focused version in *Evaluating Agent Outputs*, formalize benchmark design in *Benchmarking*, and generalize from exact-match answers to property and regression checks in *Testing Agents*.
+The loop uses a fixed test set: **write the test set once, then let it referee every future change to the prompt.**  You used this same harness last session in *Skills: Design One, Then Measure It* to score a skill with and without.  We build a larger, hallucination-focused version in *Evaluating Agent Outputs*, formalize benchmark design in *Benchmarking*, and generalize from exact-match answers to property and regression checks in *Testing Agents*.
 
 ## Model 3: Reading the Eval
 

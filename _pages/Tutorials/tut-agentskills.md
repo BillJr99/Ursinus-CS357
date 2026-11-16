@@ -58,7 +58,7 @@ The last column hides what the four have in common when the agent runs.  The fir
 
 ### Skill Versus Tool
 
-The distinction that matters most is skill versus tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a change, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
+The primary distinction is between a skill and a tool.  A skill is an instruction template: it tells the agent how to behave in a situation.  A tool is executable code: the agent calls it and gets back structured data.  A skill says "when reviewing a change, follow steps 1-4."  A tool says "call `run_tests()` and here is the exit code."  You can combine them.  A safety skill can instruct the agent to always call a `list_files` tool before deletion, then pause for confirmation.  The instruction is the skill; the file listing is the tool.
 
 > Many students assume that installing a skill (dropping its directory into `.agents/skills/`) makes the agent follow those instructions on every turn, like a system prompt.  It does not.  Registration surfaces a skill (makes it available), but the agent invokes it only when it recognizes the situation or when you name the skill in your prompt ("use the code-review skill").  If you want always-on behavior, use a context file or a system prompt.  If you want composable, named behavior you can invoke selectively, use a skill.
 {: .tb-warning data-title="Watch out"}
@@ -121,7 +121,7 @@ description: Pause and require explicit confirmation before any destructive file
 
 Those five keys are the whole list, and opencode ignores anything else rather than complaining about it.  That matters most when you bring a skill over from Claude Code, where `allowed-tools` is a real field: opencode does not recognize it, so the line sits in the file looking like a restriction while the agent reaches for whatever tool it likes.  A skill that was gated somewhere else is not gated here.  If a skill must not touch something, say so with a `permission` rule, which the next section covers, and not with front matter opencode never reads.
 
-> The description is the trigger.  There is no `when` field, and this trips people up.  The agent decides whether to pull in a skill by reading its `description` against what you are currently doing.  The description is not documentation; it is the matching surface.  "Safety utilities" will not fire.  "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" will.  Write the description as *when to use this*, in the words a user would type, and your skills will fire when you expect them to.
+> The description is the trigger.  There is no `when` field, and this trips people up.  The agent decides whether to pull in a skill by reading its `description` against what you are currently doing.  The description serves as the matching surface rather than as documentation.  "Safety utilities" will not fire.  "Use when the user asks to delete, remove, overwrite, truncate, or drop anything" will.  Write the description as *when to use this*, in the words a user would type, and your skills will fire when you expect them to.
 {: .tb-warning data-title="Watch out"}
 
 ### What `opencode.json` Still Holds

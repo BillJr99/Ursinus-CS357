@@ -36,7 +36,7 @@ A deployed agent that silently fails is worse than one that visibly crashes.  A 
 > Flying an agent without traces is like flying a plane with no instruments: you only know something's wrong when you crash.  In production, your agent will fail in ways you did not anticipate.  The three pillars below are your cockpit instruments: they let you see the problem, measure its scale, and trace it to its source before a user reports it.
 {: .tb-key data-title="Why this matters"}
 
-Observability in distributed systems is built on three complementary data types.  No single pillar is sufficient on its own; each answers a question the other two cannot, as the key insight below shows.
+Observability in distributed systems is built on three complementary data types.  No single pillar is sufficient on its own; each answers a question the other two cannot, as the comparison below shows.
 
 | Pillar | What It Captures | Time Granularity | Best For | Example Tool | In Our Course |
 |:-------|:-----------------|:----------------|:---------|:-------------|:--------------|
@@ -45,7 +45,7 @@ Observability in distributed systems is built on three complementary data types.
 | **Traces** | Causally linked spans representing the end-to-end execution of a single request through multiple services or steps; each span has a parent, a start time, an end time, and key-value attributes | Per-request at sub-millisecond resolution on individual spans; you see the full causal chain for one request | Root-cause analysis across multiple hops in a pipeline; identifying which specific step added most of the latency | Jaeger, Zipkin, Honeycomb | Visualizing that 73% of your agent's response time comes from the LLM call, not the retrieval step |
 {: .tb-full}
 
-**Key insight**: A metric can tell you that error rate increased at 2:00 PM; a log can tell you the exact error message for one failing request; a trace can tell you which step in the agent pipeline caused that request to fail and how long each step took.
+For comparison, a metric can tell you that error rate increased at 2:00 PM; a log can tell you the exact error message for one failing request; a trace can tell you which step in the agent pipeline caused that request to fail and how long each step took.
 
 ### Questions to Work Through
 

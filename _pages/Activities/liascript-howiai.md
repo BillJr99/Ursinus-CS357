@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # How I AI: A Vault, a Charter, and a Personal Agent Setup
 
-You have spent eight weeks learning how agents work.  Today is about how a person actually *lives* with them.
+You have spent eight weeks learning how agents work.  Today is about how a person *lives* with them.
 
 Here is the problem this session solves.  Every AI tool you use keeps its own private memory of you.  Your coding agent knows the files you opened this morning.  Your chat window knows this conversation and forgets it tomorrow.  None of them know what the others know, and none of them survive a closed tab.  So you re-explain yourself, constantly, to tools that could already know, and every session starts from zero.
 

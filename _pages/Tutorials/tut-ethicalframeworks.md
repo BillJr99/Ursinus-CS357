@@ -162,7 +162,7 @@ In this part, you will compare two agent design philosophies (minimal footprint 
 
 ## 3.  The Architecture of a Well-Behaved Agent
 
-The minimal footprint principle is not a limitation on what you can build; it is a design specification for how you build it.  A minimal-footprint agent can do everything a maximum-capability agent does; it just does it with the least possible autonomy, the narrowest necessary permissions, and the most reversible possible actions.  That is not a constraint on capability; it is a constraint on risk.  Learning to build that way now prepares you to work in contexts (healthcare, finance, education, government) where the cost of getting it wrong is not a bug report but a human harmed.
+The minimal footprint principle specifies how you build a system without limiting what you can build.  A minimal-footprint agent can do everything a maximum-capability agent does; it just does it with the least possible autonomy, the narrowest necessary permissions, and the most reversible possible actions.  This constrains risk while preserving capability.  Learning to build that way now prepares you to work in contexts (healthcare, finance, education, government) where the cost of getting it wrong is not a bug report but a human harmed.
 
 **The minimal footprint principle** holds that an autonomous agent should: request only the permissions necessary for the current task; prefer reversible actions over irreversible ones when both achieve the goal; and escalate to a human when uncertain rather than taking a low-confidence autonomous action.  The principle operationalizes corrigibility (the property of being correctable) as an engineering constraint rather than a post-hoc aspiration.
 
@@ -256,7 +256,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 ## Where This Goes Next
 
-This tutorial completes the ethics and philosophy arc of the course.  The frameworks you applied today (utilitarian, deontological, virtue-based, design justice) are not final answers; they are instruments for reasoning in public about decisions that affect people.  Your final project governance document should reflect the application of at least two of these frameworks to your specific design choices.
+This tutorial completes the ethics and philosophy arc of the course.  The frameworks you applied today (utilitarian, deontological, virtue-based, design justice) help you reason in public about decisions that affect people without providing final answers.  Your final project governance document should reflect the application of at least two of these frameworks to your specific design choices.
 
 ## Further Reading
 

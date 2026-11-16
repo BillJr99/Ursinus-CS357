@@ -104,7 +104,7 @@ In this part, you will install and configure your own local AI stack (Ollama to 
 
 ## 3.  Install Checklist
 
-Follow this sequence as a team; the Recorder logs each step's outcome, including the exact error message if a step fails.  A failed step is not a problem; it is data.  Record the error verbatim, write down your hypothesis for the cause, and test the hypothesis before asking for help.  This troubleshooting protocol is itself a course outcome.
+Follow this sequence as a team; the Recorder logs each step's outcome, including the exact error message if a step fails.  Treat a failed step as data for troubleshooting.  Record the error verbatim, write down your hypothesis for the cause, and test the hypothesis before asking for help.  This troubleshooting protocol is itself a course outcome.
 
 ```
 1. Install Ollama:        https://ollama.com/download
@@ -280,7 +280,7 @@ That last row is the point worth pausing on: the `temperature=0.7` your Python h
 
 4.  Suppose you are building the campus advising assistant your team keeps sketching.  Would you ship it at 0, at 1, or somewhere between?  Name the failure you are trading away, and the one you are accepting.
 
-> **Common Misconception:** Temperature is not a "creativity" slider, and it is certainly not an "accuracy" slider.  A model at temperature 0 will state a wrong fact just as confidently as one at temperature 1; it will simply state the *same* wrong fact every time.  Turning temperature down makes a system **repeatable**, which makes it testable.  It does not make it right.
+> **Common Misconception:** Temperature is not a "creativity" slider, and it is certainly not an "accuracy" slider.  A model at temperature 0 will state a wrong fact just as confidently as one at temperature 1; it will state the *same* wrong fact every time.  Turning temperature down makes a system **repeatable**, which makes it testable.  It does not make it right.
 
 ---
 
@@ -326,7 +326,7 @@ The full walkthrough, with every platform and the rest of the file, is End-to-En
 
 ## 4.  Multi-Turn Conversations: Managing the Message List
 
-The call above sends a single message and forgets it instantly.  A real conversation remembers what came before, and here is the key idea: **the Ollama server is stateless.**  It does not remember your last turn.  *You* remember, by keeping a running `messages` list and re-sending the whole thing on every call.  Each turn you append the user's message, send the full list, then append the assistant's reply back onto it.  The growing list *is* the conversation's memory.
+The call above sends a single message and forgets it instantly.  A real conversation remembers what came before, but **the Ollama server is stateless.**  It does not remember your last turn.  *You* remember, by keeping a running `messages` list and re-sending the whole thing on every call.  Each turn you append the user's message, send the full list, then append the assistant's reply back onto it.  The growing list *is* the conversation's memory.
 
 The cell below holds a three-turn conversation.  Notice that `chat()` now takes the entire `messages` list, and that after each reply we append the assistant's message (`r.json()["message"]`) verbatim, so the next turn can see it.
 

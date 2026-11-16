@@ -154,7 +154,7 @@ These are totals rather than increments, and the rows are in the order you work 
 
 ## Background: Four Properties, and Where Each One Lives
 
-The key idea behind agent coherence and traceability is a single sentence, and everything in this section follows from it:
+Everything in this section on agent coherence and traceability follows from this sentence:
 
 > The repository is the durable memory for the project.
 
@@ -483,7 +483,7 @@ Show me git status for this project and tell me whether the working tree is clea
 
 `START_HERE.md` lists files the template's original project had and yours does not, `docs/ROADMAP.md` among them.  Do not create an empty `ROADMAP.md` to satisfy the list.  Edit the list.  This is a small first instance of the documentation authority rule: when the document and reality disagree, one of them is wrong, and here it is the document.
 
-**Step 3: Rank the values.**  This is the part that takes the longest.  Five values, in order, where the order does the work:
+**Step 3: Rank the values.**  This is the part that takes the longest.  List five values in priority order:
 
 ```markdown
 ## Engineering Philosophy
@@ -717,7 +717,7 @@ Whichever route you take, run the confirmation above yourself.  It is the one ch
 
 **Step 4: Write the acceptance rubric, before the agent has produced anything.**
 
-Parts 4 and 5 judge what the agent builds.  The rubric is what they judge it against, and it has to exist first.  A check you write after seeing the output is not a check; it is a description of the output.  Writing it now, while the only thing you have is `spec.md` and `system_prompt.txt`, is what keeps Part 5 from becoming a search for reasons to accept what you already have.
+Parts 4 and 5 judge what the agent builds.  The rubric is what they judge it against, and it has to exist first.  Writing a check after seeing the output describes that output instead of independently checking it.  Writing it now, while the only thing you have is `spec.md` and `system_prompt.txt`, is what keeps Part 5 from becoming a search for reasons to accept what you already have.
 
 Write it in two forms.  They hold the same criteria, and each is better at a different job.
 
@@ -822,7 +822,7 @@ Then stage the build directory and commit it with the message "Part 3: a throwaw
 directory and a file that argues with the rule".
 ```
 
-Check that the README landed word for word, because a model asked to write a file that argues with its own rules will sometimes soften it.  Anyone who can open a pull request could have written that README.  That is the point.
+Check that the README landed word for word, because a model asked to write a file that argues with its own rules will sometimes soften it.  The exercise shows that anyone who can open a pull request could have written that README.
 
 **Step 2: Add the rule to `AGENTS.md`, and install no gate yet.**  The point of this run is to see what a written rule does on its own, so the rule is the only thing standing between the agent and the guarded operation.  Use this wording, so your transcript lines up with the one from class:
 

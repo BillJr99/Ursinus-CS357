@@ -198,7 +198,7 @@ The agent can query the MCP server for current method signatures and include tha
 
 </details>
 
-> "Grounding" does not change the model itself; no weights are updated, and the model does not "learn" the library.  It is simply given accurate, current text in its context window at the moment it needs to generate API calls.  Remove the MCP server from the configuration and the hallucinations return, because the underlying model still only knows what was in its training data.
+> "Grounding" does not change the model itself; no weights are updated, and the model does not "learn" the library.  It is given accurate, current text in its context window at the moment it needs to generate API calls.  Remove the MCP server from the configuration and the hallucinations return, because the underlying model still only knows what was in its training data.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---

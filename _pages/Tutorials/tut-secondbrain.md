@@ -349,7 +349,7 @@ Before any task, fetch and read from the knowledge repository:
 Treat them as authoritative for all decisions this session.
 ```
 
-The session rhythm that results: you drop a PDF into `raw/` from your phone and sync; hermes runs (manually or on an n8n schedule from the stack module), reads the contract, synthesizes wiki pages, updates the metadata, and commits; you open Obsidian, sync, and the new cross-linked pages are simply *there*.  The question-answering direction is one more prompt: *"Using the vault per AGENTS.md, what do my notes say about X? Update the wiki first if raw/ has newer material."*
+The session rhythm that results: you drop a PDF into `raw/` from your phone and sync; hermes runs (manually or on an n8n schedule from the stack module), reads the contract, synthesizes wiki pages, updates the metadata, and commits; you open Obsidian, sync, and the new cross-linked pages are *there*.  The question-answering direction is one more prompt: *"Using the vault per AGENTS.md, what do my notes say about X? Update the wiki first if raw/ has newer material."*
 
 Obsidian becomes the comfortable viewer onto a knowledge base your agents largely maintain.  What becomes possible once that loop is running (a living wiki that grows more useful each session, rather than a folder that grows larger) is the argument the *How I AI* session makes; this page is the deeper build behind it.
 

@@ -124,7 +124,7 @@ You do not need all of this page today.  It describes a semester-long structure,
 | **Sprint Checks** | Before each of the two sprint checks in Sprint 1 |
 | **Assessment Philosophy** and the **rubric** | Before your first milestone, then before each one |
 
-**The one thing to internalize now:** the graded emphasis in this thread falls on **process** as much as product.  How your team frames a problem, works with a stakeholder, manages itself, and communicates is not the soft part around the real work.  It is a substantial share of the grade, and a strong technical result cannot rescue it.
+The graded emphasis in this thread falls on **process** as much as product.  How your team frames a problem, works with a stakeholder, manages itself, and communicates is part of the real work, not the soft part around it.  It is a substantial share of the grade, and a strong technical result cannot rescue it.
 
 > **If your team is struggling, say so early.**  The confidential pulse in any check-in works, and so does office hours.  Every team hits the storming stage.  The teams that come out of it well are the ones that named it while it was happening rather than at the post-mortem.
 

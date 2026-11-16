@@ -464,7 +464,7 @@ Prefix caching: shared prefixes are hashed and stored once, then pointed to
 
 </details>
 
-> It is tempting to treat `gpu_memory_utilization` as a "make it faster" dial and crank it to the maximum.  It is really a **risk/packing tradeoff**.  A higher value admits more concurrent requests (better throughput) but leaves less slack to absorb sudden bursts; when a spike arrives with no headroom, the engine hits out-of-memory and *drops* requests, worse than running slightly under-packed.  The right value is workload-specific and found by benchmarking, not by maximizing.
+> It is tempting to treat `gpu_memory_utilization` as a "make it faster" dial and crank it to the maximum.  It is a **risk/packing tradeoff**.  A higher value admits more concurrent requests (better throughput) but leaves less slack to absorb sudden bursts; when a spike arrives with no headroom, the engine hits out-of-memory and *drops* requests, worse than running slightly under-packed.  The right value is workload-specific and found by benchmarking, not by maximizing.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---

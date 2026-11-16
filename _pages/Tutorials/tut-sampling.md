@@ -436,7 +436,7 @@ It is the same.  A transformer runs its input through a fixed stack of layers, t
 
 So a fixed-depth model has exactly one way to spend more computation on a hard problem: write more tokens.  Each token it emits is appended to the context and read back on the next pass, so the tokens it has already written become a place to store partial results.  The context window stops being only an input and starts being a scratchpad the model can write to and read from.
 
-That is the whole idea, stated in one line because it is the line that separates the two kinds of model:
+The two kinds of model differ in how they use computation:
 
 > **Attention decides what a fixed amount of computation looks at.  Generated tokens decide how much computation happens at all.**
 

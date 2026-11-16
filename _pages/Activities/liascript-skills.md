@@ -704,7 +704,7 @@ Two other things to notice as an author, both of which are today's lessons arriv
 
 Run the same with-and-without comparison from Part III, but on a task long enough that memory becomes the bottleneck: something with six or seven steps rather than one.  Watch specifically for whether the model checks its own work when nobody asked it to.
 
-Expect `llama3.2` to struggle.  That is the point, and it is the most useful thing you will see: every place the small model drops a step is a place where the instruction relied on good intentions instead of structure.  Rewriting one of those steps so that it is hard to skip rather than merely requested is exactly the move the Skill Design Study is asking you to make.
+Expect `llama3.2` to struggle.  The most useful observations are the steps the small model drops: each reveals where the instruction relied on good intentions instead of structure.  Rewriting one of those steps so that it is hard to skip rather than merely requested is exactly the move the Skill Design Study is asking you to make.
 
 ## Where to go next
 
@@ -744,7 +744,7 @@ You have two transcripts of the same request, a rubric in which every item inclu
 
 ## The limit, stated plainly
 
-The gate proves that `.ai/CURRENT_TASK.md` exists and is not empty.  It does not prove that the file contains a real interview.  A model that wanted to get past this gate could write one line of nonsense into it and stop, and the hook would let it.  That is not a flaw in hooks; it is the general shape of the problem.  **Every gate checks a proxy for the thing you actually care about, and the engineering question is how far the proxy sits from the thing.**  Tightening the proxy, by checking that the file contains five answered questions rather than merely that it exists, is worth an afternoon on your own project, and it is the same move you make when you turn a vague rubric item into a string check.
+The gate proves that `.ai/CURRENT_TASK.md` exists and is not empty.  It does not prove that the file contains a real interview.  A model that wanted to get past this gate could write one line of nonsense into it and stop, and the hook would let it.  This limitation applies to gates generally, rather than to hooks alone.  **Every gate checks a proxy for the thing you actually care about, and the engineering question is how far the proxy sits from the thing.**  Tightening the proxy, by checking that the file contains five answered questions rather than merely that it exists, is worth an afternoon on your own project, and it is the same move you make when you turn a vague rubric item into a string check.
 
 ## Where to go next
 

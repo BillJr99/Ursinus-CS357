@@ -17,7 +17,7 @@ tags:
 
 ## About This Tutorial
 
-The LLMs powering today's AI applications are not magic; they are the result of well-understood engineering decisions made during construction: how text is cut into pieces, what objective the model is trained to optimize, how many parameters and how much data are needed, and how weights are compressed for deployment.  This tutorial traces the full construction path from **tokenization → byte-pair encoding by hand → causal vs. masked language modeling → cross-entropy loss in code → Chinchilla scaling laws → quantization for deployment**, building enough mechanical understanding to make informed choices about which models to use and how.
+The LLMs powering today's AI applications result from well-understood engineering decisions made during construction: how text is cut into pieces, what objective the model is trained to optimize, how many parameters and how much data are needed, and how weights are compressed for deployment.  This tutorial traces the full construction path from **tokenization → byte-pair encoding by hand → causal vs. masked language modeling → cross-entropy loss in code → Chinchilla scaling laws → quantization for deployment**, building enough mechanical understanding to make informed choices about which models to use and how.
 {: .tb-lede}
 
 ## Key Concepts
@@ -42,7 +42,7 @@ The LLMs powering today's AI applications are not magic; they are the result of 
 
 **What you need:** Python 3.10+. No GPU, no training run; everything here is small enough to watch.
 
-**What you will have at the end:** a tokenizer you built by hand and a concrete sense of what pre-training actually optimizes.
+**What you will have at the end:** a tokenizer you built by hand and a concrete sense of what pre-training optimizes.
 
 Do these in order.  Each section builds on the last, and you'll get much more out of the code blocks by running them.
 
@@ -54,7 +54,7 @@ In this part, you will work through the BPE algorithm by hand on a small example
 
 ## 1.  The Limits of Naive Tokenization
 
-**Why this matters:** Tokenization is the first thing that happens to any text you send to an LLM, and it shapes everything downstream: what patterns the model can recognize, how long your context window actually is in practice, why the model cannot spell words reliably, and why languages with different scripts receive worse service from models trained primarily on English.  Understanding tokenization is not a detour into implementation details; it is essential context for making good decisions about model selection, prompt design, and RAG chunk sizing.
+**Why this matters:** Tokenization is the first thing that happens to any text you send to an LLM, and it shapes everything downstream: what patterns the model can recognize, how long your context window actually is in practice, why the model cannot spell words reliably, and why languages with different scripts receive worse service from models trained primarily on English.  You need to understand tokenization to make good decisions about model selection, prompt design, and RAG chunk sizing.
 
 Why not just split text on spaces?  Three problems:
 

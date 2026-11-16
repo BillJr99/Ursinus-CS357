@@ -170,7 +170,7 @@ async function callTextModel(providerConfig, prompt, { maxTokens = 500, temperat
 ```
 [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-chessaicoach-2) <!-- code-viz link -->
 
-Notice the shape: **the rest of the app never knows or cares which provider is active.**  Adding a fourth provider later means adding one more branch here and nothing else changes.  That is the whole point of a dispatcher.
+Notice the shape: **the rest of the app never knows or cares which provider is active.**  Adding a fourth provider later means adding one more branch here and nothing else changes.  The dispatcher keeps provider-specific changes in one place.
 
 ## 4.  Anthropic: `POST https://api.anthropic.com/v1/messages`
 

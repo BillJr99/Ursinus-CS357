@@ -366,7 +366,7 @@ This section covers six engineering controls that keep agent loops safe in produ
 
 **Idempotency and oscillation** deserve a closer look.  An agent oscillates when it alternates between two actions: `search("climate data")` finds nothing new, so it calls `refine_query("climate data 2024")`, which finds nothing new, so it calls `search("climate data")` again.  The idempotency check stores a hash of `(action_name, args)` and flags the repeat.
 
-**Checkpointing** lets a loop pick up after a failure.  The checkpoint stores the full context window, the history of tool calls, and any outside state (files written, IDs retrieved).  On restart, the agent resumes from the last checkpoint instead of from zero.  This matters most for tasks that take hours or make expensive API calls.
+**Checkpointing** lets a loop pick up after a failure.  The checkpoint stores the full context window, the history of tool calls, and any outside state (files written, IDs retrieved).  On restart, the agent resumes from the last checkpoint instead of from zero.  Checkpointing is most useful for tasks that take hours or make expensive API calls.
 
 ### Critical Thinking Questions
 

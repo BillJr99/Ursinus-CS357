@@ -146,7 +146,7 @@ The prompt has three parts in a fixed order: an instruction, the passages with t
 
 Read the first run from the top. `0.625 safety-1` is the injury passage, in first place, although "hurt" and "injury" are different words. The bag-of-words retriever scored this question at zero, because it counts shared words, and an embedding places related meanings close together.
 
-Now read the bikes run. The top score is 0.642, which is higher than the score of the question that has a real answer. So similarity is not the same thing as answerability. The hours passage is simply the nearest thing in the corpus to a question about the co-op. Retrieval always returns its top `k`, even when none of them helps.
+Now read the bikes run. The top score is 0.642, which is higher than the score of the question that has a real answer. So similarity is not the same thing as answerability. The hours passage is the nearest thing in the corpus to a question about the co-op. Retrieval always returns its top `k`, even when none of them helps.
 
 ## Demo 2: The Same Retriever as an MCP Tool
 

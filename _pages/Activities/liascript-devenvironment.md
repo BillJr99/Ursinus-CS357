@@ -838,7 +838,7 @@ The same property answers "did I break my environment or my code?": exit, rerun 
 
 ## Step 10: The Native Fallback (No Docker)
 
-If your machine cannot run Docker (unsupported hardware, administrator locks, disk limits), work natively.  Every lab's **Before You Start** section already documents its native installs, and those remain fully valid; the container simply pre-bundles them.  The outline:
+If your machine cannot run Docker (unsupported hardware, administrator locks, disk limits), work natively.  Every lab's **Before You Start** section already documents its native installs, and those remain fully valid; the container pre-bundles them.  The outline:
 
 1.  **Ollama**: exactly as in Step 1; it is native in both routes.
 2.  **Python environment**: in your cloned `cs357-work` repo, use [uv](https://docs.astral.sh/uv/) (from the Overview assignment's Part 1.5): `uv venv`, then `uv add` each lab's packages as that lab lists them: `requests` first (every lab), then `chromadb sentence-transformers` (retrieval), `scikit-learn numpy` (the ML labs), `spacy` plus `python -m spacy download en_core_web_sm` (NLP direction), `shap lime matplotlib pandas` (explainability direction), `flask` (web-endpoint direction).

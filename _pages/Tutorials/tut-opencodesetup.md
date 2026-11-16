@@ -469,7 +469,7 @@ Git is the one family allowed to run unattended, and that is deliberate rather t
 **This block is the default, and it stays on.**  Every lab, every project, every session on your own machine runs with permissions configured like this.  You will hear about a mode that skips the prompts; it belongs inside the container in Part V and nowhere else, for reasons that part makes concrete.  On your host, the answer to "this is a lot of prompts" is a better `permission` block, one that allows the specific commands you have decided are safe, not a flag that allows all of them.
 {: .tb-key data-title="Why this matters"}
 
-An already-running session does not pick up a file you just edited.  Quit and restart opencode after changing `permission`, or you will conclude the rule does not work when it simply has not been read.
+An already-running session does not pick up a file you just edited.  Quit and restart opencode after changing `permission`, or you will conclude the rule does not work when it has not been read.
 {: .tb-warning data-title="Watch out"}
 
 ---
@@ -686,7 +686,7 @@ Name the variable after what its token can reach.  `GITHUB_SCRATCH_PAT` for a to
 
 Everything so far assumed you approve actions as they come, and on your own machine that does not change: §5's permission block is the standing configuration for all normal work.
 
-This part is about the one exception. There is a mode where the agent runs to completion without stopping, which is what you want for a long refactor or an overnight task, and it is also the mode where a mistake costs the most. Those two facts are the same fact. So the mode is not something you turn on when the prompts get tiring; it is something you turn on **after** you have built a boundary that makes the prompts unnecessary. That boundary is a container, and building it is most of this part.
+This part is about the one exception. There is a mode where the agent runs to completion without stopping, which is what you want for a long refactor or an overnight task, and it is also the mode where a mistake costs the most. Running without pauses also increases the cost of mistakes. Turn on this mode **after** you have built a boundary that makes the prompts unnecessary, rather than when the prompts get tiring. That boundary is a container, and building it is most of this part.
 
 ## 9.  Why a container is the price of skipping the prompts
 

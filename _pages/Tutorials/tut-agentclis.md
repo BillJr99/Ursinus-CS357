@@ -37,7 +37,7 @@ Make sure these terms are solid before you start.  You will meet all of them bel
 
 ## The Three Paradigms: Chat, Code, and Cowork
 
-Before you install a single tool, it helps to know *which kind* of tool you are installing.  AI assistants have settled into three paradigms, and the difference between them is not the model; it is **who runs the actions and where those actions land**.  A useful analogy: a **chat** assistant is a knowledgeable colleague on the phone (they tell you what to do, you do it); a **code** agent is a contractor you handed the keys to *one room* (they do the work, you approve each consequential step); a **cowork** agent is a personal assistant loose in your *whole office* (they open apps, edit documents, and run errands across your desktop).
+Before you install a single tool, it helps to know *which kind* of tool you are installing.  AI assistants have settled into three paradigms, distinguished by **who runs the actions and where those actions land**, rather than by the model.  A useful analogy: a **chat** assistant is a knowledgeable colleague on the phone (they tell you what to do, you do it); a **code** agent is a contractor you handed the keys to *one room* (they do the work, you approve each consequential step); a **cowork** agent is a personal assistant loose in your *whole office* (they open apps, edit documents, and run errands across your desktop).
 
 | Paradigm | What you do | Who runs the actions | Primarily for | Autonomy | Example tools |
 |----------|-------------|----------------------|---------------|----------|---------------|
@@ -239,7 +239,7 @@ This is the same pattern as the vault's `AGENTS.md` in the second brain module, 
 
 ## 4.  Permission Gates Are Your Governance Layer
 
-The gates are not friction; they are the course's human-oversight principle running on your laptop.  Think of them as the "sign here" moments in a legal document: they exist so that later, if something goes wrong, there is a clear record of what was authorized by a human and what was not.  Tools differ in granularity (Claude Code lets you allow a command pattern once, for the session, or always; pi has no gates at all, which is exactly why it is for low-stakes exploration only).  Calibrate deliberately: auto-approve reads, gate writes, and *always* gate `rm`, `git push`, network calls to new hosts, and anything touching credentials.  When a tool offers a "skip all permissions" mode, recognize it as the same trade the governance part of *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* analyzes, and decline it for coursework.
+The gates apply the course's human-oversight principle on your laptop.  Think of them as the "sign here" moments in a legal document: they exist so that later, if something goes wrong, there is a clear record of what was authorized by a human and what was not.  Tools differ in granularity (Claude Code lets you allow a command pattern once, for the session, or always; pi has no gates at all, which is exactly why it is for low-stakes exploration only).  Calibrate deliberately: auto-approve reads, gate writes, and *always* gate `rm`, `git push`, network calls to new hosts, and anything touching credentials.  When a tool offers a "skip all permissions" mode, recognize it as the same trade the governance part of *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* analyzes, and decline it for coursework.
 
 A teammate launches an agent CLI from their home directory instead of the project directory "to save a cd".  The principled objection is:
 
@@ -420,7 +420,7 @@ The same wizard reaches the gateway from the top of this section: choose *Custom
 
 > **Why bother with three?**  Because "the model gave a bad answer" is not a diagnosis.  With Ollama, OpenWebUI, and the gateway all registered, you re-ask the same question through each and the failure localizes itself: same answer everywhere means the model, different answers means your retrieval or your routing.  The [filesystem isolation]({{ site.baseurl }}/Tutorials/FilesystemIsolation) tutorial builds this exact setup inside a container, with the Dockerfile and the pre-seeded config, if you want the containerized version.
 
-The payoff is the unbundling theme of this course: the *interface* (the CLI you like) is now independent of the *model* (local, free-tier, or frontier), swappable per task with `/model`.  For privacy-sensitive coursework, local routing is not just cheaper; it is the data-minimization requirement satisfied by architecture.
+The payoff is the unbundling theme of this course: the *interface* (the CLI you like) is now independent of the *model* (local, free-tier, or frontier), swappable per task with `/model`.  For privacy-sensitive coursework, local routing reduces cost and satisfies the data-minimization requirement through the architecture.
 
 Now that your tool is scoped, instructed, and routed, Part III shows how to bring it into your editor and run it inside a container so the workspace boundary is enforced by the operating system, not just convention.
 
@@ -544,7 +544,7 @@ That one addition changes the job from *babysitting one agent* to *supervising a
 | Purpose-built for coding-agent workflows | no | yes |
 {: .tb-full}
 
-The relationship is not "herdr *versus* `tmux`"; it is `tmux`'s persistence *plus* the observability an agent workflow needs.  Learn the plain multiplexer first (it is everywhere, on every server); reach for herdr when you are running enough agents that "which one needs me?" becomes the real question.
+herdr adds the observability an agent workflow needs to `tmux`'s persistence, rather than competing with `tmux`.  Learn the plain multiplexer first (it is everywhere, on every server); reach for herdr when you are running enough agents that "which one needs me?" becomes the real question.
 
 ## 11.  The "Walk Away and Come Back" Discipline
 

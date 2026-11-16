@@ -69,7 +69,7 @@ Every step below has an owner. The agent does most of the typing, and you make e
 | Deploy | Shows the exact commands | Approve the run |
 | Teardown | Shows what will be deleted | Approve each deletion |
 
-> The point of the table is not that the agent is untrustworthy. It is that a decision you never saw is a decision you cannot defend: to a teammate, to a community partner, or to yourself in two weeks when the app does something surprising.  Iterating in small slices keeps each decision small enough to actually read.
+> The point of the table is not that the agent is untrustworthy. It is that a decision you never saw is a decision you cannot defend: to a teammate, to a community partner, or to yourself in two weeks when the app does something surprising.  Iterating in small slices keeps each decision small enough to read.
 {: .tb-key data-title="Why this matters"}
 
 ---

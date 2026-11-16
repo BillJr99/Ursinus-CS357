@@ -14,7 +14,7 @@ tags:
 ---
 ## About This Tutorial
 
-The technical questions this course addresses (how models generate text, how agents plan actions, how retrieval grounds answers) rest on a set of prior questions that are unsettled: *Does any of this constitute understanding?  Can a system have beliefs?  Who bears responsibility when an agent causes harm?*  These questions are not decorative philosophy; they structure how we build, regulate, and relate to AI systems.  Today you engage with the arguments seriously, without easy resolution, because the engineers who build these systems without these frameworks are the ones who will cause the most harm.
+The technical questions this course addresses (how models generate text, how agents plan actions, how retrieval grounds answers) rest on a set of prior questions that are unsettled: *Does any of this constitute understanding?  Can a system have beliefs?  Who bears responsibility when an agent causes harm?*  These philosophical questions structure how we build, regulate, and relate to AI systems.  Today you engage with the arguments seriously, without easy resolution, because the engineers who build these systems without these frameworks are the ones who will cause the most harm.
 {: .tb-lede}
 
 ### Key Concepts
@@ -37,7 +37,7 @@ In this part, you will examine four philosophical positions on machine understan
 
 ## 1.  Four Positions on Machine Minds
 
-These questions might seem purely academic, but they have direct engineering consequences.  If you believe a system understands its outputs, you design it differently than if you believe it is a very sophisticated autocomplete.  If you believe users might attribute feelings to your system, you design its interface differently.  And if you believe no system can ever be responsible for harm, you assign responsibility to humans differently.  The four positions below are not historical curiosities; they are live options that practicing AI engineers implicitly adopt.
+These questions might seem purely academic, but they have direct engineering consequences.  If you believe a system understands its outputs, you design it differently than if you believe it is a very sophisticated autocomplete.  If you believe users might attribute feelings to your system, you design its interface differently.  And if you believe no system can ever be responsible for harm, you assign responsibility to humans differently.  Practicing AI engineers implicitly adopt the four positions below, which remain live options.
 
 The debate over whether machines can understand (and what understanding even means) has been active since at least 1950.  Four positions dominate; each has specific engineering implications.
 
@@ -85,7 +85,7 @@ In this part, you will analyze the ELIZA effect and the frame problem through a 
 
 ## 2.  What People Do With Systems That Talk
 
-Understanding the ELIZA effect is not just philosophically interesting; it is a design obligation.  If your system produces the ELIZA effect unintentionally, users will form attachments that do not serve them, disclose information they would not otherwise share, and suffer when the illusion breaks.  If your system produces it intentionally (to maximize engagement), you are exploiting a psychological vulnerability.  Either way, this is a design decision, whether or not you recognize it as one.
+Understanding the ELIZA effect is both philosophically interesting and a design obligation.  If your system produces the ELIZA effect unintentionally, users will form attachments that do not serve them, disclose information they would not otherwise share, and suffer when the illusion breaks.  If your system produces it intentionally (to maximize engagement), you are exploiting a psychological vulnerability.  Either way, this is a design decision, whether or not you recognize it as one.
 
 The ELIZA program (Weizenbaum, 1966) implemented a Rogerian therapist with approximately 200 lines of pattern-matching script.  Weizenbaum created ELIZA partly to demonstrate the shallowness of such interactions; he was appalled to discover that users (including his own secretary, who knew ELIZA was a program) formed deep emotional attachments, disclosed private information, and resisted having their sessions observed.  Weizenbaum spent the rest of his career warning about what he had built.
 

@@ -79,7 +79,7 @@ Four parts in class, a report-out, and an extension you take home.
 | **Part IV** | Exercises, cowork agents, and reflection | take-home |
 | **Extension** | Self-paced: architecture comparison, a full worked scenario, the opencode configuration reference, and hook recipes for eight scenarios in both harnesses | self-paced |
 
-The Extension is real material, not filler; it is where you go when a lab direction or your project needs it.  Nothing in it is assumed by Parts I through IV.
+The Extension is real material: use it when a lab direction or your project needs it.  Nothing in it is assumed by Parts I through IV.
 
 # Part I: Driving the Agent
 
@@ -343,7 +343,7 @@ The table traces a coding agent through its five stages.  As you read each row, 
 
    *Hint: Estimate the number of distinct files that probably need to change, multiply by the number of verify-and-fix cycles you expect, and add a buffer.  What information would you want to collect from past runs to refine this estimate?*
 
-> **Common Misconception:** Many students assume that a coding agent "understands" the codebase the way a senior developer does, holding a mental model of every function, every dependency, and every implicit assumption.  It does not.  The agent only knows what it has loaded into its context window during the current run.  If a critical convention (like "never use raw SQL strings; always use the ORM") was established in a file the agent did not load, the agent will violate it without noticing.  This is why human log review remains essential even when the test suite passes: tests verify behavior, not design adherence.
+> **Common Misconception:** Many students assume that a coding agent "understands" the codebase the way a senior developer does, holding a mental model of every function, every dependency, and every implicit assumption.  It does not.  The agent only knows what it has loaded into its context window during the current run.  If a critical convention (like "never use raw SQL strings; always use the ORM") was established in a file the agent did not load, the agent will violate it without noticing.  Human log review is still needed when the test suite passes because tests verify behavior rather than design adherence.
 
 In the coding agent loop, the *Verify* stage fails silently when:
 
@@ -368,7 +368,7 @@ The three levels sit on a continuum.  The right choice depends on the stakes, th
 | **Pair** | You describe a task; the agent produces a full file or function; you read every line before accepting | New features in production code, security-sensitive modules | Medium | Every changed file, every line |
 | **Vibe** | You write a spec and tests; the agent implements the whole feature; you review only the change | Well-tested utility code, prototypes, features with complete acceptance criteria | High without tests, medium with them | The change against the spec, and the test results |
 
-One column is missing from that table on purpose, and Sections 2b and 2c supplied it: at every level, you can also review the plan before the agent acts.  Plan review is not a fourth supervision level; it is a discount available at all three.  It is what makes the third row survivable on a task where the tests are thinner than you would like.  Notice what the third row requires.  "Vibe" is only the low-risk option when the tests exist first.  Without them it is not a supervision level at all; it is hoping.  Your Week 1 session was closest to "pair": you read every line of a three-line change.  Today we earn our way to the third row by building the thing that makes it safe.
+One column is missing from that table on purpose, and Sections 2b and 2c supplied it: at every level, you can also review the plan before the agent acts.  Plan review reduces the supervision needed at all three levels, without adding a fourth level.  It is what makes the third row survivable on a task where the tests are thinner than you would like.  Notice what the third row requires.  "Vibe" is only the low-risk option when the tests exist first.  Without tests, you are relying on hope rather than supervision.  Your Week 1 session was closest to "pair": you read every line of a three-line change.  Today we earn our way to the third row by building the thing that makes it safe.
 
 Which supervision level is appropriate for adding a password-hashing function to a production login system, given that the module has no existing tests?
 

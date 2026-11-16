@@ -41,7 +41,7 @@ Early language models accepted only text.  Modern agents increasingly accept (an
 
 This matters for agents more than for standalone chatbots because agents take actions.  An agent that can see a screenshot can click the right button.  An agent that can read a PDF contract can extract the clause that triggers a tool call.  An agent that hears a voice command can act on it without a human typing an intermediate transcript.
 
-Multimodality is not magic; it is an extension of the fundamental token-processing architecture.  Every modality is ultimately encoded as a sequence of tokens before it enters the transformer.  What differs is how that encoding happens, how lossy it is, and what kinds of errors result.
+Multimodality extends the fundamental token-processing architecture.  Every modality is ultimately encoded as a sequence of tokens before it enters the transformer.  What differs is how that encoding happens, how lossy it is, and what kinds of errors result.
 
 | Modality | Input Format | How the Model Receives It | Typical Token Count | Key Capability | Key Limitation |
 |:---------|:------------|:---------------------|:---------------------|:-------------|:------------|
@@ -138,7 +138,7 @@ All modalities eventually become tokens.  This unification is the source of mult
 
 When an image is encoded into patch embeddings, fine spatial detail is compressed and potentially lost.  When audio is transcribed, tone, emphasis, and speaker identity may be lost.  When a PDF is parsed, layout relationships may be lost.  When code is summarized, implementation details may be lost.
 
-These losses are not bugs; they are the cost of compression.  The implication for agents is that **errors introduced at modality conversion propagate through the entire pipeline**.  If the VLM misreads a digit in an invoice, every downstream tool call based on that digit will be wrong.  If the transcription of a voice command mis-hears a name, the agent will act on the wrong entity.
+These losses result from compression rather than from bugs.  The implication for agents is that **errors introduced at modality conversion propagate through the entire pipeline**.  If the VLM misreads a digit in an invoice, every downstream tool call based on that digit will be wrong.  If the transcription of a voice command mis-hears a name, the agent will act on the wrong entity.
 
 ## Mitigation Strategies for Modality Errors
 

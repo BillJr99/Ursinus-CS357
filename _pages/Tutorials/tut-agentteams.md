@@ -201,7 +201,7 @@ print("\nSUMMARY:\n", state["summary"])
 
    > *Hint: For example, the extractor does not see `state["minutes"]` because minutes have not been written yet, but also because seeing a draft might bias the action-item extraction.  What analogous risks exist for the writer and checker?*
 
-> Students often assume that giving every agent access to the *full* state object is safer: "the more context, the better."  In practice, the opposite is often true.  An agent given irrelevant context is more likely to be distracted by it, to over-fit its output to previous stages, or to reproduce upstream errors with false confidence.  The discipline of passing only what each role needs is not a technical limitation; it is a deliberate design choice that makes each agent's behavior more predictable and more testable in isolation.
+> Students often assume that giving every agent access to the *full* state object is safer: "the more context, the better."  In practice, the opposite is often true.  An agent given irrelevant context is more likely to be distracted by it, to over-fit its output to previous stages, or to reproduce upstream errors with false confidence.  Passing only what each role needs is a deliberate design choice, rather than a technical limitation, that makes each agent's behavior more predictable and more testable in isolation.
 {: .tb-pitfall data-title="Common Misconception"}
 
 With the pattern fully understood, Part III applies it directly to your final project; this is where the activity becomes a design session for the work you will submit.

@@ -131,7 +131,7 @@ A normal, expected developmental stage that healthy teams pass through
 
 </details>
 
-> Psychological safety does *not* mean "niceness" or the absence of disagreement.  Edmondson (1999) is explicit that psychologically safe teams disagree *more* openly, not less; safety is what makes candid disagreement survivable.  A team that never argues is usually a team in which people have stopped saying what they think.  The goal of your charter is not to prevent storms; it is to make storms informative.
+> Psychological safety does *not* mean "niceness" or the absence of disagreement.  Edmondson (1999) is explicit that psychologically safe teams disagree *more* openly, not less; safety is what makes candid disagreement survivable.  A team that never argues is usually a team in which people have stopped saying what they think.  Your charter should help you learn from storms rather than prevent them.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---

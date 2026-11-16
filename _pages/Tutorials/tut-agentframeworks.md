@@ -626,7 +626,7 @@ show_context()
 ```
 [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentframeworks-11) <!-- code-viz link -->
 
-The printout is short, and that is the point:
+The printout is short:
 
 ```text
 --- request 1 of 1: the context window ---
@@ -634,7 +634,7 @@ The printout is short, and that is the point:
 [user-prompt] 'In one sentence: what is an agent?'
 ```
 
-Your instructions did not configure the model.  Pydantic AI pasted them into the request, ahead of your question, and the model read both as text.  That is all a system prompt is.
+Your instructions did not configure the model.  Pydantic AI pasted them into the request, ahead of your question, and the model read both as text.  A system prompt consists of those instructions as text.
 
 **Step 2: memory.**  Two kinds of memory, both of them text.  Long-term memory is a file the program reads into the instructions; short-term memory is the earlier conversation, handed back in with `message_history`:
 

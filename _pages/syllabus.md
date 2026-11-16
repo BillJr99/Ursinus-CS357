@@ -797,7 +797,7 @@ I write every assignment to be transparent about three things, so you are never 
 - **Task:** *what* you will actually do, in concrete steps.
 - **Criteria:** *how* your work will be evaluated.  Every graded assignment carries a rubric with four levels (pre-emerging, beginning, progressing, proficient), so you can see what proficient work looks like before you begin, and can hold your own draft against it.
 
-Please read the Purpose first.  It tells you what the assignment is really for, and that is the fastest way to make good decisions when the task gets open-ended.  Much of this course is open-ended on purpose, because operating real systems is.  Every assignment also asks you to reflect and to disclose your use of AI tools honestly, and I count both as part of the work, for the reasons set out in *A Note on the Use of Generative AI* above.
+Please read the Purpose first.  It tells you what the assignment is for, and that is the fastest way to make good decisions when the task gets open-ended.  Much of this course is open-ended on purpose, because operating real systems is.  Every assignment also asks you to reflect and to disclose your use of AI tools honestly, and I count both as part of the work, for the reasons set out in *A Note on the Use of Generative AI* above.
 
 ## Class Activities and Participation (12.5%)
 

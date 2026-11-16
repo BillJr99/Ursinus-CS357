@@ -661,7 +661,7 @@ fi
 
 ## 13.  A Claude Skill That Requests the Deploy - But Cannot Bypass the Gates
 
-You can let an agent *initiate* a deploy without giving it any power to bypass your guardrails.  The key idea: a skill only **requests** a run via `workflow_dispatch`; the guardrails from Section 11 (branch, actor allowlist, environment approval) are enforced **server-side by the pipeline**, so the request is powerless unless it satisfies them.
+You can let an agent *initiate* a deploy without giving it any power to bypass your guardrails.  A skill only **requests** a run via `workflow_dispatch`; the guardrails from Section 11 (branch, actor allowlist, environment approval) are enforced **server-side by the pipeline**, so the request is powerless unless it satisfies them.
 
 A minimal Claude skill is a folder with a `SKILL.md` describing when and how to invoke the workflow:
 

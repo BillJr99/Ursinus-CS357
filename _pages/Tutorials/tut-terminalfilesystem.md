@@ -399,7 +399,7 @@ The wizard asks which provider, then for a base URL and a key.  Do it twice.
 
 **Then, OpenWebUI.**  Run `/compat-login` again and choose *Custom*.  The base URL is `http://host.docker.internal:3000/api/v1`, and the key is one you mint yourself in OpenWebUI under *Settings -> Account -> API Keys*.  That key authenticates you to a server running on your own machine; it is not a payment credential and nothing is billed.
 
-Now run `/model`.  Both providers are listed, labeled separately, with all their models, and you switch between them mid-session.  That is the point of doing both: they are not the same route to the same thing.
+Now run `/model`.  Both providers are listed, labeled separately, with all their models, and you switch between them mid-session.  Setting up both gives you distinct routes rather than duplicate access to the same thing.
 
 | | Straight to Ollama | Through OpenWebUI |
 |---|---|---|
@@ -830,7 +830,7 @@ The third is the dangerous one, and the skill's framing of it is the sentence wo
 
 > A fluent response, successful command, or generated file is not proof of completion.
 
-Notice that none of the three is a knowledge problem.  A bigger model has the same three failure modes and simply reaches them later.  What the skill does is refuse to let the conversation be the only place the work is recorded.
+Notice that none of the three is a knowledge problem.  A bigger model has the same three failure modes and reaches them later.  What the skill does is refuse to let the conversation be the only place the work is recorded.
 
 Version 0.4.0 adds a fourth failure, and it is worth quoting the skill's own description of it because it is a field report rather than a hypothetical:
 

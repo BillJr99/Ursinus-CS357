@@ -170,7 +170,7 @@ Each part does one job, and naming them is what lets you carry the shape from on
 | **Stopping rule** | What ends the loop, not the turn | The criterion passes | No material defect remains | The target is reached, or the budget is spent |
 | **Report** | The four facts the turn comes back with | What changed, what the check said, what was committed, what is next | The scored table, then what was revised and what still fails | The number, whether it was kept, and what to try next |
 
-Read the **Check** row across.  A test answers yes or no, a rubric answers one question per criterion, and a metric answers with a number, but all three name something that existed **before** the turn started and that the agent may not edit.  That is the whole design.  When Model 2 rewrote a failing test to match its own code, it did not break a rule about diligence; it broke the Check part, and every other part of that run was worthless afterward.
+Read the **Check** row across.  A test answers yes or no, a rubric answers one question per criterion, and a metric answers with a number, but all three name something that existed **before** the turn started and that the agent may not edit.  The design depends on that fixed check.  When Model 2 rewrote a failing test to match its own code, it invalidated the Check part and every other part of that run, rather than merely failing to be diligent.
 
 Three of the six parts never change between turns, which is why the next section puts them in a file.  **Gate**, **Stopping rule**, and **Report** are properties of the loop, so they belong in `AGENTS.md` and you write them once.  **Scope**, **Source of truth**, and **Check** are properties of this turn, so you retype them each time, and they are short enough that retyping is the cheap part of the loop.
 
@@ -313,7 +313,7 @@ Every increment produces two things: a commit, and a sentence about what happene
 
 Of the four files, the loop touches two often and two rarely.  `.ai/SESSION.md` gets an entry after every commit or restore, and `.ai/FUTURE_WORK.md` gets one whenever you reject a plan for scope, as you did in Increment 2; `.ai/CURRENT_TASK.md` changes when you pick the next increment, and `.ai/CONTEXT.md` almost never changes at all.  The *Governing Coding Agents* tutorial carries all four in full.
 
-Every `SESSION.md` entry ends with a **Next Safe Action**, which in the Karpathy loop is simply the next increment.  Here is the entry for Model 1's second increment, so you can see how short it is:
+Every `SESSION.md` entry ends with a **Next Safe Action**, which in the Karpathy loop is the next increment.  Here is the entry for Model 1's second increment, so you can see how short it is:
 
 ```markdown
 ## 2026-09-17 increment 2: normalize_title lowercases and hyphenates
@@ -737,7 +737,7 @@ This runs on the practice repository, not on your graded lab artifact.
 - `eval/queries.json`, twelve queries a student might actually type, each labeled with the one document that should rank first.
 - `eval/score.py`, which runs each query through `artifact/search.py` as a subprocess, finds the rank of the labeled document, and prints the **mean reciprocal rank**: rank 1 scores 1.0, rank 2 scores 0.5, rank 4 scores 0.25, absent scores 0.
 
-Two rules turn that number into a check rather than a suggestion.  The agent may not edit either file, and the target is written down **before** the first attempt, in `eval/BEST.md`: reach 0.80, with a budget of five attempts.  A target chosen after you see the scores is not a target at all; it is a description.
+Two rules turn that number into a check rather than a suggestion.  The agent may not edit either file, and the target is written down **before** the first attempt, in `eval/BEST.md`: reach 0.80, with a budget of five attempts.  A target must precede the scores; choosing it afterward only describes them.
 
 **The prompt.**  In the six parts from Section 2:
 

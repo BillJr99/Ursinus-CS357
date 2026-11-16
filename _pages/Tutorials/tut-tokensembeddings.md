@@ -230,7 +230,7 @@ Think of a library search.  Your search term is the query.  The index cards are 
 
 To find out how relevant token $$j$$ is to token $$i$$, take the dot product $$\mathbf{q}_i \cdot \mathbf{k}_j$$, the same operation as the numerator of cosine similarity in Section 2.  Run those relevance scores through softmax (raise $$e$$ to each score, then divide by the total) so they become weights that sum to 1.  Then build the token's new meaning as a weighted blend of everyone's values.
 
-That is the whole mechanism, and it is written compactly as:
+The mechanism can be written compactly as:
 
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V

@@ -479,7 +479,7 @@ for msg in ["I have exams in chemistry on Dec 14 and statistics on Dec 16.",
      *Hint:* With `keep=1`, only the single most recent message is kept verbatim; everything else is in the summary.  With `keep=10`, 10 messages are kept verbatim before any summarization begins.  Predict for each: (a) how often does summarization happen?  (b) how large does the prompt grow?  (c) how faithful is the agent's memory?  Then run both and compare your predictions to the actual output.
 {: start="16"}
 
-> Many students assume that a longer context window removes the need for memory management.  Even with a 1-million-token context (which exists in some frontier models), the lost-in-the-middle effect means the model under-attends to content in the vast middle of the context.  And the quadratic attention cost makes 1-million-token contexts dramatically slower and more expensive.  Memory architecture is not a workaround for small context windows; it is good engineering practice even when large windows are available.
+> Many students assume that a longer context window removes the need for memory management.  Even with a 1-million-token context (which exists in some frontier models), the lost-in-the-middle effect means the model under-attends to content in the vast middle of the context.  And the quadratic attention cost makes 1-million-token contexts dramatically slower and more expensive.  Memory architecture is good engineering practice for both small and large context windows.
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---

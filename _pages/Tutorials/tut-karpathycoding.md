@@ -175,7 +175,7 @@ Running `pytest` on this file before any implementation shows five `FAILED` line
 
    > *Hint: "Silent failure" means the function returns without raising an exception, but returns a wrong, empty, or nonsensical value.  For example: returning `[]` when `k` exceeds the corpus size, instead of raising `ValueError`.  Why is silent failure dangerous in a system that other code depends on?*
 
-> "TDD means you write tests after you write code to make sure it works."  In true TDD the tests come first and they must *fail* before any implementation exists.  A test that passes before the implementation is written either tests the wrong thing or has a bug in the test itself.  The "red" phase is not a formality; it confirms that your test is actually measuring something.
+> "TDD means you write tests after you write code to make sure it works."  In true TDD the tests come first and they must *fail* before any implementation exists.  A test that passes before the implementation is written either tests the wrong thing or has a bug in the test itself.  The "red" phase confirms that your test measures something.
 {: .tb-pitfall data-title="Common Misconception"}
 
 In the TDD cycle, what does "red" mean?
