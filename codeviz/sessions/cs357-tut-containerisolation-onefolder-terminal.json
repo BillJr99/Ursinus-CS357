@@ -1,0 +1,83 @@
+{
+ "version": 1,
+ "id": "cs357-tut-containerisolation-onefolder-terminal",
+ "title": "One shared directory in a container",
+ "description": "Run the tutorial shell probes with synthetic files. The container can read and write the shared workspace. The parent directory stays outside the container. Build output is sample output; versions and download progress can vary.",
+ "page": "_pages/Tutorials/tut-containerisolation.md",
+ "scenario": {
+  "files": {
+   "iso/Dockerfile": "# Debian + Bun 1.4.4, pinned by digest so a re-tag upstream cannot change this demo.\nFROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e\nUSER root\nRUN apt-get update \\\n && apt-get install -y --no-install-recommends ca-certificates curl \\\n && rm -rf /var/lib/apt/lists/*\nRUN BUN_INSTALL=/opt/omp bun install -g \"@oh-my-pi/pi-coding-agent@18.18.1\" \\\n && ln -sfn /opt/omp/install/global/node_modules/@oh-my-pi/pi-coding-agent/dist/cli.js /usr/local/bin/omp \\\n && chmod -R a+rX /opt/omp \\\n && /usr/local/bin/omp --version\nRUN chmod 711 /home && mkdir -p /workspace && chown bun:bun /workspace\nUSER bun\nENV HOME=/home/bun\nWORKDIR /workspace\nCMD [\"bash\"]\n",
+   "iso/run.sh": "#!/usr/bin/env bash\n# run.sh: an agent that can see one folder. Usage: ./run.sh bash   or   ./run.sh omp\nset -euo pipefail\ncd \"$(dirname \"$0\")\"\nnet=()\nif [ \"${NET:-}\" = \"none\" ]; then net=(--network none); fi\nexec docker run --rm -it --read-only \\\n  --tmpfs /tmp \\\n  --tmpfs /home/bun:exec,mode=1777 \\\n  --cap-drop=ALL --security-opt no-new-privileges \\\n  --pids-limit 256 --memory 1g \\\n  --user \"$(id -u):$(id -g)\" -e HOME=/home/bun -e OPENROUTER_API_KEY \\\n  \"${net[@]}\" \\\n  -v \"$PWD/workspace:/workspace\" -w /workspace \\\n  cs357-isolation-demo \"$@\"\n"
+  },
+  "commands": [
+   "mkdir -p iso/workspace && cd iso",
+   "echo \"Hello from the one host directory this container is allowed to see.\" > workspace/README.txt",
+   "echo \"outside the shared directory\" > decoy-secret.txt",
+   "docker build -t cs357-isolation-demo . && chmod +x run.sh",
+   "./run.sh bash -c 'id'",
+   "./run.sh bash -c 'touch /etc/x'",
+   "./run.sh bash -c 'find / -name decoy-secret.txt 2>/dev/null'",
+   "./run.sh bash -c 'cat /workspace/README.txt'",
+   "./run.sh bash -c 'echo \"written from inside the container\" > /workspace/from-container.txt'",
+   "./run.sh bash -c 'omp --version'"
+  ],
+  "images": [
+   "oven/bun:1.4.4-debian"
+  ],
+  "network": "internet",
+  "watch": [
+   "iso",
+   "iso/workspace"
+  ],
+  "timeout": 1800,
+  "user": "student"
+ },
+ "terminal": true,
+ "markers": [
+  {
+   "step": 0,
+   "title": "Prepare the workspace",
+   "note": "You create the directory that the container will share."
+  },
+  {
+   "step": 2,
+   "title": "Keep a file outside",
+   "note": "This synthetic file stays beside the workspace directory."
+  },
+  {
+   "step": 3,
+   "title": "Build the demo image",
+   "note": "Docker installs the agent from the tutorial Dockerfile. Build logs are sample output."
+  },
+  {
+   "step": 4,
+   "title": "Check the user",
+   "note": "The container runs with the user ID passed by run.sh."
+  },
+  {
+   "step": 5,
+   "title": "Try the read-only filesystem",
+   "note": "The container attempts to create a file under /etc. Check the recorded error."
+  },
+  {
+   "step": 6,
+   "title": "Search for the outside file",
+   "note": "The search runs inside the container filesystem."
+  },
+  {
+   "step": 7,
+   "title": "Read the shared file",
+   "note": "The mounted workspace exposes README.txt to the container."
+  },
+  {
+   "step": 8,
+   "title": "Write through the mount",
+   "note": "The container writes a file into the shared workspace."
+  },
+  {
+   "step": 9,
+   "title": "Check the agent installation",
+   "note": "The version command runs locally and needs no model login."
+  }
+ ]
+}

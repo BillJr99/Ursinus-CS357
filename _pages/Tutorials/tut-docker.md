@@ -346,6 +346,19 @@ A teammate's Open WebUI container cannot reach Ollama.  From the host, `curl htt
 
 ## 8.  Making a Host Folder Available to a Container
 
+
+### Demo: Write through a Docker bind mount
+
+Recorded output from a disposable Docker sandbox. Watch the shared file appear on the host side.
+The demo plays once when you scroll it into view. You can pause it. Reduced-motion settings show the finished transcript.
+
+<iframe title="Write through a Docker bind mount" loading="lazy"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-demo-docker-sharing"
+  style="width:100%;height:640px;border:1px solid #888"></iframe>
+
+[Open this demo]({{ site.baseurl }}/viz/?mode=terminal#cs357-demo-docker-sharing)
+
+
 This is the single most common thing you will do all semester, and the single most common thing to get wrong.  The flag is `-v HOST_PATH:CONTAINER_PATH[:MODE]`, and each of the three parts deserves care.
 
 **Step 1: create the folder on the host first.**  Docker will happily create a missing host path *as root*, leaving you a folder you cannot write to.  Make it yourself:

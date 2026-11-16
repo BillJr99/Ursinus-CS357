@@ -1,0 +1,73 @@
+{
+ "version": 1,
+ "id": "cs357-demo-overview-setup",
+ "title": "Docker Desktop and the course tools",
+ "description": "Illustration of Route A after you create the course repository and add its container files. Install Docker Desktop using its graphical installer first. The container prompt is shortened to /workspace$ here. Build messages are typical output.",
+ "page": "_pages/Assignments/asmt-overview.md",
+ "terminal": true,
+ "demo": true,
+ "provenance": "scripted",
+ "scenario": {
+  "commands": [
+   "# Install and start Docker Desktop using the tutorial installer and settings.",
+   "docker run hello-world",
+   "cd ~/cs357-work/.devcontainer && docker compose build",
+   "docker compose run --rm cs357",
+   "python3 -c \"import spacy; nlp = spacy.load('en_core_web_sm'); print('spacy OK:', nlp('Agents plan and act.')[0].pos_)\""
+  ]
+ },
+ "steps": [
+  {
+   "cmd": "# Install and start Docker Desktop using the tutorial installer and settings.",
+   "output": "",
+   "exit": 0
+  },
+  {
+   "cmd": "docker run hello-world",
+   "output": "Hello from Docker!\nThis message shows that your installation appears to be working correctly.\n",
+   "exit": 0
+  },
+  {
+   "cmd": "cd ~/cs357-work/.devcontainer && docker compose build",
+   "output": "[+] Building\n[+] Building complete\n",
+   "exit": 0
+  },
+  {
+   "cmd": "docker compose run --rm cs357",
+   "output": "/workspace$\n",
+   "exit": 0
+  },
+  {
+   "cmd": "python3 -c \"import spacy; nlp = spacy.load('en_core_web_sm'); print('spacy OK:', nlp('Agents plan and act.')[0].pos_)\"",
+   "output": "spacy OK: NOUN\n",
+   "exit": 0
+  }
+ ],
+ "markers": [
+  {
+   "step": 0,
+   "title": "Install on your host",
+   "note": "Use the Docker Desktop installer and the tutorial settings. This illustration does not run an installer."
+  },
+  {
+   "step": 1,
+   "title": "Verify Docker",
+   "note": "Run this check after Docker Desktop starts."
+  },
+  {
+   "step": 2,
+   "title": "Build the course image",
+   "note": "First create the repository and add the tutorial container files. Then build from .devcontainer."
+  },
+  {
+   "step": 3,
+   "title": "Enter the course container",
+   "note": "The course tools run in the container. This illustration shortens the prompt."
+  },
+  {
+   "step": 4,
+   "title": "Check the NLP model",
+   "note": "The tutorial checks the installed spaCy model with this sentence."
+  }
+ ]
+}
