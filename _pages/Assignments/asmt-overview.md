@@ -195,10 +195,10 @@ Illustration: typical output; yours may differ. Follow A1 through A6 in the Cour
 The demo plays once when you scroll it into view. You can pause it. Reduced-motion settings show the finished transcript.
 
 <iframe title="Docker Desktop and the course tools" loading="lazy"
-  src="{{ '/viz/?mode=terminal&embed=1#cs357-demo-overview-setup' | relative_url }}"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-demo-overview-setup"
   style="width:100%;height:640px;border:1px solid #888"></iframe>
 
-[Open this demo]({{ '/viz/?mode=terminal#cs357-demo-overview-setup' | relative_url }})
+[Open this demo]({{ site.baseurl }}/viz/?mode=terminal#cs357-demo-overview-setup)
 
 #### Route A Checklist
 

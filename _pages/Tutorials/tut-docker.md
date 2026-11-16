@@ -353,10 +353,10 @@ Recorded output from a disposable Docker sandbox. Watch the shared file appear o
 The demo plays once when you scroll it into view. You can pause it. Reduced-motion settings show the finished transcript.
 
 <iframe title="Write through a Docker bind mount" loading="lazy"
-  src="{{ '/viz/?mode=terminal&embed=1#cs357-demo-docker-sharing' | relative_url }}"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-demo-docker-sharing"
   style="width:100%;height:640px;border:1px solid #888"></iframe>
 
-[Open this demo]({{ '/viz/?mode=terminal#cs357-demo-docker-sharing' | relative_url }})
+[Open this demo]({{ site.baseurl }}/viz/?mode=terminal#cs357-demo-docker-sharing)
 
 
 This is the single most common thing you will do all semester, and the single most common thing to get wrong.  The flag is `-v HOST_PATH:CONTAINER_PATH[:MODE]`, and each of the three parts deserves care.

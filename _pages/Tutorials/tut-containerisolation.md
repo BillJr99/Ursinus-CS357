@@ -230,10 +230,10 @@ Play the commands and their recorded output. Pause to inspect a result, or choos
 Build logs and version strings are sample output.
 
 <iframe title="One shared directory in a container" loading="lazy"
-  src="{{ '/viz/?mode=terminal&embed=1#cs357-tut-containerisolation-onefolder-terminal' | relative_url }}"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-tut-containerisolation-onefolder-terminal"
   style="width:100%;height:740px;border:1px solid #888"></iframe>
 
-[Open the terminal recording]({{ '/viz/?mode=terminal#cs357-tut-containerisolation-onefolder-terminal' | relative_url }})
+[Open the terminal recording]({{ site.baseurl }}/viz/?mode=terminal#cs357-tut-containerisolation-onefolder-terminal)
 
 
 Save this as `Dockerfile`:
