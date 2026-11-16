@@ -120,7 +120,7 @@ You do not need all of this page today.  It describes a semester-long structure,
 | **The Team Charter**, and write it with your team | The week teams are announced |
 | **The Tuckman Map** and **Psychological Safety** | With the charter, then again before each check-in |
 | **The Team Playbook** | As you need it: it is a reference, not a reading |
-| **Intra-Team Check-Ins 1-3** | Before each check-in, which is three times across the term |
+| **Intra-Team Check-Ins 1 and 2** | Before each check-in, which is twice across the term |
 | **Sprint Checks** | Before each of the two sprint checks in Sprint 1 |
 | **Assessment Philosophy** and the **rubric** | Before your first milestone, then before each one |
 
@@ -153,8 +153,7 @@ Every artifact below has its own assignment or activity page.  The table is the 
 | 15 | **Sprints 1-3** | Three sprints between the proposal and the last day of class, with rotating roles, runnable increments, evaluation updates, and Responsible AI measurements (token counts, traces, correctness audits, and bias probes) logged at every boundary. Sprint 1 spans the Thanksgiving break; plan for it in your charter's cadence. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 | 16 | **Sprint checks 1 and 2** | Ten minutes at the start of class, twice during Sprint 1: a member I pick at random shows one thing running (Direction B: one cited finding), and the Coordinator says what is next and what is blocking. Each is marked shown or not yet. Every member's linked standup line is their evidence line, and Sprint Check 2 includes the peer pulse. | [Sprint Checks](#sprint-checks) |
 | 17 | **Gallery walk + peer review round 3** | Walk each other's work with SQR cards at the final studio. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
-| 18 | **Intra-team check-in 3** | The third private check-in, reflecting on what the gallery walk surfaced. | [Check-Ins](#intra-team-check-ins-1-3) |
-| 19 | **Final submission and Demo Day** | The final project is due on the last day of class, and teams present on final exam day: a technical demo, a non-technical stakeholder-facing segment, a disseminable artifact, and the Responsible AI Report on the team's own work. Demo Day is also the team's deliberate adjourning: the final reflection, contribution statements, and your professional portfolio artifact close the thread. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
+| 18 | **Final submission and Demo Day** | The final project is due on the last day of class, and teams present on final exam day: a technical demo, a non-technical stakeholder-facing segment, a disseminable artifact, and the Responsible AI Report on the team's own work. Demo Day is also the team's deliberate adjourning: the final reflection, contribution statements, and your professional portfolio artifact close the thread. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 
 ---
 
@@ -303,13 +302,13 @@ Rotation is not optional and not tradeable.  The point is that everyone practice
 
 ---
 
-## Intra-Team Check-Ins 1-3
+## Intra-Team Check-Ins 1 and 2 {#intra-team-check-ins-1-3}
 
 > **Have these ready.**  Each review round runs on real artifacts: the Stakeholder Brief draft at the first round, the proposal, as it stands that day, at the *Project Sprint* session, and your gallery-walk artifact plus SQR cards at *Project Studio and Gallery Walk*.  A round with nothing to review is a round wasted.
 
 The structured peer reviews at the brief, proposal, and gallery-walk stages all use the **SQR protocol**: one Strength with evidence, one genuine Question, one Risk with a mitigation.  The **[Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview)** carries the protocol card; bring it to each review round.
 
-Three times in the semester (with the Stakeholder Brief, between the project hand-out and the proposal, and after the gallery walk) your team pauses for a structured check-in, timed to the Tuckman map above.  Each check-in carries **3 points, assessed within Final Project and Project Thread Milestones**, and Check-In 3 is scored on the [check-in rubric]({{ site.baseurl }}/Projects/CheckIn).  Two things are due:
+Twice in the semester (with the Stakeholder Brief, and between the project hand-out and the proposal) your team pauses for a structured check-in, timed to the Tuckman map above.  Each check-in carries **3 points, assessed within Final Project and Project Thread Milestones**.  Two things are due:
 
 1.  **A team progress report, signed by all members.**  Half a page, using this form.  The signatures matter.  Signing a report you know is rosy is the small version of every engineering-ethics case study you will ever read.
 
@@ -330,9 +329,8 @@ The prompts change with the stage your team is in:
 
 - **Check-In 1 (storming into norming):** (a) Name one place where two members' working styles or standards differed; what ground rule did you set or reset in response?  (b) Which charter norm has been hardest to keep, and what will you change?  (c) Name one thing a teammate did that made it safer to speak up.
 - **Check-In 2 (norming into performing):** (a) Role-rotation audit: list who has held each role so far; where has the team quietly specialized?  (b) Workload audit: where is effort unbalanced, and what is the rebalancing plan for the sprints?  (c) What shorthand or rhythm has this team developed that should be codified in the charter revision?
-- **Check-In 3 (performing into adjourning):** (a) What would you put in your next team's charter on day one, based on this team?  (b) Name one repair that succeeded: a conflict or slippage the team actually recovered from, and how.  (c) What will each member claim, with evidence, on Demo Day and beyond?
 
-**The confidential peer pulse (Check-Ins 2 and 3, and Sprint Check 2).**  At the second and third check-ins, and at Sprint Check 2 late in Sprint 1, the individual pulse adds a short structured section, adapted from the CATME behaviorally-anchored peer-evaluation dimensions (see the research base above).  Rate **yourself and each teammate** from 1 to 5 on (1) contributing to the team's work, (2) interacting with teammates, (3) keeping the team on track, (4) expecting quality, and (5) having relevant knowledge and skills, with one sentence of evidence for any rating of 2 or below.  Three commitments govern how I use it.  It is **read only by the instructor**.  It is **never mechanically averaged into anyone's grade**.  It informs the individual-contribution component of the final project grade and triggers a coaching conversation when self- and peer-ratings diverge sharply.  I use it as a health instrument, never as a weapon.
+**The confidential peer pulse (Check-In 2 and Sprint Check 2).**  At the second check-in, and at Sprint Check 2 late in Sprint 1, the individual pulse adds a short structured section, adapted from the CATME behaviorally-anchored peer-evaluation dimensions (see the research base above).  Rate **yourself and each teammate** from 1 to 5 on (1) contributing to the team's work, (2) interacting with teammates, (3) keeping the team on track, (4) expecting quality, and (5) having relevant knowledge and skills, with one sentence of evidence for any rating of 2 or below.  Three commitments govern how I use it.  It is **read only by the instructor**.  It is **never mechanically averaged into anyone's grade**.  It informs the individual-contribution component of the final project grade and triggers a coaching conversation when self- and peer-ratings diverge sharply.  I use it as a health instrument, never as a weapon.
 
 At every check-in, the team re-reads its charter against its actual behavior.  The charter is a living document; the check-ins are where it lives.
 

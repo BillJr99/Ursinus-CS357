@@ -30,8 +30,8 @@ info:
       description: Process and Professionalism, meetings, communication, project management, check-ins, charter adherence
       preemerging: There is no evidence of team process, no meeting agendas or notes, no decision log, no role rotation, and missing check-ins and signatures
       beginning: Some process artifacts exist but are spotty, meeting notes or the decision log have gaps, one or more intra-team check-ins are missing, the GANTT-style timeline is absent or stale, or signatures are missing from a milestone
-      progressing: The Team Playbook is followed with minor lapses, meeting agendas and notes, the decision log, role rotation, the project timeline, all three intra-team check-ins, and all-member signatures are present, but one element is thin, late, or inconsistently maintained (Goal 13)
-      proficient: Team process is visible and current throughout, every meeting has a posted agenda and notes with owners and dates; the decision log records alternatives and rationale; project management is real (a maintained GANTT-style timeline with named owners, sprint boundaries honored, runnable increments at each sprint); all three intra-team check-ins are submitted on time; the team demonstrably operates under its signed charter, including its conflict protocol; roles rotate per sprint and every student is primary author of at least one section or component of every team deliverable (editable by teammates); each team document's version or commit history shows a real drafting trajectory rather than a single late paste; every milestone carries all members' signatures (Goal 13)
+      progressing: The Team Playbook is followed with minor lapses, meeting agendas and notes, the decision log, role rotation, the project timeline, both intra-team check-ins, and all-member signatures are present, but one element is thin, late, or inconsistently maintained (Goal 13)
+      proficient: Team process is visible and current throughout, every meeting has a posted agenda and notes with owners and dates; the decision log records alternatives and rationale; project management is real (a maintained GANTT-style timeline with named owners, sprint boundaries honored, runnable increments at each sprint); both intra-team check-ins are submitted on time; the team demonstrably operates under its signed charter, including its conflict protocol; roles rotate per sprint and every student is primary author of at least one section or component of every team deliverable (editable by teammates); each team document's version or commit history shows a real drafting trajectory rather than a single late paste; every milestone carries all members' signatures (Goal 13)
     - weight: 19
       description: Product, the working system, audit, or publication; the Demo Day presentation; and the partner-facing artifact
       preemerging: The direction's core artifact is missing or does not function, the system does not run, the audit lacks findings and governance, or nothing was published; the Demo Day presentation is missing or covers only a happy path with no disclosed limitation; no partner-facing artifact exists
@@ -141,7 +141,7 @@ The milestones run in the sequence below, and the [course schedule]({{ site.base
 | Sprints 1, 2, and 3 | Rotating roles, a runnable increment (or evidenced stage checkpoint) at every sprint boundary, and a **partner feedback pass** during the final sprint | - |
 | Sprint checks 1 and 2 | At the start of class at the *Critique, Consensus, and the LLM Judge* and *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* sessions.  See [Sprint Checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) | 3 points each, within Final Project and Project Thread Milestones |
 | Cross-team proposal critique | At the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session, the boundary between Sprint 1 and Sprint 2 | - |
-| Gallery walk, peer review (SQR cards), and intra-team check-in 3 | The gallery walk at *Project Studio and Gallery Walk*; check-in 3 at the end of that same day | - |
+| Gallery walk and peer review (SQR cards) | The gallery walk at *Project Studio and Gallery Walk* | - |
 | Final submission | Your direction's deliverables, the partner-facing artifact, the Responsible AI Report, contribution statements, reflections, and the final AI-use disclosure, all due on the last day of class | **75 / 100**, with Demo Day |
 | Demo Day | The presentation, on final exam day | *within the 75* |
 
@@ -317,16 +317,15 @@ During the final sprint, also run the **partner feedback pass**: put your work i
 
 ---
 
-## Phase 4: Gallery Walk, Peer Review, and Check-in 3
+## Phase 4: Gallery Walk and Peer Review
 
-The gallery walk and peer review happen during the final sprint.  They are mandatory and graded within the Process family.  Intra-team check-in 3 is due at the end of the gallery walk day.  The *Final Integration and Demo Rehearsal* studio that follows hosts the cross-team mock-interview rehearsal (see the [Demo Day Guide]({{ site.baseurl }}/Tutorials/DemoDay)).
+The gallery walk and peer review happen during the final sprint.  They are mandatory and graded within the Process family.  The *Final Integration and Demo Rehearsal* studio that follows hosts the cross-team mock-interview rehearsal (see the [Demo Day Guide]({{ site.baseurl }}/Tutorials/DemoDay)).
 
 > **Do this.**
 > 1. Host honestly: demonstrate your work, including at least one known failure or open finding.
 > 2. Walk generously: fill out a **S**trength / **Q**uestion / **R**isk card for every team you visit.
 > 3. Triage all feedback you receive into three buckets: *fix before submission*, *disclose in the report*, or *defer to future work*.
 > 4. Put your triage decisions in the artifacts folder.
-> 5. Submit intra-team check-in 3 at the end of the gallery walk day.
 
 ---
 

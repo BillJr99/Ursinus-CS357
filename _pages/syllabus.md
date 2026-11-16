@@ -645,10 +645,6 @@ schedule:
     dlink: "Assignments/MultiAgentDebate"
     points: "100"
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
-  - dtitle: "Project: Intra-Team Check-In (Performing into Adjourning) Due"
-    dlink: "Projects/PBLThread"
-    points: "3"
-    rubricpath: "_pages/Projects/proj-checkin.md"
   readings:
   - rtitle: "Have your gallery-walk artifact ready to display, and your SQR cards."
     rlink: false

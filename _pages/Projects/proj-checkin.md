@@ -39,4 +39,4 @@ tags:
 
 ---
 
-Use the form and the stage prompts under [Intra-Team Check-Ins 1-3]({{ site.baseurl }}/Projects/PBLThread#intra-team-check-ins-1-3) in the Project Thread.  Submit one signed report for the team, and each member submits their own pulse privately.  Each check-in carries 3 points, assessed within Final Project and Project Thread Milestones.
+Use the form and the stage prompts under [Intra-Team Check-Ins 1 and 2]({{ site.baseurl }}/Projects/PBLThread#intra-team-check-ins-1-3) in the Project Thread.  Submit one signed report for the team, and each member submits their own pulse privately.  Each check-in carries 3 points, assessed within Final Project and Project Thread Milestones.
