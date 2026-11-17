@@ -539,7 +539,7 @@ schedule:
     dlink: "Projects/FinalProjectProposal"
     points: "25"
     rubricpath: "_pages/Projects/proj-finalprojectproposal.md"
-  - dtitle: "Project: Sprint Check 1 Handed Out"
+  - dtitle: "Project: Sprint Check Handed Out"
     dlink: "Projects/PBLThread#sprint-checks"
     points: "3"
   readings:
@@ -561,13 +561,6 @@ schedule:
   title: "Critique, Consensus, and the LLM Judge: One Loop, Three Uses"
   link: "Activities/liascript-critiqueconsensusjudge.md"
   liapage: true
-  deliverables:
-  - dtitle: "Project: Sprint Check 1 Due"
-    dlink: "Projects/PBLThread#sprint-checks"
-    points: "3"
-  - dtitle: "Project: Sprint Check 2 Handed Out"
-    dlink: "Projects/PBLThread#sprint-checks"
-    points: "3"
   readings:
   - rtitle: "Hamel Husain, \"Your AI Product Needs Evals\""
     rlink: "https://hamel.dev/blog/posts/evals/"
@@ -580,15 +573,6 @@ schedule:
   title: "Judge Pipeline Workshop: Build and Audit a Judge"
   link: "Activities/liascript-rubricworkshop.md"
   liapage: true
-  deliverables:
-  - dtitle: "Project: Literature Review, Individual Annotated Bibliographies Due"
-    dlink: "Assignments/LitReview"
-    points: "3"
-    rubricpath: "_pages/Assignments/asmt-litreview-phase1.md"
-  - dtitle: "Lab: RAG Knowledge Base Due"
-    dlink: "Assignments/RAGKnowledgeBase"
-    points: "100"
-    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
   readings:
   - rtitle: "promptfoo"
     rlink: "https://www.promptfoo.dev/docs/intro/"
@@ -603,9 +587,14 @@ schedule:
   link: "Activities/liascript-biasdata.md"
   liapage: true
   deliverables:
-  - dtitle: "Project: Sprint Check 2 Due"
-    dlink: "Projects/PBLThread#sprint-checks"
+  - dtitle: "Project: Literature Review, Individual Annotated Bibliographies Due"
+    dlink: "Assignments/LitReview"
     points: "3"
+    rubricpath: "_pages/Assignments/asmt-litreview-phase1.md"
+  - dtitle: "Lab: RAG Knowledge Base Due"
+    dlink: "Assignments/RAGKnowledgeBase"
+    points: "100"
+    rubricpath: "_pages/Assignments/lab-ragknowledgebase.md"
   readings:
   - rtitle: "Reading Response: What is the carbon and water cost of a deployment you would run?"
   - rtitle: "Crawford, Atlas of AI, Chapter 1, Earth"
@@ -619,14 +608,9 @@ schedule:
   link: "Activities/liascript-projectsprint.md"
   liapage: true
   deliverables:
-  - dtitle: "Project: Literature Review, Team Synthesis Due"
-    dlink: "Assignments/LitReview"
-    points: "100"
-    rubricpath: "_pages/Assignments/asmt-litreview.md"
-  - dtitle: "Participation: Reading Responses Due"
-    dlink: "Participation/ReadingResponses"
-    points: "10"
-    rubricpath: "_pages/Participation/reading-responses.md"
+  - dtitle: "Project: Sprint Check Due"
+    dlink: "Projects/PBLThread#sprint-checks"
+    points: "3"
   readings:
   - rtitle: "Reading Response: Name one design choice you would make differently in a system you deploy."
   - rtitle: "Have your judge, three artifacts from your final project, and your integrated project and proposal ready."
@@ -645,6 +629,10 @@ schedule:
     dlink: "Assignments/MultiAgentDebate"
     points: "100"
     rubricpath: "_pages/Assignments/lab-multiagentdebate.md"
+  - dtitle: "Project: Literature Review, Team Synthesis Due"
+    dlink: "Assignments/LitReview"
+    points: "100"
+    rubricpath: "_pages/Assignments/asmt-litreview.md"
   readings:
   - rtitle: "Have your gallery-walk artifact ready to display, and your SQR cards."
     rlink: false
@@ -652,6 +640,10 @@ schedule:
   date: "0"
   title: "Project Studio and Gallery Walk (Class Switch Day: follows a Thursday schedule)"
   deliverables:
+  - dtitle: "Participation: Reading Responses Due"
+    dlink: "Participation/ReadingResponses"
+    points: "10"
+    rubricpath: "_pages/Participation/reading-responses.md"
   - dtitle: "Project: Demo Day Presentations Due"
     dlink: "Projects/FinalProject"
     points: "75"

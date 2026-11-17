@@ -121,7 +121,7 @@ You do not need all of this page today.  It describes a semester-long structure,
 | **The Tuckman Map** and **Psychological Safety** | With the charter, then again before each check-in |
 | **The Team Playbook** | As you need it: it is a reference, not a reading |
 | **Intra-Team Check-Ins 1 and 2** | Before each check-in, which is twice across the term |
-| **Sprint Checks** | Before each of the two sprint checks in Sprint 1 |
+| **Sprint Check** | Before the combined sprint check |
 | **Assessment Philosophy** and the **rubric** | Before your first milestone, then before each one |
 
 The graded emphasis in this thread falls on **process** as much as product.  How your team frames a problem, works with a stakeholder, manages itself, and communicates is part of the real work, not the soft part around it.  It is a substantial share of the grade, and a strong technical result cannot rescue it.
@@ -151,7 +151,7 @@ Every artifact below has its own assignment or activity page.  The table is the 
 | 13 | **Literature Review, Phase 2** (team) | One page connecting everyone's sources to the problem statement and naming the gap your project addresses. | [Literature Review]({{ site.baseurl }}/Assignments/LitReview) |
 | 14 | **Peer review round 2** | Cross-team SQR critique of the proposals, in class at the *Project Sprint* session. | [Structured Peer Review activity]({{ site.baseurl }}/Tutorials/PeerReview) |
 | 15 | **Sprints 1-3** | Three sprints between the proposal and the last day of class, with rotating roles, runnable increments, evaluation updates, and Responsible AI measurements (token counts, traces, correctness audits, and bias probes) logged at every boundary. Sprint 1 spans the Thanksgiving break; plan for it in your charter's cadence. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
-| 16 | **Sprint checks 1 and 2** | Ten minutes at the start of class, twice during Sprint 1: a member I pick at random shows one thing running (Direction B: one cited finding), and the Coordinator says what is next and what is blocking. Each is marked shown or not yet. Every member's linked standup line is their evidence line, and Sprint Check 2 includes the peer pulse. | [Sprint Checks](#sprint-checks) |
+| 16 | **Sprint check** | One combined ten-minute check at the start of class: a member I pick at random shows one thing running (Direction B: one cited finding), and the Coordinator says what is next and what is blocking. The check is marked shown or not yet. Every member's linked standup line is their evidence line, and the check includes the peer pulse. | [Sprint Check](#sprint-checks) |
 | 17 | **Gallery walk + peer review round 3** | Walk each other's work with SQR cards at the final studio. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 | 18 | **Final submission and Demo Day** | The final project is due on the last day of class, and teams present on final exam day: a technical demo, a non-technical stakeholder-facing segment, a disseminable artifact, and the Responsible AI Report on the team's own work. Demo Day is also the team's deliberate adjourning: the final reflection, contribution statements, and your professional portfolio artifact close the thread. | [Final Project]({{ site.baseurl }}/Projects/FinalProject) |
 
@@ -274,7 +274,7 @@ I am blocked by / worried about: ...
 
 The third line is the one that matters.  It is the psychological-safety line.  A standup where nobody is ever blocked is a standup where nobody is being honest.
 
-During the sprints, write the first line with a link to the commit, issue, or document that shows the work.  That linked line is your **evidence line** for the sprint checks.  By Demo Day, these lines make up most of your contribution statement.
+During the sprints, write the first line with a link to the commit, issue, or document that shows the work.  That linked line is your **evidence line** for the sprint check.  By Demo Day, these lines make up most of your contribution statement.
 
 ### Decision Log
 
@@ -330,30 +330,30 @@ The prompts change with the stage your team is in:
 - **Check-In 1 (storming into norming):** (a) Name one place where two members' working styles or standards differed; what ground rule did you set or reset in response?  (b) Which charter norm has been hardest to keep, and what will you change?  (c) Name one thing a teammate did that made it safer to speak up.
 - **Check-In 2 (norming into performing):** (a) Role-rotation audit: list who has held each role so far; where has the team quietly specialized?  (b) Workload audit: where is effort unbalanced, and what is the rebalancing plan for the sprints?  (c) What shorthand or rhythm has this team developed that should be codified in the charter revision?
 
-**The confidential peer pulse (Check-In 2 and Sprint Check 2).**  At the second check-in, and at Sprint Check 2 late in Sprint 1, the individual pulse adds a short structured section, adapted from the CATME behaviorally-anchored peer-evaluation dimensions (see the research base above).  Rate **yourself and each teammate** from 1 to 5 on (1) contributing to the team's work, (2) interacting with teammates, (3) keeping the team on track, (4) expecting quality, and (5) having relevant knowledge and skills, with one sentence of evidence for any rating of 2 or below.  Three commitments govern how I use it.  It is **read only by the instructor**.  It is **never mechanically averaged into anyone's grade**.  It informs the individual-contribution component of the final project grade and triggers a coaching conversation when self- and peer-ratings diverge sharply.  I use it as a health instrument, never as a weapon.
+**The confidential peer pulse (Check-In 2 and Sprint Check).**  At the second check-in, and at the combined sprint check, the individual pulse adds a short structured section, adapted from the CATME behaviorally-anchored peer-evaluation dimensions (see the research base above).  Rate **yourself and each teammate** from 1 to 5 on (1) contributing to the team's work, (2) interacting with teammates, (3) keeping the team on track, (4) expecting quality, and (5) having relevant knowledge and skills, with one sentence of evidence for any rating of 2 or below.  Three commitments govern how I use it.  It is **read only by the instructor**.  It is **never mechanically averaged into anyone's grade**.  It informs the individual-contribution component of the final project grade and triggers a coaching conversation when self- and peer-ratings diverge sharply.  I use it as a health instrument, never as a weapon.
 
 At every check-in, the team re-reads its charter against its actual behavior.  The charter is a living document; the check-ins are where it lives.
 
 ---
 
-## Sprint Checks
+## Sprint Check {#sprint-checks}
 
 > **Reference.**  [Coordinating a Team Project]({{ site.baseurl }}/Tutorials/ProjectCoordination) has short examples of a standup, a decision log, a pre-mortem, and a retrospective.
 
-> **Handed out** at the *Agents That Talk, Observability, and Handoff Protocols* session, and **held** at the start of class at the *Critique, Consensus, and the LLM Judge* session and the *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* session.  See the [course schedule]({{ site.baseurl }}/).
+> **Handed out** at the *Agents That Talk, Observability, and Handoff Protocols* session, and **held** at the start of class at the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session.  See the [course schedule]({{ site.baseurl }}/).
 
-Sprint 1 is long and spans the Thanksgiving break, so two sprint checks before the break cut it into short laps.  Each check takes ten minutes at the start of class, with no slides:
+The two sprint checks are combined into one check after the Thanksgiving break.  The check takes ten minutes at the start of class, with no slides:
 
 1.  I pick one member of your team at random when the check starts, and that person has 90 seconds to show one thing running.  Direction B teams show one cited finding instead.  Every member should be ready to show it, whoever built it.
 2.  Your **Coordinator** says what is next and what is blocking you.  Write those same two lines into that week's team note.
 
-Before each check, every member's latest standup in the team note includes their **evidence line**: the "Since last time I" line, with a link to the commit, issue, or document that shows the work.  Sprint Check 2 also carries the confidential peer pulse described under the check-ins below, submitted privately by each member in Canvas.
+Before the check, every member's latest standup in the team note includes their **evidence line**: the "Since last time I" line, with a link to the commit, issue, or document that shows the work.  The combined check also carries the confidential peer pulse described under the check-ins above, submitted privately by each member in Canvas.
 
-I mark each team **shown** or **not yet**, based on the running piece alone.  The evidence lines and the pulse are expected of every member, but they do not change the mark.  Each check carries **3 points, assessed within Final Project and Project Thread Milestones**, and the credit is all or nothing: shown earns all 3 points, and not yet earns none.  What you show can be small.  One piece that runs end to end is enough, but a slide about what you plan to build is not.  For example:
+I mark each team **shown** or **not yet**, based on the running piece alone.  The evidence lines and the pulse are expected of every member, but they do not change the mark.  The combined check carries **3 points, assessed within Final Project and Project Thread Milestones**, and the credit is all or nothing: shown earns all 3 points, and not yet earns none.  What you show can be small.  One piece that runs end to end is enough, but a slide about what you plan to build is not.  For example:
 
-- **Direction A.**  Check 1: the monolith baseline answers one evaluation task end to end.  Check 2: the baseline prints a score on your drafted evaluation set.
-- **Direction B.**  Check 1: one cited finding from your evidence folder.  Check 2: one failure-mode candidate, with its source and the framework step it belongs to.
-- **Direction C.**  Check 1: the core feature runs on one real input.  Check 2: one test passes in CI on that feature.
+- **Direction A.**  The monolith baseline answers one evaluation task end to end and prints a score on your drafted evaluation set.
+- **Direction B.**  One cited finding from your evidence folder and one failure-mode candidate, with its source and the framework step it belongs to.
+- **Direction C.**  The core feature runs on one real input and one test passes in CI on that feature.
 
 ---
 
