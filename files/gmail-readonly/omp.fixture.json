@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json",
+  "mcpServers": {
+    "gmail-demo": {
+      "type": "stdio",
+      "command": "/ABSOLUTE/PATH/cs357-gmail-demo/.venv/bin/python",
+      "args": [
+        "/ABSOLUTE/PATH/cs357-gmail-demo/gmail_readonly.py",
+        "serve",
+        "--fixture"
+      ]
+    }
+  }
+}

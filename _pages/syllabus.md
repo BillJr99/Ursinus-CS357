@@ -437,6 +437,8 @@ schedule:
     rlink: "https://huggingface.co/learn/mcp-course/"
   - rtitle: "Install Obsidian before class."
     rlink: "https://obsidian.md"
+  - rtitle: "Gmail Read-Only Tools with OpenCode and Oh My Pi"
+    rlink: "Tutorials/GmailReadOnly"
 - week: "5"
   date: "1"
   title: "RAG Knowledge Base: Code and No-Code Routes"
