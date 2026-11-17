@@ -356,7 +356,7 @@ The same rule holds as in the stable format: the file names the variable (`MY_AP
 {: .tb-note data-title="Which version?"}
 
 
-**Never paste a key, token, or password into a chat with an agent**, including this one.  Text you send to a hosted model rests in that provider's logs, and unlike your terminal scrollback you cannot clear it.  If it happens, treat the credential as compromised: revoke it, issue a new one, update the variable.  That takes two minutes and is not a crisis.  *MCP, REST, and OAuth 2.0 Together* shows how a token in a context window gets extracted, and the *Coding Agents* session has a hook that rejects such a message before the model ever sees it.
+**Never paste a key, token, or password into a chat with an agent**, including this one.  Text you send to a hosted model rests in that provider's logs, and unlike your terminal scrollback you cannot clear it.  If it happens, treat the credential as compromised: revoke it, issue a new one, update the variable.  That takes two minutes and is not a crisis.  *MCP, REST, and OAuth 2.0* shows how a token in a context window gets extracted, and the *Coding Agents* session has a hook that rejects such a message before the model ever sees it.
 {: .tb-warning data-title="Watch out"}
 
 ---

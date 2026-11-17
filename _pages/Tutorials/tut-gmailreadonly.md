@@ -21,7 +21,7 @@ Suppose we want an agent to find a demonstration email and report its first sent
 
 **Start with the credential-free demonstration.** It uses constructed email data and requires no Google account, Cloud project, or Gmail login. The optional account setup later on is for a separate personal test account containing only invented messages. Do not connect an Ursinus account, a student's mailbox, your everyday personal mailbox, or any account containing institutional or private data. Reading this tutorial does not require granting access to an account, and no credentials or mail should be submitted for coursework.
 
-This page complements [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth). It uses a **local stdio server**: each agent starts a Python subprocess and exchanges MCP messages through its standard input and output. Google authorization belongs to that subprocess, not to the model or an agent chat command.
+This page complements [MCP, REST, and OAuth 2.0]({{ site.baseurl }}/Tutorials/MCPOAuth). It uses a **local stdio server**: each agent starts a Python subprocess and exchanges MCP messages through its standard input and output. Google authorization belongs to that subprocess, not to the model or an agent chat command.
 
 ## 1. Identify the Two Permission Checks
 
@@ -182,24 +182,27 @@ Repeat the same demonstration prompt from the OpenCode section and compare the t
 
 **Observe:** Which differences belong to the agent interface, and which belong to the server? You should not need to change the Python tool implementation to switch clients.
 
-## 5. Optional: Create a Separate Google Test Application
+## 5. Get the Google OAuth Credentials
 
-You may stop after the fixture demonstration. If you continue, perform these steps yourself in a normal browser and terminal, outside any agent conversation. **Do not ask an agent to log in, create keys, inspect the downloaded JSON, or repair your account setup.**
+**Skip this section if you are using fixture mode.** It needs no Google account or credentials. For the optional live experiment, use only a separate personal test account containing invented messages. Perform the following steps yourself in a normal browser, outside any agent conversation. Do not ask an agent to log in, create credentials, inspect the download, or repair your account setup.
 
-1. Create or select a **new personal Google Cloud test project**. Do not reuse an instructor's project, a broad Workspace login, a shared helper, or credentials from another tutorial.
-2. In **APIs & Services > Library**, enable the **Gmail API** for that project. This local adapter calls the Gmail REST API; it does not require enabling Google's remote Gmail MCP service. [7]
-3. Open **Google Auth Platform > Branding**. Configure the app name, support email, and contact information. Use a recognizable name such as `CS357 Personal Gmail Read Test`.
-4. Under **Audience**, choose **External** for a personal account, keep publishing status **Testing**, and add your separate test account under **Test users**. Do not choose an institutional account merely to obtain an Internal option. [8]
-5. Under **Data Access > Add or Remove Scopes**, select only:
+The file you need is the **OAuth 2.0 client JSON for a Desktop app**. It identifies this local application to Google; it is not an API key, an app password, or a user access or refresh token. The adapter obtains the user's tokens later, through browser consent in section 7, and stores them separately in `token.json`. Do not copy an existing token from a shared Workspace helper or another application. [7, 9]
+
+1. Open the [Google Cloud console](https://console.cloud.google.com/) and use the project selector to select your **dedicated personal test project**, or create one if you do not have one. Check the selected project before each step below. Do not reuse an instructor's project, an institutional project, or a shared Workspace integration.
+2. In that project, open the [Gmail API page](https://console.cloud.google.com/apis/library/gmail.googleapis.com) and enable the **Gmail API** if it is not already enabled. This adapter calls Gmail's REST API; it does not require Google's remote Gmail MCP service. [7]
+3. Open **Google Auth Platform > [Branding](https://console.cloud.google.com/auth/branding)**. If the platform is not configured, choose **Get Started** and provide the app name, support email, and contact information. Use a recognizable name such as `CS357 Personal Gmail Read Test`. Review Google's policy before agreeing to it. If you already configured this dedicated test project, review its existing settings rather than creating another application. [8]
+4. Under **[Audience](https://console.cloud.google.com/auth/audience)**, use **External** for your personal account, keep publishing status **Testing**, and add your separate synthetic-content account under **Test users > Add users**, then save. Do not choose an institutional account to obtain an Internal option. [8]
+5. Under **[Data Access](https://console.cloud.google.com/auth/scopes) > Add or Remove Scopes**, select only:
 
    ```text
    https://www.googleapis.com/auth/gmail.readonly
    ```
 
-   Save. Do not add `gmail.modify`, `gmail.compose`, `gmail.send`, `https://mail.google.com/`, Drive, Calendar, or broad Workspace scopes.
-6. Under **Clients > Create Client**, choose **Desktop app** and give it a name. If the console offers **Use this client for an AI-powered agent**, select it for this agent-specific test client. Download the client JSON yourself. Do not paste its contents into chat or a configuration example. [7]
+   Save the selection. Do not add `gmail.modify`, `gmail.compose`, `gmail.send`, `https://mail.google.com/`, Drive, Calendar, or broad Workspace scopes. If the existing test configuration has broader scopes, stop and use a dedicated read-only test setup instead. [1, 8]
+6. Open **[Clients](https://console.cloud.google.com/auth/clients)**. If this dedicated test setup already has an appropriate **Desktop app** client for this adapter, select that client and use its JSON download option. Otherwise, choose **Create Client**, set **Application type** to **Desktop app**, name it, and choose **Create**. If offered **Use this client for an AI-powered agent**, select it for this agent-specific test client. Download and retain the client JSON yourself when creating the client. Do not substitute a Web application client, API key, or service-account key. If an older client's complete JSON is no longer available for download, create a replacement Desktop app client in this dedicated test project rather than trying to reconstruct missing values. [7, 9]
+7. Keep the download out of your demonstration directory. Follow section 6 to move and rename it to `~/.local/share/cs357-gmail-readonly/client.json` and set private permissions **before** running authorization. Do not print its values or paste the JSON, a client secret, an authorization code, or a token into chat, Git, a synced folder, a model prompt, or an agent configuration.
 
-Google classifies `gmail.readonly` as a **restricted** scope despite its read-only name. Testing is not permission to deploy a public mail-processing product. Production use and transmitting restricted data to servers can bring verification, assessment, and policy requirements. This demonstration uses only invented content in a separate account. [1, 8]
+Downloading `client.json` does **not** grant mailbox access. Section 7 performs the separate user-consent step with both agents closed. Google classifies `gmail.readonly` as a **restricted** scope despite its read-only name. Testing is not permission to deploy a public mail-processing product; production use and transmitting restricted data to servers can bring verification, assessment, and policy requirements. This experiment uses only invented content in a separate account. [1, 8]
 
 ## 6. Put the Files Outside the Project
 

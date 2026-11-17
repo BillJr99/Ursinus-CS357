@@ -45,7 +45,7 @@ info:
       liapage: true
     - rtitle: "Hugging Face MCP Course (built with Anthropic): protocol, building a server, connecting clients"
       rlink: "https://huggingface.co/learn/mcp-course/"
-    - rtitle: "Optional background: MCP, REST, and OAuth 2.0 Together, for what happens behind the sign-in page"
+    - rtitle: "Optional background: MCP, REST, and OAuth 2.0, for what happens behind the sign-in page"
       rlink: "../Tutorials/MCPOAuth"
 
 tags:

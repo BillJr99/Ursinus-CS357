@@ -698,7 +698,7 @@ Every tool and technique in this course has a tutorial you can work through at y
 - [AI by Hand: Tokens, Cosine, Attention, Softmax, and a Forward Pass]({{ site.baseurl }}/Tutorials/AIByHand)
 - [Pydantic AI From the Loop Up: Tools, Validation, the Agentic Loop, Memory, Skills, and MCP]({{ site.baseurl }}/Tutorials/PydanticAI)
 - [Syncing Obsidian to GitHub and Wiring Agents to Your Vault]({{ site.baseurl }}/Tutorials/ObsidianSync)
-- [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth)
+- [MCP, REST, and OAuth 2.0]({{ site.baseurl }}/Tutorials/MCPOAuth)
 - [GitHub Superpowers for AI Developers]({{ site.baseurl }}/Tutorials/GitHubPowerTools)
 - [Offline RAG and LoRA, End to End: Build, Reopen, Fine-Tune, and Compare on Your Own Machine]({{ site.baseurl }}/Tutorials/OfflineRAGFineTuning)
 - [The Second Brain]({{ site.baseurl }}/Tutorials/SecondBrain)
