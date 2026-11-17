@@ -1,0 +1,8 @@
+onboarding = false
+
+[terminal]
+default_shell = "/usr/local/bin/demo-pane"
+new_cwd = "current"
+
+[session]
+resume_agents_on_restore = false

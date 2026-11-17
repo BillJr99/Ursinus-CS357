@@ -127,6 +127,10 @@ Outside the container, use `http://localhost:11434/v1`.  There is no API key any
 
 > **On OpenCode v2 with an AI gateway?**  v2 spells the provider block differently (`providers`, `package`, `settings`, and an `env` list for the key) and sets the key with `opencode service set env`.  The full configuration is in [OpenCode v2: a custom provider through an AI gateway](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup#opencode-v2-a-custom-provider-through-an-ai-gateway) in the OpenCode setup tutorial.
 
+> **Optional Docker example: OpenCode inside Herdr TUI.** Build the image once, then bind only a disposable project to `/workspace` when you run it. Herdr opens OpenCode with automatic approval, explicit Git allowance, and named `rm` deny patterns. **Those patterns do not prevent deletion through Python, file tools, or destructive Git commands; the read/write mount exposes real host files.**
+>
+> Use the [downloadable source bundle](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/examples/opencode-herdr.zip), [POSIX/PowerShell directions](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/examples/opencode-herdr/README.md), and [public instructor / speaker notes](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/examples/opencode-herdr/INSTRUCTOR-NOTES.md). This example uses **OpenCode V2** configuration, not the older `permission.bash` form below. Linux amd64 startup/configuration was verified; Windows execution and model-originated permission enforcement were not. No model/provider is configured by this bundle.
+
 ### The habits that make this work
 
 Three habits, and they matter more than the tool:

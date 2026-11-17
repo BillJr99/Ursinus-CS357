@@ -1,0 +1,7 @@
+#!/bin/sh
+# Herdr default_shell accepts an executable, not an argv string.
+# Override for diagnostics: docker run -e DEMO_AUTOSTART=0 ...
+if [ -n "${HERDR_PANE_ID:-}" ] && [ "${DEMO_AUTOSTART:-1}" = 1 ]; then
+    exec opencode --standalone --auto
+fi
+exec /bin/bash --noprofile --norc "$@"
