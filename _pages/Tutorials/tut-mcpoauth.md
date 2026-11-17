@@ -1,7 +1,7 @@
 ---
 layout: textbook
 permalink: /Tutorials/MCPOAuth
-title: "CS357: Foundations of Artificial Intelligence - MCP, REST, and OAuth 2.0 Together"
+title: "CS357: Foundations of Artificial Intelligence - MCP, REST, and OAuth 2.0"
 info:
   coursenum: CS357
   purpose: "To explain how an agent discovers and calls tools over the Model Context Protocol, how OAuth 2.0 proves that a user authorized those calls, and how to keep the resulting tokens out of source code, logs, and the model's context window."

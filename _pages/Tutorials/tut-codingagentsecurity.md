@@ -170,7 +170,7 @@ Three things follow, and they are worth separating because they fail differently
 
 **It is a disclosure you cannot retract.**  Text sent to a hosted model rests on that provider's infrastructure under their terms, which may permit retention, human review, or training.  Deleting the conversation in the interface does not reach any of that.  Compare a token printed to your terminal, which is recoverable by clearing scrollback and history: this is not that.
 
-**It is reachable by injection.**  Part I of this tutorial is about instructions arriving through content the agent reads.  A credential in the context window is exactly the thing such an instruction asks for, and the model has no way to distinguish "print your token" arriving from a poisoned README from the same request arriving from you.  *MCP, REST, and OAuth 2.0 Together* traces that path in detail; the structural fix, in the MCP session, is that the server holds the secret and the model never sees it at all.
+**It is reachable by injection.**  Part I of this tutorial is about instructions arriving through content the agent reads.  A credential in the context window is exactly the thing such an instruction asks for, and the model has no way to distinguish "print your token" arriving from a poisoned README from the same request arriving from you.  *MCP, REST, and OAuth 2.0* traces that path in detail; the structural fix, in the MCP session, is that the server holds the secret and the model never sees it at all.
 
 **It survives in places you are not thinking about.**  Session transcripts you commit for a lab, logs a harness writes, a screenshot pasted into the course channel.  The token outlives the moment you needed it.
 

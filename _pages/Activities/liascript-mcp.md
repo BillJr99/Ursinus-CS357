@@ -800,7 +800,7 @@ In your notebook, respond to all three levels:
 
 ## Further Reading
 
-- [MCP, REST APIs, and OAuth 2.0 together, the background for what happens when the Tools and MCP Lab has you sign in to a server](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MCPOAuth)
+- [MCP, REST, and OAuth 2.0, the background for what happens when the Tools and MCP Lab has you sign in to a server](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MCPOAuth)
 - [GitHub Superpowers for AI Developers: gitingest, getmcp.io, deepwiki, gdagram, and github.dev, for turning a repository into something an agent can read](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GitHubPowerTools)
 - Model Context Protocol specification and documentation: https://modelcontextprotocol.io
 - Hugging Face MCP Course (built with Anthropic), whose early units build and connect a compliant MCP server over JSON-RPC: https://huggingface.co/learn/mcp-course/

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "gmail-demo": {
+        "type": "local",
+        "command": [
+          "/ABSOLUTE/PATH/cs357-gmail-demo/.venv/bin/python",
+          "/ABSOLUTE/PATH/cs357-gmail-demo/gmail_readonly.py",
+          "serve",
+          "--fixture"
+        ],
+        "codemode": false
+      }
+    }
+  }
+}

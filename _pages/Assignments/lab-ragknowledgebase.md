@@ -139,7 +139,13 @@ hours-0     Office Hours                                    hours.md
 hours-1     I hold office hours on Mondays in Room 204.     hours.md
 ```
 
-The ID is the file's stem and the paragraph's number, so it stays the same every time you run the script.  That matters because `upsert` replaces a chunk that has the same ID, so rerunning the script does not store everything twice.  Save this as `index.py`, and fill in the `TODO`s:
+The ID is the file's stem and the paragraph's number, so it stays the same every time you run the script.  That matters because `upsert` replaces a chunk that has the same ID, so rerunning the script does not store everything twice.
+
+> **When blank lines are not enough.** Splitting on `\n\n` assumes that two consecutive newline characters mark useful paragraph boundaries. Source formatting varies: text extracted from PDFs may have only single newlines, no blank lines, or breaks in the middle of sentences. Very long paragraphs also produce oversized chunks. Raw CRLF line endings (`\r\n`) need normalization before that literal split, although the `read_text` call below already normalizes common line endings.
+>
+> One alternative is to take windows of up to **1000 characters**, advancing through the text by that amount rather than looking for blank lines. This bounds chunk length even when no blank lines occur, but a window can cut a word or sentence. A small overlap, such as the last 100 characters of one window repeated at the start of the next, can preserve context across a boundary. Characters are **not tokens**, so check the embedding model's token limit as well; 1000 characters is a starting choice, not a guarantee that every model accepts it. Keep each chunk's source filename and a distinct chunk ID so retrieval can still name its evidence.
+
+Save this as `index.py`, and fill in the `TODO`s:
 
 ```python
 # index.py: split every document in corpus/ into paragraphs and store them in a local Chroma collection.

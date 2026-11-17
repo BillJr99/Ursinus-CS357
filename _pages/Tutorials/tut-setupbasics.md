@@ -166,7 +166,7 @@ In PowerShell, `if ($env:GITHUB_PAT) { "set" }`.
 >
 > This course makes the mistake easy, which is the reason to say it here rather than later.  You will have a terminal with a live token in its environment and an agent in the next pane, and the natural move when something breaks is to paste the config and ask why.  Paste the *variable name*, never its value, and redact before you send.
 >
-> If it happens anyway, it is a two-minute problem and not a crisis: revoke the token at [github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens), issue a new one, update the variable.  Treat "I pasted it" as "it is compromised," because from the outside those are the same thing.  [MCP, REST, and OAuth 2.0 Together]({{ site.baseurl }}/Tutorials/MCPOAuth) shows how a token sitting in a context window gets extracted by an injected instruction, and the *Coding Agents* session builds a hook that rejects such a message before the model ever sees it.
+> If it happens anyway, it is a two-minute problem and not a crisis: revoke the token at [github.com/settings/personal-access-tokens](https://github.com/settings/personal-access-tokens), issue a new one, update the variable.  Treat "I pasted it" as "it is compromised," because from the outside those are the same thing.  [MCP, REST, and OAuth 2.0]({{ site.baseurl }}/Tutorials/MCPOAuth) shows how a token sitting in a context window gets extracted by an injected instruction, and the *Coding Agents* session builds a hook that rejects such a message before the model ever sees it.
 
 **Which name to use.**  Different tools read different variables, and that is worth one table rather than one guess:
 
