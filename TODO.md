@@ -66,3 +66,6 @@
 - [ ] Add an ungraded interview with each student (a short one-on-one conversation about their work and progress).
 
 - [ ] Add a grading component tied to on-time submissions.
+
+- [ ] Have students submit any warmup survey in Canvas. This supersedes the earlier instruction to leave the warmup survey unchanged; the Overview assignment TODO is unaffected.
+- [ ] Include an updated syllabus quiz based on the current syllabus.
