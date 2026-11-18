@@ -14,93 +14,112 @@ tags:
 - security
 ---
 
-## 5. Get the Google OAuth Credentials
-
 Let's ask an agent to find an email we wrote for this exercise. Use a separate personal Gmail account containing only invented messages. Do not connect an Ursinus account or a mailbox you use for real correspondence. If you need to install an agent, see the [OpenCode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) or its [Oh My Pi instructions]({{ site.baseurl }}/Tutorials/OpenCodeSetup#install-oh-my-pi-too). Signing in to a model provider does not give the agent access to Gmail.
 {: .tb-lede}
 
-1. In the [Google Cloud console](https://console.cloud.google.com/), create or select a dedicated test project and [enable the Gmail API](https://console.cloud.google.com/apis/library/gmail.googleapis.com).
-2. In **Google Auth Platform > [Branding](https://console.cloud.google.com/auth/branding)**, configure the consent screen. Use a name you will recognize when you sign in, such as `CS357 Gmail Read Test`.
-3. Under **[Audience](https://console.cloud.google.com/auth/audience)**, choose **External**, keep the app in **Testing**, and add the Gmail test account under **Test users**.
-4. Under **[Data Access](https://console.cloud.google.com/auth/scopes)**, add only `https://www.googleapis.com/auth/gmail.readonly`. This scope lets a tool view email and settings across the mailbox. It cannot send mail or change labels. A search filter limits one request, not the account access granted by the scope.
-5. Under **[Clients](https://console.cloud.google.com/auth/clients)**, select **Create Client > Desktop app**, name the client, and download its JSON. You will move the download in Step 6. The JSON identifies your app; it does not grant access to your mailbox. That happens when you review the scope and approve it in your browser.
+**Choose one path.** [Path A: MCP](#path-a-mcp) gives the agent two named tools and checks their inputs before calling Gmail. It takes more setup: install a local Python server and register it with your agent. [Path B: CLI](#path-b-cli) works directly in a terminal, including native Windows, and lets you inspect the exact command before the agent runs it. The CLI exposes more commands than this exercise needs. It relies on the OAuth scope and your review of each shell call rather than a two-tool menu. Neither path isolates a same-user shell from your files.
 
-See Google's guides to [OAuth consent](https://developers.google.com/workspace/guides/configure-oauth-consent), [Desktop app authorization](https://developers.google.com/identity/protocols/oauth2/native-app), and [Gmail scopes](https://developers.google.com/workspace/gmail/api/auth/scopes).
+Both paths need a Google OAuth client and a browser grant. Create a Desktop client **once for the path you choose**; you do not need two clients or both tools. The CLI can use an existing suitable Desktop client for this dedicated test project, but a model-provider login does not supply Google credentials. Do not reuse a token from another app or a broader grant.
 
-## 6. Keep Credentials Outside the Agent Project
+In Gmail's web interface, send an invented message to your test account with the subject `CS357 MCP DEMO`. Then follow either A or B. For either path, sign in yourself with the agent closed. Check the test account and cancel if Google asks for write access or access to another service. Do not paste client JSON, tokens, or a browser callback URL into the agent.
 
-Use a fresh, local directory outside Git and synced folders. Give the Google Workspace CLI (`gws`) the directory **path** through `GOOGLE_WORKSPACE_CLI_CONFIG_DIR`. Launching the agent from the same terminal lets its shell tool inherit the path. Do not put the JSON contents, a token, or a browser callback URL in an environment variable, a prompt, or an agent configuration. Use a fresh terminal without any existing `GOOGLE_WORKSPACE_CLI_TOKEN`, `GOOGLE_WORKSPACE_CLI_CREDENTIALS_FILE`, `GOOGLE_WORKSPACE_CLI_CLIENT_ID`, or `GOOGLE_WORKSPACE_CLI_CLIENT_SECRET` overrides.
+## Path A: MCP
 
-### Windows (PowerShell)
+This simulation illustrates the setup and read-only test. It does not sign in to Google or read a mailbox. [Open the MCP terminal simulation]({{ site.baseurl }}/viz/?mode=terminal#cs357-gmailreadonly-terminal-walkthrough).
 
-Use PowerShell 7.3 or later for the native command arguments in Step 8. In a fresh terminal, run:
+<iframe title="Gmail read-only MCP terminal simulation" loading="lazy"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-gmailreadonly-terminal-walkthrough"
+  style="width:100%;height:600px;border:1px solid #888"></iframe>
 
-```powershell
-$env:GOOGLE_WORKSPACE_CLI_CONFIG_DIR = Join-Path $env:LOCALAPPDATA 'CS357-GmailReadOnly'
-New-Item -ItemType Directory -Path $env:GOOGLE_WORKSPACE_CLI_CONFIG_DIR
-```
+Use Python 3.11 or later on macOS, Linux, or Windows Subsystem for Linux (WSL). Run the agent and adapter on the same side of WSL, and keep the credentials in the Linux home directory, not `/mnt/c`. The adapter does not implement native Windows access-control lists; use Path B for native Windows.
 
-Move the downloaded JSON into that directory using File Explorer and name it `client_secret.json`. In **Properties > Security** for the directory and file, confirm that other ordinary users cannot read them. Do not proceed if the directory is shared or the permissions do not look right.
+1. **Set up Google OAuth.**
 
-### macOS and Linux (Bash or Zsh)
+   - In the [Google Cloud console](https://console.cloud.google.com/), create or select a dedicated test project and [enable the Gmail API](https://console.cloud.google.com/apis/library/gmail.googleapis.com).
+   - In **Google Auth Platform > [Branding](https://console.cloud.google.com/auth/branding)**, configure the consent screen. Use a name you will recognize when you sign in, such as `CS357 Gmail Read Test`.
+   - Under **[Audience](https://console.cloud.google.com/auth/audience)**, choose **External**, keep the app in **Testing**, and add the Gmail test account under **Test users**.
+   - Under **[Data Access](https://console.cloud.google.com/auth/scopes)**, add only `https://www.googleapis.com/auth/gmail.readonly`. This scope lets a tool view email and settings across the mailbox. It cannot send mail or change labels. A search filter limits one request, not the account access granted by the scope.
+   - Under **[Clients](https://console.cloud.google.com/auth/clients)**, select **Create Client > Desktop app**, name the client, and download its JSON. The JSON identifies your app; it does not grant access to your mailbox. That happens when you review the scope and approve it in your browser.
 
-```bash
-umask 077
-export GOOGLE_WORKSPACE_CLI_CONFIG_DIR="$HOME/.config/cs357-gmail-readonly"
-mkdir -m 700 "$GOOGLE_WORKSPACE_CLI_CONFIG_DIR"
-```
+   See Google's guides to [OAuth consent](https://developers.google.com/workspace/guides/configure-oauth-consent), [Desktop app authorization](https://developers.google.com/identity/protocols/oauth2/native-app), and [Gmail scopes](https://developers.google.com/workspace/gmail/api/auth/scopes).
 
-Move the downloaded JSON into that directory using your file manager and name it `client_secret.json`. Then run:
+2. **Get the adapter.** Open the [adapter source directory](https://github.com/BillJr99/Ursinus-CS357-Fall2026/tree/gh-pages/files/gmail-readonly). Save `gmail_readonly.py`, `requirements.txt`, and the JSON template for your agent as individual files in a new directory outside your existing projects. On GitHub, open each file and choose **Download raw file**. Review the script before running it.
+3. **Check the fixture.** From that directory, install the dependencies and check fixture mode. The fixture uses invented data and does not contact Gmail.
 
-```bash
-chmod 600 "$GOOGLE_WORKSPACE_CLI_CONFIG_DIR/client_secret.json"
-```
-
-If the directory already exists on either system, stop and check that it belongs to this exercise before using it. If you use WSL, keep the files in your Linux home directory, not in a Windows mount. Keep both agents closed during sign-in. File permissions protect against other users, not a shell running as you. The agent only needs to run the CLI; it does not need to open any credential file.
-
-## 7. Install and Authorize the Google Workspace CLI
-
-You do not need an MCP server for this exercise. Both agents can call `gws` through their shell tool. Google's [remote Gmail MCP setup](https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server) is a different route: it requires Developer Preview access and documents compose and modify scopes as well as read access. Skip that setup here.
-
-1. With Node.js 18 or later, run these commands in PowerShell, Bash, or Zsh. The [Google Workspace CLI project](https://github.com/googleworkspace/cli) also provides platform binaries. It is not an officially supported Google product. The commands below use version `0.22.5`.
-
-   ```text
-   npm install -g @googleworkspace/cli@0.22.5
-   gws --version
+   ```bash
+   python3 -m venv .venv
+   .venv/bin/python -m pip install -r requirements.txt
+   .venv/bin/python gmail_readonly.py check --fixture
    ```
 
-2. In the terminal where you set the directory path, run this command yourself, not through the agent:
+4. **Authorize the adapter.** Create `$HOME/.local/share/cs357-gmail-readonly` with `mkdir -p` and set its mode to `700` with `chmod`. Move the Desktop client download there as `client.json` and set its mode to `600`. Keep both the client file and the generated `token.json` out of Git and synced folders. From the adapter directory, run:
+
+   ```bash
+   .venv/bin/python gmail_readonly.py authorize
+   .venv/bin/python gmail_readonly.py check
+   ```
+
+   The adapter requests `gmail.readonly` and refuses to save a grant if the token response omits that scope or reports additional scopes. The check reads the saved grant record; it is not an independent check of Google's token.
+5. **Connect the agent.** Replace both example paths in the downloaded template with absolute paths to your `.venv/bin/python` and `gmail_readonly.py`. Remove the `"--fixture"` argument and its preceding comma to enable the live test. Leave `"serve"` in place. The config contains paths, not credentials.
+   - **[OpenCode v2](https://opencode.ai/docs/mcp-servers/):** save `opencode.fixture.json` as `opencode.json` in your demonstration directory. Run `opencode mcp list` there, then start `opencode` and inspect `/mcps`.
+   - **[Oh My Pi](https://omp.sh/docs/mcp):** save `omp.fixture.json` as `.omp/mcp.json` in the demonstration directory, creating `.omp` if needed. Start `omp` there and run `/mcp list` and `/mcp test gmail-demo`.
+6. **Test with a Read-Only Request.** Check that `gmail-demo` offers `search_demo` and `read_demo_message`, with no write tool. Then prompt the agent:
+
+   > Check my Gmail test inbox using only the `gmail-demo` MCP server. Call `search_demo` once to find the demonstration email. Report how many IDs it returned. Do not open messages, use the shell, or call another service.
+
+## Path B: CLI
+
+This simulation illustrates the setup and read-only test. It does not sign in to Google or read a mailbox. [Open the CLI terminal simulation]({{ site.baseurl }}/viz/?mode=terminal#cs357-gmailreadonly-cli-terminal).
+
+<iframe title="Gmail read-only CLI terminal simulation" loading="lazy"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-gmailreadonly-cli-terminal"
+  style="width:100%;height:600px;border:1px solid #888"></iframe>
+
+1. **Set up Google OAuth.** Follow [the Google OAuth checklist in Path A](#path-a-mcp) only, then return here. If your dedicated test project already has a suitable Desktop client, reuse its client JSON. Skip the rest of Path A.
+
+2. **Install the CLI.** Install [`gws` 0.22.5](https://github.com/googleworkspace/cli/tree/v0.22.5#installation) for your operating system. If you use Node.js 18 or later, run `npm install -g @googleworkspace/cli@0.22.5`, then `gws --version`. This route does not need an MCP server. The CLI still needs its own browser sign-in. Do not export or import a token from the MCP adapter.
+
+3. **Store the client file.** Create a private local directory outside your project and synced folders. Move the downloaded client JSON there as `client_secret.json`. On Windows, use a new directory under `%LOCALAPPDATA%` and check **Properties > Security**. On macOS or Linux, use a new directory in your home folder with mode `700` and set the file mode to `600`. Set `GOOGLE_WORKSPACE_CLI_CONFIG_DIR` to the private directory path in the terminal you will use. For example:
+
+   - **Windows (PowerShell):** `$env:GOOGLE_WORKSPACE_CLI_CONFIG_DIR = Join-Path $env:LOCALAPPDATA 'CS357-GmailReadOnly'`
+   - **macOS and Linux:** `export GOOGLE_WORKSPACE_CLI_CONFIG_DIR="$HOME/.config/cs357-gmail-readonly"`
+
+4. **Authorize the CLI.** In a terminal without other `gws` credential overrides, authorize the CLI yourself:
 
    ```text
    gws auth login --scopes https://www.googleapis.com/auth/gmail.readonly
    ```
 
-3. In your browser, check the app name and the test account. Approve only read access to Gmail. Cancel if Google asks for permission to send, modify, or manage mail, or to access another service. Use the exact scope above: plain `gws auth login` can request write access, and `--readonly` can request access to other Workspace services. If Google blocks the request, check the project and test-user settings. Do not switch to a broader grant.
+   Use the exact scope. Plain `gws auth login` can request write access, and `--readonly` can include other Workspace services. See the [CLI authentication guide](https://github.com/googleworkspace/cli/tree/v0.22.5#authentication) for the client file and local credential store.
 
-The CLI saves its credentials locally. Keep its credential store private and do not export the token for the agent. If local credential storage fails, stop and consult the [CLI authentication guide](https://github.com/googleworkspace/cli#authentication). Do not paste a token into the agent to get around the failure.
+5. **Run the search yourself.** Run the search below yourself first. `me` refers to the account that approved the grant. The request returns up to three matching message IDs, not message bodies.
 
-## 8. Test with a Read-Only Request
+   **Windows (PowerShell 7.3+, with native argument passing set to Standard):**
 
-In Gmail's web interface, send an invented message to your test account with the subject `CS357 MCP DEMO`. Run the search below yourself first. `me` refers to the account that approved the grant. The request returns up to three matching message IDs, not message bodies.
+   ```powershell
+   $PSNativeCommandArgumentPassing = 'Standard'
+   $params = @{userId='me'; q='subject:"CS357 MCP DEMO"'; maxResults=3} | ConvertTo-Json -Compress
+   gws gmail users messages list --params $params
+   ```
 
-**Windows (PowerShell 7.3+, with native argument passing set to Standard):**
+   **macOS and Linux (Bash or Zsh):**
 
-```powershell
-$PSNativeCommandArgumentPassing = 'Standard'
-$params = @{userId='me'; q='subject:"CS357 MCP DEMO"'; maxResults=3} | ConvertTo-Json -Compress
-gws gmail users messages list --params $params
-```
+   ```bash
+   gws gmail users messages list --params '{"userId":"me","q":"subject:\"CS357 MCP DEMO\"","maxResults":3}'
+   ```
 
-**macOS and Linux (Bash or Zsh):**
+6. **Test with a Read-Only Request.** From that terminal, change to an empty working directory and launch `opencode` or `omp`. Paste this prompt instead of pasting the command output or any credential:
 
-```bash
-gws gmail users messages list --params '{"userId":"me","q":"subject:\"CS357 MCP DEMO\"","maxResults":3}'
-```
+   > Check my Gmail test inbox using the `gws` CLI. Use the shell tool to run one `gws gmail users messages list` request. Set `userId` to `me`, `q` to `subject:"CS357 MCP DEMO"`, and `maxResults` to `3`. Use quoting for the shell you are running in. Report how many IDs this page returned. Do not fetch message bodies, open credential files, follow links, run other commands, or change anything in Gmail.
 
-From that terminal, change to an empty working directory and launch `opencode` or `omp`. Paste this prompt instead of pasting the command output or any credential:
+**For either path**, check the tool trace for the requested search. Compare the result with the test mailbox and, for the CLI, your manual run. Stop the turn if the agent proposes a different operation. If the list is empty, check the subject and signed-in test account before changing the query. Do not test the grant by attempting a write.
 
-> Use the shell tool to run one `gws gmail users messages list` request. Set `userId` to `me`, `q` to `subject:"CS357 MCP DEMO"`, and `maxResults` to `3`. Use quoting for the shell you are running in. Report how many IDs this page returned. Do not fetch message bodies, open credential files, follow links, run other commands, or change anything in Gmail.
+## Protect the Returned Data
 
-Check the tool trace for the list request and compare the result with your manual test. Stop the turn if the agent proposes a different operation. If the list is empty, check the subject and signed-in test account before changing the query. Do not test the grant by attempting a write. Keep real mail out of the session: tool results can reach a hosted model, and instructions inside an email are untrusted data.
+The OAuth scope controls what the tool can do in Gmail. It does not control where the result goes after Gmail returns it. When an agent runs a command, the output can enter its conversation history and be sent to the model provider. Asking the agent to report only a count limits its reply, not what it sees. In this exercise, either search returns message IDs without opening messages. On a real account, even IDs and search results can reveal that someone received mail matching a particular query.
+
+If a task needs only a count, leave message bodies, subjects, senders, attachments, and links out of the tool result. For real data, filter the result locally **before** it reaches the model. A local model can avoid sending the result to a hosted provider, but the agent may still keep local transcripts or pass data to other tools. Do not share a transcript or screenshot that contains mailbox data or credentials.
+
+If you later read a message, treat its content as untrusted. An email might tell the agent to open a link or upload a file. That text is part of the message, not permission to take another action. Read-only Gmail access can stop a Gmail write; it cannot stop a separate shell or browser tool from acting. Review the tool trace and stop any call outside the task.
 
 When you finish, close the agent, remove this test app's access in [Google Account connections](https://myaccount.google.com/connections), and remove the exercise's private credential directory. Deleting local files without revoking access does not revoke the Google grant.

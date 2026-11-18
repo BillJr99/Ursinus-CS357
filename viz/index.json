@@ -1,7 +1,7 @@
 {
  "course": "cs357",
  "site": "https://billjr99.github.io/Ursinus-CS357",
- "built": "2026-11-18 13:18",
+ "built": "2026-11-18 12:34",
  "examples": [
   {
    "id": "cs357-liascript-agentloop-1",
@@ -1169,13 +1169,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-aibyhand",
    "error": null,
    "steps": 11,
-   "tours": [
-    "",
-    "walkthrough"
-   ],
    "modes": [
     "run",
     "explain"
+   ],
+   "tours": [
+    "",
+    "walkthrough"
    ]
   },
   {
@@ -2644,6 +2644,19 @@
    ]
   },
   {
+   "id": "cs357-gmailreadonly-cli-terminal",
+   "viz": "session",
+   "lang": "shell",
+   "page": "_pages/Tutorials/tut-gmailreadonly.md",
+   "line": 0,
+   "page_url": "",
+   "error": null,
+   "steps": 0,
+   "modes": [
+    "terminal"
+   ]
+  },
+  {
    "id": "cs357-tut-groupcharter-practice-viz",
    "viz": "env",
    "lang": "python",
@@ -2665,13 +2678,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-handoffprotocols",
    "error": null,
    "steps": 197,
-   "tours": [
-    "",
-    "walkthrough"
-   ],
    "modes": [
     "run",
     "explain"
+   ],
+   "tours": [
+    "",
+    "walkthrough"
    ]
   },
   {
@@ -2749,13 +2762,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-llmjudges",
    "error": null,
    "steps": 87,
-   "tours": [
-    "",
-    "walkthrough"
-   ],
    "modes": [
     "run",
     "explain"
+   ],
+   "tours": [
+    "",
+    "walkthrough"
    ]
   },
   {
@@ -4374,13 +4387,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-pythonessentials",
    "error": null,
    "steps": 14,
-   "tours": [
-    "",
-    "walkthrough"
-   ],
    "modes": [
     "run",
     "explain"
+   ],
+   "tours": [
+    "",
+    "walkthrough"
    ]
   },
   {
@@ -4583,13 +4596,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-sampling",
    "error": null,
    "steps": 5,
-   "tours": [
-    "",
-    "walkthrough"
-   ],
    "modes": [
     "run",
     "explain"
+   ],
+   "tours": [
+    "",
+    "walkthrough"
    ]
   },
   {
@@ -5244,13 +5257,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-tokensenergycost",
    "error": null,
    "steps": 186,
-   "tours": [
-    "",
-    "walkthrough"
-   ],
    "modes": [
     "run",
     "explain"
+   ],
+   "tours": [
+    "",
+    "walkthrough"
    ]
   },
   {
