@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "id": "cs357-gmailreadonly-cli-terminal",
+  "title": "Gmail read-only: CLI path",
+  "description": "Scripted walkthrough of the CLI setup and test. No Google login or mailbox access occurs in playback.",
+  "page": "_pages/Tutorials/tut-gmailreadonly.md",
+  "scenario": {
+    "commands": [
+      "npm install -g @googleworkspace/cli@0.22.5",
+      "gws --version",
+      "export GOOGLE_WORKSPACE_CLI_CONFIG_DIR=\"$HOME/.config/cs357-gmail-readonly\"",
+      "gws auth login --scopes https://www.googleapis.com/auth/gmail.readonly",
+      "gws gmail users messages list --dry-run --params '{\"userId\":\"me\",\"q\":\"subject:\\\"CS357 MCP DEMO\\\"\",\"maxResults\":3}'",
+      "opencode"
+    ]
+  },
+  "terminal": true,
+  "demo": true,
+  "provenance": "scripted",
+  "steps": [
+    {
+      "cmd": "npm install -g @googleworkspace/cli@0.22.5",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "gws --version",
+      "output": "gws 0.22.5\nThis is not an officially supported Google product.\n",
+      "exit": 0
+    },
+    {
+      "cmd": "export GOOGLE_WORKSPACE_CLI_CONFIG_DIR=\"$HOME/.config/cs357-gmail-readonly\"",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "gws auth login --scopes https://www.googleapis.com/auth/gmail.readonly",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "gws gmail users messages list --dry-run --params '{\"userId\":\"me\",\"q\":\"subject:\\\"CS357 MCP DEMO\\\"\",\"maxResults\":3}'",
+      "output": "{\n  \"body\": null,\n  \"dry_run\": true,\n  \"is_multipart_upload\": false,\n  \"method\": \"GET\",\n  \"query_params\": [\n    [\n      \"maxResults\",\n      \"3\"\n    ],\n    [\n      \"q\",\n      \"subject:\\\"CS357 MCP DEMO\\\"\"\n    ]\n  ],\n  \"url\": \"https://gmail.googleapis.com/gmail/v1/users/me/messages\"\n}\n",
+      "exit": 0
+    },
+    {
+      "cmd": "opencode",
+      "output": "",
+      "exit": 0
+    }
+  ],
+  "markers": [
+    {
+      "step": 0,
+      "title": "Set up Google OAuth and install the CLI",
+      "note": "Complete the Desktop client checklist in your browser, then install gws. The install log is omitted."
+    },
+    {
+      "step": 1,
+      "title": "Check the installation",
+      "note": "Version output from the CLI used for this illustration."
+    },
+    {
+      "step": 2,
+      "title": "Store the client file",
+      "note": "Bash or Zsh example. Follow the separate PowerShell instruction on Windows. The variable contains a path, never a token."
+    },
+    {
+      "step": 3,
+      "title": "Authorize the CLI",
+      "note": "Approve Gmail read-only access in your own test account. The browser consent and token are not shown or executed here."
+    },
+    {
+      "step": 4,
+      "title": "Inspect the request without calling Gmail",
+      "note": "Real output from the CLI dry run. On your test mailbox, follow the tutorial to run the search without --dry-run."
+    },
+    {
+      "step": 5,
+      "title": "Test with a Read-Only Request",
+      "note": "From the same terminal, use OpenCode or Oh My Pi. Ask the agent to check Gmail using one gws messages list call, then verify the tool trace."
+    }
+  ]
+}
