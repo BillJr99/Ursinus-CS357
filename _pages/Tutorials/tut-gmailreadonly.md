@@ -25,10 +25,10 @@ In Gmail's web interface, send an invented message to your test account with the
 
 ## Path A: MCP
 
-This simulation illustrates the setup and read-only test. It does not sign in to Google or read a mailbox. [Open the MCP terminal simulation]({{ '/viz/?mode=terminal#cs357-gmailreadonly-terminal-walkthrough' | relative_url }}).
+This simulation illustrates the setup and read-only test. It does not sign in to Google or read a mailbox. [Open the MCP terminal simulation]({{ site.baseurl }}/viz/?mode=terminal#cs357-gmailreadonly-terminal-walkthrough).
 
 <iframe title="Gmail read-only MCP terminal simulation" loading="lazy"
-  src="{{ '/viz/?mode=terminal&embed=1#cs357-gmailreadonly-terminal-walkthrough' | relative_url }}"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-gmailreadonly-terminal-walkthrough"
   style="width:100%;height:600px;border:1px solid #888"></iframe>
 
 Use Python 3.11 or later on macOS, Linux, or Windows Subsystem for Linux (WSL). Run the agent and adapter on the same side of WSL, and keep the credentials in the Linux home directory, not `/mnt/c`. The adapter does not implement native Windows access-control lists; use Path B for native Windows.
@@ -69,10 +69,10 @@ Use Python 3.11 or later on macOS, Linux, or Windows Subsystem for Linux (WSL). 
 
 ## Path B: CLI
 
-This simulation illustrates the setup and read-only test. It does not sign in to Google or read a mailbox. [Open the CLI terminal simulation]({{ '/viz/?mode=terminal#cs357-gmailreadonly-cli-terminal' | relative_url }}).
+This simulation illustrates the setup and read-only test. It does not sign in to Google or read a mailbox. [Open the CLI terminal simulation]({{ site.baseurl }}/viz/?mode=terminal#cs357-gmailreadonly-cli-terminal).
 
 <iframe title="Gmail read-only CLI terminal simulation" loading="lazy"
-  src="{{ '/viz/?mode=terminal&embed=1#cs357-gmailreadonly-cli-terminal' | relative_url }}"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-gmailreadonly-cli-terminal"
   style="width:100%;height:600px;border:1px solid #888"></iframe>
 
 1. **Set up Google OAuth.** Follow [the Google OAuth checklist in Path A](#path-a-mcp) only, then return here. If your dedicated test project already has a suitable Desktop client, reuse its client JSON. Skip the rest of Path A.
