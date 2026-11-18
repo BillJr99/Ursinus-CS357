@@ -458,7 +458,6 @@ schedule:
   date: "0"
   title: "RAG Knowledge Base: Code and No-Code Routes"
   readings:
-  - rtitle: "Mitchell, Chapter 4"
   - rtitle: "Have your team's Stakeholder Brief draft ready for peer review."
     rlink: false
 - week: "7"
@@ -502,11 +501,6 @@ schedule:
 - week: "8"
   date: "1"
   title: "RAG Knowledge Base: Code and No-Code Routes"
-  readings:
-  - rtitle: "Mitchell, Chapter 4"
-  - rtitle: "Reading Response: Connect RAG to a corpus of your own."
-  - rtitle: "LangChain RAG from Scratch (video)"
-    rlink: "https://www.youtube.com/watch?v=rz40ukZ3krQ&t=10s"
 - week: "10"
   date: "0"
   title: "Project Groups: Team Meetings and Proposal Planning"
