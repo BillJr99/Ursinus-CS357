@@ -1,7 +1,7 @@
 {
  "course": "cs357",
- "site": "https://billjr99.github.io/Ursinus-CS357-Fall2026",
- "built": "2026-11-18 06:34",
+ "site": "https://billjr99.github.io/Ursinus-CS357",
+ "built": "2026-11-18 11:44",
  "examples": [
   {
    "id": "cs357-liascript-agentloop-1",
@@ -399,7 +399,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agentcasestudies.md",
    "line": 743,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agentcasestudies",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agentcasestudies",
    "error": null,
    "steps": 8,
    "modes": [
@@ -633,7 +633,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agentdebugging.md",
    "line": 279,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agentdebugging",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agentdebugging",
    "error": null,
    "steps": 9,
    "modes": [
@@ -880,7 +880,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agentframeworks.md",
    "line": 1046,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agentframeworks",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agentframeworks",
    "error": null,
    "steps": 7,
    "modes": [
@@ -893,7 +893,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agentgovernance.md",
    "line": 389,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agentgovernance",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agentgovernance",
    "error": null,
    "steps": 6,
    "modes": [
@@ -906,7 +906,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agenticopenwebui.md",
    "line": 375,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agenticopenwebui",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agenticopenwebui",
    "error": null,
    "steps": 8,
    "modes": [
@@ -932,7 +932,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agentprojectdesign.md",
    "line": 174,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agentprojectdesign",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agentprojectdesign",
    "error": null,
    "steps": 10,
    "modes": [
@@ -1010,7 +1010,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agentskills.md",
    "line": 499,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agentskills",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agentskills",
    "error": null,
    "steps": 9,
    "modes": [
@@ -1127,7 +1127,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-agentteams.md",
    "line": 279,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-agentteams",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-agentteams",
    "error": null,
    "steps": 6,
    "modes": [
@@ -1140,7 +1140,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-aiaccessibility.md",
    "line": 226,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-aiaccessibility",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-aiaccessibility",
    "error": null,
    "steps": 7,
    "modes": [
@@ -1169,13 +1169,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-aibyhand",
    "error": null,
    "steps": 11,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -1266,7 +1266,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-aimaker.md",
    "line": 303,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-aimaker",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-aimaker",
    "error": null,
    "steps": 9,
    "modes": [
@@ -1449,7 +1449,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-chessaicoach.md",
    "line": 792,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-chessaicoach",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-chessaicoach",
    "error": null,
    "steps": 7,
    "modes": [
@@ -1839,7 +1839,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-codingagentsecurity.md",
    "line": 296,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-codingagentsecurity",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-codingagentsecurity",
    "error": null,
    "steps": 10,
    "modes": [
@@ -2063,7 +2063,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-datacards.md",
    "line": 215,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-datacards",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-datacards",
    "error": null,
    "steps": 9,
    "modes": [
@@ -2076,7 +2076,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-demoday.md",
    "line": 112,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-demoday",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-demoday",
    "error": null,
    "steps": 9,
    "modes": [
@@ -2298,7 +2298,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-ethicalframeworks.md",
    "line": 274,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-ethicalframeworks",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-ethicalframeworks",
    "error": null,
    "steps": 10,
    "modes": [
@@ -2311,7 +2311,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-explainability.md",
    "line": 211,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-explainability",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-explainability",
    "error": null,
    "steps": 5,
    "modes": [
@@ -2337,7 +2337,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-explainabilitydeep.md",
    "line": 316,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-explainabilitydeep",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-explainabilitydeep",
    "error": null,
    "steps": 10,
    "modes": [
@@ -2649,7 +2649,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-groupcharter.md",
    "line": 234,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-groupcharter",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-groupcharter",
    "error": null,
    "steps": 7,
    "modes": [
@@ -2665,13 +2665,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-handoffprotocols",
    "error": null,
    "steps": 197,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -2694,7 +2694,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-hardware.md",
    "line": 371,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-hardware",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-hardware",
    "error": null,
    "steps": 9,
    "modes": [
@@ -2720,7 +2720,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-karpathycoding.md",
    "line": 397,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-karpathycoding",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-karpathycoding",
    "error": null,
    "steps": 9,
    "modes": [
@@ -2749,13 +2749,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-llmjudges",
    "error": null,
    "steps": 87,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -2923,7 +2923,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-localagentfromscratch.md",
    "line": 742,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-localagentfromscratch",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-localagentfromscratch",
    "error": null,
    "steps": 5,
    "modes": [
@@ -3001,7 +3001,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-mcpoauth.md",
    "line": 185,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-mcpoauth",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-mcpoauth",
    "error": null,
    "steps": 8,
    "modes": [
@@ -3027,7 +3027,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-memorycontext.md",
    "line": 541,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-memorycontext",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-memorycontext",
    "error": null,
    "steps": 14,
    "modes": [
@@ -3040,7 +3040,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-modeltypes.md",
    "line": 293,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-modeltypes",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-modeltypes",
    "error": null,
    "steps": 12,
    "modes": [
@@ -3210,7 +3210,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-multimodalagents.md",
    "line": 396,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-multimodalagents",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-multimodalagents",
    "error": null,
    "steps": 10,
    "modes": [
@@ -3301,7 +3301,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-observability.md",
    "line": 578,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-observability",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-observability",
    "error": null,
    "steps": 9,
    "modes": [
@@ -3851,7 +3851,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-peerreview.md",
    "line": 230,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-peerreview",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-peerreview",
    "error": null,
    "steps": 9,
    "modes": [
@@ -3890,7 +3890,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-personapipeline.md",
    "line": 693,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-personapipeline",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-personapipeline",
    "error": null,
    "steps": 10,
    "modes": [
@@ -3903,7 +3903,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-philosophyai.md",
    "line": 241,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-philosophyai",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-philosophyai",
    "error": null,
    "steps": 7,
    "modes": [
@@ -3916,7 +3916,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-productionassistant.md",
    "line": 392,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-productionassistant",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-productionassistant",
    "error": null,
    "steps": 9,
    "modes": [
@@ -3929,7 +3929,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-projectcoordination.md",
    "line": 96,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-projectcoordination",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-projectcoordination",
    "error": null,
    "steps": 8,
    "modes": [
@@ -4345,7 +4345,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-pydanticai.md",
    "line": 944,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-pydanticai",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-pydanticai",
    "error": null,
    "steps": 11,
    "modes": [
@@ -4374,13 +4374,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-pythonessentials",
    "error": null,
    "steps": 14,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -4527,7 +4527,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-redteaming.md",
    "line": 403,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-redteaming",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-redteaming",
    "error": null,
    "steps": 4,
    "modes": [
@@ -4540,7 +4540,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-regulation.md",
    "line": 206,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-regulation",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-regulation",
    "error": null,
    "steps": 11,
    "modes": [
@@ -4553,7 +4553,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-restllmapi.md",
    "line": 882,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-restllmapi",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-restllmapi",
    "error": null,
    "steps": 5,
    "modes": [
@@ -4583,13 +4583,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-sampling",
    "error": null,
    "steps": 5,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -4888,7 +4888,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-shipit.md",
    "line": 160,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-shipit",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-shipit",
    "error": null,
    "steps": 7,
    "modes": [
@@ -5174,7 +5174,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-testingagents.md",
    "line": 261,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-testingagents",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-testingagents",
    "error": null,
    "steps": 8,
    "modes": [
@@ -5244,13 +5244,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-tokensenergycost",
    "error": null,
    "steps": 186,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -5273,7 +5273,7 @@
    "lang": "python",
    "page": "_pages/Tutorials/tut-visualagents.md",
    "line": 314,
-   "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-visualagents",
+   "page_url": "https://billjr99.github.io/Ursinus-CS357/Tutorials/tut-visualagents",
    "error": null,
    "steps": 11,
    "modes": [
