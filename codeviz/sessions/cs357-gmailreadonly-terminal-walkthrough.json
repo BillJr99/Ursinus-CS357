@@ -95,7 +95,7 @@
     {
       "step": 6,
       "title": "Test with a Read-Only Request",
-      "note": "Use the demo subject, pageSize 3, and THREAD_VIEW_METADATA_ONLY. Check the tool trace and count only the first page. This playback does not read a mailbox."
+      "note": "Use the demo subject, pageSize 3, and THREAD_VIEW_IDS_ONLY. Check the tool trace and count only the first page. This playback does not read a mailbox."
     },
     {
       "step": 7,

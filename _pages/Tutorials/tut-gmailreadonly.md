@@ -100,7 +100,7 @@ Use this path only if you can enable the preview service on your test project. G
 
 6. **Test with a Read-Only Request.** In OpenCode, check `/mcps`. In Oh My Pi, run `/mcp test gmail-demo`, then use `/tools` to find the search tool. Google's catalog can list write tools even without a grant; seeing a tool name does not prove you have permission to use it. Prompt the agent:
 
-   > Check my Gmail test inbox using only the `gmail-demo` MCP server. Call `search_threads` once with `query` set to `subject:"CS357 MCP DEMO"`, `pageSize` set to `3`, and `view` set to `THREAD_VIEW_METADATA_ONLY`. Report how many threads the first page returned. Do not open a thread or message, use the shell, or change anything in Gmail.
+   > Check my Gmail test inbox using only the `gmail-demo` MCP server. Call `search_threads` once with `query` set to `subject:"CS357 MCP DEMO"`, `pageSize` set to `3`, and `view` set to `THREAD_VIEW_IDS_ONLY`. Report how many threads the first page returned. Do not open a thread or message, use the shell, or change anything in Gmail.
 
    The [search tool](https://developers.google.com/workspace/gmail/api/reference/mcp/tools_list/search_threads) accepts the Gmail read-only scope. If a token expires, close the agent and repeat the narrow authorization in Step 3. If Google reports a preview or project-access restriction, use Path B instead of adding scopes.
 
@@ -161,7 +161,7 @@ This simulation illustrates the setup and read-only test. It does not sign in to
 
 ## Protect the Returned Data
 
-The OAuth scope controls what the tool can do in Gmail. It does not control where the result goes after Gmail returns it. When an agent runs a command, the output can enter its conversation history and be sent to the model provider. Asking the agent to report only a count limits its reply, not what it sees. The CLI search returns message and thread IDs. The MCP search uses a metadata-only view to omit subjects and snippets, but its result can still include thread and message metadata. On a real account, even IDs and search results can reveal that someone received mail matching a particular query.
+The OAuth scope controls what the tool can do in Gmail. It does not control where the result goes after Gmail returns it. When an agent runs a command, the output can enter its conversation history and be sent to the model provider. Asking the agent to report only a count limits its reply, not what it sees. The CLI search returns message and thread IDs. The MCP search requests only thread IDs, without per-thread message metadata. On a real account, even IDs and search results can reveal that someone received mail matching a particular query.
 
 If a task needs only a count, leave message bodies, subjects, senders, attachments, and links out of the tool result. For real data, filter the result locally **before** it reaches the model. A local model can avoid sending the result to a hosted provider, but the agent may still keep local transcripts or pass data to other tools. Do not share a transcript or screenshot that contains mailbox data or credentials.
 
