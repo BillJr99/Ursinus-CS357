@@ -782,3 +782,17 @@ You now have the full pattern for adding a language model to real software: isol
 - Open WebUI. *Open WebUI Documentation*. `docs.openwebui.com`.  The OpenAI-compatible `/api/chat/completions` and `/api/models` endpoints the local branch targets.
 - OWASP. "Secrets Management Cheat Sheet."  *cheatsheetseries.owasp.org*.  Why secrets must not ship to clients, and the backend-proxy pattern from Part IV.
 - Prior activity: [RESTful LLM Access: The api/v1 Paradigm]({{ site.baseurl }}/Tutorials/RESTLLMAPI).  The Python foundation this tutorial builds on.
+
+
+## Step Through an Example
+
+**Give the coach a legal move list.** Check a suggested move against the moves provided by the chess engine.
+
+<!-- run: id=cs357-tut-chessaicoach-practice-viz viz=env -->
+```python
+legal_moves = {"e2e4", "d2d4", "g1f3"}
+for suggestion in ["e2e4", "e2e5"]:
+    print(suggestion, "legal in this sample:", suggestion in legal_moves)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-chessaicoach-practice-viz) <!-- code-viz link -->

@@ -732,3 +732,18 @@ When those feel familiar, hand the plumbing to a framework, one piece at a time.
 3. [Agent Frameworks]({{ site.baseurl }}/Tutorials/AgentFrameworks), Part V, which prints the context window as each feature is added, and then that tutorial's optional comparison of other frameworks.
 
 The gates in this tutorial do not go away in a framework.  Pydantic AI validates a tool's arguments for you, but a well-formed argument is not a permitted one: `gate()` becomes a check inside the tool, and the person typing `YES` becomes an approval step.
+
+
+## Step Through an Example
+
+**Follow one step of a local agent loop.** Use a fixed observation to see how a tool result becomes context for a reply.
+
+<!-- run: id=cs357-tut-localagentfromscratch-practice-viz viz=env -->
+```python
+messages = ["How many items are in the list?"]
+items = ["alpha", "beta", "gamma"]
+messages.append(f"Tool result: {len(items)} items")
+print(messages[-1])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-localagentfromscratch-practice-viz) <!-- code-viz link -->

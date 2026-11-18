@@ -683,3 +683,20 @@ When the red team and the checks disagree, believe the checks.  A rule you need 
 This chain is the smallest honest version of orchestration.  *Orchestration and Multi-Agent Patterns* replaces the for-loop with pipelines, routers, and a supervisor that chooses the next worker each turn.  Every pattern there is some arrangement of the three things you declared here: a role, a boundary, and a stop condition.
 
 You can also run this chain from `opencode.json` instead, by declaring each step as an agent with its own `prompt`, `temperature`, and `permission` block.  Doing that by hand first is the point.  A framework you have never done without is a framework you cannot judge.
+
+
+## Step Through an Example
+
+**Choose which context reaches each persona.** Filter synthetic inputs at the handoff to the publishing persona.
+
+<!-- run: id=cs357-tut-personapipeline-practice-viz viz=env -->
+```python
+inputs = [("draft summary", "share"), ("private reviewer notes", "hold")]
+published = []
+for text, rule in inputs:
+    if rule == "share":
+        published.append(text)
+print(published)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-personapipeline-practice-viz) <!-- code-viz link -->

@@ -86,3 +86,18 @@ Will change: Merge by the day before.  Ana owns the check.
 ```
 
 Give the last line an owner, and start the next retrospective by asking whether you made that change.
+
+
+## Step Through an Example
+
+**Find which project task can start.** Evaluate the dependencies before choosing work from a synthetic plan.
+
+<!-- run: id=cs357-tut-projectcoordination-practice-viz viz=env -->
+```python
+done = {"draft"}
+tasks = {"review": {"draft"}, "publish": {"review"}}
+for task, needs in tasks.items():
+    print(task, "ready:", needs <= done)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-projectcoordination-practice-viz) <!-- code-viz link -->

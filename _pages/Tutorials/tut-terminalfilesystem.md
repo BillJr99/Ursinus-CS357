@@ -1109,3 +1109,9 @@ Identity directories and bind mounts are filesystem-level controls.  The next ac
 - Docker Documentation: "Networking."  https://docs.docker.com/engine/network/, the reference for `host.docker.internal`, `--add-host`, and `--network none`.
 - Julia Evans.  "How containers work: overlayfs." https://jvns.ca/blog/2019/11/18/how-containers-work--overlayfs/, intuitive explanation of what Docker isolation actually does at the filesystem level.
 - Saltzer and Schroeder.  "The Protection of Information in Computer Systems."  *Proceedings of the IEEE* (1975).  The original paper enumerating least privilege, fail-safe defaults, and economy of mechanism, principles that are fifty years old and still directly applicable to agent design.
+
+## Terminal Walkthrough
+
+Watch the container read and write the mounted directory while a file outside it stays on the host.
+
+[Watch: Watch a one-folder isolation check]({{ site.baseurl }}/viz/?mode=terminal#cs357-tut-containerisolation-onefolder-terminal) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-tut-containerisolation-onefolder-terminal)

@@ -748,3 +748,9 @@ In the *The Local Agent Stack: Wiring Containers into a System* activity you wil
 - **opencode's server mode**: `serve`, `web`, and the HTTP API that `--attach` talks to: opencode.ai/docs/server.
 - **LM Studio Bionic**: an agent for open, local models spanning chat and code: lmstudio.ai/blog/introducing-lm-studio-bionic.
 - **Cowork** and open alternatives: Claude Cowork (claude.ai), and **OpenWork**, the open-source, opencode-powered cowork tool: github.com/different-ai/openwork.
+
+## Terminal Walkthrough
+
+The recording copies a launcher into a Git project and starts both agents in Herdr panes.
+
+[Watch: Start OpenCode and Oh My Pi in Herdr]({{ site.baseurl }}/viz/?mode=terminal#cs357-agent-containers-walkthrough) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-agent-containers-walkthrough)

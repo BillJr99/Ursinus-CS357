@@ -1063,3 +1063,9 @@ The [RAG Knowledge Base lab]({{ site.baseurl }}/Assignments/RAGKnowledgeBase) as
 - Hugging Face: [PEFT LoRA guide](https://huggingface.co/docs/peft/main/en/developer_guides/lora), [Hub environment variables, including offline mode](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables), [SmolLM2-360M-Instruct model card](https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct)
 - Ollama: [importing models and adapters](https://docs.ollama.com/import), [OpenAI compatibility](https://docs.ollama.com/api/openai-compatibility)
 - Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models," 2021, [arXiv:2106.09685](https://arxiv.org/abs/2106.09685); Dettmers et al., "QLoRA: Efficient Finetuning of Quantized LLMs," 2023, [arXiv:2305.14314](https://arxiv.org/abs/2305.14314)
+
+## Terminal Walkthrough
+
+The tutorial uses one model to generate text and another to make embeddings. Download these while you still have a network connection.
+
+[Watch: Prepare the generator and embedding models]({{ site.baseurl }}/viz/?mode=terminal#cs357-offlineragfinetuning-terminal-walkthrough)

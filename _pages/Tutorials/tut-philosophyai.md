@@ -231,3 +231,17 @@ The next activity introduces the formal ethical frameworks (utilitarian, deontol
 - Searle, J.R. "Minds, Brains, and Programs."  *Behavioral and Brain Sciences* 3(3): 417-424 (1980).  Read with the peer commentaries.
 - Weizenbaum, J. *Computer Power and Human Reason.*  Freeman (1976).  The ELIZA creator's own critique of the systems he helped build.
 - Mitchell, M. *Artificial Intelligence: A Guide for Thinking Humans.*  Farrar, Straus and Giroux (2019), chapters 2-4.
+
+
+## Step Through an Example
+
+**Separate an observed output from an inference about it.** Sort evidence and interpretation before you compare positions.
+
+<!-- run: id=cs357-tut-philosophyai-practice-viz viz=env -->
+```python
+claims = [("The agent produced a fluent answer.", "observation"), ("The agent understands the question.", "interpretation")]
+for text, kind in claims:
+    print(kind + ":", text)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-philosophyai-practice-viz) <!-- code-viz link -->

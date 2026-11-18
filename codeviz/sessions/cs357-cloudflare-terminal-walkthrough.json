@@ -1,0 +1,62 @@
+{
+ "version": 1,
+ "id": "cs357-cloudflare-terminal-walkthrough",
+ "title": "Preview a Worker locally",
+ "description": "This illustration assumes you have created the tutorial\u2019s hello-worker project. It stops before deployment.",
+ "page": "_pages/Tutorials/tut-cloudflare.md",
+ "scenario": {
+  "commands": [
+   "npm install -g wrangler",
+   "cd hello-worker",
+   "npx wrangler dev",
+   "curl -i http://localhost:8787/health"
+  ]
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "scripted",
+ "steps": [
+  {
+   "cmd": "npm install -g wrangler",
+   "output": "added packages\n",
+   "exit": 0
+  },
+  {
+   "cmd": "cd hello-worker",
+   "output": "",
+   "exit": 0
+  },
+  {
+   "cmd": "npx wrangler dev",
+   "output": "Ready on http://localhost:8787\n",
+   "exit": 0
+  },
+  {
+   "cmd": "curl -i http://localhost:8787/health",
+   "output": "HTTP/1.1 200 OK\n\n",
+   "exit": 0
+  }
+ ],
+ "markers": [
+  {
+   "step": 0,
+   "title": "Install the CLI",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 1,
+   "title": "Enter the Worker project",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 2,
+   "title": "Start the local server",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 3,
+   "title": "Call the health route in a second terminal",
+   "note": "Illustration. Output and versions may differ."
+  }
+ ]
+}

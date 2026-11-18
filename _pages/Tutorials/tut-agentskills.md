@@ -489,3 +489,19 @@ State each rule as a path and a condition, not as a sentiment.  "Agents should c
 
 > Two agents pointed at the same unclaimed item at the same time do not have a "correct" outcome.  Either your claim protocol held, in which case you should be able to say what mechanism held it, or you produced the double work or the lost write.  The second outcome is a passing result if you diagnose it: show the evidence, name the rule that would have prevented it, and say whether that rule is enforceable in your medium or only advisory.
 {: .tb-practice data-title="Checkpoint"}
+
+
+## Step Through an Example
+
+**Choose a skill by its description.** Filter the skill catalog. Load the instructions only for the matching skill.
+
+<!-- run: id=cs357-tut-agentskills-practice-viz viz=env -->
+```python
+catalog = {"review": "inspect a git diff", "publish": "package a release"}
+task = "inspect the diff"
+matches = [name for name, description in catalog.items() if "diff" in task and "diff" in description]
+for name in matches:
+    print(f"Read .agents/skills/{name}/SKILL.md")
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-agentskills-practice-viz) <!-- code-viz link -->

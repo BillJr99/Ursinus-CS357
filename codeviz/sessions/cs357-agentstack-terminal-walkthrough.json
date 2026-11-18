@@ -1,0 +1,40 @@
+{
+ "version": 1,
+ "id": "cs357-agentstack-terminal-walkthrough",
+ "title": "Verify a local Ollama endpoint",
+ "description": "After installing Ollama and starting it, use this walkthrough to check the model endpoint before connecting Open WebUI.",
+ "page": "_pages/Tutorials/tut-agentstack.md",
+ "scenario": {
+  "commands": [
+   "ollama pull qwen2.5:3b",
+   "curl -s http://localhost:11434/api/tags"
+  ]
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "scripted",
+ "steps": [
+  {
+   "cmd": "ollama pull qwen2.5:3b",
+   "output": "pulling manifest\nverifying sha256 digest\nwriting manifest\nsuccess\n",
+   "exit": 0
+  },
+  {
+   "cmd": "curl -s http://localhost:11434/api/tags",
+   "output": "{\"models\":[{\"name\":\"qwen2.5:3b\",\"model\":\"qwen2.5:3b\"}]}\n",
+   "exit": 0
+  }
+ ],
+ "markers": [
+  {
+   "step": 0,
+   "title": "Download a local model",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 1,
+   "title": "Check the API",
+   "note": "Illustration. Output and versions may differ."
+  }
+ ]
+}

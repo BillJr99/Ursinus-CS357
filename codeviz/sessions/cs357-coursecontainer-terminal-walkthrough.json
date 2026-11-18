@@ -1,0 +1,41 @@
+{
+ "version": 1,
+ "id": "cs357-coursecontainer-terminal-walkthrough",
+ "title": "Run the first Docker check",
+ "description": "Run the same hello-world check from the tutorial. Docker installs the image in the temporary recorder when needed.",
+ "page": "_pages/Tutorials/tut-coursecontainer.md",
+ "scenario": {
+  "shell": {
+   "image": "docker:27.3.1-cli",
+   "setup": [
+    "apk add --no-cache bash"
+   ]
+  },
+  "commands": [
+   "docker --version",
+   "docker run --rm hello-world"
+  ],
+  "network": "isolated",
+  "user": "student",
+  "timeout": 480,
+  "files": {},
+  "images": [
+   "hello-world:latest"
+  ]
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "recorded",
+ "markers": [
+  {
+   "step": 0,
+   "title": "Check the command",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  },
+  {
+   "step": 1,
+   "title": "Run a short container",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  }
+ ]
+}

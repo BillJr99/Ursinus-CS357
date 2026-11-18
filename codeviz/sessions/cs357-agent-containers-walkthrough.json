@@ -1,0 +1,91 @@
+{
+ "version": 1,
+ "id": "cs357-agent-containers-walkthrough",
+ "title": "Set up an isolated agent project",
+ "description": "Create a Git project, copy in the Dockerfile and scripts, start two Herdr panes and review the mounted change. The recorder uses an offline launch check and a synthetic edit.",
+ "page": "_pages/Tutorials/tut-containerisolation.md",
+ "scenario": {
+  "files": {
+   "downloads/AgentBox.Dockerfile": "FROM oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e\nUSER root\nARG TARGETARCH\nARG OMP_VERSION=18.18.1\nARG OPENCODE_VERSION=1.19.5\nRUN apt-get update -qq \\\n && apt-get install -y -qq --no-install-recommends ca-certificates curl git unzip tar jq util-linux \\\n && rm -rf /var/lib/apt/lists/*\nRUN BUN_INSTALL=/opt/agents bun install -g \"@oh-my-pi/pi-coding-agent@${OMP_VERSION}\" \\\n && ln -sfn /opt/agents/install/global/node_modules/@oh-my-pi/pi-coding-agent/dist/cli.js /usr/local/bin/omp \\\n && chmod -R a+rX /opt/agents\nRUN case \"$TARGETARCH\" in \\\n      amd64) arch=x64; sha=588310a336fa3b9df36b3f0225b26f679d453efaad0cf3d66c3651ef3ec1647a ;; \\\n      arm64) arch=arm64; sha=fae5be262d693b7c5e562856cc473e59e741772936db0c0600ac0d5ed5bd088b ;; \\\n      *) echo \"Unsupported architecture: $TARGETARCH\" >&2; exit 1 ;; \\\n    esac \\\n && curl -fsSL \"https://github.com/anomalyco/opencode/releases/download/v${OPENCODE_VERSION}/opencode-linux-$arch.tar.gz\" -o /tmp/opencode.tar.gz \\\n && printf '%s  %s\\n' \"$sha\" /tmp/opencode.tar.gz | sha256sum -c - \\\n && tar -xzf /tmp/opencode.tar.gz -C /usr/local/bin opencode \\\n && chmod 755 /usr/local/bin/opencode \\\n && rm /tmp/opencode.tar.gz\nRUN case \"$TARGETARCH\" in \\\n      amd64) arch=x86_64; sha=14d9e8bc8b4a9e0118d77c32266f76d461f09b40342eb23752960bd89f59929d ;; \\\n      arm64) arch=aarch64; sha=17d7536f2da50859523680ef279dffcac8e4a235f4e46fe8da6c2ec44141897c ;; \\\n      *) echo \"Unsupported architecture: $TARGETARCH\" >&2; exit 1 ;; \\\n    esac \\\n && curl -fsSL \"https://github.com/herdrdev/herdr/releases/download/v0.9.5/herdr-linux-$arch\" -o /usr/local/bin/herdr \\\n && printf '%s  %s\\n' \"$sha\" /usr/local/bin/herdr | sha256sum -c - \\\n && chmod 755 /usr/local/bin/herdr \\\n && chmod 711 /home \\\n && mkdir -p /workspace /opt/agents/seed\nCOPY opencode.json models.yml config.yml box-start /opt/agents/seed/\nRUN chmod 755 /opt/agents/seed/box-start\nUSER bun\nENV HOME=/home/bun\nWORKDIR /workspace\nENTRYPOINT [\"/opt/agents/seed/box-start\"]\nCMD [\"herdr\"]\n",
+   "downloads/cs357-agent-box.sh": "#!/usr/bin/env bash\n# cs357-agent-box.sh: open Oh My Pi and OpenCode in a locked-down container that can see only the\n# directory you run this from, with a small local model as the default for both agents. When you\n# exit, containers and other run resources are removed; Docker may keep build cache. Needs only Docker and a network connection; no API key.\n#\n#   cd some-project && bash /path/to/cs357-agent-box.sh                Herdr inside the box\n#   bash /path/to/cs357-agent-box.sh bash                              a shell inside the box\n#   NO_MODEL=1 bash /path/to/cs357-agent-box.sh                        Herdr with no runtime network\n#   bash /path/to/cs357-agent-box.sh omp                         start Oh My Pi\n#   bash /path/to/cs357-agent-box.sh opencode                    start OpenCode\n#   MODEL=qwen3:1b bash /path/to/cs357-agent-box.sh              a different local model\n#   NET=none bash /path/to/cs357-agent-box.sh                    the box can reach the model and nothing else\n#   URSINUSAI_API_KEY set in your shell                          use https://ursinus.ai/api/v1 instead of the local model\n#   URSINUSAI_MODEL=name                                         with that key, choose the model (default: the first one listed)\n#   PASS_KEYS=1 bash /path/to/cs357-agent-box.sh                 also pass hosted-model API keys set in your shell\n#\n# The current directory is mounted read-write at /workspace, and it is the only host path the\n# container gets. An agent can change or delete anything in it, so use a clean git tree.\n# With no Ursinus AI key the local model is used. A key reaches the container by name only, but an\n# agent inside can read any key it is given. Set it with read -rs, then export, not on a shared screen.\n# Small local models are slow on a CPU and make mistakes with tools; that is part of the lesson.\n# Agent settings live in memory and vanish on exit.\n#\n# Teardown removes the containers, network, volume, temporary files and the image built for this\n# run, and the base images if they were not already on your machine. It also runs on Ctrl-C or an\n# error. Your directory is left as it is.\nset -u\n\nDOCKER=${DOCKER:-docker}\nMODEL=${MODEL:-llama3.2:1b}\nOLLAMA_IMAGE=ollama/ollama:latest\nBASE=oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e\nTAG=cs357-agent-box-$$\nIMAGE=$TAG:local\nSERVER=$TAG-ollama\nVOLUME=$TAG-models\nNETWORK=$TAG-net\nKEYS=\"OPENROUTER_API_KEY ANTHROPIC_API_KEY OPENAI_API_KEY GEMINI_API_KEY\"\n\nHERE=$(pwd -P)\nLAUNCHER_DIR=$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd -P) || exit 1\nDOCKERFILE=$LAUNCHER_DIR/AgentBox.Dockerfile\ncase \"$LAUNCHER_DIR/\" in\n  \"$HERE/\"*) echo \"Keep the launcher and Dockerfile outside the shared project.\" >&2; exit 1 ;;\nesac\nif [ -L \"${BASH_SOURCE[0]}\" ] || [ -L \"$DOCKERFILE\" ]; then\n  echo \"Use regular files for the launcher and Dockerfile.\" >&2\n  exit 1\nfi\nif [ ! -f \"$DOCKERFILE\" ]; then\n  echo \"Put AgentBox.Dockerfile beside cs357-agent-box.sh before running it.\" >&2\n  exit 1\nfi\nif [ \"$(id -u)\" = 0 ]; then\n  echo \"Run this launcher as your ordinary workstation user, without sudo.\" >&2\n  exit 1\nfi\nif [ \"$HERE\" = \"/\" ] || [ \"$HERE\" = \"$(cd \"$HOME\" && pwd -P)\" ]; then\n  echo \"Refusing to share $HERE. cd into a single project directory first. Nothing was changed.\"\n  exit 1\nfi\nif [ -n \"${URSINUSAI_API_KEY:-}\" ] && [ \"${NET:-}\" = \"none\" ]; then\n  echo \"NET=none cannot reach ursinus.ai. Unset one of them. Nothing was changed.\"\n  exit 1\nfi\nif ! $DOCKER info >/dev/null 2>&1; then\n  echo \"Docker is not running, or this user cannot reach it. Nothing was changed.\"\n  exit 1\nfi\n\n$DOCKER image inspect \"$BASE\" >/dev/null 2>&1 && HAD_BASE=1 || HAD_BASE=0\n$DOCKER image inspect \"$OLLAMA_IMAGE\" >/dev/null 2>&1 && HAD_OLLAMA=1 || HAD_OLLAMA=0\nWORK=$(mktemp -d \"$HOME/.cs357-agent-box.XXXXXX\") || exit 1\n\nteardown() {\n  trap - EXIT INT TERM\n  echo\n  echo \"=== Tearing down\"\n  $DOCKER rm -f \"$TAG\" \"$SERVER\" >/dev/null 2>&1\n  [ \"$NETWORK\" = none ] || $DOCKER network rm \"$NETWORK\" >/dev/null 2>&1\n  $DOCKER volume rm \"$VOLUME\" >/dev/null 2>&1\n  $DOCKER rmi -f \"$IMAGE\" >/dev/null 2>&1\n  [ \"$HAD_BASE\" = 0 ] && $DOCKER rmi \"$BASE\" >/dev/null 2>&1\n  [ \"$HAD_OLLAMA\" = 0 ] && $DOCKER rmi \"$OLLAMA_IMAGE\" >/dev/null 2>&1\n  rm -rf \"$WORK\"\n  echo \"Containers left from this run: $($DOCKER ps -aq --filter \"name=$TAG\" | wc -l | tr -d ' ')\"\n  echo \"Images left from this run:     $($DOCKER images -q \"$TAG\" | wc -l | tr -d ' ')\"\n  echo \"Volumes left from this run:    $($DOCKER volume ls -q --filter \"name=$TAG\" | wc -l | tr -d ' ')\"\n  echo \"Networks left from this run:   $($DOCKER network ls -q --filter \"name=$TAG\" | wc -l | tr -d ' ')\"\n  echo \"Done.\"\n}\ntrap teardown EXIT\ntrap 'exit 130' INT TERM\n\nif [ \"${NO_MODEL:-}\" = 1 ]; then\n  PROVIDER_NAME=\"Offline launch check\"\n  BASE_URL=http://127.0.0.1:11434/v1\n  CONTEXT=16384\n  OPENCODE_KEY=\n  OMP_AUTH='auth: none'\n  NETWORK=none\n  unset URSINUSAI_API_KEY\nelif [ -n \"${URSINUSAI_API_KEY:-}\" ]; then\n  PROVIDER_NAME=\"Ursinus AI\"\n  BASE_URL=https://ursinus.ai/api/v1\n  CONTEXT=128000\n  OPENCODE_KEY=', \"apiKey\": \"{env:URSINUSAI_API_KEY}\"'\n  OMP_AUTH='apiKey: URSINUSAI_API_KEY'\n  MODEL=${URSINUSAI_MODEL:-}\n  if [ -z \"$MODEL\" ]; then\n    echo \"=== Asking Ursinus AI which models this key can use\"\n    MODEL=$($DOCKER run --rm -e URSINUSAI_API_KEY --entrypoint bun \"$BASE\" -e '\n      const r = await fetch(\"https://ursinus.ai/api/v1/models\", {headers: {Authorization: \"Bearer \" + process.env.URSINUSAI_API_KEY}});\n      if (!r.ok) { console.error(\"Ursinus AI answered \" + r.status); process.exit(1); }\n      const ids = (await r.json()).data.map(m => m.id);\n      console.error(\"Available: \" + ids.join(\", \"));\n      console.log(ids[0]);\n    ') || { echo \"Could not list models with that key.\"; exit 1; }\n  fi\n  echo \"=== Using Ursinus AI, model $MODEL\"\n  $DOCKER network create \"$NETWORK\" >/dev/null || exit 1\nelse\n  PROVIDER_NAME=\"Local Ollama\"\n  BASE_URL=http://ollama:11434/v1\n  CONTEXT=16384\n  OPENCODE_KEY=\n  OMP_AUTH='auth: none'\n  echo \"=== Starting the local model $MODEL\"\n  if [ \"${NET:-}\" = \"none\" ]; then $DOCKER network create --internal \"$NETWORK\" >/dev/null || exit 1\n  else $DOCKER network create \"$NETWORK\" >/dev/null || exit 1; fi\n  $DOCKER pull -q \"$OLLAMA_IMAGE\" >/dev/null || exit 1\n  $DOCKER run -d --name \"$SERVER\" -e OLLAMA_CONTEXT_LENGTH=16384 -v \"$VOLUME:/root/.ollama\" \"$OLLAMA_IMAGE\" >/dev/null || exit 1\n  for i in $(seq 1 30); do\n    $DOCKER exec \"$SERVER\" ollama list >/dev/null 2>&1 && break\n    sleep 2\n  done\n  $DOCKER exec \"$SERVER\" ollama pull \"$MODEL\" >/dev/null 2>&1 || { echo \"Could not pull $MODEL.\"; exit 1; }\n  $DOCKER network connect --alias ollama \"$NETWORK\" \"$SERVER\" || exit 1\nfi\n\ncat > \"$WORK/opencode.json\" <<EOF\n{\n  \"\\$schema\": \"https://opencode.ai/config.json\",\n  \"provider\": {\n    \"local\": {\n      \"npm\": \"@ai-sdk/openai-compatible\",\n      \"name\": \"$PROVIDER_NAME\",\n      \"options\": { \"baseURL\": \"$BASE_URL\"$OPENCODE_KEY },\n      \"models\": { \"$MODEL\": { \"name\": \"$MODEL\", \"tools\": true } }\n    }\n  },\n  \"model\": \"local/$MODEL\",\n  \"permission\": { \"*\": \"ask\" }\n}\nEOF\ncat > \"$WORK/models.yml\" <<EOF\nproviders:\n  local:\n    baseUrl: $BASE_URL\n    api: openai-completions\n    $OMP_AUTH\n    models:\n      - id: \"$MODEL\"\n        name: \"$MODEL\"\n        reasoning: false\n        input: [text]\n        contextWindow: $CONTEXT\n        maxTokens: 4096\nEOF\ncat > \"$WORK/config.yml\" <<EOF\nmodelRoles:\n  default: \"local/$MODEL\"\ntools:\n  approvalMode: always-ask\nEOF\ncat > \"$WORK/box-start\" <<'EOF'\n#!/bin/bash\nmkdir -p \"$HOME/.omp/agent\"\nexport XDG_RUNTIME_DIR=\"$HOME/.run\"\nexport TMPDIR=\"$HOME/.tmp\"\nmkdir -m 700 -p \"$XDG_RUNTIME_DIR\" \"$TMPDIR\"\nexport SHELL=/bin/bash\nexport TERM=\"${TERM:-xterm-256color}\"\ncp /opt/agents/seed/models.yml /opt/agents/seed/config.yml \"$HOME/.omp/agent/\"\nexec \"$@\"\nEOF\nchmod 755 \"$WORK/box-start\"\nchmod 644 \"$WORK/opencode.json\" \"$WORK/models.yml\" \"$WORK/config.yml\"\n\necho \"=== Building the agent box\"\ncp \"$DOCKERFILE\" \"$WORK/Dockerfile\" || exit 1\n$DOCKER build -t \"$IMAGE\" \"$WORK\" || exit 1\n\nKEY_ARGS=()\nif [ \"${PASS_KEYS:-}\" = 1 ] && [ \"${NO_MODEL:-}\" != 1 ]; then\n  for k in $KEYS; do\n    if [ -n \"${!k:-}\" ]; then KEY_ARGS+=(-e \"$k\"); fi\n  done\nfi\nif [ -t 0 ]; then TTY=-it; else TTY=-i; fi\n\necho \"=== In the box, using $MODEL ($PROVIDER_NAME). Only $HERE is visible, at /workspace. Type exit to leave.\"\n$DOCKER run --rm \"$TTY\" --name \"$TAG\" --hostname agent-box --read-only \\\n  --tmpfs /tmp \\\n  --tmpfs /home/bun:exec,mode=1777 \\\n  --cap-drop=ALL --security-opt no-new-privileges \\\n  --pids-limit 512 --memory 2g \\\n  --user \"$(id -u):$(id -g)\" -e HOME=/home/bun \\\n  -e OPENCODE_CONFIG=/opt/agents/seed/opencode.json \\\n  ${URSINUSAI_API_KEY:+-e URSINUSAI_API_KEY} \\\n  --network \"$NETWORK\" --entrypoint /opt/agents/seed/box-start \\\n  ${KEY_ARGS[@]+\"${KEY_ARGS[@]}\"} \\\n  -v \"$HERE:/workspace\" -w /workspace \\\n  \"$IMAGE\" \"$@\"\n",
+   "downloads/check-agent-box.sh": "#!/usr/bin/env bash\nset -euo pipefail\ntest \"$(id -u)\" -ne 0\ntest \"$PWD\" = /workspace\ntest -z \"$(find / -name outside-cs357-demo.txt -print -quit 2>/dev/null || true)\"\nif touch /etc/cs357-demo 2>/dev/null; then echo 'Unexpected write to /etc'; exit 1; fi\necho \"Only the project is mounted. The container filesystem is read-only.\"\njq -e '.permission[\"*\"] == \"ask\"' \"$OPENCODE_CONFIG\" >/dev/null\ngrep -q 'approvalMode: always-ask' \"$HOME/.omp/agent/config.yml\"\ngit status --short\nherdr --version\nopencode --version\nomp --version\nherdr server >/tmp/herdr-demo-server.log 2>&1 &\ntrap 'herdr server stop >/dev/null 2>&1 || true' EXIT\nfor attempt in $(seq 1 30); do\n  if herdr pane list >/tmp/herdr-panes.json 2>/dev/null; then break; fi\n  sleep 0.2\ndone\nherdr workspace create --cwd /workspace --label 'Agent project' >/tmp/workspace.json\nfirst=$(herdr pane list | jq -r '.result.panes[-1].pane_id')\nherdr pane split \"$first\" --direction right --cwd /workspace >/tmp/split.json\nsecond=$(herdr pane list | jq -r --arg first \"$first\" '.result.panes[] | select(.pane_id != $first) | .pane_id' | tail -1)\nherdr pane run \"$first\" opencode\nherdr pane run \"$second\" omp\nfor attempt in $(seq 1 30); do\n  herdr pane list >/tmp/herdr-panes.json\n  if jq -e '[.result.panes[].agent] | index(\"opencode\") != null and index(\"omp\") != null' /tmp/herdr-panes.json >/dev/null; then break; fi\n  sleep 0.5\ndone\njq -r '.result.panes[] | select(.agent != null) | [.agent, .cwd] | @tsv' /tmp/herdr-panes.json\nherdr pane read \"$first\" --source visible --lines 15\nherdr pane read \"$second\" --source visible --lines 15\njq -e '[.result.panes[].agent] | index(\"opencode\") != null and index(\"omp\") != null' /tmp/herdr-panes.json >/dev/null\nprintf '\\nReviewed from the container shell.\\n' >> notes.txt\ngit status --short\ngit diff -- notes.txt\n"
+  },
+  "commands": [
+   "mkdir cs357-agent-project && cd cs357-agent-project",
+   "printf 'Outside the mount\\n' > ../outside-cs357-demo.txt",
+   "cp ../downloads/AgentBox.Dockerfile ../downloads/cs357-agent-box.sh ../downloads/check-agent-box.sh . && ls -1",
+   "git init -q && printf 'A small project\\n' > notes.txt",
+   "git add . && git -c user.name=Student -c user.email=student@example.invalid commit -qm \"Start the agent project\" && git status --short",
+   "BUILDKIT_PROGRESS=plain NO_MODEL=1 bash ../downloads/cs357-agent-box.sh bash ./check-agent-box.sh",
+   "git status --short && git --no-pager diff -- notes.txt",
+   "ls ../outside-cs357-demo.txt"
+  ],
+  "shell": {
+   "image": "docker:27.3.1-cli",
+   "setup": [
+    "apk add --no-cache bash git"
+   ]
+  },
+  "network": "internet",
+  "watch": [
+   "cs357-agent-project"
+  ],
+  "timeout": 900,
+  "user": "student"
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "recorded",
+ "markers": [
+  {
+   "step": 0,
+   "title": "Create a project",
+   "note": "Create a fresh folder. Only this folder will be mounted."
+  },
+  {
+   "step": 1,
+   "title": "Place a file outside",
+   "note": "Use a synthetic file to check the boundary."
+  },
+  {
+   "step": 2,
+   "title": "Copy in the downloads",
+   "note": "The demo stages the downloads in advance. You copy the Dockerfile and scripts directly into the project."
+  },
+  {
+   "step": 3,
+   "title": "Start Git",
+   "note": "Put the project under version control and create a small file."
+  },
+  {
+   "step": 4,
+   "title": "Save a baseline",
+   "note": "Git records the original files so you can review changes. A clean status prints no files."
+  },
+  {
+   "step": 5,
+   "title": "Start Herdr and check the box",
+   "note": "Run the reviewed launcher outside the mounted project. The helper starts both Herdr panes, checks the mount and permissions, and edits the sample file from a shell."
+  },
+  {
+   "step": 6,
+   "title": "Review from the workstation",
+   "note": "Inspect the same change on the host after the box exits."
+  },
+  {
+   "step": 7,
+   "title": "Check what stayed outside",
+   "note": "The synthetic file remains on the host, beside the project."
+  }
+ ],
+ "masking": [
+  {
+   "pattern": "cs357-agent-box-\\d+",
+   "label": "cs357-agent-box-demo"
+  },
+  {
+   "pattern": "\\.cs357-agent-box\\.[A-Za-z0-9]+",
+   "label": ".cs357-agent-box.demo"
+  }
+ ]
+}

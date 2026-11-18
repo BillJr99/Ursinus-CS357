@@ -948,3 +948,9 @@ Take ten minutes in your notebook, at three levels.
 - **Coding Agents**, the Week 1 Thursday session, which takes the permission block apart, writes a plugin from scratch, and drives the full issue-to-pull-request loop.
 - **Skills: Design One, Then Measure It**, the Week 2 Thursday session, on writing a skill worth loading rather than merely installing one.
 - **MCP: Connecting Agents to Tools and Your Obsidian Vault**, the Week 5 session, which builds a tool server so that Part IV's configuration stops being an incantation.
+
+## Terminal Walkthrough
+
+The container route builds the agents and starts them in a project with no model sign-in.
+
+[Watch: Run both agents in a disposable container]({{ site.baseurl }}/viz/?mode=terminal#cs357-agent-containers-walkthrough) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-agent-containers-walkthrough)

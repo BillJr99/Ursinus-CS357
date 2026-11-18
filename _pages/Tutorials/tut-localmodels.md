@@ -394,3 +394,9 @@ Now that you can run models locally, the next module examines the security impli
 - Microsoft Research.  "Phi-3 Technical Report." arXiv:2404.14219 (2024).  Small model, large capability through data curation.
 - Ollama model library: https://ollama.com/library
 - GGUF quantization format documentation: https://github.com/ggerganov/llama.cpp/blob/master/docs/gguf.md
+
+## Terminal Walkthrough
+
+The download requires network access and disk space. Names, sizes and progress depend on the installation.
+
+[Watch: Inspect the models Ollama can run]({{ site.baseurl }}/viz/?mode=terminal#cs357-localmodels-terminal-walkthrough)

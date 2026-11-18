@@ -387,3 +387,18 @@ Your vibe-coded feature is working and tested locally.  The next challenge is ma
 - OWASP. "OWASP Top 10 for Large Language Model Applications." https://owasp.org/www-project-top-10-for-large-language-model-applications/, see especially "Prompt Injection" and "Insecure Output Handling."
 - Google Project Zero.  "0day In the Wild." https://googleprojectzero.blogspot.com, illustrates real-world consequences of the categories of bugs introduced in this tutorial.
 - This course: [Governing Coding Agents: Charters, Handoffs, and Durable Memory]({{ site.baseurl }}/Tutorials/AgentGovernance), a production case study of these rules governing a multi-month, multi-agent project.
+
+
+## Step Through an Example
+
+**Decide what needs review before accepting a patch.** Apply the same review checklist to a small edit and a permission change.
+
+<!-- run: id=cs357-tut-karpathycoding-practice-viz viz=env -->
+```python
+changes = [("fix a typo", "text"), ("change write access", "permission")]
+for change, category in changes:
+    needs_manual_review = category == "permission"
+    print(change, "manual review:", needs_manual_review)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-karpathycoding-practice-viz) <!-- code-viz link -->

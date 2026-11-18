@@ -382,3 +382,17 @@ You now have both halves of the governance story: charters and handoffs for agen
 - This course: [The Second Brain]({{ site.baseurl }}/Tutorials/SecondBrain) (the foundation this tutorial builds on), [Human-in-the-Loop](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-critiqueconsensusjudge.md) (the theory behind the gates), [Governing Coding Agents]({{ site.baseurl }}/Tutorials/AgentGovernance) (the companion case study), and [Agent Skills and Plugins]({{ site.baseurl }}/Tutorials/AgentSkills) (the skill format this system's inventory manages).
 - Model Context Protocol documentation. https://modelcontextprotocol.io, the integration layer behind the tool connections in Part III.
 - Atul Gawande.  *The Checklist Manifesto*.  Metropolitan Books (2009).  Why written procedure outperforms expert memory in high-stakes operations, the human-institutions version of everything in this activity.
+
+
+## Step Through an Example
+
+**Find which file governs an action.** Look up the source for a constraint, a shared fact and a proposed task.
+
+<!-- run: id=cs357-tut-productionassistant-practice-viz viz=env -->
+```python
+sources = {"approval rule": "charter", "known fact": "memory", "proposed task": "plan"}
+for question in ("approval rule", "known fact", "proposed task"):
+    print(question, "belongs in", sources[question])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-productionassistant-practice-viz) <!-- code-viz link -->

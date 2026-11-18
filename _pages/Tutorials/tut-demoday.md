@@ -102,3 +102,17 @@ Answer individually after the mock-interview rehearsal, connecting to the course
 | Self-Check: Guest-Facing Communication | I cannot explain the project without assuming the listener took this course | I can describe the project, but my opening runs long, leans on jargon, or hides what does not work | I can open the project in about ninety seconds in plain language and disclose a limitation when asked, though my answers to unexpected questions still wobble | I can open the project in ninety seconds in plain language, volunteer one rehearsed limitation or failure mode with its evidence, redirect a question I cannot answer honestly ("I don't know, but here is how I would find out"), and ask a guest a real question back |
 | Self-Check: Mock Technical Interview | I skipped the rehearsal or could not explain my own part of the system | I explained my component but not how it connects to the rest of the system, or I could not tell a single concrete failure story | I walked my partner through the architecture, defended one design decision, and told one failure story with its mitigation, though I leaned on notes or slides | Without slides, I explained the system end to end, defended a design decision by naming the alternative we rejected and why, told a failure story with its measured mitigation (or a finding with its evidence, for audit teams), and asked my partner at least one probing question about their project when roles reversed |
 | Self-Check: Portfolio Story | I have no way to show this project to anyone outside the course | I can point at the repository or write-up but cannot yet tell its story in a way a recruiter would follow | My 200-word project story exists and names my contribution, though it is not yet linked from anywhere or rehearsed aloud | My project story is written, linked from my profile or portfolio per the ShipIt guide, rehearsed aloud as a two-minute narrative, a drafted (publication-optional) LinkedIn-style post exists, and I can produce the evidence behind every claim in it on request |
+
+
+## Step Through an Example
+
+**Prepare evidence for one demo claim.** Put the demo claim, evidence and remaining limitation in one brief.
+
+<!-- run: id=cs357-tut-demoday-practice-viz viz=env -->
+```python
+brief = {"claim": "The app handles empty input.", "evidence": "A passing empty-input test.", "limit": "Only text input was tested."}
+for item in ("claim", "evidence", "limit"):
+    print(item + ":", brief[item])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-demoday-practice-viz) <!-- code-viz link -->

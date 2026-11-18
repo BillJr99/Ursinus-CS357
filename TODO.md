@@ -69,3 +69,5 @@
 
 - [ ] Have students submit any warmup survey in Canvas. This supersedes the earlier instruction to leave the warmup survey unchanged; the Overview assignment TODO is unaffected.
 - [ ] Include an updated syllabus quiz based on the current syllabus.
+
+- [ ] Break the AI Workbench lecture, tutorial, and Overview assignment into a gentler start. Teach only the shell, Git, and agent setup students need right away. Move Docker and agent isolation to a later meeting.

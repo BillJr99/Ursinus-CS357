@@ -164,3 +164,19 @@ opencode run --attach http://100.92.14.7:4096 --agent builder "Implement spec.md
 `opencode web` starts the same API together with a browser interface, so a second laptop or a phone browser at that address picks up the session instead of a terminal.  That browser is also the no-code way to drive a remote run: once the server is up, everything you would have passed to `opencode run --attach`, including the choice of `builder`, is a message and a selector in the page.  Starting the server itself has no desktop equivalent, because it is a long-running process on the machine that holds the repository, so that one command needs a terminal there.  The address in the example is a tailnet address; *Agentic CLI Tools* Section 9a covers how a machine behind a home router or the campus network gets one, and why a port forward is the wrong way to arrange it.
 
 Two cautions from Part 3 apply here too.  The password is not optional, because an unauthenticated agent server is an open shell on whatever its working directory contains.  And a long run you started from a phone is an unattended run, which means the `permission` block and the container are doing the supervising rather than you.
+
+
+## Step Through an Example
+
+**Trace a change back to its decision.** Start from a commit and follow its recorded links back to a requirement.
+
+<!-- run: id=cs357-tut-agentprojectdesign-practice-viz viz=env -->
+```python
+links = {"commit A": "decision 2", "decision 2": "requirement 4"}
+item = "commit A"
+while item in links:
+    print(item, "points to", links[item])
+    item = links[item]
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-agentprojectdesign-practice-viz) <!-- code-viz link -->

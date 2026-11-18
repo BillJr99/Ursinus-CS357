@@ -176,3 +176,17 @@ An MCP server you build is that application code.  It reads the token from its o
 
 > Keep tokens out of source, logs, and prompts, and request the narrowest scope that works.  The Tools and MCP Lab applies the first of those rules on the client side: you sign in outside the chat, and no token ever lands in a configuration file or a prompt.
 {: .tb-practice data-title="Checkpoint"}
+
+## Step Through an Example
+
+**Compare the operation with its scopes.** Check a read operation and a write operation against a synthetic granted scope. A real provider checks its token and scopes on each request.
+
+<!-- run: id=cs357-tut-mcpoauth-practice-viz viz=env -->
+```python
+granted = {"notes.read"}
+required = {"list notes": "notes.read", "edit notes": "notes.write"}
+for operation, scope in required.items():
+    print(operation, "allowed:", scope in granted)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-mcpoauth-practice-viz) <!-- code-viz link -->

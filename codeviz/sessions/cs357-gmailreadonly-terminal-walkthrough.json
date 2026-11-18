@@ -1,0 +1,51 @@
+{
+ "version": 1,
+ "id": "cs357-gmailreadonly-terminal-walkthrough",
+ "title": "Check the Gmail adapter with its fixture",
+ "description": "After extracting the reference bundle, check the local fixture before you configure a real account. The contents of the fixture are synthetic.",
+ "page": "_pages/Tutorials/tut-gmailreadonly.md",
+ "scenario": {
+  "commands": [
+   "python3 -m venv .venv",
+   ".venv/bin/python -m pip install -r requirements.txt",
+   ".venv/bin/python gmail_readonly.py check --fixture"
+  ]
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "scripted",
+ "steps": [
+  {
+   "cmd": "python3 -m venv .venv",
+   "output": "",
+   "exit": 0
+  },
+  {
+   "cmd": ".venv/bin/python -m pip install -r requirements.txt",
+   "output": "Successfully installed requirements\n",
+   "exit": 0
+  },
+  {
+   "cmd": ".venv/bin/python gmail_readonly.py check --fixture",
+   "output": "Fixture check completed.\n",
+   "exit": 0
+  }
+ ],
+ "markers": [
+  {
+   "step": 0,
+   "title": "Create an isolated Python environment",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 1,
+   "title": "Install the adapter dependencies",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 2,
+   "title": "Run the check without signing in",
+   "note": "Illustration. Output and versions may differ."
+  }
+ ]
+}

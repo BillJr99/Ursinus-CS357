@@ -216,3 +216,17 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 - W3C.  *Web Content Accessibility Guidelines (WCAG) 2.2.* https://www.w3.org/TR/WCAG22/
 - NV Access.  *NVDA screen reader* (free download for Windows). https://www.nvaccess.org/
+
+
+## Step Through an Example
+
+**Compare error rates across test groups.** Use synthetic counts to see what a single overall number could hide.
+
+<!-- run: id=cs357-tut-aiaccessibility-practice-viz viz=env -->
+```python
+groups = {"sample A": (2, 20), "sample B": (6, 20)}
+for name, (errors, cases) in groups.items():
+    print(name, f"{errors / cases:.0%} errors")
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-aiaccessibility-practice-viz) <!-- code-viz link -->

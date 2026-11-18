@@ -306,3 +306,21 @@ Now that we understand how to explain individual decisions, we turn to publishin
 - Turpin, M., Michael, J., Perez, E., and Bowman, S. (2023).  "Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting."  *NeurIPS 2023*.
 - European Parliament and Council (2024).  "EU Artificial Intelligence Act."  *Official Journal of the European Union*.  (Articles 13 and 14 on transparency and human oversight.)
 - Doshi-Velez, F., and Kim, B. (2017).  "Towards A Rigorous Science of Interpretable Machine Learning."  *arXiv:1702.08608*.
+
+
+## Step Through an Example
+
+**Measure a feature change in a toy score.** Change one feature at a time and compare the score with the baseline.
+
+<!-- run: id=cs357-tut-explainabilitydeep-practice-viz viz=env -->
+```python
+def score(length, has_source):
+    return length + 2 * has_source
+
+baseline = score(3, False)
+with_source = score(3, True)
+print("Baseline:", baseline)
+print("Change with source:", with_source - baseline)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-explainabilitydeep-practice-viz) <!-- code-viz link -->

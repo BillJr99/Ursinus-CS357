@@ -196,3 +196,17 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 - FDA AI/ML-Based Software as a Medical Device: https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-software-medical-device
 - Federal Reserve SR 11-7 Model Risk Management Guidance: https://www.federalreserve.gov/supervisionreg/srletters/sr1107.htm
 - Future of Privacy Forum.  "Student Privacy and AI." https://fpf.org/
+
+
+## Step Through an Example
+
+**Identify what evidence a risk review still needs.** Check a hypothetical system record for the information a reviewer would request.
+
+<!-- run: id=cs357-tut-regulation-practice-viz viz=env -->
+```python
+record = {"purpose": "sort practice files", "users": "course team"}
+for field in ("purpose", "users", "human oversight", "known risks"):
+    print(field, "recorded" if field in record else "ask for evidence")
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-regulation-practice-viz) <!-- code-viz link -->

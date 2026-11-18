@@ -768,7 +768,7 @@ There are 61 days until December 7, 2026.
   [text] 'There are 61 days until December 7, 2026.'
 ```
 
-The server validated the bad date itself, on its side of the connection, before your function ran.  The agent's trace is identical to Part 1's: the model sees a description going in and a result coming back, whether the function lives in your file or in another process.  What changed is who runs the code, and therefore where permission checks have to live.  A server you connect to decides for itself what its tools may do, so an approval gate in your agent cannot reach inside it.  Connect only servers you trust, and give them only the access their tools need; the [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) tutorial is about exactly that.
+The server validated the bad date itself, on its side of the connection, before your function ran.  The agent's trace is identical to Part 1's: the model sees a description going in and a result coming back, whether the function lives in your file or in another process.  What changed is who runs the code, and therefore where permission checks have to live.  A server you connect to decides for itself what its tools may do, so an approval gate in your agent cannot reach inside it.  Connect only servers you trust, and give them only the access their tools need; the [Agent Containers and Isolation]({{ site.baseurl }}/Tutorials/ContainerIsolation) tutorial is about exactly that.
 
 > **Older examples:** FastMCP 4 warns when you pass a bare filename string (`MCPToolset("calendar_server.py")`); pass `Path("calendar_server.py")` as above.  `Tool.inputSchema` is now `Tool.input_schema`.
 {: .tb-warning data-title="FastMCP 4"}
@@ -934,3 +934,19 @@ Building that file is Exercise 1.
 - [FastMCP on PyPI](https://pypi.org/project/fastmcp/), which links its documentation
 - [Model Context Protocol specification](https://modelcontextprotocol.io)
 - [Ollama's OpenAI-compatible API](https://docs.ollama.com/api/openai-compatibility)
+
+
+## Step Through an Example
+
+**Validate a tool call before running it.** Check a pair of synthetic tool arguments against a simple input rule.
+
+<!-- run: id=cs357-tut-pydanticai-practice-viz viz=env -->
+```python
+def valid_count(value):
+    return type(value) is int and value > 0
+
+for argument in (3, "three"):
+    print(repr(argument), "accepted:", valid_count(argument))
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-pydanticai-practice-viz) <!-- code-viz link -->

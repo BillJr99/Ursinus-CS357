@@ -379,3 +379,19 @@ The charter governs agents working on a *repository*.  The companion case study,
 - The Menon Lab.  "The Karpathy CLAUDE.md: Four Rules That Fix AI Coding Agents." https://themenonlab.blog/blog/karpathy-claude-md-four-rules-ai-coding-agents: the community distillation compared in Model 2.
 - AI Builder Club.  "Karpathy's agents.md: What It Is and Why It Matters." https://www.aibuilderclub.com/blog/karpathy-agents-md-framework: on instruction files as the control layer for coding agents.
 - This course: [The Karpathy Coding Approach]({{ site.baseurl }}/Tutorials/VibeCoding) (the workflow this tutorial governs), [Skills: Design One, Then Measure It](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-skills.md) (the `AGENTS.md` layer beneath the charter), and [Terminal and Filesystem Isolation for Agent Safety]({{ site.baseurl }}/Tutorials/FilesystemIsolation) (the sandbox layer beneath the devbox).
+
+
+## Step Through an Example
+
+**Find governing instructions before drafting.** Start with the charter and follow the file it points to for the current task.
+
+<!-- run: id=cs357-tut-agentgovernance-practice-viz viz=env -->
+```python
+files = {"AGENTS.md": {"review": "review-guide.md"}, "review-guide.md": "Read the diff first."}
+task = "review"
+guide = files["AGENTS.md"][task]
+print("Read", guide)
+print(files[guide])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-agentgovernance-practice-viz) <!-- code-viz link -->

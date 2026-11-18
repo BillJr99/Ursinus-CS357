@@ -872,3 +872,18 @@ Now that you can speak the REST protocol fluently, the next activity takes the `
 - BerriAI. *LiteLLM Documentation*. `docs.litellm.ai`.  Covers provider setup, proxy configuration, and the translation layer between OpenAI format and provider-specific APIs.
 - Shunyu Yao et al. "ReAct: Synergizing Reasoning and Acting in Language Models."  *ICLR* (2023).  The intellectual foundation for tool-calling agents, implemented at the REST level in today's tool loop.
 - Xuezhi Wang et al. "Self-Consistency Improves Chain of Thought Reasoning in Language Models."  *ICLR* (2023).  The consensus/voting pattern in Part V, Section 8.
+
+
+## Step Through an Example
+
+**Read the assistant content from a JSON response.** Use a synthetic response with the same choices and message fields as the tutorial.
+
+<!-- run: id=cs357-tut-restllmapi-practice-viz viz=env -->
+```python
+answer = {"choices": [{"message": {"role": "assistant", "content": "A sample reply."}}]}
+message = answer["choices"][0]["message"]
+print(message["role"])
+print(message["content"])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-restllmapi-practice-viz) <!-- code-viz link -->

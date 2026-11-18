@@ -1,7 +1,7 @@
 ---
 layout: textbook
 permalink: /Tutorials/ContainerIsolation
-title: "CS357: Foundations of Artificial Intelligence - What a Container Isolates: Sizing an Agent's Blast Radius"
+title: "CS357: Foundations of Artificial Intelligence - Agent Containers and Isolation"
 info:
   coursenum: CS357
   purpose: "To explain what a Docker container does and does not protect you from, so that you can draw a trust boundary around an AI agent on purpose and defend a threat model for it."
@@ -365,20 +365,80 @@ An agent that read something private in the folder and has the network can send 
 
 A container protects you exactly as much as your mount layout does.
 
-### The Full Version: Two Agents and a Local Model
+### Run OpenCode and Oh My Pi in Herdr
 
-[cs357-agent-box.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-agent-box.sh) builds the same kind of box with both **Oh My Pi** and **opencode** installed, shares only the directory you run it from, and removes its containers, network, volume, and images when you exit.  It needs only Docker.
+You will create a small Git project and share it with two agents in one container. Docker must already be running. On Windows, use Bash in WSL with Docker integration enabled. See [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker) if you need to set it up. See [Agentic CLI Tools]({{ site.baseurl }}/Tutorials/AgentCLIs) for more on Herdr's panes.
+
+#### Create the project and copy in the launcher
+
+Run these commands on your workstation. Start in a new directory so you can tell exactly which files the container will see.
 
 ```bash
-cd ~/cs357-work
-bash /path/to/cs357-agent-box.sh omp        # or opencode, or nothing for a shell
+mkdir -p ~/cs357-agent-project
+cd ~/cs357-agent-project
+git init
+printf 'A small project\n' > notes.txt
 ```
 
-- **The model.**  By default both agents use a small model, `llama3.2:1b`, running in a second container.  Set `MODEL` to try another.
-- **Ursinus AI.**  If `URSINUSAI_API_KEY` is set in your shell, the box uses `https://ursinus.ai/api/v1` instead, and `URSINUSAI_MODEL` chooses the model.  The key reaches the container by name, and an agent inside can read it.
-- **No internet.**  With `NET=none`, the box can reach the local model and nothing else.
+Download [AgentBox.Dockerfile]({{ site.baseurl }}/files/docker-demos/AgentBox.Dockerfile) and [cs357-agent-box.sh]({{ site.baseurl }}/files/docker-demos/cs357-agent-box.sh). If your browser saved them in Downloads, copy both into your project.
 
-Expect this model to be slow on a CPU, a few minutes for a first reply, and to make mistakes.  In testing, Oh My Pi used its write tool correctly on this model, while opencode produced garbled tool calls.  A small model is enough to prove the walls hold.  For real work with opencode, use a larger model.
+```bash
+cp ~/Downloads/AgentBox.Dockerfile ~/Downloads/cs357-agent-box.sh .
+git add AgentBox.Dockerfile cs357-agent-box.sh notes.txt
+git commit -m "Start the agent project"
+```
+
+If Git needs your name and email, set them for this repository and run the commit again. Read the two files before launching. Keep credentials and unrelated files outside this directory. Running from your home directory would share far too much, so the launcher refuses it.
+
+#### Start the container from the project
+
+Stay in the project directory. Run the reviewed launcher from Downloads. The agents can edit the project copies, so use the originals beside each other in Downloads for each launch.
+
+```bash
+NET=none bash ~/Downloads/cs357-agent-box.sh
+```
+
+The launcher builds the image and starts Herdr inside it. The build downloads the tools. By default the launcher also downloads a small model, `llama3.2:1b`, into an Ollama sidecar, a second container that serves the model. With `NET=none`, the running agent container can reach that sidecar on an internal Docker network. If you only want to check the panes, use `NO_MODEL=1 bash ~/Downloads/cs357-agent-box.sh`. That still builds the tools, then starts the agent container without a model or runtime network.
+
+Herdr opens a terminal in `/workspace`. Split it to the right from the pane's context menu or with Ctrl+B, then V. Split the right pane once more. Run `opencode` in the first pane and `omp` in the second. Leave the third pane at a shell. Each tool sees the same project directory. If Oh My Pi opens its first-run provider picker, press Esc to skip it and use the launcher’s model configuration. A small model can take time and may make tool-call mistakes. Keep the agents on separate tasks, or let one edit while the other reviews.
+
+The container runs as your user ID with a read-only root filesystem, temporary home and temporary scratch space. The shared project is writable. The launcher drops Linux capabilities, disables privilege escalation, and passes no Docker socket or workstation home. OpenCode asks before tools by default in this setup. Oh My Pi uses `always-ask`. Give one agent this task: “Append a sentence about the project to notes.txt. Change only that file.” Read any tool request before approving it. The prompt gives you a chance to review the action. The mount defines which workstation files the agent can access, even if you approve the wrong action.
+
+#### Review and leave
+
+On the workstation, open a second terminal in the same project. Review the change before staging it.
+
+```bash
+cd ~/cs357-agent-project
+git status --short
+git diff -- notes.txt
+```
+
+For a boundary check, create a synthetic file in the workstation terminal. Put it next to the project.
+
+```bash
+printf 'Outside the mount\n' > ~/outside-cs357-demo.txt
+```
+
+Run the next commands in the third Herdr pane. You should see `/workspace`, the edited file in Git status and no match for the file you created on the workstation.
+
+```bash
+pwd
+git status --short
+find / -name outside-cs357-demo.txt 2>/dev/null
+```
+
+When you finish, run `herdr server stop` from the extra pane. The launcher removes this run's containers, image, model volume and network. Docker may retain build cache. Your project and Git history stay on the workstation. Commit the edit only if the diff matches what you intended.
+
+#### Watch the full setup
+
+The walkthrough starts on the workstation. It creates the project, copies the downloaded files into it, makes a Git baseline, launches the box, starts both panes and checks the diff. It copies the optional [check-agent-box.sh]({{ site.baseurl }}/files/docker-demos/check-agent-box.sh) helper alongside the two launcher files. It uses the offline launch check so no model account or generated response is needed. A shell writes the example edit so you can see exactly what changed.
+
+<iframe title="Set up an isolated agent project" loading="lazy"
+  src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-agent-containers-walkthrough"
+  style="width:100%;height:740px;border:1px solid #888"></iframe>
+
+[Open the terminal walkthrough]({{ site.baseurl }}/viz/?mode=terminal#cs357-agent-containers-walkthrough) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-agent-containers-walkthrough)
 
 ### Questions to Work Through
 

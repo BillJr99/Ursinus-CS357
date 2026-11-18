@@ -1036,3 +1036,19 @@ You have now completed the core technical modules of this course.  The final act
 - Pydantic AI documentation.  "Agents," "Function Tools," "Message History," and "MCP."  (online): https://ai.pydantic.dev
 - FastMCP documentation.  "Servers and Tools."  (online): https://gofastmcp.com
 - Course notebook: LangChain + Ollama multi-agent tutorial: [/files/notebooks/langchain_ollama_multiagent_tutorial.ipynb](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/notebooks/langchain_ollama_multiagent_tutorial.ipynb)
+
+
+## Step Through an Example
+
+**See the loop a framework wraps.** Follow the same state through a tool call, its result, and a final answer.
+
+<!-- run: id=cs357-tut-agentframeworks-practice-viz viz=env -->
+```python
+state = {"question": "How many files?", "observation": None}
+while state["observation"] is None:
+    files = ["notes.txt", "run.py"]
+    state["observation"] = len(files)
+print("Answer:", state["observation"])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-agentframeworks-practice-viz) <!-- code-viz link -->

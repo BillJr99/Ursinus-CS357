@@ -264,3 +264,18 @@ This tutorial completes the ethics and philosophy arc of the course.  The framew
 - ACM. *Code of Ethics and Professional Conduct* (2018). acm.org/code-of-ethics.  Read in full; the case studies are the most useful part.
 - Costanza-Chock, S. *Design Justice: Community-Led Practices to Build the Worlds We Need.*  MIT Press (2020), chapters 1-2.
 - Gabriel, I. "Artificial Intelligence, Values, and Alignment."  *Minds and Machines* 30: 411-437 (2020).  A careful analysis of what alignment requires beyond stated preferences.
+
+
+## Step Through an Example
+
+**Evaluate a release decision from several perspectives.** Track which questions still need an answer before you release a tool.
+
+<!-- run: id=cs357-tut-ethicalframeworks-practice-viz viz=env -->
+```python
+questions = {"benefit": True, "consent": False, "recourse": False}
+for name, evidence in questions.items():
+    print(name, "evidence present" if evidence else "needs review")
+print("Evidence checklist complete:", all(questions.values()))
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-ethicalframeworks-practice-viz) <!-- code-viz link -->

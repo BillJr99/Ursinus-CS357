@@ -994,3 +994,9 @@ In the Project Studio, you will take everything built and published this semeste
 - GitHub Copilot, "Using GitHub Copilot code review" (docs.github.com): requesting automatic or on-demand AI review on pull requests, and its limitations as an advisory (not authoritative) reviewer.
 - GitHub Actions, "About billing for GitHub Actions" and "Usage limits, billing, and administration" (docs.github.com): how runner minutes are metered and how private-repo/runner multipliers affect cost.
 - GitHub Actions, workflow trigger reference (`on:`, `paths`/`branches` filters, `workflow_dispatch`) and "Control the concurrency of workflows" (docs.github.com): the credit-saving controls in Section 14.
+
+## Terminal Walkthrough
+
+This illustration assumes you have created the tutorial’s hello-worker project. It stops before deployment.
+
+[Watch: Preview a Worker locally]({{ site.baseurl }}/viz/?mode=terminal#cs357-cloudflare-terminal-walkthrough)

@@ -485,6 +485,8 @@ schedule:
     rubricpath: "_pages/Assignments/lab-toolsmcp.md"
   readings:
   - rtitle: "Have your stuck points and your pipeline-in-progress ready for the open studio."
+  - rtitle: "Agent Containers and Isolation"
+    rlink: "Tutorials/ContainerIsolation"
 - week: "8"
   date: "0"
   title: "How I AI: A Vault, a Charter, and Agents That Talk Through GitHub and Dropbox"
@@ -684,7 +686,7 @@ Every tool and technique in this course has a tutorial you can work through at y
 - [Docker from Zero]({{ site.baseurl }}/Tutorials/Docker)
 - [Agentic CLI Tools]({{ site.baseurl }}/Tutorials/AgentCLIs)
 - [AI Coding Agent Security]({{ site.baseurl }}/Tutorials/CodingAgentSecurity)
-- [What a Container Isolates: Sizing an Agent's Blast Radius]({{ site.baseurl }}/Tutorials/ContainerIsolation)
+- [Agent Containers and Isolation]({{ site.baseurl }}/Tutorials/ContainerIsolation)
 - [The Local Model Landscape]({{ site.baseurl }}/Tutorials/LocalModels)
 - [The Hardware Behind AI]({{ site.baseurl }}/Tutorials/Hardware)
 - [End-to-End OpenCode Setup]({{ site.baseurl }}/Tutorials/OpenCodeSetup)

@@ -568,3 +568,19 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 - OpenTelemetry GenAI Semantic Conventions, now in their own repository: https://github.com/open-telemetry/semantic-conventions-genai
 - Ollama API, usage fields: https://docs.ollama.com/api/usage
 - opencode CLI reference, including `stats`, `export`, and `session list`: https://opencode.ai/docs/cli/
+
+
+## Step Through an Example
+
+**Find a failed step in a trace.** Walk the synthetic spans for one request and stop at the first error.
+
+<!-- run: id=cs357-tut-observability-practice-viz viz=env -->
+```python
+spans = [("retrieve", "ok"), ("summarize", "error"), ("deliver", "skipped")]
+for name, status in spans:
+    print(name, status)
+    if status == "error":
+        break
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-observability-practice-viz) <!-- code-viz link -->

@@ -229,7 +229,7 @@ This is the same pattern as the plain HTTP `/tools/list` and `/tools/call` from 
 
 ## Demo 3: An Agent That Can See One Folder
 
-Follow *Try It: An Agent That Can See One Folder* in [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).  The mount is the boundary, and it opens both ways.  [cs357-agent-box.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-agent-box.sh) gives you the same box with both agents and a local model.
+Follow *Try It: An Agent That Can See One Folder* in [Agent Containers and Isolation](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).  The mount is the boundary, and it opens both ways.  [cs357-agent-box.sh](https://www.billmongan.com/Ursinus-CS357-Fall2026/files/docker-demos/cs357-agent-box.sh) gives you the same box with both agents and a local model.
 
 ---
 

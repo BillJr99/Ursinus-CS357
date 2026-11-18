@@ -1,0 +1,51 @@
+{
+ "version": 1,
+ "id": "cs357-offlineragfinetuning-terminal-walkthrough",
+ "title": "Prepare the generator and embedding models",
+ "description": "The tutorial uses one model to generate text and another to make embeddings. Download these while you still have a network connection.",
+ "page": "_pages/Tutorials/tut-offlineragfinetuning.md",
+ "scenario": {
+  "commands": [
+   "ollama pull nomic-embed-text",
+   "ollama pull llama3.2",
+   "ollama list"
+  ]
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "scripted",
+ "steps": [
+  {
+   "cmd": "ollama pull nomic-embed-text",
+   "output": "pulling manifest\nwriting manifest\nsuccess\n",
+   "exit": 0
+  },
+  {
+   "cmd": "ollama pull llama3.2",
+   "output": "pulling manifest\nwriting manifest\nsuccess\n",
+   "exit": 0
+  },
+  {
+   "cmd": "ollama list",
+   "output": "NAME                       ID          SIZE     MODIFIED\nllama3.2:latest             <model-id>  2.0 GB   <time>\nnomic-embed-text:latest     <model-id>  274 MB   <time>\n",
+   "exit": 0
+  }
+ ],
+ "markers": [
+  {
+   "step": 0,
+   "title": "Download the embedding model",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 1,
+   "title": "Download the generator model",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 2,
+   "title": "Confirm both are available",
+   "note": "Illustration. Output and versions may differ."
+  }
+ ]
+}

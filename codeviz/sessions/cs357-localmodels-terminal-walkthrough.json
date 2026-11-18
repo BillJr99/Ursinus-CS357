@@ -1,0 +1,51 @@
+{
+ "version": 1,
+ "id": "cs357-localmodels-terminal-walkthrough",
+ "title": "Inspect the models Ollama can run",
+ "description": "The download requires network access and disk space. Names, sizes and progress depend on the installation.",
+ "page": "_pages/Tutorials/tut-localmodels.md",
+ "scenario": {
+  "commands": [
+   "ollama pull llama3.2:3b",
+   "ollama list",
+   "ollama run llama3.2:3b"
+  ]
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "scripted",
+ "steps": [
+  {
+   "cmd": "ollama pull llama3.2:3b",
+   "output": "pulling manifest\nwriting manifest\nsuccess\n",
+   "exit": 0
+  },
+  {
+   "cmd": "ollama list",
+   "output": "NAME          ID          SIZE     MODIFIED\nllama3.2:3b   <model-id>  2.0 GB   <time>\n",
+   "exit": 0
+  },
+  {
+   "cmd": "ollama run llama3.2:3b",
+   "output": ">>> Send a message\n",
+   "exit": 0
+  }
+ ],
+ "markers": [
+  {
+   "step": 0,
+   "title": "Download the tutorial\u2019s sample model",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 1,
+   "title": "Check what is stored locally",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 2,
+   "title": "Open an interactive prompt",
+   "note": "Illustration. Output and versions may differ."
+  }
+ ]
+}

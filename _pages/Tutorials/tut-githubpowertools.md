@@ -322,3 +322,9 @@ Now that you can efficiently read and feed any public codebase to an AI agent, t
 - Simon Willison.  "Things I've learned about LLMs."  *simonwillison.net* (2024).  Practical field notes on working with language models, including grounding strategies and the limits of training-data knowledge.
 - `gitingest.com` documentation and CLI reference: `github.com/cyclotruc/gitingest`.  Covers filtering options, token estimation, and the programmatic API for automation pipelines.
 - Model Context Protocol specification: `modelcontextprotocol.io/specification`.  The formal definition of the MCP server interface that `getmcp.io` implements, relevant to understanding what an agent can and cannot query at runtime.
+
+## Terminal Walkthrough
+
+The illustration uses a small public demo repository and a virtual environment you already activated.
+
+[Watch: Create and inspect a repository digest]({{ site.baseurl }}/viz/?mode=terminal#cs357-githubpowertools-terminal-walkthrough)

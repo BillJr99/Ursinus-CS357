@@ -283,3 +283,18 @@ These four activities are the deep dives this hub connects.  Open any of them wh
 - [From Rewards to Preferences: Reinforcement Learning and RLHF]({{ site.baseurl }}/Tutorials/RLHF), RL, RLHF, and DPO, the machinery behind *alignment* and *reasoning* training.
 - [RAG: Building and Measuring a Knowledge Base](https://www.billmongan.com/LiaScript/?https://raw.githubusercontent.com/BillJr99/Ursinus-CS357-Fall2026/gh-pages/_pages/Activities/liascript-rag.md), whose *Fine-Tuning, RAG, and Prompting* extension covers how to specialize any model type, including the LoRA shortcut.
 - [Multimodal Agents: Vision, Documents, and Code as First-Class Inputs]({{ site.baseurl }}/Tutorials/MultimodalAgents), the longer treatment of *vision/multimodal* models, the modality bottleneck, and grounding.
+
+
+## Step Through an Example
+
+**Compare checkpoints along a training pipeline.** Track what each training stage adds to a simplified record.
+
+<!-- run: id=cs357-tut-modeltypes-practice-viz viz=env -->
+```python
+record = []
+for stage in ("pretraining", "instruction tuning", "preference tuning"):
+    record.append(stage)
+    print("Checkpoint history:", ", ".join(record))
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-modeltypes-practice-viz) <!-- code-viz link -->

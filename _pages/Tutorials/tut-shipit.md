@@ -150,3 +150,17 @@ Answer these as part of your self-assessment before your project's publish gate:
 | Self-Check: Continuous Integration | I have no automated checking; my project cannot pass the Final Project's publish gate yet | I have a CI workflow, but it does not run my project's real checks | My CI runs the real checks on every push, and I can show one demonstrated red run and one demonstrated green run | My CI runs the real checks on every push with demonstrated red and green runs, publication is gated on green plus a deliberate human act (a tag or merge) that I perform myself, and I can state in one sentence exactly where the human gate lives in my pipeline |
 | Self-Check: Publication Quality | I have not published anything, or my publication is broken for strangers | My artifact is published, but a stranger cannot use it from the public record alone | My artifact is published, installable or reachable by a stranger, with versioning and a readme, though a minor gap remains such as a missing license or visibility friction | My artifact is published with semantic versioning, a license, and a readme answering what, install, and use in thirty seconds; I documented a pre-publication audit (dry run output or layer listing reviewed); a classmate verified a stranger installation or visit; and the artifact is pinned or linked from my GitHub profile or personal portfolio page with a short project story |
 | Self-Check: Writeup, AI Disclosure, and Evidence Portfolio | My evidence portfolio is incomplete | My evidence portfolio exists, but the AI contribution statement or human-centric design evidence is missing | My evidence portfolio is complete with an AI contribution statement and design evidence, and I gave at least superficial responses to the reflection prompts | My evidence portfolio is complete, my AI contribution statement honestly delineates agent work from my own work, my human-centric design evidence covers the persona and at least one failure path, and I answered the reflection prompts thoughtfully |
+
+
+## Step Through an Example
+
+**Check whether a build can be handed off.** Run a small release checklist before you publish an artifact.
+
+<!-- run: id=cs357-tut-shipit-practice-viz viz=env -->
+```python
+checks = {"build": True, "tests": True, "install instructions": False}
+print("Release ready:", all(checks.values()))
+print("Still needed:", [name for name, passed in checks.items() if not passed])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-shipit-practice-viz) <!-- code-viz link -->

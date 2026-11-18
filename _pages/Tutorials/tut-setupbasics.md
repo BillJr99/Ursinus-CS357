@@ -559,3 +559,9 @@ The Ubuntu or WSL2 route gives you the standard Unix tooling instead, and every 
 | [ShellCheck](https://www.shellcheck.net/) | Catches bugs in shell scripts before they bite |
 | `curl` and [HTTPie](https://httpie.io/) plus [jq](https://jqlang.github.io/jq/) | You will hit JSON APIs (Ollama, MCP) all semester; `curl ... \| jq` is your friend |
 
+
+## Terminal Walkthrough
+
+Use the tutorial’s version checks and create a project-local environment.
+
+[Watch: Create a Python virtual environment]({{ site.baseurl }}/viz/?mode=terminal#cs357-setupbasics-terminal-walkthrough) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-setupbasics-terminal-walkthrough)

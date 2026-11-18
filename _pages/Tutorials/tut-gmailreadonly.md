@@ -313,3 +313,9 @@ The supplied adapter and tests were locally exercised with MCP Python SDK 2.3.0,
 11. Google, [messages.list](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list) and [messages.get](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/get), the two read operations used here.
 12. Model Context Protocol, [Python SDK](https://github.com/modelcontextprotocol/python-sdk) and [client testing interface](https://py.sdk.modelcontextprotocol.io/client/).
 13. Inspected alternatives: [paultrusov/gmail-mcp at 7cba057](https://github.com/paultrusov/gmail-mcp/tree/7cba0577c004014f7085a2e4990ee72e096fb858) and [psmolenski/gmail-mcp-readonly at fa868ba](https://github.com/psmolenski/gmail-mcp-readonly/tree/fa868ba95560dcca297d33a314bdc501fd9fe09f). These links document the compared versions, not an endorsement.
+
+## Terminal Walkthrough
+
+After extracting the reference bundle, check the local fixture before you configure a real account. The contents of the fixture are synthetic.
+
+[Watch: Check the Gmail adapter with its fixture]({{ site.baseurl }}/viz/?mode=terminal#cs357-gmailreadonly-terminal-walkthrough)

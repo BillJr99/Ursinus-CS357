@@ -1326,3 +1326,9 @@ In `.omp/config.yml` the first match wins, so put them at the top of `bash.patte
 - [Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
 - [ShipIt: Build, Test, CI, and Publish One Artifact]({{ site.baseurl }}/Tutorials/ShipIt), this course's general guide to builds and CI
 - Kent Beck, *Test-Driven Development: By Example*, for the original red-green-refactor loop
+
+## Terminal Walkthrough
+
+Follow the setup for the shared project folder and review a change through Git before starting the full stack.
+
+[Watch: Check the agent container setup]({{ site.baseurl }}/viz/?mode=terminal#cs357-agent-containers-walkthrough) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-agent-containers-walkthrough)

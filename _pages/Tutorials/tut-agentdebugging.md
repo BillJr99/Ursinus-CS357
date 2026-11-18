@@ -269,3 +269,20 @@ In the next activity, we examine synthetic data (using AI to generate training d
 - Zinkevich, M. "Rules of Machine Learning: Best Practices for ML Engineering."  Google Research.  Rule 5 ("Test the infrastructure independently from the ML") and Rule 37 ("Measure training/serving skew") apply directly to agent debugging.
 
 - Langfuse documentation: https://langfuse.com/docs: Open-source alternative to LangSmith with self-hosting options; useful reference for understanding what a full observability schema looks like.
+
+
+## Step Through an Example
+
+**Find the first mismatch in a tool trace.** Compare the observed tool calls with the expected calls in order.
+
+<!-- run: id=cs357-tut-agentdebugging-practice-viz viz=env -->
+```python
+expected = ["find_file", "read_file", "summarize"]
+observed = ["find_file", "summarize"]
+for step, (wanted, got) in enumerate(zip(expected, observed), start=1):
+    if wanted != got:
+        print(f"Step {step}: expected {wanted}, saw {got}")
+        break
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-agentdebugging-practice-viz) <!-- code-viz link -->

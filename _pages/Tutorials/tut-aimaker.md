@@ -293,3 +293,19 @@ In the next module you will encounter the governance and policy layer that sits 
 - Don Norman.  *The Design of Everyday Things*: the human-centric design floor, especially the chapters on errors; Chapter 5's treatment of human error as a design failure rather than a user failure is the philosophical foundation of Section 6.
 - GitHub Docs, "Quickstart for GitHub Actions": the workflow syntax this tutorial's YAML uses, with examples for Python, Node, and other languages.
 - Ziegler et al., "Productivity Assessment of Neural Code Completion" (2022): empirical data on when AI code assistance helps and when it slows engineers down, the study that grounds the "small changes only" rule in evidence.
+
+
+## Step Through an Example
+
+**Separate a generated draft from verified work.** Apply two checks to a synthetic result before you accept it.
+
+<!-- run: id=cs357-tut-aimaker-practice-viz viz=env -->
+```python
+draft = {"summary": "The test passed.", "has_test_log": False, "has_source": True}
+checks = {"test log": draft["has_test_log"], "source": draft["has_source"]}
+for name, passed in checks.items():
+    print(name, "present" if passed else "missing")
+print("Accept draft:", all(checks.values()))
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-aimaker-practice-viz) <!-- code-viz link -->

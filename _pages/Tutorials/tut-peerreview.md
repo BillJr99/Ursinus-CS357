@@ -220,3 +220,17 @@ You will use SQR cards for real at the Stakeholder Brief exchange on the course 
 - AAC&U VALUE Rubrics (Teamwork; Written Communication): https://www.aacu.org/initiatives/value
 - WPI SWEET Center Team Contract Exercise, Worcester Polytechnic Institute (companion protocol from the Team Charter activity)
 - The Project Thread hub: https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread
+
+
+## Step Through an Example
+
+**Turn a vague comment into actionable feedback.** Keep the observation and request separate so an author can respond to each.
+
+<!-- run: id=cs357-tut-peerreview-practice-viz viz=env -->
+```python
+review = {"observation": "The draft omits an empty-input test.", "question": "What should empty input return?", "request": "Add a test for that result."}
+for part in ("observation", "question", "request"):
+    print(review[part])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-peerreview-practice-viz) <!-- code-viz link -->

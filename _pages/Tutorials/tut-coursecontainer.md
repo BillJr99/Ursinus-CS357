@@ -358,3 +358,9 @@ Expect the rebuild to take roughly as long as your original build did.  A change
 If you work through VS Code Dev Containers, run **Dev Containers: Rebuild Container** from the command palette.  Plain **Reopen in Container** reuses the old image and will not pick up the change.
 
 Once you are back at the container prompt, rerun the A5 checks to confirm the update landed, then run `docker image prune` to reclaim the disk the replaced image was still holding.
+
+## Terminal Walkthrough
+
+Run the same hello-world check from the tutorial. Docker installs the image in the temporary recorder when needed.
+
+[Watch: Run the first Docker check]({{ site.baseurl }}/viz/?mode=terminal#cs357-coursecontainer-terminal-walkthrough) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-coursecontainer-terminal-walkthrough)

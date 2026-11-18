@@ -386,3 +386,19 @@ Now that you understand multimodal agents and how they process different input t
 - OpenAI. "GPT-4 Technical Report." arXiv:2303.08774 (2023).  Section on vision capabilities.
 - Whisper model card and documentation: https://github.com/openai/whisper
 - PaliGemma model card (for grounding tasks): https://ai.google.dev/gemma/docs/paligemma
+
+
+## Step Through an Example
+
+**Track how input parts enter a context.** Add the example token counts from a caption and an image.
+
+<!-- run: id=cs357-tut-multimodalagents-practice-viz viz=env -->
+```python
+inputs = [("caption", 8), ("image patches", 64)]
+total = 0
+for part, tokens in inputs:
+    total += tokens
+    print(part, tokens, "running total:", total)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-multimodalagents-practice-viz) <!-- code-viz link -->

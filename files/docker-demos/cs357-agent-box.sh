@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # cs357-agent-box.sh: open Oh My Pi and OpenCode in a locked-down container that can see only the
 # directory you run this from, with a small local model as the default for both agents. When you
-# exit, everything is removed. Needs only Docker and a network connection; no API key.
+# exit, containers and other run resources are removed; Docker may keep build cache. Needs only Docker and a network connection; no API key.
 #
-#   cd some-project && bash /path/to/cs357-agent-box.sh          a shell inside the box
+#   cd some-project && bash /path/to/cs357-agent-box.sh                Herdr inside the box
+#   bash /path/to/cs357-agent-box.sh bash                              a shell inside the box
+#   NO_MODEL=1 bash /path/to/cs357-agent-box.sh                        Herdr with no runtime network
 #   bash /path/to/cs357-agent-box.sh omp                         start Oh My Pi
 #   bash /path/to/cs357-agent-box.sh opencode                    start OpenCode
 #   MODEL=qwen3:1b bash /path/to/cs357-agent-box.sh              a different local model
@@ -27,11 +29,8 @@ set -u
 DOCKER=${DOCKER:-docker}
 MODEL=${MODEL:-llama3.2:1b}
 OLLAMA_IMAGE=ollama/ollama:latest
-OMP_VERSION=18.18.1
-OPENCODE_VERSION=1.19.5
 BASE=oven/bun:1.4.4-debian@sha256:93d5032fe06d163427822dc1598f420363759bb18155c9cc90eb1be05a64a19e
 TAG=cs357-agent-box-$$
-BUILDER=$TAG-build
 IMAGE=$TAG:local
 SERVER=$TAG-ollama
 VOLUME=$TAG-models
@@ -39,6 +38,23 @@ NETWORK=$TAG-net
 KEYS="OPENROUTER_API_KEY ANTHROPIC_API_KEY OPENAI_API_KEY GEMINI_API_KEY"
 
 HERE=$(pwd -P)
+LAUNCHER_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P) || exit 1
+DOCKERFILE=$LAUNCHER_DIR/AgentBox.Dockerfile
+case "$LAUNCHER_DIR/" in
+  "$HERE/"*) echo "Keep the launcher and Dockerfile outside the shared project." >&2; exit 1 ;;
+esac
+if [ -L "${BASH_SOURCE[0]}" ] || [ -L "$DOCKERFILE" ]; then
+  echo "Use regular files for the launcher and Dockerfile." >&2
+  exit 1
+fi
+if [ ! -f "$DOCKERFILE" ]; then
+  echo "Put AgentBox.Dockerfile beside cs357-agent-box.sh before running it." >&2
+  exit 1
+fi
+if [ "$(id -u)" = 0 ]; then
+  echo "Run this launcher as your ordinary workstation user, without sudo." >&2
+  exit 1
+fi
 if [ "$HERE" = "/" ] || [ "$HERE" = "$(cd "$HOME" && pwd -P)" ]; then
   echo "Refusing to share $HERE. cd into a single project directory first. Nothing was changed."
   exit 1
@@ -60,8 +76,8 @@ teardown() {
   trap - EXIT INT TERM
   echo
   echo "=== Tearing down"
-  $DOCKER rm -f "$TAG" "$BUILDER" "$SERVER" >/dev/null 2>&1
-  $DOCKER network rm "$NETWORK" >/dev/null 2>&1
+  $DOCKER rm -f "$TAG" "$SERVER" >/dev/null 2>&1
+  [ "$NETWORK" = none ] || $DOCKER network rm "$NETWORK" >/dev/null 2>&1
   $DOCKER volume rm "$VOLUME" >/dev/null 2>&1
   $DOCKER rmi -f "$IMAGE" >/dev/null 2>&1
   [ "$HAD_BASE" = 0 ] && $DOCKER rmi "$BASE" >/dev/null 2>&1
@@ -76,7 +92,15 @@ teardown() {
 trap teardown EXIT
 trap 'exit 130' INT TERM
 
-if [ -n "${URSINUSAI_API_KEY:-}" ]; then
+if [ "${NO_MODEL:-}" = 1 ]; then
+  PROVIDER_NAME="Offline launch check"
+  BASE_URL=http://127.0.0.1:11434/v1
+  CONTEXT=16384
+  OPENCODE_KEY=
+  OMP_AUTH='auth: none'
+  NETWORK=none
+  unset URSINUSAI_API_KEY
+elif [ -n "${URSINUSAI_API_KEY:-}" ]; then
   PROVIDER_NAME="Ursinus AI"
   BASE_URL=https://ursinus.ai/api/v1
   CONTEXT=128000
@@ -125,7 +149,8 @@ cat > "$WORK/opencode.json" <<EOF
       "models": { "$MODEL": { "name": "$MODEL", "tools": true } }
     }
   },
-  "model": "local/$MODEL"
+  "model": "local/$MODEL",
+  "permission": { "*": "ask" }
 }
 EOF
 cat > "$WORK/models.yml" <<EOF
@@ -145,41 +170,29 @@ EOF
 cat > "$WORK/config.yml" <<EOF
 modelRoles:
   default: "local/$MODEL"
+tools:
+  approvalMode: always-ask
 EOF
 cat > "$WORK/box-start" <<'EOF'
 #!/bin/bash
 mkdir -p "$HOME/.omp/agent"
+export XDG_RUNTIME_DIR="$HOME/.run"
+export TMPDIR="$HOME/.tmp"
+mkdir -m 700 -p "$XDG_RUNTIME_DIR" "$TMPDIR"
+export SHELL=/bin/bash
+export TERM="${TERM:-xterm-256color}"
 cp /opt/agents/seed/models.yml /opt/agents/seed/config.yml "$HOME/.omp/agent/"
 exec "$@"
 EOF
 chmod 755 "$WORK/box-start"
 chmod 644 "$WORK/opencode.json" "$WORK/models.yml" "$WORK/config.yml"
 
-echo "=== Installing Oh My Pi and OpenCode (a few minutes, about 1 GB)"
-# Installing in a container and committing it leaves no Docker build cache to clean up.
-$DOCKER run --name "$BUILDER" --user root "$BASE" bash -c "
-  set -e
-  export DEBIAN_FRONTEND=noninteractive
-  apt-get update -qq
-  apt-get install -y -qq --no-install-recommends ca-certificates curl git unzip tar >/dev/null
-  rm -rf /var/lib/apt/lists/*
-  export BUN_INSTALL=/opt/agents
-  bun install -g --trust '@oh-my-pi/pi-coding-agent@$OMP_VERSION' >/dev/null
-  curl -fsSL https://opencode.ai/install | bash -s -- --version '$OPENCODE_VERSION' --no-modify-path >/dev/null
-  install -m 755 /root/.opencode/bin/opencode /usr/local/bin/opencode
-  ln -sfn /opt/agents/install/global/node_modules/@oh-my-pi/pi-coding-agent/dist/cli.js /usr/local/bin/omp
-  chmod -R a+rX /opt/agents
-  chmod 711 /home
-  mkdir -p /workspace /opt/agents/seed
-" || exit 1
-for f in opencode.json models.yml config.yml box-start; do
-  $DOCKER cp -q "$WORK/$f" "$BUILDER:/opt/agents/seed/$f" || exit 1
-done
-$DOCKER commit "$BUILDER" "$IMAGE" >/dev/null || exit 1
-$DOCKER rm "$BUILDER" >/dev/null
+echo "=== Building the agent box"
+cp "$DOCKERFILE" "$WORK/Dockerfile" || exit 1
+$DOCKER build -t "$IMAGE" "$WORK" || exit 1
 
 KEY_ARGS=()
-if [ "${PASS_KEYS:-}" = 1 ]; then
+if [ "${PASS_KEYS:-}" = 1 ] && [ "${NO_MODEL:-}" != 1 ]; then
   for k in $KEYS; do
     if [ -n "${!k:-}" ]; then KEY_ARGS+=(-e "$k"); fi
   done
@@ -187,7 +200,7 @@ fi
 if [ -t 0 ]; then TTY=-it; else TTY=-i; fi
 
 echo "=== In the box, using $MODEL ($PROVIDER_NAME). Only $HERE is visible, at /workspace. Type exit to leave."
-$DOCKER run --rm "$TTY" --name "$TAG" --read-only \
+$DOCKER run --rm "$TTY" --name "$TAG" --hostname agent-box --read-only \
   --tmpfs /tmp \
   --tmpfs /home/bun:exec,mode=1777 \
   --cap-drop=ALL --security-opt no-new-privileges \
@@ -198,4 +211,4 @@ $DOCKER run --rm "$TTY" --name "$TAG" --read-only \
   --network "$NETWORK" --entrypoint /opt/agents/seed/box-start \
   ${KEY_ARGS[@]+"${KEY_ARGS[@]}"} \
   -v "$HERE:/workspace" -w /workspace \
-  "$IMAGE" "${@:-bash}"
+  "$IMAGE" "$@"

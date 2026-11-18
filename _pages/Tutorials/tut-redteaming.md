@@ -393,3 +393,17 @@ We know how to serve models efficiently and test their failure modes.  The next 
 
 > : AI Engineering from Scratch, Phase 18.
 {: .tb-note data-title="Citation"}
+
+
+## Step Through an Example
+
+**Record an expected boundary and compare the observed result.** Use a harmless toy test case. The simulator checks its record without contacting a model.
+
+<!-- run: id=cs357-tut-redteaming-practice-viz viz=env -->
+```python
+case = {"name": "outside project request", "expected": "decline", "observed": "decline"}
+print(case["name"])
+print("Boundary held:", case["expected"] == case["observed"])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-redteaming-practice-viz) <!-- code-viz link -->

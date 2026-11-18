@@ -304,3 +304,19 @@ In the *Judge Pipeline Workshop: Build and Audit a Judge*, we measure agent outp
 - Langflow documentation: https://docs.langflow.org
 - Ollama integration guide within the Langflow docs (component reference).
 - Victor, Bret.  "Learnable Programming" (2012, online essay), on representations that make systems visible and understandable.
+
+
+## Step Through an Example
+
+**Follow one value through the nodes of a toy workflow.** Step through a prompt node, a sample model result and the output node.
+
+<!-- run: id=cs357-tut-visualagents-practice-viz viz=env -->
+```python
+nodes = {"prompt": "Summarize the notes."}
+nodes["model"] = "Sample summary"
+nodes["output"] = nodes["model"]
+for name, value in nodes.items():
+    print(name, value)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-visualagents-practice-viz) <!-- code-viz link -->

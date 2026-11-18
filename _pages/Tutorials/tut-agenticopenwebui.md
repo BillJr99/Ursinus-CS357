@@ -366,3 +366,20 @@ control and portability for speed and pre-built, already-authenticated connector
 {: .tb-pitfall data-title="Common Misconception"}
 
 ---
+
+## Step Through an Example
+
+**Trace a frontend tool call.** Follow a toy tool schema, call, and observation. A model is not required for this example.
+
+<!-- run: id=cs357-tut-agenticopenwebui-practice-viz viz=env -->
+```python
+def current_unit():
+    return "tool schemas"
+
+tool = {"name": "current_unit", "arguments": {}}
+if tool["name"] == "current_unit":
+    result = current_unit()
+    print({"role": "tool", "content": result})
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-agenticopenwebui-practice-viz) <!-- code-viz link -->

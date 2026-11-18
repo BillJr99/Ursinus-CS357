@@ -361,3 +361,18 @@ In the next activity, we examine how we know whether an AI system is actually go
 - Ollama Documentation.  (2024). https://ollama.com/docs
 
 - Apple.  (2023).  *Apple Silicon Machine Learning Research: Unified Memory Architecture.* https://developer.apple.com/metal/pytorch/
+
+
+## Step Through an Example
+
+**Estimate memory for model weights.** Compare the storage for two weights formats in a toy estimate. Runtime memory adds other costs.
+
+<!-- run: id=cs357-tut-hardware-practice-viz viz=env -->
+```python
+parameters = 1_000_000
+for bits_per_weight in [16, 4]:
+    weight_bytes = parameters * bits_per_weight // 8
+    print(bits_per_weight, "bits per weight:", weight_bytes, "bytes")
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-hardware-practice-viz) <!-- code-viz link -->

@@ -1,0 +1,51 @@
+{
+ "version": 1,
+ "id": "cs357-githubpowertools-terminal-walkthrough",
+ "title": "Create and inspect a repository digest",
+ "description": "The illustration uses a small public demo repository and a virtual environment you already activated.",
+ "page": "_pages/Tutorials/tut-githubpowertools.md",
+ "scenario": {
+  "commands": [
+   "pip install gitingest",
+   "gitingest ./sample-project",
+   "ls digest.txt"
+  ]
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "scripted",
+ "steps": [
+  {
+   "cmd": "pip install gitingest",
+   "output": "Successfully installed gitingest and dependencies\n",
+   "exit": 0
+  },
+  {
+   "cmd": "gitingest ./sample-project",
+   "output": "Digest saved to digest.txt\n",
+   "exit": 0
+  },
+  {
+   "cmd": "ls digest.txt",
+   "output": "digest.txt\n",
+   "exit": 0
+  }
+ ],
+ "markers": [
+  {
+   "step": 0,
+   "title": "Install the digest tool",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 1,
+   "title": "Summarize a local project",
+   "note": "Illustration. Output and versions may differ."
+  },
+  {
+   "step": 2,
+   "title": "Find the result",
+   "note": "Illustration. Output and versions may differ."
+  }
+ ]
+}

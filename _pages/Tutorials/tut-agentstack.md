@@ -14,7 +14,7 @@ tags:
 ---
 ## About This Tutorial
 
-> **Supplemental: optional prep for hardening an agent's container, the self-paced work that [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) describes.**  This is self-paced reference material rather than a class session.  Do the installs and image pulls before you start: Docker Desktop plus roughly 6 GB of images.  Build the **3-container minimal stack** first (Ollama, `llmproxy`, Open WebUI); the full 20-service tour below is reference.  Bring what will not start to the open studio in *How I AI*, Part III.
+> **Supplemental: optional prep for hardening an agent's container, the self-paced work that [Agent Containers and Isolation]({{ site.baseurl }}/Tutorials/ContainerIsolation) describes.**  This is self-paced reference material rather than a class session.  Do the installs and image pulls before you start: Docker Desktop plus roughly 6 GB of images.  Build the **3-container minimal stack** first (Ollama, `llmproxy`, Open WebUI); the full 20-service tour below is reference.  Bring what will not start to the open studio in *How I AI*, Part III.
 
 The *Docker from Zero: Containers for Agent Builders* tutorial gave you one container, and one container is a demo; a *stack* of containers that talk to each other is infrastructure.  This tutorial deploys the course's local AI ecosystem (model servers, a unifying gateway, tool servers, web frontends, and autonomous agents) and teaches the wiring discipline that makes two dozen services coexist: tiered roles, a port plan, per-service identity directories, and `host.docker.internal` as the connective tissue.  The path today: **the tier model → the inference foundation → the gateway → frontends and tools → agents → wiring and verification**.
 
@@ -208,7 +208,7 @@ docker run -d --name open-webui -p 3000:8080 \
 ```
 [Explain this example](https://billjr99.github.io/Ursinus-CS357-Fall2026/viz/?mode=explain#cs357-tut-agentstack-4) <!-- code-viz link -->
 
-> **Isolation and trust boundaries**, meaning which tier may talk to which and what a container actually isolates, are worked through in the tutorial [What a Container Isolates](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).
+> **Isolation and trust boundaries**, meaning which tier may talk to which and what a container actually isolates, are worked through in the tutorial [Agent Containers and Isolation](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ContainerIsolation).
 
 ## 6.  The Agent Tier
 
@@ -344,7 +344,7 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 
 ## Where This Goes Next
 
-Now that the stack is running, *Orchestration and Multi-Agent Patterns* is where wiring several agents together gets a design rule: choose the least dynamic pattern that solves the problem, and plan it before you build it.  The stack knowledge from today is also the starting point for the container hardening that [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) walks through.
+Now that the stack is running, *Orchestration and Multi-Agent Patterns* is where wiring several agents together gets a design rule: choose the least dynamic pattern that solves the problem, and plan it before you build it.  The stack knowledge from today is also the starting point for the container hardening that [Agent Containers and Isolation]({{ site.baseurl }}/Tutorials/ContainerIsolation) walks through.
 
 ---
 
@@ -353,3 +353,9 @@ Now that the stack is running, *Orchestration and Multi-Agent Patterns* is where
 - W. Mongan, "Building a Private AI Stack: From Mini PC to Autonomous Agents" (billmongan.com, May 2026): the complete architecture this tutorial deploys, with every Dockerfile and run script.
 - The LiteLLM documentation (docs.litellm.ai): the gateway's routing options in depth.
 - The n8n documentation (docs.n8n.io): workflow patterns for scheduling agents.
+
+## Terminal Walkthrough
+
+After installing Ollama and starting it, use this walkthrough to check the model endpoint before connecting Open WebUI.
+
+[Watch: Verify a local Ollama endpoint]({{ site.baseurl }}/viz/?mode=terminal#cs357-agentstack-terminal-walkthrough)

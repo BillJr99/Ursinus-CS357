@@ -286,3 +286,20 @@ Securing a single coding agent is the start.  As agents gain autonomy and are wi
 - *Prompt Injection*, *Agent Security*, the general injection taxonomy and OWASP LLM Top 10 this tutorial builds on.
 - *Containerizing AI Systems*, sandboxing, isolation, and trust boundaries for the blast-radius controls in Model 3.
 - the *Tool Use and Function Calling* activity, the read-only vs. irreversible-write tool taxonomy and human-approval gates.
+
+
+## Step Through an Example
+
+**Check the boundary before a file read.** Resolve a proposed path and check whether it stays inside the project.
+
+<!-- run: id=cs357-tut-codingagentsecurity-practice-viz viz=env -->
+```python
+from pathlib import PurePosixPath
+
+project = PurePosixPath("/workspace")
+for name in ["/workspace/notes.txt", "/private/notes.txt"]:
+    path = PurePosixPath(name)
+    print(name, "in example scope:", path.is_relative_to(project))
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-codingagentsecurity-practice-viz) <!-- code-viz link -->

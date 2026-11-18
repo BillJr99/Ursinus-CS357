@@ -224,3 +224,17 @@ Your team exists and has a constitution.  Next on the Project Thread, you point 
 - CATME Smarter Teamwork: https://www.catme.org/
 - Lave, J., & Wenger, E. (1991).  *Situated Learning: Legitimate Peripheral Participation.*  Cambridge University Press.
 - The Project Thread hub: https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread
+
+
+## Step Through an Example
+
+**Apply a team charter to a decision.** Check who reviews a change and what the team records when it disagrees.
+
+<!-- run: id=cs357-tut-groupcharter-practice-viz viz=env -->
+```python
+charter = {"reviewer": "another team member", "disagreement": "record both options"}
+for decision in ["reviewer", "disagreement"]:
+    print(decision + ":", charter[decision])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-groupcharter-practice-viz) <!-- code-viz link -->

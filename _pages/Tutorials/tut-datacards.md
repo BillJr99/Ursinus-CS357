@@ -205,3 +205,17 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 - Hugging Face Model Cards documentation: https://huggingface.co/docs/hub/model-cards
 - Pushkarna et al. "Data Cards: Purposeful and Transparent Dataset Documentation for Responsible AI." *FAccT 2022*.
 - Google.  "Know Your Data." https://knowyourdata.withgoogle.com/
+
+
+## Step Through an Example
+
+**Check whether a datasheet answers key questions.** Compare the questions you need answered with the fields a toy dataset records.
+
+<!-- run: id=cs357-tut-datacards-practice-viz viz=env -->
+```python
+card = {"purpose": "practice classification", "collection": "synthetic samples"}
+for field in ["purpose", "collection", "limitations"]:
+    print(field, "documented" if field in card else "needs a note")
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-datacards-practice-viz) <!-- code-viz link -->

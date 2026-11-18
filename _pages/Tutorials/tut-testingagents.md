@@ -251,3 +251,18 @@ With a working eval harness, the next module explores how to integrate it into a
 - Shankar et al. "Who Validates the Validators?  Aligning LLM-Assisted Evaluation of LLM Outputs with Human Preferences."  *UIST* (2024).
 - OpenAI. "Evals: A Framework for Evaluating LLMs and LLM Systems."  (2023, github.com/openai/evals).
 - Brundage et al. "Toward Trustworthy AI Development: Mechanisms for Supporting Human Oversight." arXiv:2004.07213 (2020).
+
+
+## Step Through an Example
+
+**Score a fixed agent response against a test contract.** Check the output with a deterministic rule so you can rerun the same test.
+
+<!-- run: id=cs357-tut-testingagents-practice-viz viz=env -->
+```python
+reply = {"answer": "Read the syllabus.", "source": "syllabus"}
+contract = ("answer", "source")
+for field in contract:
+    print(field, "passes:", bool(reply.get(field)))
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-testingagents-practice-viz) <!-- code-viz link -->

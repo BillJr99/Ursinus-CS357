@@ -709,3 +709,9 @@ Everything below is optional.  Nothing here is collected and nothing here is gra
 - OpenCode documentation (opencode.ai): `AGENTS.md` specification, session context injection, and skill definitions.
 - "Building a Second Brain" (Tiago Forte, 2022): the personal knowledge management framework that motivates the zone structure and the distinction between capturing, organizing, and expressing knowledge.
 - Git documentation, "git merge" and "resolving conflicts": the mechanics of merge conflict markers and resolution strategies.
+
+## Terminal Walkthrough
+
+Track a synthetic note in a disposable repo. Inspect the change you would send to a remote.
+
+[Watch: Review a Git change before syncing]({{ site.baseurl }}/viz/?mode=terminal#cs357-obsidiansync-terminal-walkthrough) · [Inspect the simulator]({{ site.baseurl }}/viz/?mode=simulate#cs357-obsidiansync-terminal-walkthrough)

@@ -1,0 +1,50 @@
+{
+ "version": 1,
+ "id": "cs357-obsidiansync-terminal-walkthrough",
+ "title": "Review a Git change before syncing",
+ "description": "Track a synthetic note in a disposable repo. Inspect the change you would send to a remote.",
+ "page": "_pages/Tutorials/tut-obsidiansync.md",
+ "scenario": {
+  "shell": {
+   "image": "docker:27.3.1-cli",
+   "setup": [
+    "apk add --no-cache bash git"
+   ]
+  },
+  "commands": [
+   "git init -q",
+   "printf 'Demo notes\\n' > notes.md && git add notes.md && git -c user.name=Student -c user.email=student@example.invalid commit -qm 'Record the note'",
+   "printf 'A new decision\\n' >> notes.md",
+   "git --no-pager diff -- notes.md"
+  ],
+  "network": "isolated",
+  "user": "student",
+  "timeout": 480,
+  "files": {}
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "recorded",
+ "markers": [
+  {
+   "step": 0,
+   "title": "Create a repository",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  },
+  {
+   "step": 1,
+   "title": "Save the first note",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  },
+  {
+   "step": 2,
+   "title": "Make one edit",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  },
+  {
+   "step": 3,
+   "title": "Inspect the diff before syncing",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  }
+ ]
+}

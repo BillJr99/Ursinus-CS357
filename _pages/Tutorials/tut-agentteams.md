@@ -269,3 +269,19 @@ In the *Visual Agent Building with Langflow* activity, we turn to visual tools (
 - Anthropic engineering blog.  "Building Effective Agents" (2024) and "How we built our multi-agent research system" (2025, online).
 - Wu et al. "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation."  (2023).
 - Hong et al. "MetaGPT: Meta Programming for Multi-Agent Collaborative Frameworks."  *ICLR* (2024).
+
+
+## Step Through an Example
+
+**Pass work through a shared board.** The reviewer reads the draft stored by the writer, then records its own finding.
+
+<!-- run: id=cs357-tut-agentteams-practice-viz viz=env -->
+```python
+board = {}
+board["draft"] = "Accept empty input."
+board["review"] = "Define the output for empty input."
+print(board["draft"])
+print(board["review"])
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-agentteams-practice-viz) <!-- code-viz link -->

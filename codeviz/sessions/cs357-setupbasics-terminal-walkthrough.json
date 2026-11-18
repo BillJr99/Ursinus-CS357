@@ -1,0 +1,42 @@
+{
+ "version": 1,
+ "id": "cs357-setupbasics-terminal-walkthrough",
+ "title": "Create a Python virtual environment",
+ "description": "Use the tutorial\u2019s version checks and create a project-local environment.",
+ "page": "_pages/Tutorials/tut-setupbasics.md",
+ "scenario": {
+  "shell": {
+   "image": "python:3.12-slim",
+   "setup": []
+  },
+  "commands": [
+   "python3 --version",
+   "python3 -m venv .venv",
+   ".venv/bin/python -m pip --version"
+  ],
+  "network": "isolated",
+  "user": "student",
+  "timeout": 480,
+  "files": {}
+ },
+ "terminal": true,
+ "demo": true,
+ "provenance": "recorded",
+ "markers": [
+  {
+   "step": 0,
+   "title": "Check Python",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  },
+  {
+   "step": 1,
+   "title": "Create the environment",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  },
+  {
+   "step": 2,
+   "title": "Confirm pip belongs to the environment",
+   "note": "Use this command in the order shown. Version and download output may vary."
+  }
+ ]
+}

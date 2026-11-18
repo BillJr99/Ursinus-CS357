@@ -1039,4 +1039,4 @@ Capture two transcripts: one where the skill fires and changes what the agent di
 
 ## Looking Ahead
 
-This lab stops at a working agent loop with reliable structured output.  Connecting an agent to tools over **MCP** is the subject of the [Tools and MCP Lab]({{ site.baseurl }}/Assignments/ToolsMCP), handed out after the tool use and MCP sessions.  Putting a tool server in a hardened container and sizing its blast radius is the subject of the [What a Container Isolates]({{ site.baseurl }}/Tutorials/ContainerIsolation) tutorial.  Nothing in this lab requires either.
+This lab stops at a working agent loop with reliable structured output.  Connecting an agent to tools over **MCP** is the subject of the [Tools and MCP Lab]({{ site.baseurl }}/Assignments/ToolsMCP), handed out after the tool use and MCP sessions.  Putting a tool server in a hardened container and sizing its blast radius is the subject of the [Agent Containers and Isolation]({{ site.baseurl }}/Tutorials/ContainerIsolation) tutorial.  Nothing in this lab requires either.

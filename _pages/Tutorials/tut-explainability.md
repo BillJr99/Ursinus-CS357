@@ -201,3 +201,18 @@ The *Project Sprint*, the *Project Studio* sessions, and Demo Day are next: an a
 - Doshi-Velez and Kim.  "Towards a Rigorous Science of Interpretable Machine Learning."  (2017).
 - Amershi et al. "Guidelines for Human-AI Interaction."  *CHI* (2019).  Eighteen heuristics worth printing.
 - Guo et al. "On Calibration of Modern Neural Networks."  *ICML* (2017), source of the ECE formulation.
+
+
+## Step Through an Example
+
+**Distinguish a claimed reason from a trace.** Match an explanation to the evidence you would need to verify it.
+
+<!-- run: id=cs357-tut-explainability-practice-viz viz=env -->
+```python
+claim = "The agent checked the source."
+trace = ["read prompt", "draft response"]
+print(claim)
+print("Trace contains a source read:", "read source" in trace)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-explainability-practice-viz) <!-- code-viz link -->

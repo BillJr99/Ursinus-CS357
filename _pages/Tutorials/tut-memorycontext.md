@@ -531,3 +531,20 @@ These exercises quantify the memory savings from summarization, stress-test the 
 - Liu et al. "Lost in the Middle: How Language Models Use Long Contexts."  *TACL* (2024).
 - Packer et al. "MemGPT: Towards LLMs as Operating Systems."  (2023).  Tiered memory for agents.
 - Anthropic engineering blog, "Effective context engineering for AI agents" (online).
+
+
+## Step Through an Example
+
+**Fit the current task into a context budget.** Select synthetic context entries until they fill the small budget.
+
+<!-- run: id=cs357-tut-memorycontext-practice-viz viz=env -->
+```python
+entries = [("current task", 5), ("recent decision", 3), ("old discussion", 7)]
+budget = 10
+for name, cost in entries:
+    if cost <= budget:
+        budget -= cost
+        print("Keep", name, "remaining:", budget)
+```
+
+[Step through the code]({{ site.baseurl }}/viz/?mode=run#cs357-tut-memorycontext-practice-viz) <!-- code-viz link -->
