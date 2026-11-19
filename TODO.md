@@ -71,3 +71,5 @@
 - [ ] Include an updated syllabus quiz based on the current syllabus.
 
 - [ ] Break the AI Workbench lecture, tutorial, and Overview assignment into a gentler start. Teach only the shell, Git, and agent setup students need right away. Move Docker and agent isolation to a later meeting.
+
+- [ ] Use a developer agent skill in a CS357 lab or project checkpoint. Choose one focused skill from [Matt Pocock’s skills](https://github.com/mattpocock/skills) or [Poteto’s Noodle skills](https://github.com/poteto/noodle/tree/main/skills), such as a testing or code-review workflow. Have students apply it to a small change and explain how they checked the result.
