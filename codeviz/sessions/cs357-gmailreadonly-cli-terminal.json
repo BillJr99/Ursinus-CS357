@@ -2,7 +2,7 @@
   "version": 1,
   "id": "cs357-gmailreadonly-cli-terminal",
   "title": "Gmail read-only: CLI path",
-  "description": "Scripted walkthrough of Cloud CLI setup, the optional WSL repair, and a Gmail read-only request preview. Playback does not install software, sign in, or read a mailbox.",
+  "description": "Scripted walkthrough of the shared Cloud and Gmail OAuth setup, then the CLI path and optional WSL repair. Playback does not install software, sign in, or read a mailbox.",
   "page": "_pages/Tutorials/tut-gmailreadonly.md",
   "scenario": {
     "commands": [
@@ -95,7 +95,7 @@
     {
       "step": 0,
       "title": "Install the Cloud CLI on Ubuntu or WSL",
-      "note": "Optional. This playback does not install software. Skip this block if gcloud already works."
+      "note": "Optional for either live path. The browser console also works. Skip this block if gcloud already works. Playback does not install software."
     },
     {
       "step": 1,
