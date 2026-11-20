@@ -2,13 +2,20 @@
   "version": 1,
   "id": "cs357-gmailreadonly-cli-terminal",
   "title": "Gmail read-only: CLI path",
-  "description": "Scripted walkthrough of the CLI setup and test. No Google login or mailbox access occurs in playback.",
+  "description": "Scripted walkthrough of the shared Cloud and Gmail OAuth setup, then the CLI path and optional WSL repair. Playback does not install software, sign in, or read a mailbox.",
   "page": "_pages/Tutorials/tut-gmailreadonly.md",
   "scenario": {
     "commands": [
+      "sudo apt-get update\nsudo apt-get install ca-certificates curl gnupg\ncurl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg |\nsudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg\nprintf '%s\\n' 'deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main' |\nsudo tee /etc/apt/sources.list.d/google-cloud-sdk.list\nsudo apt-get update\nsudo apt-get install google-cloud-cli\ngcloud --version",
+      "gcloud auth login --brief",
+      "read -r -p 'Choose a globally unique Cloud project ID: ' PROJECT_ID\ngcloud projects create \"$PROJECT_ID\" --name='CS357 Gmail Read Test'",
+      "read -r -p 'Test Cloud project ID: ' PROJECT_ID\ngcloud services list --enabled --project=\"$PROJECT_ID\" --filter='config.name=gmail.googleapis.com' --format='value(config.name)'",
+      "gcloud services enable gmail.googleapis.com --project=\"$PROJECT_ID\"",
       "npm install -g @googleworkspace/cli@0.22.5",
       "gws --version",
-      "export GOOGLE_WORKSPACE_CLI_CONFIG_DIR=\"$HOME/.config/cs357-gmail-readonly\"",
+      "uname -m; getconf GNU_LIBC_VERSION",
+      "(\nset -eu\ntest \"$(uname -m)\" = x86_64\nprefix=$(npm prefix -g)\ncase \"$prefix\" in \"${NVM_DIR:-$HOME/.nvm}\"/versions/node/*) ;; *) exit 1 ;; esac\npkg=\"$(npm root -g)/@googleworkspace/cli\"\ntest \"$(node -p 'require(process.argv[1]).version' \"$pkg/package.json\")\" = 0.22.5\ntest \"$(command -v gws)\" = \"$prefix/bin/gws\"\ntest -f \"$pkg/bin/gws\" && test ! -L \"$pkg/bin/gws\"\nwork=$(mktemp -d)\ncd \"$work\"\nasset=google-workspace-cli-x86_64-unknown-linux-musl.tar.gz\nbase=https://github.com/googleworkspace/cli/releases/download/v0.22.5\ncurl -fsSLO \"$base/$asset\"\ncurl -fsSLO \"$base/$asset.sha256\"\nsha256sum --check \"$asset.sha256\"\ntar -xzf \"$asset\" ./gws\n./gws --version\ninstall -m 0755 ./gws \"$pkg/bin/gws\"\ngws --version\n)",
+      "export GOOGLE_WORKSPACE_CLI_CONFIG_DIR=\"$HOME/.config/cs357-gmail-readonly\"\nclient_download=\"$HOME/Downloads/client_secret.json\"\ninstall -d -m 700 \"$GOOGLE_WORKSPACE_CLI_CONFIG_DIR\"\n(umask 077; set -C; cat \"$client_download\" > \"$GOOGLE_WORKSPACE_CLI_CONFIG_DIR/client_secret.json\")",
       "gws auth login --scopes https://www.googleapis.com/auth/gmail.readonly",
       "gws gmail users messages list --dry-run --params '{\"userId\":\"me\",\"q\":\"subject:\\\"CS357 MCP DEMO\\\"\",\"maxResults\":3}'",
       "opencode"
@@ -18,6 +25,31 @@
   "demo": true,
   "provenance": "scripted",
   "steps": [
+    {
+      "cmd": "sudo apt-get update\nsudo apt-get install ca-certificates curl gnupg\ncurl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg |\nsudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg\nprintf '%s\\n' 'deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main' |\nsudo tee /etc/apt/sources.list.d/google-cloud-sdk.list\nsudo apt-get update\nsudo apt-get install google-cloud-cli\ngcloud --version",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "gcloud auth login --brief",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "read -r -p 'Choose a globally unique Cloud project ID: ' PROJECT_ID\ngcloud projects create \"$PROJECT_ID\" --name='CS357 Gmail Read Test'",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "read -r -p 'Test Cloud project ID: ' PROJECT_ID\ngcloud services list --enabled --project=\"$PROJECT_ID\" --filter='config.name=gmail.googleapis.com' --format='value(config.name)'",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "gcloud services enable gmail.googleapis.com --project=\"$PROJECT_ID\"",
+      "output": "",
+      "exit": 0
+    },
     {
       "cmd": "npm install -g @googleworkspace/cli@0.22.5",
       "output": "",
@@ -29,7 +61,17 @@
       "exit": 0
     },
     {
-      "cmd": "export GOOGLE_WORKSPACE_CLI_CONFIG_DIR=\"$HOME/.config/cs357-gmail-readonly\"",
+      "cmd": "uname -m; getconf GNU_LIBC_VERSION",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "(\nset -eu\ntest \"$(uname -m)\" = x86_64\nprefix=$(npm prefix -g)\ncase \"$prefix\" in \"${NVM_DIR:-$HOME/.nvm}\"/versions/node/*) ;; *) exit 1 ;; esac\npkg=\"$(npm root -g)/@googleworkspace/cli\"\ntest \"$(node -p 'require(process.argv[1]).version' \"$pkg/package.json\")\" = 0.22.5\ntest \"$(command -v gws)\" = \"$prefix/bin/gws\"\ntest -f \"$pkg/bin/gws\" && test ! -L \"$pkg/bin/gws\"\nwork=$(mktemp -d)\ncd \"$work\"\nasset=google-workspace-cli-x86_64-unknown-linux-musl.tar.gz\nbase=https://github.com/googleworkspace/cli/releases/download/v0.22.5\ncurl -fsSLO \"$base/$asset\"\ncurl -fsSLO \"$base/$asset.sha256\"\nsha256sum --check \"$asset.sha256\"\ntar -xzf \"$asset\" ./gws\n./gws --version\ninstall -m 0755 ./gws \"$pkg/bin/gws\"\ngws --version\n)",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "export GOOGLE_WORKSPACE_CLI_CONFIG_DIR=\"$HOME/.config/cs357-gmail-readonly\"\nclient_download=\"$HOME/Downloads/client_secret.json\"\ninstall -d -m 700 \"$GOOGLE_WORKSPACE_CLI_CONFIG_DIR\"\n(umask 077; set -C; cat \"$client_download\" > \"$GOOGLE_WORKSPACE_CLI_CONFIG_DIR/client_secret.json\")",
       "output": "",
       "exit": 0
     },
@@ -52,33 +94,63 @@
   "markers": [
     {
       "step": 0,
-      "title": "Set up Google OAuth and install the CLI",
-      "note": "Complete the Desktop client checklist in your browser, then install gws. The install log is omitted."
+      "title": "Install the Cloud CLI on Ubuntu or WSL",
+      "note": "Optional for either live path. The browser console also works. Skip this block if gcloud already works. Playback does not install software."
     },
     {
       "step": 1,
-      "title": "Check the installation",
-      "note": "Version output from the CLI used for this illustration."
+      "title": "Sign in to the Cloud CLI",
+      "note": "In your own browser, sign in to manage the dedicated test project. This is separate from Gmail consent."
     },
     {
       "step": 2,
-      "title": "Store the client file",
-      "note": "Bash or Zsh example. Follow the separate PowerShell instruction on Windows. The variable contains a path, never a token."
+      "title": "Create a dedicated test project if needed",
+      "note": "Skip this command if you already have a test project. The Desktop OAuth client is created in that project in the browser, not by gcloud auth login."
     },
     {
       "step": 3,
-      "title": "Authorize the CLI",
-      "note": "Approve Gmail read-only access in your own test account. The browser consent and token are not shown or executed here."
+      "title": "Check the Gmail API",
+      "note": "Use the ID of your own test project. If Gmail is listed, skip the next command."
     },
     {
       "step": 4,
-      "title": "Inspect the request without calling Gmail",
-      "note": "Real output from the CLI dry run. On your test mailbox, follow the tutorial to run the search without --dry-run."
+      "title": "Enable Gmail only if needed",
+      "note": "Run this only if Gmail is absent and you have permission. In the browser, set up External testing, add your test user, select Gmail read-only, and create a Desktop client."
     },
     {
       "step": 5,
-      "title": "Test with a Read-Only Request",
-      "note": "From the same terminal, use OpenCode or Oh My Pi. Ask the agent to check Gmail using one gws messages list call, then verify the tool trace."
+      "title": "Install the Workspace CLI",
+      "note": "Use Node.js 18 or later and the pinned version. No installation happens in playback."
+    },
+    {
+      "step": 7,
+      "title": "Diagnose a glibc error on Ubuntu 22.04 WSL",
+      "note": "Use this branch only if the GNU binary reports GLIBC_2.39 missing after reinstall. The replacement shown is for x86_64 with npm under nvm."
+    },
+    {
+      "step": 8,
+      "title": "Verify and replace only the npm package binary",
+      "note": "The checksum must pass before extraction and replacement. Do not change system glibc. Playback does not modify an executable."
+    },
+    {
+      "step": 9,
+      "title": "Store the Desktop client locally",
+      "note": "Use your own download and the separate private config directory. No JSON or credentials are shown."
+    },
+    {
+      "step": 10,
+      "title": "Authorize Gmail read-only",
+      "note": "Complete consent yourself with your test account. Stop if Google asks for other access. No login occurs in playback."
+    },
+    {
+      "step": 11,
+      "title": "Inspect the request without calling Gmail",
+      "note": "This is a credential-free preview, not an authentication test. In your own terminal, omit --dry-run for one read against your test inbox."
+    },
+    {
+      "step": 12,
+      "title": "Try the agent",
+      "note": "Use OpenCode or Oh My Pi and inspect the actual tool trace."
     }
   ]
 }

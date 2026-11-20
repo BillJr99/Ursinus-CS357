@@ -23,40 +23,116 @@ Both live paths need a Google Desktop OAuth client and your approval in a browse
 
 In Gmail's web interface, send an invented message to your test account with the subject `CS357 MCP DEMO`. Complete Google sign-in yourself. Cancel if the screen shows the wrong account or asks for anything beyond Gmail read access. Never give the agent a token, client secret, or browser callback URL in a prompt.
 
+## Shared Setup: Google Cloud and Gmail OAuth
+
+Complete this setup once if you plan to read a test mailbox with either path. If you only want to try the MCP fixture, skip to [Path B](#path-b-mcp); the fixture needs no Google project, credentials, or sign-in.
+
+The browser console is enough for this step. If you want to check or enable the Gmail API from a terminal, use the Google Cloud CLI (`gcloud`). `gcloud` manages the Cloud project; the Google Workspace CLI (`gws`) reads the test mailbox. Each has its own sign-in.
+
+**Optional: install and sign in to `gcloud` on Ubuntu or Ubuntu under WSL.** If `gcloud --version` already works, skip the install block. If you installed Google's archive under `~/google-cloud-sdk` and Bash cannot find `gcloud`, run `source "$HOME/google-cloud-sdk/path.bash.inc"` in this shell. For other systems, see the [Google Cloud CLI install guide](https://docs.cloud.google.com/sdk/docs/install).
+
+```bash
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg |
+  sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+printf '%s\n' 'deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main' |
+  sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update
+sudo apt-get install google-cloud-cli
+gcloud --version
+```
+
+Run `gcloud auth login --brief` yourself and finish the [Cloud CLI sign-in](https://docs.cloud.google.com/sdk/gcloud/reference/auth/login) in your browser. Keep the terminal and the browser flow private. This signs you in to manage Cloud resources; it does not authorize `gws` to read Gmail.
+
+- **Choose a Cloud project for the Gmail OAuth client.** If you already have a dedicated test project you can manage, use its project ID. Otherwise, open the [New Project page](https://console.cloud.google.com/projectcreate), give the project a display name such as `CS357 Gmail Read Test`, and click **Create**. Note the project ID, which is different from the display name. You can also [create the project with `gcloud`](https://docs.cloud.google.com/sdk/gcloud/reference/projects/create) after signing in:
+
+  ```bash
+  read -r -p 'Choose a globally unique Cloud project ID: ' PROJECT_ID
+  gcloud projects create "$PROJECT_ID" --name='CS357 Gmail Read Test'
+  ```
+
+  The Cloud project will contain the Gmail API setting, consent configuration, and Desktop OAuth client. `gcloud auth login` uses its own sign-in flow and does not need the Desktop client you are about to create. If your account cannot create projects, use a dedicated test project you have permission to manage rather than changing your organization's settings.
+
+- **Enable Gmail in that project.** Select the project in the [Cloud console and enable the Gmail API](https://console.cloud.google.com/apis/library/gmail.googleapis.com), or use the commands below. Enter the same project ID for every step. Run the enable command only if the check succeeds but does not list Gmail. Skip `gws auth setup` for this exercise so you do not enable unrelated APIs.
+
+  ```bash
+  read -r -p 'Test Cloud project ID: ' PROJECT_ID
+  gcloud services list --enabled --project="$PROJECT_ID" --filter='config.name=gmail.googleapis.com' --format='value(config.name)'
+  ```
+
+  ```bash
+  gcloud services enable gmail.googleapis.com --project="$PROJECT_ID"
+  ```
+- In **Google Auth Platform > [Branding](https://console.cloud.google.com/auth/branding)**, configure the consent screen. Use a name you will recognize when you sign in, such as `CS357 Gmail Read Test`.
+- Under **[Audience](https://console.cloud.google.com/auth/audience)**, choose **External**, keep the app in **Testing**, and add the Gmail test account under **Test users**.
+- Under **[Data Access](https://console.cloud.google.com/auth/scopes)**, add only `https://www.googleapis.com/auth/gmail.readonly`. This scope lets a tool view email and settings across the mailbox. It cannot send mail or change labels. A search filter limits one request, not the account access granted by the scope.
+- Under **[Clients](https://console.cloud.google.com/auth/clients)**, select **Create Client > Desktop app**, name the client, and download its JSON. You can reuse a suitable Desktop client from this dedicated test project, but authorize it afresh. The JSON identifies your app; it does not grant access to your mailbox. That happens when you review the scope and approve it in your browser.
+
+See Google's guides to [OAuth consent](https://developers.google.com/workspace/guides/configure-oauth-consent), [Desktop app authorization](https://developers.google.com/identity/protocols/oauth2/native-app), and [Gmail scopes](https://developers.google.com/workspace/gmail/api/auth/scopes).
+
+
 ## Path A: CLI
 
-This simulation illustrates the setup and read-only test. It does not sign in to Google or read a mailbox. [Open the CLI terminal simulation]({{ site.baseurl }}/viz/?mode=terminal#cs357-gmailreadonly-cli-terminal).
+This simulation replays the shared setup, then follows the CLI path. It does not sign in to Google or read a mailbox. [Open the CLI terminal simulation]({{ site.baseurl }}/viz/?mode=terminal#cs357-gmailreadonly-cli-terminal).
 
 <iframe title="Gmail read-only CLI terminal simulation" loading="lazy"
   src="{{ site.baseurl }}/viz/?mode=terminal&embed=1#cs357-gmailreadonly-cli-terminal"
   style="width:100%;height:600px;border:1px solid #888"></iframe>
 
-1. **Set up Google OAuth.**
+1. **Install the CLI.** Install [`gws` 0.22.5](https://github.com/googleworkspace/cli/tree/v0.22.5#installation) for your operating system. If you use Node.js 18 or later, run `npm install -g @googleworkspace/cli@0.22.5`, then `gws --version`. This route does not need an MCP server. The CLI still needs its own browser sign-in. Do not import a token from the MCP path.
 
-   - In the [Google Cloud console](https://console.cloud.google.com/), create or select a dedicated test project and [enable the Gmail API](https://console.cloud.google.com/apis/library/gmail.googleapis.com).
-   - In **Google Auth Platform > [Branding](https://console.cloud.google.com/auth/branding)**, configure the consent screen. Use a name you will recognize when you sign in, such as `CS357 Gmail Read Test`.
-   - Under **[Audience](https://console.cloud.google.com/auth/audience)**, choose **External**, keep the app in **Testing**, and add the Gmail test account under **Test users**.
-   - Under **[Data Access](https://console.cloud.google.com/auth/scopes)**, add only `https://www.googleapis.com/auth/gmail.readonly`. This scope lets a tool view email and settings across the mailbox. It cannot send mail or change labels. A search filter limits one request, not the account access granted by the scope.
-   - Under **[Clients](https://console.cloud.google.com/auth/clients)**, select **Create Client > Desktop app**, name the client, and download its JSON. You can reuse a suitable Desktop client from this dedicated test project, but authorize it afresh. The JSON identifies your app; it does not grant access to your mailbox. That happens when you review the scope and approve it in your browser.
+   **Ubuntu 22.04 WSL: if `gws --version` reports `GLIBC_2.39` not found.** Check `uname -m` and `getconf GNU_LIBC_VERSION`. Ubuntu 22.04 can report `glibc 2.35`. If the error persists after reinstalling `gws` 0.22.5 with npm, the block below is for **x86_64 only**, with npm running under nvm. It uses the matching [musl release](https://github.com/googleworkspace/cli/releases/tag/v0.22.5), which does not need the newer system glibc. Leave system glibc alone. On another architecture or version, use the official release that matches both.
 
-   See Google's guides to [OAuth consent](https://developers.google.com/workspace/guides/configure-oauth-consent), [Desktop app authorization](https://developers.google.com/identity/protocols/oauth2/native-app), and [Gmail scopes](https://developers.google.com/workspace/gmail/api/auth/scopes).
+   ```bash
+   (
+     set -eu
+     test "$(uname -m)" = x86_64
+     prefix=$(npm prefix -g)
+     case "$prefix" in "${NVM_DIR:-$HOME/.nvm}"/versions/node/*) ;; *) exit 1 ;; esac
+     pkg="$(npm root -g)/@googleworkspace/cli"
+     test "$(node -p 'require(process.argv[1]).version' "$pkg/package.json")" = 0.22.5
+     test "$(command -v gws)" = "$prefix/bin/gws"
+     test -f "$pkg/bin/gws" && test ! -L "$pkg/bin/gws"
+     work=$(mktemp -d)
+     cd "$work"
+     asset=google-workspace-cli-x86_64-unknown-linux-musl.tar.gz
+     base=https://github.com/googleworkspace/cli/releases/download/v0.22.5
+     curl -fsSLO "$base/$asset"
+     curl -fsSLO "$base/$asset.sha256"
+     sha256sum --check "$asset.sha256"
+     tar -xzf "$asset" ./gws
+     ./gws --version
+     install -m 0755 ./gws "$pkg/bin/gws"
+     gws --version
+   )
+   ```
 
-2. **Install the CLI.** Install [`gws` 0.22.5](https://github.com/googleworkspace/cli/tree/v0.22.5#installation) for your operating system. If you use Node.js 18 or later, run `npm install -g @googleworkspace/cli@0.22.5`, then `gws --version`. This route does not need an MCP server. The CLI still needs its own browser sign-in. Do not import a token from the MCP path.
+   This replaces the binary the npm launcher calls, not the launcher itself. Recheck `gws --version` after changing Node versions in nvm or reinstalling the package.
 
-3. **Store the client file.** Create a private local directory outside your project and synced folders. Move the downloaded client JSON there as `client_secret.json`. On Windows, use a new directory under `%LOCALAPPDATA%` and check **Properties > Security**. On macOS or Linux, use a new directory in your home folder with mode `700` and set the file mode to `600`. Set `GOOGLE_WORKSPACE_CLI_CONFIG_DIR` to the private directory path in the terminal you will use. For example:
+2. **Store the client file.** Create a private local directory outside your project and synced folders. Move the downloaded client JSON there as `client_secret.json`. On Windows, use a new directory under `%LOCALAPPDATA%` and check **Properties > Security**. On macOS or Linux, use a new directory in your home folder with mode `700` and set the file mode to `600`. Set `GOOGLE_WORKSPACE_CLI_CONFIG_DIR` to the private directory path in the terminal you will use. For example:
 
    - **Windows (PowerShell):** `$env:GOOGLE_WORKSPACE_CLI_CONFIG_DIR = Join-Path $env:LOCALAPPDATA 'CS357-GmailReadOnly'`
-   - **macOS and Linux:** `export GOOGLE_WORKSPACE_CLI_CONFIG_DIR="$HOME/.config/cs357-gmail-readonly"`
+   - **macOS and Linux (including WSL):** use the following commands. The example assumes you saved the Desktop client download as `~/Downloads/client_secret.json`. Set `client_download` to the actual path if it differs. Do not overwrite a client file from another exercise or project.
 
-4. **Authorize the CLI.** In a terminal without other `gws` credential overrides, authorize the CLI yourself:
+     ```bash
+     export GOOGLE_WORKSPACE_CLI_CONFIG_DIR="$HOME/.config/cs357-gmail-readonly"
+     client_download="$HOME/Downloads/client_secret.json"
+     install -d -m 700 "$GOOGLE_WORKSPACE_CLI_CONFIG_DIR"
+     (umask 077; set -C; cat "$client_download" > "$GOOGLE_WORKSPACE_CLI_CONFIG_DIR/client_secret.json")
+     ```
+
+     The new file has mode `600`. If WSL downloaded the file to Windows, use its local path from WSL and copy it into the Linux home directory as shown. Keep the client file out of Git, synced folders, agent prompts, and screenshots.
+
+3. **Authorize the CLI.** In a terminal without other `gws` credential overrides, authorize the CLI yourself:
 
    ```text
    gws auth login --scopes https://www.googleapis.com/auth/gmail.readonly
    ```
 
-   Use the exact scope. Plain `gws auth login` can request write access, and `--readonly` can include other Workspace services. See the [CLI authentication guide](https://github.com/googleworkspace/cli/tree/v0.22.5#authentication) for the client file and local credential store.
+   Use the exact scope. Plain `gws auth login` can request write access, and `--readonly` can include other Workspace services. Complete consent yourself in your browser. Do not paste tokens, authorization codes, or callback URLs into chat. See the [CLI authentication guide](https://github.com/googleworkspace/cli/tree/v0.22.5#authentication) for the client file and local credential store.
 
-5. **Run the search yourself.** Run the search below yourself first. `me` refers to the account that approved the grant. The request returns up to three matching message IDs, not message bodies.
+4. **Verify with one read.** Run the search yourself before launching the agent. `me` refers to the account that approved the grant. A successful response verifies that the test grant works; `--dry-run` only previews the request. The search returns up to three matching message IDs, not message bodies. Keep its output local.
 
    **Windows (PowerShell 7.3+, with native argument passing set to Standard):**
 
@@ -72,7 +148,7 @@ This simulation illustrates the setup and read-only test. It does not sign in to
    gws gmail users messages list --params '{"userId":"me","q":"subject:\"CS357 MCP DEMO\"","maxResults":3}'
    ```
 
-6. **Test with a Read-Only Request.** From that terminal, change to an empty working directory and launch `opencode` or `omp`. Paste this prompt instead of pasting the command output or any credential:
+5. **Test with a Read-Only Request.** From that terminal, change to an empty working directory and launch `opencode` or `omp`. Paste this prompt instead of pasting the command output or any credential:
 
    > Check my Gmail test inbox using the `gws` CLI. Use the shell tool to run one `gws gmail users messages list` request. Set `userId` to `me`, `q` to `subject:"CS357 MCP DEMO"`, and `maxResults` to `3`. Use quoting for the shell you are running in. Report how many IDs this page returned. Do not fetch message bodies, open credential files, follow links, run other commands, or change anything in Gmail.
 
@@ -207,7 +283,7 @@ This simulation illustrates the setup and read-only test. It does not sign in to
 
 4. **Try the fixture.** Check `/mcps` in OpenCode or `/mcp test gmail-demo` and `/tools` in Oh My Pi. Ask the agent to call `count_demo_messages` once. Check the tool trace for `mode: fixture` and `matches_on_page: 1`, not a result from your mailbox.
 
-5. **Authorize your test mailbox.** Close the agent and stop the fixture server with Ctrl+C. Follow **Step 1 of Path A** to set up a Gmail API project and a Desktop OAuth client; skip the rest of Path A. Put the downloaded JSON in a private local directory outside your project and outside synced folders. On Windows, check **Properties > Security**; on macOS/Linux, use a directory with mode `700` and a file with mode `600`.
+5. **Authorize your test mailbox.** Close the agent and stop the fixture server with Ctrl+C. If you skipped [Shared Setup](#shared-setup-google-cloud-and-gmail-oauth), do it now. Use the Desktop OAuth client JSON from that setup; you do not need to install `gws` or run `gws auth login`. Put the downloaded JSON in a private local directory outside your project and outside synced folders. On Windows, check **Properties > Security**; on macOS/Linux, use a directory with mode `700` and a file with mode `600`.
 
    Run the same Python command from Step 2, but add `--client-json` followed by the quoted absolute path to the download. In the browser, authorize only the test mailbox and the Gmail read-only permission. The browser's loopback callback is separate from the MCP endpoint. The script checks Google's returned scope before starting the server and keeps the short-lived token in memory. It does not write a token file or refresh the token. The agent configuration needs only the local URL. After authorization, start the agent again from the second terminal.
 
