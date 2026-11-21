@@ -76,3 +76,4 @@
 
 - [ ] Discuss AI in the software development lifecycle (AI SDLC): where AI can help with requirements, design, implementation, testing, and maintenance, and what people still need to review and verify.
 - [ ] Consolidate the course goals and course objectives into one list. Preserve each distinct learning outcome and remove duplicates.
+- [ ] Expire assignments automatically when the late penalty would bring the score to zero or on the last class day, whichever comes first: update the code/ scripts (Canvas deploy, syllabus tooling) and the course skills that set due and lock dates, and install the updated skills wherever they are used.
