@@ -12,9 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Critique, Consensus, and the LLM Judge: One Loop, Three Uses
 
-Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  You leave with two runnable loops and a catalog of the ways each use fails, both of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration and Multi-Agent Patterns* session and due Thursday, December 3, builds on.  In that session's worked example, the check that refused the supervisor's stop was a program; today asks what to do when the check has to be a model.
-
-**This week:** Sprint Check 1 is at the start of class on Tuesday, November 17, and the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) is due Thursday, November 19.
+Every pattern today is the same loop: generate something, evaluate it, decide what to do with the evaluation.  A critic feeds its issues back to the generator (critique and refine).  Several generators produce answers that a vote or a clustering step compares by meaning (debate and stochastic consensus).  An evaluator scores one artifact against a rubric and emits JSON (the LLM as judge).  You leave with two runnable loops and a catalog of the ways each use fails, both of which the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) builds on.  In that session's worked example, the check that refused the supervisor's stop was a program; today asks what to do when the check has to be a model.
 
 ## Directions and Group Roles
 
@@ -37,17 +35,12 @@ Work in your POGIL team with your rotated roles (**Manager**, **Recorder**, **Pr
 
 Anything marked self-paced is for outside class, and nothing graded assumes it.
 
-1. Sprint check: a member picked at random shows one thing running (Direction B: one cited finding), and each Coordinator says what is next and what is blocking
-2. Part I, one loop, and why the evaluator is a separate call (Model 1)
-3. Part II, the critic: one round by hand, Model 2, and three failure modes
-4. Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5)
-5. Part IV, the judge: Model 6 and auditing the judge
-6. Part V, where today's loops sit in the Multi-Agent Patterns lab, and the reflection prompt.  The Human-in-the-Loop Extension is self-paced
-7. Report out: one place each use of the loop earned its cost, and one place it did not
-
-## Sprint Check 1
-
-Sprint Check 1 opens today's session, with no slides.  I pick one member of each team at random.  That member has 90 seconds to show one thing running (Direction B: one cited finding), and your Coordinator says what is next and what is blocking.  Every member's evidence line (the linked first line of their latest standup) should already be in the team note.  I mark each team as shown or not yet.  The full protocol is in [Sprint Checks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread#sprint-checks).
+1. Part I, one loop, and why the evaluator is a separate call (Model 1)
+2. Part II, the critic: one round by hand, Model 2, and three failure modes
+3. Part III, several generators: the debate loop, Model 4, and voting on meaning (Model 5)
+4. Part IV, the judge: Model 6 and auditing the judge
+5. Part V, where today's loops sit in the Multi-Agent Patterns lab, and the reflection prompt.  The Human-in-the-Loop Extension is self-paced
+6. Report out: one place each use of the loop earned its cost, and one place it did not
 
 ---
 # Part I: One Loop
@@ -483,7 +476,7 @@ Sit with the distinction before you move on, because your lab design depends on 
 
 # Part IV: Use Three, an Evaluator That Scores Against a Rubric
 
-The third use turns the loop outward: the artifact already exists (an essay, a plan, a pull request) and the model's only job is to score it against a rubric and emit JSON.  You will take apart a bad rubric, then ask who audits the judge.  The judging pipeline, batch scoring, and bias measurements are Thursday's *Judge Pipeline Workshop: Build and Audit a Judge*; today is the design work that comes first.
+The third use turns the loop outward: the artifact already exists (an essay, a plan, a pull request) and the model's only job is to score it against a rubric and emit JSON.  You will take apart a bad rubric, then ask who audits the judge.  The judging pipeline, batch scoring, and bias measurements are the work of the *Judge Pipeline Workshop: Build and Audit a Judge*; today is the design work that comes first.
 
 ## 9.  Judgment at Scale
 
@@ -548,7 +541,7 @@ There is a second-order effect.  A long, fluent, confident trace is more persuas
 
 # Part V: Synthesis and Practice
 
-The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), handed out at the *Orchestration and Multi-Agent Patterns* session, is due Thursday, December 3.  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-30-points).  Do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below practice the measurements that the [Measuring Multi-Agent Patterns](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MultiAgentMeasurement) tutorial walks through.
+Today's loops feed the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate).  Its Part A (critique and refine) has its own specification at [Critique and Refine](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate#part-a-critique-and-refine-30-points).  Do Part A first, because the debate and consensus parts reuse its scaffolding.  The exercises below practice the measurements that the [Measuring Multi-Agent Patterns](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/MultiAgentMeasurement) tutorial walks through.
 
 ## 11.  Exercises
 
@@ -584,7 +577,7 @@ The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026
 
 ---
 
--> Coming Up Next: *Judge Pipeline Workshop: Build and Audit a Judge* (Thursday) turns today's Part IV into code.  You hand-score three sample submissions first.  Then you build a judge that reads the rubric as data, writes a `grades.csv`, and checks its own quoted evidence.  You run the same judge a second time as a promptfoo configuration with no Python, and you measure the judge against your hand scores and against one bias, padding.  The loop you built today is the core of the Multi-Agent Patterns lab, and the judge you build Thursday is one of the two critics its Part A lets you choose.  Have Ollama running with `llama3.2`, Node.js installed for promptfoo, and your answers to the Model 6 rubric autopsy ready.
+-> Coming Up Next: *Judge Pipeline Workshop: Build and Audit a Judge* turns today's Part IV into code.  You hand-score three sample submissions first.  Then you build a judge that reads the rubric as data, writes a `grades.csv`, and checks its own quoted evidence.  You run the same judge a second time as a promptfoo configuration with no Python, and you measure the judge against your hand scores and against one bias, padding.  The loop you built today is the core of the Multi-Agent Patterns lab, and the judge you build there is one of the two critics its Part A lets you choose.  Have Ollama running with `llama3.2`, Node.js installed for promptfoo, and your answers to the Model 6 rubric autopsy ready.
 
 ---
 

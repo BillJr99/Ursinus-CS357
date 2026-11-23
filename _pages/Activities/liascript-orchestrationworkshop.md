@@ -18,8 +18,6 @@ Unit 3 starts here.  In *Agents That Talk, Observability, and Handoff Protocols*
 
 That task is a nightly club digest: five raw messages in, one short digest out, with every day and time intact.  Running one task through all three patterns lets you compare them on the two things the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) grades: whether the loop stopped for a stated reason, and how many model calls it spent getting there.  The worked example first runs in this page with a scripted stand-in for the model, so every run repeats exactly and you can make every stop condition fire on purpose.  Then you swap in Ollama by changing one function and run the same code on your machine, or you run the same protocol by hand on the lab's no-code route.
 
-**Today:** I hand out the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), due Thursday, December 3.  Keep the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) and your Literature Review annotated bibliographies moving: the lab is due Tuesday, November 17, and the bibliographies are due Thursday, November 19.
-
 ---
 
 ## Directions and Group Roles
@@ -1178,7 +1176,7 @@ Answer one prompt at each level in your notebook.
 
 ---
 
--> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* takes the check you wrote today and asks what happens when it cannot be a program: a critic model that sends issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab you received today.  Have `supervise` and your cost table ready.  Sprint Check 1 is at the start of that class, and the RAG Knowledge Base lab is due at the Judge Pipeline Workshop, the session after it.
+-> Coming Up Next: *Critique, Consensus, and the LLM Judge: One Loop, Three Uses* takes the check you wrote today and asks what happens when it cannot be a program: a critic model that sends issues back to a generator, several generators compared by meaning, and a judge that scores against a rubric.  That loop is the core of the Multi-Agent Patterns lab.  Have `supervise` and your cost table ready.
 
 ## Further Reading
 

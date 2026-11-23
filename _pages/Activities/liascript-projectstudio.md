@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Project Studio and Gallery Walk
 
-This deck covers two sessions: *Project Studio and Gallery Walk*, and *Project Studio: Final Integration and Demo Rehearsal* (see the Session Two section below).  Today the classroom becomes a studio.  The *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session gave you an audited judge and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is due today.
+This deck covers two sessions: *Project Studio and Gallery Walk*, and *Project Studio: Final Integration and Demo Rehearsal* (see the Session Two section below).  Today the classroom becomes a studio.  The *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session gave you an audited judge and a threat model; today you show the result.  You get structured work time, a formal gallery walk (a peer review where teams rotate through each other's live demos), and a release-readiness checklist that turns the feedback into your final sprint's backlog.  We take today in this order: stand-up, gallery walk, triage, release checklist.
 
 ---
 
@@ -215,11 +215,11 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 
 ---
 
--> Coming Up Next: Demo Day, on final exam day (the [course schedule](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the time and room).  Work through the [Demo Day Guide](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/DemoDay) with your team.  It turns this week's triaged backlog and release-readiness checklist into your final presentation plan.
+-> Coming Up Next: Demo Day (the [course schedule](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the date, time, and room).  Work through the [Demo Day Guide](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/DemoDay) with your team.  It turns your triaged backlog and release-readiness checklist into your final presentation plan.
 
 ---
 
 ## 5.  Further Reading
 
-- Your project specification's presentation rubric, reread tonight.
+- Your project specification's presentation rubric, reread before Demo Day.
 - Amershi et al. "Guidelines for Human-AI Interaction."  *CHI* (2019), for last-mile demo polish.

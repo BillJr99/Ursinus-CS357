@@ -12,9 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Judge Pipeline Workshop: Build and Audit a Judge
 
-Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet.  You also leave with the same judge written a second time as a promptfoo configuration, with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries.  Today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list instead of rereading them here.  Keep everything you build today.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate), due Thursday, December 3, may use this judge as its Part A critic, and the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session (Tuesday, December 1) points it at your own final project.
-
-**Today:** your individual annotated bibliographies for the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview) are due, and so is the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase).
+Today is a build session.  You leave with a judge that reads a rubric, scores three sample submissions with your local model, and writes a `grades.csv` you can open in a spreadsheet.  You also leave with the same judge written a second time as a promptfoo configuration, with no Python at all.  Last session (*Critique, Consensus, and the LLM Judge*) taught why vague rubrics fail and what biases a judge carries.  Today you run the machinery, so keep that deck open for the rubric autopsy and the pathology list instead of rereading them here.  Keep everything you build today.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) may use this judge as its Part A critic, and the *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* session points it at your own final project.
 
 ---
 
@@ -391,7 +389,7 @@ Recap: agreement tells you whether the rubric wording means the same thing to yo
 
 ---
 
--> Coming Up Next: *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system, and then puts governance and cost behind what you build.  Its disaggregation drill points today's judge at essays that differ only in their byline, and Sprint Check 2 is at the start of that class.  After the Thanksgiving break, *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* (Tuesday, December 1) brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
+-> Coming Up Next: *Training Data, Bias, IP, Privacy, Governance, and the Cost of Inference* follows the judge's preferences back to where they came from: the corpus the model learned from, who owns that material, and who gets watched when people use the system, and then puts governance and cost behind what you build.  Its disaggregation drill points today's judge at essays that differ only in their byline.  Then *Project Sprint: Run Your Rubric Against Your Project, and Threat Model It* brings today's judge to your own project outputs, so keep `judge.py`, both YAML files, and your disagreement table where you can find them.
 
 ---
 

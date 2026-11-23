@@ -38,7 +38,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 |------|--------------------------|--------------------------|
 | **Vault** | A folder of plain Markdown files that is your notes. No database, no proprietary format, so any tool or agent can read it | The `vault/` tree in Model 1, edited in Obsidian and stored on GitHub |
 | **Zone** | A directory whose name tells every agent what it may do there: read only, write freely, never touch | `raw/` (never modified), `wiki/` (agents author here), `.obsidian/` (hands off) |
-| **Agent contract** | A file at the root of a repository or vault stating the rules any agent must follow inside it. The `AGENTS.md` you wrote for `cs357-work` in Week 1, grown up | Section 2: a contract with zone boundaries, a synthesis rule, and a stop rule |
+| **Agent contract** | A file at the root of a repository or vault stating the rules any agent must follow inside it. The `AGENTS.md` you wrote for `cs357-work` in *Your AI Workbench*, grown up | Section 2: a contract with zone boundaries, a synthesis rule, and a stop rule |
 | **Durable memory** | Project state that lives in files under version control rather than in a conversation, so it survives the session, the tool, and the model | `.ai/SESSION.md` and `.ai/CURRENT_TASK.md` in Part II |
 | **Handoff** | A deliberate stop in which an agent writes down enough state that a *different* agent can continue safely | The continuation entry and kickoff prompt in Model 2, read by a fresh session |
 | **Agent multiplexer** | A terminal multiplexer that keeps several agents alive on a persistent server after you disconnect, and shows which one is blocked, working, or done | **herdr**, in Section 2b |
@@ -55,7 +55,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 **You do not need** to have finished any particular lab.  If you are behind, the studio in Part III is for exactly that.
 
-**Also today:** the [Local Agent lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LocalAgent) is due, and I hand out the [Final Project](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject).  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due Tuesday, November 10.  Questions about either belong in the studio in Part III.
+Questions about the [Final Project](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProject) and your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) belong in the studio in Part III.
 
 **What you will have at the end:** a vault with zone boundaries and a written agent contract, a sketch of your own personal agent setup, one repository configured with handoff documents, and a plan for the thing you are currently stuck on.
 
@@ -146,7 +146,7 @@ And three operations, each of which is a prompt:
 2.  **Query.**  You ask a question.  The agent answers from `wiki/`, with citations, and an answer worth keeping becomes a page.
 3.  **Lint.**  Periodically, the agent audits its own wiki: contradictions between pages, claims that have gone stale, orphan pages nothing links to, gaps where a topic is named but never written.
 
-Notice what makes this different from RAG (retrieval-augmented generation), which you build on Thursday in *RAG: Building and Measuring a Knowledge Base* and then in the RAG Knowledge Base lab.  RAG re-discovers the same context on every query and keeps nothing; the wiki pays the synthesis cost once and keeps the result.  Karpathy's argument for why this is newly practical is a labor argument rather than a technical one: wikis have always been good and have always died of maintenance, and maintenance is exactly the work a model will do for free, forever, without getting bored.  Your job shifts from writing to curating: choosing sources, asking good questions, and reviewing what the agent wrote before you trust it.
+Notice what makes this different from RAG (retrieval-augmented generation), which you build in *RAG: Building and Measuring a Knowledge Base* and then in the RAG Knowledge Base lab.  RAG re-discovers the same context on every query and keeps nothing; the wiki pays the synthesis cost once and keeps the result.  Karpathy's argument for why this is newly practical is a labor argument rather than a technical one: wikis have always been good and have always died of maintenance, and maintenance is exactly the work a model will do for free, forever, without getting bored.  Your job shifts from writing to curating: choosing sources, asking good questions, and reviewing what the agent wrote before you trust it.
 
 > **Why Obsidian and GitHub, specifically.**  The gist is deliberately tool-agnostic, but the pattern asks for two things, and these two supply them.  Obsidian supplies the reading experience: `[[wikilinks]]` between entity pages, backlinks that show you what else cites a claim, and a graph view in which an orphan page is visible at a glance.  GitHub supplies the safety: every ingest is a commit, so a synthesis pass that went wrong is one `git revert` away, and a scoped token is what lets an agent running in a container do the writing at all.  The setup is stepwise and takes an evening: [The Second Brain](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/SecondBrain) builds the vault and the contract, and [Syncing Obsidian to GitHub](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/ObsidianSync) walks the wiring, including a section on standing up the LLM wiki itself.
 
@@ -154,7 +154,7 @@ Notice what makes this different from RAG (retrieval-augmented generation), whic
 
 ## 2.  The Contract
 
-`AGENTS.md` is the same kind of file you wrote for `cs357-work` in Week 1, doing a bigger job.  It opens with a non-negotiable instruction and then answers four questions:
+`AGENTS.md` is the same kind of file you wrote for `cs357-work` in *Your AI Workbench*, doing a bigger job.  It opens with a non-negotiable instruction and then answers four questions:
 
 ```markdown
 # Agent Contract for this Vault
@@ -212,7 +212,7 @@ The `:ro` is the whole difference between a rule the agent is asked to follow an
 
    > *Hint: Credentials are the easy one.  What about information that is not yours to store, such as someone else's messages?  What about categories that carry breach-notification duties regardless of who saw them?*
 
-4.  The vault is a retrieval problem.  Thursday's session, *RAG: Building and Measuring a Knowledge Base*, builds the machinery for it, and the RAG Knowledge Base lab builds it out.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
+4.  The vault is a retrieval problem.  The *RAG: Building and Measuring a Knowledge Base* session builds the machinery for it, and the RAG Knowledge Base lab builds it out.  Compare two ways of answering a question from your notes: hand the agent the whole `wiki/` folder, or index it and retrieve only the relevant chunks.  At what vault size does the first one stop working, and what exactly breaks?
 
    > *Hint: You do not need a number to answer this; you need the reason.  A model can only read a fixed amount of text at once.  What happens to the oldest part of what you handed it when the folder outgrows that limit, and how would you notice?  *Agents That Talk, Observability, and Handoff Protocols*, and its reading, *Memory and the Small Context Window Principle*, give that limit its name and its arithmetic.*
 
@@ -509,7 +509,7 @@ Pick **one** of your own repositories: `cs357-work`, or your Project Thread repo
 
 ---
 
--> Coming Up Next: In *RAG: Building and Measuring a Knowledge Base* (Thursday) we build the read side of today's vault at scale: a pipeline that chunks your documents, embeds them, retrieves the passages a question needs, and grounds the answer in them, and then a way to measure whether it found the right passage.  Question 4 asked when handing an agent the whole `wiki/` folder stops working; Thursday is the answer, and the RAG Knowledge Base lab builds it out.
+-> Coming Up Next: In *RAG: Building and Measuring a Knowledge Base* we build the read side of today's vault at scale: a pipeline that chunks your documents, embeds them, retrieves the passages a question needs, and grounds the answer in them, and then a way to measure whether it found the right passage.  Question 4 asked when handing an agent the whole `wiki/` folder stops working; that session is the answer, and the RAG Knowledge Base lab builds it out.
 
 ## Further Reading
 

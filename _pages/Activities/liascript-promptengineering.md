@@ -12,7 +12,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 # Prompt Engineering as Agent Design: System Prompts, Personas, and Comparing Models
 
-In *The Agent Loop: Perceive, Plan, Act*, two-thirds of our calculator agent's design lived in one string: its system prompt.  A prompt is a **program written in natural language**, and it configures the agent's behavior.  Today moves from the anatomy of a prompt, to the core patterns, to personas and system prompts, to the policy of your own agent, and then to a fair comparison of two models on the same prompt.  In an agentic system the system prompt *is* the agent's job description.  It is also the frame that the OpenCode Studio lab's Part 2 (the agent contract and the system prompt) has been waiting for: that part starts after today, and your Signed Team Charter is due today as well.
+In *The Agent Loop: Perceive, Plan, Act*, two-thirds of our calculator agent's design lived in one string: its system prompt.  A prompt is a **program written in natural language**, and it configures the agent's behavior.  Today moves from the anatomy of a prompt, to the core patterns, to personas and system prompts, to the policy of your own agent, and then to a fair comparison of two models on the same prompt.  In an agentic system the system prompt *is* the agent's job description.  It is also the frame that the OpenCode Studio lab's Part 2 (the agent contract and the system prompt) has been waiting for.
 
 ---
 

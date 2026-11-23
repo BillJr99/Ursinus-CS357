@@ -18,7 +18,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 The corpus is four short files about an invented bicycle co-op.  Every fact in them is synthetic, so you can change and test against them freely.  The measurement at the end is the habit the lab's Step 4 depends on: a golden set written before you tune anything, recall@k for the retriever, and a grounding check for the answer.
 
-**Today:** the [Tools and MCP lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/ToolsMCP) is due, and I hand out the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase) and the [Literature Review](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/LitReview).  For the lab's corpus, you may use your team's stakeholder material (interview notes, your partner's public documents, your evidence folder), so that the lab also moves your project forward.  If you do, use only material your partner agreed to share, and leave out personal details about the people you interviewed.  Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due soon: the [course schedule](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the date.
+For the corpus in the [RAG Knowledge Base lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/RAGKnowledgeBase), you may use your team's stakeholder material (interview notes, your partner's public documents, your evidence folder), so that the lab also moves your project forward.  If you do, use only material your partner agreed to share, and leave out personal details about the people you interviewed.
 
 ---
 
@@ -59,7 +59,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 5. Part I, Step 6: measure recall@k and grounding, then fix the chunking and measure again (Checkpoint 4)
 6. Part II, the same corpus on a real model: I run the lab's finished code route on the projector, teams that chose the no-code route confirm their Langflow flow on one laptop, and everyone records one golden-set answer (Checkpoint 5).  The rest of Part II is self-paced lab work
 7. Proposal Clinic: one card per team, four lines
-8. The lab handout, and what to have ready for Tuesday
+8. The lab, and what to have ready for the next session
 
 Part III, the exercise on a golden set for your own lab corpus, is self-paced.
 
@@ -519,7 +519,7 @@ This exercise does the lab's Step 1 and Step 4 in the right order.  Three of you
 
 # Proposal Clinic
 
-Your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) is due soon: the [course schedule](https://www.billmongan.com/Ursinus-CS357-Fall2026/) has the date.  Use this time to settle what is still open while I am in the room to help.  Fill in one card per team, with four lines:
+Use this time to settle what is still open in your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal) while I am in the room to help.  Fill in one card per team, with four lines:
 
 1.  **Direction.**  The direction you are choosing, and the one you nearly chose instead.
 2.  **Blocker.**  The one open question that is blocking your proposal.
@@ -530,7 +530,7 @@ While you write, I circulate and answer line 2 on the spot.  Before you leave, p
 
 ---
 
--> Coming Up Next: *Agents That Talk, Observability, and Handoff Protocols* puts two agents on either end of a shared channel, a GitHub issue thread and a shared folder, and then asks how anyone can see what each one did: logs, traces, and a written handoff protocol.  Your team's Final Project Proposal is due at that session.  The trace you write there is the observability version of today's measurement: identifiers and numbers, kept for every run.
+-> Coming Up Next: *Agents That Talk, Observability, and Handoff Protocols* puts two agents on either end of a shared channel, a GitHub issue thread and a shared folder, and then asks how anyone can see what each one did: logs, traces, and a written handoff protocol.  The trace you write there is the observability version of today's measurement: identifiers and numbers, kept for every run.
 
 ## Further Reading
 

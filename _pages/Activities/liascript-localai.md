@@ -320,7 +320,7 @@ A provider key and a model key join with a slash, so the block above defines `ol
 
 Adding a provider is a file edit in every case.  The desktop application and the TUI both read this file, and neither offers a form for adding one: the TUI's `/models` selects among providers already defined, and `/connect` stores a credential for a service that needs one, which Ollama does not.  Restart opencode after editing, then type `/models` and look for your provider.
 
-The full walkthrough, with every platform and the rest of the file, is End-to-End OpenCode Setup at https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup, which is today's reading for the lab being handed out.
+The full walkthrough, with every platform and the rest of the file, is End-to-End OpenCode Setup at https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/OpenCodeSetup, which is the reading for the OpenCode Studio lab.
 
 ---
 
@@ -875,7 +875,7 @@ In this part, you will probe your local model across five different task types t
 
 ---
 
--> Coming Up Next: Your model is running and you have turned your first dial on it.  In *Skills: Design One, Then Measure It*, you work on the instructions the agent reads before it produces anything, and measure whether they changed the output.  Keep this stack running, because the OpenCode Studio lab handed out today drives opencode against the model you just stood up, and *Prompt Engineering as Agent Design* edits system prompts against this same live model, where the temperature slider from Section 3c is one of the things we vary.  (*Why* that dial behaves the way it does gets its full treatment in *Why Different Answers Every Time?  Sampling, Temperature, and Generation*.)
+-> Coming Up Next: Your model is running and you have turned your first dial on it.  In *Skills: Design One, Then Measure It*, you work on the instructions the agent reads before it produces anything, and measure whether they changed the output.  Keep this stack running, because the OpenCode Studio lab drives opencode against the model you just stood up, and *Prompt Engineering as Agent Design* edits system prompts against this same live model, where the temperature slider from Section 3c is one of the things we vary.  (*Why* that dial behaves the way it does gets its full treatment in *Why Different Answers Every Time?  Sampling, Temperature, and Generation*.)
 
 ## 6.  Further Reading
 

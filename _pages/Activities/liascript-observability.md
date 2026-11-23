@@ -22,7 +22,7 @@ You leave with four things: the vocabulary for how agents communicate through a 
 
 ## Directions and Group Roles
 
-Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Manager calls for a prediction before anyone runs a code cell.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol, writing every claim rule as a path and a condition rather than a sentiment.  At report-out, the Presenter says your team's Sprint 1 goal and the one thing you will show at Sprint Check 1, and then, if time allows, reads one rule of the protocol aloud.  The Reflector watches for any moment when the team assumes GitHub does something for free that a folder would not.  The Reflector also notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
+Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rotated roles (**Manager**, **Recorder**, **Presenter**, **Reflector**).  Think each model and question through on your own first, then talk it over with your group.  The Manager calls for a prediction before anyone runs a code cell.  The Recorder posts your answers to the Class Activity Questions discussion board and keeps the team's draft protocol, writing every claim rule as a path and a condition rather than a sentiment.  At report-out, the Presenter says your team's Sprint 1 goal and the one thing you will show at the sprint check, and then, if time allows, reads one rule of the protocol aloud.  The Reflector watches for any moment when the team assumes GitHub does something for free that a folder would not.  The Reflector also notes where the team disagreed about what an agent must write down before it stops.  After class, answer the reflective prompt on your own in your notebook.
 
 ---
 
@@ -49,7 +49,7 @@ Work in your POGIL (Process Oriented Guided Inquiry Learning) team with your rot
 
 **You need:** your `cs357-work` repository from *How I AI*, with its `.ai/` directory, and the two course templates linked in Part IV.  There is nothing to install today; both code cells run in this page.
 
-**Due today:** your team's [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal).  In Part IV, your team writes its own handoff skill for that project, so have your project repository open.  I also hand out the two [sprint checks](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread#sprint-checks), which take place at the start of class on Tuesday, November 17, and Tuesday, November 24.
+In Part IV, your team writes its own handoff skill for the project in your [Final Project Proposal](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/FinalProjectProposal), so have your project repository open.  The [sprint check](https://www.billmongan.com/Ursinus-CS357-Fall2026/Projects/PBLThread#sprint-checks) page says what you will show and how it is marked.
 
 ---
 
@@ -62,7 +62,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it.
 3. Part II, agents that talk: the handoff through a shared folder, with the claim race run in code (Model 3); the issue thread between two agents (Model 2) is self-paced
 4. Part III, observability and traceability: logs and traces, one loop step written as a trace, and reading one (Model 4)
 5. Part IV, handoff protocols: start, stop, restart, and your team's own `SKILL.md` for your project, written together (Model 5)
-6. Report out: each Presenter says your team's Sprint 1 goal and the one thing you will show at Sprint Check 1 (a running piece for Directions A and C, one cited finding for Direction B).  If time allows: one rule the medium enforces, and one rule that holds only because both agents chose to follow it
+6. Report out: each Presenter says your team's Sprint 1 goal and the one thing you will show at the sprint check (a running piece for Directions A and C, one cited finding for Direction B).  If time allows: one rule the medium enforces, and one rule that holds only because both agents chose to follow it
 
 ---
 # Opening Demos: What an Agent Can See, Reach, and Leave Behind

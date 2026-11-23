@@ -14,7 +14,7 @@ link:   https://cdn.jsdelivr.net/gh/BillJr99/Ursinus-Boilerplate-Assets@main/css
 
 Today is a working session on your own project, built around one review and two hard questions.  The review is the cross-team proposal critique that closes Sprint 1: another team reads your proposal with the SQR card and you read theirs.  The first hard question is whether the judge you built in the Judge Pipeline Workshop deserves your trust on real outputs: you point it at three artifacts your final project produced this week, compare it with two blind human scorers, trace one disagreement back to its evidence, and repair the right thing.  The second hard question is what an outsider could write that your agent will read, and what you would do in the first hour after it went wrong: you walk the OWASP LLM Top 10 against the channels your system reads, then run the incident simulation from the case-studies material against your own system instead of a fictional one.  We take today in this order: **stand-up, proposal critique, run the judge, audit and repair, threat model, report out**.
 
-The Literature Review Team Synthesis is due today.  The [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) is due Thursday.  Its Part A critic checks a draft against a rubric the same way this judge does, so what you learn from today's repairs carries into that lab.
+The Part A critic in the [Multi-Agent Patterns lab](https://www.billmongan.com/Ursinus-CS357-Fall2026/Assignments/MultiAgentDebate) checks a draft against a rubric the same way this judge does, so what you learn from today's repairs carries into that lab.
 
 ---
 
@@ -489,7 +489,7 @@ Write a combined reflection of 150-200 words addressing at least two of the thre
 
 ---
 
--> Coming Up Next: *Project Studio and Gallery Walk* (Thursday) is the last review round before Demo Day: every team hosts a live station with its architecture diagram and evaluation table, walks every other station with SQR cards, triages what it hears into fix, disclose, and defer, and signs the release-readiness checklist.  The Multi-Agent Patterns lab is due at that session.  Today's work feeds it three times: the residual risk from row 5 of the worksheet is the known failure case you must show at your station, the control from Exercise 4 is evidence for the checklist's reproducibility row, and your human-to-judge agreement number is what you report at its stand-up.  Rehearse the failure case before then.
+-> Coming Up Next: *Project Studio and Gallery Walk* is the last review round before Demo Day: every team hosts a live station with its architecture diagram and evaluation table, walks every other station with SQR cards, triages what it hears into fix, disclose, and defer, and signs the release-readiness checklist.  Today's work feeds it three times: the residual risk from row 5 of the worksheet is the known failure case you must show at your station, the control from Exercise 4 is evidence for the checklist's reproducibility row, and your human-to-judge agreement number is what you report at its stand-up.  Rehearse the failure case before then.
 
 ---
 

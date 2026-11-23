@@ -163,7 +163,7 @@ ollama --version
 curl http://localhost:11434/api/tags
 ```
 
-Expected: a version string, then a JSON blob whose `"models"` list includes `llama3.2`.  (The Overview assignment, handed out today, asks you to submit a transcript of exactly this.  Capture your output as you go and you will not have to redo it.  If you installed Ollama before class, just rerun the `curl` to confirm it is running now, and move on.)
+Expected: a version string, then a JSON blob whose `"models"` list includes `llama3.2`.  (The Overview assignment asks you to submit a transcript of exactly this.  Capture your output as you go and you will not have to redo it.  If you installed Ollama before class, just rerun the `curl` to confirm it is running now, and move on.)
 
 Note the address you just used: `localhost:11434`.  Hold that thought: in Step 5 the *same server* will need a *different name*, and knowing why is the point of this whole architecture.
 
