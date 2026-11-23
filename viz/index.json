@@ -1,7 +1,7 @@
 {
  "course": "cs357",
  "site": "https://billjr99.github.io/Ursinus-CS357-Fall2026",
- "built": "2026-11-18 18:45",
+ "built": "2026-11-23 21:40",
  "examples": [
   {
    "id": "cs357-liascript-agentloop-1",
@@ -36,7 +36,7 @@
    "viz": "env",
    "lang": "python",
    "page": "_pages/Activities/liascript-biasdata.md",
-   "line": 430,
+   "line": 421,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-biasdata",
    "error": null,
    "steps": 21,
@@ -50,7 +50,7 @@
    "viz": "env",
    "lang": "python",
    "page": "_pages/Activities/liascript-biasdata.md",
-   "line": 752,
+   "line": 743,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-biasdata",
    "error": null,
    "steps": 19,
@@ -232,7 +232,7 @@
    "viz": "env",
    "lang": "python",
    "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 614,
+   "line": 612,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
    "error": null,
    "steps": 39,
@@ -246,7 +246,7 @@
    "viz": "env",
    "lang": "python",
    "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 688,
+   "line": 686,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
    "error": null,
    "steps": 44,
@@ -260,7 +260,7 @@
    "viz": "env",
    "lang": "python",
    "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 745,
+   "line": 743,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
    "error": null,
    "steps": 50,
@@ -274,7 +274,7 @@
    "viz": "env",
    "lang": "python",
    "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 793,
+   "line": 791,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
    "error": null,
    "steps": 177,
@@ -288,7 +288,7 @@
    "viz": "env",
    "lang": "python",
    "page": "_pages/Activities/liascript-orchestrationworkshop.md",
-   "line": 882,
+   "line": 880,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-orchestrationworkshop",
    "error": null,
    "steps": 18,
@@ -344,7 +344,7 @@
    "viz": "cast",
    "lang": "shell",
    "page": "_pages/Activities/liascript-rubricworkshop.md",
-   "line": 246,
+   "line": 244,
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Activities/liascript-rubricworkshop",
    "error": null,
    "steps": 4,
@@ -1169,13 +1169,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-aibyhand",
    "error": null,
    "steps": 11,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -2665,13 +2665,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-handoffprotocols",
    "error": null,
    "steps": 197,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -2749,13 +2749,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-llmjudges",
    "error": null,
    "steps": 87,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -4374,13 +4374,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-pythonessentials",
    "error": null,
    "steps": 14,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -4583,13 +4583,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-sampling",
    "error": null,
    "steps": 5,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
@@ -5244,13 +5244,13 @@
    "page_url": "https://billjr99.github.io/Ursinus-CS357-Fall2026/Tutorials/tut-tokensenergycost",
    "error": null,
    "steps": 186,
-   "modes": [
-    "run",
-    "explain"
-   ],
    "tours": [
     "",
     "walkthrough"
+   ],
+   "modes": [
+    "run",
+    "explain"
    ]
   },
   {
