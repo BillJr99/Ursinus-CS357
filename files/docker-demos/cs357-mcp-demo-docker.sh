@@ -92,10 +92,11 @@ PYEOF
 
 cat > "$WORK/notes_server.py" <<'PYEOF'
 # notes_server.py: Thursday's retriever, served as a real MCP tool over stdio.
-from mcp.server.fastmcp import FastMCP
+# Written for the MCP Python SDK 2.x (pip install 'mcp>=2.3,<3'), where FastMCP is now MCPServer.
+from mcp.server.mcpserver import MCPServer
 from rag_demo import search
 
-mcp = FastMCP("coop-notes")
+mcp = MCPServer("coop-notes")
 
 @mcp.tool()
 def search_notes(question: str, k: int = 3) -> list[dict]:
@@ -151,4 +152,4 @@ step "The tool as the server defines it"
 cat "$WORK/notes_server.py"
 
 step "Three messages by hand: initialize, tools/list, tools/call"
-python_run "pip install -q --disable-pip-version-check --root-user-action=ignore 'mcp[cli]<2' && python3 mcp_raw.py"
+python_run "pip install -q --disable-pip-version-check --root-user-action=ignore 'mcp[cli]>=2.3,<3' && python3 mcp_raw.py"

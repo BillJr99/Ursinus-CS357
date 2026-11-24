@@ -67,7 +67,7 @@ Anything marked self-paced is for outside class, and nothing graded assumes it.
 ---
 # Opening Demos: What an Agent Can See, Reach, and Leave Behind
 
-> An agent is only as good as what it can see, what it can reach, and what it leaves behind.  RAG and MCP decide what enters the window, a container decides what the agent can touch, and the rest of today is what survives.  I run these on the projector.  To run them yourself, you need Ollama, `ollama pull nomic-embed-text:v1.5`, and `python3 -m pip install 'mcp[cli]<2'`.
+> An agent is only as good as what it can see, what it can reach, and what it leaves behind.  RAG and MCP decide what enters the window, a container decides what the agent can touch, and the rest of today is what survives.  I run these on the projector.  To run them yourself, you need Ollama, `ollama pull nomic-embed-text:v1.5`, and `python3 -m pip install 'mcp[cli]>=2.3,<3'`.
 
 ## Demo 1: RAG With a Real Embedding
 
@@ -154,10 +154,11 @@ Save as `notes_server.py`, next to `rag_demo.py`:
 
 ```python
 # notes_server.py: Thursday's retriever, served as a real MCP tool over stdio.
-from mcp.server.fastmcp import FastMCP
+# Written for the MCP Python SDK 2.x (pip install 'mcp>=2.3,<3'), where FastMCP is now MCPServer.
+from mcp.server.mcpserver import MCPServer
 from rag_demo import search
 
-mcp = FastMCP("coop-notes")
+mcp = MCPServer("coop-notes")
 
 @mcp.tool()
 def search_notes(question: str, k: int = 3) -> list[dict]:
@@ -208,11 +209,11 @@ The retriever has not changed. `notes_server.py` imports `search` from the RAG d
 
 | Line | What it does |
 |---|---|
-| `mcp = FastMCP("coop-notes")` | Creates a server with a name. |
+| `mcp = MCPServer("coop-notes")` | Creates a server with a name. In version 1 of the SDK this class was `FastMCP`, imported from `mcp.server.fastmcp`; tutorials written before 2.x still use that spelling. |
 | `@mcp.tool()` | Registers the next function as a tool that clients can discover. |
 | `def search_notes(question: str, k: int = 3)` | The type hints become the tool's input schema, and the default makes `k` optional. |
 | The docstring | Becomes the tool's description. This sentence is what a model reads when it decides whether to call the tool, so it is part of the prompt. |
-| `mcp.run()` | Serves the tool over standard input and output. |
+| `mcp.run()` | Serves the tool over standard input and output. `run(transport="streamable-http", ...)` serves the same tool over HTTP instead. |
 
 `mcp_raw.py` starts the server as a child process and speaks the protocol by hand, writing one JSON object per line. Nothing in the client knows about `search_notes` ahead of time.
 
@@ -226,6 +227,8 @@ The retriever has not changed. `notes_server.py` imports `search` from the RAG d
 A real agent adds one step between `tools/list` and `tools/call`. It puts every tool's description in the model's window, the model answers with the tool it wants and the arguments, and the client makes the call. So the model chooses, the client executes, and the server is where the checks belong. Every tool the server advertises costs tokens on every call, whether or not the model uses it.
 
 This is the same pattern as the plain HTTP `/tools/list` and `/tools/call` from earlier in the term. The difference is that everyone has agreed on the messages, so one server works with any client.
+
+The same SDK can also run a server as its own long-lived process that agents reach over HTTP, rather than as a child process the client starts. Path B of the [*Read Gmail with OpenCode or Oh My Pi* tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GmailReadOnly#path-b-self-hosted-mcp) builds one at `http://127.0.0.1:8795/mcp`: it holds a read-only Gmail grant and returns a count, never a message. Its fixture mode sends the same `initialize` and `tools/call` messages with `curl`, with no Google account needed. The same tutorial also connects an agent to Google's own hosted Gmail MCP server and to the `gws` command line, so you can compare all three routes to one mailbox.
 
 ## Demo 3: An Agent That Can See One Folder
 
