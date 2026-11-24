@@ -73,7 +73,7 @@ Both paths build the same pipeline, reach the same learning objectives, and earn
 | Path | What you build | What you need | Pick this if |
 |------|----------------|---------------|--------------|
 | **Code** | `index.py` and `rag_agent.py`: a Chroma index and a Pydantic AI agent with a search tool (Steps 2 and 3) | Python, `pydantic-ai-slim` and `chromadb`, and Ollama with `qwen2.5:3b` | You want to see the tool call in your own code and control every line of it |
-| **No-code** | The same index and query path as one Langflow flow (the [No-code Path](#no-code-path) section, in place of Steps 2 and 3) | Langflow, and Ollama with `llama3.2` and `nomic-embed-text` | You would rather wire and inspect than write Python; you still choose the corpus, write the grounding prompt, and check every answer |
+| **No-code** | The same index and query path as one Langflow flow (the [No-code Path](#no-code-path) section, in place of Steps 2 and 3) | Docker, which runs a pinned Langflow for you, and Ollama with `llama3.2` and `nomic-embed-text` | You would rather wire and inspect than write Python; you still choose the corpus, write the grounding prompt, and check every answer |
 
 Steps 1 and 4, the writeup, and the deliverables apply to both paths.  On the no-code path, read "script" as "exported flow JSON", "tool call" as "the chunks the search step returned", and "run" as "one question in the Playground" wherever this page and the rubric use those words.
 
@@ -83,7 +83,7 @@ Steps 1 and 4, the writeup, and the deliverables apply to both paths.  On the no
 
 > **Python you will use.**  Lists and dictionaries, `pathlib`, `split` and `strip`, and virtual environments are all in [Python Essentials]({{ site.baseurl }}/Tutorials/PythonEssentials).
 
-The *RAG Worked Example* session builds these steps on a small corpus, on both paths.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need two Python packages and Ollama running with a model that calls tools reliably.  **No-code path:** skip the commands below and start with Step 1, then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.
+The *RAG Worked Example* session builds these steps on a small corpus, on both paths.  **Code path:** [Pydantic AI From the Loop Up]({{ site.baseurl }}/Tutorials/PydanticAI) sets up the same agent and model this lab uses.  You need two Python packages and Ollama running with a model that calls tools reliably.  **No-code path:** skip the commands below.  Install [Docker Desktop](https://docs.docker.com/get-started/get-docker/) (or Docker Engine on Linux) and Ollama, start with Step 1, and then follow the [No-code Path](#no-code-path) section in place of Steps 2 and 3.  Step N1 starts Langflow in Docker, so you do not install Langflow with `pip`.
 
 ```bash
 python3 -m venv .venv
@@ -307,24 +307,70 @@ index path:  File --> Text Splitter --> Chroma (with Ollama Embeddings)
 query path:  Chat Input --> Chroma search --> Prompt --> Ollama --> Chat Output
 ```
 
-### Step N1: Install and Launch Langflow
+### Step N1: Start Langflow in Docker
 
-**Goal:** the Langflow canvas open in your browser, with both Ollama models available to it.
+**Goal:** the Langflow canvas open in your browser, with your project folder and both Ollama models available to it.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-python3 -m pip install langflow
-langflow run
-ollama pull llama3.2
-ollama pull nomic-embed-text
+Langflow depends on a long list of Python libraries, and `pip install langflow` has to find a version of every one of them that installs on your machine's Python.  On a Python as new as 3.14, that install can fail on some computers.  Rather than chase a working combination by hand, we will run Langflow in **Docker**.  The official `langflowai/langflow` image comes with Langflow, its own Python, and every library it needs already installed at versions that were built and tested together, so there is nothing to `pip install`.  The image tag pins all of them at once: this page uses `1.13.1`, which runs Python 3.14.8 inside the container, so everyone in the class runs exactly the same versions.
+
+Langflow runs inside the container, and Ollama stays on your computer, installed as usual.  Save this as `compose.yaml` in your project folder, next to your `corpus` folder:
+
+```yaml
+services:
+  langflow:
+    image: langflowai/langflow:1.13.1      # pins Langflow and its Python; do not change this to latest
+    ports:
+      - "127.0.0.1:7860:7860"              # only your own computer can open the canvas
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # lets the container reach Ollama on your computer
+    environment:
+      LANGFLOW_CONFIG_DIR: /app/langflow
+      LANGFLOW_SAVE_DB_IN_CONFIG_DIR: "true"
+      LANGFLOW_AUTO_LOGIN: "true"
+    volumes:
+      - ./:/workspace                      # your project folder, seen from inside the container
+      - langflow-data:/app/langflow        # your flows and settings, kept between runs
+
+volumes:
+  langflow-data:
 ```
 
-> **You should see.** A "Langflow is running" banner in the terminal and the canvas at `http://localhost:7860`.  `ollama list` shows `llama3.2` and `nomic-embed-text`.
+Then, from your project folder:
 
-> **If `pip` says `externally-managed-environment` or `python3 -m venv` says `ensurepip is not available`.**  The notes under *Before You Start* explain both errors and how to fix them.
+```bash
+ollama pull llama3.2
+ollama pull nomic-embed-text
+docker compose up -d        # start Langflow in the background
+docker compose logs -f      # watch it start; Ctrl+C stops watching, and Langflow keeps running
+```
 
-> **If it fails.** A dependency-resolver error from `pip install langflow` usually means your Python is too new or too old.  Create a fresh virtual environment on Python 3.11 or 3.12 and install there.  If `localhost:7860` refuses to connect, the server is still starting, so wait for the banner.
+> **You should see.** The first `up` downloads the image once, which can take a few minutes.  After that, the canvas opens at `http://localhost:7860` with no login screen, and `ollama list` shows `llama3.2` and `nomic-embed-text`.
+
+Here is what each part of `compose.yaml` does:
+
+- **The image tag** pins the Langflow release and the Python under it.  Leave it at `1.13.1` for the whole lab: node names and settings change between Langflow versions, and `latest` would quietly move you to a new one partway through.  Write this tag in your readme as your Langflow version.
+- **`./:/workspace`** makes your project folder appear inside the container as `/workspace`, so your corpus is at `/workspace/corpus`.  Anything Langflow saves under `/workspace` shows up in your project folder.
+- **`langflow-data`** is a Docker volume that holds your flows and settings (the `LANGFLOW_CONFIG_DIR` and `LANGFLOW_SAVE_DB_IN_CONFIG_DIR` lines tell Langflow to keep its database there), so your flows are still there after you stop and start the container.
+- **`127.0.0.1:7860`** publishes the canvas only to your own computer.  Keep it that way, because `LANGFLOW_AUTO_LOGIN` skips the login screen: that is fine for one person on their own laptop, but not for a canvas that anyone on the network could open.
+- **`host.docker.internal`** is the name the container uses for your computer, which is how Langflow reaches Ollama.
+
+When you are done for the day, run `docker compose down` from the same folder.  It stops and removes the container, but your flows stay in the volume and your files stay in your project folder.  Next time, `docker compose up -d` brings everything back.
+
+> **Where is Ollama?**  Inside the container, `localhost` means the container itself, not your computer, so a Base URL of `http://localhost:11434` cannot reach Ollama.  Every Ollama node on this path uses `http://host.docker.internal:11434` instead.
+
+> **On Linux without Docker Desktop.**  Ollama listens only on `127.0.0.1` by default, and the container cannot reach that address.  If an Ollama node reports a refused connection, have Ollama listen on all interfaces: run `sudo systemctl edit ollama`, add `Environment="OLLAMA_HOST=0.0.0.0:11434"` under `[Service]`, and then run `sudo systemctl restart ollama`.  This also opens Ollama to other computers on your network, so make sure your firewall blocks port 11434 from outside, especially on campus or public Wi-Fi.
+
+If you would rather not use Compose, or your Docker does not have the `docker compose` command, this one command starts the same container with the same pin and settings.  Run it from your project folder (in PowerShell on Windows):
+
+```bash
+docker run -d --name langflow -p 127.0.0.1:7860:7860 --add-host=host.docker.internal:host-gateway -v "${PWD}:/workspace" -v langflow-data:/app/langflow -e LANGFLOW_CONFIG_DIR=/app/langflow -e LANGFLOW_SAVE_DB_IN_CONFIG_DIR=true -e LANGFLOW_AUTO_LOGIN=true langflowai/langflow:1.13.1
+```
+
+Watch it start with `docker logs -f langflow`, stop it with `docker stop langflow`, and start it again later with `docker start langflow`.
+
+> **If it fails.** If `docker` says it cannot connect to the Docker daemon, Docker Desktop is not running, so start it and retry.  If it says the port is already allocated, something else is using port 7860 (perhaps a Langflow you installed earlier), so stop that, or change the published port to `127.0.0.1:7861:7860` and open `http://localhost:7861`.  If `localhost:7860` refuses to connect, the server is still starting, so watch the logs and wait.
+
+> **Already running Langflow without Docker?**  That works too, as long as you pin it with `python3 -m pip install "langflow==1.13.1"` in a virtual environment and record the version.  Use `http://localhost:11434` wherever this page says `http://host.docker.internal:11434`, and use your own folder in place of `/workspace`.  If that `pip install` fails on your Python, switch to Docker rather than trying older or newer Pythons by hand.  The notes under *Before You Start* explain the `externally-managed-environment` and `ensurepip is not available` errors.
 
 ### Step N2: Build the Index Path, and Check the Search
 
@@ -332,9 +378,9 @@ ollama pull nomic-embed-text
 
 Create a **New Flow** from a **Blank Canvas**, and wire the index path:
 
-1.  **File** (upload every file in your `corpus` folder) to **Text Splitter** (the recursive character splitter; start with a chunk size of 1000 and an overlap of 100) to **Chroma** (collection name `notes`).
-2.  Wire an **Ollama Embeddings** node (model `nomic-embed-text`, Base URL `http://localhost:11434`) into Chroma's embedding input.  Chroma uses it to turn each chunk into numbers that place similar meanings close together.
-3.  Write every node setting in your readme as you go: the model, the Base URL, chunk size, and overlap.  On this path, that list takes the place of the code.
+1.  **File** (upload every file in your `corpus` folder) to **Text Splitter** (the recursive character splitter; start with a chunk size of 1000 and an overlap of 100) to **Chroma** (collection name `notes`, persist directory `/workspace/chroma_db`, so the index is saved in your project folder).
+2.  Wire an **Ollama Embeddings** node (model `nomic-embed-text`, Base URL `http://host.docker.internal:11434`) into Chroma's embedding input.  Chroma uses it to turn each chunk into numbers that place similar meanings close together.
+3.  Write every node setting in your readme as you go: the model, the Base URL, chunk size, overlap, and the persist directory.  On this path, that list takes the place of the code.
 
 > **You should see.** The Chroma node's inspection view lists the chunks it stored.  Write that count in your readme, as `index.py` would have printed it.
 
@@ -342,13 +388,13 @@ Now check the search by itself.  Later, a wrong answer could come from the searc
 
 > **You should see.** In the Chroma node's inspection view, three chunks, including one from the file your readme expects for that question.  If it is not there, no model can give the right answer from these chunks, so change the chunk size or reword the question first, and record what you changed.
 
-> **If it fails.** A connection refusal at run time means a node's Base URL is wrong or Ollama is not running.  If old documents still show up after you change the corpus, give the Chroma collection a new name and run the index path again.
+> **If it fails.** A connection refusal at run time means a node's Base URL is wrong or Ollama is not running.  A Base URL of `http://localhost:11434` points at the container, not your computer, so use `http://host.docker.internal:11434` (and, on Linux, see the Ollama note in Step N1).  If old documents still show up after you change the corpus, give the Chroma collection a new name and run the index path again.
 
 ### Step N3: Ground the Answers and Name the Source
 
 **Goal:** answers that come only from your notes, name the file each fact came from, and say so when the notes do not have the answer.
 
-Finish the query path.  Wire the search results to a **Prompt** node, then to **Ollama** (model `llama3.2`, temperature 0, Base URL `http://localhost:11434`), then to **Chat Output**, and add these settings to your readme.  Paste this into the Prompt node, then wire the search results into `{context}` and the Chat Input into `{question}`:
+Finish the query path.  Wire the search results to a **Prompt** node, then to **Ollama** (model `llama3.2`, temperature 0, Base URL `http://host.docker.internal:11434`), then to **Chat Output**, and add these settings to your readme.  Paste this into the Prompt node, then wire the search results into `{context}` and the Chat Input into `{question}`:
 
 ```text
 Answer questions about the user's notes, using ONLY the passages below.
@@ -400,6 +446,7 @@ Answer each in a short paragraph, pointing at your own runs:
 |---|---|---|
 | The answer ignores the passages | The model is not following the instructions, or never called the tool | Check for a `[tool call]` line; use `qwen2.5:3b` |
 | Old documents still show up after you edit the corpus | The `chroma_db` folder still holds the previous chunks | Delete `chroma_db` and rerun `index.py` |
+| (No-code) An Ollama node reports a refused connection | Its Base URL is `http://localhost:11434`, which inside the container is the container itself | Use `http://host.docker.internal:11434`; on Linux, see the Ollama note in Step N1 |
 | (No-code) The answer ignores your notes | The search results are not wired into the Prompt's `{context}` | Open the Prompt node's inspection view and check that the passages arrived |
 | (No-code) The answer names no source file | The chunks do not carry their file name | Check the search step's inspection view; re-upload through the File node rather than pasting text |
 
@@ -412,7 +459,7 @@ Answer each in a short paragraph, pointing at your own runs:
 | `corpus/`, `index.py`, and its output (no-code: the chunk count from the Chroma node) | Your documents, chunked and stored | Corpus and Index (30) |
 | `rag_agent.py` (no-code: the exported flow JSON and your node settings) | An agent that searches before it answers and names its sources | Retrieval Agent (30) |
 | Your three golden questions with expected answers, the three saved runs, and your one-line checks (no-code: Playground conversations with the retrieved chunks) | Whether the agent was right, question by question | Golden Questions and Checks (25) |
-| A readme with your path, the corpus description, commands, model and package (or Langflow) versions, the two writeup answers, and an AI-use disclosure | A reader could rerun everything | Writeup and Reproducibility (15) |
+| A readme with your path, the corpus description, commands, model and package (or Langflow) versions (on Docker, the image tag in your `compose.yaml`), the two writeup answers, and an AI-use disclosure | A reader could rerun everything | Writeup and Reproducibility (15) |
 
 ---
 
