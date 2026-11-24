@@ -540,6 +540,7 @@ schedule:
   - dtitle: "Project: Sprint Check Handed Out"
     dlink: "Projects/PBLThread#sprint-checks"
     points: "3"
+    submission_types: "written"
   readings:
   - rtitle: "Reading Response: What is the longest-running piece of work you have done with an AI tool, and where did it start losing the thread?"
 - week: "11"
@@ -609,6 +610,7 @@ schedule:
   - dtitle: "Project: Sprint Check Due"
     dlink: "Projects/PBLThread#sprint-checks"
     points: "3"
+    submission_types: "written"
   readings:
   - rtitle: "Reading Response: Name one design choice you would make differently in a system you deploy."
   - rtitle: "Have your judge, three artifacts from your final project, and your integrated project and proposal ready."
