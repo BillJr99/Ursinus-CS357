@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "id": "cs357-gmailreadonly-terminal-walkthrough",
+  "title": "Gmail read-only: hosted MCP path",
+  "description": "Scripted walkthrough of Path C, Google's hosted Gmail MCP server: setup and one read-only test. No Google login or mailbox access occurs in playback.",
+  "page": "_pages/Tutorials/tut-gmailreadonly.md",
+  "scenario": {
+    "commands": [
+      "# In Google Cloud: enable Gmail API and Gmail MCP API",
+      "# Create an agent-enabled OAuth Web client",
+      "# In Google's OAuth Playground: request only gmail.readonly",
+      "# Save the agent's remote MCP configuration from the tutorial",
+      "( IFS= read -rs CS357_GMAIL_ACCESS_TOKEN && export CS357_GMAIL_ACCESS_TOKEN && opencode )",
+      "# In OpenCode: /mcps",
+      "# Ask the agent for one search_threads call",
+      "# Close the agent and revoke the test application's Google access"
+    ]
+  },
+  "terminal": true,
+  "demo": true,
+  "provenance": "scripted",
+  "steps": [
+    {
+      "cmd": "# In Google Cloud: enable Gmail API and Gmail MCP API",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "# Create an agent-enabled OAuth Web client",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "# In Google's OAuth Playground: request only gmail.readonly",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "# Save the agent's remote MCP configuration from the tutorial",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "( IFS= read -rs CS357_GMAIL_ACCESS_TOKEN && export CS357_GMAIL_ACCESS_TOKEN && opencode )",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "# In OpenCode: /mcps",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "# Ask the agent for one search_threads call",
+      "output": "",
+      "exit": 0
+    },
+    {
+      "cmd": "# Close the agent and revoke the test application's Google access",
+      "output": "",
+      "exit": 0
+    }
+  ],
+  "markers": [
+    {
+      "step": 0,
+      "title": "Set up a preview project",
+      "note": "The MCP API requires Google Workspace Developer Preview access. If you cannot enable it, choose Path A (CLI) or Path B (self-hosted MCP)."
+    },
+    {
+      "step": 1,
+      "title": "Register the OAuth client",
+      "note": "Use Google's OAuth Playground as the redirect. Add only Gmail read access to Data Access."
+    },
+    {
+      "step": 2,
+      "title": "Verify the grant",
+      "note": "Choose Online access and check the scope in Google's token response. No authorization or token is shown here."
+    },
+    {
+      "step": 3,
+      "title": "Configure the connection",
+      "note": "Use Google's Gmail MCP endpoint, https://gmailmcp.googleapis.com/mcp/v1. The configuration references an environment variable; it contains no token."
+    },
+    {
+      "step": 4,
+      "title": "Start the agent",
+      "note": "Bash/Zsh illustration. The page also has a masked PowerShell example. Paste a token only into the real hidden terminal prompt, never into chat."
+    },
+    {
+      "step": 5,
+      "title": "Check the connection",
+      "note": "In Oh My Pi, use /mcp test gmail-demo and /tools. The catalog alone does not establish your OAuth permissions."
+    },
+    {
+      "step": 6,
+      "title": "Test with a Read-Only Request",
+      "note": "Use the demo subject, pageSize 3, and THREAD_VIEW_IDS_ONLY. Check the tool trace and count only the first page. This playback does not read a mailbox."
+    },
+    {
+      "step": 7,
+      "title": "Clean up",
+      "note": "Close the Playground and clear the clipboard. The short-lived token is no longer in the terminal environment after the agent exits."
+    }
+  ]
+}

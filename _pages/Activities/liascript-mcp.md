@@ -671,11 +671,17 @@ Two habits carry across all four.  A configuration file holds a reference and ne
 
 And a server you did not write still exposes only what you allow it to: toolsets, read-only flags, and directory arguments are the allowlists of Safeguard 2, set in the configuration instead of in code.
 
-## One More Path: A Real MCP Server You Run Yourself
+## One Task, Three Paths: Gmail Read-Only
 
-The four servers above came from someone else, and Part II's server was ours but only MCP-shaped.  There is a path in between: write a small server with the official [MCP Python SDK](https://py.sdk.modelcontextprotocol.io/), run it as its own process on your computer, and point your agent at it over streamable HTTP.  Path B of the [*Read Gmail with OpenCode or Oh My Pi* tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GmailReadOnly#path-b-mcp) builds one.  Its server holds a read-only Gmail grant, offers one tool, `count_demo_messages`, and returns a count instead of the messages, so all three Part IIc safeguards live in under eighty lines of code you can read.  The tutorial's Path A does the same job with Google's `gws` command-line program, which is the shell route from the warm-up.
+The [*Read Gmail with OpenCode or Oh My Pi* tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GmailReadOnly) gives an agent one job, counting the test messages with a fixed subject, and three ways to reach Gmail.  Each path puts a different piece of software between the model and the mailbox, so it is a good place to ask this section's three questions of real code.
 
-The shape of the server is short.  This is the SDK's 2.x spelling (`pip install 'mcp>=2.3,<3'`), where `FastMCP` is now `MCPServer` and the HTTP settings go to `run()`:
+| Path | What the agent talks to | Where the secret lives | What comes back into the window |
+|---|---|---|---|
+| **A: CLI** | Google's `gws` program, through its shell tool | `gws`'s own credential store, from a browser sign-in you did at a terminal | Whatever the command prints: message and thread IDs |
+| **B: Self-hosted MCP** | Your own small MCP server at `http://127.0.0.1:8795/mcp`, over streamable HTTP | The access token stays in the server's memory and expires in about an hour | A count, never an ID |
+| **C: Hosted MCP** | Google's Gmail MCP server at `https://gmailmcp.googleapis.com/mcp/v1` (a Developer Preview) | An environment variable the agent's configuration names, holding a short-lived token | Thread IDs, with `view` set to `THREAD_VIEW_IDS_ONLY` |
+
+Path B is the vault server from Part IIb grown up: a real server written with the official [MCP Python SDK](https://py.sdk.modelcontextprotocol.io/), run as its own process, with all three Part IIc safeguards in under a hundred lines you can read.  This is the SDK's 2.x spelling (`pip install 'mcp>=2.3,<3'`), where `FastMCP` is now `MCPServer` and the HTTP settings go to `run()`:
 
 ```python
 from mcp.server.mcpserver import MCPServer
@@ -691,7 +697,9 @@ server.run(transport="streamable-http", host="127.0.0.1", port=8795,
            stateless_http=True, json_response=True)
 ```
 
-The agent connects to `http://127.0.0.1:8795/mcp`.  The tutorial's Step 3 has the OpenCode and Oh My Pi configurations; both call it a `remote` or `http` server, because the agent reaches it over HTTP even though the address is your own computer.  Run the tutorial's fixture mode first: it needs no Google account, and two `curl` requests show the `initialize` and `tools/call` messages an agent sends before it uses the tool.  The server binds to `127.0.0.1` and does not check who is calling, so keep it on a computer you trust and never forward or tunnel the port.
+Its fixture mode needs no Google account: two `curl` requests show the `initialize` and `tools/call` messages an agent sends before it uses the tool.  The server binds to `127.0.0.1` and does not check who is calling, so keep it on a computer you trust and never forward or tunnel the port.
+
+Path C is the hosted GitHub pattern above, a vendor's server with a token in a header, with one twist: Google's catalog advertises write tools such as `trash_thread` to anyone who asks, so the read-only OAuth scope, not the tool list, is what stops a write.  Paths B and C both have a sign-in that works on a machine with no browser, such as a container: the tutorial shows each one.
 
 ---
 
@@ -826,7 +834,7 @@ In your notebook, respond to all three levels:
 - [GitHub Superpowers for AI Developers: gitingest, getmcp.io, deepwiki, gdagram, and github.dev, for turning a repository into something an agent can read](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GitHubPowerTools)
 - Model Context Protocol specification and documentation: https://modelcontextprotocol.io
 - Hugging Face MCP Course (built with Anthropic), whose early units build and connect a compliant MCP server over JSON-RPC: https://huggingface.co/learn/mcp-course/
-- [Read Gmail with OpenCode or Oh My Pi](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GmailReadOnly), a read-only Gmail tool two ways: the `gws` command line, or a small MCP server you run yourself on `127.0.0.1:8795`
+- [Read Gmail with OpenCode or Oh My Pi](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GmailReadOnly), a read-only Gmail tool three ways: the `gws` command line, a small MCP server you run yourself on `127.0.0.1:8795`, or Google's hosted Gmail MCP server
 - *Pydantic AI From the Loop Up*, Part 8, a real FastMCP server and an agent that discovers its tools over stdio: https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/PydanticAI
 - Roy Fielding's REST dissertation, Chapter 5 (online), for the architectural style behind web APIs.
 - Anthropic.  "Introducing the Model Context Protocol" (2024, online).

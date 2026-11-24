@@ -228,7 +228,7 @@ A real agent adds one step between `tools/list` and `tools/call`. It puts every 
 
 This is the same pattern as the plain HTTP `/tools/list` and `/tools/call` from earlier in the term. The difference is that everyone has agreed on the messages, so one server works with any client.
 
-The same SDK can also run a server as its own long-lived process that agents reach over HTTP, rather than as a child process the client starts. Path B of the [*Read Gmail with OpenCode or Oh My Pi* tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GmailReadOnly#path-b-mcp) builds one at `http://127.0.0.1:8795/mcp`: it holds a read-only Gmail grant and returns a count, never a message. Its fixture mode sends the same `initialize` and `tools/call` messages with `curl`, with no Google account needed.
+The same SDK can also run a server as its own long-lived process that agents reach over HTTP, rather than as a child process the client starts. Path B of the [*Read Gmail with OpenCode or Oh My Pi* tutorial](https://www.billmongan.com/Ursinus-CS357-Fall2026/Tutorials/GmailReadOnly#path-b-self-hosted-mcp) builds one at `http://127.0.0.1:8795/mcp`: it holds a read-only Gmail grant and returns a count, never a message. Its fixture mode sends the same `initialize` and `tools/call` messages with `curl`, with no Google account needed. The same tutorial also connects an agent to Google's own hosted Gmail MCP server and to the `gws` command line, so you can compare all three routes to one mailbox.
 
 ## Demo 3: An Agent That Can See One Folder
 
