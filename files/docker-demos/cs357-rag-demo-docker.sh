@@ -94,10 +94,11 @@ PYEOF
 
 cat > "$WORK/notes_server.py" <<'PYEOF'
 # notes_server.py: Thursday's retriever, served as a real MCP tool over stdio.
-from mcp.server.fastmcp import FastMCP
+# Written for the MCP Python SDK 2.x (pip install 'mcp>=2.3,<3'), where FastMCP is now MCPServer.
+from mcp.server.mcpserver import MCPServer
 from rag_demo import search
 
-mcp = FastMCP("coop-notes")
+mcp = MCPServer("coop-notes")
 
 @mcp.tool()
 def search_notes(question: str, k: int = 3) -> list[dict]:
@@ -166,4 +167,4 @@ ask "Who do I tell if I get hurt?" hurt
 ask "Does the co-op sell new bikes?" bikes
 
 step "The same retriever as an MCP tool, three messages by hand"
-python_run "pip install -q --disable-pip-version-check --root-user-action=ignore 'mcp[cli]<2' && python3 mcp_raw.py"
+python_run "pip install -q --disable-pip-version-check --root-user-action=ignore 'mcp[cli]>=2.3,<3' && python3 mcp_raw.py"

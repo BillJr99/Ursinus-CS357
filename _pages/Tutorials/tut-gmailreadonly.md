@@ -17,7 +17,7 @@ tags:
 Let's ask an agent to find an email we wrote for this exercise. Use a separate personal Gmail account containing only invented messages. Do not connect an Ursinus account or a mailbox you use for real correspondence. If you need to install an agent, see the [OpenCode setup tutorial]({{ site.baseurl }}/Tutorials/OpenCodeSetup) or its [Oh My Pi instructions]({{ site.baseurl }}/Tutorials/OpenCodeSetup#install-oh-my-pi-too). Signing in to a model provider does not give the agent access to Gmail.
 {: .tb-lede}
 
-**Choose one path.** [Path A: CLI](#path-a-cli) lets you run the same Gmail command you ask the agent to run. [Path B: MCP](#path-b-mcp) gives the agent one named tool. You run the Python server on your own computer, and the agent connects to it over localhost. Use the CLI if you want fewer moving parts, or MCP if you want to see how the server can limit both the operation and the data the agent receives.
+**Choose one path.** [Path A: CLI](#path-a-cli) lets you run the same Gmail command you ask the agent to run. The agent composes a `gws` command line in its shell, and `gws` talks to Gmail. [Path B: MCP](#path-b-mcp) runs your own small MCP server instead: a Python process on your computer that holds the Gmail grant and offers the agent one named tool. The agent connects to that server over streamable HTTP at `http://127.0.0.1:8795/mcp` and never runs a Gmail command itself. Use the CLI if you want fewer moving parts, or MCP if you want to see how the server can limit both the operation and the data the agent receives.
 
 Both live paths need a Google Desktop OAuth client and your approval in a browser. The MCP fixture works without a Google account or credentials. Use a fresh grant with only `https://www.googleapis.com/auth/gmail.readonly`. This scope permits reads across the mailbox, not just the messages your search returns. It does not allow sending mail or changing labels. Do not reuse credentials from a broader grant.
 
@@ -156,14 +156,19 @@ This simulation replays the shared setup, then follows the CLI path. It does not
 
 1. **Save the server.** In a new local directory, copy the whole box into `gmail_readonly.py`. The server has one tool, `count_demo_messages`. In live mode it asks Gmail for up to three IDs matching the exercise subject and returns a count, not the IDs or message bodies.
 
+   This version is written for the [MCP Python SDK](https://py.sdk.modelcontextprotocol.io/) 2.x. If you have an older copy of this script that starts with `from mcp.server.fastmcp import FastMCP`, a fresh install of `mcp` now stops it with `ModuleNotFoundError: No module named 'mcp.server.fastmcp'`, because 2.x renamed `FastMCP` to `MCPServer` and moved the HTTP settings (host, port, and the two transport options) from the constructor to `run()`. The [migration guide](https://py.sdk.modelcontextprotocol.io/v2/migration/#fastmcp-renamed-to-mcpserver) lists the changes. The tool, its checks, and what it returns are the same as before.
+
    ```python
+   # Targets the MCP Python SDK 2.x (mcp>=2.3,<3; see requirements.txt).
+   # In 2.x, FastMCP became MCPServer, and the HTTP settings moved to run():
+   # https://py.sdk.modelcontextprotocol.io/v2/migration/#fastmcp-renamed-to-mcpserver
    import argparse
    import logging
    from pathlib import Path
 
    import httpx
    from google_auth_oauthlib.flow import InstalledAppFlow
-   from mcp.server.fastmcp import FastMCP
+   from mcp.server.mcpserver import MCPServer
 
    SCOPE = "https://www.googleapis.com/auth/gmail.readonly"
    URL = "https://gmail.googleapis.com/gmail/v1/users/me/messages"
@@ -190,11 +195,8 @@ This simulation replays the shared setup, then follows the CLI path. It does not
        return grant["access_token"]
 
 
-   def make_server(token: str | None) -> FastMCP:
-       server = FastMCP(
-           "CS357 Gmail demo", host="127.0.0.1", port=8795,
-           stateless_http=True, json_response=True,
-       )
+   def make_server(token: str | None) -> MCPServer:
+       server = MCPServer("CS357 Gmail demo")
 
        @server.tool()
        def count_demo_messages() -> dict[str, int | str]:
@@ -229,16 +231,27 @@ This simulation replays the shared setup, then follows the CLI path. It does not
                token = authorize(args.client_json)
            except Exception:
                raise SystemExit("Google sign-in failed or the grant was not Gmail read-only.") from None
-       make_server(token).run(transport="streamable-http")
+       make_server(token).run(
+           transport="streamable-http", host="127.0.0.1", port=8795,
+           stateless_http=True, json_response=True,
+       )
    ```
 
-2. **Install the dependencies.** Use Python 3.11 or later. Run these commands from the directory containing the script. See the [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk/tree/v1.26.0#streamable-http-transport) for the HTTP transport.
+   Save these three lines next to it as `requirements.txt`. Each pin allows bug fixes but stops at the next major version, so a future 3.x release cannot break the script the way 2.x broke the old one.
+
+   ```text
+   mcp>=2.3,<3
+   google-auth-oauthlib>=1.5,<2
+   httpx>=0.28,<1
+   ```
+
+2. **Install the dependencies and start the server.** Use Python 3.11 or later. Run these commands from the directory containing the script.
 
    **macOS/Linux:**
 
    ```bash
    python3 -m venv .venv
-   .venv/bin/python -m pip install 'mcp==1.26.0' 'google-auth-oauthlib==1.2.4'
+   .venv/bin/python -m pip install -r requirements.txt
    .venv/bin/python gmail_readonly.py
    ```
 
@@ -246,11 +259,21 @@ This simulation replays the shared setup, then follows the CLI path. It does not
 
    ```powershell
    py -3 -m venv .venv
-   .\.venv\Scripts\python.exe -m pip install 'mcp==1.26.0' 'google-auth-oauthlib==1.2.4'
+   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
    .\.venv\Scripts\python.exe gmail_readonly.py
    ```
 
    Leave this terminal open. With no arguments, the server runs in fixture mode and never contacts Gmail. Its MCP endpoint is `http://127.0.0.1:8795/mcp`. It does not authenticate local callers, so use it only on a trusted computer. Do not publish, forward, or tunnel the port. The server and coding agent must run in the same environment, including the same side of WSL if you use it.
+
+   **Check the fixture before you add an agent.** Let's talk to the server ourselves first, so that if something goes wrong later, we know whether the problem is the server or the agent. In a second terminal on macOS, Linux, or WSL, send the two requests an agent would send first: `initialize`, then a call to the tool.
+
+   ```bash
+   H='-H Content-Type:application/json -H Accept:application/json,text/event-stream'
+   curl -s $H -X POST http://127.0.0.1:8795/mcp -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"t","version":"1"}}}'
+   curl -s $H -X POST http://127.0.0.1:8795/mcp -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"count_demo_messages","arguments":{}}}'
+   ```
+
+   The first reply should include `"serverInfo":{"name":"CS357 Gmail demo"`. The second should end with `"isError":false,"structuredContent":{"mode":"fixture","matches_on_page":1}`. Neither request sends a session header: `stateless_http=True` lets each request stand on its own, and `json_response=True` sends a plain JSON reply instead of an event stream. If you are on Windows without WSL, you can skip this check and use the agent check in Step 4 instead.
 
 3. **Connect your coding agent.** Open a second terminal in the same directory. Use the matching configuration below and start the agent there. What the client calls a `remote` server is an HTTP connection, even when the address is your own computer.
 
@@ -285,7 +308,7 @@ This simulation replays the shared setup, then follows the CLI path. It does not
 
 5. **Authorize your test mailbox.** Close the agent and stop the fixture server with Ctrl+C. If you skipped [Shared Setup](#shared-setup-google-cloud-and-gmail-oauth), do it now. Use the Desktop OAuth client JSON from that setup; you do not need to install `gws` or run `gws auth login`. Put the downloaded JSON in a private local directory outside your project and outside synced folders. On Windows, check **Properties > Security**; on macOS/Linux, use a directory with mode `700` and a file with mode `600`.
 
-   Run the same Python command from Step 2, but add `--client-json` followed by the quoted absolute path to the download. In the browser, authorize only the test mailbox and the Gmail read-only permission. The browser's loopback callback is separate from the MCP endpoint. The script checks Google's returned scope before starting the server and keeps the short-lived token in memory. It does not write a token file or refresh the token. The agent configuration needs only the local URL. After authorization, start the agent again from the second terminal.
+   Run the same `gmail_readonly.py` command from Step 2, but add `--client-json` followed by the quoted absolute path to the download. In the browser, authorize only the test mailbox and the Gmail read-only permission. The browser's loopback callback is separate from the MCP endpoint. The script checks Google's returned scope before starting the server and keeps the short-lived token in memory. It does not write a token file or refresh the token. The agent configuration needs only the local URL. After authorization, start the agent again from the second terminal.
 
 6. **Test with a Read-Only Request.** Prompt the agent:
 
