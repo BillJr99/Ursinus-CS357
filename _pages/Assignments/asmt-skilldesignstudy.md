@@ -46,7 +46,7 @@ info:
       rlink: "Activities/liascript-skills.md"
       liapage: true
     - rtitle: "Lab: OpenCode Studio, whose project and typed kickoff interview this assignment packages into a skill"
-      rlink: "Assignments/OpenCodeStudio"
+      rlink: "OpenCodeStudio"
     - rtitle: "Prompt Engineering Activity"
       rlink: "Activities/liascript-promptengineering.md"
       liapage: true
