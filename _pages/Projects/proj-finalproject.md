@@ -300,9 +300,9 @@ The proposal has its own page and its own rubric: see [Final Project Proposal]({
 
 > **Reference.**  Each sprint ends with a retrospective, and [Coordinating a Team Project]({{ site.baseurl }}/Tutorials/ProjectCoordination#a-retrospective) shows a short one.
 
-Build in three sprints between the proposal and the last day of class.  The [course schedule]({{ site.baseurl }}/) has the sprint boundaries and the class sessions that support them: the two sprint checks, the *Project Sprint* session, and the two *Project Studio* sessions.  Your direction's section below lists what each sprint builds and how you know it is done.
+Build in three sprints between the proposal and the last day of class.  The [course schedule]({{ site.baseurl }}/) has the sprint boundaries and the class sessions that support them: the sprint check, the *Project Sprint* session, and the two *Project Studio* sessions.  Your direction's section below lists what each sprint builds and how you know it is done.
 
-Sprint 1 is the longest and spans the Thanksgiving break, so the two [sprint checks]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) cut it into short laps.
+Sprint 1 is the longest and spans the Thanksgiving break, so the [sprint check]({{ site.baseurl }}/Projects/PBLThread#sprint-checks) at the start of the *Project Sprint* session marks its end.
 
 The [Literature Review]({{ site.baseurl }}/Assignments/LitReview) runs across Sprints 1 and 2.  Its synthesis states what the evidence confirms, complicates, or changes about your proposal, and any scope change that follows belongs in your decision log and your next check-in.
 
@@ -370,7 +370,7 @@ Design, build, evaluate, and present a **custom agent team**: cooperating, speci
 
 ### Direction A sprints
 
-- **Sprint 1 (proposal to cross-team critique).**  Build the monolith baseline first: by Sprint Check 1 it answers one evaluation task end to end, with the evaluation set drafted.  By the end of the sprint, finalize and freeze the 10-task evaluation set, draft the agent design table, and set up the repository with a CI placeholder.  *You are done when* the baseline has a result for all 10 tasks.
+- **Sprint 1 (proposal to cross-team critique).**  Build the monolith baseline first: by the sprint check it answers one evaluation task end to end, with the evaluation set drafted.  By the end of the sprint, finalize and freeze the 10-task evaluation set, draft the agent design table, and set up the repository with a CI placeholder.  *You are done when* the baseline has a result for all 10 tasks.
 - **Sprint 2 (critique to gallery walk).**  Implement all the agents, and commit a first draft of GOVERNANCE.md.  *You are done when* each agent passes a test on its own, and at least 5 evaluation tasks have run.
 - **Sprint 3 (gallery walk to the last day of class).**  Run the full evaluation against the baseline, document at least 3 failure modes with transcripts, and re-measure one mitigation.  *You are done when* the baseline and multi-agent numbers sit side by side, and the mitigation has a before and an after.
 
