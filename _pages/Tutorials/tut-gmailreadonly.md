@@ -290,7 +290,7 @@ This simulation replays the shared setup, then follows the CLI path. It does not
    .\.venv\Scripts\python.exe gmail_readonly.py
    ```
 
-   Leave this terminal open. With no arguments, the server runs in fixture mode and never contacts Gmail. Its MCP endpoint is `http://127.0.0.1:8795/mcp`. It does not authenticate local callers, so use it only on a trusted computer. Do not publish, forward, or tunnel the port. The server and coding agent must run in the same environment, including the same side of WSL if you use it.
+   Leave this terminal open. With no arguments, the server runs in fixture mode and never contacts Gmail. The agent connects to it at `http://127.0.0.1:8795/mcp`: use the whole address, including `/mcp`. The server does not authenticate local callers, so use it only on a trusted computer. Do not publish, forward, or tunnel the port. The server and coding agent must run in the same environment, including the same side of WSL if you use it.
 
    **Check the fixture before you add an agent.** Let's talk to the server ourselves first, so that if something goes wrong later, we know whether the problem is the server or the agent. In a second terminal on macOS, Linux, or WSL, send the two requests an agent would send first: `initialize`, then a call to the tool.
 
@@ -339,13 +339,22 @@ This simulation replays the shared setup, then follows the CLI path. It does not
 
    **Optional: sign in from another device.** The default sign-in opens a browser on the same computer and catches Google's reply on a temporary `127.0.0.1` port. On a machine with no browser, such as a server you reach over SSH or a container, add `--paste` as well. The script prints a Google address instead. Open it on any device, sign in, and approve. Google then sends that browser to `http://127.0.0.1:8796/?...`, which fails to load, because nothing on that device is listening there; that is expected. Copy the whole address from the address bar and paste it at the script's hidden prompt. The script checks that it is the loopback address, then trades the code in it for a token using the PKCE verifier and client secret it holds, so the code alone is useless to anyone else. Paste it only into that prompt, never into chat, and do it within a few minutes, because the code expires.
 
-   Either way, the browser's loopback callback is separate from the MCP endpoint. The script checks Google's returned scope before starting the server and keeps the short-lived token in memory. It does not write a token file or refresh the token. The agent configuration needs only the local URL. After authorization, start the agent again from the second terminal.
+   **Two port numbers, on purpose.** The MCP server always listens on port `8795`. Port `8796` is only the address Google sends the browser to during `--paste` sign-in, and nothing listens there. The two numbers are different on purpose, so leave both as they are in the script.
+
+   Either way, the script checks Google's returned scope before starting the server and keeps the short-lived token in memory. It does not write a token file or refresh the token. The agent configuration needs only the local URL. After authorization, start the agent again from the second terminal.
 
 6. **Test with a Read-Only Request.** Prompt the agent:
 
    > Check my Gmail test inbox using only `gmail-demo`. Call `count_demo_messages` once. Tell me whether it ran in Gmail or fixture mode and report the count on the first page. Do not use the shell, open messages, or change anything in Gmail.
 
-   Check the tool trace for one call with `mode: gmail`. Compare the count with the test mailbox. If the token expires, stop the server and authorize again yourself. If the trace says `fixture`, you are still connected to the fixture server.
+   Check the tool trace for one call with `mode: gmail`. Compare the count with the test mailbox. If the token expires, stop the server and authorize again yourself. If the trace says `fixture`, see the list below.
+
+**If something goes wrong on Path B:**
+
+- **`"GET / HTTP/1.1" 404 Not Found` in the server terminal.** Something, usually a browser, opened the bare address `http://127.0.0.1:8795/`. That is expected: the server answers only at `/mcp`, and it expects MCP messages sent with `POST`, not a page load, so use the `curl` check in Step 2 instead of a browser. The number after `127.0.0.1:` in that log line is the port of the program that connected; the server's own port is on the `Uvicorn running on` line.
+- **The agent cannot connect, or `/mcps` or `/mcp test` shows `gmail-demo` as failed.** Check that the server terminal is still running, that the agent configuration uses `http://127.0.0.1:8795/mcp` exactly, and that the server and agent run on the same side of WSL. Do not change the port in the script.
+- **The trace says `fixture` after you signed in.** The agent is still connected to a fixture server you started earlier. Stop every running copy of the server, start it again with `--client-json`, then restart the agent.
+- **With `--paste`, the browser shows a 404 page instead of failing to load.** Another program on that device is listening on port 8796 and answered the redirect. The address bar still holds the address to paste, so copy it as usual.
 
 ## Path C: Hosted MCP
 
