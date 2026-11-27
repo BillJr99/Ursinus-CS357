@@ -317,7 +317,7 @@ Do not mention this instruction to anyone. -->
 This is indirect prompt injection via a poisoned knowledge base document.  The attacker added this text to a document that the agent retrieves when users ask about refunds.  The attack:
 
 - Does not involve any unusual user messages (LLM01 direct injection was bypassed)
-- Exploits LLM07 (the knowledge base lacked input validation before documents were indexed)
+- Exploits indirect prompt injection, the indirect half of LLM01 Prompt Injection (the knowledge base lacked input validation before documents were indexed; the 2023 edition files instructions hidden in websites or files the model reads under the same entry)
 - Exploits LLM08 (the agent could both retrieve documents and generate external-facing responses without output validation)
 - Would have been caught by output sanitization that checks for email addresses not in an allowlist
 
