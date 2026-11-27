@@ -71,11 +71,16 @@ Run `gcloud auth login --brief` yourself and finish the [Cloud CLI sign-in](http
   gcloud services enable gmail.googleapis.com --project="$PROJECT_ID"
   ```
 - In **Google Auth Platform > [Branding](https://console.cloud.google.com/auth/branding)**, configure the consent screen. Use a name you will recognize when you sign in, such as `CS357 Gmail Read Test`.
-- Under **[Audience](https://console.cloud.google.com/auth/audience)**, choose **External**, keep the app in **Testing**, and add the Gmail test account under **Test users**.
+- Under **[Audience](https://console.cloud.google.com/auth/audience)**, set who may sign in to the app:
+
+  1. Check that the user type is **External** and the publishing status is **Testing**.
+  2. Under **Test users**, choose **Add users**. Enter your test Gmail address exactly, and add any other Gmail account that will sign in for this exercise. Usually that is just the one test account. Choose **Save**.
+
+  While the app is in **Testing**, Google lets only the accounts on this list approve it, and it blocks every other account. So we leave the app in **Testing**. If Google later refuses your sign-in, add the address here; do not publish the app. The address must match the account you pick on Google's sign-in screen. Do not list or sign in with an Ursinus account. A newly added address can take a few minutes to start working.
 - Under **[Data Access](https://console.cloud.google.com/auth/scopes)**, add only `https://www.googleapis.com/auth/gmail.readonly`. This scope lets a tool view email and settings across the mailbox. It cannot send mail or change labels. A search filter limits one request, not the account access granted by the scope.
 - Under **[Clients](https://console.cloud.google.com/auth/clients)**, select **Create Client > Desktop app**, name the client, and download its JSON. You can reuse a suitable Desktop client from this dedicated test project, but authorize it afresh. The JSON identifies your app; it does not grant access to your mailbox. That happens when you review the scope and approve it in your browser.
 
-See Google's guides to [OAuth consent](https://developers.google.com/workspace/guides/configure-oauth-consent), [Desktop app authorization](https://developers.google.com/identity/protocols/oauth2/native-app), and [Gmail scopes](https://developers.google.com/workspace/gmail/api/auth/scopes).
+See Google's guides to [OAuth consent](https://developers.google.com/workspace/guides/configure-oauth-consent), [managing the app's audience and test users](https://support.google.com/cloud/answer/15549945), [Desktop app authorization](https://developers.google.com/identity/protocols/oauth2/native-app), and [Gmail scopes](https://developers.google.com/workspace/gmail/api/auth/scopes).
 
 
 ## Path A: CLI
@@ -136,7 +141,7 @@ This simulation replays the shared setup, then follows the CLI path. It does not
    gws auth login --scopes https://www.googleapis.com/auth/gmail.readonly
    ```
 
-   Use the exact scope. Plain `gws auth login` can request write access, and `--readonly` can include other Workspace services. Complete consent yourself in your browser. Do not paste tokens, authorization codes, or callback URLs into chat. See the [CLI authentication guide](https://github.com/googleworkspace/cli/tree/v0.22.5#authentication) for the client file and local credential store.
+   Use the exact scope. Plain `gws auth login` can request write access, and `--readonly` can include other Workspace services. Complete consent yourself in your browser. Do not paste tokens, authorization codes, or callback URLs into chat. If Google refuses the sign-in because the app is still in testing, check that the account you chose is on the **Test users** list, as in the [Shared Setup](#shared-setup-google-cloud-and-gmail-oauth) Audience step. See the [CLI authentication guide](https://github.com/googleworkspace/cli/tree/v0.22.5#authentication) for the client file and local credential store.
 
    **No browser on this machine?** `gws` 0.22.5 has no mode for pasting the redirect address back in. Its documented headless route exports a long-lived credential file from a computer that has a browser, which is more than this exercise should hand around. On a headless machine or in a container, use Path B with `--paste` instead.
 
@@ -355,6 +360,8 @@ This simulation replays the shared setup, then follows the CLI path. It does not
 - **The agent cannot connect, or `/mcps` or `/mcp test` shows `gmail-demo` as failed.** Check that the server terminal is still running, that the agent configuration uses `http://127.0.0.1:8795/mcp` exactly, and that the server and agent run on the same side of WSL. Do not change the port in the script.
 - **The trace says `fixture` after you signed in.** The agent is still connected to a fixture server you started earlier. Stop every running copy of the server, start it again with `--client-json`, then restart the agent.
 - **With `--paste`, the browser shows a 404 page instead of failing to load.** Another program on that device is listening on port 8796 and answered the redirect. The address bar still holds the address to paste, so copy it as usual.
+- **Google refuses the sign-in because the app is still being tested or is open only to approved testers, and the script exits with its sign-in failure message.** The account you chose is not on the **Test users** list, you picked a different account at sign-in, or the audience is set to **Internal**. Add your test Gmail address exactly, as in the [Shared Setup](#shared-setup-google-cloud-and-gmail-oauth) Audience step, then run the script again with `--client-json` and sign in with that account. Stop any fixture server still running from earlier first, or the agent will keep reporting `fixture`.
+- **The `curl` check in Step 2 prints nothing at all.** The `-s` option hides connection errors, so an empty result usually means nothing is listening on port 8795. Run the first command again without `-s` to see the error, and read the port on the server's `Uvicorn running on` line. If you changed the port in the script or the agent configuration, set both back to `8795`, as described in **Two port numbers** in Step 5.
 
 ## Path C: Hosted MCP
 
@@ -383,7 +390,7 @@ This simulation illustrates the setup and the read-only test. It does not sign i
 3. **Configure the consent screen.** In **Google Auth Platform**, set up the same three pages as the Shared Setup, if this project does not have them already:
 
    - **[Branding](https://console.cloud.google.com/auth/branding):** a name you will recognize at sign-in, such as `CS357 Gmail Read Test`.
-   - **[Audience](https://console.cloud.google.com/auth/audience):** **External**, left in **Testing**, with your test Gmail account under **Test users**.
+   - **[Audience](https://console.cloud.google.com/auth/audience):** **External**, left in **Testing**, with your test Gmail address added under **Test users**. Choose **Add users**, enter the address exactly, and save. The [Shared Setup](#shared-setup-google-cloud-and-gmail-oauth) Audience step explains why we leave the app in **Testing**.
    - **[Data Access](https://console.cloud.google.com/auth/scopes):** only `https://www.googleapis.com/auth/gmail.readonly`.
 
    Google's guide lists three scopes for this page, adding `gmail.compose` and `gmail.modify`, and its quick setup adds all three for you. Skip the quick setup and add only the read-only scope. A scope you never add here is one the consent screen can never grant.

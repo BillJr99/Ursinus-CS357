@@ -115,7 +115,7 @@
     {
       "step": 4,
       "title": "Enable Gmail only if needed",
-      "note": "Run this only if Gmail is absent and you have permission. In the browser, set up External testing, add your test user, select Gmail read-only, and create a Desktop client."
+      "note": "Run this only if Gmail is absent and you have permission. In the browser, set up External testing, choose Add users under Test users and enter your test Gmail address exactly, select Gmail read-only, and create a Desktop client."
     },
     {
       "step": 5,
